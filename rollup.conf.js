@@ -3,7 +3,7 @@ const { getRollupPlugins } = require('@gera2ld/plaid');
 const pkg = require('./package.json');
 
 const DIST = 'dist';
-const FILENAME = 'index';
+const FILENAME = 'ArcaRefresher';
 const BANNER = fs.readFileSync('src/meta.js', 'utf8')
 .replace('process.env.VERSION', pkg.version);
 
