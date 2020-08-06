@@ -1,0 +1,11 @@
+.button {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+    background-color: #eee !important;
+    color: #000 !important;
+}
+
+.button:focus {
+    text-decoration: none;
+}

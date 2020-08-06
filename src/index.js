@@ -1,4 +1,5 @@
 import * as Setting from './module/setting.js';
+import * as HideNotice from './module/hidenotice.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -40,7 +41,7 @@ import fade from './css/fade.css';
 function initBoard() {
     // TODO : Refresher
     // TODO : Preview Filter
-    // TODO : Hide Notice
+    HideNotice.apply();
     // TODO : Article Block System
 }
 
