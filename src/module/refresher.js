@@ -1,12 +1,12 @@
 import * as DateManager from './datemanager';
-import * as PreviewFilter from './previewfilter.js';
-import * as BlockSystem from './blocksystem.js';
+import * as PreviewFilter from './previewfilter';
+import * as BlockSystem from './blocksystem';
 
 import styles, { stylesheet } from '../css/refresher.module.css';
 
 function initLoader() {
     document.head.append(<style>{stylesheet}</style>);
-    const loader = <div id="article_loader" class={styles.loader}></div>;
+    const loader = <div id="article_loader" class={styles.loader} />;
     document.body.append(loader);
 
     return loader;
@@ -14,18 +14,18 @@ function initLoader() {
 
 function playLoader(loader, time) {
     loader.removeAttribute('style');
-    setTimeout(function() {
+    setTimeout(() => {
         loader.setAttribute('style', `animation: ${styles.loaderspin} ${time}s ease-in-out`);
     }, 50);
 }
 
 function getRefreshArticle() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
         req.open('GET', window.location.href);
         req.responseType = 'document';
-        req.addEventListener('load', event => {
+        req.addEventListener('load', () => {
             const articles = req.response.querySelectorAll('a[class="vrow"]');
             resolve(articles);
         });
@@ -38,26 +38,26 @@ function swapNewArticle(newArticles) {
     const oldArticles = board.querySelectorAll('a[class="vrow"]');
 
     let i = newArticles.length - 1;
-    const oldnum = parseInt(oldArticles[0].pathname.split('/')[3]);
+    const oldnum = parseInt(oldArticles[0].pathname.split('/')[3], 10);
 
     while(i > -1) {
-        const newnum = parseInt(newArticles[i].pathname.split('/')[3]);
+        const newnum = parseInt(newArticles[i].pathname.split('/')[3], 10);
         if(newnum > oldnum) {
             newArticles[i].setAttribute('style', `animation: ${styles.light} 0.3s`);
         }
 
         const lazywrapper = newArticles[i].querySelector('noscript');
-        if(lazywrapper)
-            lazywrapper.outerHTML = lazywrapper.innerHTML;
+        if(lazywrapper) lazywrapper.outerHTML = lazywrapper.innerHTML;
 
         const time = newArticles[i].querySelector('time');
-        if(DateManager.in24(time.dateTime))
+        if(DateManager.in24(time.dateTime)) {
             time.innerText = DateManager.getTimeStr(time.dateTime);
-        i--;
+        }
+        i -= 1;
     }
 
-    oldArticles.forEach(i => {
-        i.remove();
+    oldArticles.forEach(item => {
+        item.remove();
     });
     board.append(...newArticles);
 
@@ -67,8 +67,7 @@ function swapNewArticle(newArticles) {
 export function run() {
     const refreshTime = window.setting.refreshTime;
 
-    if(refreshTime == 0)
-        return;
+    if(refreshTime == 0) return;
 
     const loader = initLoader();
     playLoader(loader, refreshTime);
@@ -79,47 +78,47 @@ export function run() {
         PreviewFilter.filter(articles);
         BlockSystem.blockArticle(articles);
     }
-    
-    let loader_loop = null;
-    loader_loop = setInterval(routine, refreshTime * 1000);
-    
+
+    let loadLoop = null;
+    loadLoop = setInterval(routine, refreshTime * 1000);
+
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-            clearInterval(loader_loop);
-            loader_loop = null;
-        } else {
-            if (loader_loop == null) {
+            clearInterval(loadLoop);
+            loadLoop = null;
+        }
+        else {
+            if (loadLoop == null) {
                 playLoader(loader, refreshTime);
-                loader_loop = setInterval(routine, refreshTime * 1000);
+                loadLoop = setInterval(routine, refreshTime * 1000);
             }
         }
     });
     document.addEventListener('click', event => {
-        if(event.target.tagName != 'INPUT')
-            return;
+        if(event.target.tagName != 'INPUT') return;
 
         if(event.target.classList.contains('batch-check-all')) {
             if(event.target.checked) {
-                clearInterval(loader_loop);
-                loader_loop = null;
+                clearInterval(loadLoop);
+                loadLoop = null;
             }
             else {
                 playLoader(loader, refreshTime);
-                loader_loop = setInterval(routine, refreshTime * 1000);
+                loadLoop = setInterval(routine, refreshTime * 1000);
             }
         }
         else {
             const btns = document.querySelectorAll('.batch-check');
-            for(let btn of btns) {
+            for(const btn of btns) {
                 if(btn.checked) {
-                    clearInterval(loader_loop);
-                    loader_loop = null;
+                    clearInterval(loadLoop);
+                    loadLoop = null;
                     return;
                 }
             }
 
             playLoader(loader, refreshTime);
-            loader_loop = setInterval(routine, refreshTime * 1000);
+            loadLoop = setInterval(routine, refreshTime * 1000);
         }
-    })
+    });
 }

@@ -14,19 +14,18 @@ let data = {
     filteredCategory: {},
     blockKeyword: [],
     blockUser: [],
-    blockEmoticon: {}
-}
+    blockEmoticon: {},
+};
 
 const defaultCategory = {
-    '전체': false,
-    '일반': false
-}
+    전체: false,
+    일반: false,
+};
 
 export async function load(channel) {
     const loadData = JSON.parse(await GM.getValue('Setting', ''));
 
-    if(compareVersion(loadData.version, MIN_VERSION))
-        return;
+    if(compareVersion(loadData.version, MIN_VERSION)) return;
 
     if(compareVersion(loadData.version, CONVERTIBLE_VERSION)) {
         data = convertSetting(loadData);
@@ -52,17 +51,14 @@ function reset() {
 }
 
 function compareVersion(a, b) {
-    if(a == undefined)
-        return true;
-    
-    let c = a.split('.');
-    var d = b.split('.');
+    if(a == undefined) return true;
 
-    for(let i = 0; i < a.length; i++) {
-        if(parseInt(c[i]) > parseInt(d[i])) 
-            break;
-        else if(parseInt(c[i]) < parseInt(d[i]))
-            return true;
+    const c = a.split('.');
+    const d = b.split('.');
+
+    for(let i = 0; i < a.length; i += 1) {
+        if(parseInt(c[i], 10) > parseInt(d[i], 10)) break;
+        else if(parseInt(c[i], 10) < parseInt(d[i], 10)) return true;
     }
 
     return false;
@@ -78,10 +74,9 @@ function convertSetting(newData) {
 
     const tmp = {};
     for(key in newData.filteredCategory) {
-        if(key == 'name' || key == 'description')
-            continue;
-
-        tmp[key] = Object.assign({}, newData.filteredCategory[key]);
+        if({}.hasOwnProperty.call(newData.filteredCategory, key)) {
+            tmp[key] = Object.assign({}, newData.filteredCategory[key]);
+        }
     }
 
     NewSetting.filteredCategory = tmp;
@@ -90,29 +85,19 @@ function convertSetting(newData) {
 }
 
 export function setup(channel) {
-    const showSettingBtn = 
+    const showSettingBtn = (
         <li class="nav-item dropdown">
             <a aria-expanded="false" class="nav-link" href="#">
-            <span class="hidden-sm-down">스크립트 설정</span>
-            <span class="hidden-md-up"><span class="ion-gear-a"></span></span>
+                <span class="hidden-sm-down">스크립트 설정</span>
+                <span class="hidden-md-up"><span class="ion-gear-a" /></span>
             </a>
-        </li>;
-    
-    showSettingBtn.addEventListener('click', () => {
-        if(settingWrapper.classList.contains('hidden')) {
-            contentWrapper.classList.add('disappear');
-        }
-        else {
-            settingWrapper.classList.add('disappear');
-        }
-    });
+        </li>
+    );
 
-    document.querySelector('ul.navbar-nav').append(showSettingBtn);
-
-    const settingWrapper = 
+    const settingWrapper = (
         <div class={`${styles.wrapper} hidden clearfix`}>
             <div class="row">
-                <div class="col-sm-0 col-md-2"></div>
+                <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
                     <div class="dialog card">
                         <div calss="card-block">
@@ -169,28 +154,28 @@ export function setup(channel) {
                             <div class="row">
                                 <label class="col-xs-3">미리보기 필터</label>
                                 <div class="col-xs-9">
-                                    <div class="category-group"></div>
+                                    <div class="category-group" />
                                     <p class="text-muted">지정한 카테고리의 미리보기를 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-xs-3">유저 차단</label>
                                 <div class="col-xs-9">
-                                    <textarea id="blockUser" rows="6" placeholder="차단할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다."></textarea>
+                                    <textarea id="blockUser" rows="6" placeholder="차단할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 유저의 게시물과 댓글을 차단합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-xs-3">키워드 차단</label>
                                 <div class="col-xs-9">
-                                    <textarea id="blockKeyword" rows="6" placeholder="차단할 키워드를 입력, 줄바꿈으로 구별합니다."></textarea>
+                                    <textarea id="blockKeyword" rows="6" placeholder="차단할 키워드를 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 차단합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-xs-3">아카콘 차단</label>
                                 <div class="col-xs-9">
-                                    <select id="blockEmoticon" size="6" multiple></select>
+                                    <select id="blockEmoticon" size="6" multiple />
                                     <div class="col-xs-10">
                                         <p class="text-muted">특정 아카콘을 차단합니다. 댓글에서 추가 가능합니다.</p>
                                     </div>
@@ -212,17 +197,29 @@ export function setup(channel) {
                     </div>
                 </div>
             </div>
-        </div>;
+        </div>
+    );
     const contentWrapper = document.querySelector('.content-wrapper');
     const categoryGroup = settingWrapper.querySelector('.category-group');
-        
+
+    showSettingBtn.addEventListener('click', () => {
+        if(settingWrapper.classList.contains('hidden')) {
+            contentWrapper.classList.add('disappear');
+        }
+        else {
+            settingWrapper.classList.add('disappear');
+        }
+    });
+
+    document.querySelector('ul.navbar-nav').append(showSettingBtn);
+
     document.head.append(<style>{ stylesheet }</style>);
     contentWrapper.parentNode.insertBefore(settingWrapper, document.querySelector('footer'));
 
-    const categoryButton = <span><input type="checkbox" id=""/><label for=""></label></span>;
+    const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
     const category = document.querySelectorAll('.board-category a');
 
-    categoryGroup.append(<span><input type="checkbox" id="전체"/><label for="전체">전체</label></span>);
+    categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
 
     category.forEach(element => {
         const categoryName = (element.innerText == '전체') ? '일반' : element.innerText;
@@ -262,24 +259,25 @@ export function setup(channel) {
     settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
-    for(let key in data.filteredCategory[channel]) {
+    for(const key in data.filteredCategory[channel]) {
         if(data.filteredCategory[channel][key]) {
             const checkbox = document.getElementById(key);
             if(checkbox) checkbox.checked = true;
         }
     }
     const emoticonList = settingWrapper.querySelector('#blockEmoticon');
-    for(let key in data.blockEmoticon) {
-        const opt = <option value=''></option>;
-        opt.value = key;
-        opt.innerText = data.blockEmoticon[key];
-        emoticonList.append(opt);
+    for(const key in data.blockEmoticon) {
+        if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
+            const opt = <option value="" />;
+            opt.value = key;
+            opt.innerText = data.blockEmoticon[key];
+            emoticonList.append(opt);
+        }
     }
 
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.preventDefault();
-        if(!confirm('등록한 자짤을 삭제하시겠습니까?'))
-            return;
+        if(!confirm('등록한 자짤을 삭제하시겠습니까?')) return;
 
         data.myImage = '';
         save();
@@ -296,8 +294,7 @@ export function setup(channel) {
     settingWrapper.querySelector('#resetSetting').addEventListener('click', event => {
         event.preventDefault();
 
-        if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?'))
-            return;
+        if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
 
         reset();
         location.reload();
@@ -310,13 +307,13 @@ export function setup(channel) {
         data.hideContentImage = settingWrapper.querySelector('#hideContentImage').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
 
-        const category = settingWrapper.querySelectorAll('.category-group input');
-        category.forEach(element => {
+        const checkboxes = settingWrapper.querySelectorAll('.category-group input');
+        checkboxes.forEach(element => {
             data.filteredCategory[channel][element.id] = element.checked;
         });
 
         const blockUser = settingWrapper.querySelector('#blockUser').value;
-        if(blockUser == "") {
+        if(blockUser == '') {
             data.blockUser = [];
         }
         else {
@@ -324,7 +321,7 @@ export function setup(channel) {
         }
 
         const blockKeyword = settingWrapper.querySelector('#blockKeyword').value;
-        if(blockKeyword == "") {
+        if(blockKeyword == '') {
             data.blockKeyword = [];
         }
         else {
@@ -341,7 +338,7 @@ export function setup(channel) {
         save();
         location.reload();
     });
-    settingWrapper.querySelector('#closeSetting').addEventListener('click', event => {
+    settingWrapper.querySelector('#closeSetting').addEventListener('click', () => {
         settingWrapper.classList.add('disappear');
     });
 }
