@@ -1,0 +1,6 @@
+.avatar {
+    display: none !important;
+}
+.input-wrapper > .input {
+    width: calc(100% - 4.5rem - .5rem) !important;
+}

@@ -1,5 +1,6 @@
 import * as Setting from './module/setting.js';
 import * as HideNotice from './module/hidenotice.js';
+import * as HideAvatar from './module/hideavatar.js';
 import * as PreviewFilter from './module/previewfilter.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 
@@ -53,6 +54,7 @@ function initBoard() {
 
 function initArticle() {
     ReplyRefreshBtn.apply();
+    HideAvatar.apply();
     // TODO : Add Image Context Menu
     // TODO : Comment Block System
 }
