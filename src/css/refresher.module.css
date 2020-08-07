@@ -1,0 +1,38 @@
+@keyframes light{
+    0% {
+        background-color: rgba(240, 248, 255, 1);
+        opacity:1
+    }
+    100% {
+        background-color: rgba(240, 248, 255, 0);
+        opacity:1
+    }
+
+}
+
+@keyframes loaderspin {
+    0% { transform: rotate(0deg);
+        box-shadow: 0 0 15px #3d414d;
+    }
+    5% {
+        box-shadow: 0 0 -10px #3d414d;
+    }
+    15%{
+        box-shadow: 0 0 0px #3d414d;
+    }
+    100% { transform: rotate(360deg);
+        box-shadow: 0 0 0px #3d414d;
+    }
+}
+
+.loader {
+    border: 6px solid #d3d3d3;
+    border-top: 6px solid #3d414d;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 30px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+}
