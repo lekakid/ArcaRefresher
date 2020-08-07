@@ -26,10 +26,6 @@ export function apply() {
     document.querySelector('.root-container').append(wrapper);
     const context = wrapper.querySelector('#context-menu');
 
-    if(window.outerWidth <= 768) {
-        wrapper.classList.add(styles.mobile);
-    }
-
     function closeContext(event) {
         if(!wrapper.classList.contains('hidden'))
             wrapper.classList.add('hidden');
@@ -50,7 +46,8 @@ export function apply() {
         if(event.target.tagName != 'IMG' && event.target.tagName != 'VIDEO')
             return;
 
-        context.setAttribute('style', `left: ${event.clientX}px; top: ${event.clientY}px`);
+        if(!wrapper.classList.contains(styles.mobile))
+            context.setAttribute('style', `left: ${event.clientX}px; top: ${event.clientY}px`);
 
         if(!wrapper.classList.contains('hidden')) {
             wrapper.classList.add('hidden');

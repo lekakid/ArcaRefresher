@@ -11,11 +11,6 @@
     pointer-events: none;
 }
 
-.wrapper.mobile {
-    background-color: rgba(0, 0, 0, 0.5);
-    pointer-events: auto;
-}
-
 .menu {
     position: absolute;
     width: 300px;
@@ -24,10 +19,6 @@
     background-color: #fff;
     z-index: 20;
     pointer-events: auto;
-}
-
-.wrapper.mobile .menu {
-    width: 80%;
 }
 
 .menu .devider {
