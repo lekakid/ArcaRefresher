@@ -1,7 +1,10 @@
 // ==UserScript==
 // @name        Arca Refresher
 // @namespace   LeKAKiD
-// @description Acra Live Extension
+// @description Arca Live Extension
+// @downloadURL https://raw.githubusercontent.com/lekakid/ArcaRefresher/master/ArcaRefresher.user.js
+// @homepageURL https://github.com/lekakid/ArcaRefresher
+// @supportURL  https://arca.live/b/namurefresher
 // @match       https://*.arca.live/*
 // @match       https://arca.live/*
 // @grant       GM.setValue
