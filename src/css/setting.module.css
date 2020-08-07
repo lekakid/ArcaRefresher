@@ -1,0 +1,42 @@
+.wrapper {
+    margin: 0 auto;
+    max-width: 1300px;
+    border: 1px solid #bbb;
+    background-color: #fff;
+    padding: 1rem;
+}
+
+.wrapper select,
+.wrapper textarea {
+    display: block;
+    width: 100%;
+    padding: .5rem .75rem;
+    color: #55595c;
+    background-color: #fff;
+    border: 1px solid #bbb;
+}
+
+.wrapper input {
+    width: 0;
+}
+
+.wrapper input+label {
+    border: 1px solid transparent;
+    border-radius: 100px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.wrapper input:checked+label {
+    border-color: #3d414d;
+    color: #fff;
+    background: #3d414d;
+}
+
+.wrapper input+label:hover {
+    border: 1px solid #3d414d;
+}
+
+.wrapper .align-right {
+    text-align: right;
+}

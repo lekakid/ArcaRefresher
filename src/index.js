@@ -1,5 +1,10 @@
-(function() {
+import * as Setting from './module/setting.js';
+
+import fade from './css/fade.css';
+
+(async function() {
     // TODO : Header Fix
+    document.head.append(<style>{fade}</style>);
     
     const path = location.pathname.split('/');
 
@@ -7,7 +12,8 @@
         return;
 
     window.channel = path[2] || '';
-    //window.setting = Setting.load();
+    window.setting = await Setting.load(window.channel);
+    Setting.setup(window.channel);
 
     if(path[3] == undefined || path[3] == '') {
         // Board Page
