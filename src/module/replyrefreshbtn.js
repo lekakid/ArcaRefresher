@@ -1,4 +1,4 @@
-import * as DateFormmatter from './dateformatter.js';
+import * as DateManager from './datemanager.js';
 
 export function apply() {
     const btn = 
@@ -36,7 +36,7 @@ function refresh() {
         req.addEventListener('load', event => {
             const newComments = req.response.querySelector('.article-comment .list-area');
             newComments.querySelectorAll('time').forEach(time => {
-                time.innerText = DateFormmatter.getDateStr(time.dateTime);
+                time.innerText = DateManager.getDateStr(time.dateTime);
             });
             if(newComments) {
                 const parent = document.querySelector('.article-comment');

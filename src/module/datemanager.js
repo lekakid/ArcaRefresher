@@ -41,3 +41,14 @@ export function getDateStr(datetime) {
 
     return `${year}-${month}-${day} ${hh}:${mm}:${ss}`;
 }
+
+export function in24(datetime) {
+    const target = new Date(datetime);
+    const criteria = new Date();
+    criteria.setHours(criteria.getHours() - 24);
+    
+    if(target > criteria)
+        return true;
+
+    return false;
+}
