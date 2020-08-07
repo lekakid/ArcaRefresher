@@ -22,15 +22,19 @@ Violentmonkey 확장프로그램 기반 [아카라이브](https://arca.live/) �
 
 설치법
 ------
-![image](https://user-images.githubusercontent.com/1362809/88759826-8d159680-d1a6-11ea-80cd-4bdbcd12a2c6.png)  
-브라우저 확장 프로그램인 Violentmonkey([Chrome](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/))를 설치합니다.
+> ![image](https://user-images.githubusercontent.com/1362809/88759826-8d159680-d1a6-11ea-80cd-4bdbcd12a2c6.png)  
+1. 브라우저 확장 프로그램인 Violentmonkey([Chrome](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/))를 설치합니다.
+2. [배포 중인 스크립트](/../../releases/latest/download/ArcaRefresher.user.js)의 링크를 복사합니다.  
 
-![image](https://user-images.githubusercontent.com/1362809/88760008-07461b00-d1a7-11ea-9b6d-b7a039de339e.png)  
-[배포 중인 스크립트](/../../releases/latest/download/ArcaRefresher.user.js) 열어 설치 확인을 누르고 닫습니다.
+> ![image](https://user-images.githubusercontent.com/1362809/89657584-42afba80-d908-11ea-8007-c0978b5ce064.png)
+3. 확장프로그램의 톱니 버튼을 눌러 대시보드를 열고 스크립트를 추가합니다.
 
-![image](https://user-images.githubusercontent.com/1362809/88633544-1cac3e00-d0f0-11ea-9e99-4b4638ff2cfa.png)
+> ![image](https://user-images.githubusercontent.com/1362809/88760008-07461b00-d1a7-11ea-9b6d-b7a039de339e.png)
+4. 설치 확인을 하고 닫습니다.
 
-나무라이브 채널에 접속한 후에 상단에 설정 메뉴가 생겼는지 확인합니다.
+> ![image](https://user-images.githubusercontent.com/1362809/88633544-1cac3e00-d0f0-11ea-9e99-4b4638ff2cfa.png)
+
+5. 나무라이브 채널에 접속한 후에 상단에 설정 메뉴가 생겼는지 확인합니다.
 
 라이선스
 --------
