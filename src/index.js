@@ -1,6 +1,7 @@
 import * as Setting from './module/setting.js';
 import * as HideNotice from './module/hidenotice.js';
 import * as PreviewFilter from './module/previewfilter.js';
+import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -51,7 +52,7 @@ function initBoard() {
 }
 
 function initArticle() {
-    // TODO : Reply Refresh Button
+    ReplyRefreshBtn.apply();
     // TODO : Add Image Context Menu
     // TODO : Comment Block System
 }
