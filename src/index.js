@@ -2,6 +2,7 @@ import * as Setting from './module/setting.js';
 import * as HideNotice from './module/hidenotice.js';
 import * as HideAvatar from './module/hideavatar.js';
 import * as PreviewFilter from './module/previewfilter.js';
+import * as ArticleContextMenu from './module/articlecontextmenu.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 import * as BlockSystem from './module/blocksystem.js';
 import * as Refrehser from './module/refresher.js';
@@ -57,7 +58,7 @@ function initBoard() {
 function initArticle() {
     ReplyRefreshBtn.apply();
     HideAvatar.apply();
-    // TODO : Add Image Context Menu
+    ArticleContextMenu.apply();
 
     const comments = document.querySelectorAll('.list-area .comment-item');
     BlockSystem.blockComment(comments);
