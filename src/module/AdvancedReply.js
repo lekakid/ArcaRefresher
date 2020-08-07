@@ -61,7 +61,7 @@ export function applyBlockBtn() {
     const emoticons = document.querySelectorAll('.comment-item img, .comment-item video');
 
     emoticons.forEach(item => {
-        const btn = <button class="btn btn-success" data-id="">차단</button>;
+        const btn = <button class="btn btn-success block-emoticon" data-id="">차단</button>;
 
         btn.setAttribute('data-id', item.getAttribute('data-id'));
         item.parentNode.append(btn);
@@ -69,6 +69,7 @@ export function applyBlockBtn() {
 
     async function onClick(event) {
         if(event.target.tagName != 'BUTTON') return;
+        if(!event.target.classList.contains('block-emoticon')) return;
 
         event.preventDefault();
 
