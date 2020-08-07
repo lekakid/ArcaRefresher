@@ -1,5 +1,6 @@
 import * as Setting from './module/setting.js';
 import * as HideNotice from './module/hidenotice.js';
+import * as PreviewFilter from './module/previewfilter.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -39,10 +40,14 @@ import fade from './css/fade.css';
 })();
 
 function initBoard() {
-    // TODO : Refresher
-    // TODO : Preview Filter
     HideNotice.apply();
+
+    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
+    const articles = board.querySelectorAll('a[class="vrow"]');
+    PreviewFilter.filter(articles);
     // TODO : Article Block System
+    
+    // TODO : Refresher
 }
 
 function initArticle() {
