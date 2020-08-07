@@ -6,6 +6,7 @@ import * as ArticleContextMenu from './module/articlecontextmenu.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 import * as BlockSystem from './module/blocksystem.js';
 import * as Refrehser from './module/refresher.js';
+import * as MyImage from './module/myimage.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -66,7 +67,7 @@ function initArticle() {
 
 function initWrite(editMode) {
     if(!editMode) {
-        // TODO : My Image Feature
+        MyImage.apply();
     }
 
     // TODO : Advanced Image Uploader
