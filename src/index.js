@@ -1,9 +1,10 @@
 import * as Setting from './module/setting.js';
 
+import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
 
 (async function() {
-    // TODO : Header Fix
+    document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
     
     const path = location.pathname.split('/');
