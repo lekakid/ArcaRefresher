@@ -4,6 +4,7 @@ import * as HideAvatar from './module/hideavatar.js';
 import * as PreviewFilter from './module/previewfilter.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 import * as BlockSystem from './module/blocksystem.js';
+import * as Refrehser from './module/refresher.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -50,7 +51,7 @@ function initBoard() {
     PreviewFilter.filter(articles);
     BlockSystem.blockArticle(articles);
     
-    // TODO : Refresher
+    Refrehser.run();
 }
 
 function initArticle() {
