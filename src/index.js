@@ -7,6 +7,7 @@ import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
 import * as BlockSystem from './module/blocksystem.js';
 import * as Refrehser from './module/refresher.js';
 import * as MyImage from './module/myimage.js';
+import * as AdvancedImageUpload from './module/advancedimageupload.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -70,5 +71,5 @@ function initWrite(editMode) {
         MyImage.apply();
     }
 
-    // TODO : Advanced Image Uploader
+    AdvancedImageUpload.apply();
 }
