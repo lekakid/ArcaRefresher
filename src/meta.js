@@ -2,7 +2,7 @@
 // @name        Arca Refresher
 // @namespace   LeKAKiD
 // @description Arca Live Extension
-// @downloadURL https://raw.githubusercontent.com/lekakid/ArcaRefresher/master/ArcaRefresher.user.js
+// @downloadURL https://raw.githubusercontent.com/lekakid/ArcaRefresher/releases/latest/download/ArcaRefresher.user.js
 // @homepageURL https://github.com/lekakid/ArcaRefresher
 // @supportURL  https://arca.live/b/namurefresher
 // @match       https://*.arca.live/*
