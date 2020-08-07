@@ -9,6 +9,7 @@ let data = {
     hideNotice: false,
     hideAvatar: true,
     hideContentImage: false,
+    hideModified: false,
     myImage: '',
     filteredCategory: {},
     blockKeyword: [],
@@ -148,6 +149,16 @@ export function setup(channel) {
                                 </div>
                             </div>
                             <div class="row">
+                                <label class="col-xs-3">댓글 수정됨 표시 숨기기</label>
+                                <div class="col-xs-9">
+                                    <select id="hideModified">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <label class="col-xs-3">자짤 관리</label>
                                 <div class="col-xs-9">
                                     <a href="#" id="removeMyImage" class="btn btn-success">삭제</a>
@@ -235,6 +246,7 @@ export function setup(channel) {
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
     settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
     settingWrapper.querySelector('#hideContentImage').value = data.hideContentImage ? 1 : 0;
+    settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
     for(let key in data.filteredCategory[channel]) {
@@ -268,6 +280,7 @@ export function setup(channel) {
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
         data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
         data.hideContentImage = settingWrapper.querySelector('#hideContentImage').value == 1;
+        data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
 
         const category = settingWrapper.querySelectorAll('.category-group input');
         category.forEach(element => {

@@ -1,6 +1,7 @@
 import * as Setting from './module/setting.js';
 import * as HideNotice from './module/hidenotice.js';
 import * as HideAvatar from './module/hideavatar.js';
+import * as HideModified from './module/hidemodified.js';
 import * as PreviewFilter from './module/previewfilter.js';
 import * as ArticleContextMenu from './module/articlecontextmenu.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
@@ -61,6 +62,7 @@ function initArticle() {
     ReplyRefreshBtn.apply();
     HideAvatar.apply();
     ArticleContextMenu.apply();
+    HideModified.apply();
 
     const comments = document.querySelectorAll('.list-area .comment-item');
     BlockSystem.blockComment(comments);
