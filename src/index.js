@@ -3,6 +3,7 @@ import * as HideNotice from './module/hidenotice.js';
 import * as HideAvatar from './module/hideavatar.js';
 import * as PreviewFilter from './module/previewfilter.js';
 import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
+import * as BlockSystem from './module/blocksystem.js';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
@@ -47,7 +48,7 @@ function initBoard() {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"]');
     PreviewFilter.filter(articles);
-    // TODO : Article Block System
+    BlockSystem.blockArticle(articles);
     
     // TODO : Refresher
 }
@@ -56,7 +57,9 @@ function initArticle() {
     ReplyRefreshBtn.apply();
     HideAvatar.apply();
     // TODO : Add Image Context Menu
-    // TODO : Comment Block System
+
+    const comments = document.querySelectorAll('.list-area .comment-item');
+    BlockSystem.blockComment(comments);
 }
 
 function initWrite(editMode) {
