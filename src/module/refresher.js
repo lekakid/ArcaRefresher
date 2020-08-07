@@ -95,7 +95,31 @@ export function run() {
         }
     });
     document.addEventListener('click', event => {
-        if(event.target.tagName == 'INPUT')
+        if(event.target.tagName != 'INPUT')
             return;
+
+        if(event.target.classList.contains('batch-check-all')) {
+            if(event.target.checked) {
+                clearInterval(loader_loop);
+                loader_loop = null;
+            }
+            else {
+                playLoader(loader, refreshTime);
+                loader_loop = setInterval(routine, refreshTime * 1000);
+            }
+        }
+        else {
+            const btns = document.querySelectorAll('.batch-check');
+            for(let btn of btns) {
+                if(btn.checked) {
+                    clearInterval(loader_loop);
+                    loader_loop = null;
+                    return;
+                }
+            }
+
+            playLoader(loader, refreshTime);
+            loader_loop = setInterval(routine, refreshTime * 1000);
+        }
     })
 }
