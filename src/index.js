@@ -1,26 +1,25 @@
-import * as Setting from './module/setting.js';
-import * as HideNotice from './module/hidenotice.js';
-import * as HideAvatar from './module/hideavatar.js';
-import * as HideModified from './module/hidemodified.js';
-import * as PreviewFilter from './module/previewfilter.js';
-import * as ArticleContextMenu from './module/articlecontextmenu.js';
-import * as AdvancedReply from './module/AdvancedReply.js';
-import * as BlockSystem from './module/blocksystem.js';
-import * as Refrehser from './module/refresher.js';
-import * as MyImage from './module/myimage.js';
-import * as AdvancedImageUpload from './module/advancedimageupload.js';
+import * as Setting from './module/setting';
+import * as HideNotice from './module/hidenotice';
+import * as HideAvatar from './module/hideavatar';
+import * as HideModified from './module/hidemodified';
+import * as PreviewFilter from './module/previewfilter';
+import * as ArticleContextMenu from './module/articlecontextmenu';
+import * as AdvancedReply from './module/AdvancedReply';
+import * as BlockSystem from './module/blocksystem';
+import * as Refrehser from './module/refresher';
+import * as MyImage from './module/myimage';
+import * as AdvancedImageUpload from './module/advancedimageupload';
 
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
 
-(async function() {
+(async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
-    
+
     const path = location.pathname.split('/');
 
-    if(path[1] != 'b')
-        return;
+    if(path[1] != 'b') return;
 
     window.channel = path[2] || '';
     window.setting = await Setting.load(window.channel);
@@ -45,7 +44,7 @@ import fade from './css/fade.css';
             initBoard();
         }
     }
-})();
+}());
 
 function initBoard() {
     HideNotice.apply();
@@ -54,7 +53,7 @@ function initBoard() {
     const articles = board.querySelectorAll('a[class="vrow"]');
     PreviewFilter.filter(articles);
     BlockSystem.blockArticle(articles);
-    
+
     Refrehser.run();
 }
 

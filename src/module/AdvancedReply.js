@@ -1,16 +1,17 @@
-import * as DateManager from './datemanager.js';
-import * as BlockSystem from './blocksystem.js';
-import * as Setting from './setting.js';
+import * as DateManager from './datemanager';
+import * as BlockSystem from './blocksystem';
+import * as Setting from './setting';
 
 export function applyRefreshBtn() {
-    const btn = 
+    const btn = (
         <span>
             <span>　</span>
             <button class="btn btn-success">
-                <span class="icon ion-android-refresh"></span>
+                <span class="icon ion-android-refresh" />
                 <span> 새로고침</span>
             </button>
-        </span>;
+        </span>
+    );
     const clonebtn = btn.cloneNode(true);
 
     document.querySelector('.article-comment .title a').insertAdjacentElement('beforebegin', btn);
@@ -30,12 +31,12 @@ export function applyRefreshBtn() {
 }
 
 function refresh() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
         req.open('GET', window.location.href);
         req.responseType = 'document';
-        req.addEventListener('load', event => {
+        req.addEventListener('load', () => {
             const newComments = req.response.querySelector('.article-comment .list-area');
             newComments.querySelectorAll('time').forEach(time => {
                 time.innerText = DateManager.getDateStr(time.dateTime);
@@ -60,19 +61,17 @@ export function applyBlockBtn() {
     const emoticons = document.querySelectorAll('.comment-item img, .comment-item video');
 
     emoticons.forEach(item => {
-        const btn = 
-            <button class="btn btn-success" data-id="">차단</button>;
+        const btn = <button class="btn btn-success" data-id="">차단</button>;
 
         btn.setAttribute('data-id', item.getAttribute('data-id'));
         item.parentNode.append(btn);
     });
 
     async function onClick(event) {
-        if(event.target.tagName != 'BUTTON')
-            return;
+        if(event.target.tagName != 'BUTTON') return;
 
         event.preventDefault();
-        
+
         event.target.innerText = '차단 중...';
         event.target.disabled = true;
         const id = event.target.getAttribute('data-id');
@@ -87,12 +86,12 @@ export function applyBlockBtn() {
 }
 
 function getEmoticonTitle(id) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
         req.open('GET', `/api/emoticon/shop/${id}`);
         req.responseType = 'document';
-        req.addEventListener('load', event => {
+        req.addEventListener('load', () => {
             const name = req.response.querySelector('.article-head .title').innerText;
             resolve(name);
         });
