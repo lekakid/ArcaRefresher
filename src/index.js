@@ -4,7 +4,7 @@ import * as HideAvatar from './module/hideavatar.js';
 import * as HideModified from './module/hidemodified.js';
 import * as PreviewFilter from './module/previewfilter.js';
 import * as ArticleContextMenu from './module/articlecontextmenu.js';
-import * as ReplyRefreshBtn from './module/replyrefreshbtn.js';
+import * as AdvancedReply from './module/AdvancedReply.js';
 import * as BlockSystem from './module/blocksystem.js';
 import * as Refrehser from './module/refresher.js';
 import * as MyImage from './module/myimage.js';
@@ -59,13 +59,15 @@ function initBoard() {
 }
 
 function initArticle() {
-    ReplyRefreshBtn.apply();
+    AdvancedReply.applyRefreshBtn();
+    AdvancedReply.applyBlockBtn();
     HideAvatar.apply();
     ArticleContextMenu.apply();
     HideModified.apply();
 
     const comments = document.querySelectorAll('.list-area .comment-item');
     BlockSystem.blockComment(comments);
+    BlockSystem.blockEmoticon(comments);
 }
 
 function initWrite(editMode) {

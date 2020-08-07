@@ -37,6 +37,14 @@
     border: 1px solid #3d414d;
 }
 
+.wrapper select {
+    overflow: scroll;
+}
+
 .wrapper .align-right {
     text-align: right;
+}
+
+.wrapper .fit {
+    padding: 0 !important;
 }

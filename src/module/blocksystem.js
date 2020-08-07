@@ -39,3 +39,16 @@ export function blockComment(comments) {
         }
     });
 }
+
+export function blockEmoticon(comments) {
+    comments.forEach(item => {
+        const emoticon = item.querySelector('.emoticon');
+
+        if(emoticon) {
+            const id = emoticon.getAttribute('data-id');
+            if(window.setting.blockEmoticon.hasOwnProperty(id)) {
+                emoticon.parentNode.innerText = '[아카콘 차단됨]';
+            }
+        }
+    });
+}

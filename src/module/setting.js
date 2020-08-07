@@ -13,7 +13,8 @@ let data = {
     myImage: '',
     filteredCategory: {},
     blockKeyword: [],
-    blockUser: []
+    blockUser: [],
+    blockEmoticon: {}
 }
 
 const defaultCategory = {
@@ -187,6 +188,18 @@ export function setup(channel) {
                                 </div>
                             </div>
                             <div class="row">
+                                <label class="col-xs-3">아카콘 차단</label>
+                                <div class="col-xs-9">
+                                    <select id="blockEmoticon" size="6" multiple></select>
+                                    <div class="col-xs-10">
+                                        <p class="text-muted">특정 아카콘을 차단합니다. 댓글에서 추가 가능합니다.</p>
+                                    </div>
+                                    <div class={`col-xs-2 ${styles['align-right']} ${styles.fit}`}>
+                                        <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xs-6">
                                     <a href="#" id="resetSetting" class="btn btn-danger">설정 초기화</a>
                                 </div>
@@ -255,6 +268,13 @@ export function setup(channel) {
             if(checkbox) checkbox.checked = true;
         }
     }
+    const emoticonList = settingWrapper.querySelector('#blockEmoticon');
+    for(let key in data.blockEmoticon) {
+        const opt = <option value=''></option>;
+        opt.value = key;
+        opt.innerText = data.blockEmoticon[key];
+        emoticonList.append(opt);
+    }
 
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.preventDefault();
@@ -264,6 +284,14 @@ export function setup(channel) {
         data.myImage = '';
         save();
         alert('삭제되었습니다.');
+    });
+    settingWrapper.querySelector('#removeEmoticon').addEventListener('click', event => {
+        event.preventDefault();
+
+        const removeItems = settingWrapper.querySelector('#blockEmoticon').selectedOptions;
+        while(removeItems.length > 0) {
+            removeItems[0].remove();
+        }
     });
     settingWrapper.querySelector('#resetSetting').addEventListener('click', event => {
         event.preventDefault();
@@ -302,6 +330,13 @@ export function setup(channel) {
         else {
             data.blockKeyword = blockKeyword.split('\n');
         }
+
+        const tmp = {};
+        const blockEmoticons = settingWrapper.querySelectorAll('#blockEmoticon option');
+        blockEmoticons.forEach(item => {
+            tmp[item.value] = item.innerText;
+        });
+        data.blockEmoticon = tmp;
 
         save();
         location.reload();
