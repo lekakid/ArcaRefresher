@@ -1,0 +1,33 @@
+{
+  "name": "arcarefresher",
+  "version": "2.0.0",
+  "description": "",
+  "author": "LeKAKiD",
+  "license": "MIT",
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint"
+    }
+  },
+  "scripts": {
+    "dev": "rollup -wc rollup.conf.js",
+    "clean": "del dist",
+    "build": "npm run build:js",
+    "build:js": "rollup -c rollup.conf.js",
+    "prebuild": "npm run ci && npm run clean",
+    "prepublishOnly": "npm run build",
+    "ci": "npm run lint",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@gera2ld/plaid": "^2.0.5",
+    "@gera2ld/plaid-common-react": "^2.0.5",
+    "@gera2ld/plaid-rollup": "^2.0.5",
+    "del-cli": "^3.0.1",
+    "husky": "^4.2.5"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.11.1"
+  }
+}
