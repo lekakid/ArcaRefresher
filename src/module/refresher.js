@@ -64,8 +64,8 @@ function swapNewArticle(newArticles) {
     return newArticles;
 }
 
-export function run() {
-    const refreshTime = window.setting.refreshTime;
+export function run(channel) {
+    const refreshTime = window.config.refreshTime;
 
     if(refreshTime == 0) return;
 
@@ -75,7 +75,7 @@ export function run() {
     async function routine() {
         const articles = swapNewArticle(await getRefreshArticle());
         playLoader(loader, refreshTime);
-        PreviewFilter.filter(articles);
+        PreviewFilter.filter(articles, channel);
         BlockSystem.blockArticle(articles);
     }
 

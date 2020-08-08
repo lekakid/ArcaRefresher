@@ -1,5 +1,5 @@
 export function apply() {
-    if(window.setting.myImage == '') return;
+    if(window.config.myImage == '') return;
 
     const observer = new MutationObserver(mutations => {
         for(const m of mutations) {
@@ -7,7 +7,7 @@ export function apply() {
                 observer.disconnect();
 
                 const img = <p />;
-                img.innerHTML = window.setting.myImage;
+                img.innerHTML = window.config.myImage;
                 unsafeWindow.summernote.summernote('insertNode', img);
                 break;
             }

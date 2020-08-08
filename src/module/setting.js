@@ -1,9 +1,9 @@
 import styles, { stylesheet } from '../css/setting.module.css';
 
-const MIN_VERSION = '1.5.2';
-const CONVERTIBLE_VERSION = '1.10.0';
+const MIN_VERSION = '1.10.0';
+const CONVERTIBLE_VERSION = '2.0.2';
 
-let data = {
+const defaultData = {
     version: GM.info.script.version,
     refreshTime: 5,
     hideNotice: false,
@@ -14,7 +14,7 @@ let data = {
     filteredCategory: {},
     blockKeyword: [],
     blockUser: [],
-    blockEmoticon: {},
+    blockEmoticon: [],
 };
 
 const defaultCategory = {
@@ -23,31 +23,32 @@ const defaultCategory = {
 };
 
 export async function load(channel) {
-    const loadData = JSON.parse(await GM.getValue('Setting', ''));
+    let loadData = JSON.parse(await GM.getValue('Setting', '{}'));
 
-    if(compareVersion(loadData.version, MIN_VERSION)) return;
-
-    if(compareVersion(loadData.version, CONVERTIBLE_VERSION)) {
-        data = convertSetting(loadData);
-        save();
+    if(compareVersion(loadData.version, MIN_VERSION)) {
+        loadData = defaultData;
+    }
+    else if(compareVersion(loadData.version, CONVERTIBLE_VERSION)) {
+        loadData = convertSetting(loadData);
+        save(loadData);
     }
     else {
-        data = Object.assign(data, loadData);
+        loadData = Object.assign(defaultData, loadData);
     }
 
     if(loadData.filteredCategory[channel] == undefined) {
         loadData.filteredCategory[channel] = Object.assign({}, defaultCategory);
     }
 
-    return data;
+    return loadData;
 }
 
-export function save() {
+export function save(data) {
     GM.setValue('Setting', JSON.stringify(data));
 }
 
 function reset() {
-    GM.setValue('Setting', '');
+    GM.setValue('Setting', '{}');
 }
 
 function compareVersion(a, b) {
@@ -64,27 +65,31 @@ function compareVersion(a, b) {
     return false;
 }
 
-function convertSetting(newData) {
-    const NewSetting = Object.assign({}, Setting);
-    NewSetting.refreshTime = newData.refreshTime.value;
-    NewSetting.hideNotice = newData.hideNotice.value;
-    NewSetting.hideAvatar = newData.hideAvatar.value;
-    NewSetting.hideContentImage = newData.hideContentImage.value;
-    NewSetting.myImage = newData.myImage.value;
+function convertSetting(data) {
+    const result = Object.assign({}, defaultData);
+    result.version = GM.info.script.version;
+    result.refreshTime = data.refreshTime;
+    result.hideNotice = data.hideNotice;
+    result.hideAvatar = data.hideAvatar;
+    result.hideContentImage = data.hideContentImage;
+    result.myImage = data.myImage;
 
     const tmp = {};
-    for(key in newData.filteredCategory) {
-        if({}.hasOwnProperty.call(newData.filteredCategory, key)) {
-            tmp[key] = Object.assign({}, newData.filteredCategory[key]);
+    for(key in data.filteredCategory) {
+        if({}.hasOwnProperty.call(data.filteredCategory, key)) {
+            tmp[key] = Object.assign({}, data.filteredCategory[key]);
         }
     }
 
-    NewSetting.filteredCategory = tmp;
+    result.filteredCategory = tmp;
 
-    return NewSetting;
+    result.blockUser = data.blockUser;
+    result.blockKeyword = data.blockKeyword;
+
+    return result;
 }
 
-export function setup(channel) {
+export function setup(channel, data) {
     const showSettingBtn = (
         <li class="nav-item dropdown">
             <a aria-expanded="false" class="nav-link" href="#">
@@ -270,7 +275,7 @@ export function setup(channel) {
         if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
             const opt = <option value="" />;
             opt.value = key;
-            opt.innerText = data.blockEmoticon[key];
+            opt.innerText = `${data.blockEmoticon[key]}(${key})`;
             emoticonList.append(opt);
         }
     }
@@ -280,7 +285,7 @@ export function setup(channel) {
         if(!confirm('등록한 자짤을 삭제하시겠습니까?')) return;
 
         data.myImage = '';
-        save();
+        save(data);
         alert('삭제되었습니다.');
     });
     settingWrapper.querySelector('#removeEmoticon').addEventListener('click', event => {
@@ -335,7 +340,7 @@ export function setup(channel) {
         });
         data.blockEmoticon = tmp;
 
-        save();
+        save(data);
         location.reload();
     });
     settingWrapper.querySelector('#closeSetting').addEventListener('click', () => {

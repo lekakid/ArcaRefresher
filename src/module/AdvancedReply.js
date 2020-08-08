@@ -78,8 +78,8 @@ export function applyBlockBtn() {
         const id = event.target.getAttribute('data-id');
         const title = await getEmoticonTitle(id);
 
-        window.setting.blockEmoticon[id] = title;
-        Setting.save();
+        window.config.blockEmoticon[id] = title;
+        Setting.save(window.config);
         location.reload();
     }
 

@@ -13,6 +13,8 @@ import * as AdvancedImageUpload from './module/advancedimageupload';
 import headerfix from './css/headerfix.css';
 import fade from './css/fade.css';
 
+let channel;
+
 (async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
@@ -21,9 +23,9 @@ import fade from './css/fade.css';
 
     if(path[1] != 'b') return;
 
-    window.channel = path[2] || '';
-    window.setting = await Setting.load(window.channel);
-    Setting.setup(window.channel);
+    channel = path[2] || '';
+    window.config = await Setting.load(channel);
+    Setting.setup(channel, window.config);
 
     if(path[3] == undefined || path[3] == '') {
         // Board Page
@@ -51,10 +53,10 @@ function initBoard() {
 
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"]');
-    PreviewFilter.filter(articles);
+    PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
 
-    Refrehser.run();
+    Refrehser.run(channel);
 }
 
 function initArticle() {

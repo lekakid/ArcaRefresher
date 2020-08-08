@@ -8,7 +8,7 @@ export function apply() {
     const btn = <a class={`vrow ${styles.button}`} href="#">공지사항 숨기기 ▲</a>;
     document.head.append(<style>{buttonsheet}</style>);
 
-    if(window.setting.hideNotice) {
+    if(window.config.hideNotice) {
         document.head.append(css);
         btn.innerText = '공지사항 펼치기 ▼';
     }
@@ -17,7 +17,7 @@ export function apply() {
     list.querySelector('.head').insertAdjacentElement('afterend', btn);
     btn.addEventListener('click', event => {
         event.preventDefault();
-        if(window.setting.hideNotice) {
+        if(window.config.hideNotice) {
             css.remove();
             btn.innerText = '공지사항 숨기기 ▲';
         }
@@ -25,7 +25,7 @@ export function apply() {
             document.head.append(css);
             btn.innerText = '공지사항 펼치기 ▼';
         }
-        window.setting.hideNotice = !window.setting.hideNotice;
-        Setting.save();
+        window.config.hideNotice = !window.config.hideNotice;
+        Setting.save(window.config);
     });
 }
