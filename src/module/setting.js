@@ -1,7 +1,6 @@
 import styles, { stylesheet } from '../css/setting.module.css';
 
 const MIN_VERSION = '1.10.0';
-const CONVERTIBLE_VERSION = '2.0.2';
 
 const defaultData = {
     version: GM.info.script.version,
@@ -27,10 +26,6 @@ export async function load(channel) {
 
     if(compareVersion(loadData.version, MIN_VERSION)) {
         loadData = defaultData;
-    }
-    else if(compareVersion(loadData.version, CONVERTIBLE_VERSION)) {
-        loadData = convertSetting(loadData);
-        save(loadData);
     }
     else {
         loadData = Object.assign(defaultData, loadData);
@@ -63,30 +58,6 @@ function compareVersion(a, b) {
     }
 
     return false;
-}
-
-function convertSetting(data) {
-    const result = Object.assign({}, defaultData);
-    result.version = GM.info.script.version;
-    result.refreshTime = data.refreshTime;
-    result.hideNotice = data.hideNotice;
-    result.hideAvatar = data.hideAvatar;
-    result.hideMedia = data.hideContentImage;
-    result.myImage = data.myImage;
-
-    const tmp = {};
-    for(key in data.filteredCategory) {
-        if({}.hasOwnProperty.call(data.filteredCategory, key)) {
-            tmp[key] = Object.assign({}, data.filteredCategory[key]);
-        }
-    }
-
-    result.filteredCategory = tmp;
-
-    result.blockUser = data.blockUser;
-    result.blockKeyword = data.blockKeyword;
-
-    return result;
 }
 
 export function setup(channel, data) {
