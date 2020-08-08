@@ -1,14 +1,17 @@
 import * as Setting from './setting';
 
 import noticesheet from '../css/hidenotice.css';
+import avatarsheet from '../css/hideavatar.css';
+import modifiedsheet from '../css/hidemodified.css';
+import mediasheet from '../css/hideMedia.css';
 import styles, { stylesheet as buttonsheet } from '../css/hidenoticebtn.module.css';
 
-export function apply() {
+export function applyNotice() {
     const css = <style>{noticesheet}</style>;
     const btn = <a class={`vrow ${styles.button}`} href="#">공지사항 숨기기 ▲</a>;
     document.head.append(<style>{buttonsheet}</style>);
 
-    if(window.setting.hideNotice) {
+    if(window.config.hideNotice) {
         document.head.append(css);
         btn.innerText = '공지사항 펼치기 ▼';
     }
@@ -17,7 +20,7 @@ export function apply() {
     list.querySelector('.head').insertAdjacentElement('afterend', btn);
     btn.addEventListener('click', event => {
         event.preventDefault();
-        if(window.setting.hideNotice) {
+        if(window.config.hideNotice) {
             css.remove();
             btn.innerText = '공지사항 숨기기 ▲';
         }
@@ -25,7 +28,31 @@ export function apply() {
             document.head.append(css);
             btn.innerText = '공지사항 펼치기 ▼';
         }
-        window.setting.hideNotice = !window.setting.hideNotice;
-        Setting.save();
+        window.config.hideNotice = !window.config.hideNotice;
+        Setting.save(window.config);
     });
+}
+
+export function applyModified() {
+    const css = <style>{modifiedsheet}</style>;
+
+    if(window.config.hideModified) {
+        document.head.append(css);
+    }
+}
+
+export function applyAvatar() {
+    const css = <style>{avatarsheet}</style>;
+
+    if(window.config.hideAvatar) {
+        document.head.append(css);
+    }
+}
+
+export function applyMedia() {
+    const css = <style>{mediasheet}</style>;
+
+    if(window.config.hideMedia) {
+        document.head.append(css);
+    }
 }

@@ -4,8 +4,8 @@ export function blockArticle(articles) {
         const author = item.querySelector('.col-author');
         const preview = item.querySelector('.vrow-preview');
 
-        const userlist = window.setting.blockUser;
-        const keywordlist = window.setting.blockKeyword;
+        const userlist = window.config.blockUser;
+        const keywordlist = window.config.blockKeyword;
 
         const authorAllow = userlist == '' ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const titleAllow = keywordlist == '' ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
@@ -26,8 +26,8 @@ export function blockComment(comments) {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
 
-        const userlist = window.setting.blockUser;
-        const keywordlist = window.setting.blockKeyword;
+        const userlist = window.config.blockUser;
+        const keywordlist = window.config.blockKeyword;
 
         const authorAllow = userlist == '' ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const textAllow = keywordlist == '' ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
@@ -41,12 +41,19 @@ export function blockComment(comments) {
 }
 
 export function blockEmoticon(comments) {
+    let list = [];
+    for(const key in window.config.blockEmoticon) {
+        if({}.hasOwnProperty.call(window.config.blockEmoticon, key)) {
+            list = list.concat(window.config.blockEmoticon[key].bundle);
+        }
+    }
+
     comments.forEach(item => {
         const emoticon = item.querySelector('.emoticon');
 
         if(emoticon) {
             const id = emoticon.getAttribute('data-id');
-            if(window.setting.blockEmoticon.hasOwnProperty(id)) {
+            if(list.indexOf(id) > -1) {
                 emoticon.parentNode.innerText = '[아카콘 차단됨]';
             }
         }
