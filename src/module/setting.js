@@ -14,7 +14,7 @@ const defaultData = {
     filteredCategory: {},
     blockKeyword: [],
     blockUser: [],
-    blockEmoticon: [],
+    blockEmoticon: {},
 };
 
 const defaultCategory = {
@@ -275,7 +275,7 @@ export function setup(channel, data) {
         if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
             const opt = <option value="" />;
             opt.value = key;
-            opt.innerText = `${data.blockEmoticon[key]}(${key})`;
+            opt.innerText = `${data.blockEmoticon[key].name}`;
             emoticonList.append(opt);
         }
     }
@@ -336,7 +336,7 @@ export function setup(channel, data) {
         const tmp = {};
         const blockEmoticons = settingWrapper.querySelectorAll('#blockEmoticon option');
         blockEmoticons.forEach(item => {
-            tmp[item.value] = item.innerText;
+            tmp[item.value] = data.blockEmoticon[item.value];
         });
         data.blockEmoticon = tmp;
 

@@ -41,12 +41,19 @@ export function blockComment(comments) {
 }
 
 export function blockEmoticon(comments) {
+    let list = [];
+    for(const key in window.config.blockEmoticon) {
+        if({}.hasOwnProperty.call(window.config.blockEmoticon, key)) {
+            list = list.concat(window.config.blockEmoticon[key].bundle);
+        }
+    }
+
     comments.forEach(item => {
         const emoticon = item.querySelector('.emoticon');
 
         if(emoticon) {
             const id = emoticon.getAttribute('data-id');
-            if(window.config.blockEmoticon.hasOwnProperty(id)) {
+            if(list.indexOf(id) > -1) {
                 emoticon.parentNode.innerText = '[아카콘 차단됨]';
             }
         }
