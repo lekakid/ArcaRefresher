@@ -26,7 +26,7 @@ function getRefreshArticle() {
         req.open('GET', window.location.href);
         req.responseType = 'document';
         req.addEventListener('load', () => {
-            const articles = req.response.querySelectorAll('a[class="vrow"]');
+            const articles = req.response.querySelectorAll('a[class="vrow"], a.vrow.active');
             resolve(articles);
         });
         req.send();
@@ -35,7 +35,7 @@ function getRefreshArticle() {
 
 function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a[class="vrow"]');
+    const oldArticles = board.querySelectorAll('a[class="vrow"], a.vrow.active');
 
     let i = newArticles.length - 1;
     const oldnum = parseInt(oldArticles[0].pathname.split('/')[3], 10);
