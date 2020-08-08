@@ -1,7 +1,5 @@
 import * as Setting from './module/setting';
-import * as HideNotice from './module/hidenotice';
-import * as HideAvatar from './module/hideavatar';
-import * as HideModified from './module/hidemodified';
+import * as HideSystem from './module/HideSystem';
 import * as PreviewFilter from './module/previewfilter';
 import * as ArticleContextMenu from './module/articlecontextmenu';
 import * as AdvancedReply from './module/AdvancedReply';
@@ -49,7 +47,7 @@ let channel;
 }());
 
 function initBoard() {
-    HideNotice.apply();
+    HideSystem.applyNotice();
 
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"]');
@@ -62,9 +60,10 @@ function initBoard() {
 function initArticle() {
     AdvancedReply.applyRefreshBtn();
     AdvancedReply.applyBlockBtn();
-    HideAvatar.apply();
+    HideSystem.applyAvatar();
+    HideSystem.applyMedia();
     ArticleContextMenu.apply();
-    HideModified.apply();
+    HideSystem.applyModified();
 
     const comments = document.querySelectorAll('.list-area .comment-item');
     BlockSystem.blockComment(comments);

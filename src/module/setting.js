@@ -8,7 +8,7 @@ const defaultData = {
     refreshTime: 5,
     hideNotice: false,
     hideAvatar: true,
-    hideContentImage: false,
+    hideMedia: false,
     hideModified: false,
     myImage: '',
     filteredCategory: {},
@@ -71,7 +71,7 @@ function convertSetting(data) {
     result.refreshTime = data.refreshTime;
     result.hideNotice = data.hideNotice;
     result.hideAvatar = data.hideAvatar;
-    result.hideContentImage = data.hideContentImage;
+    result.hideMedia = data.hideContentImage;
     result.myImage = data.myImage;
 
     const tmp = {};
@@ -132,7 +132,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-xs-3">본문 이미지, 동영상 숨기기</label>
                                 <div class="col-xs-9">
-                                    <select id="hideContentImage">
+                                    <select id="hideMedia">
                                         <option value="0">사용 안 함</option>
                                         <option value="1">사용</option>
                                     </select>
@@ -260,7 +260,7 @@ export function setup(channel, data) {
 
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
     settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
-    settingWrapper.querySelector('#hideContentImage').value = data.hideContentImage ? 1 : 0;
+    settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
     settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
@@ -309,7 +309,7 @@ export function setup(channel, data) {
 
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
         data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
-        data.hideContentImage = settingWrapper.querySelector('#hideContentImage').value == 1;
+        data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
 
         const checkboxes = settingWrapper.querySelectorAll('.category-group input');
