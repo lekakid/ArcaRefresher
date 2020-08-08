@@ -76,17 +76,18 @@ export function applyBlockBtn() {
         event.target.innerText = '차단 중...';
         event.target.disabled = true;
         const id = event.target.getAttribute('data-id');
-        const title = await getEmoticonTitle(id);
+        const [name, bundleID] = await getEmoticonInfo(id);
+        const bundle = await getEmoticonBundle(bundleID);
 
-        window.setting.blockEmoticon[id] = title;
-        Setting.save();
+        window.config.blockEmoticon[bundleID] = { name, bundle };
+        Setting.save(window.config);
         location.reload();
     }
 
     document.querySelector('.article-comment').addEventListener('click', onClick);
 }
 
-function getEmoticonTitle(id) {
+function getEmoticonInfo(id) {
     return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
@@ -94,7 +95,22 @@ function getEmoticonTitle(id) {
         req.responseType = 'document';
         req.addEventListener('load', () => {
             const name = req.response.querySelector('.article-head .title').innerText;
-            resolve(name);
+            const bundleID = req.response.URL.split('/e/')[1];
+            resolve([name, bundleID]);
+        });
+        req.send();
+    });
+}
+
+function getEmoticonBundle(bundleID) {
+    return new Promise((resolve) => {
+        const req = new XMLHttpRequest();
+
+        req.open('GET', `/api/emoticon/${bundleID}`);
+        req.responseType = 'json';
+        req.addEventListener('load', () => {
+            const bundle = Object.keys(req.response);
+            resolve(bundle);
         });
         req.send();
     });

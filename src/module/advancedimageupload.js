@@ -20,7 +20,7 @@ function onDropImage(event) {
 
     let files = event.dataTransfer.files;
 
-    if(files.length < 1) return true;
+    if(files.length < 1) return;
 
     files = Array.from(files);
 
@@ -42,8 +42,6 @@ function onDropImage(event) {
 }
 
 function onPasteImage(event) {
-    event.preventDefault();
-
     const items = event.clipboardData.items;
     const files = [];
 
@@ -58,13 +56,13 @@ function onPasteImage(event) {
         }
     }
 
-    if(files.length == 0) return true;
+    if(files.length == 0) return;
+
+    event.preventDefault();
 
     if(files.length > 0) {
         doUpload(files, 0, files.length);
-        return false;
     }
-    return true;
 }
 
 function doUpload(files, count, total) {

@@ -133,8 +133,8 @@ function onClickContextMenu(event) {
         event.preventDefault();
 
         const html = context.getAttribute('data-html');
-        window.setting.myImage = html;
-        Setting.save();
+        window.config.myImage = html;
+        Setting.save(window.config);
         alert('선택한 짤이 등록되었습니다.\n새 게시물 작성 시 최상단에 자동으로 첨부됩니다.');
     }
 }
