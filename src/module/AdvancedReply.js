@@ -38,10 +38,10 @@ function refresh() {
         req.responseType = 'document';
         req.addEventListener('load', () => {
             const newComments = req.response.querySelector('.article-comment .list-area');
-            newComments.querySelectorAll('time').forEach(time => {
-                time.innerText = DateManager.getDateStr(time.dateTime);
-            });
             if(newComments) {
+                newComments.querySelectorAll('time').forEach(time => {
+                    time.innerText = DateManager.getDateStr(time.dateTime);
+                });
                 const parent = document.querySelector('.article-comment');
                 const list = parent.querySelector('.list-area');
                 if(list) list.remove();
