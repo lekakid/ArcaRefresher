@@ -41,33 +41,38 @@ let channel;
         else {
             // Article View Page
             initArticle();
-            initBoard();
         }
     }
 }());
 
 function initBoard() {
-    HideSystem.applyNotice();
-
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"]');
+
+    HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
-
     Refrehser.run(channel);
 }
 
 function initArticle() {
-    AdvancedReply.applyRefreshBtn();
-    AdvancedReply.applyBlockBtn();
+    const comments = document.querySelectorAll('.list-area .comment-item');
+    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
+    const articles = board.querySelectorAll('a[class="vrow"]');
+
     HideSystem.applyAvatar();
     HideSystem.applyMedia();
     ArticleContextMenu.apply();
     HideSystem.applyModified();
 
-    const comments = document.querySelectorAll('.list-area .comment-item');
+    AdvancedReply.applyRefreshBtn();
+    AdvancedReply.applyBlockBtn();
     BlockSystem.blockComment(comments);
     BlockSystem.blockEmoticon(comments);
+
+    HideSystem.applyNotice();
+    PreviewFilter.filter(articles, channel);
+    BlockSystem.blockArticle(articles);
 }
 
 function initWrite(editMode) {
