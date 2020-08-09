@@ -1,8 +1,8 @@
-import * as DateManager from './datemanager';
-import * as PreviewFilter from './previewfilter';
-import * as BlockSystem from './blocksystem';
+import * as DateManager from './DateManager';
+import * as PreviewFilter from './PreviewFilter';
+import * as BlockSystem from './BlockSystem';
 
-import styles, { stylesheet } from '../css/refresher.module.css';
+import styles, { stylesheet } from '../css/Refresher.module.css';
 
 function initLoader() {
     document.head.append(<style>{stylesheet}</style>);

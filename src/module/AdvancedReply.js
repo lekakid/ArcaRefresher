@@ -1,6 +1,6 @@
-import * as DateManager from './datemanager';
-import * as BlockSystem from './blocksystem';
-import * as Setting from './setting';
+import * as DateManager from './DateManager';
+import * as BlockSystem from './BlockSystem';
+import * as Setting from './Setting';
 
 export function applyRefreshBtn() {
     const btn = (

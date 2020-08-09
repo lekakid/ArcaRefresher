@@ -1,4 +1,4 @@
-import styles, { stylesheet } from '../css/setting.module.css';
+import styles, { stylesheet } from '../css/Setting.module.css';
 
 const MIN_VERSION = '1.10.0';
 

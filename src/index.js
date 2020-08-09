@@ -1,15 +1,15 @@
-import * as Setting from './module/setting';
+import * as Setting from './module/Setting';
 import * as HideSystem from './module/HideSystem';
-import * as PreviewFilter from './module/previewfilter';
-import * as ArticleContextMenu from './module/articlecontextmenu';
+import * as PreviewFilter from './module/PreviewFilter';
+import * as ArticleContextMenu from './module/ArticleContextMenu';
 import * as AdvancedReply from './module/AdvancedReply';
-import * as BlockSystem from './module/blocksystem';
-import * as Refrehser from './module/refresher';
-import * as MyImage from './module/myimage';
-import * as AdvancedImageUpload from './module/advancedimageupload';
+import * as BlockSystem from './module/BlockSystem';
+import * as Refrehser from './module/Refresher';
+import * as MyImage from './module/MyImage';
+import * as AdvancedImageUpload from './module/AdvancedImageUpload';
 
-import headerfix from './css/headerfix.css';
-import fade from './css/fade.css';
+import headerfix from './css/HeaderFix.css';
+import fade from './css/Fade.css';
 
 let channel;
 
