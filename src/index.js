@@ -69,6 +69,7 @@ function initArticle() {
 
     AdvancedReply.applyRefreshBtn();
     AdvancedReply.applyBlockBtn();
+    AdvancedReply.applyFullAreaRereply();
     BlockSystem.blockComment(comments);
     BlockSystem.blockEmoticon(comments);
 

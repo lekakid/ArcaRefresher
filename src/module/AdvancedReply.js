@@ -72,6 +72,7 @@ export function applyBlockBtn() {
         if(!event.target.classList.contains('block-emoticon')) return;
 
         event.preventDefault();
+        event.stopPropagation();
 
         event.target.innerText = '차단 중...';
         event.target.disabled = true;
@@ -114,4 +115,24 @@ function getEmoticonBundle(bundleID) {
         });
         req.send();
     });
+}
+
+export function applyFullAreaRereply() {
+    function onClick(event) {
+        if(event.target.tagName == 'IMG' || event.target.tagName == 'VIDEO' || event.target.tagName == 'A') return;
+        if(event.target.classList.contains('block-emoticon')) return;
+
+        for(let i = 0; i < 5; i += 1) {
+            const element = event.path[i];
+            if(element.classList.contains('message')) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                element.parentNode.querySelector('.reply-link').click();
+                return;
+            }
+        }
+    }
+
+    document.querySelector('.article-comment').addEventListener('click', onClick);
 }
