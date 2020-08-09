@@ -37,28 +37,26 @@ function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const oldArticles = board.querySelectorAll('a[class="vrow"], a.vrow.active');
 
-    let i = newArticles.length - 1;
-    const oldnum = parseInt(oldArticles[0].pathname.split('/')[3], 10);
+    const oldnums = [];
+    for(const o of oldArticles) {
+        oldnums.push(o.pathname.split('/')[3]);
+        o.remove();
+    }
 
-    while(i > -1) {
-        const newnum = parseInt(newArticles[i].pathname.split('/')[3], 10);
-        if(newnum > oldnum) {
-            newArticles[i].setAttribute('style', `animation: ${styles.light} 0.3s`);
+    for(const n of newArticles) {
+        if(oldnums.indexOf(n.pathname.split('/')[3]) == -1) {
+            n.setAttribute('style', `animation: ${styles.light} 0.5s`);
         }
 
-        const lazywrapper = newArticles[i].querySelector('noscript');
+        const lazywrapper = n.querySelector('noscript');
         if(lazywrapper) lazywrapper.outerHTML = lazywrapper.innerHTML;
 
-        const time = newArticles[i].querySelector('time');
+        const time = n.querySelector('time');
         if(DateManager.in24(time.dateTime)) {
             time.innerText = DateManager.getTimeStr(time.dateTime);
         }
-        i -= 1;
     }
 
-    oldArticles.forEach(item => {
-        item.remove();
-    });
     board.append(...newArticles);
 
     return newArticles;
