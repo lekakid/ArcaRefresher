@@ -72,7 +72,6 @@ export function applyBlockBtn() {
         if(!event.target.classList.contains('block-emoticon')) return;
 
         event.preventDefault();
-        event.stopPropagation();
 
         event.target.innerText = '차단 중...';
         event.target.disabled = true;
@@ -126,7 +125,6 @@ export function applyFullAreaRereply() {
             const element = event.path[i];
             if(element.classList.contains('message')) {
                 event.preventDefault();
-                event.stopPropagation();
 
                 element.parentNode.querySelector('.reply-link').click();
                 return;
