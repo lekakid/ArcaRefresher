@@ -1,11 +1,9 @@
 @keyframes light{
     0% {
-        background-color: rgba(240, 248, 255, 1);
-        opacity:1
+        background-color: rgb(246, 247, 239);
     }
     100% {
-        background-color: rgba(240, 248, 255, 0);
-        opacity:1
+        background-color: rgba(255, 255, 255, 0);
     }
 
 }

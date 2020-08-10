@@ -1,8 +1,8 @@
-import * as DateManager from './datemanager';
-import * as PreviewFilter from './previewfilter';
-import * as BlockSystem from './blocksystem';
+import * as DateManager from './DateManager';
+import * as PreviewFilter from './PreviewFilter';
+import * as BlockSystem from './BlockSystem';
 
-import styles, { stylesheet } from '../css/refresher.module.css';
+import styles, { stylesheet } from '../css/Refresher.module.css';
 
 function initLoader() {
     document.head.append(<style>{stylesheet}</style>);
@@ -26,7 +26,7 @@ function getRefreshArticle() {
         req.open('GET', window.location.href);
         req.responseType = 'document';
         req.addEventListener('load', () => {
-            const articles = req.response.querySelectorAll('a[class="vrow"], a.vrow.active');
+            const articles = req.response.querySelectorAll('a[class="vrow"]');
             resolve(articles);
         });
         req.send();
@@ -35,30 +35,28 @@ function getRefreshArticle() {
 
 function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a[class="vrow"], a.vrow.active');
+    const oldArticles = board.querySelectorAll('a[class="vrow"]');
 
-    let i = newArticles.length - 1;
-    const oldnum = parseInt(oldArticles[0].pathname.split('/')[3], 10);
+    const oldnums = [];
+    for(const o of oldArticles) {
+        oldnums.push(o.pathname.split('/')[3]);
+        o.remove();
+    }
 
-    while(i > -1) {
-        const newnum = parseInt(newArticles[i].pathname.split('/')[3], 10);
-        if(newnum > oldnum) {
-            newArticles[i].setAttribute('style', `animation: ${styles.light} 0.3s`);
+    for(const n of newArticles) {
+        if(oldnums.indexOf(n.pathname.split('/')[3]) == -1) {
+            n.setAttribute('style', `animation: ${styles.light} 0.5s`);
         }
 
-        const lazywrapper = newArticles[i].querySelector('noscript');
+        const lazywrapper = n.querySelector('noscript');
         if(lazywrapper) lazywrapper.outerHTML = lazywrapper.innerHTML;
 
-        const time = newArticles[i].querySelector('time');
+        const time = n.querySelector('time');
         if(DateManager.in24(time.dateTime)) {
             time.innerText = DateManager.getTimeStr(time.dateTime);
         }
-        i -= 1;
     }
 
-    oldArticles.forEach(item => {
-        item.remove();
-    });
     board.append(...newArticles);
 
     return newArticles;

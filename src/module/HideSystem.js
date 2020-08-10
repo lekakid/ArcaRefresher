@@ -1,10 +1,10 @@
-import * as Setting from './setting';
+import * as Setting from './Setting';
 
-import noticesheet from '../css/hidenotice.css';
-import avatarsheet from '../css/hideavatar.css';
-import modifiedsheet from '../css/hidemodified.css';
-import mediasheet from '../css/hideMedia.css';
-import styles, { stylesheet as buttonsheet } from '../css/hidenoticebtn.module.css';
+import noticesheet from '../css/HideNotice.css';
+import avatarsheet from '../css/HideAvatar.css';
+import modifiedsheet from '../css/HideModified.css';
+import mediasheet from '../css/HideMedia.css';
+import styles, { stylesheet as buttonsheet } from '../css/HideNoticeBtn.module.css';
 
 export function applyNotice() {
     const css = <style>{noticesheet}</style>;

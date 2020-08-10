@@ -1,6 +1,6 @@
-import * as Setting from './setting';
+import * as Setting from './Setting';
 
-import styles, { stylesheet } from '../css/articlecontextmenu.module.css';
+import styles, { stylesheet } from '../css/ArticleContextMenu.module.css';
 
 export function apply() {
     document.head.append(<style>{stylesheet}</style>);
@@ -57,7 +57,6 @@ export function apply() {
         }
 
         event.preventDefault();
-        event.stopPropagation();
         wrapper.classList.remove('hidden');
 
         context.setAttribute('data-url', event.target.src);

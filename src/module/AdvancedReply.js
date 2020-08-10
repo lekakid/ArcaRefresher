@@ -1,6 +1,6 @@
-import * as DateManager from './datemanager';
-import * as BlockSystem from './blocksystem';
-import * as Setting from './setting';
+import * as DateManager from './DateManager';
+import * as BlockSystem from './BlockSystem';
+import * as Setting from './Setting';
 
 export function applyRefreshBtn() {
     const btn = (
@@ -38,10 +38,10 @@ function refresh() {
         req.responseType = 'document';
         req.addEventListener('load', () => {
             const newComments = req.response.querySelector('.article-comment .list-area');
-            newComments.querySelectorAll('time').forEach(time => {
-                time.innerText = DateManager.getDateStr(time.dateTime);
-            });
             if(newComments) {
+                newComments.querySelectorAll('time').forEach(time => {
+                    time.innerText = DateManager.getDateStr(time.dateTime);
+                });
                 const parent = document.querySelector('.article-comment');
                 const list = parent.querySelector('.list-area');
                 if(list) list.remove();
@@ -114,4 +114,23 @@ function getEmoticonBundle(bundleID) {
         });
         req.send();
     });
+}
+
+export function applyFullAreaRereply() {
+    function onClick(event) {
+        if(event.target.tagName == 'IMG' || event.target.tagName == 'VIDEO' || event.target.tagName == 'A') return;
+        if(event.target.classList.contains('block-emoticon')) return;
+
+        for(let i = 0; i < 5; i += 1) {
+            const element = event.path[i];
+            if(element.classList.contains('message')) {
+                event.preventDefault();
+
+                element.parentNode.querySelector('.reply-link').click();
+                return;
+            }
+        }
+    }
+
+    document.querySelector('.article-comment').addEventListener('click', onClick);
 }
