@@ -57,6 +57,7 @@ export function apply() {
         }
 
         event.preventDefault();
+        event.stopPropagation();
         wrapper.classList.remove('hidden');
 
         context.setAttribute('data-url', event.target.src);
