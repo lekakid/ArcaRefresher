@@ -293,7 +293,11 @@ export function setup(channel, data) {
             data.blockUser = [];
         }
         else {
-            data.blockUser = blockUser.split('\n');
+            let tmp = blockUser.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.blockUser = tmp;
         }
 
         const blockKeyword = settingWrapper.querySelector('#blockKeyword').value;
@@ -301,7 +305,11 @@ export function setup(channel, data) {
             data.blockKeyword = [];
         }
         else {
-            data.blockKeyword = blockKeyword.split('\n');
+            let tmp = blockKeyword.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.blockKeyword = tmp;
         }
 
         const tmp = {};
