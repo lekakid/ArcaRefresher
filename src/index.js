@@ -62,7 +62,7 @@ function initBoard() {
 function initArticle() {
     const comments = document.querySelectorAll('.list-area .comment-item');
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a[class="vrow"]');
+    const articles = board.querySelectorAll('a[class="vrow"], .vrow.active');
 
     IPScouter.applyAuthor();
     HideSystem.applyAvatar();
