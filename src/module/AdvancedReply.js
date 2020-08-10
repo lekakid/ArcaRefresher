@@ -118,8 +118,21 @@ function getEmoticonBundle(bundleID) {
 
 export function applyFullAreaRereply() {
     function onClick(event) {
-        if(event.target.tagName == 'IMG' || event.target.tagName == 'VIDEO' || event.target.tagName == 'A') return;
-        if(event.target.classList.contains('block-emoticon')) return;
+        switch(event.target.tagName) {
+        case 'IMG':
+        case 'VIDEO':
+        case 'A':
+        case 'BUTTON':
+        case 'TEXTAREA':
+            return;
+        default:
+            break;
+        }
+
+        for(let i = 0; i < 5; i += 1) {
+            const element = event.path[i];
+            if(element.classList.contains('reply-form')) return;
+        }
 
         for(let i = 0; i < 5; i += 1) {
             const element = event.path[i];

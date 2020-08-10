@@ -12,7 +12,7 @@ function onArticle(event) {
     // R 댓글 목록보기
     // W 댓글 입력 포커스
 
-    if(event.target.nodeName == 'TEXTAREA') return;
+    if(event.target.nodeName == 'INPUT' || event.target.nodeName == 'TEXTAREA') return;
 
     switch(event.code) {
     case 'KeyA':
@@ -42,6 +42,8 @@ function onArticle(event) {
 function onBoard(event) {
     // W 게시물 쓰기
     // E 헤드라인
+
+    if(event.target.nodeName == 'INPUT') return;
 
     switch(event.code) {
     case 'KeyW': {
