@@ -1,4 +1,6 @@
 export function apply(view) {
+    if(!window.config.useShortcut) return;
+
     if(view == 'article') {
         document.addEventListener('keydown', onArticle);
     }
