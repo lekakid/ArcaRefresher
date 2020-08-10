@@ -49,7 +49,7 @@ function refresh() {
                 const items = newComments.querySelectorAll('.comment-item');
                 BlockSystem.blockComment(items);
                 BlockSystem.blockEmoticon(items);
-                applyBlockBtn();
+                applyEmoticonBlockBtn();
             }
             resolve();
         });
@@ -57,24 +57,35 @@ function refresh() {
     });
 }
 
-export function applyBlockBtn() {
-    const emoticons = document.querySelectorAll('.comment-item img, .comment-item video');
+export function applyEmoticonBlockBtn() {
+    const commentArea = document.querySelector('.article-comment');
+    const emoticons = commentArea.querySelectorAll('.emoticon');
 
     emoticons.forEach(item => {
-        const btn = <button class="btn btn-success block-emoticon" data-id="">차단</button>;
+        const btn = (
+            <span>
+                {'\n | '}
+                <a href="#" class="block-emoticon" data-id="">
+                    <span class="ion-ios-close" />
+                    {' 아카콘 차단'}
+                </a>
+            </span>
+        );
+        btn.querySelector('a').setAttribute('data-id', item.getAttribute('data-id'));
 
-        btn.setAttribute('data-id', item.getAttribute('data-id'));
-        item.parentNode.append(btn);
+        const commentHeader = item.parentNode.parentNode;
+        commentHeader.querySelector('time').insertAdjacentElement('afterend', btn);
+        btn.outerHTML = btn.innerHTML;
     });
 
     async function onClick(event) {
-        if(event.target.tagName != 'BUTTON') return;
+        if(event.target.tagName != 'A') return;
         if(!event.target.classList.contains('block-emoticon')) return;
 
         event.preventDefault();
 
         event.target.innerText = '차단 중...';
-        event.target.disabled = true;
+        event.target.classList.remove('block-emoticon');
         const id = event.target.getAttribute('data-id');
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);

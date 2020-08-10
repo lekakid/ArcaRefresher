@@ -68,10 +68,10 @@ function initArticle() {
     HideSystem.applyModified();
 
     AdvancedReply.applyRefreshBtn();
-    AdvancedReply.applyBlockBtn();
-    AdvancedReply.applyFullAreaRereply();
     BlockSystem.blockComment(comments);
     BlockSystem.blockEmoticon(comments);
+    AdvancedReply.applyEmoticonBlockBtn();
+    AdvancedReply.applyFullAreaRereply();
 
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
