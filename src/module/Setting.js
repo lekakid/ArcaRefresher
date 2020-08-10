@@ -5,6 +5,7 @@ const MIN_VERSION = '1.10.0';
 const defaultData = {
     version: GM.info.script.version,
     refreshTime: 5,
+    useShortcut: false,
     hideNotice: false,
     hideAvatar: true,
     hideMedia: false,
@@ -88,6 +89,20 @@ export function setup(channel, data) {
                                         <option value="10">10초</option>
                                     </select>
                                     <p class="text-muted">일정 시간마다 게시물 목록을 갱신합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">단축키 사용 (Beta)</label>
+                                <div class="col-xs-9">
+                                    <select id="useShortcut">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">
+                                        채널 활동을 빠르게 할 수 있는 단축키를 사용합니다.<br />
+                                        게시판에서 : (E) 헤드라인 / (W) 게시물 쓰기<br />
+                                        게시물에서 : (A) 게시판으로 / (W) 댓글 작성란으로 스크롤 / (R) 댓글 목록으로 스크롤
+                                    </p>
                                 </div>
                             </div>
                             <div class="row">
@@ -230,6 +245,7 @@ export function setup(channel, data) {
     });
 
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
+    settingWrapper.querySelector('#useShortcut').value = data.useShortcut ? 1 : 0;
     settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
     settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
     settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
@@ -279,6 +295,7 @@ export function setup(channel, data) {
         event.preventDefault();
 
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
+        data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 1;
         data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
         data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
