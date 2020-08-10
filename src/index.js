@@ -7,6 +7,7 @@ import * as BlockSystem from './module/BlockSystem';
 import * as Refrehser from './module/Refresher';
 import * as MyImage from './module/MyImage';
 import * as AdvancedImageUpload from './module/AdvancedImageUpload';
+import * as ShortCut from './module/ShortCut';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -53,6 +54,7 @@ function initBoard() {
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
     Refrehser.run(channel);
+    ShortCut.apply('board');
 }
 
 function initArticle() {
@@ -73,6 +75,7 @@ function initArticle() {
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
+    ShortCut.apply('article');
 }
 
 function initWrite(editMode) {
