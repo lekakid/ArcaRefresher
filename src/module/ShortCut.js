@@ -43,7 +43,7 @@ function onBoard(event) {
     // W 게시물 쓰기
     // E 헤드라인
 
-    if(event.target.nodeName == 'INPUT') return;
+    if(event.target.nodeName == 'INPUT' || event.target.nodeName == 'TEXTAREA') return;
 
     switch(event.code) {
     case 'KeyW': {
