@@ -38,7 +38,7 @@ function getRefreshArticle() {
 
 function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a[class="vrow"]');
+    const oldArticles = board.querySelectorAll('a.vrow:not(.notice)');
 
     const oldnums = [];
     for(const o of oldArticles) {
