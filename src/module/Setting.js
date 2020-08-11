@@ -5,6 +5,7 @@ const MIN_VERSION = '1.10.0';
 const defaultData = {
     version: GM.info.script.version,
     refreshTime: 5,
+    hideRefresher: false,
     useShortcut: false,
     hideNotice: false,
     hideAvatar: true,
@@ -90,6 +91,16 @@ export function setup(channel, data) {
                                         <option value="10">10초</option>
                                     </select>
                                     <p class="text-muted">일정 시간마다 게시물 목록을 갱신합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">새로고침 애니메이션 숨김</label>
+                                <div class="col-xs-9">
+                                    <select id="hideRefresher">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">자동 새로고침 애니메이션을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -256,6 +267,7 @@ export function setup(channel, data) {
     });
 
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
+    settingWrapper.querySelector('#hideRefresher').value = data.hideRefresher ? 1 : 0;
     settingWrapper.querySelector('#useShortcut').value = data.useShortcut ? 1 : 0;
     settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
     settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
@@ -307,6 +319,7 @@ export function setup(channel, data) {
         event.preventDefault();
 
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
+        data.hideRefresher = settingWrapper.querySelector('#hideRefresher').value == 1;
         data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 1;
         data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
         data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;

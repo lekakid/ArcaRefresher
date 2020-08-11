@@ -14,10 +14,12 @@ function initLoader() {
 }
 
 function playLoader(loader, time) {
-    loader.removeAttribute('style');
-    setTimeout(() => {
-        loader.setAttribute('style', `animation: ${styles.loaderspin} ${time}s ease-in-out`);
-    }, 50);
+    if(loader) {
+        loader.removeAttribute('style');
+        setTimeout(() => {
+            loader.setAttribute('style', `animation: ${styles.loaderspin} ${time}s ease-in-out`);
+        }, 50);
+    }
 }
 
 function getRefreshArticle() {
@@ -68,7 +70,10 @@ export function run(channel) {
 
     if(refreshTime == 0) return;
 
-    const loader = initLoader();
+    let loader = null;
+    if(!window.config.hideRefresher) {
+        loader = initLoader();
+    }
     playLoader(loader, refreshTime);
 
     async function routine() {
