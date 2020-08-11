@@ -144,6 +144,7 @@ export function applyFullAreaRereply() {
 
         for(let i = 0; i < 5; i += 1) {
             const element = event.path[i];
+            if(element.classList.contains('btn-more')) return;
             if(element.classList.contains('reply-form')) return;
         }
 
