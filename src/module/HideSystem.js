@@ -8,25 +8,26 @@ import sidemenusheet from '../css/HideSideMenu.css';
 import styles, { stylesheet as buttonsheet } from '../css/HideNoticeBtn.module.css';
 
 export function applyNotice() {
-    const css = <style>{noticesheet}</style>;
-    const btn = <a class={`vrow ${styles.button}`} href="#">공지사항 숨기기 ▲</a>;
+    document.head.append(<style>{noticesheet}</style>);
     document.head.append(<style>{buttonsheet}</style>);
-
-    if(window.config.hideNotice) {
-        document.head.append(css);
-        btn.innerText = '공지사항 펼치기 ▼';
-    }
+    const btn = <a class={styles.button} href="#">공지사항 펼치기 ▼</a>;
 
     const list = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     list.querySelector('.head').insertAdjacentElement('afterend', btn);
+
+    if(!window.config.hideNotice) {
+        list.classList.add('show-notice');
+        btn.innerText = '공지사항 숨기기 ▼';
+    }
+
     btn.addEventListener('click', event => {
         event.preventDefault();
         if(window.config.hideNotice) {
-            css.remove();
+            list.classList.add('show-notice');
             btn.innerText = '공지사항 숨기기 ▲';
         }
         else {
-            document.head.append(css);
+            list.classList.remove('show-notice');
             btn.innerText = '공지사항 펼치기 ▼';
         }
         window.config.hideNotice = !window.config.hideNotice;
@@ -35,33 +36,25 @@ export function applyNotice() {
 }
 
 export function applyModified() {
-    const css = <style>{modifiedsheet}</style>;
-
     if(window.config.hideModified) {
-        document.head.append(css);
+        document.head.append(<style>{modifiedsheet}</style>);
     }
 }
 
 export function applyAvatar() {
-    const css = <style>{avatarsheet}</style>;
-
     if(window.config.hideAvatar) {
-        document.head.append(css);
+        document.head.append(<style>{avatarsheet}</style>);
     }
 }
 
 export function applyMedia() {
-    const css = <style>{mediasheet}</style>;
-
     if(window.config.hideMedia) {
-        document.head.append(css);
+        document.head.append(<style>{mediasheet}</style>);
     }
 }
 
 export function applySideMenu() {
-    const css = <style>{sidemenusheet}</style>;
-
     if(window.config.hideSideMenu) {
-        document.head.append(css);
+        document.head.append(<style>{sidemenusheet}</style>);
     }
 }
