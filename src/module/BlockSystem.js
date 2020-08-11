@@ -1,24 +1,52 @@
 export function blockArticle(articles) {
+    if(document.readyState != 'complete') {
+        window.addEventListener('load', () => {
+            blockArticle(articles);
+        });
+        return;
+    }
+
+    const list = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
+
+    let toggleBtn = document.querySelector('.vrow.frontend-header');
+    if(toggleBtn == null) {
+        toggleBtn = <div class="vrow frontend-header"><span class="mute-count">뮤트 카운트</span></div>;
+        toggleBtn.addEventListener('click', () => {
+            if(list.classList.contains('show-muted')) {
+                list.classList.remove('show-muted');
+            }
+            else {
+                list.classList.add('show-muted');
+            }
+        });
+    }
+
+    const live = unsafeWindow.LiveConfig.mute;
+
+    const userlist = live.users.length == 0 ? window.config.blockUser : live.users;
+    const keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
+
+    let muteCount = 0;
+
     articles.forEach(item => {
         const title = item.querySelector('.col-title');
         const author = item.querySelector('.col-author');
-        const preview = item.querySelector('.vrow-preview');
 
-        const userlist = window.config.blockUser;
-        const keywordlist = window.config.blockKeyword;
+        const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
+        const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
 
-        const authorAllow = userlist == '' ? false : new RegExp(userlist.join('|')).test(author.innerText);
-        const titleAllow = keywordlist == '' ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
-
-        if(titleAllow || authorAllow) {
-            item.setAttribute('data-url', item.href);
-            item.removeAttribute('href');
-            item.style = 'color: #777';
-            title.innerText = '차단된 게시물입니다.';
-            author.innerText = '차단';
-            if(preview) preview.remove();
+        if((titleAllow || authorAllow) && !item.classList.contains('muted')) {
+            item.classList.add('muted');
+            muteCount += 1;
         }
     });
+
+    if(muteCount > 0) {
+        if(toggleBtn.parentNode == null) {
+            list.prepend(toggleBtn);
+        }
+        toggleBtn.querySelector('.mute-count').innerText = `${muteCount}개 글 뮤트됨`;
+    }
 }
 
 export function blockComment(comments) {
@@ -29,8 +57,8 @@ export function blockComment(comments) {
         const userlist = window.config.blockUser;
         const keywordlist = window.config.blockKeyword;
 
-        const authorAllow = userlist == '' ? false : new RegExp(userlist.join('|')).test(author.innerText);
-        const textAllow = keywordlist == '' ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
+        const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
+        const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
 
         if(textAllow || authorAllow) {
             author.innerText = '차단';

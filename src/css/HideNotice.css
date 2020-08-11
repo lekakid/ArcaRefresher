@@ -1,3 +1,7 @@
-.article-list .notice {
-    display: none !important;
+.body .board-article .article-list .list-table a.notice {
+    display: none;
+}
+
+.body .board-article .article-list .list-table.show-notice a.notice {
+    display: flex;
 }

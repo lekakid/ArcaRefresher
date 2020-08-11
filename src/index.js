@@ -8,6 +8,7 @@ import * as Refrehser from './module/Refresher';
 import * as MyImage from './module/MyImage';
 import * as AdvancedImageUpload from './module/AdvancedImageUpload';
 import * as ShortCut from './module/ShortCut';
+import * as IPScouter from './module/IPScouter';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -48,11 +49,14 @@ let channel;
 
 function initBoard() {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a[class="vrow"]');
+    const articles = board.querySelectorAll('a.vrow:not(.notice)');
+
+    HideSystem.applySideMenu();
 
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
+    IPScouter.applyArticles(articles);
     Refrehser.run(channel);
     ShortCut.apply('board');
 }
@@ -60,26 +64,33 @@ function initBoard() {
 function initArticle() {
     const comments = document.querySelectorAll('.list-area .comment-item');
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a[class="vrow"]');
+    const articles = board.querySelectorAll('a.vrow:not(.notice)');
 
+    HideSystem.applySideMenu();
+
+    IPScouter.applyAuthor();
     HideSystem.applyAvatar();
     HideSystem.applyMedia();
     ArticleContextMenu.apply();
     HideSystem.applyModified();
 
     AdvancedReply.applyRefreshBtn();
-    AdvancedReply.applyBlockBtn();
-    AdvancedReply.applyFullAreaRereply();
     BlockSystem.blockComment(comments);
     BlockSystem.blockEmoticon(comments);
+    IPScouter.applyComments(comments);
+    AdvancedReply.applyEmoticonBlockBtn();
+    AdvancedReply.applyFullAreaRereply();
 
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
+    IPScouter.applyArticles(articles);
     ShortCut.apply('article');
 }
 
 function initWrite(editMode) {
+    HideSystem.applySideMenu();
+
     if(!editMode) {
         MyImage.apply();
     }

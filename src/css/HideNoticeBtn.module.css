@@ -1,11 +1,12 @@
-.button {
-    display: flex !important;
-    justify-content: center;
-    width: 100%;
-    background-color: #eee !important;
-    color: #000 !important;
-}
-
+.button,
+.button:hover,
 .button:focus {
-    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    padding: .2rem .3rem;
+    background-color: #f3f3f3;
+    color: #000;
+    text-decoration: none !important;
 }

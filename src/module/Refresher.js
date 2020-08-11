@@ -1,6 +1,7 @@
 import * as DateManager from './DateManager';
 import * as PreviewFilter from './PreviewFilter';
 import * as BlockSystem from './BlockSystem';
+import * as IPScouter from './IPScouter';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
 
@@ -13,10 +14,12 @@ function initLoader() {
 }
 
 function playLoader(loader, time) {
-    loader.removeAttribute('style');
-    setTimeout(() => {
-        loader.setAttribute('style', `animation: ${styles.loaderspin} ${time}s ease-in-out`);
-    }, 50);
+    if(loader) {
+        loader.removeAttribute('style');
+        setTimeout(() => {
+            loader.setAttribute('style', `animation: ${styles.loaderspin} ${time}s ease-in-out`);
+        }, 50);
+    }
 }
 
 function getRefreshArticle() {
@@ -35,7 +38,7 @@ function getRefreshArticle() {
 
 function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a[class="vrow"]');
+    const oldArticles = board.querySelectorAll('a.vrow:not(.notice)');
 
     const oldnums = [];
     for(const o of oldArticles) {
@@ -67,7 +70,10 @@ export function run(channel) {
 
     if(refreshTime == 0) return;
 
-    const loader = initLoader();
+    let loader = null;
+    if(!window.config.hideRefresher) {
+        loader = initLoader();
+    }
     playLoader(loader, refreshTime);
 
     async function routine() {
@@ -75,6 +81,7 @@ export function run(channel) {
         playLoader(loader, refreshTime);
         PreviewFilter.filter(articles, channel);
         BlockSystem.blockArticle(articles);
+        IPScouter.applyArticles(articles);
     }
 
     let loadLoop = null;

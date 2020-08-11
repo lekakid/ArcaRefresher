@@ -5,11 +5,13 @@ const MIN_VERSION = '1.10.0';
 const defaultData = {
     version: GM.info.script.version,
     refreshTime: 5,
+    hideRefresher: false,
     useShortcut: false,
     hideNotice: false,
     hideAvatar: true,
     hideMedia: false,
     hideModified: false,
+    hideSideMenu: false,
     myImage: '',
     filteredCategory: {},
     blockKeyword: [],
@@ -92,6 +94,16 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
+                                <label class="col-xs-3">새로고침 애니메이션 숨김</label>
+                                <div class="col-xs-9">
+                                    <select id="hideRefresher">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">자동 새로고침 애니메이션을 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <label class="col-xs-3">단축키 사용 (Beta)</label>
                                 <div class="col-xs-9">
                                     <select id="useShortcut">
@@ -103,6 +115,16 @@ export function setup(channel, data) {
                                         게시판에서 : (E) 헤드라인 / (W) 게시물 쓰기<br />
                                         게시물에서 : (A) 게시판으로 / (W) 댓글 작성란으로 스크롤 / (R) 댓글 목록으로 스크롤
                                     </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">사이드 메뉴 숨기기</label>
+                                <div class="col-xs-9">
+                                    <select id="hideSideMenu">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">베스트 라이브, 헤드라인 등 우측 사이드 메뉴를 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -245,10 +267,12 @@ export function setup(channel, data) {
     });
 
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
+    settingWrapper.querySelector('#hideRefresher').value = data.hideRefresher ? 1 : 0;
     settingWrapper.querySelector('#useShortcut').value = data.useShortcut ? 1 : 0;
     settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
     settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
     settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
+    settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
     for(const key in data.filteredCategory[channel]) {
@@ -295,9 +319,11 @@ export function setup(channel, data) {
         event.preventDefault();
 
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
+        data.hideRefresher = settingWrapper.querySelector('#hideRefresher').value == 1;
         data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 1;
         data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
         data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;
+        data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
 
         const checkboxes = settingWrapper.querySelectorAll('.category-group input');
@@ -310,7 +336,11 @@ export function setup(channel, data) {
             data.blockUser = [];
         }
         else {
-            data.blockUser = blockUser.split('\n');
+            let tmp = blockUser.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.blockUser = tmp;
         }
 
         const blockKeyword = settingWrapper.querySelector('#blockKeyword').value;
@@ -318,7 +348,11 @@ export function setup(channel, data) {
             data.blockKeyword = [];
         }
         else {
-            data.blockKeyword = blockKeyword.split('\n');
+            let tmp = blockKeyword.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.blockKeyword = tmp;
         }
 
         const tmp = {};
