@@ -4,6 +4,7 @@ import noticesheet from '../css/HideNotice.css';
 import avatarsheet from '../css/HideAvatar.css';
 import modifiedsheet from '../css/HideModified.css';
 import mediasheet from '../css/HideMedia.css';
+import sidemenusheet from '../css/HideSideMenu.css';
 import styles, { stylesheet as buttonsheet } from '../css/HideNoticeBtn.module.css';
 
 export function applyNotice() {
@@ -53,6 +54,14 @@ export function applyMedia() {
     const css = <style>{mediasheet}</style>;
 
     if(window.config.hideMedia) {
+        document.head.append(css);
+    }
+}
+
+export function applySideMenu() {
+    const css = <style>{sidemenusheet}</style>;
+
+    if(window.config.hideSideMenu) {
         document.head.append(css);
     }
 }

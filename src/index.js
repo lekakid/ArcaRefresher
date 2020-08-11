@@ -51,6 +51,8 @@ function initBoard() {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"]');
 
+    HideSystem.applySideMenu();
+
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
@@ -63,6 +65,8 @@ function initArticle() {
     const comments = document.querySelectorAll('.list-area .comment-item');
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a[class="vrow"], .vrow.active');
+
+    HideSystem.applySideMenu();
 
     IPScouter.applyAuthor();
     HideSystem.applyAvatar();
@@ -85,6 +89,8 @@ function initArticle() {
 }
 
 function initWrite(editMode) {
+    HideSystem.applySideMenu();
+
     if(!editMode) {
         MyImage.apply();
     }
