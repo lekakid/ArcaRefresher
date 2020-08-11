@@ -1,6 +1,7 @@
 import * as DateManager from './DateManager';
 import * as BlockSystem from './BlockSystem';
 import * as Setting from './Setting';
+import * as IPScouter from './IPScouter';
 
 export function applyRefreshBtn() {
     const btn = (
@@ -49,6 +50,7 @@ function refresh() {
                 const items = newComments.querySelectorAll('.comment-item');
                 BlockSystem.blockComment(items);
                 BlockSystem.blockEmoticon(items);
+                IPScouter.applyComments(items);
                 applyEmoticonBlockBtn();
             }
             resolve();

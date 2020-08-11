@@ -1,6 +1,7 @@
 import * as DateManager from './DateManager';
 import * as PreviewFilter from './PreviewFilter';
 import * as BlockSystem from './BlockSystem';
+import * as IPScouter from './IPScouter';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
 
@@ -75,6 +76,7 @@ export function run(channel) {
         playLoader(loader, refreshTime);
         PreviewFilter.filter(articles, channel);
         BlockSystem.blockArticle(articles);
+        IPScouter.applyArticles(articles);
     }
 
     let loadLoop = null;
