@@ -23,8 +23,17 @@ export function blockArticle(articles) {
 
     const live = unsafeWindow.LiveConfig.mute;
 
-    const userlist = live.users.length == 0 ? window.config.blockUser : live.users;
-    const keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
+    let userlist;
+    let keywordlist;
+
+    if(live) {
+        userlist = live.users.length == 0 ? window.config.blockUser : live.users;
+        keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
+    }
+    else {
+        userlist = window.config.blockUser;
+        keywordlist = window.config.blockKeyword;
+    }
 
     let muteCount = 0;
 
