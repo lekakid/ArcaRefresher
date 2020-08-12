@@ -17,7 +17,7 @@ export function applyNotice() {
 
     if(!window.config.hideNotice) {
         list.classList.add('show-notice');
-        btn.innerText = '공지사항 숨기기 ▼';
+        btn.innerText = '공지사항 숨기기 ▲';
     }
 
     btn.addEventListener('click', event => {
