@@ -1,7 +1,3 @@
-.body .board-article .article-list .list-table a.notice {
+.body .board-article .article-list .list-table:not(.show-notice) a.notice {
     display: none;
-}
-
-.body .board-article .article-list .list-table.show-notice a.notice {
-    display: flex;
 }
