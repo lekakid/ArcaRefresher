@@ -3,17 +3,18 @@ export function apply() {
 
     const observer = new MutationObserver(mutations => {
         for(const m of mutations) {
-            if(m.target.className == 'note-editable') {
+            if(m.target.classList.contains('fr-box')) {
                 observer.disconnect();
 
-                const img = <p />;
-                img.innerHTML = window.config.myImage;
-                unsafeWindow.summernote.summernote('insertNode', img);
+                const img = window.config.myImage;
+
+                const editor = unsafeWindow.FroalaEditor('#content');
+                editor.html.insert(img);
                 break;
             }
         }
     });
-    observer.observe(document, {
+    observer.observe(document.querySelector('.write-body'), {
         childList: true,
         subtree: true,
     });
