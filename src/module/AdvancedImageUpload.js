@@ -23,7 +23,7 @@ function onPasteImage(event) {
     if(files.length == 0) return true;
 
     const editor = unsafeWindow.FroalaEditor('#content');
-    editor.events.trigger('image.beforeUpload', [files]);
+    editor.image.upload(files);
 
     return false;
 }
