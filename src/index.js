@@ -9,6 +9,7 @@ import * as MyImage from './module/MyImage';
 import * as AdvancedImageUpload from './module/AdvancedImageUpload';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
+import * as ImageDownloader from './module/ImageDownloader';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -71,6 +72,7 @@ function initArticle() {
     IPScouter.applyAuthor();
     HideSystem.applyAvatar();
     HideSystem.applyMedia();
+    ImageDownloader.apply();
     ArticleContextMenu.apply();
     HideSystem.applyModified();
 
