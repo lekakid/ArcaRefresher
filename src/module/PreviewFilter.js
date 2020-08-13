@@ -2,7 +2,10 @@ export function filter(articles, channel) {
     const filteredCategory = window.config.filteredCategory;
 
     articles.forEach(article => {
-        let category = article.querySelector('.tag').innerText;
+        const tag = article.querySelector('.tag');
+        if(tag == null) return;
+
+        let category = tag.innerText;
         category = (category == '') ? '일반' : category;
         const preview = article.querySelector('.vrow-preview');
 
