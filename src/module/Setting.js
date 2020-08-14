@@ -17,6 +17,7 @@ const defaultData = {
     blockKeyword: [],
     blockUser: [],
     blockEmoticon: {},
+    userMemo: {},
 };
 
 const defaultCategory = {
