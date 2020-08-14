@@ -167,7 +167,6 @@ export function applyArticles(articles) {
             const [result, color] = checkIP(ip);
 
             ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
-            ipElement.parentNode.title = result;
         }
     });
 }
@@ -203,7 +202,6 @@ export function applyComments(comments) {
             const [result, color] = checkIP(ip);
 
             ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
-            ipElement.parentNode.title = result;
         }
     });
 }

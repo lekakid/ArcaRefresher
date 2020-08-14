@@ -1,0 +1,23 @@
+.article-images .article-list .list-table .vrow .vrow-top .vcol.col-thumb img {
+    width: 50px;
+}
+
+.article-images .article-list .list-table .vrow .vrow-top .vcol.col-thumb .video-placeholder {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.article-images .article-list .list-table .vrow .vrow-top .vcol.col-image {
+    display: flex;
+    width: 90%;
+    align-items: center;
+    color: #000;
+    text-decoration: none;
+}
+
+.article-images .article-list .list-table .vrow .vrow-top .vcol.col-download {
+    width: 100%;
+    margin: 0;
+}

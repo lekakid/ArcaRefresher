@@ -7,7 +7,7 @@ export function apply() {
 
     const wrapper = (
         <div class={`${styles.wrapper} hidden`}>
-            <div class={styles.menu} id="context-menu" data-url="" data-html="">
+            <div class={styles.menu} id="context-menu" data-url="" data-html="" data-orig="">
                 <a href="#" class={styles.item} id="copy-clipboard">이미지를 클립보드에 복사</a>
                 <a href="#" class={styles.item} id="save">SAVE_SOMETHING</a>
                 <a href="#" class={styles.item} id="copy-url">원본 주소 복사</a>
@@ -15,9 +15,9 @@ export function apply() {
                 <div id="search-wrapper">
                     <div class={styles.devider} />
                     <a href="" class={styles.item} id="search-google" target="_blank">구글 검색</a>
-                    <a href="" class={styles.item} id="search-yandex" target="_blank">Yandex 검색</a>
-                    <a href="" class={styles.item} id="search-iqdb" target="_blank">IQDB 검색</a>
-                    <a href="" class={styles.item} id="search-saucenao" target="_blank">SauceNao 검색</a>
+                    <a href="" class={styles.item} id="search-yandex" target="_blank" title="러시아 검색엔진입니다.">Yandex 검색</a>
+                    <a href="" class={styles.item} id="search-iqdb" target="_blank" title="부루계통 사이트 검색을 지원합니다.">IQDB 검색</a>
+                    <a href="" class={styles.item} id="search-saucenao" target="_blank" title="픽시브 사이트 검색을 지원합니다.">SauceNao 검색</a>
                 </div>
             </div>
         </div>
@@ -60,14 +60,25 @@ export function apply() {
         event.stopPropagation();
         wrapper.classList.remove('hidden');
 
-        context.setAttribute('data-url', event.target.src);
-        context.setAttribute('data-html', event.target.outerHTML);
-        context.querySelector('#search-google').href = `https://www.google.com/searchbyimage?safe=off&image_url=${event.target.src}`;
-        context.querySelector('#search-yandex').href = `https://yandex.com/images/search?rpt=imageview&url=${event.target.src}`;
-        context.querySelector('#search-iqdb').href = `https://iqdb.org/?url=${event.target.src}`;
-        context.querySelector('#search-saucenao').href = `https://saucenao.com/search.php?db=999&dbmaski=32768&url=${event.target.src}`;
+        let url = event.target.src;
+        let type;
+        if(event.target.getAttribute('data-orig')) {
+            url = `${url}.${event.target.getAttribute('data-orig')}?type=orig`;
+            type = event.target.getAttribute('data-orig');
+        }
+        else {
+            url = `${url}?type=orig`;
+            type = event.target.src.replace(/.*\.arca\.live\/.*\/.*\./, '');
+        }
 
-        if(event.target.tagName == 'IMG') {
+        context.setAttribute('data-url', url);
+        context.setAttribute('data-html', event.target.outerHTML);
+        context.querySelector('#search-google').href = `https://www.google.com/searchbyimage?safe=off&image_url=${url}`;
+        context.querySelector('#search-yandex').href = `https://yandex.com/images/search?rpt=imageview&url=${url}`;
+        context.querySelector('#search-iqdb').href = `https://iqdb.org/?url=${url}`;
+        context.querySelector('#search-saucenao').href = `https://saucenao.com/search.php?db=999&dbmaski=32768&url=${url}`;
+
+        if(['gif', 'png', 'jpg', 'jpeg', 'wepb'].indexOf(type) > -1) {
             context.querySelector('#copy-clipboard').removeAttribute('style');
             context.querySelector('#save').innerText = '원본 이미지 저장';
             context.querySelector('#search-wrapper').removeAttribute('style');
@@ -87,7 +98,7 @@ function onClickContextMenu(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        const url = `${context.getAttribute('data-url')}?type=orig`;
+        const url = context.getAttribute('data-url');
         const menubtn = context.querySelector('#copy-clipboard');
         GM.xmlHttpRequest({
             method: 'GET',
@@ -111,7 +122,7 @@ function onClickContextMenu(event) {
     if(event.target.id == 'save') {
         event.preventDefault();
 
-        const url = `${context.getAttribute('data-url')}?type=orig`;
+        const url = context.getAttribute('data-url');
         GM.xmlHttpRequest({
             method: 'GET',
             url,

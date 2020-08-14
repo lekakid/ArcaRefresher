@@ -24,6 +24,7 @@ module.exports = {
     'keyword-spacing': "off",
     'no-restricted-globals':"off",
     'eqeqeq':"off",
+    'no-plusplus':"off",
     'brace-style':["error", "stroustrup"],
     'func-names': "off",
     'no-undef': "off",

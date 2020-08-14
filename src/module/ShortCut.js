@@ -44,6 +44,8 @@ function onArticle(event) {
 function onBoard(event) {
     // W 게시물 쓰기
     // E 헤드라인
+    // D 이전 페이지
+    // F 다음 페이지
 
     if(event.target.nodeName == 'INPUT' || event.target.nodeName == 'TEXTAREA') return;
 
@@ -69,6 +71,22 @@ function onBoard(event) {
         }
         else {
             location.search = '?mode=best';
+        }
+        break;
+    }
+    case 'KeyD': {
+        event.preventDefault();
+        const active = document.querySelector('.pagination .active');
+        if(active.previousElementSibling) {
+            active.previousElementSibling.firstChild.click();
+        }
+        break;
+    }
+    case 'KeyF': {
+        event.preventDefault();
+        const active = document.querySelector('.pagination .active');
+        if(active.nextElementSibling) {
+            active.nextElementSibling.firstChild.click();
         }
         break;
     }

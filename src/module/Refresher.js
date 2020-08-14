@@ -2,6 +2,7 @@ import * as DateManager from './DateManager';
 import * as PreviewFilter from './PreviewFilter';
 import * as BlockSystem from './BlockSystem';
 import * as IPScouter from './IPScouter';
+import * as UserMemo from './UserMemo';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
 
@@ -81,6 +82,7 @@ export function run(channel) {
         playLoader(loader, refreshTime);
         PreviewFilter.filter(articles, channel);
         BlockSystem.blockArticle(articles);
+        UserMemo.apply();
         IPScouter.applyArticles(articles);
     }
 

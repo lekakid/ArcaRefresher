@@ -9,6 +9,8 @@ import * as MyImage from './module/MyImage';
 import * as AdvancedImageUpload from './module/AdvancedImageUpload';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
+import * as ImageDownloader from './module/ImageDownloader';
+import * as UserMemo from './module/UserMemo';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -53,6 +55,7 @@ function initBoard() {
 
     HideSystem.applySideMenu();
 
+    UserMemo.apply();
     HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
     BlockSystem.blockArticle(articles);
@@ -68,9 +71,12 @@ function initArticle() {
 
     HideSystem.applySideMenu();
 
+    UserMemo.apply();
+    UserMemo.applyArticle();
     IPScouter.applyAuthor();
     HideSystem.applyAvatar();
     HideSystem.applyMedia();
+    ImageDownloader.apply();
     ArticleContextMenu.apply();
     HideSystem.applyModified();
 
