@@ -103,7 +103,7 @@ export function apply() {
 
         const zipblob = await zip.generateAsync({ type: 'blob' });
         const title = document.querySelector('.article-head .title').textContent.trim();
-        window.saveAs(zipblob, title);
+        window.saveAs(zipblob, `${title}.zip`);
     }
 
     footerItem.querySelector('button').addEventListener('click', onDownloadAll);
