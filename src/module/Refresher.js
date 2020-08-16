@@ -56,7 +56,7 @@ function swapNewArticle(newArticles) {
         if(lazywrapper) lazywrapper.outerHTML = lazywrapper.innerHTML;
 
         const time = n.querySelector('time');
-        if(DateManager.in24(time.dateTime)) {
+        if(time && DateManager.in24(time.dateTime)) {
             time.innerText = DateManager.getTimeStr(time.dateTime);
         }
     }
