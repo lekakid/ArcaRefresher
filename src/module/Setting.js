@@ -113,8 +113,9 @@ export function setup(channel, data) {
                                     </select>
                                     <p class="text-muted">
                                         채널 활동을 빠르게 할 수 있는 단축키를 사용합니다.<br />
-                                        게시판에서 : (E) 헤드라인 / (W) 게시물 쓰기<br />
-                                        게시물에서 : (A) 게시판으로 / (W) 댓글 작성란으로 스크롤 / (R) 댓글 목록으로 스크롤
+                                        <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
+                                            단축키 안내 바로가기
+                                        </a>
                                     </p>
                                 </div>
                             </div>
