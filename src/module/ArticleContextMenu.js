@@ -17,7 +17,7 @@ export function apply() {
                     <a href="" class={styles.item} id="search-google" target="_blank">구글 검색</a>
                     <a href="" class={styles.item} id="search-yandex" target="_blank" title="러시아 검색엔진입니다.">Yandex 검색</a>
                     <a href="" class={styles.item} id="search-iqdb" target="_blank" title="부루계통 사이트 검색을 지원합니다.">IQDB 검색</a>
-                    <a href="" class={styles.item} id="search-saucenao" target="_blank" title="픽시브 사이트 검색을 지원합니다.">SauceNao 검색</a>
+                    <a href="" class={styles.item} id="search-saucenao" target="_blank" title="망가, 픽시브 사이트 검색을 지원합니다.">SauceNao 검색</a>
                 </div>
             </div>
         </div>
