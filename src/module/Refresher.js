@@ -23,7 +23,7 @@ function playLoader(loader, time) {
     }
 }
 
-function getRefreshArticle() {
+function getNewArticles() {
     return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
@@ -62,8 +62,6 @@ function swapNewArticle(newArticles) {
     }
 
     board.append(...newArticles);
-
-    return newArticles;
 }
 
 export function run(channel) {
@@ -78,8 +76,10 @@ export function run(channel) {
     playLoader(loader, refreshTime);
 
     async function routine() {
-        const articles = swapNewArticle(await getRefreshArticle());
         playLoader(loader, refreshTime);
+
+        const articles = await getNewArticles();
+        swapNewArticle(articles);
         PreviewFilter.filter(articles, channel);
         BlockSystem.blockArticle(articles);
         UserMemo.apply();
