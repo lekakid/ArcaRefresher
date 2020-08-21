@@ -187,11 +187,11 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">아카콘 차단</label>
+                                <label class="col-xs-3">차단된 아카콘</label>
                                 <div class="col-xs-9">
                                     <select id="blockEmoticon" size="6" multiple />
                                     <div class="col-xs-10">
-                                        <p class="text-muted">특정 아카콘을 차단합니다. 댓글에서 추가 가능합니다.</p>
+                                        <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
                                     </div>
                                     <div class={`col-xs-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
