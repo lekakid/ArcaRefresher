@@ -81,9 +81,9 @@ export function run(channel) {
         const articles = await getNewArticles();
         swapNewArticle(articles);
         PreviewFilter.filter(articles, channel);
-        BlockSystem.blockArticle(articles);
         UserMemo.apply();
         IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(articles);
     }
 
     let loadLoop = null;
