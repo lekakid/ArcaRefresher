@@ -26,7 +26,7 @@ let channel;
     if(path[1] != 'b') return;
 
     channel = path[2] || '';
-    window.config = await Setting.load(channel);
+    window.config = await Setting.load();
     Setting.setup(channel, window.config);
 
     if(path[3] == undefined || path[3] == '') {

@@ -28,7 +28,7 @@ const defaultCategory = {
     일반: false,
 };
 
-export async function load(channel) {
+export async function load() {
     let loadData = JSON.parse(await GM.getValue('Setting', '{}'));
 
     if(compareVersion(loadData.version, MIN_VERSION)) {
@@ -36,10 +36,6 @@ export async function load(channel) {
     }
     else {
         loadData = Object.assign(defaultData, loadData);
-    }
-
-    if(loadData.filteredCategory[channel] == undefined) {
-        loadData.filteredCategory[channel] = Object.assign({}, defaultCategory);
     }
 
     return loadData;
@@ -308,12 +304,17 @@ export function setup(channel, data) {
     settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
+
+    if(data.filteredCategory[channel] == undefined) {
+        data.filteredCategory[channel] = Object.assign({}, defaultCategory);
+    }
     for(const key in data.filteredCategory[channel]) {
         if(data.filteredCategory[channel][key]) {
             const checkbox = document.getElementById(key);
             if(checkbox) checkbox.checked = true;
         }
     }
+
     const emoticonList = settingWrapper.querySelector('#blockEmoticon');
     for(const key in data.blockEmoticon) {
         if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
