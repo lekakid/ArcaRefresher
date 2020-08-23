@@ -18,6 +18,9 @@ const defaultData = {
     blockUser: [],
     blockEmoticon: {},
     userMemo: {},
+    useAutoRemoverTest: true,
+    autoRemoveUser: [],
+    autoRemoveKeyword: [],
 };
 
 const defaultCategory = {
@@ -119,6 +122,7 @@ export function setup(channel, data) {
                                     </p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">사이드 메뉴 숨기기</label>
                                 <div class="col-xs-9">
@@ -159,6 +163,7 @@ export function setup(channel, data) {
                                     <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">자짤 관리</label>
                                 <div class="col-xs-9">
@@ -166,6 +171,7 @@ export function setup(channel, data) {
                                     <p class="text-muted">등록된 자짤을 삭제합니다.</p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">미리보기 필터</label>
                                 <div class="col-xs-9">
@@ -197,6 +203,31 @@ export function setup(channel, data) {
                                     <div class={`col-xs-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
                                     </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <label class="col-xs-3">삭제 테스트 모드<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <select id="useAutoRemoverTest">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">유저 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <textarea id="autoRemoveUser" rows="6" placeholder="대상 이용자를 줄바꿈으로 구별하여 입력합니다." />
+                                    <p class="text-muted">지정한 유저의 게시물을 자동으로 삭제합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">키워드 포함 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <textarea id="autoRemoveKeyword" rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
+                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -292,6 +323,9 @@ export function setup(channel, data) {
             emoticonList.append(opt);
         }
     }
+    settingWrapper.querySelector('#useAutoRemoverTest').value = data.useAutoRemoverTest ? 1 : 0;
+    settingWrapper.querySelector('#autoRemoveUser').value = data.autoRemoveUser.join('\n');
+    settingWrapper.querySelector('#autoRemoveKeyword').value = data.autoRemoveKeyword.join('\n');
 
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.preventDefault();
@@ -357,12 +391,38 @@ export function setup(channel, data) {
             data.blockKeyword = tmp;
         }
 
-        const tmp = {};
-        const blockEmoticons = settingWrapper.querySelectorAll('#blockEmoticon option');
-        blockEmoticons.forEach(item => {
-            tmp[item.value] = data.blockEmoticon[item.value];
+        const emoticons = {};
+        const blockOptions = settingWrapper.querySelectorAll('#blockEmoticon option');
+        blockOptions.forEach(item => {
+            emoticons[item.value] = data.blockEmoticon[item.value];
         });
-        data.blockEmoticon = tmp;
+        data.blockEmoticon = emoticons;
+
+        data.useAutoRemoverTest = settingWrapper.querySelector('#useAutoRemoverTest').value == 1;
+
+        const autoRemoveUser = settingWrapper.querySelector('#autoRemoveUser').value;
+        if(autoRemoveUser == '') {
+            data.autoRemoveUser = [];
+        }
+        else {
+            let tmp = autoRemoveUser.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.autoRemoveUser = tmp;
+        }
+
+        const autoRemoveKeyword = settingWrapper.querySelector('#autoRemoveKeyword').value;
+        if(autoRemoveKeyword == '') {
+            data.autoRemoveKeyword = [];
+        }
+        else {
+            let tmp = autoRemoveKeyword.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.autoRemoveKeyword = tmp;
+        }
 
         save(data);
         location.reload();

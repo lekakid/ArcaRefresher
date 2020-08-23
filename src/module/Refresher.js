@@ -3,6 +3,7 @@ import * as PreviewFilter from './PreviewFilter';
 import * as BlockSystem from './BlockSystem';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
+import * as AutoRemover from './AutoRemover';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
 
@@ -75,6 +76,8 @@ export function run(channel) {
     }
     playLoader(loader, refreshTime);
 
+    let loadLoop = null;
+
     async function routine() {
         playLoader(loader, refreshTime);
 
@@ -84,9 +87,12 @@ export function run(channel) {
         UserMemo.apply();
         IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(articles);
+        if(AutoRemover.removeArticle(articles)) {
+            clearInterval(loadLoop);
+            loadLoop = null;
+        }
     }
 
-    let loadLoop = null;
     loadLoop = setInterval(routine, refreshTime * 1000);
 
     document.addEventListener('visibilitychange', () => {
