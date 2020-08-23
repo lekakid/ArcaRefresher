@@ -5,7 +5,7 @@ export function filter(articles, channel) {
         const tag = article.querySelector('.tag');
         if(tag == null) return;
 
-        let category = tag.innerText;
+        let category = tag.textContent;
         category = (category == '') ? '일반' : category;
         const preview = article.querySelector('.vrow-preview');
 

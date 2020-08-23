@@ -264,11 +264,11 @@ export function setup(channel, data) {
     categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
 
     category.forEach(element => {
-        const categoryName = (element.innerText == '전체') ? '일반' : element.innerText;
+        const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
         const btn = categoryButton.cloneNode(true);
         btn.querySelector('input').id = categoryName;
         btn.querySelector('label').setAttribute('for', categoryName);
-        btn.querySelector('label').innerText = categoryName;
+        btn.querySelector('label').textContent = categoryName;
         categoryGroup.append(btn);
     });
 
