@@ -36,6 +36,7 @@ export async function load() {
     }
     else {
         loadData = Object.assign(defaultData, loadData);
+        loadData.version = GM.info.script.version;
     }
 
     return loadData;
