@@ -3,6 +3,7 @@ import * as PreviewFilter from './PreviewFilter';
 import * as BlockSystem from './BlockSystem';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
+import * as AutoRemover from './AutoRemover';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
 
@@ -23,7 +24,7 @@ function playLoader(loader, time) {
     }
 }
 
-function getRefreshArticle() {
+function getNewArticles() {
     return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
@@ -62,8 +63,6 @@ function swapNewArticle(newArticles) {
     }
 
     board.append(...newArticles);
-
-    return newArticles;
 }
 
 export function run(channel) {
@@ -77,16 +76,23 @@ export function run(channel) {
     }
     playLoader(loader, refreshTime);
 
+    let loadLoop = null;
+
     async function routine() {
-        const articles = swapNewArticle(await getRefreshArticle());
         playLoader(loader, refreshTime);
+
+        const articles = await getNewArticles();
+        swapNewArticle(articles);
         PreviewFilter.filter(articles, channel);
-        BlockSystem.blockArticle(articles);
         UserMemo.apply();
         IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(articles);
+        if(AutoRemover.removeArticle(articles)) {
+            clearInterval(loadLoop);
+            loadLoop = null;
+        }
     }
 
-    let loadLoop = null;
     loadLoop = setInterval(routine, refreshTime * 1000);
 
     document.addEventListener('visibilitychange', () => {

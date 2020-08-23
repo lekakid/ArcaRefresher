@@ -34,3 +34,7 @@
     height: 40px;
     z-index: 20;
 }
+
+.target {
+    background-color: #e6aaaa;
+}

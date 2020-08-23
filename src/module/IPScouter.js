@@ -163,7 +163,7 @@ export function applyArticles(articles) {
         const ipElement = article.querySelector('small');
 
         if(ipElement) {
-            const ip = ipElement.innerText.replace(/\(|\)/g, '');
+            const ip = ipElement.textContent.replace(/\(|\)/g, '');
             const [result, color] = checkIP(ip);
 
             ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
@@ -181,7 +181,7 @@ export function applyAuthor() {
     const ipElement = info.querySelector('small');
 
     if(ipElement) {
-        const ip = ipElement.innerText.replace(/\(|\)/g, '');
+        const ip = ipElement.textContent.replace(/\(|\)/g, '');
         const [result, color] = checkIP(ip);
 
         info.insertAdjacentElement('afterend', <span class={color}>{` - ${result}`}</span>);
@@ -198,7 +198,7 @@ export function applyComments(comments) {
         const ipElement = comment.querySelector('small');
 
         if(ipElement) {
-            const ip = ipElement.innerText.replace(/\(|\)/g, '');
+            const ip = ipElement.textContent.replace(/\(|\)/g, '');
             const [result, color] = checkIP(ip);
 
             ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);

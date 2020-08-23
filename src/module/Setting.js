@@ -18,6 +18,9 @@ const defaultData = {
     blockUser: [],
     blockEmoticon: {},
     userMemo: {},
+    useAutoRemoverTest: true,
+    autoRemoveUser: [],
+    autoRemoveKeyword: [],
 };
 
 const defaultCategory = {
@@ -25,7 +28,7 @@ const defaultCategory = {
     일반: false,
 };
 
-export async function load(channel) {
+export async function load() {
     let loadData = JSON.parse(await GM.getValue('Setting', '{}'));
 
     if(compareVersion(loadData.version, MIN_VERSION)) {
@@ -33,10 +36,7 @@ export async function load(channel) {
     }
     else {
         loadData = Object.assign(defaultData, loadData);
-    }
-
-    if(loadData.filteredCategory[channel] == undefined) {
-        loadData.filteredCategory[channel] = Object.assign({}, defaultCategory);
+        loadData.version = GM.info.script.version;
     }
 
     return loadData;
@@ -113,11 +113,13 @@ export function setup(channel, data) {
                                     </select>
                                     <p class="text-muted">
                                         채널 활동을 빠르게 할 수 있는 단축키를 사용합니다.<br />
-                                        게시판에서 : (E) 헤드라인 / (W) 게시물 쓰기<br />
-                                        게시물에서 : (A) 게시판으로 / (W) 댓글 작성란으로 스크롤 / (R) 댓글 목록으로 스크롤
+                                        <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
+                                            단축키 안내 바로가기
+                                        </a>
                                     </p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">사이드 메뉴 숨기기</label>
                                 <div class="col-xs-9">
@@ -158,6 +160,7 @@ export function setup(channel, data) {
                                     <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">자짤 관리</label>
                                 <div class="col-xs-9">
@@ -165,6 +168,7 @@ export function setup(channel, data) {
                                     <p class="text-muted">등록된 자짤을 삭제합니다.</p>
                                 </div>
                             </div>
+                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">미리보기 필터</label>
                                 <div class="col-xs-9">
@@ -187,15 +191,40 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">아카콘 차단</label>
+                                <label class="col-xs-3">차단된 아카콘</label>
                                 <div class="col-xs-9">
                                     <select id="blockEmoticon" size="6" multiple />
                                     <div class="col-xs-10">
-                                        <p class="text-muted">특정 아카콘을 차단합니다. 댓글에서 추가 가능합니다.</p>
+                                        <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
                                     </div>
                                     <div class={`col-xs-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
                                     </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <label class="col-xs-3">삭제 테스트 모드<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <select id="useAutoRemoverTest">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">유저 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <textarea id="autoRemoveUser" rows="6" placeholder="대상 이용자를 줄바꿈으로 구별하여 입력합니다." />
+                                    <p class="text-muted">지정한 유저의 게시물을 자동으로 삭제합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">키워드 포함 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <div class="col-xs-9">
+                                    <textarea id="autoRemoveKeyword" rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
+                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -236,11 +265,11 @@ export function setup(channel, data) {
     categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
 
     category.forEach(element => {
-        const categoryName = (element.innerText == '전체') ? '일반' : element.innerText;
+        const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
         const btn = categoryButton.cloneNode(true);
         btn.querySelector('input').id = categoryName;
         btn.querySelector('label').setAttribute('for', categoryName);
-        btn.querySelector('label').innerText = categoryName;
+        btn.querySelector('label').textContent = categoryName;
         categoryGroup.append(btn);
     });
 
@@ -276,12 +305,17 @@ export function setup(channel, data) {
     settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
+
+    if(data.filteredCategory[channel] == undefined) {
+        data.filteredCategory[channel] = Object.assign({}, defaultCategory);
+    }
     for(const key in data.filteredCategory[channel]) {
         if(data.filteredCategory[channel][key]) {
             const checkbox = document.getElementById(key);
             if(checkbox) checkbox.checked = true;
         }
     }
+
     const emoticonList = settingWrapper.querySelector('#blockEmoticon');
     for(const key in data.blockEmoticon) {
         if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
@@ -291,6 +325,9 @@ export function setup(channel, data) {
             emoticonList.append(opt);
         }
     }
+    settingWrapper.querySelector('#useAutoRemoverTest').value = data.useAutoRemoverTest ? 1 : 0;
+    settingWrapper.querySelector('#autoRemoveUser').value = data.autoRemoveUser.join('\n');
+    settingWrapper.querySelector('#autoRemoveKeyword').value = data.autoRemoveKeyword.join('\n');
 
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.preventDefault();
@@ -356,12 +393,38 @@ export function setup(channel, data) {
             data.blockKeyword = tmp;
         }
 
-        const tmp = {};
-        const blockEmoticons = settingWrapper.querySelectorAll('#blockEmoticon option');
-        blockEmoticons.forEach(item => {
-            tmp[item.value] = data.blockEmoticon[item.value];
+        const emoticons = {};
+        const blockOptions = settingWrapper.querySelectorAll('#blockEmoticon option');
+        blockOptions.forEach(item => {
+            emoticons[item.value] = data.blockEmoticon[item.value];
         });
-        data.blockEmoticon = tmp;
+        data.blockEmoticon = emoticons;
+
+        data.useAutoRemoverTest = settingWrapper.querySelector('#useAutoRemoverTest').value == 1;
+
+        const autoRemoveUser = settingWrapper.querySelector('#autoRemoveUser').value;
+        if(autoRemoveUser == '') {
+            data.autoRemoveUser = [];
+        }
+        else {
+            let tmp = autoRemoveUser.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.autoRemoveUser = tmp;
+        }
+
+        const autoRemoveKeyword = settingWrapper.querySelector('#autoRemoveKeyword').value;
+        if(autoRemoveKeyword == '') {
+            data.autoRemoveKeyword = [];
+        }
+        else {
+            let tmp = autoRemoveKeyword.split('\n');
+            tmp = tmp.filter(item => {
+                return item != '' && item != undefined && item != null;
+            });
+            data.autoRemoveKeyword = tmp;
+        }
 
         save(data);
         location.reload();

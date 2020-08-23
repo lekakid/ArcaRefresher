@@ -26,7 +26,7 @@ let channel;
     if(path[1] != 'b') return;
 
     channel = path[2] || '';
-    window.config = await Setting.load(channel);
+    window.config = await Setting.load();
     Setting.setup(channel, window.config);
 
     if(path[3] == undefined || path[3] == '') {
@@ -53,15 +53,17 @@ function initBoard() {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a.vrow:not(.notice)');
 
-    HideSystem.applySideMenu();
-
-    UserMemo.apply();
-    HideSystem.applyNotice();
-    PreviewFilter.filter(articles, channel);
-    BlockSystem.blockArticle(articles);
-    IPScouter.applyArticles(articles);
     Refrehser.run(channel);
     ShortCut.apply('board');
+
+    HideSystem.applySideMenu();
+    HideSystem.applyNotice();
+
+    PreviewFilter.filter(articles, channel);
+
+    UserMemo.apply();
+    IPScouter.applyArticles(articles);
+    BlockSystem.blockArticle(articles);
 }
 
 function initArticle() {
@@ -69,29 +71,32 @@ function initArticle() {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
     const articles = board.querySelectorAll('a.vrow:not(.notice)');
 
-    HideSystem.applySideMenu();
+    ShortCut.apply('article');
 
-    UserMemo.apply();
-    UserMemo.applyArticle();
-    IPScouter.applyAuthor();
+    HideSystem.applySideMenu();
     HideSystem.applyAvatar();
     HideSystem.applyMedia();
-    ImageDownloader.apply();
-    ArticleContextMenu.apply();
+    HideSystem.applyNotice();
     HideSystem.applyModified();
 
-    AdvancedReply.applyRefreshBtn();
+    UserMemo.applyArticle();
+    IPScouter.applyAuthor();
+
+    ArticleContextMenu.apply();
+    ImageDownloader.apply();
+
+    IPScouter.applyComments(comments);
     BlockSystem.blockComment(comments);
     BlockSystem.blockEmoticon(comments);
-    IPScouter.applyComments(comments);
+    AdvancedReply.applyRefreshBtn();
     AdvancedReply.applyEmoticonBlockBtn();
     AdvancedReply.applyFullAreaRereply();
 
-    HideSystem.applyNotice();
     PreviewFilter.filter(articles, channel);
-    BlockSystem.blockArticle(articles);
+
+    UserMemo.apply();
     IPScouter.applyArticles(articles);
-    ShortCut.apply('article');
+    BlockSystem.blockArticle(articles);
 }
 
 function initWrite(editMode) {

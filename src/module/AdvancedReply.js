@@ -41,7 +41,7 @@ function refresh() {
             const newComments = req.response.querySelector('.article-comment .list-area');
             if(newComments) {
                 newComments.querySelectorAll('time').forEach(time => {
-                    time.innerText = DateManager.getDateStr(time.dateTime);
+                    time.textContent = DateManager.getDateStr(time.dateTime);
                 });
                 const parent = document.querySelector('.article-comment');
                 const list = parent.querySelector('.list-area');
@@ -77,7 +77,6 @@ export function applyEmoticonBlockBtn() {
 
         const commentHeader = item.parentNode.parentNode;
         commentHeader.querySelector('time').insertAdjacentElement('afterend', btn);
-        btn.outerHTML = btn.innerHTML;
     });
 
     async function onClick(event) {
@@ -86,7 +85,7 @@ export function applyEmoticonBlockBtn() {
 
         event.preventDefault();
 
-        event.target.innerText = '차단 중...';
+        event.target.textContent = '차단 중...';
         event.target.classList.remove('block-emoticon');
         const id = event.target.getAttribute('data-id');
         const [name, bundleID] = await getEmoticonInfo(id);

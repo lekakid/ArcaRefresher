@@ -9,7 +9,11 @@ export function apply() {
                 const img = window.config.myImage;
 
                 const editor = unsafeWindow.FroalaEditor('#content');
-                editor.html.insert(img);
+                if(editor.core.isEmpty()) {
+                    editor.html.set(img);
+                    editor.html.insert('<p></p>');
+                    editor.selection.setAtEnd(editor.$el.get(0));
+                }
                 break;
             }
         }
