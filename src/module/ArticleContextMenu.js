@@ -137,7 +137,7 @@ function onClickContextMenu(event) {
     if(event.target.id == 'copy-url') {
         event.preventDefault();
 
-        const url = `${context.getAttribute('data-url')}?type=orig`;
+        const url = context.getAttribute('data-url');
         navigator.clipboard.writeText(url);
     }
     if(event.target.id == 'apply-myimage') {
