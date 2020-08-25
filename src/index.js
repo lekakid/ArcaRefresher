@@ -39,12 +39,12 @@ let channel;
     }
     else if(path[3] == 'write') {
         // Write Article Page
-        initWrite(false);
+        initWrite();
     }
     else if(/[0-9]+/.test(path[3])) {
         if(path[4] == 'edit') {
             // Edit Article Page
-            initWrite(true);
+            initWrite();
         }
         else {
             // Article View Page
@@ -98,12 +98,7 @@ function initArticle() {
     BlockSystem.blockArticle(articles);
 }
 
-function initWrite(editMode) {
-    HideSystem.applySideMenu();
-
-    if(!editMode) {
-        MyImage.apply();
-    }
-
+function initWrite() {
+    MyImage.apply();
     AdvancedImageUpload.apply();
 }
