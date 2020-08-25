@@ -14,20 +14,24 @@ import * as UserMemo from './module/UserMemo';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
+import hidesheet from './css/HideSystem.css';
 
 let channel;
 
 (function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
+    document.head.append(<style>{hidesheet}</style>);
 
     const path = location.pathname.split('/');
-
-    if(path[1] != 'b') return;
 
     channel = path[2] || '';
     window.config = Setting.load();
     Setting.setup(channel, window.config);
+
+    HideSystem.apply();
+
+    if(path[1] != 'b') return;
 
     if(path[3] == undefined || path[3] == '') {
         // Board Page
@@ -56,7 +60,6 @@ function initBoard() {
     Refrehser.run(channel);
     ShortCut.apply('board');
 
-    HideSystem.applySideMenu();
     HideSystem.applyNotice();
 
     PreviewFilter.filter(articles, channel);
@@ -73,11 +76,7 @@ function initArticle() {
 
     ShortCut.apply('article');
 
-    HideSystem.applySideMenu();
-    HideSystem.applyAvatar();
-    HideSystem.applyMedia();
     HideSystem.applyNotice();
-    HideSystem.applyModified();
 
     UserMemo.applyArticle();
     IPScouter.applyAuthor();
