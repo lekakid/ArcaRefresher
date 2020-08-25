@@ -24,81 +24,56 @@ let channel;
     document.head.append(<style>{hidesheet}</style>);
 
     const path = location.pathname.split('/');
-
     channel = path[2] || '';
+
     window.config = Setting.load();
     Setting.setup(channel, window.config);
 
     HideSystem.apply();
 
-    if(path[1] != 'b') return;
+    const articleList = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
+    const articleArea = document.querySelector('.article-wrapper');
+    const writeArea = document.querySelector('.article-write');
 
-    if(path[3] == undefined || path[3] == '') {
-        // Board Page
-        initBoard();
+    let shortCutMode = '';
+    UserMemo.apply();
+
+    if(articleArea) {
+        const comments = document.querySelectorAll('#comment .comment-item');
+        UserMemo.applyArticle();
+        IPScouter.applyAuthor();
+
+        ArticleContextMenu.apply();
+        ImageDownloader.apply();
+
+        IPScouter.applyComments(comments);
+        BlockSystem.blockComment(comments);
+        BlockSystem.blockEmoticon(comments);
+        AdvancedReply.applyRefreshBtn();
+        AdvancedReply.applyEmoticonBlockBtn();
+        AdvancedReply.applyFullAreaRereply();
+
+        shortCutMode = 'article';
     }
-    else if(path[3] == 'write') {
-        // Write Article Page
-        initWrite();
-    }
-    else if(/[0-9]+/.test(path[3])) {
-        if(path[4] == 'edit') {
-            // Edit Article Page
-            initWrite();
+    if(articleList) {
+        const articles = articleList.querySelectorAll('a.vrow:not(.notice)');
+
+        HideSystem.applyNotice();
+
+        PreviewFilter.filter(articles, channel);
+
+        IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(articles);
+
+        if(articleArea == null) {
+            Refrehser.run(channel);
+            shortCutMode = 'board';
         }
-        else {
-            // Article View Page
-            initArticle();
-        }
     }
+    if(writeArea) {
+        MyImage.apply();
+        AdvancedImageUpload.apply();
+    }
+
+    ShortCut.apply(shortCutMode);
 }());
-
-function initBoard() {
-    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a.vrow:not(.notice)');
-
-    Refrehser.run(channel);
-    ShortCut.apply('board');
-
-    HideSystem.applyNotice();
-
-    PreviewFilter.filter(articles, channel);
-
-    UserMemo.apply();
-    IPScouter.applyArticles(articles);
-    BlockSystem.blockArticle(articles);
-}
-
-function initArticle() {
-    const comments = document.querySelectorAll('.list-area .comment-item');
-    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a.vrow:not(.notice)');
-
-    ShortCut.apply('article');
-
-    HideSystem.applyNotice();
-
-    UserMemo.applyArticle();
-    IPScouter.applyAuthor();
-
-    ArticleContextMenu.apply();
-    ImageDownloader.apply();
-
-    IPScouter.applyComments(comments);
-    BlockSystem.blockComment(comments);
-    BlockSystem.blockEmoticon(comments);
-    AdvancedReply.applyRefreshBtn();
-    AdvancedReply.applyEmoticonBlockBtn();
-    AdvancedReply.applyFullAreaRereply();
-
-    PreviewFilter.filter(articles, channel);
-
-    UserMemo.apply();
-    IPScouter.applyArticles(articles);
-    BlockSystem.blockArticle(articles);
-}
-
-function initWrite() {
-    MyImage.apply();
-    AdvancedImageUpload.apply();
-}
