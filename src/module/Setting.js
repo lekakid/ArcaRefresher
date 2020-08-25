@@ -259,19 +259,24 @@ export function setup(channel, data) {
     document.head.append(<style>{ stylesheet }</style>);
     contentWrapper.parentNode.insertBefore(settingWrapper, document.querySelector('footer'));
 
-    const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
-    const category = document.querySelectorAll('.board-category a');
+    if(channel != '') {
+        const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
+        const category = document.querySelectorAll('.board-category a');
 
-    categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
+        categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
 
-    category.forEach(element => {
-        const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
-        const btn = categoryButton.cloneNode(true);
-        btn.querySelector('input').id = categoryName;
-        btn.querySelector('label').setAttribute('for', categoryName);
-        btn.querySelector('label').textContent = categoryName;
-        categoryGroup.append(btn);
-    });
+        category.forEach(element => {
+            const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
+            const btn = categoryButton.cloneNode(true);
+            btn.querySelector('input').id = categoryName;
+            btn.querySelector('label').setAttribute('for', categoryName);
+            btn.querySelector('label').textContent = categoryName;
+            categoryGroup.append(btn);
+        });
+    }
+    else {
+        categoryGroup.append(<span>카테고리 목록을 확인할 수 없습니다. 채널 게시판에서 확인바랍니다.</span>);
+    }
 
     contentWrapper.addEventListener('animationend', event => {
         if(event.target.classList.contains('disappear')) {
@@ -364,10 +369,12 @@ export function setup(channel, data) {
         data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
 
-        const checkboxes = settingWrapper.querySelectorAll('.category-group input');
-        checkboxes.forEach(element => {
-            data.filteredCategory[channel][element.id] = element.checked;
-        });
+        if(channel != '') {
+            const checkboxes = settingWrapper.querySelectorAll('.category-group input');
+            checkboxes.forEach(element => {
+                data.filteredCategory[channel][element.id] = element.checked;
+            });
+        }
 
         const blockUser = settingWrapper.querySelector('#blockUser').value;
         if(blockUser == '') {
