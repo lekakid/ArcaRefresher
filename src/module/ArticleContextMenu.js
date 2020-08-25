@@ -48,7 +48,7 @@ export function apply() {
         if(event.target.tagName != 'IMG' && event.target.tagName != 'VIDEO') return;
 
         if(!wrapper.classList.contains(styles.mobile)) {
-            context.setAttribute('style', `left: ${event.clientX}px; top: ${event.clientY}px`);
+            context.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
         }
 
         if(!wrapper.classList.contains('hidden')) {
