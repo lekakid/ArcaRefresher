@@ -7,9 +7,9 @@
 // @supportURL  https://arca.live/b/namurefresher
 // @match       https://*.arca.live/*
 // @match       https://arca.live/*
-// @grant       GM.setValue
-// @grant       GM.getValue
-// @grant       GM.xmlHttpRequest
+// @grant       GM_setValue
+// @grant       GM_getValue
+// @grant       GM_xmlhttpRequest
 // @version     process.env.VERSION
 // @author      LeKAKiD
 // @require     https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js

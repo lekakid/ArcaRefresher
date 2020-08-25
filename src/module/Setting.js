@@ -28,8 +28,8 @@ const defaultCategory = {
     일반: false,
 };
 
-export async function load() {
-    let loadData = JSON.parse(await GM.getValue('Setting', '{}'));
+export function load() {
+    let loadData = JSON.parse(GM_getValue('Setting', '{}'));
 
     if(compareVersion(loadData.version, MIN_VERSION)) {
         loadData = defaultData;
@@ -43,11 +43,11 @@ export async function load() {
 }
 
 export function save(data) {
-    GM.setValue('Setting', JSON.stringify(data));
+    GM_setValue('Setting', JSON.stringify(data));
 }
 
 function reset() {
-    GM.setValue('Setting', '{}');
+    GM_setValue('Setting', '{}');
 }
 
 function compareVersion(a, b) {

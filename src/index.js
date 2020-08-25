@@ -17,7 +17,7 @@ import fade from './css/Fade.css';
 
 let channel;
 
-(async function () {
+(function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
 
@@ -26,7 +26,7 @@ let channel;
     if(path[1] != 'b') return;
 
     channel = path[2] || '';
-    window.config = await Setting.load();
+    window.config = Setting.load();
     Setting.setup(channel, window.config);
 
     if(path[3] == undefined || path[3] == '') {

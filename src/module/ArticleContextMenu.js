@@ -100,7 +100,7 @@ function onClickContextMenu(event) {
 
         const url = context.getAttribute('data-url');
         const menubtn = context.querySelector('#copy-clipboard');
-        GM.xmlHttpRequest({
+        GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'arraybuffer',
@@ -123,7 +123,7 @@ function onClickContextMenu(event) {
         event.preventDefault();
 
         const url = context.getAttribute('data-url');
-        GM.xmlHttpRequest({
+        GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
