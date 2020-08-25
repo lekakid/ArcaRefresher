@@ -7,6 +7,7 @@
 // @supportURL  https://arca.live/b/namurefresher
 // @match       https://*.arca.live/*
 // @match       https://arca.live/*
+// @noframes
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_xmlhttpRequest
