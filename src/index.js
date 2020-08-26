@@ -16,64 +16,88 @@ import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
 import hidesheet from './css/HideSystem.css';
 
-let channel;
-
-(function () {
+(async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
     document.head.append(<style>{hidesheet}</style>);
 
     const path = location.pathname.split('/');
-    channel = path[2] || '';
+    const channel = path[2] || '';
 
     window.config = Setting.load();
     Setting.setup(channel, window.config);
 
     HideSystem.apply();
 
-    const articleList = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articleArea = document.querySelector('.article-wrapper');
-    const writeArea = document.querySelector('.article-write');
+    let targetElement = document.querySelector('article > .article-view, article > .board-article-list, article > .article-write');
 
-    let shortCutMode = '';
+    if(targetElement == null) return;
+
+    if(targetElement.classList.contains('article-view') || targetElement.classList.contains('board-article-list')) {
+        const searchForm = targetElement.querySelector('.search-form');
+
+        if(searchForm == null) {
+            await new Promise(resolve => {
+                const observer = new MutationObserver(mutations => {
+                    for(const m of mutations) {
+                        if(m.target.classList.contains('search-form')) {
+                            observer.disconnect();
+                            resolve();
+                            return;
+                        }
+                    }
+                });
+                observer.observe(targetElement, {
+                    childList: true,
+                    subtree: true,
+                });
+            });
+        }
+    }
+
     UserMemo.apply();
 
-    if(articleArea) {
-        const comments = document.querySelectorAll('#comment .comment-item');
+    let type = '';
+
+    if(targetElement.classList.contains('article-view')) type = 'article';
+    if(targetElement.classList.contains('board-article-list')) type = 'board';
+    if(targetElement.classList.contains('article-write')) type = 'write';
+
+    if(type == 'article') {
+        ShortCut.apply('article');
+
         UserMemo.applyArticle();
         IPScouter.applyAuthor();
 
         ArticleContextMenu.apply();
         ImageDownloader.apply();
 
+        const comments = targetElement.querySelectorAll('#comment .comment-item');
         IPScouter.applyComments(comments);
         BlockSystem.blockComment(comments);
         BlockSystem.blockEmoticon(comments);
+
         AdvancedReply.applyRefreshBtn();
         AdvancedReply.applyEmoticonBlockBtn();
         AdvancedReply.applyFullAreaRereply();
 
-        shortCutMode = 'article';
+        targetElement = targetElement.querySelector('.included-article-list');
+        type = 'board-included';
     }
-    if(articleList) {
-        const articles = articleList.querySelectorAll('a.vrow:not(.notice)');
 
+    if(type.indexOf('board') > -1) {
         HideSystem.applyNotice();
 
+        const articles = targetElement.querySelectorAll('.list-table a.vrow:not(.notice)');
         PreviewFilter.filter(articles, channel);
-
         IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(articles);
 
-        if(articleArea == null) {
-            Refrehser.run(channel);
-            shortCutMode = 'board';
-        }
+        if(type != 'board-included') Refrehser.run(channel);
     }
-    if(writeArea) {
+
+    if(type == 'write') {
         MyImage.apply();
         AdvancedImageUpload.apply();
     }
-
-    ShortCut.apply(shortCutMode);
 }());
