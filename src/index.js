@@ -91,7 +91,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(type.indexOf('board') > -1) {
         HideSystem.applyNotice();
 
-        const articles = targetElement.querySelectorAll('.list-table a.vrow:not(.notice)');
+        const articles = targetElement.querySelectorAll('.list-table a.vrow');
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(articles);
