@@ -4,7 +4,7 @@ export function apply() {
     const users = document.querySelectorAll('.content-wrapper .user-info');
     const memos = window.config.userMemo;
 
-    const memoElement = <span class="memo"> - MEMO</span>;
+    const memoElement = <span class="memo" />;
 
     users.forEach(user => {
         if(user.getAttribute('data-id')) return;
@@ -12,20 +12,19 @@ export function apply() {
         let id = user.textContent.trim();
         const subid = user.querySelector('span[title]');
         id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
-        const slot = memoElement.cloneNode();
-
         user.setAttribute('data-id', id);
 
         if(memos[id]) {
-            slot.innerText = ` - ${memos[id]}`;
+            const slot = memoElement.cloneNode();
+            slot.textContent = ` - ${memos[id]}`;
             user.append(slot);
             user.title = memos[id];
         }
     });
 }
 
-export function applyArticle() {
-    const memoElement = <span class="memo"> - MEMO</span>;
+export function applyHandler() {
+    const memoElement = <span class="memo" />;
     const memos = window.config.userMemo;
 
     document.querySelector('.article-wrapper').addEventListener('click', event => {
@@ -44,7 +43,7 @@ export function applyArticle() {
             user.append(slot);
         }
         if(memo) {
-            slot.innerText = ` - ${memo}`;
+            slot.textContent = ` - ${memo}`;
             memos[id] = memo;
         }
         else {

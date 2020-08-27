@@ -66,7 +66,7 @@ import hidesheet from './css/HideSystem.css';
     if(type == 'article') {
         ShortCut.apply('article');
 
-        UserMemo.applyArticle();
+        UserMemo.applyHandler();
         IPScouter.applyAuthor();
 
         ArticleContextMenu.apply();
