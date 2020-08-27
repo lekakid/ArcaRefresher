@@ -1,24 +1,34 @@
 import * as Setting from './Setting';
 
-export function apply() {
+export function apply(target) {
     const users = document.querySelectorAll('.content-wrapper .user-info');
     const memos = window.config.userMemo;
 
     const memoElement = <span class="memo" />;
 
     users.forEach(user => {
-        if(user.getAttribute('data-id')) return;
+        let id = user.getAttribute('data-id');
+        if(id == null) {
+            id = user.textContent.trim();
+            const subid = user.querySelector('span[title]');
+            id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
+            user.setAttribute('data-id', id);
+        }
 
-        let id = user.textContent.trim();
-        const subid = user.querySelector('span[title]');
-        id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
-        user.setAttribute('data-id', id);
+        if(target && id != target) return;
 
+        let slot = user.querySelector('.memo');
         if(memos[id]) {
-            const slot = memoElement.cloneNode();
+            if(slot == null) {
+                slot = memoElement.cloneNode();
+                user.append(slot);
+            }
             slot.textContent = ` - ${memos[id]}`;
-            user.append(slot);
             user.title = memos[id];
+        }
+        else if(slot) {
+            slot.remove();
+            user.title = '';
         }
     });
 }
@@ -52,5 +62,6 @@ export function applyHandler() {
         }
 
         Setting.save(window.config);
+        apply(id);
     });
 }
