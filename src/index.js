@@ -16,10 +16,13 @@ import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
 import hidesheet from './css/HideSystem.css';
 
+import { stylesheet as ipsheet } from './css/IPScouter.module.css';
+
 (async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
     document.head.append(<style>{hidesheet}</style>);
+    document.head.append(<style>{ipsheet}</style>);
 
     const path = location.pathname.split('/');
     const channel = path[2] || '';
