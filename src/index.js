@@ -27,36 +27,31 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     const path = location.pathname.split('/');
     const channel = path[2] || '';
 
+    if(document.querySelector('footer') == null) {
+        await new Promise(resolve => {
+            const observer = new MutationObserver(mutations => {
+                for(const m of mutations) {
+                    if(m.target.nodeName == 'FOOTER') {
+                        observer.disconnect();
+                        resolve();
+                        return;
+                    }
+                }
+            });
+            observer.observe(document, {
+                childList: true,
+                subtree: true,
+            });
+        });
+    }
+
     window.config = Setting.load();
     Setting.setup(channel, window.config);
 
     HideSystem.apply();
 
     let targetElement = document.querySelector('article > .article-view, article > .board-article-list, article > .article-write');
-
     if(targetElement == null) return;
-
-    if(targetElement.classList.contains('article-view') || targetElement.classList.contains('board-article-list')) {
-        const searchForm = targetElement.querySelector('.search-form');
-
-        if(searchForm == null) {
-            await new Promise(resolve => {
-                const observer = new MutationObserver(mutations => {
-                    for(const m of mutations) {
-                        if(m.target.classList.contains('search-form')) {
-                            observer.disconnect();
-                            resolve();
-                            return;
-                        }
-                    }
-                });
-                observer.observe(targetElement, {
-                    childList: true,
-                    subtree: true,
-                });
-            });
-        }
-    }
 
     UserMemo.apply();
 
