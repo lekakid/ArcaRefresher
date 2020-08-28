@@ -59,6 +59,13 @@ export function blockArticle(articles) {
 }
 
 export function blockComment(comments) {
+    if(document.readyState != 'complete') {
+        window.addEventListener('load', () => {
+            blockComment(comments);
+        });
+        return;
+    }
+
     comments.forEach(item => {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
