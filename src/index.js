@@ -67,8 +67,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(targetElement.classList.contains('article-write')) type = 'write';
 
     if(type == 'article') {
-        ShortCut.apply('article');
-
         UserMemo.applyHandler();
         IPScouter.applyAuthor();
 
@@ -84,6 +82,8 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         AdvancedReply.applyEmoticonBlockBtn();
         AdvancedReply.applyFullAreaRereply();
 
+        ShortCut.apply('article');
+
         targetElement = targetElement.querySelector('.included-article-list');
         type = 'board-included';
     }
@@ -96,7 +96,10 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(articles);
 
-        if(type != 'board-included') Refrehser.run(channel);
+        if(type != 'board-included') {
+            Refrehser.run(channel);
+            ShortCut.apply('board');
+        }
     }
 
     if(type == 'write') {
