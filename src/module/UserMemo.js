@@ -1,31 +1,40 @@
 import * as Setting from './Setting';
 
-export function apply() {
+export function apply(target) {
     const users = document.querySelectorAll('.content-wrapper .user-info');
     const memos = window.config.userMemo;
 
-    const memoElement = <span class="memo"> - MEMO</span>;
+    const memoElement = <span class="memo" />;
 
     users.forEach(user => {
-        if(user.getAttribute('data-id')) return;
+        let id = user.getAttribute('data-id');
+        if(id == null) {
+            id = user.textContent.trim();
+            const subid = user.querySelector('span[title]');
+            id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
+            user.setAttribute('data-id', id);
+        }
 
-        let id = user.textContent.trim();
-        const subid = user.querySelector('span[title]');
-        id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
-        const slot = memoElement.cloneNode();
+        if(target && id != target) return;
 
-        user.setAttribute('data-id', id);
-
+        let slot = user.querySelector('.memo');
         if(memos[id]) {
-            slot.innerText = ` - ${memos[id]}`;
-            user.append(slot);
+            if(slot == null) {
+                slot = memoElement.cloneNode();
+                user.append(slot);
+            }
+            slot.textContent = ` - ${memos[id]}`;
             user.title = memos[id];
+        }
+        else if(slot) {
+            slot.remove();
+            user.title = '';
         }
     });
 }
 
-export function applyArticle() {
-    const memoElement = <span class="memo"> - MEMO</span>;
+export function applyHandler() {
+    const memoElement = <span class="memo" />;
     const memos = window.config.userMemo;
 
     document.querySelector('.article-wrapper').addEventListener('click', event => {
@@ -44,7 +53,7 @@ export function applyArticle() {
             user.append(slot);
         }
         if(memo) {
-            slot.innerText = ` - ${memo}`;
+            slot.textContent = ` - ${memo}`;
             memos[id] = memo;
         }
         else {
@@ -53,5 +62,6 @@ export function applyArticle() {
         }
 
         Setting.save(window.config);
+        apply(id);
     });
 }

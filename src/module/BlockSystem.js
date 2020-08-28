@@ -63,8 +63,19 @@ export function blockComment(comments) {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
 
-        const userlist = window.config.blockUser;
-        const keywordlist = window.config.blockKeyword;
+        const live = unsafeWindow.LiveConfig.mute;
+
+        let userlist;
+        let keywordlist;
+
+        if(live) {
+            userlist = live.users.length == 0 ? window.config.blockUser : live.users;
+            keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
+        }
+        else {
+            userlist = window.config.blockUser;
+            keywordlist = window.config.blockKeyword;
+        }
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);

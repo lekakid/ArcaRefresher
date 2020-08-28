@@ -31,7 +31,7 @@ function getNewArticles() {
         req.open('GET', window.location.href);
         req.responseType = 'document';
         req.addEventListener('load', () => {
-            const articles = req.response.querySelectorAll('a[class="vrow"]');
+            const articles = req.response.querySelectorAll('a.vrow');
             resolve(articles);
         });
         req.send();
@@ -40,7 +40,7 @@ function getNewArticles() {
 
 function swapNewArticle(newArticles) {
     const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a.vrow:not(.notice)');
+    const oldArticles = board.querySelectorAll('a.vrow');
 
     const oldnums = [];
     for(const o of oldArticles) {

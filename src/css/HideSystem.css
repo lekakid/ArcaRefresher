@@ -1,0 +1,30 @@
+.content-wrapper:not(.show-avatar) .avatar {
+    display: none !important;
+}
+.content-wrapper:not(.show-avatar) .input-wrapper > .input {
+    width: calc(100% - 4.5rem - .5rem) !important;
+}
+
+.list-table:not(.show-notice) a.notice {
+    display: none !important;
+}
+
+.content-wrapper:not(.show-media) .article-body img, 
+.content-wrapper:not(.show-media) .article-body video {
+    display: none;
+}
+
+.content-wrapper:not(.show-modified) b.modified {
+    display: none !important;
+}
+
+.content-wrapper:not(.show-sidemenu) .right-sidebar {
+    display: none;
+}
+
+@media screen and (min-width: 991px) {
+    .content-wrapper:not(.show-sidemenu) .board-article {
+        padding: 1rem;
+        margin: 0;
+    }
+}

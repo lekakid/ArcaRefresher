@@ -14,10 +14,11 @@ export function apply() {
                 <a href="#" class={styles.item} id="apply-myimage">자짤로 등록</a>
                 <div id="search-wrapper">
                     <div class={styles.devider} />
-                    <a href="" class={styles.item} id="search-google" target="_blank" rel="noreferrer">구글 검색</a>
+                    <a href="" class={styles.item} id="search-google" target="_blank" rel="noreferrer">Google 검색</a>
                     <a href="" class={styles.item} id="search-yandex" target="_blank" rel="noreferrer" title="러시아 검색엔진입니다.">Yandex 검색</a>
-                    <a href="" class={styles.item} id="search-iqdb" target="_blank" rel="noreferrer" title="부루계통 사이트 검색을 지원합니다.">IQDB 검색</a>
-                    <a href="" class={styles.item} id="search-saucenao" target="_blank" rel="noreferrer" title="망가, 픽시브 사이트 검색을 지원합니다.">SauceNao 검색</a>
+                    <a href="#" class={styles.item} id="search-saucenao" target="_blank" title="망가, 픽시브 사이트 검색을 지원합니다.">SauceNao 검색</a>
+                    <a href="#" class={styles.item} id="search-twigaten" target="_blank" title="트위터 이미지 검색을 지원합니다.">TwiGaTen 검색</a>
+                    <a href="#" class={styles.item} id="search-ascii2d" target="_blank" title="트위터, 픽시브 사이트 검색을 지원합니다.">Ascii2D 검색</a>
                 </div>
             </div>
         </div>
@@ -48,7 +49,7 @@ export function apply() {
         if(event.target.tagName != 'IMG' && event.target.tagName != 'VIDEO') return;
 
         if(!wrapper.classList.contains(styles.mobile)) {
-            context.setAttribute('style', `left: ${event.clientX}px; top: ${event.clientY}px`);
+            context.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
         }
 
         if(!wrapper.classList.contains('hidden')) {
@@ -75,8 +76,6 @@ export function apply() {
         context.setAttribute('data-html', event.target.outerHTML);
         context.querySelector('#search-google').href = `https://www.google.com/searchbyimage?safe=off&image_url=${url}`;
         context.querySelector('#search-yandex').href = `https://yandex.com/images/search?rpt=imageview&url=${url}`;
-        context.querySelector('#search-iqdb').href = `https://iqdb.org/?url=${url}`;
-        context.querySelector('#search-saucenao').href = `https://saucenao.com/search.php?db=999&dbmaski=32768&url=${url}`;
 
         if(['gif', 'png', 'jpg', 'jpeg', 'wepb'].indexOf(type) > -1) {
             context.querySelector('#copy-clipboard').removeAttribute('style');
@@ -99,13 +98,12 @@ function onClickContextMenu(event) {
         event.stopPropagation();
 
         const url = context.getAttribute('data-url');
-        const menubtn = context.querySelector('#copy-clipboard');
-        GM.xmlHttpRequest({
+        GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'arraybuffer',
             onprogress: e => {
-                menubtn.innerText = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
+                event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
             },
             onload: response => {
                 const buffer = response.response;
@@ -114,7 +112,7 @@ function onClickContextMenu(event) {
                 const item = new ClipboardItem({ [blob.type]: blob });
                 navigator.clipboard.write([item]);
                 context.parentNode.classList.add('hidden');
-                menubtn.innerText = '이미지를 클립보드에 복사';
+                event.target.textContent = '이미지를 클립보드에 복사';
             },
         });
         return;
@@ -123,7 +121,7 @@ function onClickContextMenu(event) {
         event.preventDefault();
 
         const url = context.getAttribute('data-url');
-        GM.xmlHttpRequest({
+        GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
@@ -147,5 +145,90 @@ function onClickContextMenu(event) {
         window.config.myImage = html;
         Setting.save(window.config);
         alert('선택한 짤이 등록되었습니다.\n새 게시물 작성 시 최상단에 자동으로 첨부됩니다.');
+    }
+    if(event.target.id.indexOf('search') > -1) {
+        if(event.target.id == 'search-google') return;
+        if(event.target.id == 'search-yandex') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const originalText = event.target.textContent;
+
+        const url = context.getAttribute('data-url');
+        const db = event.target.id.split('-')[1];
+        const promise = new Promise(resolve => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url,
+                responseType: 'blob',
+                onprogress: e => {
+                    event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
+                },
+                onload: response => {
+                    resolve(response.response);
+                    event.target.textContent = '업로드 중...';
+                },
+            });
+        });
+        promise.then(blob => {
+            const formdata = new FormData();
+            formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
+            if(db == 'saucenao') {
+                formdata.append('frame', 1);
+                formdata.append('database', 999);
+                GM_xmlhttpRequest({
+                    method: 'POST',
+                    url: 'https://saucenao.com/search.php',
+                    responseType: 'document',
+                    data: formdata,
+                    onload: response => {
+                        const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
+
+                        window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                        context.parentNode.classList.add('hidden');
+                        event.target.textContent = originalText;
+                    },
+                });
+            }
+            else if(db == 'ascii2d') {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: 'https://ascii2d.net',
+                    responseType: 'document',
+                    data: formdata,
+                    onload: r => {
+                        const token = r.response.querySelector('input[name="authenticity_token"]').value;
+
+                        formdata.append('utf8', '✓');
+                        formdata.append('authenticity_token', token);
+                        GM_xmlhttpRequest({
+                            method: 'POST',
+                            url: 'https://ascii2d.net/search/file',
+                            responseType: 'document',
+                            data: formdata,
+                            onload: res => {
+                                window.open(res.finalUrl);
+                                context.parentNode.classList.add('hidden');
+                                event.target.textContent = originalText;
+                            },
+                        });
+                    },
+                });
+            }
+            else if(db == 'twigaten') {
+                GM_xmlhttpRequest({
+                    method: 'POST',
+                    url: 'https://twigaten.204504byse.info/search/media',
+                    responseType: 'document',
+                    data: formdata,
+                    onload: res => {
+                        window.open(res.finalUrl);
+                        context.parentNode.classList.add('hidden');
+                        event.target.textContent = originalText;
+                    },
+                });
+            }
+        });
     }
 }

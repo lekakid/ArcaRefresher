@@ -14,97 +14,93 @@ import * as UserMemo from './module/UserMemo';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
+import hidesheet from './css/HideSystem.css';
 
-let channel;
+import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
 (async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
+    document.head.append(<style>{hidesheet}</style>);
+    document.head.append(<style>{ipsheet}</style>);
 
     const path = location.pathname.split('/');
+    const channel = path[2] || '';
 
-    if(path[1] != 'b') return;
-
-    channel = path[2] || '';
-    window.config = await Setting.load();
+    window.config = Setting.load();
     Setting.setup(channel, window.config);
 
-    if(path[3] == undefined || path[3] == '') {
-        // Board Page
-        initBoard();
-    }
-    else if(path[3] == 'write') {
-        // Write Article Page
-        initWrite(false);
-    }
-    else if(/[0-9]+/.test(path[3])) {
-        if(path[4] == 'edit') {
-            // Edit Article Page
-            initWrite(true);
+    HideSystem.apply();
+
+    let targetElement = document.querySelector('article > .article-view, article > .board-article-list, article > .article-write');
+
+    if(targetElement == null) return;
+
+    if(targetElement.classList.contains('article-view') || targetElement.classList.contains('board-article-list')) {
+        const searchForm = targetElement.querySelector('.search-form');
+
+        if(searchForm == null) {
+            await new Promise(resolve => {
+                const observer = new MutationObserver(mutations => {
+                    for(const m of mutations) {
+                        if(m.target.classList.contains('search-form')) {
+                            observer.disconnect();
+                            resolve();
+                            return;
+                        }
+                    }
+                });
+                observer.observe(targetElement, {
+                    childList: true,
+                    subtree: true,
+                });
+            });
         }
-        else {
-            // Article View Page
-            initArticle();
-        }
+    }
+
+    UserMemo.apply();
+
+    let type = '';
+
+    if(targetElement.classList.contains('article-view')) type = 'article';
+    if(targetElement.classList.contains('board-article-list')) type = 'board';
+    if(targetElement.classList.contains('article-write')) type = 'write';
+
+    if(type == 'article') {
+        ShortCut.apply('article');
+
+        UserMemo.applyHandler();
+        IPScouter.applyAuthor();
+
+        ArticleContextMenu.apply();
+        ImageDownloader.apply();
+
+        const comments = targetElement.querySelectorAll('#comment .comment-item');
+        IPScouter.applyComments(comments);
+        BlockSystem.blockComment(comments);
+        BlockSystem.blockEmoticon(comments);
+
+        AdvancedReply.applyRefreshBtn();
+        AdvancedReply.applyEmoticonBlockBtn();
+        AdvancedReply.applyFullAreaRereply();
+
+        targetElement = targetElement.querySelector('.included-article-list');
+        type = 'board-included';
+    }
+
+    if(type.indexOf('board') > -1) {
+        HideSystem.applyNotice();
+
+        const articles = targetElement.querySelectorAll('.list-table a.vrow');
+        PreviewFilter.filter(articles, channel);
+        IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(articles);
+
+        if(type != 'board-included') Refrehser.run(channel);
+    }
+
+    if(type == 'write') {
+        MyImage.apply();
+        AdvancedImageUpload.apply();
     }
 }());
-
-function initBoard() {
-    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a.vrow:not(.notice)');
-
-    Refrehser.run(channel);
-    ShortCut.apply('board');
-
-    HideSystem.applySideMenu();
-    HideSystem.applyNotice();
-
-    PreviewFilter.filter(articles, channel);
-
-    UserMemo.apply();
-    IPScouter.applyArticles(articles);
-    BlockSystem.blockArticle(articles);
-}
-
-function initArticle() {
-    const comments = document.querySelectorAll('.list-area .comment-item');
-    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const articles = board.querySelectorAll('a.vrow:not(.notice)');
-
-    ShortCut.apply('article');
-
-    HideSystem.applySideMenu();
-    HideSystem.applyAvatar();
-    HideSystem.applyMedia();
-    HideSystem.applyNotice();
-    HideSystem.applyModified();
-
-    UserMemo.applyArticle();
-    IPScouter.applyAuthor();
-
-    ArticleContextMenu.apply();
-    ImageDownloader.apply();
-
-    IPScouter.applyComments(comments);
-    BlockSystem.blockComment(comments);
-    BlockSystem.blockEmoticon(comments);
-    AdvancedReply.applyRefreshBtn();
-    AdvancedReply.applyEmoticonBlockBtn();
-    AdvancedReply.applyFullAreaRereply();
-
-    PreviewFilter.filter(articles, channel);
-
-    UserMemo.apply();
-    IPScouter.applyArticles(articles);
-    BlockSystem.blockArticle(articles);
-}
-
-function initWrite(editMode) {
-    HideSystem.applySideMenu();
-
-    if(!editMode) {
-        MyImage.apply();
-    }
-
-    AdvancedImageUpload.apply();
-}

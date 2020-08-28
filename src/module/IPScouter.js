@@ -1,4 +1,4 @@
-import styles, { stylesheet } from '../css/IPScouter.module.css';
+import styles from '../css/IPScouter.module.css';
 
 const db = {
     KT: [
@@ -151,59 +151,33 @@ const db = {
     ],
 };
 
-let css = null;
-
 export function applyArticles(articles) {
-    if(css == null) {
-        css = <style>{stylesheet}</style>;
-        document.head.append(css);
-    }
-
     articles.forEach(article => {
         const ipElement = article.querySelector('small');
 
-        if(ipElement) {
-            const ip = ipElement.textContent.replace(/\(|\)/g, '');
-            const [result, color] = checkIP(ip);
-
-            ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
-        }
+        if(ipElement) appendInfo(ipElement);
     });
 }
 
 export function applyAuthor() {
-    if(css == null) {
-        css = <style>{stylesheet}</style>;
-        document.head.append(css);
-    }
+    const ipElement = document.querySelector('.article-head .user-info small');
 
-    const info = document.querySelector('.article-head .user-info');
-    const ipElement = info.querySelector('small');
-
-    if(ipElement) {
-        const ip = ipElement.textContent.replace(/\(|\)/g, '');
-        const [result, color] = checkIP(ip);
-
-        info.insertAdjacentElement('afterend', <span class={color}>{` - ${result}`}</span>);
-    }
+    if(ipElement) appendInfo(ipElement);
 }
 
 export function applyComments(comments) {
-    if(css == null) {
-        css = <style>{stylesheet}</style>;
-        document.head.append(css);
-    }
-
     comments.forEach(comment => {
         const ipElement = comment.querySelector('small');
 
-        if(ipElement) {
-            const ip = ipElement.textContent.replace(/\(|\)/g, '');
-            const [result, color] = checkIP(ip);
-
-            ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
-        }
+        if(ipElement) appendInfo(ipElement);
     });
+}
+
+function appendInfo(ipElement) {
+    const ip = ipElement.textContent.replace(/\(|\)/g, '');
+    const [result, color] = checkIP(ip);
+
+    ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
 }
 
 function checkIP(ip) {

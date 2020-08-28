@@ -138,7 +138,7 @@ function parse() {
 
 function download(url) {
     return new Promise(resolve => {
-        GM.xmlHttpRequest({
+        GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
