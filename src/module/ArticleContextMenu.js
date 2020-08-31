@@ -183,9 +183,14 @@ function onClickContextMenu(event) {
                     responseType: 'document',
                     data: formdata,
                     onload: response => {
-                        const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
-
-                        window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                        const tag = response.response.querySelector('#yourimage a');
+                        if(tag) {
+                            const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
+                            window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                        }
+                        else {
+                            alert('비로그인 이용자 검색 제한을 초과했습니다.');
+                        }
                         context.parentNode.classList.add('hidden');
                         event.target.textContent = originalText;
                     },
