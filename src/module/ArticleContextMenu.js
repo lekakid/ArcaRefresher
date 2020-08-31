@@ -93,6 +93,8 @@ export function apply() {
 function onClickContextMenu(event) {
     const context = document.querySelector('#context-menu');
 
+    const originalText = event.target.textContent;
+
     if(event.target.id == 'copy-clipboard') {
         event.preventDefault();
         event.stopPropagation();
@@ -112,23 +114,29 @@ function onClickContextMenu(event) {
                 const item = new ClipboardItem({ [blob.type]: blob });
                 navigator.clipboard.write([item]);
                 context.parentNode.classList.add('hidden');
-                event.target.textContent = '이미지를 클립보드에 복사';
+                event.target.textContent = originalText;
             },
         });
         return;
     }
     if(event.target.id == 'save') {
         event.preventDefault();
+        event.stopPropagation();
 
         const url = context.getAttribute('data-url');
         GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
+            onprogress: e => {
+                event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
+            },
             onload: response => {
                 const data = response.response;
 
                 window.saveAs(data, `image.${data.type.split('/')[1]}`);
+                context.parentNode.classList.add('hidden');
+                event.target.textContent = originalText;
             },
         });
     }
@@ -152,8 +160,6 @@ function onClickContextMenu(event) {
 
         event.preventDefault();
         event.stopPropagation();
-
-        const originalText = event.target.textContent;
 
         const url = context.getAttribute('data-url');
         const db = event.target.id.split('-')[1];
@@ -183,9 +189,14 @@ function onClickContextMenu(event) {
                     responseType: 'document',
                     data: formdata,
                     onload: response => {
-                        const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
-
-                        window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                        const tag = response.response.querySelector('#yourimage a');
+                        if(tag) {
+                            const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
+                            window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                        }
+                        else {
+                            alert('비로그인 이용자 검색 제한을 초과했습니다.');
+                        }
                         context.parentNode.classList.add('hidden');
                         event.target.textContent = originalText;
                     },
