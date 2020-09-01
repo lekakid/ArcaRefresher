@@ -114,3 +114,16 @@ export function blockEmoticon(comments) {
         }
     });
 }
+
+export function blockRatedown() {
+    if(!window.config.blockRatedown) return;
+
+    const ratedown = document.querySelector('#rateDown');
+    if(ratedown == null) return;
+
+    ratedown.addEventListener('click', e => {
+        if(!confirm('비추천을 눌렀습니다.\n계속하시겠습니까?')) {
+            e.preventDefault();
+        }
+    });
+}

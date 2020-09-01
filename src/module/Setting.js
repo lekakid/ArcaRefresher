@@ -14,6 +14,7 @@ const defaultData = {
     hideSideMenu: false,
     myImage: '',
     filteredCategory: {},
+    blockRatedown: false,
     blockKeyword: [],
     blockUser: [],
     blockEmoticon: {},
@@ -177,6 +178,16 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
+                                <label class="col-xs-3">비추천 방지</label>
+                                <div class="col-xs-9">
+                                    <select id="blockRatedown">
+                                        <option value="0">사용 안 함</option>
+                                        <option value="1">사용</option>
+                                    </select>
+                                    <p class="text-muted">비추천을 클릭하면 확인창을 띄웁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <label class="col-xs-3">유저 차단</label>
                                 <div class="col-xs-9">
                                     <textarea id="blockUser" rows="6" placeholder="차단할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
@@ -308,6 +319,7 @@ export function setup(channel, data) {
     settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
     settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
     settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu ? 1 : 0;
+    settingWrapper.querySelector('#blockRatedown').value = data.blockRatedown ? 1 : 0;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
 
@@ -368,6 +380,7 @@ export function setup(channel, data) {
         data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;
         data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 1;
         data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
+        data.blockRatedown = settingWrapper.querySelector('#blockRatedown').value == 1;
 
         if(channel != '') {
             const checkboxes = settingWrapper.querySelectorAll('.category-group input');

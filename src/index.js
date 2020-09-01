@@ -52,6 +52,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         IPScouter.applyAuthor();
 
         ArticleContextMenu.apply();
+        BlockSystem.blockRatedown();
         ImageDownloader.apply();
 
         const comments = targetElement.querySelectorAll('#comment .comment-item');
