@@ -81,7 +81,7 @@ export function setup(channel, data) {
                 <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
                     <div class="dialog card">
-                        <div calss="card-block">
+                        <div class="card-block">
                             <h4 class="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
                             <div class="row">
                                 <label class="col-xs-3">자동 새로고침</label>
