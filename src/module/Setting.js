@@ -81,8 +81,10 @@ export function setup(channel, data) {
                 <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
                     <div class="dialog card">
-                        <div class="card-block">
+                        <form class="card-block">
                             <h4 class="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
+                            <hr />
+                            <h5 class="card-title">유틸리티</h5>
                             <div class="row">
                                 <label class="col-xs-3">자동 새로고침</label>
                                 <div class="col-xs-9">
@@ -99,8 +101,8 @@ export function setup(channel, data) {
                                 <label class="col-xs-3">새로고침 애니메이션 숨김</label>
                                 <div class="col-xs-9">
                                     <select id="hideRefresher">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
+                                        <option value="false">사용 안 함</option>
+                                        <option value="true">사용</option>
                                     </select>
                                     <p class="text-muted">자동 새로고침 애니메이션을 숨깁니다.</p>
                                 </div>
@@ -109,8 +111,8 @@ export function setup(channel, data) {
                                 <label class="col-xs-3">단축키 사용 (Beta)</label>
                                 <div class="col-xs-9">
                                     <select id="useShortcut">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
+                                        <option value="false">사용 안 함</option>
+                                        <option value="true">사용</option>
                                     </select>
                                     <p class="text-muted">
                                         채널 활동을 빠르게 할 수 있는 단축키를 사용합니다.<br />
@@ -120,48 +122,16 @@ export function setup(channel, data) {
                                     </p>
                                 </div>
                             </div>
-                            <hr />
                             <div class="row">
-                                <label class="col-xs-3">사이드 메뉴 숨기기</label>
+                                <label class="col-xs-3">비추천 방지</label>
                                 <div class="col-xs-9">
-                                    <select id="hideSideMenu">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
+                                    <select id="blockRatedown">
+                                        <option value="false">사용 안 함</option>
+                                        <option value="true">사용</option>
                                     </select>
-                                    <p class="text-muted">베스트 라이브, 헤드라인 등 우측 사이드 메뉴를 숨깁니다.</p>
+                                    <p class="text-muted">비추천을 클릭하면 확인창을 띄웁니다.</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <label class="col-xs-3">프로필 아바타 숨기기</label>
-                                <div class="col-xs-9">
-                                    <select id="hideAvatar">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
-                                    </select>
-                                    <p class="text-muted">게시물 조회 시 프로필 아바타를 숨깁니다.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3">본문 이미지, 동영상 숨기기</label>
-                                <div class="col-xs-9">
-                                    <select id="hideMedia">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
-                                    </select>
-                                    <p class="text-muted">게시물 조회 시 본문에 나오는 이미지와 동영상을 숨깁니다.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3">댓글 수정됨 표시 숨기기</label>
-                                <div class="col-xs-9">
-                                    <select id="hideModified">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
-                                    </select>
-                                    <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
-                                </div>
-                            </div>
-                            <hr />
                             <div class="row">
                                 <label class="col-xs-3">자짤 관리</label>
                                 <div class="col-xs-9">
@@ -170,21 +140,54 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <hr />
+                            <h5 class="card-title">요소 숨김</h5>
+                            <div class="row">
+                                <label class="col-xs-3">우측 사이드 메뉴</label>
+                                <div class="col-xs-9">
+                                    <select id="hideSideMenu">
+                                        <option value="false">보임</option>
+                                        <option value="true">숨김</option>
+                                    </select>
+                                    <p class="text-muted">베스트 라이브, 헤드라인 등 우측 사이드 메뉴를 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">프로필 아바타</label>
+                                <div class="col-xs-9">
+                                    <select id="hideAvatar">
+                                        <option value="false">보임</option>
+                                        <option value="true">숨김</option>
+                                    </select>
+                                    <p class="text-muted">게시물 조회 시 프로필 아바타를 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">본문 이미지, 동영상</label>
+                                <div class="col-xs-9">
+                                    <select id="hideMedia">
+                                        <option value="false">보임</option>
+                                        <option value="true">숨김</option>
+                                    </select>
+                                    <p class="text-muted">게시물 조회 시 본문에 나오는 이미지와 동영상을 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">댓글 *수정됨</label>
+                                <div class="col-xs-9">
+                                    <select id="hideModified">
+                                        <option value="false">보임</option>
+                                        <option value="true">숨김</option>
+                                    </select>
+                                    <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
+                                </div>
+                            </div>
+                            <hr />
+                            <h5 class="card-title">차단 기능</h5>
                             <div class="row">
                                 <label class="col-xs-3">미리보기 필터</label>
                                 <div class="col-xs-9">
                                     <div class="category-group" />
                                     <p class="text-muted">지정한 카테고리의 미리보기를 숨깁니다.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3">비추천 방지</label>
-                                <div class="col-xs-9">
-                                    <select id="blockRatedown">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
-                                    </select>
-                                    <p class="text-muted">비추천을 클릭하면 확인창을 띄웁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -214,25 +217,26 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <hr />
+                            <h5 class="card-title">채널 관리자 전용</h5>
                             <div class="row">
-                                <label class="col-xs-3">삭제 테스트 모드<br />(채널 관리자 전용)</label>
+                                <label class="col-xs-3">삭제 테스트 모드</label>
                                 <div class="col-xs-9">
                                     <select id="useAutoRemoverTest">
-                                        <option value="0">사용 안 함</option>
-                                        <option value="1">사용</option>
+                                        <option value="false">사용 안 함</option>
+                                        <option value="true">사용</option>
                                     </select>
                                     <p class="text-muted">게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">유저 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <label class="col-xs-3">유저 게시물 삭제</label>
                                 <div class="col-xs-9">
                                     <textarea id="autoRemoveUser" rows="6" placeholder="대상 이용자를 줄바꿈으로 구별하여 입력합니다." />
                                     <p class="text-muted">지정한 유저의 게시물을 자동으로 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">키워드 포함 게시물 삭제<br />(채널 관리자 전용)</label>
+                                <label class="col-xs-3">키워드 포함 게시물 삭제</label>
                                 <div class="col-xs-9">
                                     <textarea id="autoRemoveKeyword" rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
@@ -247,7 +251,7 @@ export function setup(channel, data) {
                                     <a href="#" id="closeSetting" class="btn btn-success">닫기</a>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -268,7 +272,7 @@ export function setup(channel, data) {
     document.querySelector('ul.navbar-nav').append(showSettingBtn);
 
     document.head.append(<style>{ stylesheet }</style>);
-    contentWrapper.parentNode.insertBefore(settingWrapper, document.querySelector('footer'));
+    contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
     if(channel != '') {
         const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
@@ -313,13 +317,13 @@ export function setup(channel, data) {
     });
 
     settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
-    settingWrapper.querySelector('#hideRefresher').value = data.hideRefresher ? 1 : 0;
-    settingWrapper.querySelector('#useShortcut').value = data.useShortcut ? 1 : 0;
-    settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar ? 1 : 0;
-    settingWrapper.querySelector('#hideMedia').value = data.hideMedia ? 1 : 0;
-    settingWrapper.querySelector('#hideModified').value = data.hideModified ? 1 : 0;
-    settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu ? 1 : 0;
-    settingWrapper.querySelector('#blockRatedown').value = data.blockRatedown ? 1 : 0;
+    settingWrapper.querySelector('#hideRefresher').value = data.hideRefresher;
+    settingWrapper.querySelector('#useShortcut').value = data.useShortcut;
+    settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar;
+    settingWrapper.querySelector('#hideMedia').value = data.hideMedia;
+    settingWrapper.querySelector('#hideModified').value = data.hideModified;
+    settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu;
+    settingWrapper.querySelector('#blockRatedown').value = data.blockRatedown;
     settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
     settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
 
@@ -374,13 +378,13 @@ export function setup(channel, data) {
         event.preventDefault();
 
         data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
-        data.hideRefresher = settingWrapper.querySelector('#hideRefresher').value == 1;
-        data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 1;
-        data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 1;
-        data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 1;
-        data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 1;
-        data.hideModified = settingWrapper.querySelector('#hideModified').value == 1;
-        data.blockRatedown = settingWrapper.querySelector('#blockRatedown').value == 1;
+        data.hideRefresher = settingWrapper.querySelector('#hideRefresher').value == 'true';
+        data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 'true';
+        data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 'true';
+        data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 'true';
+        data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 'true';
+        data.hideModified = settingWrapper.querySelector('#hideModified').value == 'true';
+        data.blockRatedown = settingWrapper.querySelector('#blockRatedown').value == 'true';
 
         if(channel != '') {
             const checkboxes = settingWrapper.querySelectorAll('.category-group input');
