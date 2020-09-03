@@ -86,8 +86,8 @@ export function setup(channel, data) {
                             <hr />
                             <h5 class="card-title">유틸리티</h5>
                             <div class="row">
-                                <label class="col-xs-3">자동 새로고침</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">자동 새로고침</label>
+                                <div class="col-md-9">
                                     <select id="refreshTime">
                                         <option value="0">사용 안 함</option>
                                         <option value="3">3초</option>
@@ -98,8 +98,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">새로고침 애니메이션 숨김</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">새로고침 애니메이션 숨김</label>
+                                <div class="col-md-9">
                                     <select id="hideRefresher">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
@@ -108,8 +108,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">단축키 사용 (Beta)</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">단축키 사용 (Beta)</label>
+                                <div class="col-md-9">
                                     <select id="useShortcut">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
@@ -123,8 +123,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">비추천 방지</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">비추천 방지</label>
+                                <div class="col-md-9">
                                     <select id="blockRatedown">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
@@ -133,8 +133,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">자짤 관리</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">자짤 관리</label>
+                                <div class="col-md-9">
                                     <a href="#" id="removeMyImage" class="btn btn-success">삭제</a>
                                     <p class="text-muted">등록된 자짤을 삭제합니다.</p>
                                 </div>
@@ -142,8 +142,8 @@ export function setup(channel, data) {
                             <hr />
                             <h5 class="card-title">요소 숨김</h5>
                             <div class="row">
-                                <label class="col-xs-3">우측 사이드 메뉴</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">우측 사이드 메뉴</label>
+                                <div class="col-md-9">
                                     <select id="hideSideMenu">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
@@ -152,8 +152,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">프로필 아바타</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">프로필 아바타</label>
+                                <div class="col-md-9">
                                     <select id="hideAvatar">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
@@ -162,8 +162,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">본문 이미지, 동영상</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">본문 이미지, 동영상</label>
+                                <div class="col-md-9">
                                     <select id="hideMedia">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
@@ -172,8 +172,8 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">댓글 *수정됨</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">댓글 *수정됨</label>
+                                <div class="col-md-9">
                                     <select id="hideModified">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
@@ -184,34 +184,34 @@ export function setup(channel, data) {
                             <hr />
                             <h5 class="card-title">차단 기능</h5>
                             <div class="row">
-                                <label class="col-xs-3">미리보기 필터</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">미리보기 필터</label>
+                                <div class="col-md-9">
                                     <div class="category-group" />
                                     <p class="text-muted">지정한 카테고리의 미리보기를 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">유저 차단</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">유저 차단</label>
+                                <div class="col-md-9">
                                     <textarea id="blockUser" rows="6" placeholder="차단할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 유저의 게시물과 댓글을 차단합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">키워드 차단</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">키워드 차단</label>
+                                <div class="col-md-9">
                                     <textarea id="blockKeyword" rows="6" placeholder="차단할 키워드를 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 차단합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">차단된 아카콘</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">차단된 아카콘</label>
+                                <div class="col-md-9">
                                     <select id="blockEmoticon" size="6" multiple />
-                                    <div class="col-xs-10">
+                                    <div class="col-md-10">
                                         <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
                                     </div>
-                                    <div class={`col-xs-2 ${styles['align-right']} ${styles.fit}`}>
+                                    <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
                                     </div>
                                 </div>
@@ -219,8 +219,8 @@ export function setup(channel, data) {
                             <hr />
                             <h5 class="card-title">채널 관리자 전용</h5>
                             <div class="row">
-                                <label class="col-xs-3">삭제 테스트 모드</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">삭제 테스트 모드</label>
+                                <div class="col-md-9">
                                     <select id="useAutoRemoverTest">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
@@ -229,24 +229,24 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">유저 게시물 삭제</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">유저 게시물 삭제</label>
+                                <div class="col-md-9">
                                     <textarea id="autoRemoveUser" rows="6" placeholder="대상 이용자를 줄바꿈으로 구별하여 입력합니다." />
                                     <p class="text-muted">지정한 유저의 게시물을 자동으로 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-xs-3">키워드 포함 게시물 삭제</label>
-                                <div class="col-xs-9">
+                                <label class="col-md-3">키워드 포함 게시물 삭제</label>
+                                <div class="col-md-9">
                                     <textarea id="autoRemoveKeyword" rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
                                     <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-md-6">
                                     <a href="#" id="resetSetting" class="btn btn-danger">설정 초기화</a>
                                 </div>
-                                <div class={`col-xs-6 ${styles['align-right']}`}>
+                                <div class={`col-md-6 ${styles['align-right']}`}>
                                     <a href="#" id="saveAndClose" class="btn btn-primary">저장</a>
                                     <a href="#" id="closeSetting" class="btn btn-success">닫기</a>
                                 </div>
