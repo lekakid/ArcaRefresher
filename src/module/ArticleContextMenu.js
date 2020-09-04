@@ -1,5 +1,3 @@
-import * as Setting from './Setting';
-
 import styles, { stylesheet } from '../css/ArticleContextMenu.module.css';
 
 export function apply() {
@@ -150,8 +148,7 @@ function onClickContextMenu(event) {
         event.preventDefault();
 
         const html = context.getAttribute('data-html');
-        window.config.myImage = html;
-        Setting.save(window.config);
+        GM_setValue('myImage', html);
         alert('선택한 짤이 등록되었습니다.\n새 게시물 작성 시 최상단에 자동으로 첨부됩니다.');
     }
     if(event.target.id.indexOf('search') > -1) {

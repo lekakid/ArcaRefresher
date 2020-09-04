@@ -1,9 +1,6 @@
 import styles, { stylesheet } from '../css/Setting.module.css';
 
-const MIN_VERSION = '1.10.0';
-
-const defaultData = {
-    version: GM.info.script.version,
+export const defaultConfig = {
     refreshTime: 5,
     hideRefresher: false,
     useShortcut: false,
@@ -29,43 +26,47 @@ const defaultCategory = {
     일반: false,
 };
 
-export function load() {
-    let loadData = JSON.parse(GM_getValue('Setting', '{}'));
+export function convert() {
+    const oldData = GM_getValue('Setting', '');
+    if(oldData == '') return;
 
-    if(compareVersion(loadData.version, MIN_VERSION)) {
-        loadData = defaultData;
-    }
-    else {
-        loadData = Object.assign(defaultData, loadData);
-        loadData.version = GM.info.script.version;
-    }
+    const data = JSON.parse(oldData);
 
-    return loadData;
-}
+    GM_setValue('refreshTime', parseInt(data.refreshTime, 10));
+    GM_setValue('hideRefresher', data.hideRefresher);
+    GM_setValue('useShortcut', data.useShortcut);
+    GM_setValue('hideNotice', data.hideNotice);
+    GM_setValue('hideAvatar', data.hideAvatar);
+    GM_setValue('hideMedia', data.hideMedia);
+    GM_setValue('hideModified', data.hideModified);
+    GM_setValue('hideSideMenu', data.hideSideMenu);
+    GM_setValue('myImage', data.myImage);
+    GM_setValue('filteredCategory', data.filteredCategory);
+    GM_setValue('blockRatedown', data.blockRatedown);
+    GM_setValue('blockKeyword', data.blockKeyword);
+    GM_setValue('blockUser', data.blockUser);
+    GM_setValue('blockEmoticon', data.blockEmoticon);
+    GM_setValue('userMemo', data.userMemo);
+    GM_setValue('useAutoRemoverTest', data.useAutoRemoverTest);
+    GM_setValue('autoRemoveUser', data.autoRemoveUser);
+    GM_setValue('autoRemoveKeyword', data.autoRemoveKeyword);
 
-export function save(data) {
-    GM_setValue('Setting', JSON.stringify(data));
+    GM_deleteValue('Setting');
 }
 
 function reset() {
-    GM_setValue('Setting', '{}');
-}
+    const keys = GM_listValues();
 
-function compareVersion(a, b) {
-    if(a == undefined) return true;
-
-    const c = a.split('.');
-    const d = b.split('.');
-
-    for(let i = 0; i < a.length; i += 1) {
-        if(parseInt(c[i], 10) > parseInt(d[i], 10)) break;
-        else if(parseInt(c[i], 10) < parseInt(d[i], 10)) return true;
+    for(key of keys) {
+        GM_deleteValue(keys);
     }
-
-    return false;
 }
 
-export function setup(channel, data) {
+export function setup() {
+    // 설정 CSS 등록
+    document.head.append(<style>{ stylesheet }</style>);
+
+    // 스크립트 설정 버튼 엘리먼트
     const showSettingBtn = (
         <li class="nav-item dropdown">
             <a aria-expanded="false" class="nav-link" href="#">
@@ -75,6 +76,7 @@ export function setup(channel, data) {
         </li>
     );
 
+    // 설정 뷰
     const settingWrapper = (
         <div class={`${styles.wrapper} hidden clearfix`}>
             <div class="row">
@@ -88,7 +90,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">자동 새로고침</label>
                                 <div class="col-md-9">
-                                    <select id="refreshTime">
+                                    <select id="refreshTime" data-type="number">
                                         <option value="0">사용 안 함</option>
                                         <option value="3">3초</option>
                                         <option value="5">5초</option>
@@ -100,7 +102,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">새로고침 애니메이션 숨김</label>
                                 <div class="col-md-9">
-                                    <select id="hideRefresher">
+                                    <select id="hideRefresher" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
@@ -110,7 +112,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">단축키 사용 (Beta)</label>
                                 <div class="col-md-9">
-                                    <select id="useShortcut">
+                                    <select id="useShortcut" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
@@ -125,7 +127,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">비추천 방지</label>
                                 <div class="col-md-9">
-                                    <select id="blockRatedown">
+                                    <select id="blockRatedown" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
@@ -144,7 +146,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">우측 사이드 메뉴</label>
                                 <div class="col-md-9">
-                                    <select id="hideSideMenu">
+                                    <select id="hideSideMenu" data-type="bool">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
@@ -154,7 +156,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">프로필 아바타</label>
                                 <div class="col-md-9">
-                                    <select id="hideAvatar">
+                                    <select id="hideAvatar" data-type="bool">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
@@ -164,7 +166,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">본문 이미지, 동영상</label>
                                 <div class="col-md-9">
-                                    <select id="hideMedia">
+                                    <select id="hideMedia" data-type="bool">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
@@ -174,7 +176,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">댓글 *수정됨</label>
                                 <div class="col-md-9">
-                                    <select id="hideModified">
+                                    <select id="hideModified" data-type="bool">
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
@@ -182,14 +184,16 @@ export function setup(channel, data) {
                                 </div>
                             </div>
                             <hr />
-                            <h5 class="card-title">차단 기능</h5>
+                            <h5 class="card-title">카테고리 기능</h5>
                             <div class="row">
                                 <label class="col-md-3">미리보기 필터</label>
                                 <div class="col-md-9">
-                                    <div class="category-group" />
+                                    <div class="category-group">카테고리 목록을 확인할 수 없습니다. 채널 게시판에서 확인바랍니다.</div>
                                     <p class="text-muted">지정한 카테고리의 미리보기를 숨깁니다.</p>
                                 </div>
                             </div>
+                            <hr />
+                            <h5 class="card-title">차단 기능</h5>
                             <div class="row">
                                 <label class="col-md-3">유저 차단</label>
                                 <div class="col-md-9">
@@ -221,7 +225,7 @@ export function setup(channel, data) {
                             <div class="row">
                                 <label class="col-md-3">삭제 테스트 모드</label>
                                 <div class="col-md-9">
-                                    <select id="useAutoRemoverTest">
+                                    <select id="useAutoRemoverTest" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
@@ -258,8 +262,8 @@ export function setup(channel, data) {
         </div>
     );
     const contentWrapper = document.querySelector('.content-wrapper');
-    const categoryGroup = settingWrapper.querySelector('.category-group');
 
+    // 설정 버튼 클릭 이벤트
     showSettingBtn.addEventListener('click', () => {
         if(settingWrapper.classList.contains('hidden')) {
             contentWrapper.classList.add('disappear');
@@ -269,93 +273,61 @@ export function setup(channel, data) {
         }
     });
 
-    document.querySelector('ul.navbar-nav').append(showSettingBtn);
-
-    document.head.append(<style>{ stylesheet }</style>);
-    contentWrapper.insertAdjacentElement('afterend', settingWrapper);
-
-    if(channel != '') {
-        const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
-        const category = document.querySelectorAll('.board-category a');
-
-        categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
-
-        category.forEach(element => {
-            const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
-            const btn = categoryButton.cloneNode(true);
-            btn.querySelector('input').id = categoryName;
-            btn.querySelector('label').setAttribute('for', categoryName);
-            btn.querySelector('label').textContent = categoryName;
-            categoryGroup.append(btn);
-        });
-    }
-    else {
-        categoryGroup.append(<span>카테고리 목록을 확인할 수 없습니다. 채널 게시판에서 확인바랍니다.</span>);
-    }
-
-    contentWrapper.addEventListener('animationend', event => {
-        if(event.target.classList.contains('disappear')) {
-            event.target.classList.add('hidden');
-            event.target.classList.remove('disappear');
+    // 애니메이션 처리
+    contentWrapper.addEventListener('animationend', () => {
+        if(contentWrapper.classList.contains('disappear')) {
+            contentWrapper.classList.add('hidden');
+            contentWrapper.classList.remove('disappear');
             settingWrapper.classList.add('appear');
             settingWrapper.classList.remove('hidden');
         }
-        else if(event.target.classList.contains('appear')) {
-            event.target.classList.remove('appear');
+        else if(contentWrapper.classList.contains('appear')) {
+            contentWrapper.classList.remove('appear');
         }
     });
-    settingWrapper.addEventListener('animationend', event => {
-        if(event.target.classList.contains('disappear')) {
-            event.target.classList.add('hidden');
-            event.target.classList.remove('disappear');
+    settingWrapper.addEventListener('animationend', () => {
+        if(settingWrapper.classList.contains('disappear')) {
+            settingWrapper.classList.add('hidden');
+            settingWrapper.classList.remove('disappear');
             contentWrapper.classList.add('appear');
             contentWrapper.classList.remove('hidden');
         }
-        else if(event.target.classList.contains('appear')) {
-            event.target.classList.remove('appear');
+        else if(settingWrapper.classList.contains('appear')) {
+            settingWrapper.classList.remove('appear');
         }
     });
 
-    settingWrapper.querySelector('#refreshTime').value = data.refreshTime;
-    settingWrapper.querySelector('#hideRefresher').value = data.hideRefresher;
-    settingWrapper.querySelector('#useShortcut').value = data.useShortcut;
-    settingWrapper.querySelector('#hideAvatar').value = data.hideAvatar;
-    settingWrapper.querySelector('#hideMedia').value = data.hideMedia;
-    settingWrapper.querySelector('#hideModified').value = data.hideModified;
-    settingWrapper.querySelector('#hideSideMenu').value = data.hideSideMenu;
-    settingWrapper.querySelector('#blockRatedown').value = data.blockRatedown;
-    settingWrapper.querySelector('#blockUser').value = data.blockUser.join('\n');
-    settingWrapper.querySelector('#blockKeyword').value = data.blockKeyword.join('\n');
+    // 헤더에 버튼 부착
+    document.querySelector('ul.navbar-nav').append(showSettingBtn);
+    contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
-    if(data.filteredCategory[channel] == undefined) {
-        data.filteredCategory[channel] = Object.assign({}, defaultCategory);
+    // 설정 값 불러오기
+    const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
+    for(const element of comboElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]);
     }
-    for(const key in data.filteredCategory[channel]) {
-        if(data.filteredCategory[channel][key]) {
-            const checkbox = document.getElementById(key);
-            if(checkbox) checkbox.checked = true;
-        }
+    const textElements = settingWrapper.querySelectorAll('textarea');
+    for(const element of textElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
 
+    const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
     const emoticonList = settingWrapper.querySelector('#blockEmoticon');
-    for(const key in data.blockEmoticon) {
-        if({}.hasOwnProperty.call(data.blockEmoticon, key)) {
+    for(const key in blockEmoticon) {
+        if({}.hasOwnProperty.call(blockEmoticon, key)) {
             const opt = <option value="" />;
             opt.value = key;
-            opt.innerText = `${data.blockEmoticon[key].name}`;
+            opt.textContent = `${blockEmoticon[key].name}`;
             emoticonList.append(opt);
         }
     }
-    settingWrapper.querySelector('#useAutoRemoverTest').value = data.useAutoRemoverTest ? 1 : 0;
-    settingWrapper.querySelector('#autoRemoveUser').value = data.autoRemoveUser.join('\n');
-    settingWrapper.querySelector('#autoRemoveKeyword').value = data.autoRemoveKeyword.join('\n');
 
+    // 이벤트 핸들러
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.preventDefault();
         if(!confirm('등록한 자짤을 삭제하시겠습니까?')) return;
 
-        data.myImage = '';
-        save(data);
+        GM_setValue('myImage', '');
         alert('삭제되었습니다.');
     });
     settingWrapper.querySelector('#removeEmoticon').addEventListener('click', event => {
@@ -377,83 +349,97 @@ export function setup(channel, data) {
     settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
 
-        data.refreshTime = settingWrapper.querySelector('#refreshTime').value;
-        data.hideRefresher = settingWrapper.querySelector('#hideRefresher').value == 'true';
-        data.useShortcut = settingWrapper.querySelector('#useShortcut').value == 'true';
-        data.hideAvatar = settingWrapper.querySelector('#hideAvatar').value == 'true';
-        data.hideMedia = settingWrapper.querySelector('#hideMedia').value == 'true';
-        data.hideSideMenu = settingWrapper.querySelector('#hideSideMenu').value == 'true';
-        data.hideModified = settingWrapper.querySelector('#hideModified').value == 'true';
-        data.blockRatedown = settingWrapper.querySelector('#blockRatedown').value == 'true';
-
-        if(channel != '') {
-            const checkboxes = settingWrapper.querySelectorAll('.category-group input');
-            checkboxes.forEach(element => {
-                data.filteredCategory[channel][element.id] = element.checked;
-            });
+        for(const element of comboElements) {
+            let value;
+            switch(element.dataset.type) {
+            case 'number':
+                value = Number(element.value);
+                break;
+            case 'bool':
+                value = element.value == 'true';
+                break;
+            default:
+                value = null;
+                break;
+            }
+            GM_setValue(element.id, value);
         }
 
-        const blockUser = settingWrapper.querySelector('#blockUser').value;
-        if(blockUser == '') {
-            data.blockUser = [];
-        }
-        else {
-            let tmp = blockUser.split('\n');
-            tmp = tmp.filter(item => {
-                return item != '' && item != undefined && item != null;
-            });
-            data.blockUser = tmp;
-        }
-
-        const blockKeyword = settingWrapper.querySelector('#blockKeyword').value;
-        if(blockKeyword == '') {
-            data.blockKeyword = [];
-        }
-        else {
-            let tmp = blockKeyword.split('\n');
-            tmp = tmp.filter(item => {
-                return item != '' && item != undefined && item != null;
-            });
-            data.blockKeyword = tmp;
+        for(const element of textElements) {
+            let value;
+            if(element.value != '') {
+                value = element.split('\n');
+                value = value.filter(item => {
+                    return item != '';
+                });
+            }
+            else {
+                value = [];
+            }
+            GM_setValue(element.id, value);
         }
 
-        const emoticons = {};
         const blockOptions = settingWrapper.querySelectorAll('#blockEmoticon option');
+        const keys = [];
         blockOptions.forEach(item => {
-            emoticons[item.value] = data.blockEmoticon[item.value];
+            keys.push(item.value);
         });
-        data.blockEmoticon = emoticons;
-
-        data.useAutoRemoverTest = settingWrapper.querySelector('#useAutoRemoverTest').value == 1;
-
-        const autoRemoveUser = settingWrapper.querySelector('#autoRemoveUser').value;
-        if(autoRemoveUser == '') {
-            data.autoRemoveUser = [];
+        for(const key in blockEmoticon) {
+            if(keys.indexOf(key) == -1) delete blockEmoticon[key];
         }
-        else {
-            let tmp = autoRemoveUser.split('\n');
-            tmp = tmp.filter(item => {
-                return item != '' && item != undefined && item != null;
-            });
-            data.autoRemoveUser = tmp;
-        }
+        GM_setValue('blockEmoticon', blockEmoticon);
 
-        const autoRemoveKeyword = settingWrapper.querySelector('#autoRemoveKeyword').value;
-        if(autoRemoveKeyword == '') {
-            data.autoRemoveKeyword = [];
+        if(settingWrapper.querySelector('.category-group').textContent != '') {
+            location.reload();
         }
-        else {
-            let tmp = autoRemoveKeyword.split('\n');
-            tmp = tmp.filter(item => {
-                return item != '' && item != undefined && item != null;
-            });
-            data.autoRemoveKeyword = tmp;
-        }
-
-        save(data);
-        location.reload();
     });
     settingWrapper.querySelector('#closeSetting').addEventListener('click', () => {
         settingWrapper.classList.add('disappear');
+    });
+}
+
+export function setupCategory(channel) {
+    const settingWrapper = document.querySelector(`.${styles.wrapper}`);
+    const categoryGroup = settingWrapper.querySelector('.category-group');
+
+    // 카테고리 버튼 등록
+    categoryGroup.textContent = '';
+    const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
+    const category = document.querySelectorAll('.board-category a');
+
+    categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
+
+    category.forEach(element => {
+        const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
+        const btn = categoryButton.cloneNode(true);
+        btn.querySelector('input').id = categoryName;
+        btn.querySelector('label').setAttribute('for', categoryName);
+        btn.querySelector('label').textContent = categoryName;
+        categoryGroup.append(btn);
+    });
+
+    // 카테고리 설정 불러오기
+    const filteredCategory = GM_getValue('filteredCategory', defaultConfig.filteredCategory);
+    if(filteredCategory[channel] == undefined) {
+        filteredCategory[channel] = Object.assign({}, defaultCategory);
+    }
+    for(const key in filteredCategory[channel]) {
+        if(filteredCategory[channel][key]) {
+            const checkbox = document.getElementById(key);
+            if(checkbox) checkbox.checked = true;
+        }
+    }
+
+    // 이벤트 핸들러
+    settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
+        event.preventDefault();
+
+        const checkboxes = settingWrapper.querySelectorAll('.category-group input');
+        checkboxes.forEach(element => {
+            filteredCategory[channel][element.id] = element.checked;
+        });
+        GM_setValue('filteredCategory', filteredCategory);
+
+        location.reload();
     });
 }

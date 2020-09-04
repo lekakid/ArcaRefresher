@@ -1,11 +1,13 @@
+import { defaultConfig } from './Setting';
+
 import styles from '../css/Refresher.module.css';
 
 export function removeArticle(articles) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
-    const userlist = window.config.autoRemoveUser;
-    const keywordlist = window.config.autoRemoveKeyword;
+    const userlist = GM_getValue('autoRemoveUser', defaultConfig.autoRemoveUser);
+    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemovekeyword);
 
     const articleid = [];
 
@@ -18,7 +20,7 @@ export function removeArticle(articles) {
         const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
 
         if((titleAllow || authorAllow)) {
-            if(window.config.useAutoRemoverTest) {
+            if(GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest)) {
                 item.classList.add(styles.target);
             }
             else {
@@ -27,7 +29,7 @@ export function removeArticle(articles) {
         }
     });
 
-    if(articleid.length > 0 && !window.config.useAutoRemoverTest) {
+    if(articleid.length > 0 && !GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest)) {
         form.querySelector('input[name="articleIds"]').value = articleid.join(',');
         form.submit();
         return true;

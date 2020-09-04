@@ -29,8 +29,8 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
 
-    window.config = Setting.load();
-    Setting.setup(channel, window.config);
+    Setting.convert();
+    Setting.setup(channel);
 
     HideSystem.apply();
 
@@ -71,6 +71,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     }
 
     if(type.indexOf('board') > -1) {
+        Setting.setupCategory(channel);
         HideSystem.applyNotice();
 
         const articles = targetElement.querySelectorAll('.list-table a.vrow');

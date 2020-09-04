@@ -1,8 +1,8 @@
-import * as Setting from './Setting';
+import { defaultConfig } from './Setting';
 
 export function apply(target) {
     const users = document.querySelectorAll('.content-wrapper .user-info');
-    const memos = window.config.userMemo;
+    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
     const memoElement = <span class="memo" />;
 
@@ -35,7 +35,7 @@ export function apply(target) {
 
 export function applyHandler() {
     const memoElement = <span class="memo" />;
-    const memos = window.config.userMemo;
+    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
     document.querySelector('.article-wrapper').addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
@@ -61,7 +61,7 @@ export function applyHandler() {
             delete memos[id];
         }
 
-        Setting.save(window.config);
+        GM_setValue('userMemo', memos);
         apply(id);
     });
 }

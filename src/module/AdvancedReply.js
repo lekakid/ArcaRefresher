@@ -1,6 +1,6 @@
 import * as DateManager from './DateManager';
 import * as BlockSystem from './BlockSystem';
-import * as Setting from './Setting';
+import { defaultConfig } from './Setting';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 
@@ -93,8 +93,9 @@ export function applyEmoticonBlockBtn() {
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);
 
-        window.config.blockEmoticon[bundleID] = { name, bundle };
-        Setting.save(window.config);
+        const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+        blockEmoticon[bundleID] = { name, bundle };
+        GM_setValue('blockEmoticon', blockEmoticon);
         location.reload();
     }
 

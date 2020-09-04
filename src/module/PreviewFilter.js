@@ -1,5 +1,7 @@
+import { defaultConfig } from './Setting';
+
 export function filter(articles, channel) {
-    const filteredCategory = window.config.filteredCategory;
+    const filteredCategory = GM_getValue('filteredCategory', defaultConfig.filteredCategory);
 
     articles.forEach(article => {
         const tag = article.querySelector('.tag');

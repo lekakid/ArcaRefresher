@@ -1,3 +1,5 @@
+import { defaultConfig } from './Setting';
+
 export function blockArticle(articles) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
@@ -23,16 +25,12 @@ export function blockArticle(articles) {
 
     const live = unsafeWindow.LiveConfig.mute;
 
-    let userlist;
-    let keywordlist;
+    let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
+    let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
 
     if(live) {
-        userlist = live.users.length == 0 ? window.config.blockUser : live.users;
-        keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
-    }
-    else {
-        userlist = window.config.blockUser;
-        keywordlist = window.config.blockKeyword;
+        userlist = live.users.length == 0 ? userlist : live.users;
+        keywordlist = live.keywords.length == 0 ? keywordlist : live.keywords;
     }
 
     let muteCount = 0;
@@ -72,16 +70,12 @@ export function blockComment(comments) {
 
         const live = unsafeWindow.LiveConfig.mute;
 
-        let userlist;
-        let keywordlist;
+        let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
+        let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
 
         if(live) {
-            userlist = live.users.length == 0 ? window.config.blockUser : live.users;
-            keywordlist = live.keywords.length == 0 ? window.config.blockKeyword : live.keywords;
-        }
-        else {
-            userlist = window.config.blockUser;
-            keywordlist = window.config.blockKeyword;
+            userlist = live.users.length == 0 ? userlist : live.users;
+            keywordlist = live.keywords.length == 0 ? keywordlist : live.keywords;
         }
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
@@ -96,10 +90,12 @@ export function blockComment(comments) {
 }
 
 export function blockEmoticon(comments) {
+    const blockEmoticons = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+
     let list = [];
-    for(const key in window.config.blockEmoticon) {
-        if({}.hasOwnProperty.call(window.config.blockEmoticon, key)) {
-            list = list.concat(window.config.blockEmoticon[key].bundle);
+    for(const key in blockEmoticons) {
+        if({}.hasOwnProperty.call(blockEmoticons, key)) {
+            list = list.concat(blockEmoticons[key].bundle);
         }
     }
 
@@ -116,7 +112,7 @@ export function blockEmoticon(comments) {
 }
 
 export function blockRatedown() {
-    if(!window.config.blockRatedown) return;
+    if(!GM_getValue('blockRatedown', defaultConfig.blockRatedown)) return;
 
     const ratedown = document.querySelector('#rateDown');
     if(ratedown == null) return;
