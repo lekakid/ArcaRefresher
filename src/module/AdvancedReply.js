@@ -132,32 +132,13 @@ function getEmoticonBundle(bundleID) {
 
 export function applyFullAreaRereply() {
     function onClick(event) {
-        switch(event.target.tagName) {
-        case 'IMG':
-        case 'VIDEO':
-        case 'A':
-        case 'BUTTON':
-        case 'TEXTAREA':
-            return;
-        default:
-            break;
-        }
+        const element = event.target.closest('a, .emoticon, .btn-more, .message');
+        if(element == null) return;
+        if(!element.classList.contains('message')) return;
 
-        for(let i = 0; i < 5; i += 1) {
-            const element = event.path[i];
-            if(element.classList.contains('btn-more')) return;
-            if(element.classList.contains('reply-form')) return;
-        }
+        event.preventDefault();
 
-        for(let i = 0; i < 5; i += 1) {
-            const element = event.path[i];
-            if(element.classList.contains('message')) {
-                event.preventDefault();
-
-                element.parentNode.querySelector('.reply-link').click();
-                return;
-            }
-        }
+        element.parentNode.querySelector('.reply-link').click();
     }
 
     document.querySelector('.article-comment').addEventListener('click', onClick);
