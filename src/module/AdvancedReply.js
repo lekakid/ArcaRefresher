@@ -69,16 +69,15 @@ export function applyEmoticonBlockBtn() {
         const btn = (
             <span>
                 {'\n | '}
-                <a href="#" class="block-emoticon" data-id="">
+                <a href="#" class="block-emoticon" data-id={item.dataset.id}>
                     <span class="ion-ios-close" />
                     {' 아카콘 차단'}
                 </a>
             </span>
         );
-        btn.querySelector('a').setAttribute('data-id', item.getAttribute('data-id'));
 
-        const commentHeader = item.parentNode.parentNode;
-        commentHeader.querySelector('time').insertAdjacentElement('afterend', btn);
+        const commentTimeElement = item.closest('.content').querySelector('.right > time');
+        commentTimeElement.insertAdjacentElement('afterend', btn);
     });
 
     async function onClick(event) {
