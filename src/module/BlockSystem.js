@@ -52,8 +52,8 @@ export function blockArticle(articles) {
         if(toggleBtn.parentNode == null) {
             list.prepend(toggleBtn);
         }
-        toggleBtn.querySelector('.mute-count').innerText = `${muteCount}개 글 뮤트됨`;
     }
+    toggleBtn.querySelector('.mute-count').textContent = `${muteCount}개 글 뮤트됨`;
 }
 
 export function blockComment(comments) {
