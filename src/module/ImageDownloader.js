@@ -21,15 +21,6 @@ export function apply() {
         </div>
     );
 
-    const itemElement = (
-        <div class="vrow">
-            <div class="vrow-top">
-                <span class="vcol col-thumb" />
-                <a class="vcol col-image" href="#">NAME</a>
-            </div>
-        </div>
-    );
-
     const footerItem = (
         <div class="vrow">
             <div class="vrow-top">
@@ -68,17 +59,19 @@ export function apply() {
     }
 
     data.forEach(dataItem => {
-        const clone = itemElement.cloneNode(true);
-        if(dataItem.type == 'image') {
-            clone.querySelector('.col-thumb').append(<img src={dataItem.thumb} />);
-        }
-        else {
-            clone.querySelector('.col-thumb').append(<div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>);
-        }
-        clone.querySelector('.col-image').innerText = dataItem.image;
-        clone.querySelector('.col-image').setAttribute('data-url', dataItem.url);
+        const itemElement = (
+            <div class="vrow">
+                <div class="vrow-top">
+                    <span class="vcol col-thumb">
+                        {dataItem.type == 'image' && <img src={dataItem.thumb} />}
+                        {dataItem.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
+                    </span>
+                    <a class="vcol col-image" href="#" data-url={dataItem.url}>{dataItem.image}</a>
+                </div>
+            </div>
+        );
 
-        list.append(clone);
+        list.append(itemElement);
     });
 
     async function onDownloadAll() {
