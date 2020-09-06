@@ -103,9 +103,9 @@ export function blockEmoticon(comments) {
         const emoticon = item.querySelector('.emoticon');
 
         if(emoticon) {
-            const id = emoticon.getAttribute('data-id');
+            const id = emoticon.dataset.id;
             if(list.indexOf(id) > -1) {
-                emoticon.parentNode.innerText = '[아카콘 차단됨]';
+                emoticon.closest('.message').innerText = '[아카콘 차단됨]';
             }
         }
     });
