@@ -36,7 +36,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     await waitForElement('footer');
 
-    let targetElement = document.querySelector('article > .article-view, article > .board-article-list, article > .article-write');
+    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list, article > .article-write');
     if(targetElement == null) return;
 
     UserMemo.apply();
