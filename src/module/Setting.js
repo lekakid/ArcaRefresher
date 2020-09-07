@@ -194,12 +194,8 @@ export function setup(channel, data) {
                                 <label class="col-md-3">차단된 아카콘</label>
                                 <div class="col-md-9">
                                     <select id="blockEmoticon" size="6" multiple />
-                                    <div class="col-md-10">
-                                        <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
-                                    </div>
-                                    <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
-                                        <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
-                                    </div>
+                                    <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
+                                    <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
                                 </div>
                             </div>
                             <hr />
