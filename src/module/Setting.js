@@ -257,7 +257,7 @@ export function setup(channel, data) {
     document.querySelector('ul.navbar-nav').append(showSettingBtn);
 
     document.head.append(<style>{ stylesheet }</style>);
-    contentWrapper.parentNode.insertBefore(settingWrapper, document.querySelector('footer'));
+    contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
     if(channel != '') {
         const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
