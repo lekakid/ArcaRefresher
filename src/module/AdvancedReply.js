@@ -132,6 +132,9 @@ function getEmoticonBundle(bundleID) {
 
 export function applyFullAreaRereply() {
     function onClick(event) {
+        const checkWriteForm = event.target.closest('form');
+        if(checkWriteForm) return;
+
         const element = event.target.closest('a, .emoticon, .btn-more, .message');
         if(element == null) return;
         if(!element.classList.contains('message')) return;
