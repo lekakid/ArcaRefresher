@@ -42,7 +42,6 @@ export function convert() {
     GM_setValue('hideSideMenu', data.hideSideMenu);
     GM_setValue('myImage', data.myImage);
     GM_setValue('filteredCategory', data.filteredCategory);
-    GM_setValue('blockRatedown', data.blockRatedown);
     GM_setValue('blockKeyword', data.blockKeyword);
     GM_setValue('blockUser', data.blockUser);
     GM_setValue('blockEmoticon', data.blockEmoticon);
