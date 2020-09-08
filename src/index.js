@@ -5,8 +5,7 @@ import * as ArticleContextMenu from './module/ArticleContextMenu';
 import * as AdvancedReply from './module/AdvancedReply';
 import * as BlockSystem from './module/BlockSystem';
 import * as Refrehser from './module/Refresher';
-import * as MyImage from './module/MyImage';
-import * as AdvancedImageUpload from './module/AdvancedImageUpload';
+import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
 import * as ImageDownloader from './module/ImageDownloader';
@@ -87,7 +86,9 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     }
 
     if(type == 'write') {
-        MyImage.apply();
-        AdvancedImageUpload.apply();
+        await waitForElement('.fr-box');
+        const editor = unsafeWindow.FroalaEditor('#content');
+        AdvancedWriteForm.applyClipboardUpload(editor);
+        AdvancedWriteForm.applyMyImage(editor);
     }
 }());
