@@ -70,8 +70,8 @@ export function setup() {
     const showSettingBtn = (
         <li class="nav-item dropdown">
             <a aria-expanded="false" class="nav-link" href="#">
-                <span class="hidden-sm-down">스크립트 설정</span>
-                <span class="hidden-md-up"><span class="ion-gear-a" /></span>
+                <span class="d-none d-sm-block">스크립트 설정</span>
+                <span class="d-block d-sm-none"><span class="ion-gear-a" /></span>
             </a>
         </li>
     );
@@ -83,7 +83,7 @@ export function setup() {
                 <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
                     <div class="dialog card">
-                        <form class="card-block">
+                        <div class="card-block">
                             <h4 class="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
                             <hr />
                             <h5 class="card-title">유틸리티</h5>
@@ -246,16 +246,18 @@ export function setup() {
                                     <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
+                            <div class="row btns">
+                                <div class="col-12">
                                     <a href="#" id="resetSetting" class="btn btn-danger">설정 초기화</a>
                                 </div>
-                                <div class={`col-md-6 ${styles['align-right']}`}>
+                            </div>
+                            <div class="row btns">
+                                <div class="col-12">
                                     <a href="#" id="saveAndClose" class="btn btn-primary">저장</a>
                                     <a href="#" id="closeSetting" class="btn btn-success">닫기</a>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
