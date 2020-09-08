@@ -11,6 +11,7 @@ import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
 import * as ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
+import { waitForElement } from './module/ElementDetector';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -90,21 +91,3 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         AdvancedImageUpload.apply();
     }
 }());
-
-async function waitForElement(selector) {
-    let targetElement = document.querySelector(selector);
-
-    if(targetElement) return Promise.resolve(targetElement);
-
-    return new Promise(resolve => {
-        const observer = new MutationObserver(() => {
-            targetElement = document.querySelector(selector);
-
-            if(targetElement) resolve(targetElement);
-        });
-        observer.observe(document, {
-            childList: true,
-            subtree: true,
-        });
-    });
-}
