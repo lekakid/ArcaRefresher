@@ -201,27 +201,27 @@ export function setup() {
                                 </div>
                             </div>
                             <hr />
-                            <h5 class="card-title">차단 기능</h5>
+                            <h5 class="card-title">뮤트 기능</h5>
                             <div class="row">
-                                <label class="col-md-3">유저 차단</label>
+                                <label class="col-md-3">사용자 뮤트</label>
                                 <div class="col-md-9">
-                                    <textarea id="blockUser" rows="6" placeholder="차단할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
-                                    <p class="text-muted">지정한 유저의 게시물과 댓글을 차단합니다.</p>
+                                    <textarea id="blockUser" rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
+                                    <p class="text-muted">지정한 유저의 게시물과 댓글을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-md-3">키워드 차단</label>
+                                <label class="col-md-3">키워드 뮤트</label>
                                 <div class="col-md-9">
-                                    <textarea id="blockKeyword" rows="6" placeholder="차단할 키워드를 입력, 줄바꿈으로 구별합니다." />
-                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 차단합니다.</p>
+                                    <textarea id="blockKeyword" rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
+                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-md-3">차단된 아카콘</label>
+                                <label class="col-md-3">뮤트된 아카콘</label>
                                 <div class="col-md-9">
                                     <select id="blockEmoticon" size="6" multiple />
                                     <div class="col-md-10">
-                                        <p class="text-muted">차단된 아카콘 리스트입니다. 차단은 댓글에서 할 수 있습니다.</p>
+                                        <p class="text-muted">뮤트된 아카콘 리스트입니다. 뮤트는 댓글에서 할 수 있습니다.</p>
                                     </div>
                                     <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>

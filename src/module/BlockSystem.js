@@ -95,8 +95,8 @@ export function blockComment(comments) {
         const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
 
         if(textAllow || authorAllow) {
-            author.innerText = '차단';
-            message.innerText = '차단된 댓글입니다.';
+            author.innerText = '뮤트';
+            message.innerText = '뮤트된 댓글입니다.';
             if(message) message.style = 'color: #777';
         }
     });
@@ -118,7 +118,7 @@ export function blockEmoticon(comments) {
         if(emoticon) {
             const id = emoticon.dataset.id;
             if(list.indexOf(id) > -1) {
-                emoticon.closest('.message').innerText = '[아카콘 차단됨]';
+                emoticon.closest('.message').innerText = '[아카콘 뮤트됨]';
             }
         }
     });
