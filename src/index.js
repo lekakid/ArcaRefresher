@@ -10,6 +10,7 @@ import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
 import * as ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
+import * as CategoryColor from './module/CategoryColor';
 import { waitForElement } from './module/ElementDetector';
 
 import headerfix from './css/HeaderFix.css';
@@ -75,6 +76,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         HideSystem.applyNotice();
 
         const articles = targetElement.querySelectorAll('.list-table a.vrow');
+        CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(articles, channel);

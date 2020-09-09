@@ -17,6 +17,10 @@
     border: 1px solid #bbb;
 }
 
+.wrapper input[disabled] {
+    background-color: #eee;
+}
+
 .wrapper select {
     overflow: scroll;
 }

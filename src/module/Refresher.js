@@ -4,6 +4,7 @@ import * as BlockSystem from './BlockSystem';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 import * as AutoRemover from './AutoRemover';
+import * as CategoryColor from './CategoryColor';
 import { defaultConfig } from './Setting';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
@@ -84,10 +85,11 @@ export function run(channel) {
 
         const articles = await getNewArticles();
         swapNewArticle(articles);
-        PreviewFilter.filter(articles, channel);
         UserMemo.apply();
+        CategoryColor.applyArticles(articles, channel);
+        PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(articles);
+        BlockSystem.blockArticle(articles, channel);
         if(AutoRemover.removeArticle(articles)) {
             clearInterval(loadLoop);
             loadLoop = null;

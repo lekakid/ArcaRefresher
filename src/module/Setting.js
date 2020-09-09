@@ -1,3 +1,5 @@
+import { getContrastYIQ, getRandomColor } from './ColorManager';
+
 import styles, { stylesheet } from '../css/Setting.module.css';
 
 export const defaultConfig = {
@@ -195,6 +197,7 @@ export function setup() {
                                         <tbody />
                                     </table>
                                     <p class="text-muted">
+                                        색상: 카테고리를 표시하는 색상을 변경합니다. 더블 클릭 시 무작위 색상이 지정됩니다.<br />
                                         미리보기 숨김: 마우스 오버 시 보여주는 미리보기를 제거합니다.<br />
                                         게시물 뮤트: 해당 카테고리가 포함된 게시물을 숨깁니다.
                                     </p>
@@ -420,7 +423,8 @@ export function setupCategory(channel) {
         const tableCategoryElement = (
             <tr id={name}>
                 <td>{name}</td>
-                <td><input type="text" name="color" /></td>
+                {name == '일반' && <td><input type="text" name="color" placeholder="000000" disabled /></td>}
+                {name != '일반' && <td><input type="text" name="color" placeholder="000000" maxlength="6" /></td>}
                 <td>
                     <label><input type="checkbox" name="blockPreview" /><span> 미리보기 숨김 </span></label>
                     <label><input type="checkbox" name="blockArticle" /><span> 게시물 뮤트 </span></label>
@@ -439,7 +443,12 @@ export function setupCategory(channel) {
         if({}.hasOwnProperty.call(categoryConfig[channel], key)) {
             const row = document.getElementById(key);
             if(row) {
-                row.querySelector('[name="color"]').value = categoryConfig[channel][key].color;
+                const colorInput = row.querySelector('[name="color"]');
+                if(categoryConfig[channel][key].color != '') {
+                    colorInput.value = categoryConfig[channel][key].color;
+                    colorInput.style.backgroundColor = `#${categoryConfig[channel][key].color}`;
+                    colorInput.style.color = getContrastYIQ(categoryConfig[channel][key].color);
+                }
                 row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
                 row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
             }
@@ -447,6 +456,31 @@ export function setupCategory(channel) {
     }
 
     // 이벤트 핸들러
+    categoryTable.addEventListener('keypress', event => {
+        const regex = /[0-9a-f]/;
+        if(!regex.test(event.key)) event.preventDefault();
+    });
+    categoryTable.addEventListener('dblclick', event => {
+        if(event.target.name != 'color') return;
+
+        const color = getRandomColor();
+        event.target.value = color;
+        event.target.style.backgroundColor = `#${color}`;
+        event.target.style.color = getContrastYIQ(color);
+    });
+    categoryTable.addEventListener('input', event => {
+        if(event.target.value.length == 6 || event.target.value.length == 3) {
+            const color = event.target.value;
+            const textColor = getContrastYIQ(color);
+
+            event.target.style.backgroundColor = `#${color}`;
+            event.target.style.color = textColor;
+        }
+        else {
+            event.target.style.backgroundColor = '';
+            event.target.style.color = '';
+        }
+    });
     settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
 
