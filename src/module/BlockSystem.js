@@ -1,9 +1,9 @@
 import { defaultConfig } from './Setting';
 
-export function blockArticle(articles) {
+export function blockArticle(articles, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            blockArticle(articles);
+            blockArticle(articles, channel);
         });
         return;
     }
@@ -27,6 +27,7 @@ export function blockArticle(articles) {
 
     let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
     let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
+    const categoryConfig = GM_getValue('category', defaultConfig.category);
 
     if(live) {
         userlist = live.users.length == 0 ? userlist : live.users;
@@ -38,11 +39,23 @@ export function blockArticle(articles) {
     articles.forEach(item => {
         const title = item.querySelector('.col-title');
         const author = item.querySelector('.col-author');
+        const categoryElement = item.querySelector('.badge');
+        let category;
+        if(categoryElement == null || categoryElement.textContent == '') {
+            category = '일반';
+        }
+        else {
+            category = categoryElement.textContent;
+        }
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
+        let categoryAllow = false;
+        if(categoryConfig[channel] && categoryConfig[channel][category]) {
+            categoryAllow = categoryConfig[channel][category].blockArticle;
+        }
 
-        if((titleAllow || authorAllow) && !item.classList.contains('muted')) {
+        if((titleAllow || authorAllow || categoryAllow) && !item.classList.contains('muted')) {
             item.classList.add('muted');
             muteCount += 1;
         }

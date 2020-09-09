@@ -77,7 +77,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         const articles = targetElement.querySelectorAll('.list-table a.vrow');
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(articles);
+        BlockSystem.blockArticle(articles, channel);
 
         if(type != 'board-included') {
             Refrehser.run(channel);
