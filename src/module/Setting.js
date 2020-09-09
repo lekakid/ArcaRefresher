@@ -10,7 +10,6 @@ export const defaultConfig = {
     hideModified: false,
     hideSideMenu: false,
     myImage: '',
-    filteredCategory: {},
     blockRatedown: false,
     blockKeyword: [],
     blockUser: [],
@@ -19,11 +18,7 @@ export const defaultConfig = {
     useAutoRemoverTest: true,
     autoRemoveUser: [],
     autoRemoveKeyword: [],
-};
-
-const defaultCategory = {
-    전체: false,
-    일반: false,
+    category: {},
 };
 
 export function convert() {
@@ -41,7 +36,6 @@ export function convert() {
     GM_setValue('hideModified', data.hideModified);
     GM_setValue('hideSideMenu', data.hideSideMenu);
     GM_setValue('myImage', data.myImage);
-    GM_setValue('filteredCategory', data.filteredCategory);
     GM_setValue('blockKeyword', data.blockKeyword);
     GM_setValue('blockUser', data.blockUser);
     GM_setValue('blockEmoticon', data.blockEmoticon);
@@ -183,12 +177,27 @@ export function setup() {
                                 </div>
                             </div>
                             <hr />
-                            <h5 class="card-title">카테고리 기능</h5>
+                            <h5 class="card-title">채널 설정</h5>
                             <div class="row">
-                                <label class="col-md-3">미리보기 필터</label>
+                                <label class="col-md-3">카테고리 설정</label>
                                 <div class="col-md-9">
-                                    <div class="category-group">카테고리 목록을 확인할 수 없습니다. 채널 게시판에서 확인바랍니다.</div>
-                                    <p class="text-muted">지정한 카테고리의 미리보기를 숨깁니다.</p>
+                                    <table class="table align-middle" id="categorySetting">
+                                        <colgroup>
+                                            <col width="20%" />
+                                            <col width="20%" />
+                                            <col width="60%" />
+                                        </colgroup>
+                                        <thead>
+                                            <th>카테고리</th>
+                                            <th>색상</th>
+                                            <th>설정</th>
+                                        </thead>
+                                        <tbody />
+                                    </table>
+                                    <p class="text-muted">
+                                        미리보기 숨김: 마우스 오버 시 보여주는 미리보기를 제거합니다.<br />
+                                        게시물 뮤트: 해당 카테고리가 포함된 게시물을 숨깁니다.
+                                    </p>
                                 </div>
                             </div>
                             <hr />
@@ -401,33 +410,39 @@ export function setup() {
 
 export function setupCategory(channel) {
     const settingWrapper = document.querySelector(`.${styles.wrapper}`);
-    const categoryGroup = settingWrapper.querySelector('.category-group');
+    const categoryTable = settingWrapper.querySelector('#categorySetting tbody');
 
-    // 카테고리 버튼 등록
-    categoryGroup.textContent = '';
-    const categoryButton = <span><input type="checkbox" id="" /><label for="" /></span>;
-    const category = document.querySelectorAll('.board-category a');
+    // 카테고리 목록 등록
+    const boardCategoryElements = document.querySelectorAll('.board-category a');
 
-    categoryGroup.append(<span><input type="checkbox" id="전체" /><label for="전체">전체</label></span>);
-
-    category.forEach(element => {
-        const categoryName = (element.textContent == '전체') ? '일반' : element.textContent;
-        const btn = categoryButton.cloneNode(true);
-        btn.querySelector('input').id = categoryName;
-        btn.querySelector('label').setAttribute('for', categoryName);
-        btn.querySelector('label').textContent = categoryName;
-        categoryGroup.append(btn);
-    });
+    for(const element of boardCategoryElements) {
+        const name = element.textContent == '전체' ? '일반' : element.textContent;
+        const tableCategoryElement = (
+            <tr id={name}>
+                <td>{name}</td>
+                <td><input type="text" name="color" /></td>
+                <td>
+                    <label><input type="checkbox" name="blockPreview" /><span> 미리보기 숨김 </span></label>
+                    <label><input type="checkbox" name="blockArticle" /><span> 게시물 뮤트 </span></label>
+                </td>
+            </tr>
+        );
+        categoryTable.append(tableCategoryElement);
+    }
 
     // 카테고리 설정 불러오기
-    const filteredCategory = GM_getValue('filteredCategory', defaultConfig.filteredCategory);
-    if(filteredCategory[channel] == undefined) {
-        filteredCategory[channel] = Object.assign({}, defaultCategory);
+    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    if(categoryConfig[channel] == undefined) {
+        categoryConfig[channel] = {};
     }
-    for(const key in filteredCategory[channel]) {
-        if(filteredCategory[channel][key]) {
-            const checkbox = document.getElementById(key);
-            if(checkbox) checkbox.checked = true;
+    for(const key in categoryConfig[channel]) {
+        if({}.hasOwnProperty.call(categoryConfig[channel], key)) {
+            const row = document.getElementById(key);
+            if(row) {
+                row.querySelector('[name="color"]').value = categoryConfig[channel][key].color;
+                row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
+                row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
+            }
         }
     }
 
@@ -435,11 +450,17 @@ export function setupCategory(channel) {
     settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
 
-        const checkboxes = settingWrapper.querySelectorAll('.category-group input');
-        checkboxes.forEach(element => {
-            filteredCategory[channel][element.id] = element.checked;
-        });
-        GM_setValue('filteredCategory', filteredCategory);
+        const rows = settingWrapper.querySelectorAll('#categorySetting tr');
+        for(const row of rows) {
+            if(categoryConfig[channel][row.id] == undefined) {
+                categoryConfig[channel][row.id] = {};
+            }
+            categoryConfig[channel][row.id].color = row.querySelector('[name="color"]').value;
+            categoryConfig[channel][row.id].blockPreview = row.querySelector('[name="blockPreview"]').checked;
+            categoryConfig[channel][row.id].blockArticle = row.querySelector('[name="blockArticle"]').checked;
+        }
+
+        GM_setValue('category', categoryConfig);
 
         location.reload();
     });

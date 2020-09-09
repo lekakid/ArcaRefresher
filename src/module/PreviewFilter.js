@@ -1,7 +1,7 @@
 import { defaultConfig } from './Setting';
 
 export function filter(articles, channel) {
-    const filteredCategory = GM_getValue('filteredCategory', defaultConfig.filteredCategory);
+    const categoryConfig = GM_getValue('category', defaultConfig.category);
 
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
@@ -11,8 +11,10 @@ export function filter(articles, channel) {
         category = (category == '') ? '일반' : category;
         const preview = article.querySelector('.vrow-preview');
 
-        const filtered = filteredCategory[channel][category] || filteredCategory[channel]['전체'];
+        if(categoryConfig[channel] && categoryConfig[channel][category]) {
+            const filtered = categoryConfig[channel][category].blockPreview || false;
 
-        if(filtered && preview != null) preview.remove();
+            if(filtered && preview != null) preview.remove();
+        }
     });
 }
