@@ -4,7 +4,7 @@ export function blockArticle(articles, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
             blockArticle(articles, channel);
-        });
+        }, { once: true });
         return;
     }
 
@@ -73,7 +73,7 @@ export function blockComment(comments) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
             blockComment(comments);
-        });
+        }, { once: true });
         return;
     }
 
