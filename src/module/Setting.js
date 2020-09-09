@@ -5,7 +5,7 @@ export const defaultConfig = {
     hideRefresher: false,
     useShortcut: false,
     hideNotice: false,
-    hideAvatar: true,
+    hideAvatar: false,
     hideMedia: false,
     hideModified: false,
     hideSideMenu: false,
