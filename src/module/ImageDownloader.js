@@ -129,12 +129,15 @@ function parse() {
     return result;
 }
 
-function download(url) {
+export function download(url, element) {
     return new Promise(resolve => {
         GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
+            onprogress: event => {
+                if(element) element.textContent = `${Math.round(event.loaded / event.total * 100)}%`;
+            },
             onload: response => {
                 resolve(response.response);
             },

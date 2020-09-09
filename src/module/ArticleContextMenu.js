@@ -1,3 +1,5 @@
+import { download } from './ImageDownloader';
+
 import styles, { stylesheet } from '../css/ArticleContextMenu.module.css';
 
 export function apply() {
@@ -88,7 +90,7 @@ export function apply() {
     });
 }
 
-function onClickContextMenu(event) {
+async function onClickContextMenu(event) {
     const context = document.querySelector('#context-menu');
 
     const originalText = event.target.textContent;
@@ -122,21 +124,9 @@ function onClickContextMenu(event) {
         event.stopPropagation();
 
         const url = context.getAttribute('data-url');
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url,
-            responseType: 'blob',
-            onprogress: e => {
-                event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
-            },
-            onload: response => {
-                const data = response.response;
-
-                window.saveAs(data, `image.${data.type.split('/')[1]}`);
-                context.parentNode.classList.add('hidden');
-                event.target.textContent = originalText;
-            },
-        });
+        const imgBlob = await download(url, event.target);
+        window.saveAs(imgBlob, `image.${imgBlob.type.split('/')[1]}`);
+        event.target.textContent = originalText;
     }
     if(event.target.id == 'copy-url') {
         event.preventDefault();
