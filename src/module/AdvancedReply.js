@@ -1,6 +1,6 @@
 import * as DateManager from './DateManager';
 import * as BlockSystem from './BlockSystem';
-import * as Setting from './Setting';
+import { defaultConfig } from './Setting';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 
@@ -92,8 +92,9 @@ export function applyEmoticonBlockBtn() {
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);
 
-        window.config.blockEmoticon[bundleID] = { name, bundle };
-        Setting.save(window.config);
+        const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+        blockEmoticon[bundleID] = { name, bundle };
+        GM_setValue('blockEmoticon', blockEmoticon);
         location.reload();
     }
 
@@ -131,32 +132,16 @@ function getEmoticonBundle(bundleID) {
 
 export function applyFullAreaRereply() {
     function onClick(event) {
-        switch(event.target.tagName) {
-        case 'IMG':
-        case 'VIDEO':
-        case 'A':
-        case 'BUTTON':
-        case 'TEXTAREA':
-            return;
-        default:
-            break;
-        }
+        const checkWriteForm = event.target.closest('form');
+        if(checkWriteForm) return;
 
-        for(let i = 0; i < 5; i += 1) {
-            const element = event.path[i];
-            if(element.classList.contains('btn-more')) return;
-            if(element.classList.contains('reply-form')) return;
-        }
+        const element = event.target.closest('a, .emoticon, .btn-more, .message');
+        if(element == null) return;
+        if(!element.classList.contains('message')) return;
 
-        for(let i = 0; i < 5; i += 1) {
-            const element = event.path[i];
-            if(element.classList.contains('message')) {
-                event.preventDefault();
+        event.preventDefault();
 
-                element.parentNode.querySelector('.reply-link').click();
-                return;
-            }
-        }
+        element.parentNode.querySelector('.reply-link').click();
     }
 
     document.querySelector('.article-comment').addEventListener('click', onClick);

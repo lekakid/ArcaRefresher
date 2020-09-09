@@ -1,5 +1,7 @@
+import { defaultConfig } from './Setting';
+
 export function apply(view) {
-    if(!window.config.useShortcut) return;
+    if(!GM_getValue('useShortcut', defaultConfig.useShortcut)) return;
 
     if(view == 'article') {
         document.addEventListener('keydown', onArticle);

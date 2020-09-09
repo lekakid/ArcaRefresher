@@ -12,6 +12,8 @@
 // @run-at          document-start
 // @grant           GM_setValue
 // @grant           GM_getValue
+// @grant           GM_deleteValue
+// @grant           GM_listValues
 // @grant           GM_xmlhttpRequest
 // @version         process.env.VERSION
 // @author          LeKAKiD

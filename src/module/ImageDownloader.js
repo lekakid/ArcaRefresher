@@ -21,19 +21,13 @@ export function apply() {
         </div>
     );
 
-    const itemElement = (
-        <div class="vrow">
-            <div class="vrow-top">
-                <span class="vcol col-thumb" />
-                <a class="vcol col-image" href="#">NAME</a>
-            </div>
-        </div>
-    );
-
     const footerItem = (
         <div class="vrow">
             <div class="vrow-top">
-                <button class="vcol col-download btn btn-success">일괄 다운로드</button>
+                <button class="vcol col-download btn btn-success">
+                    <span class="total">일괄 다운로드</span><br />
+                    <span class="progressPercent" />
+                </button>
             </div>
         </div>
     );
@@ -68,17 +62,19 @@ export function apply() {
     }
 
     data.forEach(dataItem => {
-        const clone = itemElement.cloneNode(true);
-        if(dataItem.type == 'image') {
-            clone.querySelector('.col-thumb').append(<img src={dataItem.thumb} />);
-        }
-        else {
-            clone.querySelector('.col-thumb').append(<div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>);
-        }
-        clone.querySelector('.col-image').innerText = dataItem.image;
-        clone.querySelector('.col-image').setAttribute('data-url', dataItem.url);
+        const itemElement = (
+            <div class="vrow">
+                <div class="vrow-top">
+                    <span class="vcol col-thumb">
+                        {dataItem.type == 'image' && <img src={dataItem.thumb} />}
+                        {dataItem.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
+                    </span>
+                    <a class="vcol col-image" href="#" data-url={dataItem.url}>{dataItem.image}</a>
+                </div>
+            </div>
+        );
 
-        list.append(clone);
+        list.append(itemElement);
     });
 
     async function onDownloadAll() {
@@ -88,17 +84,24 @@ export function apply() {
 
         this.disabled = true;
 
+        const totalElement = this.querySelector('.total');
+        const progressElement = this.querySelector('.progressPercent');
+
+        const originalText = totalElement.textContent;
+
         for(const d of data) {
             let file = null;
 
             while(file == null) {
-                this.innerText = `다운로드 중...${current}/${total}`;
-                file = await download(d.url);
+                totalElement.textContent = `다운로드 중...${current}/${total}`;
+                file = await download(d.url, progressElement);
             }
             zip.file(`${`${++current}`.padStart(3, '0')}_${d.image}`, file);
         }
 
-        this.innerText = '일괄 다운로드';
+        totalElement.textContent = originalText;
+        progressElement.textContent = '';
+
         this.disabled = false;
 
         const zipblob = await zip.generateAsync({ type: 'blob' });
@@ -136,12 +139,15 @@ function parse() {
     return result;
 }
 
-function download(url) {
+export function download(url, element) {
     return new Promise(resolve => {
         GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
+            onprogress: event => {
+                if(element) element.textContent = `${Math.round(event.loaded / event.total * 100)}%`;
+            },
             onload: response => {
                 resolve(response.response);
             },

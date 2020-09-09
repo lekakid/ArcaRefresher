@@ -5,12 +5,13 @@ import * as ArticleContextMenu from './module/ArticleContextMenu';
 import * as AdvancedReply from './module/AdvancedReply';
 import * as BlockSystem from './module/BlockSystem';
 import * as Refrehser from './module/Refresher';
-import * as MyImage from './module/MyImage';
-import * as AdvancedImageUpload from './module/AdvancedImageUpload';
+import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
 import * as ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
+import * as CategoryColor from './module/CategoryColor';
+import { waitForElement } from './module/ElementDetector';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -29,8 +30,8 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
 
-    window.config = Setting.load();
-    Setting.setup(channel, window.config);
+    Setting.convert();
+    Setting.setup(channel);
 
     HideSystem.apply();
 
@@ -52,6 +53,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         IPScouter.applyAuthor();
 
         ArticleContextMenu.apply();
+        BlockSystem.blockRatedown();
         ImageDownloader.apply();
 
         const comments = targetElement.querySelectorAll('#comment .comment-item');
@@ -70,12 +72,14 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     }
 
     if(type.indexOf('board') > -1) {
+        Setting.setupCategory(channel);
         HideSystem.applyNotice();
 
         const articles = targetElement.querySelectorAll('.list-table a.vrow');
+        CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(articles);
+        BlockSystem.blockArticle(articles, channel);
 
         if(type != 'board-included') {
             Refrehser.run(channel);
@@ -84,25 +88,9 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     }
 
     if(type == 'write') {
-        MyImage.apply();
-        AdvancedImageUpload.apply();
+        await waitForElement('.fr-box');
+        const editor = unsafeWindow.FroalaEditor('#content');
+        AdvancedWriteForm.applyClipboardUpload(editor);
+        AdvancedWriteForm.applyMyImage(editor);
     }
 }());
-
-async function waitForElement(selector) {
-    let targetElement = document.querySelector(selector);
-
-    if(targetElement) return Promise.resolve(targetElement);
-
-    return new Promise(resolve => {
-        const observer = new MutationObserver(() => {
-            targetElement = document.querySelector(selector);
-
-            if(targetElement) resolve(targetElement);
-        });
-        observer.observe(document, {
-            childList: true,
-            subtree: true,
-        });
-    });
-}
