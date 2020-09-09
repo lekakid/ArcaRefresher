@@ -24,7 +24,10 @@ export function apply() {
     const footerItem = (
         <div class="vrow">
             <div class="vrow-top">
-                <button class="vcol col-download btn btn-success">일괄 다운로드</button>
+                <button class="vcol col-download btn btn-success">
+                    <span class="total">일괄 다운로드</span><br />
+                    <span class="progressPercent" />
+                </button>
             </div>
         </div>
     );
@@ -81,17 +84,24 @@ export function apply() {
 
         this.disabled = true;
 
+        const totalElement = this.querySelector('.total');
+        const progressElement = this.querySelector('.progressPercent');
+
+        const originalText = totalElement.textContent;
+
         for(const d of data) {
             let file = null;
 
             while(file == null) {
-                this.innerText = `다운로드 중...${current}/${total}`;
-                file = await download(d.url);
+                totalElement.textContent = `다운로드 중...${current}/${total}`;
+                file = await download(d.url, progressElement);
             }
             zip.file(`${`${++current}`.padStart(3, '0')}_${d.image}`, file);
         }
 
-        this.innerText = '일괄 다운로드';
+        totalElement.textContent = originalText;
+        progressElement.textContent = '';
+
         this.disabled = false;
 
         const zipblob = await zip.generateAsync({ type: 'blob' });
