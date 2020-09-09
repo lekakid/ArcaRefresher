@@ -105,7 +105,7 @@ async function onClickContextMenu(event) {
             url,
             responseType: 'arraybuffer',
             onprogress: e => {
-                event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
+                event.target.textContent = `${Math.round(e.loaded / e.total * 100)}%`;
             },
             onload: response => {
                 const buffer = response.response;
@@ -150,83 +150,85 @@ async function onClickContextMenu(event) {
 
         const url = context.getAttribute('data-url');
         const db = event.target.id.split('-')[1];
-        const promise = new Promise(resolve => {
+        const imgBlob = await download(url, event.target);
+        event.target.textContent = '업로드 중...';
+
+        const formdata = new FormData();
+        formdata.append('file', imgBlob, `image.${imgBlob.type.split('/')[1]}`);
+        if(db == 'saucenao') {
+            formdata.append('frame', 1);
+            formdata.append('database', 999);
             GM_xmlhttpRequest({
-                method: 'GET',
-                url,
-                responseType: 'blob',
-                onprogress: e => {
-                    event.target.textContent = `다운로드 중...(${Math.round(e.loaded / e.total * 100)}%)`;
-                },
-                onload: response => {
-                    resolve(response.response);
-                    event.target.textContent = '업로드 중...';
-                },
-            });
-        });
-        promise.then(blob => {
-            const formdata = new FormData();
-            formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
-            if(db == 'saucenao') {
-                formdata.append('frame', 1);
-                formdata.append('database', 999);
-                GM_xmlhttpRequest({
-                    method: 'POST',
-                    url: 'https://saucenao.com/search.php',
-                    responseType: 'document',
-                    data: formdata,
-                    onload: response => {
-                        const tag = response.response.querySelector('#yourimage a');
-                        if(tag) {
-                            const replaceURL = response.response.querySelector('#yourimage a').href.split('image=')[1];
-                            window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
-                        }
-                        else {
-                            alert('비로그인 이용자 검색 제한을 초과했습니다.');
-                        }
+                method: 'POST',
+                url: 'https://saucenao.com/search.php',
+                responseType: 'document',
+                data: formdata,
+                onload: result => {
+                    try {
+                        const replaceURL = result.response.querySelector('#yourimage a').href.split('image=')[1];
+                        window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
+                    }
+                    catch(error) {
+                        alert('검색 결과를 받아오지 못했습니다.\n잠시 후에 다시 시도바랍니다.');
+                        console.error(error);
+                    }
+                    finally {
                         context.parentNode.classList.add('hidden');
                         event.target.textContent = originalText;
-                    },
-                });
-            }
-            else if(db == 'ascii2d') {
+                    }
+                },
+            });
+        }
+        else if(db == 'ascii2d') {
+            const tokenResult = await new Promise(resolve => {
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: 'https://ascii2d.net',
                     responseType: 'document',
                     data: formdata,
                     onload: r => {
-                        const token = r.response.querySelector('input[name="authenticity_token"]').value;
-
-                        formdata.append('utf8', '✓');
-                        formdata.append('authenticity_token', token);
-                        GM_xmlhttpRequest({
-                            method: 'POST',
-                            url: 'https://ascii2d.net/search/file',
-                            responseType: 'document',
-                            data: formdata,
-                            onload: res => {
-                                window.open(res.finalUrl);
-                                context.parentNode.classList.add('hidden');
-                                event.target.textContent = originalText;
-                            },
-                        });
+                        resolve(r);
                     },
                 });
-            }
-            else if(db == 'twigaten') {
-                GM_xmlhttpRequest({
-                    method: 'POST',
-                    url: 'https://twigaten.204504byse.info/search/media',
-                    responseType: 'document',
-                    data: formdata,
-                    onload: res => {
-                        window.open(res.finalUrl);
-                        context.parentNode.classList.add('hidden');
-                        event.target.textContent = originalText;
-                    },
+            });
+            try {
+                const token = tokenResult.response.querySelector('input[name="authenticity_token"]').value;
+                formdata.append('utf8', '✓');
+                formdata.append('authenticity_token', token);
+                const result = await new Promise(resolve => {
+                    GM_xmlhttpRequest({
+                        method: 'POST',
+                        url: 'https://ascii2d.net/search/file',
+                        responseType: 'document',
+                        data: formdata,
+                        onload: res => {
+                            resolve(res);
+                        },
+                    });
                 });
+                window.open(result.finalUrl);
             }
-        });
+            catch(error) {
+                alert('검색 결과를 받아오지 못했습니다.\n잠시 후에 다시 시도바랍니다.');
+                console.error(error);
+            }
+            finally {
+                context.parentNode.classList.add('hidden');
+                event.target.textContent = originalText;
+            }
+        }
+        else if(db == 'twigaten') {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: 'https://twigaten.204504byse.info/search/media',
+                responseType: 'document',
+                data: formdata,
+                onload: res => {
+                    window.open(res.finalUrl);
+                    context.parentNode.classList.add('hidden');
+                    event.target.textContent = originalText;
+                },
+            });
+        }
     }
 }
