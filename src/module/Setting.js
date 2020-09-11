@@ -381,7 +381,7 @@ export function setup() {
         for(const element of textElements) {
             let value;
             if(element.value != '') {
-                value = element.split('\n');
+                value = element.value.split('\n');
                 value = value.filter(item => {
                     return item != '';
                 });
@@ -402,7 +402,7 @@ export function setup() {
         }
         GM_setValue('blockEmoticon', blockEmoticon);
 
-        if(settingWrapper.querySelector('.category-group').textContent != '') {
+        if(settingWrapper.querySelector('#categorySetting tbody').childElementCount == 0) {
             location.reload();
         }
     });
