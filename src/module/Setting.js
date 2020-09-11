@@ -402,7 +402,7 @@ export function setup() {
         }
         GM_setValue('blockEmoticon', blockEmoticon);
 
-        if(settingWrapper.querySelector('.category-group').textContent != '') {
+        if(settingWrapper.querySelector('#categorySetting tbody').childElementCount == 0) {
             location.reload();
         }
     });
