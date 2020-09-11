@@ -462,6 +462,7 @@ export function setupCategory(channel) {
     });
     categoryTable.addEventListener('dblclick', event => {
         if(event.target.name != 'color') return;
+        if(event.target.disabled) return;
 
         const color = getRandomColor();
         event.target.value = color;
