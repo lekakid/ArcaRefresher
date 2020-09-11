@@ -80,7 +80,7 @@ export function setup() {
                                         <option value="5">5초</option>
                                         <option value="10">10초</option>
                                     </select>
-                                    <p class="text-muted">일정 시간마다 게시물 목록을 갱신합니다.</p>
+                                    <p>일정 시간마다 게시물 목록을 갱신합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -90,18 +90,17 @@ export function setup() {
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
-                                    <p class="text-muted">자동 새로고침 애니메이션을 숨깁니다.</p>
+                                    <p />
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-md-3">단축키 사용 (Beta)</label>
+                                <label class="col-md-3">단축키 사용</label>
                                 <div class="col-md-9">
                                     <select id="useShortcut" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
-                                    <p class="text-muted">
-                                        채널 활동을 빠르게 할 수 있는 단축키를 사용합니다.<br />
+                                    <p>
                                         <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
                                             단축키 안내 바로가기
                                         </a>
@@ -109,20 +108,20 @@ export function setup() {
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-md-3">비추천 방지</label>
+                                <label class="col-md-3">비추천 재확인 창</label>
                                 <div class="col-md-9">
                                     <select id="blockRatedown" data-type="bool">
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
-                                    <p class="text-muted">비추천을 클릭하면 확인창을 띄웁니다.</p>
+                                    <p />
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-md-3">자짤 관리</label>
                                 <div class="col-md-9">
                                     <a href="#" id="removeMyImage" class="btn btn-success">삭제</a>
-                                    <p class="text-muted">등록된 자짤을 삭제합니다.</p>
+                                    <p>게시물 조회 시 이미지 오른쪽 클릭 메뉴에서 관리합니다.</p>
                                 </div>
                             </div>
                             <hr />
@@ -134,7 +133,7 @@ export function setup() {
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
-                                    <p class="text-muted">베스트 라이브, 헤드라인 등 우측 사이드 메뉴를 숨깁니다.</p>
+                                    <p>베스트 라이브, 헤드라인 등 우측 사이드 메뉴를 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -144,7 +143,7 @@ export function setup() {
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
-                                    <p class="text-muted">게시물 조회 시 프로필 아바타를 숨깁니다.</p>
+                                    <p>게시물 조회 시 프로필 아바타를 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -154,7 +153,7 @@ export function setup() {
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
-                                    <p class="text-muted">게시물 조회 시 본문에 나오는 이미지와 동영상을 숨깁니다.</p>
+                                    <p>게시물 조회 시 본문에 나오는 이미지와 동영상을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -164,7 +163,10 @@ export function setup() {
                                         <option value="false">보임</option>
                                         <option value="true">숨김</option>
                                     </select>
-                                    <p class="text-muted">수정된 댓글의 수정됨 표기를 숨깁니다.</p>
+                                    <p>
+                                        수정된 댓글의 수정됨 표기를 숨깁니다.<br />
+                                        주의) 댓글 삭제 권한 보유 시 삭제됨 표기도 같이 숨겨집니다.
+                                    </p>
                                 </div>
                             </div>
                             <hr />
@@ -185,7 +187,7 @@ export function setup() {
                                         </thead>
                                         <tbody />
                                     </table>
-                                    <p class="text-muted">
+                                    <p>
                                         색상: 카테고리를 표시하는 색상을 변경합니다. 더블 클릭 시 무작위 색상이 지정됩니다.<br />
                                         미리보기 숨김: 마우스 오버 시 보여주는 미리보기를 제거합니다.<br />
                                         게시물 뮤트: 해당 카테고리가 포함된 게시물을 숨깁니다.
@@ -198,14 +200,14 @@ export function setup() {
                                 <label class="col-md-3">사용자 뮤트</label>
                                 <div class="col-md-9">
                                     <textarea id="blockUser" rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
-                                    <p class="text-muted">지정한 유저의 게시물과 댓글을 숨깁니다.</p>
+                                    <p>지정한 유저의 게시물과 댓글을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-md-3">키워드 뮤트</label>
                                 <div class="col-md-9">
                                     <textarea id="blockKeyword" rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
-                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.</p>
+                                    <p>지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -213,7 +215,7 @@ export function setup() {
                                 <div class="col-md-9">
                                     <select id="blockEmoticon" size="6" multiple />
                                     <div class="col-md-10">
-                                        <p class="text-muted">뮤트된 아카콘 리스트입니다. 뮤트는 댓글에서 할 수 있습니다.</p>
+                                        <p>뮤트된 아카콘 리스트입니다. 뮤트는 댓글에서 할 수 있습니다.</p>
                                     </div>
                                     <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
                                         <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
@@ -229,21 +231,21 @@ export function setup() {
                                         <option value="false">사용 안 함</option>
                                         <option value="true">사용</option>
                                     </select>
-                                    <p class="text-muted">게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.</p>
+                                    <p>게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-md-3">유저 게시물 삭제</label>
                                 <div class="col-md-9">
                                     <textarea id="autoRemoveUser" rows="6" placeholder="대상 이용자를 줄바꿈으로 구별하여 입력합니다." />
-                                    <p class="text-muted">지정한 유저의 게시물을 자동으로 삭제합니다.</p>
+                                    <p>지정한 유저의 게시물을 자동으로 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-md-3">키워드 포함 게시물 삭제</label>
                                 <div class="col-md-9">
                                     <textarea id="autoRemoveKeyword" rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
-                                    <p class="text-muted">지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
+                                    <p>지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.</p>
                                 </div>
                             </div>
                             <div class="row btns">
