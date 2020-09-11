@@ -29,22 +29,11 @@ export function convert() {
 
     const data = JSON.parse(oldData);
 
-    GM_setValue('refreshTime', parseInt(data.refreshTime, 10));
-    GM_setValue('hideRefresher', data.hideRefresher);
-    GM_setValue('useShortcut', data.useShortcut);
-    GM_setValue('hideNotice', data.hideNotice);
-    GM_setValue('hideAvatar', data.hideAvatar);
-    GM_setValue('hideMedia', data.hideMedia);
-    GM_setValue('hideModified', data.hideModified);
-    GM_setValue('hideSideMenu', data.hideSideMenu);
-    GM_setValue('myImage', data.myImage);
-    GM_setValue('blockKeyword', data.blockKeyword);
-    GM_setValue('blockUser', data.blockUser);
-    GM_setValue('blockEmoticon', data.blockEmoticon);
-    GM_setValue('userMemo', data.userMemo);
-    GM_setValue('useAutoRemoverTest', data.useAutoRemoverTest);
-    GM_setValue('autoRemoveUser', data.autoRemoveUser);
-    GM_setValue('autoRemoveKeyword', data.autoRemoveKeyword);
+    for(const key in data) {
+        if({}.hasOwnProperty.call(data, key) && {}.hasOwnProperty.call(defaultConfig, key)) {
+            GM_setValue(key, data[key]);
+        }
+    }
 
     GM_deleteValue('Setting');
 }
