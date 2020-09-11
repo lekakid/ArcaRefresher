@@ -6,111 +6,122 @@ export function apply() {
 
     document.head.append(<style>{stylesheet}</style>);
 
-    const body = (
-        <div class="article-images hidden">
-            <div class="article-list">
-                <div class="list-table">
-                    <div class="vrow head">
-                        <div class="vrow-top">
-                            <span class="vcol col-thumb">썸네일</span>
-                            <span class="vcol col-image">이미지</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    const table = (
+        <div class="article-image hidden">
+            <table class="table align-middle" id="imageList">
+                <colgroup>
+                    <col width="5%" />
+                    <col width="10%" />
+                    <col width="85%" />
+                </colgroup>
+                <thead>
+                    <th><input type="checkbox" name="selectAll" /></th>
+                    <th>썸네일</th>
+                    <th>파일명</th>
+                </thead>
+                <tbody />
+                <tfoot>
+                    <td colspan="3">
+                        <button class="btn btn-success">일괄 다운로드</button>
+                    </td>
+                </tfoot>
+            </table>
         </div>
     );
 
-    const footerItem = (
-        <div class="vrow">
-            <div class="vrow-top">
-                <button class="vcol col-download btn btn-success">
-                    <span class="total">일괄 다운로드</span><br />
-                    <span class="progressPercent" />
-                </button>
-            </div>
-        </div>
-    );
-
-    const button = <a href="#" class="btn btn-success"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
-    button.addEventListener('click', event => {
+    const downloadBtn = table.querySelector('tfoot button');
+    const enableBtn = <a href="#" class="btn btn-success"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
+    enableBtn.addEventListener('click', event => {
         event.preventDefault();
 
-        if(body.classList.contains('hidden')) {
-            body.classList.remove('hidden');
+        if(table.classList.contains('hidden')) {
+            table.classList.remove('hidden');
         }
         else {
-            body.classList.add('hidden');
+            table.classList.add('hidden');
         }
     });
 
-    document.querySelector('.article-body').insertAdjacentElement('afterend', body);
-    document.querySelector('.article-body').insertAdjacentElement('afterend', button);
-    const list = body.querySelector('.list-table');
+    document.querySelector('.article-body').insertAdjacentElement('afterend', enableBtn);
+    enableBtn.insertAdjacentElement('afterend', table);
+    const list = table.querySelector('tbody');
 
-    list.addEventListener('click', onListClick);
-
-    async function onListClick(event) {
-        if(event.target.tagName != 'A') return;
-
-        event.preventDefault();
-
-        const url = event.target.getAttribute('data-url');
-        const file = await download(url);
-
-        window.saveAs(file, event.target.innerText);
-    }
-
-    data.forEach(dataItem => {
+    for(const d of data) {
         const itemElement = (
-            <div class="vrow">
-                <div class="vrow-top">
-                    <span class="vcol col-thumb">
-                        {dataItem.type == 'image' && <img src={dataItem.thumb} />}
-                        {dataItem.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
-                    </span>
-                    <a class="vcol col-image" href="#" data-url={dataItem.url}>{dataItem.image}</a>
-                </div>
-            </div>
+            <tr>
+                <td>
+                    <input type="checkbox" name="select" />
+                </td>
+                <td>
+                    {d.type == 'image' && <img src={d.thumb} />}
+                    {d.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
+                </td>
+                <td>
+                    <a href="#" data-url={d.url}>{d.image}</a>
+                </td>
+            </tr>
         );
 
         list.append(itemElement);
+    }
+
+    table.addEventListener('click', async event => {
+        if(event.target.tagName == 'A') {
+            event.preventDefault();
+
+            const url = event.target.dataset.url;
+            if(url != '') {
+                event.target.dataset.url = '';
+                const file = await download(url, event.target, '다운로드 중...[percent]%', event.target.textContent);
+                window.saveAs(file, event.target.textContent);
+                event.target.dataset.url = url;
+            }
+        }
+        else if(event.target.name == 'selectAll') {
+            const inputElements = table.querySelectorAll('input[type="checkbox"]');
+            for(const i of inputElements) {
+                i.checked = event.target.checked;
+            }
+        }
     });
 
-    async function onDownloadAll() {
-        const zip = new JSZip();
-        const total = data.length;
-        let current = 0;
+    downloadBtn.addEventListener('click', async event => {
+        event.preventDefault();
+        downloadBtn.disabled = true;
 
-        this.disabled = true;
+        const checkboxElements = list.querySelectorAll('input[type="checkbox"]');
+        const urlElements = list.querySelectorAll('a');
 
-        const totalElement = this.querySelector('.total');
-        const progressElement = this.querySelector('.progressPercent');
+        const originalText = downloadBtn.textContent;
 
-        const originalText = totalElement.textContent;
-
-        for(const d of data) {
-            let file = null;
-
-            while(file == null) {
-                totalElement.textContent = `다운로드 중...${current}/${total}`;
-                file = await download(d.url, progressElement);
+        const downloadList = [];
+        const nameList = [];
+        for(let i = 0; i < urlElements.length; i += 1) {
+            if(checkboxElements[i].checked) {
+                downloadList.push(urlElements[i].dataset.url);
+                nameList.push(urlElements[i].textContent);
             }
-            zip.file(`${`${++current}`.padStart(3, '0')}_${d.image}`, file);
         }
 
-        totalElement.textContent = originalText;
-        progressElement.textContent = '';
+        if(downloadList.length == 0) {
+            alert('선택된 파일이 없습니다.');
+            downloadBtn.disabled = false;
+            return;
+        }
 
-        this.disabled = false;
+        const zip = new JSZip();
+        const total = downloadList.length;
+        for(let i = 0; i < total; i += 1) {
+            const file = await download(downloadList[i], downloadBtn, `다운로드 중...[percent]% (${i}/${total})`, originalText);
+            zip.file(`${`${i}`.padStart(3, '0')}_${nameList[i]}`, file);
+        }
+
+        downloadBtn.disabled = false;
 
         const zipblob = await zip.generateAsync({ type: 'blob' });
         const title = document.querySelector('.article-head .title').textContent.trim();
         window.saveAs(zipblob, `${title}.zip`);
-    }
-
-    footerItem.querySelector('button').addEventListener('click', onDownloadAll);
-    list.append(footerItem);
+    });
 }
 
 function parse() {

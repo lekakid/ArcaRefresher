@@ -1,23 +1,34 @@
-.article-images .article-list .list-table .vrow .vrow-top .vcol.col-thumb img {
+#imageList {
+    margin: 1rem 0;
+}
+
+#imageList img {
     width: 50px;
 }
 
-.article-images .article-list .list-table .vrow .vrow-top .vcol.col-thumb .video-placeholder {
+#imageList .video-placeholder {
     display: flex;
     height: 50px;
     align-items: center;
     justify-content: center;
 }
 
-.article-images .article-list .list-table .vrow .vrow-top .vcol.col-image {
-    display: flex;
-    width: 90%;
-    align-items: center;
+#imageList tbody a {
+    word-break: break-all;
     color: #000;
-    text-decoration: none;
 }
 
-.article-images .article-list .list-table .vrow .vrow-top .vcol.col-download {
+#imageList tfoot td {
+    padding: 0;
+}
+
+#imageList button {
     width: 100%;
     margin: 0;
+}
+
+@media (prefers-color-scheme:dark) {
+    #imageList tbody a {
+        color: #e2e2e2;
+    }
 }
