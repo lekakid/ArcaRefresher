@@ -28,3 +28,22 @@
 .wrapper label {
     display: inline;
 }
+
+@media (prefers-color-scheme:dark) {
+    .wrapper {
+        border: 1px solid #43494c;
+        background-color: #181a1b;
+    }
+    
+    .wrapper select,
+    .wrapper textarea,
+    .wrapper input[type="text"] {
+        color: #55595c;
+        background-color: #fff;
+        border: 1px solid #bbb;
+    }
+    
+    .wrapper input[disabled] {
+        background-color: #999;
+    }
+}

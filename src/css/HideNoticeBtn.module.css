@@ -10,3 +10,13 @@
     color: #000;
     text-decoration: none !important;
 }
+
+@media (prefers-color-scheme:dark) {
+    .button,
+    .button:hover,
+    .button:focus {
+        border-bottom: 1px solid #43494c;
+        background-color: #222426;
+        color: #e2e2e2;
+    }
+}
