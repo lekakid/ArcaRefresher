@@ -124,9 +124,9 @@ async function onClickContextMenu(event) {
         event.stopPropagation();
 
         const url = context.getAttribute('data-url');
-        const imgBlob = await download(url, event.target);
+        const imgBlob = await download(url, event.target, '[percent]%', event.target.textContent);
         window.saveAs(imgBlob, `image.${imgBlob.type.split('/')[1]}`);
-        event.target.textContent = originalText;
+        context.parentNode.classList.add('hidden');
     }
     if(event.target.id == 'copy-url') {
         event.preventDefault();
