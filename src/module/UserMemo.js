@@ -7,12 +7,12 @@ export function apply(target) {
     const memoElement = <span class="memo" />;
 
     users.forEach(user => {
-        let id = user.getAttribute('data-id');
-        if(id == null) {
-            id = user.textContent.trim();
-            const subid = user.querySelector('span[title]');
-            id += subid ? (/#[0-9]+/.exec(subid.title) || '') : '';
-            user.setAttribute('data-id', id);
+        let id = user.dataset.id;
+        if(id == undefined) {
+            id = user.innerText.trim();
+            const subid = user.querySelector('a[title], span[title]');
+            id = subid ? subid.title : id;
+            user.dataset.id = id;
         }
 
         if(target && id != target) return;
