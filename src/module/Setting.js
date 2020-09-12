@@ -170,6 +170,18 @@ export function setup() {
                                 </div>
                             </div>
                             <hr />
+                            <h5 class="card-title">메모 기능</h5>
+                            <div class="row">
+                                <label class="col-md-3">메모된 이용자</label>
+                                <div class="col-md-9">
+                                    <select id="userMemo" size="6" multiple="" data-text-format="%key% - %value%" />
+                                    <p>
+                                        메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.<br />
+                                        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+                                    </p>
+                                </div>
+                            </div>
+                            <hr />
                             <h5 class="card-title">채널 설정</h5>
                             <div class="row">
                                 <label class="col-md-3">카테고리 설정</label>
