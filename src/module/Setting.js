@@ -120,7 +120,7 @@ export function setup() {
                             <div class="row">
                                 <label class="col-md-3">자짤 관리</label>
                                 <div class="col-md-9">
-                                    <a href="#" id="removeMyImage" class="btn btn-success">삭제</a>
+                                    <button id="removeMyImage" class="btn btn-success">삭제</button>
                                     <p>게시물 조회 시 이미지 오른쪽 클릭 메뉴에서 관리합니다.</p>
                                 </div>
                             </div>
