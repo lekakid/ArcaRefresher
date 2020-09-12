@@ -11,7 +11,9 @@ export function apply(target) {
         if(id == undefined) {
             id = user.innerText.trim();
             const subid = user.querySelector('a[title], span[title]');
-            id = subid ? subid.title : id;
+            if(subid && subid.title.indexOf('#') > -1) {
+                id = subid.title.substring(subid.title.indexOf('#'));
+            }
             user.dataset.id = id;
         }
 
