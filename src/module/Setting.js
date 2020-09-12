@@ -52,7 +52,7 @@ export function setup() {
 
     // 스크립트 설정 버튼 엘리먼트
     const showSettingBtn = (
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" id="showSetting">
             <a aria-expanded="false" class="nav-link" href="#">
                 <span class="d-none d-sm-block">스크립트 설정</span>
                 <span class="d-block d-sm-none"><span class="ion-gear-a" /></span>
@@ -280,6 +280,7 @@ export function setup() {
     // 설정 버튼 클릭 이벤트
     showSettingBtn.addEventListener('click', () => {
         if(settingWrapper.classList.contains('hidden')) {
+            loadConfig();
             contentWrapper.classList.add('disappear');
         }
         else {
@@ -315,46 +316,10 @@ export function setup() {
     document.querySelector('ul.navbar-nav').append(showSettingBtn);
     contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
-    // 설정 값 불러오기
     const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    for(const element of comboElements) {
-        element.value = GM_getValue(element.id, defaultConfig[element.id]);
-    }
     const textElements = settingWrapper.querySelectorAll('textarea');
-    for(const element of textElements) {
-        element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
-    }
-
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
-        const data = GM_getValue(element.id, defaultConfig[element.id]);
-        for(const key of Object.keys(data)) {
-            const option = <option />;
-            option.value = key;
-
-            const reservedWord = element.dataset.textFormat.match(/%\w*%/g);
-            let text = element.dataset.textFormat;
-            if(text != '') {
-                for(const word of reservedWord) {
-                    switch(word) {
-                    case '%key%':
-                        text = text.replace(word, key);
-                        break;
-                    case '%value%':
-                        text = text.replace(word, data[key]);
-                        break;
-                    default:
-                        text = text.replace(word, data[key][word.replace(/%/g, '')]);
-                        break;
-                    }
-                }
-            }
-            else {
-                text = key;
-            }
-            option.textContent = text;
-            element.append(option);
-        }
         const btnElement = <button href="#" class="btn btn-success">삭제</button>;
         btnElement.addEventListener('click', event => {
             event.target.disabled = true;
@@ -366,7 +331,6 @@ export function setup() {
         });
         element.insertAdjacentElement('afterend', btnElement);
     }
-
     // 이벤트 핸들러
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
         event.target.disabled = true;
@@ -376,7 +340,7 @@ export function setup() {
         }
         event.target.disabled = false;
     });
-    settingWrapper.querySelector('#resetSetting').addEventListener('click', event => {
+    settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
 
         if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
@@ -436,9 +400,66 @@ export function setup() {
     });
 }
 
+function loadConfig() {
+    const settingWrapper = document.querySelector('#refresherSetting');
+
+    // 설정 값 불러오기
+    const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
+    for(const element of comboElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]);
+    }
+    const textElements = settingWrapper.querySelectorAll('textarea');
+    for(const element of textElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
+    }
+
+    const listElements = settingWrapper.querySelectorAll('select[multiple]');
+    for(const element of listElements) {
+        if(element.childElementCount) {
+            while(element.childElementCount) element.removeChild(element.firstChild);
+        }
+        const data = GM_getValue(element.id, defaultConfig[element.id]);
+        for(const key of Object.keys(data)) {
+            const option = <option />;
+            option.value = key;
+
+            const reservedWord = element.dataset.textFormat.match(/%\w*%/g);
+            let text = element.dataset.textFormat;
+            if(text != '') {
+                for(const word of reservedWord) {
+                    switch(word) {
+                    case '%key%':
+                        text = text.replace(word, key);
+                        break;
+                    case '%value%':
+                        text = text.replace(word, data[key]);
+                        break;
+                    default:
+                        text = text.replace(word, data[key][word.replace(/%/g, '')]);
+                        break;
+                    }
+                }
+            }
+            else {
+                text = key;
+            }
+            option.textContent = text;
+            element.append(option);
+        }
+    }
+}
+
 export function setupCategory(channel) {
-    const settingWrapper = document.querySelector(`.${styles.wrapper}`);
+    const settingWrapper = document.querySelector('#refresherSetting');
+    const showSettingBtn = document.getElementById('showSetting');
     const categoryTable = settingWrapper.querySelector('#categorySetting tbody');
+
+    // 설정 버튼 클릭 이벤트
+    showSettingBtn.addEventListener('click', () => {
+        if(settingWrapper.classList.contains('hidden')) {
+            loadCategoryConfig(channel);
+        }
+    });
 
     // 카테고리 목록 등록
     const boardCategoryElements = document.querySelectorAll('.board-category a');
@@ -457,27 +478,6 @@ export function setupCategory(channel) {
             </tr>
         );
         categoryTable.append(tableCategoryElement);
-    }
-
-    // 카테고리 설정 불러오기
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
-    if(categoryConfig[channel] == undefined) {
-        categoryConfig[channel] = {};
-    }
-    for(const key in categoryConfig[channel]) {
-        if({}.hasOwnProperty.call(categoryConfig[channel], key)) {
-            const row = document.getElementById(key);
-            if(row) {
-                const colorInput = row.querySelector('[name="color"]');
-                if(categoryConfig[channel][key].color != '') {
-                    colorInput.value = categoryConfig[channel][key].color;
-                    colorInput.style.backgroundColor = `#${categoryConfig[channel][key].color}`;
-                    colorInput.style.color = getContrastYIQ(categoryConfig[channel][key].color);
-                }
-                row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
-                row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
-            }
-        }
     }
 
     // 이벤트 핸들러
@@ -510,6 +510,7 @@ export function setupCategory(channel) {
     settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
 
+        const categoryConfig = GM_getValue('category', defaultConfig.category);
         const rows = settingWrapper.querySelectorAll('#categorySetting tr');
         for(const row of rows) {
             if(categoryConfig[channel][row.id] == undefined) {
@@ -524,4 +525,29 @@ export function setupCategory(channel) {
 
         location.reload();
     });
+}
+
+function loadCategoryConfig(channel) {
+    // 카테고리 설정 불러오기
+    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    if(categoryConfig[channel] == undefined) {
+        categoryConfig[channel] = {};
+    }
+    for(const key of Object.keys(categoryConfig[channel])) {
+        const row = document.getElementById(key);
+        if(row) {
+            const colorInput = row.querySelector('[name="color"]');
+            colorInput.value = categoryConfig[channel][key].color;
+            if(categoryConfig[channel][key].color == '') {
+                colorInput.style.backgroundColor = '';
+                colorInput.style.color = '';
+            }
+            else {
+                colorInput.style.backgroundColor = `#${categoryConfig[channel][key].color}`;
+                colorInput.style.color = getContrastYIQ(categoryConfig[channel][key].color);
+            }
+            row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
+            row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
+        }
+    }
 }
