@@ -29,8 +29,8 @@ export function convert() {
 
     const data = JSON.parse(oldData);
 
-    for(const key in data) {
-        if({}.hasOwnProperty.call(data, key) && {}.hasOwnProperty.call(defaultConfig, key)) {
+    for(const key of Object.keys(data)) {
+        if({}.hasOwnProperty.call(defaultConfig, key)) {
             GM_setValue(key, data[key]);
         }
     }
