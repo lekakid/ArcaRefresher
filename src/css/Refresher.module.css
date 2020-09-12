@@ -38,3 +38,7 @@
 .target {
     background-color: #e6aaaa;
 }
+
+:global .badge {
+    transition: none;
+}
