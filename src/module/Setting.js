@@ -213,13 +213,11 @@ export function setup() {
                             <div class="row">
                                 <label class="col-md-3">뮤트된 아카콘</label>
                                 <div class="col-md-9">
-                                    <select id="blockEmoticon" size="6" multiple />
-                                    <div class="col-md-10">
-                                        <p>뮤트된 아카콘 리스트입니다. 뮤트는 댓글에서 할 수 있습니다.</p>
-                                    </div>
-                                    <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
-                                        <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
-                                    </div>
+                                    <select id="blockEmoticon" size="6" multiple="" data-text-format="%name%" />
+                                    <p>
+                                        아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
+                                        Ctrl, Shift를 이용해서 여러개를 동시에 선택, 삭제 할 수 있습니다.
+                                    </p>
                                 </div>
                             </div>
                             <hr />
@@ -315,32 +313,56 @@ export function setup() {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
 
-    const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
-    const emoticonList = settingWrapper.querySelector('#blockEmoticon');
-    for(const key in blockEmoticon) {
-        if({}.hasOwnProperty.call(blockEmoticon, key)) {
-            const opt = <option value="" />;
-            opt.value = key;
-            opt.textContent = `${blockEmoticon[key].name}`;
-            emoticonList.append(opt);
+    const listElements = settingWrapper.querySelectorAll('select[multiple]');
+    for(const element of listElements) {
+        const data = GM_getValue(element.id, defaultConfig[element.id]);
+        for(const key of Object.keys(data)) {
+            const option = <option />;
+            option.value = key;
+
+            const reservedWord = element.dataset.textFormat.match(/%\w*%/g);
+            let text = element.dataset.textFormat;
+            if(text != '') {
+                for(const word of reservedWord) {
+                    switch(word) {
+                    case '%key%':
+                        text = text.replace(word, key);
+                        break;
+                    case '%value%':
+                        text = text.replace(word, data[key]);
+                        break;
+                    default:
+                        text = text.replace(word, data[key][word.replace(/%/g, '')]);
+                        break;
+                    }
+                }
+            }
+            else {
+                text = key;
+            }
+            option.textContent = text;
+            element.append(option);
         }
+        const btnElement = <button href="#" class="btn btn-success">삭제</button>;
+        btnElement.addEventListener('click', event => {
+            event.target.disabled = true;
+
+            const removeElements = element.selectedOptions;
+            while(removeElements.length > 0) removeElements[0].remove();
+
+            event.target.disabled = false;
+        });
+        element.insertAdjacentElement('afterend', btnElement);
     }
 
     // 이벤트 핸들러
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
-        event.preventDefault();
-        if(!confirm('등록한 자짤을 삭제하시겠습니까?')) return;
-
-        GM_setValue('myImage', '');
-        alert('삭제되었습니다.');
-    });
-    settingWrapper.querySelector('#removeEmoticon').addEventListener('click', event => {
-        event.preventDefault();
-
-        const removeItems = settingWrapper.querySelector('#blockEmoticon').selectedOptions;
-        while(removeItems.length > 0) {
-            removeItems[0].remove();
+        event.target.disabled = true;
+        if(confirm('등록한 자짤을 삭제하시겠습니까?')) {
+            GM_setValue('myImage', '');
+            alert('삭제되었습니다.');
         }
+        event.target.disabled = false;
     });
     settingWrapper.querySelector('#resetSetting').addEventListener('click', event => {
         event.preventDefault();
@@ -383,15 +405,15 @@ export function setup() {
             GM_setValue(element.id, value);
         }
 
-        const blockOptions = settingWrapper.querySelectorAll('#blockEmoticon option');
-        const keys = [];
-        blockOptions.forEach(item => {
-            keys.push(item.value);
-        });
-        for(const key in blockEmoticon) {
-            if(keys.indexOf(key) == -1) delete blockEmoticon[key];
+        for(const element of listElements) {
+            const data = GM_getValue(element.id, defaultConfig[element.id]);
+            const options = element.querySelectorAll('option');
+            const keys = Array.from(options, o => o.value);
+            for(const key in data) {
+                if(keys.indexOf(key) == -1) delete data[key];
+            }
+            GM_setValue(element.id, data);
         }
-        GM_setValue('blockEmoticon', blockEmoticon);
 
         if(settingWrapper.querySelector('#categorySetting tbody').childElementCount == 0) {
             location.reload();
