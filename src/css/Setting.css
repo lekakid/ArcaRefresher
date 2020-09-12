@@ -1,4 +1,4 @@
-.wrapper {
+#refresherSetting {
     margin: 0 auto;
     max-width: 1300px;
     border: 1px solid #bbb;
@@ -6,9 +6,9 @@
     padding: 1rem;
 }
 
-.wrapper select,
-.wrapper textarea,
-.wrapper input[type="text"] {
+#refresherSetting select,
+#refresherSetting textarea,
+#refresherSetting input[type="text"] {
     display: block;
     width: 100%;
     padding: .5rem .75rem;
@@ -17,33 +17,33 @@
     border: 1px solid #bbb;
 }
 
-.wrapper input[disabled] {
+#refresherSetting input[disabled] {
     background-color: #eee;
 }
 
-.wrapper select {
+#refresherSetting select {
     overflow: scroll;
 }
 
-.wrapper label {
+#refresherSetting label {
     display: inline;
 }
 
 @media (prefers-color-scheme:dark) {
-    .wrapper {
+    #refresherSetting {
         border: 1px solid #43494c;
         background-color: #181a1b;
     }
     
-    .wrapper select,
-    .wrapper textarea,
-    .wrapper input[type="text"] {
+    #refresherSetting select,
+    #refresherSetting textarea,
+    #refresherSetting input[type="text"] {
         color: #55595c;
         background-color: #fff;
         border: 1px solid #bbb;
     }
     
-    .wrapper input[disabled] {
+    #refresherSetting input[disabled] {
         background-color: #999;
     }
 }

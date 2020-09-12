@@ -1,6 +1,6 @@
 import { getContrastYIQ, getRandomColor } from './ColorManager';
 
-import styles, { stylesheet } from '../css/Setting.module.css';
+import stylesheet from '../css/Setting.css';
 
 export const defaultConfig = {
     refreshTime: 5,
@@ -62,7 +62,7 @@ export function setup() {
 
     // 설정 뷰
     const settingWrapper = (
-        <div class={`${styles.wrapper} hidden clearfix`}>
+        <div class="hidden clearfix" id="refresherSetting">
             <div class="row">
                 <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
@@ -260,7 +260,7 @@ export function setup() {
                             </div>
                             <div class="row btns">
                                 <div class="col-12">
-                                    <a href="#" id="resetSetting" class="btn btn-danger">설정 초기화</a>
+                                    <a href="#" id="resetConfig" class="btn btn-danger">설정 초기화</a>
                                 </div>
                             </div>
                             <div class="row btns">
