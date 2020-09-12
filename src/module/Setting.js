@@ -1,6 +1,6 @@
 import { getContrastYIQ, getRandomColor } from './ColorManager';
 
-import styles, { stylesheet } from '../css/Setting.module.css';
+import stylesheet from '../css/Setting.css';
 
 export const defaultConfig = {
     refreshTime: 5,
@@ -29,8 +29,8 @@ export function convert() {
 
     const data = JSON.parse(oldData);
 
-    for(const key in data) {
-        if({}.hasOwnProperty.call(data, key) && {}.hasOwnProperty.call(defaultConfig, key)) {
+    for(const key of Object.keys(data)) {
+        if({}.hasOwnProperty.call(defaultConfig, key)) {
             GM_setValue(key, data[key]);
         }
     }
@@ -52,7 +52,7 @@ export function setup() {
 
     // 스크립트 설정 버튼 엘리먼트
     const showSettingBtn = (
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" id="showSetting">
             <a aria-expanded="false" class="nav-link" href="#">
                 <span class="d-none d-sm-block">스크립트 설정</span>
                 <span class="d-block d-sm-none"><span class="ion-gear-a" /></span>
@@ -62,7 +62,7 @@ export function setup() {
 
     // 설정 뷰
     const settingWrapper = (
-        <div class={`${styles.wrapper} hidden clearfix`}>
+        <div class="hidden clearfix" id="refresherSetting">
             <div class="row">
                 <div class="col-sm-0 col-md-2" />
                 <div class="col-sm-12 col-md-8">
@@ -120,7 +120,7 @@ export function setup() {
                             <div class="row">
                                 <label class="col-md-3">자짤 관리</label>
                                 <div class="col-md-9">
-                                    <a href="#" id="removeMyImage" class="btn btn-success">삭제</a>
+                                    <button id="removeMyImage" class="btn btn-success">삭제</button>
                                     <p>게시물 조회 시 이미지 오른쪽 클릭 메뉴에서 관리합니다.</p>
                                 </div>
                             </div>
@@ -170,6 +170,18 @@ export function setup() {
                                 </div>
                             </div>
                             <hr />
+                            <h5 class="card-title">메모 기능</h5>
+                            <div class="row">
+                                <label class="col-md-3">메모된 이용자</label>
+                                <div class="col-md-9">
+                                    <select id="userMemo" size="6" multiple="" data-text-format="%key% - %value%" />
+                                    <p>
+                                        메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.<br />
+                                        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+                                    </p>
+                                </div>
+                            </div>
+                            <hr />
                             <h5 class="card-title">채널 설정</h5>
                             <div class="row">
                                 <label class="col-md-3">카테고리 설정</label>
@@ -213,13 +225,11 @@ export function setup() {
                             <div class="row">
                                 <label class="col-md-3">뮤트된 아카콘</label>
                                 <div class="col-md-9">
-                                    <select id="blockEmoticon" size="6" multiple />
-                                    <div class="col-md-10">
-                                        <p>뮤트된 아카콘 리스트입니다. 뮤트는 댓글에서 할 수 있습니다.</p>
-                                    </div>
-                                    <div class={`col-md-2 ${styles['align-right']} ${styles.fit}`}>
-                                        <a href="#" id="removeEmoticon" class="btn btn-success">삭제</a>
-                                    </div>
+                                    <select id="blockEmoticon" size="6" multiple="" data-text-format="%name%" />
+                                    <p>
+                                        아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
+                                        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+                                    </p>
                                 </div>
                             </div>
                             <hr />
@@ -250,7 +260,7 @@ export function setup() {
                             </div>
                             <div class="row btns">
                                 <div class="col-12">
-                                    <a href="#" id="resetSetting" class="btn btn-danger">설정 초기화</a>
+                                    <a href="#" id="resetConfig" class="btn btn-danger">설정 초기화</a>
                                 </div>
                             </div>
                             <div class="row btns">
@@ -270,6 +280,7 @@ export function setup() {
     // 설정 버튼 클릭 이벤트
     showSettingBtn.addEventListener('click', () => {
         if(settingWrapper.classList.contains('hidden')) {
+            loadConfig();
             contentWrapper.classList.add('disappear');
         }
         else {
@@ -305,44 +316,31 @@ export function setup() {
     document.querySelector('ul.navbar-nav').append(showSettingBtn);
     contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
-    // 설정 값 불러오기
     const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    for(const element of comboElements) {
-        element.value = GM_getValue(element.id, defaultConfig[element.id]);
-    }
     const textElements = settingWrapper.querySelectorAll('textarea');
-    for(const element of textElements) {
-        element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
-    }
+    const listElements = settingWrapper.querySelectorAll('select[multiple]');
+    for(const element of listElements) {
+        const btnElement = <button href="#" class="btn btn-success">삭제</button>;
+        btnElement.addEventListener('click', event => {
+            event.target.disabled = true;
 
-    const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
-    const emoticonList = settingWrapper.querySelector('#blockEmoticon');
-    for(const key in blockEmoticon) {
-        if({}.hasOwnProperty.call(blockEmoticon, key)) {
-            const opt = <option value="" />;
-            opt.value = key;
-            opt.textContent = `${blockEmoticon[key].name}`;
-            emoticonList.append(opt);
-        }
-    }
+            const removeElements = element.selectedOptions;
+            while(removeElements.length > 0) removeElements[0].remove();
 
+            event.target.disabled = false;
+        });
+        element.insertAdjacentElement('afterend', btnElement);
+    }
     // 이벤트 핸들러
     settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
-        event.preventDefault();
-        if(!confirm('등록한 자짤을 삭제하시겠습니까?')) return;
-
-        GM_setValue('myImage', '');
-        alert('삭제되었습니다.');
-    });
-    settingWrapper.querySelector('#removeEmoticon').addEventListener('click', event => {
-        event.preventDefault();
-
-        const removeItems = settingWrapper.querySelector('#blockEmoticon').selectedOptions;
-        while(removeItems.length > 0) {
-            removeItems[0].remove();
+        event.target.disabled = true;
+        if(confirm('등록한 자짤을 삭제하시겠습니까?')) {
+            GM_setValue('myImage', '');
+            alert('삭제되었습니다.');
         }
+        event.target.disabled = false;
     });
-    settingWrapper.querySelector('#resetSetting').addEventListener('click', event => {
+    settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
 
         if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
@@ -383,15 +381,15 @@ export function setup() {
             GM_setValue(element.id, value);
         }
 
-        const blockOptions = settingWrapper.querySelectorAll('#blockEmoticon option');
-        const keys = [];
-        blockOptions.forEach(item => {
-            keys.push(item.value);
-        });
-        for(const key in blockEmoticon) {
-            if(keys.indexOf(key) == -1) delete blockEmoticon[key];
+        for(const element of listElements) {
+            const data = GM_getValue(element.id, defaultConfig[element.id]);
+            const options = element.querySelectorAll('option');
+            const keys = Array.from(options, o => o.value);
+            for(const key in data) {
+                if(keys.indexOf(key) == -1) delete data[key];
+            }
+            GM_setValue(element.id, data);
         }
-        GM_setValue('blockEmoticon', blockEmoticon);
 
         if(settingWrapper.querySelector('#categorySetting tbody').childElementCount == 0) {
             location.reload();
@@ -402,9 +400,66 @@ export function setup() {
     });
 }
 
+function loadConfig() {
+    const settingWrapper = document.querySelector('#refresherSetting');
+
+    // 설정 값 불러오기
+    const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
+    for(const element of comboElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]);
+    }
+    const textElements = settingWrapper.querySelectorAll('textarea');
+    for(const element of textElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
+    }
+
+    const listElements = settingWrapper.querySelectorAll('select[multiple]');
+    for(const element of listElements) {
+        if(element.childElementCount) {
+            while(element.childElementCount) element.removeChild(element.firstChild);
+        }
+        const data = GM_getValue(element.id, defaultConfig[element.id]);
+        for(const key of Object.keys(data)) {
+            const option = <option />;
+            option.value = key;
+
+            const reservedWord = element.dataset.textFormat.match(/%\w*%/g);
+            let text = element.dataset.textFormat;
+            if(text != '') {
+                for(const word of reservedWord) {
+                    switch(word) {
+                    case '%key%':
+                        text = text.replace(word, key);
+                        break;
+                    case '%value%':
+                        text = text.replace(word, data[key]);
+                        break;
+                    default:
+                        text = text.replace(word, data[key][word.replace(/%/g, '')]);
+                        break;
+                    }
+                }
+            }
+            else {
+                text = key;
+            }
+            option.textContent = text;
+            element.append(option);
+        }
+    }
+}
+
 export function setupCategory(channel) {
-    const settingWrapper = document.querySelector(`.${styles.wrapper}`);
+    const settingWrapper = document.querySelector('#refresherSetting');
+    const showSettingBtn = document.getElementById('showSetting');
     const categoryTable = settingWrapper.querySelector('#categorySetting tbody');
+
+    // 설정 버튼 클릭 이벤트
+    showSettingBtn.addEventListener('click', () => {
+        if(settingWrapper.classList.contains('hidden')) {
+            loadCategoryConfig(channel);
+        }
+    });
 
     // 카테고리 목록 등록
     const boardCategoryElements = document.querySelectorAll('.board-category a');
@@ -423,27 +478,6 @@ export function setupCategory(channel) {
             </tr>
         );
         categoryTable.append(tableCategoryElement);
-    }
-
-    // 카테고리 설정 불러오기
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
-    if(categoryConfig[channel] == undefined) {
-        categoryConfig[channel] = {};
-    }
-    for(const key in categoryConfig[channel]) {
-        if({}.hasOwnProperty.call(categoryConfig[channel], key)) {
-            const row = document.getElementById(key);
-            if(row) {
-                const colorInput = row.querySelector('[name="color"]');
-                if(categoryConfig[channel][key].color != '') {
-                    colorInput.value = categoryConfig[channel][key].color;
-                    colorInput.style.backgroundColor = `#${categoryConfig[channel][key].color}`;
-                    colorInput.style.color = getContrastYIQ(categoryConfig[channel][key].color);
-                }
-                row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
-                row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
-            }
-        }
     }
 
     // 이벤트 핸들러
@@ -476,6 +510,7 @@ export function setupCategory(channel) {
     settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
 
+        const categoryConfig = GM_getValue('category', defaultConfig.category);
         const rows = settingWrapper.querySelectorAll('#categorySetting tr');
         for(const row of rows) {
             if(categoryConfig[channel][row.id] == undefined) {
@@ -490,4 +525,29 @@ export function setupCategory(channel) {
 
         location.reload();
     });
+}
+
+function loadCategoryConfig(channel) {
+    // 카테고리 설정 불러오기
+    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    if(categoryConfig[channel] == undefined) {
+        categoryConfig[channel] = {};
+    }
+    for(const key of Object.keys(categoryConfig[channel])) {
+        const row = document.getElementById(key);
+        if(row) {
+            const colorInput = row.querySelector('[name="color"]');
+            colorInput.value = categoryConfig[channel][key].color;
+            if(categoryConfig[channel][key].color == '') {
+                colorInput.style.backgroundColor = '';
+                colorInput.style.color = '';
+            }
+            else {
+                colorInput.style.backgroundColor = `#${categoryConfig[channel][key].color}`;
+                colorInput.style.color = getContrastYIQ(categoryConfig[channel][key].color);
+            }
+            row.querySelector('[name="blockPreview"]').checked = categoryConfig[channel][key].blockPreview;
+            row.querySelector('[name="blockArticle"]').checked = categoryConfig[channel][key].blockArticle;
+        }
+    }
 }
