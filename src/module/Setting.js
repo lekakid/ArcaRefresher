@@ -216,7 +216,7 @@ export function setup() {
                                     <select id="blockEmoticon" size="6" multiple="" data-text-format="%name%" />
                                     <p>
                                         아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
-                                        Ctrl, Shift를 이용해서 여러개를 동시에 선택, 삭제 할 수 있습니다.
+                                        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
                                     </p>
                                 </div>
                             </div>
