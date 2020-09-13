@@ -41,6 +41,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(targetElement == null) return;
 
     UserMemo.apply();
+    // BlockSystem.injectBlockList();
 
     let type = '';
 
@@ -58,7 +59,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         const comments = targetElement.querySelectorAll('#comment .comment-item');
         IPScouter.applyComments(comments);
-        BlockSystem.blockComment(comments);
         BlockSystem.blockEmoticon(comments);
 
         AdvancedReply.applyRefreshBtn();
@@ -79,7 +79,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(articles, channel);
 
         if(type != 'board-included') {
             Refrehser.run(channel);
