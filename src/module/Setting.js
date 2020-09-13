@@ -512,6 +512,10 @@ export function setupCategory(channel) {
 
         const categoryConfig = GM_getValue('category', defaultConfig.category);
         const rows = settingWrapper.querySelectorAll('#categorySetting tr');
+        if(categoryConfig[channel] == undefined) {
+            categoryConfig[channel] = {};
+        }
+
         for(const row of rows) {
             if(categoryConfig[channel][row.id] == undefined) {
                 categoryConfig[channel][row.id] = {};
