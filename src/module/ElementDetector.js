@@ -7,7 +7,10 @@ export async function waitForElement(selector) {
         const observer = new MutationObserver(() => {
             targetElement = document.querySelector(selector);
 
-            if(targetElement) resolve(targetElement);
+            if(targetElement) {
+                observer.disconnect();
+                resolve(targetElement);
+            }
         });
         observer.observe(document, {
             childList: true,
