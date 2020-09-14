@@ -16,6 +16,7 @@ import { waitForElement } from './module/ElementDetector';
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
 import hidesheet from './css/HideSystem.css';
+import blocksheet from './css/BlockSystem.css';
 
 import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
@@ -23,6 +24,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
     document.head.append(<style>{hidesheet}</style>);
+    document.head.append(<style>{blocksheet}</style>);
     document.head.append(<style>{ipsheet}</style>);
 
     const path = location.pathname.split('/');
@@ -41,7 +43,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(targetElement == null) return;
 
     UserMemo.apply();
-    // BlockSystem.injectBlockList();
 
     let type = '';
 
@@ -77,6 +78,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         const articles = targetElement.querySelectorAll('.list-table a.vrow');
         CategoryColor.applyArticles(articles, channel);
+        BlockSystem.blockArticle(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
 

@@ -1,6 +1,6 @@
 import * as DateManager from './DateManager';
 import * as PreviewFilter from './PreviewFilter';
-// import * as BlockSystem from './BlockSystem';
+import * as BlockSystem from './BlockSystem';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 import * as AutoRemover from './AutoRemover';
@@ -89,7 +89,7 @@ export function run(channel) {
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        // BlockSystem.blockArticle(articles, channel);
+        BlockSystem.blockArticle(articles, channel);
         if(AutoRemover.removeArticle(articles)) {
             clearInterval(loadLoop);
             loadLoop = null;
