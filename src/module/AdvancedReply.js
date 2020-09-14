@@ -41,7 +41,8 @@ function refresh() {
         req.addEventListener('load', () => {
             const newComments = req.response.querySelector('.article-comment .list-area');
             const commentArea = document.querySelector('.article-comment');
-            commentArea.querySelector('.list-area').remove();
+            const list = commentArea.querySelector('.list-area');
+            if(list) list.remove();
 
             if(newComments) {
                 newComments.querySelectorAll('time').forEach(time => {
