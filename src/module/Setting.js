@@ -6,7 +6,7 @@ export const defaultConfig = {
     refreshTime: 5,
     hideRefresher: false,
     useShortcut: false,
-    hideNotice: false,
+    hideNotice: true,
     hideAvatar: false,
     hideMedia: false,
     hideModified: false,

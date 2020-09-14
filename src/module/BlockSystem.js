@@ -8,33 +8,24 @@ export function blockArticle(articles, channel) {
         return;
     }
 
-    const list = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-
-    let toggleBtn = document.querySelector('.vrow.frontend-header');
-    if(toggleBtn == null) {
-        toggleBtn = <div class="vrow frontend-header"><span class="mute-count">뮤트 카운트</span></div>;
-        toggleBtn.addEventListener('click', () => {
-            if(list.classList.contains('show-muted')) {
-                list.classList.remove('show-muted');
-            }
-            else {
-                list.classList.add('show-muted');
-            }
-        });
-    }
-
-    const live = unsafeWindow.LiveConfig.mute;
+    const count = {
+        user: 0,
+        keyword: 0,
+        category: 0,
+        notice: 0,
+        all: 0,
+    };
 
     let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
     let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
     const categoryConfig = GM_getValue('category', defaultConfig.category);
 
-    if(live) {
-        userlist = live.users.length == 0 ? userlist : live.users;
-        keywordlist = live.keywords.length == 0 ? keywordlist : live.keywords;
+    if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
+        userlist.push(...unsafeWindow.LiveConfig.mute.users);
+        keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
+        userlist = Array.from(new Set(userlist));
+        keywordlist = Array.from(new Set(keywordlist));
     }
-
-    let muteCount = 0;
 
     articles.forEach(item => {
         const title = item.querySelector('.col-title');
@@ -51,22 +42,108 @@ export function blockArticle(articles, channel) {
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
         let categoryAllow = false;
+
         if(categoryConfig[channel] && categoryConfig[channel][category]) {
             categoryAllow = categoryConfig[channel][category].blockArticle;
         }
 
-        if((titleAllow || authorAllow || categoryAllow) && !item.classList.contains('muted')) {
-            item.classList.add('muted');
-            muteCount += 1;
+        if(titleAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-keyword');
+            count.keyword += 1;
         }
+
+        if(authorAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-user');
+            count.user += 1;
+        }
+
+        if(categoryAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-category');
+            count.category += 1;
+        }
+
+        if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-notice');
+            count.notice += 1;
+        }
+
+        if(item.classList.contains('filtered')) count.all += 1;
     });
 
-    if(muteCount > 0) {
-        if(toggleBtn.parentNode == null) {
-            list.prepend(toggleBtn);
+    const list = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
+    let toggleHeader = list.querySelector('.frontend-header');
+
+    if(toggleHeader) toggleHeader.remove();
+
+    toggleHeader = (
+        <div class="frontend-header">
+            <span class="filter-title">필터된 게시물</span>
+            <span class="filter-count-container" />
+        </div>
+    );
+
+    const container = toggleHeader.querySelector('.filter-count-container');
+
+    if(count.all > 0) {
+        list.prepend(toggleHeader);
+
+        for(const key of Object.keys(count)) {
+            if(count[key] > 0) {
+                let className = `show-filtered-${key}`;
+                if(key == 'all') className = 'show-filtered';
+
+                let text;
+                switch(key) {
+                case 'all':
+                    text = '전체';
+                    break;
+                case 'user':
+                    text = '사용자';
+                    break;
+                case 'keyword':
+                    text = '키워드';
+                    break;
+                case 'category':
+                    text = '카테고리';
+                    break;
+                case 'notice':
+                    text = '공지';
+                    break;
+                default:
+                    break;
+                }
+
+                const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
+                container.append(btn);
+                btn.addEventListener('click', () => {
+                    if(list.classList.contains(className)) {
+                        list.classList.remove(className);
+                    }
+                    else {
+                        list.classList.add(className);
+                    }
+                });
+                if(key == 'notice') {
+                    // eslint-disable-next-line no-loop-func
+                    btn.addEventListener('click', () => {
+                        if(list.classList.contains(className)) {
+                            GM_setValue('hideNotice', false);
+                        }
+                        else {
+                            GM_setValue('hideNotice', true);
+                        }
+                    });
+                }
+            }
         }
     }
-    toggleBtn.querySelector('.mute-count').textContent = `${muteCount}개 글 뮤트됨`;
+
+    const noticeConfig = GM_getValue('hideNotice', defaultConfig.hideNotice);
+    if(!noticeConfig) list.classList.add('show-filtered-notice');
 }
 
 export function blockComment(comments) {
@@ -77,29 +154,100 @@ export function blockComment(comments) {
         return;
     }
 
+    const count = {
+        user: 0,
+        keyword: 0,
+        all: 0,
+    };
+
     comments.forEach(item => {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
 
-        const live = unsafeWindow.LiveConfig.mute;
-
         let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
         let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
 
-        if(live) {
-            userlist = live.users.length == 0 ? userlist : live.users;
-            keywordlist = live.keywords.length == 0 ? keywordlist : live.keywords;
+        if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
+            userlist.push(...unsafeWindow.LiveConfig.mute.users);
+            keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
+            userlist = Array.from(new Set(userlist));
+            keywordlist = Array.from(new Set(keywordlist));
         }
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
 
-        if(textAllow || authorAllow) {
-            author.innerText = '뮤트';
-            message.innerText = '뮤트된 댓글입니다.';
-            if(message) message.style = 'color: #777';
+        if(textAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-keyword');
+            count.keyword += 1;
         }
+
+        if(authorAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-user');
+            count.user += 1;
+        }
+
+        if(item.classList.contains('filtered')) count.all += 1;
     });
+
+    let toggleHeader = document.querySelector('#comment .frontend-header');
+    if(toggleHeader) toggleHeader.remove();
+
+    toggleHeader = (
+        <div class="frontend-header">
+            <span class="filter-title">필터된 게시물</span>
+            <span class="filter-count-container" />
+        </div>
+    );
+
+    const container = toggleHeader.querySelector('.filter-count-container');
+
+    if(count.all > 0) {
+        document.querySelector('#comment .title').insertAdjacentElement('afterend', toggleHeader);
+
+        for(const key of Object.keys(count)) {
+            if(count[key] > 0) {
+                let className = `show-filtered-${key}`;
+                if(key == 'all') className = 'show-filtered';
+
+                let text;
+                switch(key) {
+                case 'all':
+                    text = '전체';
+                    break;
+                case 'user':
+                    text = '사용자';
+                    break;
+                case 'keyword':
+                    text = '키워드';
+                    break;
+                default:
+                    break;
+                }
+
+                const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
+                container.append(btn);
+                btn.addEventListener('click', () => {
+                    const list = document.querySelector('#comment .list-area');
+                    if(list.classList.contains(className)) {
+                        list.classList.remove(className);
+                        toggleHeader.classList.remove(className);
+                    }
+                    else {
+                        list.classList.add(className);
+                        toggleHeader.classList.add(className);
+                    }
+                });
+            }
+        }
+    }
+
+    for(const key of Object.keys(count)) {
+        const btn = container.querySelector(`.filter-count-${key}`);
+        if(btn) container.append(btn);
+    }
 }
 
 export function blockEmoticon(comments) {
