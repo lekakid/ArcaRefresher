@@ -60,6 +60,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         const comments = targetElement.querySelectorAll('#comment .comment-item');
         IPScouter.applyComments(comments);
+        BlockSystem.blockComment(comments);
         BlockSystem.blockEmoticon(comments);
 
         AdvancedReply.applyRefreshBtn();

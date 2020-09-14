@@ -147,29 +147,107 @@ export function blockArticle(articles, channel) {
 }
 
 export function blockComment(comments) {
+    if(document.readyState != 'complete') {
+        window.addEventListener('load', () => {
+            blockComment(comments);
+        }, { once: true });
+        return;
+    }
+
+    const count = {
+        user: 0,
+        keyword: 0,
+        all: 0,
+    };
+
     comments.forEach(item => {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
 
-        const live = unsafeWindow.LiveConfig.mute;
-
         let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
         let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
 
-        if(live) {
-            userlist = live.users.length == 0 ? userlist : live.users;
-            keywordlist = live.keywords.length == 0 ? keywordlist : live.keywords;
+        if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
+            userlist.push(...unsafeWindow.LiveConfig.mute.users);
+            keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
+            userlist = Array.from(new Set(userlist));
+            keywordlist = Array.from(new Set(keywordlist));
         }
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
         const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
 
-        if(textAllow || authorAllow) {
-            author.innerText = '뮤트';
-            message.innerText = '뮤트된 댓글입니다.';
-            if(message) message.style = 'color: #777';
+        if(textAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-keyword');
+            count.keyword += 1;
         }
+
+        if(authorAllow) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-user');
+            count.user += 1;
+        }
+
+        if(item.classList.contains('filtered')) count.all += 1;
     });
+
+    let toggleHeader = document.querySelector('#comment .frontend-header');
+    if(toggleHeader) toggleHeader.remove();
+
+    toggleHeader = (
+        <div class="frontend-header">
+            <span class="filter-title">필터된 게시물</span>
+            <span class="filter-count-container" />
+        </div>
+    );
+
+    const container = toggleHeader.querySelector('.filter-count-container');
+
+    if(count.all > 0) {
+        document.querySelector('#comment .title').insertAdjacentElement('afterend', toggleHeader);
+
+        for(const key of Object.keys(count)) {
+            if(count[key] > 0) {
+                let className = `show-filtered-${key}`;
+                if(key == 'all') className = 'show-filtered';
+
+                let text;
+                switch(key) {
+                case 'all':
+                    text = '전체';
+                    break;
+                case 'user':
+                    text = '사용자';
+                    break;
+                case 'keyword':
+                    text = '키워드';
+                    break;
+                default:
+                    break;
+                }
+
+                const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
+                container.append(btn);
+                btn.addEventListener('click', () => {
+                    const list = document.querySelector('#comment .list-area');
+                    if(list.classList.contains(className)) {
+                        list.classList.remove(className);
+                        toggleHeader.classList.remove(className);
+                    }
+                    else {
+                        list.classList.add(className);
+                        toggleHeader.classList.add(className);
+                    }
+                });
+            }
+        }
+    }
+
+    for(const key of Object.keys(count)) {
+        const btn = container.querySelector(`.filter-count-${key}`);
+        if(btn) container.append(btn);
+    }
 }
 
 export function blockEmoticon(comments) {
