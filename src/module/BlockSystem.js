@@ -12,6 +12,7 @@ export function blockArticle(articles, channel) {
         user: 0,
         keyword: 0,
         category: 0,
+        notice: 0,
         all: 0,
     };
 
@@ -64,6 +65,12 @@ export function blockArticle(articles, channel) {
             count.category += 1;
         }
 
+        if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-notice');
+            count.notice += 1;
+        }
+
         if(item.classList.contains('filtered')) count.all += 1;
     });
 
@@ -103,6 +110,9 @@ export function blockArticle(articles, channel) {
                 case 'category':
                     text = '카테고리';
                     break;
+                case 'notice':
+                    text = '공지';
+                    break;
                 default:
                     break;
                 }
@@ -117,9 +127,23 @@ export function blockArticle(articles, channel) {
                         list.classList.add(className);
                     }
                 });
+                if(key == 'notice') {
+                    // eslint-disable-next-line no-loop-func
+                    btn.addEventListener('click', () => {
+                        if(list.classList.contains(className)) {
+                            GM_setValue('hideNotice', false);
+                        }
+                        else {
+                            GM_setValue('hideNotice', true);
+                        }
+                    });
+                }
             }
         }
     }
+
+    const noticeConfig = GM_getValue('hideNotice', defaultConfig.hideNotice);
+    if(!noticeConfig) list.classList.add('show-filtered-notice');
 }
 
 export function blockComment(comments) {
