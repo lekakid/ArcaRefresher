@@ -40,14 +40,14 @@ function refresh() {
         req.responseType = 'document';
         req.addEventListener('load', () => {
             const newComments = req.response.querySelector('.article-comment .list-area');
+            const commentArea = document.querySelector('.article-comment');
+            commentArea.querySelector('.list-area').remove();
+
             if(newComments) {
                 newComments.querySelectorAll('time').forEach(time => {
                     time.textContent = DateManager.getDateStr(time.dateTime);
                 });
-                const parent = document.querySelector('.article-comment');
-                const list = parent.querySelector('.list-area');
-                if(list) list.remove();
-                parent.querySelector('.title').insertAdjacentElement('afterend', newComments);
+                commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
                 const items = newComments.querySelectorAll('.comment-item');
                 UserMemo.apply();
                 IPScouter.applyComments(items);
