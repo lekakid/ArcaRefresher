@@ -74,7 +74,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     if(type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
-        HideSystem.applyNotice();
 
         const articles = targetElement.querySelectorAll('.list-table a.vrow');
         CategoryColor.applyArticles(articles, channel);
