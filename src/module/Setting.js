@@ -23,19 +23,26 @@ export const defaultConfig = {
     category: {},
 };
 
-export function convert() {
-    const oldData = GM_getValue('Setting', '');
-    if(oldData == '') return;
-
-    const data = JSON.parse(oldData);
+export function importConfig(JSONSTring) {
+    const data = JSON.parse(JSONSTring);
 
     for(const key of Object.keys(data)) {
         if({}.hasOwnProperty.call(defaultConfig, key)) {
             GM_setValue(key, data[key]);
         }
     }
+}
 
-    GM_deleteValue('Setting');
+function exportConfig() {
+    const keys = GM_listValues();
+    const config = {};
+
+    for(const key of keys) {
+        config[key] = GM_getValue(key);
+    }
+
+    const result = JSON.stringify(config);
+    return result;
 }
 
 function reset() {
