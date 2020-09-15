@@ -5,6 +5,11 @@ import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 
 export function applyRefreshBtn() {
+    if(document.querySelector('#comment .alert')) {
+        // 댓글 작성 권한 없음
+        return;
+    }
+
     const btn = (
         <span>
             <span>　</span>
@@ -16,8 +21,8 @@ export function applyRefreshBtn() {
     );
     const clonebtn = btn.cloneNode(true);
 
-    document.querySelector('.article-comment .title a').insertAdjacentElement('beforebegin', btn);
-    document.querySelector('.article-comment .subtitle').append(clonebtn);
+    document.querySelector('#comment .title a').insertAdjacentElement('beforebegin', btn);
+    document.querySelector('#comment .subtitle').append(clonebtn);
 
     async function onclick(event) {
         event.preventDefault();
