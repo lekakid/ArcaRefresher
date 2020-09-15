@@ -189,6 +189,11 @@ export function blockComment(comments) {
             count.user += 1;
         }
 
+        if(item.classList.contains('deleted')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-deleted');
+        }
+
         if(item.classList.contains('filtered')) count.all += 1;
     });
 
@@ -222,6 +227,9 @@ export function blockComment(comments) {
                     break;
                 case 'user':
                     text = '사용자';
+                    break;
+                case 'deleted':
+                    text = '삭제됨';
                     break;
                 default:
                     break;
