@@ -267,6 +267,8 @@ export function setup() {
                             </div>
                             <div class="row btns">
                                 <div class="col-12">
+                                    <a href="#" id="exportConfig" class="btn btn-primary">설정 내보내기</a>
+                                    <a href="#" id="importConfig" class="btn btn-secondary">설정 가져오기</a>
                                     <a href="#" id="resetConfig" class="btn btn-danger">설정 초기화</a>
                                 </div>
                             </div>
@@ -346,6 +348,36 @@ export function setup() {
             alert('삭제되었습니다.');
         }
         event.target.disabled = false;
+    });
+    settingWrapper.querySelector('#exportConfig').addEventListener('click', event => {
+        event.preventDefault();
+
+        const data = btoa(encodeURIComponent(exportConfig()));
+        navigator.clipboard.writeText(data);
+        alert('클립보드에 설정이 복사되었습니다.');
+    });
+    settingWrapper.querySelector('#importConfig').addEventListener('click', event => {
+        event.preventDefault();
+
+        let data = prompt('가져올 설정 데이터를 입력해주세요');
+        try {
+            data = decodeURIComponent(atob(data));
+        }
+        catch (error) {
+            alert('올바르지 않은 데이터입니다.');
+            console.error(error);
+            return;
+        }
+
+        const config = JSON.parse(data);
+
+        for(const key in config) {
+            if({}.hasOwnProperty.call(config, key)) {
+                GM_setValue(key, config[key]);
+            }
+        }
+
+        location.reload();
     });
     settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
