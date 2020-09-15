@@ -41,8 +41,8 @@ export function convert() {
 function reset() {
     const keys = GM_listValues();
 
-    for(key of keys) {
-        GM_deleteValue(keys);
+    for(const key of keys) {
+        GM_deleteValue(key);
     }
 }
 
