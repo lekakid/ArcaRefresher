@@ -21,6 +21,7 @@ export const defaultConfig = {
     autoRemoveUser: [],
     autoRemoveKeyword: [],
     category: {},
+    imageDownloaderFileName: '%title%',
 };
 
 export function importConfig(JSONString) {
@@ -129,6 +130,19 @@ export function setup() {
                                 <div class="col-md-9">
                                     <button id="removeMyImage" class="btn btn-success">삭제</button>
                                     <p>게시물 조회 시 이미지 오른쪽 클릭 메뉴에서 관리합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3">다운로더 이름 포맷</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="imageDownloaderFileName" />
+                                    <p>
+                                        이미지 일괄 다운로드 사용 시 저장할 파일 이름입니다.<br />
+                                        %title% : 게시물 제목<br />
+                                        %category% : 게시물 카테고리<br />
+                                        %author% : 게시물 작성자<br />
+                                        %channel% : 채널 이름<br />
+                                    </p>
                                 </div>
                             </div>
                             <hr />

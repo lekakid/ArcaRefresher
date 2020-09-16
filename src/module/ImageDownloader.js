@@ -1,4 +1,5 @@
 import stylesheet from '../css/ImageDownloader.css';
+import { defaultConfig } from './Setting';
 
 export function apply() {
     const data = parse();
@@ -29,7 +30,6 @@ export function apply() {
         </div>
     );
 
-    const downloadBtn = table.querySelector('tfoot button');
     const enableBtn = <a href="#" class="btn btn-success"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
     enableBtn.addEventListener('click', event => {
         event.preventDefault();
@@ -42,8 +42,9 @@ export function apply() {
         }
     });
 
-    document.querySelector('.article-body').insertAdjacentElement('afterend', enableBtn);
-    enableBtn.insertAdjacentElement('afterend', table);
+    document.querySelector('.article-body')
+        .insertAdjacentElement('afterend', enableBtn)
+        .insertAdjacentElement('afterend', table);
     const list = table.querySelector('tbody');
 
     for(const d of data) {
@@ -85,6 +86,7 @@ export function apply() {
         }
     });
 
+    const downloadBtn = table.querySelector('tfoot button');
     downloadBtn.addEventListener('click', async event => {
         event.preventDefault();
         downloadBtn.disabled = true;
@@ -116,11 +118,35 @@ export function apply() {
             zip.file(`${`${i}`.padStart(3, '0')}_${nameList[i]}`, file);
         }
 
-        downloadBtn.disabled = false;
-
-        const zipblob = await zip.generateAsync({ type: 'blob' });
         const title = document.querySelector('.article-head .title').textContent.trim();
-        window.saveAs(zipblob, `${title}.zip`);
+        const category = document.querySelector('.article-head .badge').textContent.trim();
+        const author = document.querySelector('.article-head .user-info').innerText.trim();
+        const channel = document.querySelector('.board-title a:not([class])').textContent.trim();
+
+        let filename = GM_getValue('imageDownloaderFileName', defaultConfig.imageDownloaderFileName);
+        const reservedWord = filename.match(/%\w*%/g);
+        for(const word of reservedWord) {
+            switch(word) {
+            case '%title%':
+                filename = filename.replace(word, title);
+                break;
+            case '%category%':
+                filename = filename.replace(word, category);
+                break;
+            case '%author%':
+                filename = filename.replace(word, author);
+                break;
+            case '%channel%':
+                filename = filename.replace(word, channel);
+                break;
+            default:
+                break;
+            }
+        }
+        const zipblob = await zip.generateAsync({ type: 'blob' });
+        window.saveAs(zipblob, `${filename}.zip`);
+
+        downloadBtn.disabled = false;
     });
 }
 
