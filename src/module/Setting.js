@@ -23,8 +23,8 @@ export const defaultConfig = {
     category: {},
 };
 
-export function importConfig(JSONSTring) {
-    const data = JSON.parse(JSONSTring);
+export function importConfig(JSONString) {
+    const data = JSON.parse(JSONString);
 
     for(const key of Object.keys(data)) {
         if({}.hasOwnProperty.call(defaultConfig, key)) {
@@ -326,7 +326,7 @@ export function setup() {
     contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
     const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    const textElements = settingWrapper.querySelectorAll('textarea');
+    const textareaElements = settingWrapper.querySelectorAll('textarea');
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
         const btnElement = <button href="#" class="btn btn-success">삭제</button>;
@@ -406,7 +406,7 @@ export function setup() {
             GM_setValue(element.id, value);
         }
 
-        for(const element of textElements) {
+        for(const element of textareaElements) {
             let value;
             if(element.value != '') {
                 value = element.value.split('\n');
@@ -447,8 +447,8 @@ function loadConfig() {
     for(const element of comboElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]);
     }
-    const textElements = settingWrapper.querySelectorAll('textarea');
-    for(const element of textElements) {
+    const textareaElements = settingWrapper.querySelectorAll('textarea');
+    for(const element of textareaElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
 
