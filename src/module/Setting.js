@@ -375,24 +375,25 @@ export function setup() {
         event.preventDefault();
 
         let data = prompt('가져올 설정 데이터를 입력해주세요');
+        if(data == null) return;
         try {
+            if(data == '') throw '[Setting/importConfig] 공백 값을 입력했습니다.';
             data = decodeURIComponent(atob(data));
+
+            const config = JSON.parse(data);
+
+            for(const key in config) {
+                if({}.hasOwnProperty.call(config, key)) {
+                    GM_setValue(key, config[key]);
+                }
+            }
+
+            location.reload();
         }
         catch (error) {
             alert('올바르지 않은 데이터입니다.');
             console.error(error);
-            return;
         }
-
-        const config = JSON.parse(data);
-
-        for(const key in config) {
-            if({}.hasOwnProperty.call(config, key)) {
-                GM_setValue(key, config[key]);
-            }
-        }
-
-        location.reload();
     });
     settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
