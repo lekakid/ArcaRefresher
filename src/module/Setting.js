@@ -327,6 +327,7 @@ export function setup() {
 
     const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
     const textareaElements = settingWrapper.querySelectorAll('textarea');
+    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
         const btnElement = <button href="#" class="btn btn-success">삭제</button>;
@@ -406,6 +407,10 @@ export function setup() {
             GM_setValue(element.id, value);
         }
 
+        for(const element of textElements) {
+            GM_setValue(element.id, element.value);
+        }
+
         for(const element of textareaElements) {
             let value;
             if(element.value != '') {
@@ -451,7 +456,10 @@ function loadConfig() {
     for(const element of textareaElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
-
+    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
+    for(const element of textElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]);
+    }
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
         if(element.childElementCount) {
