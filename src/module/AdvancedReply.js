@@ -77,7 +77,7 @@ export function applyEmoticonBlockBtn() {
                 {'\n | '}
                 <a href="#" class="block-emoticon" data-id={item.dataset.id}>
                     <span class="ion-ios-close" />
-                    {' 아카콘 차단'}
+                    {' 아카콘 뮤트'}
                 </a>
             </span>
         );
@@ -92,7 +92,7 @@ export function applyEmoticonBlockBtn() {
 
         event.preventDefault();
 
-        event.target.textContent = '차단 중...';
+        event.target.textContent = '뮤트 처리 중...';
         event.target.classList.remove('block-emoticon');
         const id = event.target.getAttribute('data-id');
         const [name, bundleID] = await getEmoticonInfo(id);
