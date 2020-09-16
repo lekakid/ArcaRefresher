@@ -9,8 +9,8 @@ export function blockArticle(articles, channel) {
     }
 
     const count = {
-        user: 0,
         keyword: 0,
+        user: 0,
         category: 0,
         notice: 0,
         all: 0,
@@ -101,11 +101,11 @@ export function blockArticle(articles, channel) {
                 case 'all':
                     text = '전체';
                     break;
-                case 'user':
-                    text = '사용자';
-                    break;
                 case 'keyword':
                     text = '키워드';
+                    break;
+                case 'user':
+                    text = '사용자';
                     break;
                 case 'category':
                     text = '카테고리';
@@ -155,8 +155,8 @@ export function blockComment(comments) {
     }
 
     const count = {
-        user: 0,
         keyword: 0,
+        user: 0,
         all: 0,
     };
 
@@ -189,6 +189,11 @@ export function blockComment(comments) {
             count.user += 1;
         }
 
+        if(item.classList.contains('deleted')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-deleted');
+        }
+
         if(item.classList.contains('filtered')) count.all += 1;
     });
 
@@ -217,11 +222,14 @@ export function blockComment(comments) {
                 case 'all':
                     text = '전체';
                     break;
+                case 'keyword':
+                    text = '키워드';
+                    break;
                 case 'user':
                     text = '사용자';
                     break;
-                case 'keyword':
-                    text = '키워드';
+                case 'deleted':
+                    text = '삭제됨';
                     break;
                 default:
                     break;

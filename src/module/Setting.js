@@ -21,28 +21,36 @@ export const defaultConfig = {
     autoRemoveUser: [],
     autoRemoveKeyword: [],
     category: {},
+    imageDownloaderFileName: '%title%',
 };
 
-export function convert() {
-    const oldData = GM_getValue('Setting', '');
-    if(oldData == '') return;
-
-    const data = JSON.parse(oldData);
+export function importConfig(JSONString) {
+    const data = JSON.parse(JSONString);
 
     for(const key of Object.keys(data)) {
         if({}.hasOwnProperty.call(defaultConfig, key)) {
             GM_setValue(key, data[key]);
         }
     }
+}
 
-    GM_deleteValue('Setting');
+function exportConfig() {
+    const keys = GM_listValues();
+    const config = {};
+
+    for(const key of keys) {
+        config[key] = GM_getValue(key);
+    }
+
+    const result = JSON.stringify(config);
+    return result;
 }
 
 function reset() {
     const keys = GM_listValues();
 
-    for(key of keys) {
-        GM_deleteValue(keys);
+    for(const key of keys) {
+        GM_deleteValue(key);
     }
 }
 
@@ -122,6 +130,19 @@ export function setup() {
                                 <div class="col-md-9">
                                     <button id="removeMyImage" class="btn btn-success">삭제</button>
                                     <p>게시물 조회 시 이미지 오른쪽 클릭 메뉴에서 관리합니다.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3">다운로더 이름 포맷</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="imageDownloaderFileName" />
+                                    <p>
+                                        이미지 일괄 다운로드 사용 시 저장할 파일 이름입니다.<br />
+                                        %title% : 게시물 제목<br />
+                                        %category% : 게시물 카테고리<br />
+                                        %author% : 게시물 작성자<br />
+                                        %channel% : 채널 이름<br />
+                                    </p>
                                 </div>
                             </div>
                             <hr />
@@ -260,6 +281,8 @@ export function setup() {
                             </div>
                             <div class="row btns">
                                 <div class="col-12">
+                                    <a href="#" id="exportConfig" class="btn btn-primary">설정 내보내기</a>
+                                    <a href="#" id="importConfig" class="btn btn-secondary">설정 가져오기</a>
                                     <a href="#" id="resetConfig" class="btn btn-danger">설정 초기화</a>
                                 </div>
                             </div>
@@ -317,7 +340,8 @@ export function setup() {
     contentWrapper.insertAdjacentElement('afterend', settingWrapper);
 
     const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    const textElements = settingWrapper.querySelectorAll('textarea');
+    const textareaElements = settingWrapper.querySelectorAll('textarea');
+    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
         const btnElement = <button href="#" class="btn btn-success">삭제</button>;
@@ -339,6 +363,36 @@ export function setup() {
             alert('삭제되었습니다.');
         }
         event.target.disabled = false;
+    });
+    settingWrapper.querySelector('#exportConfig').addEventListener('click', event => {
+        event.preventDefault();
+
+        const data = btoa(encodeURIComponent(exportConfig()));
+        navigator.clipboard.writeText(data);
+        alert('클립보드에 설정이 복사되었습니다.');
+    });
+    settingWrapper.querySelector('#importConfig').addEventListener('click', event => {
+        event.preventDefault();
+
+        let data = prompt('가져올 설정 데이터를 입력해주세요');
+        try {
+            data = decodeURIComponent(atob(data));
+        }
+        catch (error) {
+            alert('올바르지 않은 데이터입니다.');
+            console.error(error);
+            return;
+        }
+
+        const config = JSON.parse(data);
+
+        for(const key in config) {
+            if({}.hasOwnProperty.call(config, key)) {
+                GM_setValue(key, config[key]);
+            }
+        }
+
+        location.reload();
     });
     settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
@@ -368,6 +422,10 @@ export function setup() {
         }
 
         for(const element of textElements) {
+            GM_setValue(element.id, element.value);
+        }
+
+        for(const element of textareaElements) {
             let value;
             if(element.value != '') {
                 value = element.value.split('\n');
@@ -408,11 +466,14 @@ function loadConfig() {
     for(const element of comboElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]);
     }
-    const textElements = settingWrapper.querySelectorAll('textarea');
-    for(const element of textElements) {
+    const textareaElements = settingWrapper.querySelectorAll('textarea');
+    for(const element of textareaElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
-
+    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
+    for(const element of textElements) {
+        element.value = GM_getValue(element.id, defaultConfig[element.id]);
+    }
     const listElements = settingWrapper.querySelectorAll('select[multiple]');
     for(const element of listElements) {
         if(element.childElementCount) {
