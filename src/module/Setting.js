@@ -544,7 +544,7 @@ export function setupCategory(channel) {
 
     // 이벤트 핸들러
     categoryTable.addEventListener('keypress', event => {
-        const regex = /[0-9a-f]/;
+        const regex = /[0-9a-fA-F]/;
         if(!regex.test(event.key)) event.preventDefault();
     });
     categoryTable.addEventListener('dblclick', event => {
@@ -582,7 +582,7 @@ export function setupCategory(channel) {
             if(categoryConfig[channel][row.id] == undefined) {
                 categoryConfig[channel][row.id] = {};
             }
-            categoryConfig[channel][row.id].color = row.querySelector('[name="color"]').value;
+            categoryConfig[channel][row.id].color = row.querySelector('[name="color"]').value.toUpperCase();
             categoryConfig[channel][row.id].blockPreview = row.querySelector('[name="blockPreview"]').checked;
             categoryConfig[channel][row.id].blockArticle = row.querySelector('[name="blockArticle"]').checked;
         }
