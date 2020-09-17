@@ -3,6 +3,9 @@ import { download } from './ImageDownloader';
 import styles, { stylesheet } from '../css/ArticleContextMenu.module.css';
 
 export function apply() {
+    const articleBody = document.querySelector('article .article-body');
+    if(articleBody == null) return;
+
     document.head.append(<style>{stylesheet}</style>);
 
     const wrapper = (
@@ -45,7 +48,7 @@ export function apply() {
     document.addEventListener('contextmenu', closeContext);
     document.addEventListener('scroll', closeContext);
 
-    document.querySelector('.article-body').addEventListener('contextmenu', event => {
+    articleBody.addEventListener('contextmenu', event => {
         if(event.target.tagName != 'IMG' && event.target.tagName != 'VIDEO') return;
 
         if(!wrapper.classList.contains(styles.mobile)) {
