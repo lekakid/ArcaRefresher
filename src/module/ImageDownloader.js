@@ -73,8 +73,9 @@ export function apply() {
             const url = event.target.dataset.url;
             if(url != '') {
                 event.target.dataset.url = '';
-                const file = await download(url, event.target, '다운로드 중...[percent]%', event.target.textContent);
-                window.saveAs(file, event.target.textContent);
+                const filename = event.target.textContent;
+                const file = await download(url, event.target, '다운로드 중...[percent]%', filename);
+                window.saveAs(file, filename);
                 event.target.dataset.url = url;
             }
         }
@@ -114,33 +115,40 @@ export function apply() {
         const zip = new JSZip();
         const total = downloadList.length;
         for(let i = 0; i < total; i += 1) {
-            const file = await download(downloadList[i], downloadBtn, `다운로드 중...[percent]% (${i}/${total})`, originalText);
+            const file = await download(downloadList[i], downloadBtn, `다운로드 중...[percent]% (${i}/${total})`);
             zip.file(`${`${i}`.padStart(3, '0')}_${nameList[i]}`, file);
         }
+        downloadBtn.textContent = originalText;
 
-        const title = document.querySelector('.article-head .title').textContent.trim();
-        const category = document.querySelector('.article-head .badge').textContent.trim();
-        const author = document.querySelector('.article-head .user-info').innerText.trim();
-        const channel = document.querySelector('.board-title a:not([class])').textContent.trim();
+        const title = document.querySelector('.article-head .title');
+        const category = document.querySelector('.article-head .badge');
+        const author = document.querySelector('.article-head .user-info');
+        const channel = document.querySelector('.board-title a:not([class])');
 
         let filename = GM_getValue('imageDownloaderFileName', defaultConfig.imageDownloaderFileName);
         const reservedWord = filename.match(/%\w*%/g);
         for(const word of reservedWord) {
-            switch(word) {
-            case '%title%':
-                filename = filename.replace(word, title);
-                break;
-            case '%category%':
-                filename = filename.replace(word, category);
-                break;
-            case '%author%':
-                filename = filename.replace(word, author);
-                break;
-            case '%channel%':
-                filename = filename.replace(word, channel);
-                break;
-            default:
-                break;
+            try {
+                switch(word) {
+                case '%title%':
+                    filename = filename.replace(word, title.textContent.trim());
+                    break;
+                case '%category%':
+                    filename = filename.replace(word, category.textContent.trim());
+                    break;
+                case '%author%':
+                    filename = filename.replace(word, author.innerText.trim());
+                    break;
+                case '%channel%':
+                    filename = filename.replace(word, channel.textContent.trim());
+                    break;
+                default:
+                    break;
+                }
+            }
+            catch (error) {
+                console.warn(error);
+                filename = filename.replace(word, '');
             }
         }
         const zipblob = await zip.generateAsync({ type: 'blob' });
@@ -156,8 +164,6 @@ function parse() {
     const result = [];
 
     images.forEach(element => {
-        // if(element.tagName == 'VIDEO' && element.getAttribute('data-orig') == null) return;
-
         let src = element.src;
 
         if(element.getAttribute('data-orig') != null) {
