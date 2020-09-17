@@ -62,14 +62,17 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         BlockSystem.blockRatedown();
         ImageDownloader.apply();
 
-        const comments = targetElement.querySelectorAll('#comment .comment-item');
-        IPScouter.applyComments(comments);
-        BlockSystem.blockComment(comments);
-        BlockSystem.blockEmoticon(comments);
+        const commentArea = targetElement.querySelector('#comment');
+        if(commentArea) {
+            const comments = commentArea.querySelectorAll('.comment-item');
+            IPScouter.applyComments(comments);
+            BlockSystem.blockComment(comments);
+            BlockSystem.blockEmoticon(comments);
 
-        AdvancedReply.applyRefreshBtn();
-        AdvancedReply.applyEmoticonBlockBtn();
-        AdvancedReply.applyFullAreaRereply();
+            AdvancedReply.applyRefreshBtn(commentArea);
+            AdvancedReply.applyEmoticonBlockBtn(commentArea);
+            AdvancedReply.applyFullAreaRereply(commentArea);
+        }
 
         ShortCut.apply('article');
 

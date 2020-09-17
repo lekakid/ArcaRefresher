@@ -4,71 +4,71 @@ import { defaultConfig } from './Setting';
 import * as IPScouter from './IPScouter';
 import * as UserMemo from './UserMemo';
 
-export function applyRefreshBtn() {
-    if(document.querySelector('#comment .alert')) {
+export function applyRefreshBtn(commentArea) {
+    if(commentArea.querySelector('.alert')) {
         // 댓글 작성 권한 없음
         return;
     }
 
     const btn = (
-        <span>
-            <span>　</span>
-            <button class="btn btn-success">
-                <span class="icon ion-android-refresh" />
-                <span> 새로고침</span>
-            </button>
-        </span>
+        <button class="btn btn-success" style="margin-left: 1rem">
+            <span class="icon ion-android-refresh" />
+            <span> 새로고침</span>
+        </button>
     );
     const clonebtn = btn.cloneNode(true);
 
-    document.querySelector('#comment .title a').insertAdjacentElement('beforebegin', btn);
-    document.querySelector('#comment .subtitle').append(clonebtn);
+    commentArea.querySelector('.title a').insertAdjacentElement('beforebegin', btn);
+    commentArea.querySelector('.subtitle').append(clonebtn);
 
-    async function onclick(event) {
+    async function onClick(event) {
         event.preventDefault();
         btn.disabled = true;
         clonebtn.disabled = true;
-        await refresh();
+
+        const response = await getRefreshData();
+        const newComments = response.querySelector('.article-comment .list-area');
+        try {
+            commentArea.querySelector('.list-area').remove();
+        }
+        // eslint-disable-next-line no-empty
+        catch {}
+
+        if(newComments) {
+            newComments.querySelectorAll('time').forEach(time => {
+                time.textContent = DateManager.getDateStr(time.dateTime);
+            });
+            commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
+            const items = newComments.querySelectorAll('.comment-item');
+            UserMemo.apply();
+            IPScouter.applyComments(items);
+            BlockSystem.blockComment(items);
+            BlockSystem.blockEmoticon(items);
+            applyEmoticonBlockBtn(commentArea);
+        }
+
         btn.disabled = false;
         clonebtn.disabled = false;
     }
 
-    btn.addEventListener('click', onclick);
-    clonebtn.addEventListener('click', onclick);
+    btn.addEventListener('click', onClick);
+    clonebtn.addEventListener('click', onClick);
 }
 
-function refresh() {
+function getRefreshData() {
     return new Promise((resolve) => {
         const req = new XMLHttpRequest();
 
         req.open('GET', window.location.href);
         req.responseType = 'document';
         req.addEventListener('load', () => {
-            const newComments = req.response.querySelector('.article-comment .list-area');
-            const commentArea = document.querySelector('.article-comment');
-            const list = commentArea.querySelector('.list-area');
-            if(list) list.remove();
-
-            if(newComments) {
-                newComments.querySelectorAll('time').forEach(time => {
-                    time.textContent = DateManager.getDateStr(time.dateTime);
-                });
-                commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
-                const items = newComments.querySelectorAll('.comment-item');
-                UserMemo.apply();
-                IPScouter.applyComments(items);
-                BlockSystem.blockComment(items);
-                BlockSystem.blockEmoticon(items);
-                applyEmoticonBlockBtn();
-            }
-            resolve();
+            resolve(req.response);
         });
         req.send();
     });
 }
 
-export function applyEmoticonBlockBtn() {
-    const commentArea = document.querySelector('.article-comment');
+export function applyEmoticonBlockBtn(commentArea) {
     const emoticons = commentArea.querySelectorAll('.emoticon');
 
     emoticons.forEach(item => {
@@ -82,11 +82,11 @@ export function applyEmoticonBlockBtn() {
             </span>
         );
 
-        const commentTimeElement = item.closest('.content').querySelector('.right > time');
-        commentTimeElement.insertAdjacentElement('afterend', btn);
+        const timeElement = item.closest('.content').querySelector('.right > time');
+        timeElement.insertAdjacentElement('afterend', btn);
     });
 
-    async function onClick(event) {
+    commentArea.addEventListener('click', async event => {
         if(event.target.tagName != 'A') return;
         if(!event.target.classList.contains('block-emoticon')) return;
 
@@ -102,9 +102,7 @@ export function applyEmoticonBlockBtn() {
         blockEmoticon[bundleID] = { name, bundle };
         GM_setValue('blockEmoticon', blockEmoticon);
         location.reload();
-    }
-
-    document.querySelector('.article-comment').addEventListener('click', onClick);
+    });
 }
 
 function getEmoticonInfo(id) {
@@ -136,8 +134,8 @@ function getEmoticonBundle(bundleID) {
     });
 }
 
-export function applyFullAreaRereply() {
-    function onClick(event) {
+export function applyFullAreaRereply(commentArea) {
+    commentArea.addEventListener('click', event => {
         const checkWriteForm = event.target.closest('form');
         if(checkWriteForm) return;
 
@@ -148,7 +146,5 @@ export function applyFullAreaRereply() {
         event.preventDefault();
 
         element.parentNode.querySelector('.reply-link').click();
-    }
-
-    document.querySelector('.article-comment').addEventListener('click', onClick);
+    });
 }
