@@ -7,5 +7,5 @@ export function getContrastYIQ(hexcolor) {
 }
 
 export function getRandomColor() {
-    return `00000${Math.floor(Math.random() * 0xFFFFFF).toString(16)}`.slice(-6);
+    return `00000${Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase()}`.slice(-6);
 }
