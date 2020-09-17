@@ -110,7 +110,7 @@ export function run(board, channel) {
             }
         }
     });
-    document.addEventListener('click', event => {
+    board.addEventListener('click', event => {
         if(event.target.tagName != 'INPUT') return;
 
         if(event.target.classList.contains('batch-check-all')) {
