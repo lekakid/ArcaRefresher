@@ -36,7 +36,10 @@ export function apply(target) {
 export function applyHandler() {
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
-    document.querySelector('.article-wrapper').addEventListener('click', event => {
+    const wrapper = document.querySelector('article .article-wrapper');
+    if(wrapper == null) return;
+
+    wrapper.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
         if(!event.path[1].classList.contains('user-info')) return;
 
