@@ -471,7 +471,7 @@ function loadConfig() {
     for(const element of textareaElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
-    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
+    const textElements = settingWrapper.querySelectorAll('input[id][type="text"]');
     for(const element of textElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]);
     }
@@ -531,7 +531,7 @@ export function setupCategory(channel) {
         const tableCategoryElement = (
             <tr id={name}>
                 <td>{name}</td>
-                {name == '일반' && <td><input type="text" name="color" placeholder="000000" disabled /></td>}
+                {name == '일반' && <td><input type="text" name="color" placeholder="000000" disabled="" /></td>}
                 {name != '일반' && <td><input type="text" name="color" placeholder="000000" maxlength="6" /></td>}
                 <td>
                     <label><input type="checkbox" name="blockPreview" /><span> 미리보기 숨김 </span></label>
@@ -599,6 +599,7 @@ function loadCategoryConfig(channel) {
     if(categoryConfig[channel] == undefined) {
         categoryConfig[channel] = {};
     }
+
     for(const key of Object.keys(categoryConfig[channel])) {
         const row = document.getElementById(key);
         if(row) {
