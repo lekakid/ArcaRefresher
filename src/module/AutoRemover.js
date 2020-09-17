@@ -7,7 +7,7 @@ export function removeArticle(articles) {
     if(form == null) return false;
 
     const userlist = GM_getValue('autoRemoveUser', defaultConfig.autoRemoveUser);
-    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemovekeyword);
+    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemoveKeyword);
     const testMode = GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest);
 
     const articleid = [];
