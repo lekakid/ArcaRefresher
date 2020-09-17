@@ -1,9 +1,9 @@
 import { defaultConfig } from './Setting';
 
-export function blockArticle(articles, channel) {
+export function blockArticle(board, articles, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            blockArticle(articles, channel);
+            blockArticle(board, articles, channel);
         }, { once: true });
         return;
     }
@@ -74,8 +74,7 @@ export function blockArticle(articles, channel) {
         if(item.classList.contains('filtered')) count.all += 1;
     });
 
-    const list = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    let toggleHeader = list.querySelector('.frontend-header');
+    let toggleHeader = board.querySelector('.frontend-header');
 
     if(toggleHeader) toggleHeader.remove();
 
@@ -89,7 +88,7 @@ export function blockArticle(articles, channel) {
     const container = toggleHeader.querySelector('.filter-count-container');
 
     if(count.all > 0) {
-        list.prepend(toggleHeader);
+        board.prepend(toggleHeader);
 
         for(const key of Object.keys(count)) {
             if(count[key] > 0) {
@@ -120,17 +119,17 @@ export function blockArticle(articles, channel) {
                 const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
                 container.append(btn);
                 btn.addEventListener('click', () => {
-                    if(list.classList.contains(className)) {
-                        list.classList.remove(className);
+                    if(board.classList.contains(className)) {
+                        board.classList.remove(className);
                     }
                     else {
-                        list.classList.add(className);
+                        board.classList.add(className);
                     }
                 });
                 if(key == 'notice') {
                     // eslint-disable-next-line no-loop-func
                     btn.addEventListener('click', () => {
-                        if(list.classList.contains(className)) {
+                        if(board.classList.contains(className)) {
                             GM_setValue('hideNotice', false);
                         }
                         else {
@@ -143,7 +142,7 @@ export function blockArticle(articles, channel) {
     }
 
     const noticeConfig = GM_getValue('hideNotice', defaultConfig.hideNotice);
-    if(!noticeConfig) list.classList.add('show-filtered-notice');
+    if(!noticeConfig) board.classList.add('show-filtered-notice');
 }
 
 export function blockComment(comments) {

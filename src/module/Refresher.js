@@ -67,7 +67,7 @@ function swapNewArticle(newArticles) {
     board.append(...newArticles);
 }
 
-export function run(channel) {
+export function run(board, channel) {
     const refreshTime = GM_getValue('refreshTime', defaultConfig.refreshTime);
 
     if(refreshTime == 0) return;
@@ -89,7 +89,7 @@ export function run(channel) {
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(articles, channel);
+        BlockSystem.blockArticle(board, articles, channel);
         if(AutoRemover.removeArticle(articles)) {
             clearInterval(loadLoop);
             loadLoop = null;

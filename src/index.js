@@ -43,7 +43,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     await waitForElement('footer');
 
-    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list, article > .article-write');
+    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
     if(targetElement == null) return;
 
     UserMemo.apply();
@@ -51,7 +51,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     let type = '';
 
     if(targetElement.classList.contains('article-view')) type = 'article';
-    if(targetElement.classList.contains('board-article-list')) type = 'board';
+    if(targetElement.classList.contains('list-table')) type = 'board';
     if(targetElement.classList.contains('article-write')) type = 'write';
 
     if(type == 'article') {
@@ -76,21 +76,21 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         ShortCut.apply('article');
 
-        targetElement = targetElement.querySelector('.included-article-list');
-        type = 'board-included';
+        targetElement = targetElement.querySelector('.included-article-list .list-table');
+        if(targetElement) type = 'board-included';
     }
 
     if(type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
-        const articles = targetElement.querySelectorAll('.list-table a.vrow');
+        const articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
-        BlockSystem.blockArticle(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(targetElement, articles, channel);
 
         if(type != 'board-included') {
-            Refrehser.run(channel);
+            Refrehser.run(targetElement, channel);
             ShortCut.apply('board');
         }
     }
