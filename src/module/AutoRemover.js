@@ -7,7 +7,8 @@ export function removeArticle(articles) {
     if(form == null) return false;
 
     const userlist = GM_getValue('autoRemoveUser', defaultConfig.autoRemoveUser);
-    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemovekeyword);
+    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemoveKeyword);
+    const testMode = GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest);
 
     const articleid = [];
 
@@ -20,7 +21,7 @@ export function removeArticle(articles) {
         const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
 
         if((titleAllow || authorAllow)) {
-            if(GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest)) {
+            if(testMode) {
                 item.classList.add(styles.target);
             }
             else {
@@ -29,7 +30,7 @@ export function removeArticle(articles) {
         }
     });
 
-    if(articleid.length > 0 && !GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest)) {
+    if(articleid.length > 0 && !testMode) {
         form.querySelector('input[name="articleIds"]').value = articleid.join(',');
         form.submit();
         return true;

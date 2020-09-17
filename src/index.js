@@ -43,7 +43,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     await waitForElement('footer');
 
-    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list, article > .article-write');
+    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
     if(targetElement == null) return;
 
     UserMemo.apply();
@@ -51,43 +51,58 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     let type = '';
 
     if(targetElement.classList.contains('article-view')) type = 'article';
-    if(targetElement.classList.contains('board-article-list')) type = 'board';
+    if(targetElement.classList.contains('list-table')) type = 'board';
     if(targetElement.classList.contains('article-write')) type = 'write';
 
     if(type == 'article') {
-        UserMemo.applyHandler();
-        IPScouter.applyAuthor();
+        try {
+            UserMemo.applyHandler();
+            IPScouter.applyAuthor();
 
-        ArticleContextMenu.apply();
-        BlockSystem.blockRatedown();
-        ImageDownloader.apply();
+            ArticleContextMenu.apply();
+            BlockSystem.blockRatedown();
+            ImageDownloader.apply();
+        }
+        catch (error) {
+            console.warn('게시물 처리 중 오류 발생');
+            console.error(error);
+        }
 
-        const comments = targetElement.querySelectorAll('#comment .comment-item');
-        IPScouter.applyComments(comments);
-        BlockSystem.blockComment(comments);
-        BlockSystem.blockEmoticon(comments);
+        try {
+            const commentArea = targetElement.querySelector('#comment');
+            if(commentArea) {
+                const comments = commentArea.querySelectorAll('.comment-item');
+                IPScouter.applyComments(comments);
+                BlockSystem.blockComment(comments);
+                BlockSystem.blockEmoticon(comments);
 
-        AdvancedReply.applyRefreshBtn();
-        AdvancedReply.applyEmoticonBlockBtn();
-        AdvancedReply.applyFullAreaRereply();
+                AdvancedReply.applyRefreshBtn(commentArea);
+                AdvancedReply.applyEmoticonBlockBtn(commentArea);
+                AdvancedReply.applyFullAreaRereply(commentArea);
+            }
+        }
+        catch (error) {
+            console.warn('댓글 처리 중 오류 발생');
+            console.error(error);
+        }
 
         ShortCut.apply('article');
 
-        targetElement = targetElement.querySelector('.included-article-list');
-        type = 'board-included';
+        targetElement = targetElement.querySelector('.included-article-list .list-table');
+        if(targetElement) type = 'board-included';
     }
 
     if(type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
-        const articles = targetElement.querySelectorAll('.list-table a.vrow');
+        const articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
-        BlockSystem.blockArticle(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);
+        BlockSystem.blockArticle(targetElement, articles, channel);
 
         if(type != 'board-included') {
-            Refrehser.run(channel);
+            Refrehser.run(targetElement, channel);
             ShortCut.apply('board');
         }
     }

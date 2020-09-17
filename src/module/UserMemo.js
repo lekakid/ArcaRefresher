@@ -4,8 +4,6 @@ export function apply(target) {
     const users = document.querySelectorAll('.content-wrapper .user-info');
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
-    const memoElement = <span class="memo" />;
-
     users.forEach(user => {
         let id = user.dataset.id;
         if(id == undefined) {
@@ -22,7 +20,7 @@ export function apply(target) {
         let slot = user.querySelector('.memo');
         if(memos[id]) {
             if(slot == null) {
-                slot = memoElement.cloneNode();
+                slot = <span class="memo" />;
                 user.append(slot);
             }
             slot.textContent = ` - ${memos[id]}`;
@@ -36,10 +34,12 @@ export function apply(target) {
 }
 
 export function applyHandler() {
-    const memoElement = <span class="memo" />;
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
-    document.querySelector('.article-wrapper').addEventListener('click', event => {
+    const wrapper = document.querySelector('article .article-wrapper');
+    if(wrapper == null) return;
+
+    wrapper.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
         if(!event.path[1].classList.contains('user-info')) return;
 
@@ -51,7 +51,7 @@ export function applyHandler() {
 
         let slot = user.querySelector('.memo');
         if(slot == null) {
-            slot = memoElement.cloneNode(true);
+            slot = <span class="memo" />;
             user.append(slot);
         }
         if(memo) {

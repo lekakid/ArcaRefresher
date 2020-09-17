@@ -375,24 +375,25 @@ export function setup() {
         event.preventDefault();
 
         let data = prompt('가져올 설정 데이터를 입력해주세요');
+        if(data == null) return;
         try {
+            if(data == '') throw '[Setting/importConfig] 공백 값을 입력했습니다.';
             data = decodeURIComponent(atob(data));
+
+            const config = JSON.parse(data);
+
+            for(const key in config) {
+                if({}.hasOwnProperty.call(config, key)) {
+                    GM_setValue(key, config[key]);
+                }
+            }
+
+            location.reload();
         }
         catch (error) {
             alert('올바르지 않은 데이터입니다.');
             console.error(error);
-            return;
         }
-
-        const config = JSON.parse(data);
-
-        for(const key in config) {
-            if({}.hasOwnProperty.call(config, key)) {
-                GM_setValue(key, config[key]);
-            }
-        }
-
-        location.reload();
     });
     settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
@@ -470,7 +471,7 @@ function loadConfig() {
     for(const element of textareaElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]).join('\n');
     }
-    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
+    const textElements = settingWrapper.querySelectorAll('input[id][type="text"]');
     for(const element of textElements) {
         element.value = GM_getValue(element.id, defaultConfig[element.id]);
     }
@@ -530,7 +531,7 @@ export function setupCategory(channel) {
         const tableCategoryElement = (
             <tr id={name}>
                 <td>{name}</td>
-                {name == '일반' && <td><input type="text" name="color" placeholder="000000" disabled /></td>}
+                {name == '일반' && <td><input type="text" name="color" placeholder="000000" disabled="" /></td>}
                 {name != '일반' && <td><input type="text" name="color" placeholder="000000" maxlength="6" /></td>}
                 <td>
                     <label><input type="checkbox" name="blockPreview" /><span> 미리보기 숨김 </span></label>
@@ -543,7 +544,7 @@ export function setupCategory(channel) {
 
     // 이벤트 핸들러
     categoryTable.addEventListener('keypress', event => {
-        const regex = /[0-9a-f]/;
+        const regex = /[0-9a-fA-F]/;
         if(!regex.test(event.key)) event.preventDefault();
     });
     categoryTable.addEventListener('dblclick', event => {
@@ -581,7 +582,7 @@ export function setupCategory(channel) {
             if(categoryConfig[channel][row.id] == undefined) {
                 categoryConfig[channel][row.id] = {};
             }
-            categoryConfig[channel][row.id].color = row.querySelector('[name="color"]').value;
+            categoryConfig[channel][row.id].color = row.querySelector('[name="color"]').value.toUpperCase();
             categoryConfig[channel][row.id].blockPreview = row.querySelector('[name="blockPreview"]').checked;
             categoryConfig[channel][row.id].blockArticle = row.querySelector('[name="blockArticle"]').checked;
         }
@@ -598,6 +599,7 @@ function loadCategoryConfig(channel) {
     if(categoryConfig[channel] == undefined) {
         categoryConfig[channel] = {};
     }
+
     for(const key of Object.keys(categoryConfig[channel])) {
         const row = document.getElementById(key);
         if(row) {
