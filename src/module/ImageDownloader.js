@@ -183,7 +183,7 @@ function parse() {
 }
 
 export function download(url, element, progressString, loadString) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             method: 'GET',
             url,
@@ -202,6 +202,7 @@ export function download(url, element, progressString, loadString) {
                 if(loadString) element.textContent = loadString;
                 resolve(response.response);
             },
+            onerror: reject,
         });
     });
 }

@@ -41,9 +41,10 @@ export function applyHandler() {
 
     wrapper.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
-        if(!event.path[1].classList.contains('user-info')) return;
 
-        const user = event.path[1];
+        const user = event.target.closest('.user-info');
+        if(user == null) return;
+
         const id = user.getAttribute('data-id');
         let memo = memos[id];
         memo = prompt('이용자 메모를 설정합니다.\n', memo || '');
