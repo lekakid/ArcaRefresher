@@ -13,6 +13,7 @@ export function apply(view) {
 
 function onArticle(event) {
     // A 목록 바로가기
+    // E 추천
     // R 댓글 목록보기
     // W 댓글 입력 포커스
 
@@ -22,6 +23,10 @@ function onArticle(event) {
     case 'KeyA':
         event.preventDefault();
         location.pathname = location.pathname.replace(/\/[0-9]+/, '');
+        break;
+    case 'KeyE':
+        event.preventDefault();
+        document.querySelector('#rateUp').click();
         break;
     case 'KeyR': {
         event.preventDefault();

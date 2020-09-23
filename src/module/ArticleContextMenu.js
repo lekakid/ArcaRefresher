@@ -158,6 +158,8 @@ async function onClickContextMenu(event) {
             const imgBlob = await download(img, event.target);
             event.target.textContent = '업로드 중...';
 
+            const docParser = new DOMParser();
+
             let url = '';
             const formdata = new FormData();
             formdata.append('file', imgBlob, `image.${imgBlob.type.split('/')[1]}`);
@@ -172,15 +174,16 @@ async function onClickContextMenu(event) {
                     GM_xmlhttpRequest({
                         method: 'GET',
                         url: 'https://ascii2d.net',
-                        responseType: 'document',
                         data: formdata,
-                        onload: resolve,
+                        onload: response => {
+                            resolve(docParser.parseFromString(response.responseText, 'text/html'));
+                        },
                         onerror: () => {
                             reject(new Error('Access Rejected'));
                         },
                     });
                 });
-                const token = tokenDocument.response.querySelector('input[name="authenticity_token"]').value;
+                const token = tokenDocument.querySelector('input[name="authenticity_token"]').value;
                 formdata.append('utf8', '✓');
                 formdata.append('authenticity_token', token);
                 url = 'https://ascii2d.net/search/file';
@@ -193,7 +196,6 @@ async function onClickContextMenu(event) {
                 GM_xmlhttpRequest({
                     method: 'POST',
                     url,
-                    responseType: 'document',
                     data: formdata,
                     onload: resolve,
                     onerror: () => {
@@ -203,7 +205,8 @@ async function onClickContextMenu(event) {
             });
 
             if(db == 'saucenao') {
-                const replaceURL = result.response.querySelector('#yourimage a').href.split('image=')[1];
+                const resultDocument = docParser.parseFromString(result.responseText, 'text/html');
+                const replaceURL = resultDocument.querySelector('#yourimage a').href.split('image=')[1];
                 window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
             }
             else if(db == 'ascii2d') {
