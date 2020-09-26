@@ -1,8 +1,7 @@
 import { defaultConfig } from './Setting';
 
-export function apply(target) {
-    const users = document.querySelectorAll('.content-wrapper .user-info');
-    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+export function parseUserInfo(rootView) {
+    const users = rootView.querySelectorAll('.user-info');
 
     users.forEach(user => {
         let id = user.dataset.id;
@@ -14,8 +13,15 @@ export function apply(target) {
             }
             user.dataset.id = id;
         }
+    });
+}
 
-        if(target && id != target) return;
+export function applyMemo(rootView) {
+    const users = rootView.querySelectorAll('.user-info');
+    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+
+    users.forEach(user => {
+        const id = user.dataset.id;
 
         let slot = user.querySelector('.memo');
         if(memos[id]) {
@@ -33,19 +39,16 @@ export function apply(target) {
     });
 }
 
-export function applyHandler() {
+export function setHandler(rootView) {
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
-    const wrapper = document.querySelector('article .article-wrapper');
-    if(wrapper == null) return;
-
-    wrapper.addEventListener('click', event => {
+    rootView.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
 
         const user = event.target.closest('.user-info');
         if(user == null) return;
 
-        const id = user.getAttribute('data-id');
+        const id = user.dataset.id;
         let memo = memos[id];
         memo = prompt('이용자 메모를 설정합니다.\n', memo || '');
         if(memo == null) return;
@@ -55,6 +58,7 @@ export function applyHandler() {
             slot = <span class="memo" />;
             user.append(slot);
         }
+
         if(memo) {
             slot.textContent = ` - ${memo}`;
             memos[id] = memo;
@@ -65,6 +69,6 @@ export function applyHandler() {
         }
 
         GM_setValue('userMemo', memos);
-        apply(id);
+        applyMemo(rootView);
     });
 }

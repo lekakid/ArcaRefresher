@@ -40,8 +40,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
     if(targetElement == null) return;
 
-    UserMemo.apply();
-
     let type = '';
 
     if(targetElement.classList.contains('article-view')) type = 'article';
@@ -50,7 +48,9 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     if(type == 'article') {
         try {
-            UserMemo.applyHandler();
+            UserMemo.parseUserInfo(targetElement);
+            UserMemo.applyMemo(targetElement);
+            UserMemo.setHandler(targetElement);
             IPScouter.applyAuthor();
 
             ArticleContextMenu.apply();

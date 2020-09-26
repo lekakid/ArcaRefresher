@@ -85,7 +85,7 @@ export function run(board, channel) {
 
         const articles = await getNewArticles();
         swapNewArticle(articles);
-        UserMemo.apply();
+        // UserMemo.applyMemo();
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
         IPScouter.applyArticles(articles);

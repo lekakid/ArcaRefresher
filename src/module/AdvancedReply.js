@@ -40,7 +40,7 @@ export function applyRefreshBtn(commentArea) {
             });
             commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
             const items = newComments.querySelectorAll('.comment-item');
-            UserMemo.apply();
+            // UserMemo.applyMemo();
             IPScouter.applyComments(items);
             BlockSystem.blockComment(items);
             BlockSystem.blockEmoticon(items);
