@@ -31,12 +31,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     const channel = path[2] || '';
 
     await waitForElement('.content-wrapper');
-
-    const oldData = GM_getValue('Setting');
-    if(oldData != undefined) {
-        Setting.importConfig(oldData);
-        GM_deleteValue('Setting');
-    }
     Setting.setup(channel);
 
     HideSystem.apply();
