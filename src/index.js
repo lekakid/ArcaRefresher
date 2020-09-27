@@ -51,7 +51,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             UserMemo.parseUserInfo(targetElement);
             UserMemo.applyMemo(targetElement);
             UserMemo.setHandler(targetElement);
-            IPScouter.applyAuthor();
+            IPScouter.applyScouter(targetElement);
 
             ArticleContextMenu.apply();
             BlockSystem.blockRatedown();
@@ -60,7 +60,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             const commentView = targetElement.querySelector('#comment');
             if(commentView) {
                 const comments = commentView.querySelectorAll('.comment-item');
-                IPScouter.applyComments(comments);
                 BlockSystem.blockComment(comments);
                 BlockSystem.blockEmoticon(comments);
 
@@ -86,7 +85,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         const articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
-        IPScouter.applyArticles(articles);
+        IPScouter.applyScouter(targetElement);
         BlockSystem.blockArticle(targetElement, articles, channel);
 
         if(type != 'board-included') {

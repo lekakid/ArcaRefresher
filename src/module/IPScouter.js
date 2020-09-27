@@ -167,33 +167,15 @@ const db = {
         '92.48', '94.76', '95.215', '96.126'],
 };
 
-export function applyArticles(articles) {
-    articles.forEach(article => {
-        const ipElement = article.querySelector('small');
+export function applyScouter(rootView) {
+    const ipElements = rootView.querySelectorAll('.user-info small');
 
-        if(ipElement) appendInfo(ipElement);
+    ipElements.forEach(ipElement => {
+        const ip = ipElement.textContent.replace(/\(|\)/g, '');
+        const [result, color] = checkIP(ip);
+
+        ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
     });
-}
-
-export function applyAuthor() {
-    const ipElement = document.querySelector('.article-head .user-info small');
-
-    if(ipElement) appendInfo(ipElement);
-}
-
-export function applyComments(comments) {
-    comments.forEach(comment => {
-        const ipElement = comment.querySelector('small');
-
-        if(ipElement) appendInfo(ipElement);
-    });
-}
-
-function appendInfo(ipElement) {
-    const ip = ipElement.textContent.replace(/\(|\)/g, '');
-    const [result, color] = checkIP(ip);
-
-    ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
 }
 
 function checkIP(ip) {

@@ -88,7 +88,7 @@ export function run(board, channel) {
         // UserMemo.applyMemo();
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
-        IPScouter.applyArticles(articles);
+        // IPScouter.applyArticles(articles);
         BlockSystem.blockArticle(board, articles, channel);
         if(AutoRemover.removeArticle(articles)) {
             clearInterval(loadLoop);

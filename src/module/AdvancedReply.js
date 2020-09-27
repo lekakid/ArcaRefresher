@@ -41,7 +41,7 @@ export function applyRefreshBtn(commentArea) {
             commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
             const items = newComments.querySelectorAll('.comment-item');
             // UserMemo.applyMemo();
-            IPScouter.applyComments(items);
+            // IPScouter.applyComments(items);
             BlockSystem.blockComment(items);
             BlockSystem.blockEmoticon(items);
             applyEmoticonBlockBtn(commentArea);
