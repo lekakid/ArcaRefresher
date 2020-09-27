@@ -1,8 +1,5 @@
 import * as DateManager from './DateManager';
-import * as BlockSystem from './BlockSystem';
 import { defaultConfig } from './Setting';
-import * as IPScouter from './IPScouter';
-import * as UserMemo from './UserMemo';
 
 export function applyRefreshBtn(commentArea) {
     if(commentArea.querySelector('.alert')) {
@@ -39,12 +36,6 @@ export function applyRefreshBtn(commentArea) {
                 time.textContent = DateManager.getDateStr(time.dateTime);
             });
             commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
-            const items = newComments.querySelectorAll('.comment-item');
-            // UserMemo.applyMemo();
-            // IPScouter.applyComments(items);
-            BlockSystem.blockComment(items);
-            BlockSystem.blockEmoticon(items);
-            applyEmoticonBlockBtn(commentArea);
         }
 
         btn.disabled = false;

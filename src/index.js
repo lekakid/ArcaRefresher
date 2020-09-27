@@ -66,6 +66,14 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
                 AdvancedReply.applyRefreshBtn(commentView);
                 AdvancedReply.applyEmoticonBlockBtn(commentView);
                 AdvancedReply.applyFullAreaRereply(commentView);
+
+                const commentObserver = new MutationObserver(() => {
+                    UserMemo.parseUserInfo(commentView);
+                    UserMemo.applyMemo(commentView);
+                    IPScouter.applyScouter(commentView);
+                    AdvancedReply.applyEmoticonBlockBtn(commentView);
+                });
+                commentObserver.observe(commentView, { childList: true });
             }
         }
         catch (error) {
