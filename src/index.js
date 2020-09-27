@@ -1,7 +1,7 @@
 import * as Setting from './module/Setting';
 import * as HideSystem from './module/HideSystem';
 import * as PreviewFilter from './module/PreviewFilter';
-import * as ArticleContextMenu from './module/ArticleContextMenu';
+import * as ContextMenu from './module/ContextMenu';
 import * as AdvancedReply from './module/AdvancedReply';
 import * as BlockSystem from './module/BlockSystem';
 import * as Refrehser from './module/Refresher';
@@ -53,7 +53,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             UserMemo.setHandler(targetElement);
             IPScouter.applyScouter(targetElement);
 
-            ArticleContextMenu.apply();
+            ContextMenu.applyOnArticle(targetElement);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
 
