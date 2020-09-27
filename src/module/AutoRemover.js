@@ -1,7 +1,5 @@
 import { defaultConfig } from './Setting';
 
-import styles from '../css/Refresher.module.css';
-
 export function removeArticle(articles) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
@@ -22,7 +20,7 @@ export function removeArticle(articles) {
 
         if((titleAllow || authorAllow)) {
             if(testMode) {
-                item.classList.add(styles.target);
+                item.classList.add('target');
             }
             else {
                 articleid.push(checkbox.getAttribute('data-id'));

@@ -23,7 +23,7 @@
     }
 }
 
-.loader {
+#autoRefresher {
     border: 6px solid #d3d3d3;
     border-top: 6px solid #3d414d;
     border-radius: 50%;
@@ -39,6 +39,6 @@
     background-color: #e6aaaa;
 }
 
-:global .badge {
+.badge {
     transition: none;
 }

@@ -4,7 +4,7 @@ import * as PreviewFilter from './module/PreviewFilter';
 import * as ContextMenu from './module/ContextMenu';
 import * as AdvancedReply from './module/AdvancedReply';
 import * as BlockSystem from './module/BlockSystem';
-import * as Refrehser from './module/Refresher';
+import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
@@ -116,7 +116,8 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         boardObserver.observe(targetElement, { childList: true });
 
         if(type != 'board-included') {
-            Refrehser.run(targetElement);
+            const refresher = new AutoRefresher(targetElement);
+            refresher.start();
             ShortCut.apply('board');
         }
     }
