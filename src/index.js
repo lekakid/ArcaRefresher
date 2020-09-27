@@ -90,14 +90,33 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
-        const articles = targetElement.querySelectorAll('a.vrow');
+        UserMemo.parseUserInfo(targetElement);
+        UserMemo.applyMemo(targetElement);
+        IPScouter.applyScouter(targetElement);
+
+        let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
         PreviewFilter.filter(articles, channel);
-        IPScouter.applyScouter(targetElement);
         BlockSystem.blockArticle(targetElement, articles, channel);
 
+        const boardObserver = new MutationObserver(() => {
+            boardObserver.disconnect();
+
+            UserMemo.parseUserInfo(targetElement);
+            UserMemo.applyMemo(targetElement);
+            IPScouter.applyScouter(targetElement);
+
+            articles = targetElement.querySelectorAll('a.vrow');
+            CategoryColor.applyArticles(articles, channel);
+            PreviewFilter.filter(articles, channel);
+            BlockSystem.blockArticle(targetElement, articles, channel);
+
+            boardObserver.observe(targetElement, { childList: true });
+        });
+        boardObserver.observe(targetElement, { childList: true });
+
         if(type != 'board-included') {
-            Refrehser.run(targetElement, channel);
+            Refrehser.run(targetElement);
             ShortCut.apply('board');
         }
     }

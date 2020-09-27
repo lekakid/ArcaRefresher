@@ -1,10 +1,4 @@
 import * as DateManager from './DateManager';
-import * as PreviewFilter from './PreviewFilter';
-import * as BlockSystem from './BlockSystem';
-import * as IPScouter from './IPScouter';
-import * as UserMemo from './UserMemo';
-import * as AutoRemover from './AutoRemover';
-import * as CategoryColor from './CategoryColor';
 import { defaultConfig } from './Setting';
 
 import styles, { stylesheet } from '../css/Refresher.module.css';
@@ -40,9 +34,8 @@ function getNewArticles() {
     });
 }
 
-function swapNewArticle(newArticles) {
-    const board = document.querySelector('.board-article-list .list-table, .included-article-list .list-table');
-    const oldArticles = board.querySelectorAll('a.vrow');
+function swapNewArticle(rootView, newArticles) {
+    const oldArticles = rootView.querySelectorAll('a.vrow');
 
     const oldnums = [];
     for(const o of oldArticles) {
@@ -64,10 +57,10 @@ function swapNewArticle(newArticles) {
         }
     }
 
-    board.append(...newArticles);
+    rootView.append(...newArticles);
 }
 
-export function run(board, channel) {
+export function run(rootView) {
     const refreshTime = GM_getValue('refreshTime', defaultConfig.refreshTime);
 
     if(refreshTime == 0) return;
@@ -80,23 +73,12 @@ export function run(board, channel) {
 
     let loadLoop = null;
 
-    async function routine() {
+    async function looper() {
         playLoader(loader, refreshTime);
-
-        const articles = await getNewArticles();
-        swapNewArticle(articles);
-        // UserMemo.applyMemo();
-        CategoryColor.applyArticles(articles, channel);
-        PreviewFilter.filter(articles, channel);
-        // IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(board, articles, channel);
-        if(AutoRemover.removeArticle(articles)) {
-            clearInterval(loadLoop);
-            loadLoop = null;
-        }
+        swapNewArticle(rootView, await getNewArticles());
     }
 
-    loadLoop = setInterval(routine, refreshTime * 1000);
+    loadLoop = setInterval(looper, refreshTime * 1000);
 
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
@@ -106,11 +88,11 @@ export function run(board, channel) {
         else {
             if (loadLoop == null) {
                 playLoader(loader, refreshTime);
-                loadLoop = setInterval(routine, refreshTime * 1000);
+                loadLoop = setInterval(looper, refreshTime * 1000);
             }
         }
     });
-    board.addEventListener('click', event => {
+    rootView.addEventListener('click', event => {
         if(event.target.tagName != 'INPUT') return;
 
         if(event.target.classList.contains('batch-check-all')) {
@@ -120,7 +102,7 @@ export function run(board, channel) {
             }
             else {
                 playLoader(loader, refreshTime);
-                loadLoop = setInterval(routine, refreshTime * 1000);
+                loadLoop = setInterval(looper, refreshTime * 1000);
             }
         }
         else {
@@ -134,7 +116,7 @@ export function run(board, channel) {
             }
 
             playLoader(loader, refreshTime);
-            loadLoop = setInterval(routine, refreshTime * 1000);
+            loadLoop = setInterval(looper, refreshTime * 1000);
         }
     });
 }
