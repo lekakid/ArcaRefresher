@@ -29,7 +29,7 @@ export function importConfig(JSONString) {
 
     for(const key of Object.keys(data)) {
         if({}.hasOwnProperty.call(defaultConfig, key)) {
-            GM_setValue(key, data[key]);
+            if(data[key]) GM_setValue(key, data[key]);
         }
     }
 }
