@@ -56,27 +56,21 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             ArticleContextMenu.apply();
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
-        }
-        catch (error) {
-            console.warn('게시물 처리 중 오류 발생');
-            console.error(error);
-        }
 
-        try {
-            const commentArea = targetElement.querySelector('#comment');
-            if(commentArea) {
-                const comments = commentArea.querySelectorAll('.comment-item');
+            const commentView = targetElement.querySelector('#comment');
+            if(commentView) {
+                const comments = commentView.querySelectorAll('.comment-item');
                 IPScouter.applyComments(comments);
                 BlockSystem.blockComment(comments);
                 BlockSystem.blockEmoticon(comments);
 
-                AdvancedReply.applyRefreshBtn(commentArea);
-                AdvancedReply.applyEmoticonBlockBtn(commentArea);
-                AdvancedReply.applyFullAreaRereply(commentArea);
+                AdvancedReply.applyRefreshBtn(commentView);
+                AdvancedReply.applyEmoticonBlockBtn(commentView);
+                AdvancedReply.applyFullAreaRereply(commentView);
             }
         }
         catch (error) {
-            console.warn('댓글 처리 중 오류 발생');
+            console.warn('게시물 처리 중 오류 발생');
             console.error(error);
         }
 
