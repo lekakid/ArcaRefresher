@@ -12,7 +12,7 @@ import * as ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
 import * as CategoryColor from './module/CategoryColor';
 import * as AutoRemover from './module/AutoRemover';
-import { waitForElement } from './module/ElementDetector';
+import { waitForElement } from './util/ElementDetector';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
