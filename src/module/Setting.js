@@ -1,4 +1,4 @@
-import { getContrastYIQ, getRandomColor } from './ColorManager';
+import { getContrastYIQ, getRandomColor } from '../util/ColorManager';
 
 import stylesheet from '../css/Setting.css';
 

@@ -1,4 +1,4 @@
-import * as DateManager from './DateManager';
+import * as DateManager from '../util/DateManager';
 import { defaultConfig } from './Setting';
 
 export function applyRefreshBtn(commentArea) {

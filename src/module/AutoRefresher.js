@@ -1,4 +1,4 @@
-import { getTimeStr, in24 } from './DateManager';
+import { getTimeStr, in24 } from '../util/DateManager';
 import { defaultConfig } from './Setting';
 
 import refreshersheet from '../css/AutoRefresher.css';
