@@ -4,14 +4,16 @@ import { defaultConfig } from './Setting';
 import refreshersheet from '../css/AutoRefresher.css';
 
 export default class AutoRefresher {
-    constructor(rootView) {
+    constructor(rootView, refreshTime) {
         if(AutoRefresher.instance) return AutoRefresher.instance;
 
         this.rootView = rootView;
-        this.refreshTime = GM_getValue('refreshTime', defaultConfig.refreshTime);
-        this.hideRefreshAnimation = GM_getValue('hideRefresher', defaultConfig.hideRefresher);
+        this.refreshTime = refreshTime;
+
+        if(this.refreshTime == 0) return this;
+
         this.loaderView = (
-            <div id="autoRefresher" class={this.hideRefreshAnimation ? 'hidden' : ''}>
+            <div id="autoRefresher" class={GM_getValue('hideRefresher', defaultConfig.hideRefresher) ? 'hidden' : ''}>
                 <style>{refreshersheet}</style>
             </div>
         );
@@ -22,7 +24,7 @@ export default class AutoRefresher {
             if (document.hidden) this.stop();
             else if (this.loopInterval == null) this.start();
         });
-        this.rootView.addEventListener('click', event => {
+        rootView.addEventListener('click', event => {
             if(event.target.tagName != 'INPUT') return;
 
             if(event.target.classList.contains('batch-check-all')) {
@@ -100,6 +102,7 @@ export default class AutoRefresher {
     }
 
     start() {
+        if(this.refreshTime == 0) return;
         this.animate();
         this.setLoop();
     }

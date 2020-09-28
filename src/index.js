@@ -116,8 +116,11 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         boardObserver.observe(targetElement, { childList: true });
 
         if(type != 'board-included') {
-            const refresher = new AutoRefresher(targetElement);
-            refresher.start();
+            const refreshTime = GM_getValue('refreshTime', defaultConfig.refreshTime);
+            if(refreshTime) {
+                const refresher = new AutoRefresher(targetElement, refreshTime);
+                refresher.start();
+            }
             ShortCut.apply('board');
         }
     }
