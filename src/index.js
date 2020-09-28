@@ -118,7 +118,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         boardObserver.observe(targetElement, { childList: true });
 
         if(type != 'board-included') {
-            const refreshTime = GM_getValue('refreshTime', defaultConfig.refreshTime);
+            const refreshTime = GM_getValue('refreshTime', Setting.defaultConfig.refreshTime);
             if(refreshTime) {
                 const refresher = new AutoRefresher(targetElement, refreshTime);
                 refresher.start();
