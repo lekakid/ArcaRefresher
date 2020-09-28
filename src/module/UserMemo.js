@@ -49,9 +49,8 @@ export function setHandler(rootView) {
         if(user == null) return;
 
         const id = user.dataset.id;
-        let memo = memos[id];
-        memo = prompt('이용자 메모를 설정합니다.\n', memo || '');
-        if(memo == null) return;
+        const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
+        if(newMemo == null) return;
 
         let slot = user.querySelector('.memo');
         if(slot == null) {
@@ -59,9 +58,9 @@ export function setHandler(rootView) {
             user.append(slot);
         }
 
-        if(memo) {
-            slot.textContent = ` - ${memo}`;
-            memos[id] = memo;
+        if(newMemo) {
+            slot.textContent = ` - ${newMemo}`;
+            memos[id] = newMemo;
         }
         else {
             slot.remove();
