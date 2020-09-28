@@ -60,7 +60,7 @@ export function apply() {
                     {d.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
                 </td>
                 <td>
-                    <a href="#" data-url={d.url}>{d.image}</a>
+                    <a href="#" data-url={d.url}>{d.name}</a>
                 </td>
             </tr>
         );
@@ -161,7 +161,7 @@ export function apply() {
             }
             catch (error) {
                 console.warn(error);
-                filename = filename.replace(word, '');
+                filename = filename.replace(word, 'undefined');
             }
         }
         const zipblob = await zip.generateAsync({ type: 'blob' });
@@ -171,6 +171,7 @@ export function apply() {
     });
 }
 
+const IMAGE_TYPE = ['gif', 'png', 'jpg', 'jpeg', 'wepb'];
 function parse() {
     const images = document.querySelectorAll('.article-body img, .article-body video');
 
@@ -178,16 +179,17 @@ function parse() {
 
     images.forEach(element => {
         let src = element.src;
-
-        if(element.getAttribute('data-orig') != null) {
-            src += `.${element.getAttribute('data-orig')}`;
+        if(element.dataset.orig) {
+            src += `.${element.dataset.orig}`;
         }
 
-        const item = {};
-        item.thumb = `${src}?type=list`;
-        item.url = `${src}?type=orig`;
-        item.image = src.replace(/.*\.arca\.live\/.*\//, '').replace(/\..*\./, '.');
-        item.type = ['gif', 'png', 'jpg', 'jpeg', 'wepb'].indexOf(item.image.split('.')[1]) > -1 ? 'image' : 'video';
+        const filename = src.replace(/.*\.arca\.live\/.*\//, '').replace(/\..*\./, '.');
+        const item = {
+            thumb: `${src}?type=list`,
+            url: `${src}?type=orig`,
+            name: filename,
+            type: IMAGE_TYPE.indexOf(filename.split('.')[1]) > -1 ? 'image' : 'video',
+        };
 
         result.push(item);
     });
