@@ -1,4 +1,4 @@
-import { download } from './ImageDownloader';
+import { getBlob as download } from '../util/DownloadManager';
 
 import contextsheet from '../css/ContextMenu.css';
 
