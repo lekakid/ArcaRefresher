@@ -1,21 +1,14 @@
-export function getBlob(url, element, progressString, loadString) {
+export function getBlob(url, onProgress, onLoad) {
     return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
             method: 'GET',
             url,
             responseType: 'blob',
             onprogress: event => {
-                let text = null;
-                if(progressString) {
-                    text = progressString.replace('[percent]', Math.round(event.loaded / event.total * 100));
-                }
-                else {
-                    text = `${Math.round(event.loaded / event.total * 100)}%`;
-                }
-                if(element) element.textContent = text;
+                if(onProgress) onProgress(event);
             },
             onload: response => {
-                if(loadString) element.textContent = loadString;
+                if(onLoad) onLoad();
                 resolve(response.response);
             },
             onerror: reject,
