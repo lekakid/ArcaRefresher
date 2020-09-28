@@ -11,6 +11,7 @@ import * as IPScouter from './module/IPScouter';
 import * as ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
 import * as CategoryColor from './module/CategoryColor';
+import * as AutoRemover from './module/AutoRemover';
 import { waitForElement } from './module/ElementDetector';
 
 import headerfix from './css/HeaderFix.css';
@@ -110,6 +111,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             CategoryColor.applyArticles(articles, channel);
             PreviewFilter.filter(articles, channel);
             BlockSystem.blockArticle(targetElement, articles, channel);
+            AutoRemover.removeArticle(articles);
 
             boardObserver.observe(targetElement, { childList: true });
         });
