@@ -4,6 +4,8 @@ import { defaultConfig } from './Setting';
 import refreshersheet from '../css/AutoRefresher.css';
 
 export default class AutoRefresher {
+    static instance;
+
     constructor(rootView, refreshTime) {
         if(AutoRefresher.instance) return AutoRefresher.instance;
 
