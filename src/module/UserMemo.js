@@ -1,6 +1,8 @@
 import { defaultConfig } from './Setting';
 
-export function applyMemo(rootView) {
+export default { apply, setHandler };
+
+function apply(rootView) {
     const users = rootView.querySelectorAll('.user-info');
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
@@ -23,7 +25,7 @@ export function applyMemo(rootView) {
     });
 }
 
-export function setHandler(rootView) {
+function setHandler(rootView) {
     const memos = GM_getValue('userMemo', defaultConfig.userMemo);
 
     rootView.addEventListener('click', event => {
@@ -52,6 +54,6 @@ export function setHandler(rootView) {
         }
 
         GM_setValue('userMemo', memos);
-        applyMemo(rootView);
+        apply(rootView);
     });
 }

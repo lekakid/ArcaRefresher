@@ -7,7 +7,7 @@ import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
-import * as UserMemo from './module/UserMemo';
+import UserMemo from './module/UserMemo';
 import CategoryColor from './module/CategoryColor';
 import AutoRemover from './module/AutoRemover';
 import { waitForElement } from './util/ElementDetector';
@@ -50,7 +50,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(type == 'article') {
         try {
             PostProcessor.parseUserInfo(targetElement);
-            UserMemo.applyMemo(targetElement);
+            UserMemo.apply(targetElement);
             UserMemo.setHandler(targetElement);
             IPScouter.apply(targetElement);
 
@@ -70,7 +70,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
                 const commentObserver = new MutationObserver(() => {
                     PostProcessor.parseUserInfo(commentView);
-                    UserMemo.applyMemo(commentView);
+                    UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
                     BlockSystem.blockComment(comments);
@@ -95,7 +95,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         Setting.setupCategory(channel);
 
         PostProcessor.parseUserInfo(targetElement);
-        UserMemo.applyMemo(targetElement);
+        UserMemo.apply(targetElement);
         IPScouter.apply(targetElement);
 
         let articles = targetElement.querySelectorAll('a.vrow');
@@ -107,7 +107,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             boardObserver.disconnect();
 
             PostProcessor.parseUserInfo(targetElement);
-            UserMemo.applyMemo(targetElement);
+            UserMemo.apply(targetElement);
             IPScouter.apply(targetElement);
 
             articles = targetElement.querySelectorAll('a.vrow');
