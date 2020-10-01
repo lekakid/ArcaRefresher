@@ -1,23 +1,23 @@
+import PostProcessor from './core/PostProcessor';
 import * as Setting from './module/Setting';
-import LiveModifier from './module/LiveModifier';
-import ContextMenu from './module/ContextMenu';
-import BlockSystem from './module/BlockSystem';
-import AutoRefresher from './module/AutoRefresher';
-import MyImage from './module/MyImage';
-import ShortCut from './module/ShortCut';
-import IPScouter from './module/IPScouter';
-import ImageDownloader from './module/ImageDownloader';
-import UserMemo from './module/UserMemo';
-import CategoryColor from './module/CategoryColor';
-import AutoRemover from './module/AutoRemover';
-import { waitForElement } from './util/ElementDetector';
 
+import AutoRefresher from './module/AutoRefresher';
+import AutoRemover from './module/AutoRemover';
+import BlockSystem from './module/BlockSystem';
+import CategoryColor from './module/CategoryColor';
+import ClipboardUpload from './module/ClipboardUpload';
+import CommentRefresh from './module/CommentRefresh';
+import ContextMenu from './module/ContextMenu';
 import EmoticonBlock from './module/EmoticonBlock';
 import FullAreaReply from './module/FullAreaReply';
-import CommentRefresh from './module/CommentRefresh';
-import ClipboardUpload from './module/ClipboardUpload';
+import IPScouter from './module/IPScouter';
+import ImageDownloader from './module/ImageDownloader';
+import LiveModifier from './module/LiveModifier';
+import MyImage from './module/MyImage';
+import ShortCut from './module/ShortCut';
+import UserMemo from './module/UserMemo';
 
-import PostProcessor from './core/PostProcessor';
+import { waitForElement } from './util/ElementDetector';
 
 import fade from './css/Fade.css';
 import blocksheet from './css/BlockSystem.css';
@@ -40,15 +40,15 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     await waitForElement('footer');
 
     let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
-    if(targetElement == null) return;
+    if (targetElement == null) return;
 
     let type = '';
 
-    if(targetElement.classList.contains('article-view')) type = 'article';
-    if(targetElement.classList.contains('list-table')) type = 'board';
-    if(targetElement.classList.contains('article-write')) type = 'write';
+    if (targetElement.classList.contains('article-view')) type = 'article';
+    if (targetElement.classList.contains('list-table')) type = 'board';
+    if (targetElement.classList.contains('article-write')) type = 'write';
 
-    if(type == 'article') {
+    if (type == 'article') {
         try {
             PostProcessor.parseUserInfo(targetElement);
             UserMemo.apply(targetElement);
@@ -60,7 +60,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             ImageDownloader.apply();
 
             const commentView = targetElement.querySelector('#comment');
-            if(commentView) {
+            if (commentView) {
                 const comments = commentView.querySelectorAll('.comment-item');
                 BlockSystem.blockComment(comments);
                 BlockSystem.blockEmoticon(comments);
@@ -89,10 +89,10 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         ShortCut.apply('article');
 
         targetElement = targetElement.querySelector('.included-article-list .list-table');
-        if(targetElement) type = 'board-included';
+        if (targetElement) type = 'board-included';
     }
 
-    if(type.indexOf('board') > -1) {
+    if (type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
         PostProcessor.parseUserInfo(targetElement);
@@ -121,9 +121,9 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         });
         boardObserver.observe(targetElement, { childList: true });
 
-        if(type != 'board-included') {
+        if (type != 'board-included') {
             const refreshTime = GM_getValue('refreshTime', Setting.defaultConfig.refreshTime);
-            if(refreshTime) {
+            if (refreshTime) {
                 const refresher = new AutoRefresher(targetElement, refreshTime);
                 refresher.start();
             }
@@ -131,7 +131,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         }
     }
 
-    if(type == 'write') {
+    if (type == 'write') {
         await waitForElement('.fr-box');
         const editor = unsafeWindow.FroalaEditor('#content');
         ClipboardUpload.apply(editor);
