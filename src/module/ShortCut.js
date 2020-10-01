@@ -1,6 +1,8 @@
 import { defaultConfig } from './Setting';
 
-export function apply(view) {
+export default { apply };
+
+function apply(view) {
     if(!GM_getValue('useShortcut', defaultConfig.useShortcut)) return;
 
     if(view == 'article') {

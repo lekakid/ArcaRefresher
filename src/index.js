@@ -4,7 +4,7 @@ import ContextMenu from './module/ContextMenu';
 import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
-import * as ShortCut from './module/ShortCut';
+import ShortCut from './module/ShortCut';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import UserMemo from './module/UserMemo';
