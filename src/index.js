@@ -5,7 +5,7 @@ import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
-import * as IPScouter from './module/IPScouter';
+import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
 import * as CategoryColor from './module/CategoryColor';
@@ -54,7 +54,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             UserMemo.parseUserInfo(targetElement);
             UserMemo.applyMemo(targetElement);
             UserMemo.setHandler(targetElement);
-            IPScouter.applyScouter(targetElement);
+            IPScouter.apply(targetElement);
 
             ContextMenu.applyOnArticle(targetElement);
             BlockSystem.blockRatedown();
@@ -73,7 +73,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
                 const commentObserver = new MutationObserver(() => {
                     UserMemo.parseUserInfo(commentView);
                     UserMemo.applyMemo(commentView);
-                    IPScouter.applyScouter(commentView);
+                    IPScouter.apply(commentView);
 
                     BlockSystem.blockComment(comments);
                     BlockSystem.blockEmoticon(comments);
@@ -98,7 +98,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         UserMemo.parseUserInfo(targetElement);
         UserMemo.applyMemo(targetElement);
-        IPScouter.applyScouter(targetElement);
+        IPScouter.apply(targetElement);
 
         let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
@@ -110,7 +110,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
             UserMemo.parseUserInfo(targetElement);
             UserMemo.applyMemo(targetElement);
-            IPScouter.applyScouter(targetElement);
+            IPScouter.apply(targetElement);
 
             articles = targetElement.querySelectorAll('a.vrow');
             CategoryColor.applyArticles(articles, channel);
