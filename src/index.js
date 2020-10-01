@@ -1,6 +1,5 @@
 import * as Setting from './module/Setting';
 import * as HideSystem from './module/HideSystem';
-import * as PreviewFilter from './module/PreviewFilter';
 import * as ContextMenu from './module/ContextMenu';
 import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
@@ -103,7 +102,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
         let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.applyArticles(articles, channel);
-        PreviewFilter.filter(articles, channel);
+        BlockSystem.blockPreview(articles, channel);
         BlockSystem.blockArticle(targetElement, articles, channel);
 
         const boardObserver = new MutationObserver(() => {
@@ -115,7 +114,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
             articles = targetElement.querySelectorAll('a.vrow');
             CategoryColor.applyArticles(articles, channel);
-            PreviewFilter.filter(articles, channel);
+            BlockSystem.blockPreview(articles, channel);
             BlockSystem.blockArticle(targetElement, articles, channel);
             AutoRemover.removeArticle(articles);
 
