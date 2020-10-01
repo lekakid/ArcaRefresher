@@ -16,6 +16,8 @@ import EmoticonBlock from './module/EmoticonBlock';
 import FullAreaReply from './module/FullAreaReply';
 import CommentRefresh from './module/CommentRefresh';
 
+import PostProcessor from './core/PostProcessor';
+
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
 import sheetLiveModifier from './css/LiveModifier.css';
@@ -50,7 +52,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
     if(type == 'article') {
         try {
-            UserMemo.parseUserInfo(targetElement);
+            PostProcessor.parseUserInfo(targetElement);
             UserMemo.applyMemo(targetElement);
             UserMemo.setHandler(targetElement);
             IPScouter.apply(targetElement);
@@ -70,7 +72,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
                 FullAreaReply.apply(commentView);
 
                 const commentObserver = new MutationObserver(() => {
-                    UserMemo.parseUserInfo(commentView);
+                    PostProcessor.parseUserInfo(commentView);
                     UserMemo.applyMemo(commentView);
                     IPScouter.apply(commentView);
 
@@ -95,7 +97,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
-        UserMemo.parseUserInfo(targetElement);
+        PostProcessor.parseUserInfo(targetElement);
         UserMemo.applyMemo(targetElement);
         IPScouter.apply(targetElement);
 
@@ -107,7 +109,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         const boardObserver = new MutationObserver(() => {
             boardObserver.disconnect();
 
-            UserMemo.parseUserInfo(targetElement);
+            PostProcessor.parseUserInfo(targetElement);
             UserMemo.applyMemo(targetElement);
             IPScouter.apply(targetElement);
 
