@@ -1,6 +1,14 @@
 import { defaultConfig } from './Setting';
 
-export function blockPreview(articles, channel) {
+export default {
+    blockPreview,
+    blockArticle,
+    blockComment,
+    blockEmoticon,
+    blockRatedown,
+};
+
+function blockPreview(articles, channel) {
     const categoryConfig = GM_getValue('category', defaultConfig.category);
 
     articles.forEach(article => {
@@ -19,7 +27,7 @@ export function blockPreview(articles, channel) {
     });
 }
 
-export function blockArticle(board, articles, channel) {
+function blockArticle(board, articles, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
             blockArticle(board, articles, channel);
@@ -164,7 +172,7 @@ export function blockArticle(board, articles, channel) {
     if(!noticeConfig) board.classList.add('show-filtered-notice');
 }
 
-export function blockComment(comments) {
+function blockComment(comments) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
             blockComment(comments);
@@ -276,7 +284,7 @@ export function blockComment(comments) {
     }
 }
 
-export function blockEmoticon(comments) {
+function blockEmoticon(comments) {
     const blockEmoticons = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
 
     let list = [];
@@ -298,7 +306,7 @@ export function blockEmoticon(comments) {
     });
 }
 
-export function blockRatedown() {
+function blockRatedown() {
     if(!GM_getValue('blockRatedown', defaultConfig.blockRatedown)) return;
 
     const ratedown = document.querySelector('#rateDown');

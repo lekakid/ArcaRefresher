@@ -1,7 +1,7 @@
 import * as Setting from './module/Setting';
 import LiveModifier from './module/LiveModifier';
 import ContextMenu from './module/ContextMenu';
-import * as BlockSystem from './module/BlockSystem';
+import BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import ShortCut from './module/ShortCut';
