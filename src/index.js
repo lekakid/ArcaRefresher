@@ -2,7 +2,6 @@ import * as Setting from './module/Setting';
 import * as HideSystem from './module/HideSystem';
 import * as PreviewFilter from './module/PreviewFilter';
 import * as ContextMenu from './module/ContextMenu';
-import * as AdvancedReply from './module/AdvancedReply';
 import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
@@ -13,6 +12,10 @@ import * as UserMemo from './module/UserMemo';
 import * as CategoryColor from './module/CategoryColor';
 import * as AutoRemover from './module/AutoRemover';
 import { waitForElement } from './util/ElementDetector';
+
+import EmoticonBlock from './module/EmoticonBlock';
+import FullAreaReply from './module/FullAreaReply';
+import CommentRefresh from './module/CommentRefresh';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
@@ -64,15 +67,18 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
                 BlockSystem.blockComment(comments);
                 BlockSystem.blockEmoticon(comments);
 
-                AdvancedReply.applyRefreshBtn(commentView);
-                AdvancedReply.applyEmoticonBlockBtn(commentView);
-                AdvancedReply.applyFullAreaRereply(commentView);
+                CommentRefresh.apply(commentView);
+                EmoticonBlock.apply(commentView);
+                FullAreaReply.apply(commentView);
 
                 const commentObserver = new MutationObserver(() => {
                     UserMemo.parseUserInfo(commentView);
                     UserMemo.applyMemo(commentView);
                     IPScouter.applyScouter(commentView);
-                    AdvancedReply.applyEmoticonBlockBtn(commentView);
+
+                    BlockSystem.blockComment(comments);
+                    BlockSystem.blockEmoticon(comments);
+                    EmoticonBlock.apply(commentView);
                 });
                 commentObserver.observe(commentView, { childList: true });
             }
