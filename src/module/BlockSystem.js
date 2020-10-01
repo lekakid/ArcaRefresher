@@ -1,4 +1,4 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 export default {
     blockPreview,
@@ -9,7 +9,7 @@ export default {
 };
 
 function blockPreview(articles, channel) {
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    const categoryConfig = GM_getValue('category', DefaultConfig.category);
 
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
@@ -43,9 +43,9 @@ function blockArticle(board, articles, channel) {
         all: 0,
     };
 
-    let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
-    let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    let userlist = GM_getValue('blockUser', DefaultConfig.blockUser);
+    let keywordlist = GM_getValue('blockKeyword', DefaultConfig.blockKeyword);
+    const categoryConfig = GM_getValue('category', DefaultConfig.category);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -168,7 +168,7 @@ function blockArticle(board, articles, channel) {
         }
     }
 
-    const noticeConfig = GM_getValue('hideNotice', defaultConfig.hideNotice);
+    const noticeConfig = GM_getValue('hideNotice', DefaultConfig.hideNotice);
     if(!noticeConfig) board.classList.add('show-filtered-notice');
 }
 
@@ -190,8 +190,8 @@ function blockComment(comments) {
         const author = item.querySelector('.user-info');
         const message = item.querySelector('.message');
 
-        let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
-        let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
+        let userlist = GM_getValue('blockUser', DefaultConfig.blockUser);
+        let keywordlist = GM_getValue('blockKeyword', DefaultConfig.blockKeyword);
 
         if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
             userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -285,7 +285,7 @@ function blockComment(comments) {
 }
 
 function blockEmoticon(comments) {
-    const blockEmoticons = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+    const blockEmoticons = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
 
     let list = [];
     for(const key in blockEmoticons) {
@@ -307,7 +307,7 @@ function blockEmoticon(comments) {
 }
 
 function blockRatedown() {
-    if(!GM_getValue('blockRatedown', defaultConfig.blockRatedown)) return;
+    if(!GM_getValue('blockRatedown', DefaultConfig.blockRatedown)) return;
 
     const ratedown = document.querySelector('#rateDown');
     if(ratedown == null) return;

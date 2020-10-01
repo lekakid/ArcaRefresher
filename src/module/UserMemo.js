@@ -1,10 +1,10 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 export default { apply, setHandler };
 
 function apply(rootView) {
     const users = rootView.querySelectorAll('.user-info');
-    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+    const memos = GM_getValue('userMemo', DefaultConfig.userMemo);
 
     users.forEach(user => {
         const id = user.dataset.id;
@@ -26,7 +26,7 @@ function apply(rootView) {
 }
 
 function setHandler(rootView) {
-    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+    const memos = GM_getValue('userMemo', DefaultConfig.userMemo);
 
     rootView.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;

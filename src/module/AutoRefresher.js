@@ -1,5 +1,5 @@
 import { getTimeStr, in24 } from '../util/DateManager';
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 import refreshersheet from '../css/AutoRefresher.css';
 
@@ -15,7 +15,7 @@ export default class AutoRefresher {
         if(this.refreshTime == 0) return this;
 
         this.loaderView = (
-            <div id="autoRefresher" class={GM_getValue('hideRefresher', defaultConfig.hideRefresher) ? 'hidden' : ''}>
+            <div id="autoRefresher" class={GM_getValue('hideRefresher', DefaultConfig.hideRefresher) ? 'hidden' : ''}>
                 <style>{refreshersheet}</style>
             </div>
         );

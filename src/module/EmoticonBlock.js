@@ -1,4 +1,4 @@
-import { defaultConfig } from '../module/Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 export default { apply };
 
@@ -31,7 +31,7 @@ function apply(commentArea) {
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);
 
-        const blockEmoticon = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+        const blockEmoticon = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
         blockEmoticon[bundleID] = { name, bundle };
         GM_setValue('blockEmoticon', blockEmoticon);
         location.reload();

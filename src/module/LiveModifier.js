@@ -1,4 +1,4 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 import sheetLiveModifier from '../css/LiveModifier.css';
 
@@ -7,11 +7,11 @@ export default { apply };
 function apply() {
     document.head.append(<style>{sheetLiveModifier}</style>);
 
-    const fixHeader = GM_getValue('fixHeader', defaultConfig.fixHeader);
-    const hideAvatar = GM_getValue('hideAvatar', defaultConfig.hideAvatar);
-    const hideMedia = GM_getValue('hideMedia', defaultConfig.hideMedia);
-    const hideModified = GM_getValue('hideModified', defaultConfig.hideModified);
-    const hideSideMenu = GM_getValue('hideSideMenu', defaultConfig.hideSideMenu);
+    const fixHeader = GM_getValue('fixHeader', DefaultConfig.fixHeader);
+    const hideAvatar = GM_getValue('hideAvatar', DefaultConfig.hideAvatar);
+    const hideMedia = GM_getValue('hideMedia', DefaultConfig.hideMedia);
+    const hideModified = GM_getValue('hideModified', DefaultConfig.hideModified);
+    const hideSideMenu = GM_getValue('hideSideMenu', DefaultConfig.hideSideMenu);
 
     const contentWrapper = document.querySelector('.content-wrapper');
 

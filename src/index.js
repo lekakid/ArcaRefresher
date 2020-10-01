@@ -1,5 +1,6 @@
 import PostProcessor from './core/PostProcessor';
-import * as Setting from './module/Setting';
+import Setting from './core/Setting';
+import DefaultConfig from './core/DefaultConfig';
 
 import AutoRefresher from './module/AutoRefresher';
 import AutoRemover from './module/AutoRemover';
@@ -115,7 +116,7 @@ import { waitForElement } from './util/ElementDetector';
         boardObserver.observe(targetElement, { childList: true });
 
         if (type != 'board-included') {
-            const refreshTime = GM_getValue('refreshTime', Setting.defaultConfig.refreshTime);
+            const refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
             if (refreshTime) {
                 const refresher = new AutoRefresher(targetElement, refreshTime);
                 refresher.start();

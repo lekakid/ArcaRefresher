@@ -1,4 +1,4 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
 export default { removeArticle };
 
@@ -6,9 +6,9 @@ function removeArticle(articles) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
-    const userlist = GM_getValue('autoRemoveUser', defaultConfig.autoRemoveUser);
-    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemoveKeyword);
-    const testMode = GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest);
+    const userlist = GM_getValue('autoRemoveUser', DefaultConfig.autoRemoveUser);
+    const keywordlist = GM_getValue('autoRemoveKeyword', DefaultConfig.autoRemoveKeyword);
+    const testMode = GM_getValue('useAutoRemoverTest', DefaultConfig.useAutoRemoverTest);
 
     const articleid = [];
 

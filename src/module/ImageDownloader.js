@@ -1,5 +1,5 @@
+import DefaultConfig from '../core/DefaultConfig';
 import { getBlob as download } from '../util/DownloadManager';
-import { defaultConfig } from './Setting';
 
 import stylesheet from '../css/ImageDownloader.css';
 
@@ -139,7 +139,7 @@ function apply() {
         const author = document.querySelector('.article-head .user-info');
         const channel = document.querySelector('.board-title a:not([class])');
 
-        let filename = GM_getValue('imageDownloaderFileName', defaultConfig.imageDownloaderFileName);
+        let filename = GM_getValue('imageDownloaderFileName', DefaultConfig.imageDownloaderFileName);
         const reservedWord = filename.match(/%\w*%/g);
         for(const word of reservedWord) {
             try {
