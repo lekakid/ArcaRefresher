@@ -8,7 +8,7 @@ import * as ShortCut from './module/ShortCut';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
-import * as CategoryColor from './module/CategoryColor';
+import CategoryColor from './module/CategoryColor';
 import * as AutoRemover from './module/AutoRemover';
 import { waitForElement } from './util/ElementDetector';
 
@@ -101,7 +101,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
         IPScouter.apply(targetElement);
 
         let articles = targetElement.querySelectorAll('a.vrow');
-        CategoryColor.applyArticles(articles, channel);
+        CategoryColor.apply(articles, channel);
         BlockSystem.blockPreview(articles, channel);
         BlockSystem.blockArticle(targetElement, articles, channel);
 
@@ -113,7 +113,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             IPScouter.apply(targetElement);
 
             articles = targetElement.querySelectorAll('a.vrow');
-            CategoryColor.applyArticles(articles, channel);
+            CategoryColor.apply(articles, channel);
             BlockSystem.blockPreview(articles, channel);
             BlockSystem.blockArticle(targetElement, articles, channel);
             AutoRemover.removeArticle(articles);

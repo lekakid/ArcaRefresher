@@ -1,7 +1,9 @@
 import { defaultConfig } from './Setting';
 import { getContrastYIQ } from '../util/ColorManager';
 
-export function applyArticles(articles, channel) {
+export default { apply };
+
+function apply(articles, channel) {
     const categoryConfig = GM_getValue('category', defaultConfig.category);
 
     articles.forEach(article => {
