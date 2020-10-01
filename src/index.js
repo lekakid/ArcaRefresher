@@ -7,7 +7,7 @@ import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
 import * as ShortCut from './module/ShortCut';
 import * as IPScouter from './module/IPScouter';
-import * as ImageDownloader from './module/ImageDownloader';
+import ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
 import * as CategoryColor from './module/CategoryColor';
 import * as AutoRemover from './module/AutoRemover';

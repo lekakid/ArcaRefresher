@@ -1,16 +1,17 @@
 import { getBlob as download } from '../util/DownloadManager';
-
-import stylesheet from '../css/ImageDownloader.css';
 import { defaultConfig } from './Setting';
 
-export function apply() {
+import stylesheet from '../css/ImageDownloader.css';
+
+export default { apply };
+
+function apply() {
     const data = parse();
     if(data.length == 0) return;
 
-    document.head.append(<style>{stylesheet}</style>);
-
     const table = (
         <div class="article-image hidden">
+            <style>{stylesheet}</style>
             <table class="table align-middle" id="imageList">
                 <colgroup>
                     <col width="5%" />
