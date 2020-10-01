@@ -1,6 +1,6 @@
 import * as Setting from './module/Setting';
+import LiveModifier from './module/LiveModifier';
 import ContextMenu from './module/ContextMenu';
-import * as HideSystem from './module/HideSystem';
 import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
@@ -18,7 +18,7 @@ import CommentRefresh from './module/CommentRefresh';
 
 import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
-import hidesheet from './css/HideSystem.css';
+import sheetLiveModifier from './css/LiveModifier.css';
 import blocksheet from './css/BlockSystem.css';
 
 import { stylesheet as ipsheet } from './css/IPScouter.module.css';
@@ -26,7 +26,6 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 (async function () {
     document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
-    document.head.append(<style>{hidesheet}</style>);
     document.head.append(<style>{blocksheet}</style>);
     document.head.append(<style>{ipsheet}</style>);
 
@@ -36,7 +35,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     await waitForElement('.content-wrapper');
     Setting.setup(channel);
 
-    HideSystem.apply();
+    LiveModifier.apply();
 
     await waitForElement('footer');
 

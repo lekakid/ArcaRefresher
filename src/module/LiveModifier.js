@@ -1,6 +1,12 @@
 import { defaultConfig } from './Setting';
 
-export function apply() {
+import sheetLiveModifier from '../css/LiveModifier.css';
+
+export default { apply };
+
+function apply() {
+    document.head.append(<style>{sheetLiveModifier}</style>);
+
     const hideAvatar = GM_getValue('hideAvatar', defaultConfig.hideAvatar);
     const hideMedia = GM_getValue('hideMedia', defaultConfig.hideMedia);
     const hideModified = GM_getValue('hideModified', defaultConfig.hideModified);
