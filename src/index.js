@@ -3,7 +3,7 @@ import LiveModifier from './module/LiveModifier';
 import ContextMenu from './module/ContextMenu';
 import BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
-import * as AdvancedWriteForm from './module/AdvancedWriteForm';
+import MyImage from './module/MyImage';
 import ShortCut from './module/ShortCut';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
@@ -15,6 +15,7 @@ import { waitForElement } from './util/ElementDetector';
 import EmoticonBlock from './module/EmoticonBlock';
 import FullAreaReply from './module/FullAreaReply';
 import CommentRefresh from './module/CommentRefresh';
+import ClipboardUpload from './module/ClipboardUpload';
 
 import PostProcessor from './core/PostProcessor';
 
@@ -133,7 +134,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
     if(type == 'write') {
         await waitForElement('.fr-box');
         const editor = unsafeWindow.FroalaEditor('#content');
-        AdvancedWriteForm.applyClipboardUpload(editor);
-        AdvancedWriteForm.applyMyImage(editor);
+        ClipboardUpload.apply(editor);
+        MyImage.apply(editor);
     }
 }());
