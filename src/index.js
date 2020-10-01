@@ -19,15 +19,8 @@ import UserMemo from './module/UserMemo';
 
 import { waitForElement } from './util/ElementDetector';
 
-import fade from './css/Fade.css';
-import blocksheet from './css/BlockSystem.css';
-
-import { stylesheet as ipsheet } from './css/IPScouter.module.css';
-
 (async function () {
-    document.head.append(<style>{fade}</style>);
-    document.head.append(<style>{blocksheet}</style>);
-    document.head.append(<style>{ipsheet}</style>);
+    PostProcessor.addGlobalStyle();
 
     const path = location.pathname.split('/');
     const channel = path[2] || '';
