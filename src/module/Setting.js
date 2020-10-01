@@ -7,6 +7,7 @@ export const defaultConfig = {
     hideRefresher: false,
     useShortcut: false,
     hideNotice: true,
+    fixHeader: true,
     hideAvatar: false,
     hideMedia: false,
     hideModified: false,
@@ -146,7 +147,17 @@ export function setup() {
                                 </div>
                             </div>
                             <hr />
-                            <h5 class="card-title">요소 숨김</h5>
+                            <h5 class="card-title">요소 관리</h5>
+                            <div class="row">
+                                <label class="col-md-3">상단 헤더</label>
+                                <div class="col-md-9">
+                                    <select id="fixHeader" data-type="bool">
+                                        <option value="false">고정 안 함</option>
+                                        <option value="true">고정</option>
+                                    </select>
+                                    <p>채널 목록, 스크립트 설정 버튼이 있는 상단 헤더 메뉴를 화면 상단에 고정합니다.</p>
+                                </div>
+                            </div>
                             <div class="row">
                                 <label class="col-md-3">우측 사이드 메뉴</label>
                                 <div class="col-md-9">

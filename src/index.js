@@ -18,15 +18,12 @@ import CommentRefresh from './module/CommentRefresh';
 
 import PostProcessor from './core/PostProcessor';
 
-import headerfix from './css/HeaderFix.css';
 import fade from './css/Fade.css';
-import sheetLiveModifier from './css/LiveModifier.css';
 import blocksheet from './css/BlockSystem.css';
 
 import { stylesheet as ipsheet } from './css/IPScouter.module.css';
 
 (async function () {
-    document.head.append(<style>{headerfix}</style>);
     document.head.append(<style>{fade}</style>);
     document.head.append(<style>{blocksheet}</style>);
     document.head.append(<style>{ipsheet}</style>);
