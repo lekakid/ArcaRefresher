@@ -9,7 +9,7 @@ import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import * as UserMemo from './module/UserMemo';
 import CategoryColor from './module/CategoryColor';
-import * as AutoRemover from './module/AutoRemover';
+import AutoRemover from './module/AutoRemover';
 import { waitForElement } from './util/ElementDetector';
 
 import EmoticonBlock from './module/EmoticonBlock';

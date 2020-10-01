@@ -1,6 +1,8 @@
 import { defaultConfig } from './Setting';
 
-export function removeArticle(articles) {
+export default { removeArticle };
+
+function removeArticle(articles) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
