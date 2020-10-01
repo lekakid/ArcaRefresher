@@ -2,7 +2,9 @@ import { getBlob as download } from '../util/DownloadManager';
 
 import contextsheet from '../css/ContextMenu.css';
 
-export function applyOnArticle(rootView) {
+export default { apply };
+
+function apply(rootView) {
     const articleBody = rootView.querySelector('.article-body');
     if(articleBody == null) return;
 

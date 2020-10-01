@@ -1,6 +1,6 @@
 import * as Setting from './module/Setting';
+import ContextMenu from './module/ContextMenu';
 import * as HideSystem from './module/HideSystem';
-import * as ContextMenu from './module/ContextMenu';
 import * as BlockSystem from './module/BlockSystem';
 import AutoRefresher from './module/AutoRefresher';
 import * as AdvancedWriteForm from './module/AdvancedWriteForm';
@@ -56,7 +56,7 @@ import { stylesheet as ipsheet } from './css/IPScouter.module.css';
             UserMemo.setHandler(targetElement);
             IPScouter.apply(targetElement);
 
-            ContextMenu.applyOnArticle(targetElement);
+            ContextMenu.apply(targetElement);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
 
