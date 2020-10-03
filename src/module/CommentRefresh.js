@@ -25,7 +25,7 @@ function apply(commentArea) {
         clonebtn.disabled = true;
 
         const response = await getRefreshData();
-        const newComments = response.querySelector('.article-comment .list-area');
+        const newComments = response.querySelector('#comment .list-area');
         try {
             commentArea.querySelector('.list-area').remove();
         }
@@ -37,6 +37,7 @@ function apply(commentArea) {
                 time.textContent = getDateStr(time.dateTime);
             });
             commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
+            commentArea.dispatchEvent(new CustomEvent('ar_refresh'));
         }
 
         btn.disabled = false;

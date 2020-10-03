@@ -74,6 +74,7 @@ export default class AutoRefresher {
         }
 
         this.rootView.append(...newArticles);
+        this.rootView.dispatchEvent(new CustomEvent('ar_refresh'));
     }
 
     async routine() {

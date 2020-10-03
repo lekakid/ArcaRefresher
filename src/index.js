@@ -63,7 +63,7 @@ import { waitForElement } from './util/ElementDetector';
                 EmoticonBlock.apply(commentView);
                 FullAreaReply.apply(commentView);
 
-                const commentObserver = new MutationObserver(() => {
+                commentView.addEventListener('ar_refresh', () => {
                     PostProcessor.parseUserInfo(commentView);
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
@@ -72,7 +72,6 @@ import { waitForElement } from './util/ElementDetector';
                     BlockSystem.blockEmoticon(comments);
                     EmoticonBlock.apply(commentView);
                 });
-                commentObserver.observe(commentView, { childList: true });
             }
         }
         catch (error) {
@@ -98,9 +97,7 @@ import { waitForElement } from './util/ElementDetector';
         BlockSystem.blockPreview(articles, channel);
         BlockSystem.blockArticle(targetElement, articles, channel);
 
-        const boardObserver = new MutationObserver(() => {
-            boardObserver.disconnect();
-
+        targetElement.addEventListener('ar_refresh', () => {
             PostProcessor.parseUserInfo(targetElement);
             UserMemo.apply(targetElement);
             IPScouter.apply(targetElement);
@@ -110,10 +107,7 @@ import { waitForElement } from './util/ElementDetector';
             BlockSystem.blockPreview(articles, channel);
             BlockSystem.blockArticle(targetElement, articles, channel);
             AutoRemover.removeArticle(articles);
-
-            boardObserver.observe(targetElement, { childList: true });
         });
-        boardObserver.observe(targetElement, { childList: true });
 
         if (type != 'board-included') {
             const refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
