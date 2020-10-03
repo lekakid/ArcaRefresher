@@ -159,6 +159,9 @@ function setup() {
         for(const element of comboElements) {
             let value;
             switch(element.dataset.type) {
+            case 'string':
+                value = element.value;
+                break;
             case 'number':
                 value = Number(element.value);
                 break;
