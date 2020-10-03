@@ -122,7 +122,14 @@ async function onClickContextMenu(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        const imgBlob = await download(url, event.target, '[percent]%', event.target.textContent);
+        const imgBlob = await download(url,
+            e => {
+                const progress = Math.round(e.loaded / e.total * 100);
+                event.target.textContent = `${progress}%`;
+            },
+            () => {
+                event.target.textContent = originalText;
+            });
         window.saveAs(imgBlob, `image.${imgBlob.type.split('/')[1]}`);
         context.parentNode.classList.add('hidden');
     }
@@ -149,8 +156,14 @@ async function onClickContextMenu(event) {
         const db = event.target.id.split('-')[1];
 
         try {
-            const imgBlob = await download(img, event.target);
-            event.target.textContent = '업로드 중...';
+            const imgBlob = await download(img,
+                e => {
+                    const progress = Math.round(e.loaded / e.total * 100);
+                    event.target.textContent = `${progress}%`;
+                },
+                () => {
+                    event.target.textContent = '업로드 중...';
+                });
 
             const docParser = new DOMParser();
 
