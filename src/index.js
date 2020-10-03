@@ -44,12 +44,13 @@ import { waitForElement } from './util/ElementDetector';
 
     if (type == 'article') {
         try {
-            PostProcessor.parseUserInfo(targetElement);
-            UserMemo.apply(targetElement);
-            UserMemo.setHandler(targetElement);
-            IPScouter.apply(targetElement);
+            const articleWrapper = targetElement.querySelector('.article-wrapper');
+            PostProcessor.parseUserInfo(articleWrapper);
+            UserMemo.apply(articleWrapper);
+            UserMemo.setHandler(articleWrapper);
+            IPScouter.apply(articleWrapper);
 
-            ContextMenu.apply(targetElement);
+            ContextMenu.apply(articleWrapper);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
 
