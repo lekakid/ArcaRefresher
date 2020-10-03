@@ -60,8 +60,8 @@ import { waitForElement } from './util/ElementDetector';
             const commentView = targetElement.querySelector('#comment');
             if (commentView) {
                 const comments = commentView.querySelectorAll('.comment-item');
-                BlockSystem.blockComment(comments);
                 BlockSystem.blockEmoticon(comments);
+                BlockSystem.blockContent(commentView);
 
                 CommentRefresh.apply(commentView);
                 EmoticonBlock.apply(commentView);
@@ -72,8 +72,8 @@ import { waitForElement } from './util/ElementDetector';
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
-                    BlockSystem.blockComment(comments);
                     BlockSystem.blockEmoticon(comments);
+                    BlockSystem.blockContent(commentView);
                     EmoticonBlock.apply(commentView);
                 });
             }
@@ -99,7 +99,7 @@ import { waitForElement } from './util/ElementDetector';
         let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.apply(articles, channel);
         BlockSystem.blockPreview(articles, channel);
-        BlockSystem.blockArticle(targetElement, articles, channel);
+        BlockSystem.blockContent(targetElement, channel);
 
         targetElement.addEventListener('ar_refresh', () => {
             PostProcessor.parseUserInfo(targetElement);
@@ -109,7 +109,7 @@ import { waitForElement } from './util/ElementDetector';
             articles = targetElement.querySelectorAll('a.vrow');
             CategoryColor.apply(articles, channel);
             BlockSystem.blockPreview(articles, channel);
-            BlockSystem.blockArticle(targetElement, articles, channel);
+            BlockSystem.blockContent(targetElement, channel);
             AutoRemover.removeArticle(articles);
         });
 
