@@ -61,27 +61,25 @@ function blockContent(rootView, channel) {
 
     let contents = null;
     let keywordSelector = '';
-    let userSelector = '';
     let targetElement = null;
     let insertPosition = '';
     if(rootView.classList.contains('list-table')) {
         contents = rootView.querySelectorAll('a.vrow');
         keywordSelector = '.col-title';
-        userSelector = '.col-author';
         targetElement = rootView;
         insertPosition = 'afterbegin';
     }
     else if(rootView.id == 'comment') {
         contents = rootView.querySelectorAll('.comment-item');
         keywordSelector = '.message';
-        userSelector = '.user-info';
         targetElement = rootView.querySelector('.list-area');
         insertPosition = 'beforebegin';
     }
 
     contents.forEach(item => {
         const keywordText = item.querySelector(keywordSelector).innerText;
-        const userText = item.querySelector(userSelector).innerText;
+        const userElement = item.querySelector('.user-info');
+        const userText = userElement.dataset.id;
         const categoryElement = item.querySelector('.badge');
         let category;
         if(categoryElement == null || categoryElement.textContent == '') {
