@@ -77,6 +77,13 @@ export default (
                                 </p>
                             </div>
                         </div>
+                        <div class="row">
+                            <label class="col-md-3">알림 아이콘 색상 변경</label>
+                            <div class="col-md-9">
+                                <input type="text" id="notificationIconColor" />
+                                <p>알림 아이콘의 점등 색상을 변경합니다.</p>
+                            </div>
+                        </div>
                         <hr />
                         <h5 class="card-title">요소 관리</h5>
                         <div class="row">

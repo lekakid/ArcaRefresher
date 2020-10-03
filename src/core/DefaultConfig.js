@@ -19,4 +19,5 @@ export default {
     autoRemoveKeyword: [],
     category: {},
     imageDownloaderFileName: '%title%',
+    notificationIconColor: 'ffc107',
 };

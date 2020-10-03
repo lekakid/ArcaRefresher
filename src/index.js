@@ -15,6 +15,7 @@ import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
+import NotificationIconColor from './module/NotificationIconColor';
 import ShortCut from './module/ShortCut';
 import UserMemo from './module/UserMemo';
 
@@ -30,6 +31,7 @@ import { waitForElement } from './util/ElementDetector';
     Setting.setup(channel);
 
     LiveModifier.apply();
+    NotificationIconColor.apply();
 
     await waitForElement('footer');
 
