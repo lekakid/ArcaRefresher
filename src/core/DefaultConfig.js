@@ -5,7 +5,6 @@ export default {
     hideNotice: true,
     fixHeader: true,
     hideAvatar: false,
-    hideMedia: false,
     hideModified: false,
     hideSideMenu: false,
     myImage: '',
@@ -20,4 +19,5 @@ export default {
     category: {},
     imageDownloaderFileName: '%title%',
     notificationIconColor: 'ffc107',
+    resizeMedia: '100',
 };

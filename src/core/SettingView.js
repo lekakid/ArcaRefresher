@@ -117,13 +117,13 @@ export default (
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-md-3">본문 이미지, 동영상</label>
+                            <label class="col-md-3">본문 이미지, 동영상 사이즈</label>
                             <div class="col-md-9">
-                                <select id="hideMedia" data-type="bool">
-                                    <option value="false">보임</option>
-                                    <option value="true">숨김</option>
-                                </select>
-                                <p>게시물 조회 시 본문에 나오는 이미지와 동영상을 숨깁니다.</p>
+                                <input type="text" id="resizeMedia" />
+                                <p>
+                                    본문 가로 길이를 기준 비율로 이미지, 동영상 크기를 조절합니다.<br />
+                                    0~100(%) 사이로 입력
+                                </p>
                             </div>
                         </div>
                         <div class="row">

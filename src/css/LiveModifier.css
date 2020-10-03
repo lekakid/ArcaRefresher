@@ -18,12 +18,6 @@
 .list-table.hide-notice a.notice {
     display: none !important;
 }
-
-.content-wrapper.hide-media .article-body img, 
-.content-wrapper.hide-media .article-body video {
-    display: none;
-}
-
 .content-wrapper.hide-modified b.modified {
     display: none !important;
 }

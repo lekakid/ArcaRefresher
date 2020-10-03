@@ -52,6 +52,7 @@ import { waitForElement } from './util/ElementDetector';
             UserMemo.setHandler(articleWrapper);
             IPScouter.apply(articleWrapper);
 
+            LiveModifier.applyImageResize();
             ContextMenu.apply(articleWrapper);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
