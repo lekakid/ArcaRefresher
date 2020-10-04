@@ -96,7 +96,6 @@ import { waitForElement } from './util/ElementDetector';
         UserMemo.apply(targetElement);
         IPScouter.apply(targetElement);
 
-        let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.apply(targetElement, channel);
         BlockSystem.blockPreview(targetElement, channel);
         BlockSystem.blockContent(targetElement, channel);
@@ -106,7 +105,6 @@ import { waitForElement } from './util/ElementDetector';
             UserMemo.apply(targetElement);
             IPScouter.apply(targetElement);
 
-            articles = targetElement.querySelectorAll('a.vrow');
             CategoryColor.apply(targetElement, channel);
             BlockSystem.blockPreview(targetElement, channel);
             BlockSystem.blockContent(targetElement, channel);
