@@ -1,8 +1,10 @@
-import { defaultConfig } from './Setting';
-import { getContrastYIQ } from './ColorManager';
+import DefaultConfig from '../core/DefaultConfig';
+import { getContrastYIQ } from '../util/ColorManager';
 
-export function applyArticles(articles, channel) {
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
+export default { apply };
+
+function apply(articles, channel) {
+    const categoryConfig = GM_getValue('category', DefaultConfig.category);
 
     articles.forEach(article => {
         const category = article.querySelector('.badge');

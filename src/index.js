@@ -1,116 +1,132 @@
-import * as Setting from './module/Setting';
-import * as HideSystem from './module/HideSystem';
-import * as PreviewFilter from './module/PreviewFilter';
-import * as ArticleContextMenu from './module/ArticleContextMenu';
-import * as AdvancedReply from './module/AdvancedReply';
-import * as BlockSystem from './module/BlockSystem';
-import * as Refrehser from './module/Refresher';
-import * as AdvancedWriteForm from './module/AdvancedWriteForm';
-import * as ShortCut from './module/ShortCut';
-import * as IPScouter from './module/IPScouter';
-import * as ImageDownloader from './module/ImageDownloader';
-import * as UserMemo from './module/UserMemo';
-import * as CategoryColor from './module/CategoryColor';
-import { waitForElement } from './module/ElementDetector';
+import PostProcessor from './core/PostProcessor';
+import Setting from './core/Setting';
+import DefaultConfig from './core/DefaultConfig';
 
-import headerfix from './css/HeaderFix.css';
-import fade from './css/Fade.css';
-import hidesheet from './css/HideSystem.css';
-import blocksheet from './css/BlockSystem.css';
+import AutoRefresher from './module/AutoRefresher';
+import AutoRemover from './module/AutoRemover';
+import BlockSystem from './module/BlockSystem';
+import CategoryColor from './module/CategoryColor';
+import ClipboardUpload from './module/ClipboardUpload';
+import CommentRefresh from './module/CommentRefresh';
+import ContextMenu from './module/ContextMenu';
+import EmoticonBlock from './module/EmoticonBlock';
+import FullAreaReply from './module/FullAreaReply';
+import IPScouter from './module/IPScouter';
+import ImageDownloader from './module/ImageDownloader';
+import LiveModifier from './module/LiveModifier';
+import MyImage from './module/MyImage';
+import NotificationIconColor from './module/NotificationIconColor';
+import ShortCut from './module/ShortCut';
+import UserMemo from './module/UserMemo';
 
-import { stylesheet as ipsheet } from './css/IPScouter.module.css';
+import { waitForElement } from './util/ElementDetector';
 
 (async function () {
-    document.head.append(<style>{headerfix}</style>);
-    document.head.append(<style>{fade}</style>);
-    document.head.append(<style>{hidesheet}</style>);
-    document.head.append(<style>{blocksheet}</style>);
-    document.head.append(<style>{ipsheet}</style>);
+    PostProcessor.addGlobalStyle();
 
     const path = location.pathname.split('/');
     const channel = path[2] || '';
 
     await waitForElement('.content-wrapper');
-
-    const oldData = GM_getValue('Setting');
-    if(oldData != undefined) {
-        Setting.importConfig(oldData);
-        GM_deleteValue('Setting');
-    }
     Setting.setup(channel);
 
-    HideSystem.apply();
+    LiveModifier.apply();
+    NotificationIconColor.apply();
 
     await waitForElement('footer');
 
     let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
-    if(targetElement == null) return;
-
-    UserMemo.apply();
+    if (targetElement == null) return;
 
     let type = '';
 
-    if(targetElement.classList.contains('article-view')) type = 'article';
-    if(targetElement.classList.contains('list-table')) type = 'board';
-    if(targetElement.classList.contains('article-write')) type = 'write';
+    if (targetElement.classList.contains('article-view')) type = 'article';
+    if (targetElement.classList.contains('list-table')) type = 'board';
+    if (targetElement.classList.contains('article-write')) type = 'write';
 
-    if(type == 'article') {
+    if (type == 'article') {
         try {
-            UserMemo.applyHandler();
-            IPScouter.applyAuthor();
+            const articleWrapper = targetElement.querySelector('.article-wrapper');
+            PostProcessor.parseUserInfo(articleWrapper);
+            UserMemo.apply(articleWrapper);
+            UserMemo.setHandler(articleWrapper);
+            IPScouter.apply(articleWrapper);
 
-            ArticleContextMenu.apply();
+            LiveModifier.applyImageResize();
+            ContextMenu.apply(articleWrapper);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
+
+            const commentView = targetElement.querySelector('#comment');
+            if (commentView) {
+                const comments = commentView.querySelectorAll('.comment-item');
+                BlockSystem.blockEmoticon(comments);
+                BlockSystem.blockContent(commentView);
+
+                CommentRefresh.apply(commentView);
+                EmoticonBlock.apply(commentView);
+                FullAreaReply.apply(commentView);
+
+                commentView.addEventListener('ar_refresh', () => {
+                    PostProcessor.parseUserInfo(commentView);
+                    UserMemo.apply(commentView);
+                    IPScouter.apply(commentView);
+
+                    BlockSystem.blockEmoticon(comments);
+                    BlockSystem.blockContent(commentView);
+                    EmoticonBlock.apply(commentView);
+                });
+            }
         }
         catch (error) {
             console.warn('게시물 처리 중 오류 발생');
             console.error(error);
         }
 
-        try {
-            const commentArea = targetElement.querySelector('#comment');
-            if(commentArea) {
-                const comments = commentArea.querySelectorAll('.comment-item');
-                IPScouter.applyComments(comments);
-                BlockSystem.blockComment(comments);
-                BlockSystem.blockEmoticon(comments);
-
-                AdvancedReply.applyRefreshBtn(commentArea);
-                AdvancedReply.applyEmoticonBlockBtn(commentArea);
-                AdvancedReply.applyFullAreaRereply(commentArea);
-            }
-        }
-        catch (error) {
-            console.warn('댓글 처리 중 오류 발생');
-            console.error(error);
-        }
-
         ShortCut.apply('article');
 
         targetElement = targetElement.querySelector('.included-article-list .list-table');
-        if(targetElement) type = 'board-included';
+        if (targetElement) type = 'board-included';
     }
 
-    if(type.indexOf('board') > -1) {
+    if (type.indexOf('board') > -1) {
         Setting.setupCategory(channel);
 
-        const articles = targetElement.querySelectorAll('a.vrow');
-        CategoryColor.applyArticles(articles, channel);
-        PreviewFilter.filter(articles, channel);
-        IPScouter.applyArticles(articles);
-        BlockSystem.blockArticle(targetElement, articles, channel);
+        PostProcessor.parseUserInfo(targetElement);
+        UserMemo.apply(targetElement);
+        IPScouter.apply(targetElement);
 
-        if(type != 'board-included') {
-            Refrehser.run(targetElement, channel);
+        let articles = targetElement.querySelectorAll('a.vrow');
+        CategoryColor.apply(articles, channel);
+        BlockSystem.blockPreview(articles, channel);
+        BlockSystem.blockContent(targetElement, channel);
+
+        targetElement.addEventListener('ar_refresh', () => {
+            PostProcessor.parseUserInfo(targetElement);
+            UserMemo.apply(targetElement);
+            IPScouter.apply(targetElement);
+
+            articles = targetElement.querySelectorAll('a.vrow');
+            CategoryColor.apply(articles, channel);
+            BlockSystem.blockPreview(articles, channel);
+            BlockSystem.blockContent(targetElement, channel);
+            AutoRemover.removeArticle(articles);
+        });
+
+        if (type != 'board-included') {
+            const refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
+            if (refreshTime) {
+                const refresher = new AutoRefresher(targetElement, refreshTime);
+                refresher.start();
+            }
             ShortCut.apply('board');
         }
     }
 
-    if(type == 'write') {
+    if (type == 'write') {
         await waitForElement('.fr-box');
         const editor = unsafeWindow.FroalaEditor('#content');
-        AdvancedWriteForm.applyClipboardUpload(editor);
-        AdvancedWriteForm.applyMyImage(editor);
+        ClipboardUpload.apply(editor);
+        MyImage.apply(editor);
     }
 }());

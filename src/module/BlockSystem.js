@@ -1,24 +1,56 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
-export function blockArticle(board, articles, channel) {
+export default {
+    blockPreview,
+    blockContent,
+    blockEmoticon,
+    blockRatedown,
+};
+
+function blockPreview(articles, channel) {
+    const categoryConfig = GM_getValue('category', DefaultConfig.category);
+
+    articles.forEach(article => {
+        const badge = article.querySelector('.badge');
+        if(badge == null) return;
+
+        let category = badge.textContent;
+        category = (category == '') ? '일반' : category;
+        const preview = article.querySelector('.vrow-preview');
+
+        if(categoryConfig[channel] && categoryConfig[channel][category]) {
+            const filtered = categoryConfig[channel][category].blockPreview || false;
+
+            if(filtered && preview != null) preview.remove();
+        }
+    });
+}
+
+const ContentTypeString = {
+    keyword: '키워드',
+    user: '사용자',
+    category: '카테고리',
+    notice: '공지',
+    deleted: '삭제됨',
+    all: '전체',
+};
+
+function blockContent(rootView, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            blockArticle(board, articles, channel);
+            blockContent(rootView, channel);
         }, { once: true });
         return;
     }
 
-    const count = {
-        keyword: 0,
-        user: 0,
-        category: 0,
-        notice: 0,
-        all: 0,
-    };
+    const count = {};
+    for(const key of Object.keys(ContentTypeString)) {
+        count[key] = 0;
+    }
 
-    let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
-    let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
-    const categoryConfig = GM_getValue('category', defaultConfig.category);
+    let userlist = GM_getValue('blockUser', DefaultConfig.blockUser);
+    let keywordlist = GM_getValue('blockKeyword', DefaultConfig.blockKeyword);
+    const categoryConfig = GM_getValue('category', DefaultConfig.category);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -27,9 +59,27 @@ export function blockArticle(board, articles, channel) {
         keywordlist = Array.from(new Set(keywordlist));
     }
 
-    articles.forEach(item => {
-        const title = item.querySelector('.col-title');
-        const author = item.querySelector('.col-author');
+    let contents = null;
+    let keywordSelector = '';
+    let targetElement = null;
+    let insertPosition = '';
+    if(rootView.classList.contains('list-table')) {
+        contents = rootView.querySelectorAll('a.vrow');
+        keywordSelector = '.col-title';
+        targetElement = rootView;
+        insertPosition = 'afterbegin';
+    }
+    else if(rootView.id == 'comment') {
+        contents = rootView.querySelectorAll('.comment-item');
+        keywordSelector = '.message';
+        targetElement = rootView.querySelector('.list-area');
+        insertPosition = 'beforebegin';
+    }
+
+    contents.forEach(item => {
+        const keywordText = item.querySelector(keywordSelector).innerText;
+        const userElement = item.querySelector('.user-info');
+        const userText = userElement.dataset.id;
         const categoryElement = item.querySelector('.badge');
         let category;
         if(categoryElement == null || categoryElement.textContent == '') {
@@ -39,21 +89,21 @@ export function blockArticle(board, articles, channel) {
             category = categoryElement.textContent;
         }
 
-        const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
-        const titleAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(title.innerText);
+        const keywordAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(keywordText);
+        const userAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(userText);
         let categoryAllow = false;
 
-        if(categoryConfig[channel] && categoryConfig[channel][category]) {
+        if(channel && categoryConfig[channel] && categoryConfig[channel][category]) {
             categoryAllow = categoryConfig[channel][category].blockArticle;
         }
 
-        if(titleAllow) {
+        if(keywordAllow) {
             item.classList.add('filtered');
             item.classList.add('filtered-keyword');
             count.keyword += 1;
         }
 
-        if(authorAllow) {
+        if(userAllow) {
             item.classList.add('filtered');
             item.classList.add('filtered-user');
             count.user += 1;
@@ -71,13 +121,16 @@ export function blockArticle(board, articles, channel) {
             count.notice += 1;
         }
 
+        if(item.classList.contains('deleted')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-deleted');
+        }
+
         if(item.classList.contains('filtered')) count.all += 1;
     });
 
-    let toggleHeader = board.querySelector('.frontend-header');
-
+    let toggleHeader = rootView.querySelector('.frontend-header');
     if(toggleHeader) toggleHeader.remove();
-
     toggleHeader = (
         <div class="frontend-header">
             <span class="filter-title">필터된 게시물</span>
@@ -88,48 +141,29 @@ export function blockArticle(board, articles, channel) {
     const container = toggleHeader.querySelector('.filter-count-container');
 
     if(count.all > 0) {
-        board.prepend(toggleHeader);
+        targetElement.insertAdjacentElement(insertPosition, toggleHeader);
 
         for(const key of Object.keys(count)) {
             if(count[key] > 0) {
                 let className = `show-filtered-${key}`;
                 if(key == 'all') className = 'show-filtered';
 
-                let text;
-                switch(key) {
-                case 'all':
-                    text = '전체';
-                    break;
-                case 'keyword':
-                    text = '키워드';
-                    break;
-                case 'user':
-                    text = '사용자';
-                    break;
-                case 'category':
-                    text = '카테고리';
-                    break;
-                case 'notice':
-                    text = '공지';
-                    break;
-                default:
-                    break;
-                }
-
-                const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
+                const btn = <span class={`filter-count filter-count-${key}`}>{ContentTypeString[key]} ({count[key]})</span>;
                 container.append(btn);
                 btn.addEventListener('click', () => {
-                    if(board.classList.contains(className)) {
-                        board.classList.remove(className);
+                    if(targetElement.classList.contains(className)) {
+                        targetElement.classList.remove(className);
+                        toggleHeader.classList.remove(className);
                     }
                     else {
-                        board.classList.add(className);
+                        targetElement.classList.add(className);
+                        toggleHeader.classList.add(className);
                     }
                 });
                 if(key == 'notice') {
                     // eslint-disable-next-line no-loop-func
                     btn.addEventListener('click', () => {
-                        if(board.classList.contains(className)) {
+                        if(targetElement.classList.contains(className)) {
                             GM_setValue('hideNotice', false);
                         }
                         else {
@@ -141,124 +175,12 @@ export function blockArticle(board, articles, channel) {
         }
     }
 
-    const noticeConfig = GM_getValue('hideNotice', defaultConfig.hideNotice);
-    if(!noticeConfig) board.classList.add('show-filtered-notice');
+    const noticeConfig = GM_getValue('hideNotice', DefaultConfig.hideNotice);
+    if(!noticeConfig) targetElement.classList.add('show-filtered-notice');
 }
 
-export function blockComment(comments) {
-    if(document.readyState != 'complete') {
-        window.addEventListener('load', () => {
-            blockComment(comments);
-        }, { once: true });
-        return;
-    }
-
-    const count = {
-        keyword: 0,
-        user: 0,
-        all: 0,
-    };
-
-    comments.forEach(item => {
-        const author = item.querySelector('.user-info');
-        const message = item.querySelector('.message');
-
-        let userlist = GM_getValue('blockUser', defaultConfig.blockUser);
-        let keywordlist = GM_getValue('blockKeyword', defaultConfig.blockKeyword);
-
-        if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
-            userlist.push(...unsafeWindow.LiveConfig.mute.users);
-            keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
-            userlist = Array.from(new Set(userlist));
-            keywordlist = Array.from(new Set(keywordlist));
-        }
-
-        const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author.innerText);
-        const textAllow = keywordlist.length == 0 ? false : new RegExp(keywordlist.join('|')).test(message.innerText);
-
-        if(textAllow) {
-            item.classList.add('filtered');
-            item.classList.add('filtered-keyword');
-            count.keyword += 1;
-        }
-
-        if(authorAllow) {
-            item.classList.add('filtered');
-            item.classList.add('filtered-user');
-            count.user += 1;
-        }
-
-        if(item.classList.contains('deleted')) {
-            item.classList.add('filtered');
-            item.classList.add('filtered-deleted');
-        }
-
-        if(item.classList.contains('filtered')) count.all += 1;
-    });
-
-    let toggleHeader = document.querySelector('#comment .frontend-header');
-    if(toggleHeader) toggleHeader.remove();
-
-    toggleHeader = (
-        <div class="frontend-header">
-            <span class="filter-title">필터된 게시물</span>
-            <span class="filter-count-container" />
-        </div>
-    );
-
-    const container = toggleHeader.querySelector('.filter-count-container');
-
-    if(count.all > 0) {
-        document.querySelector('#comment .title').insertAdjacentElement('afterend', toggleHeader);
-
-        for(const key of Object.keys(count)) {
-            if(count[key] > 0) {
-                let className = `show-filtered-${key}`;
-                if(key == 'all') className = 'show-filtered';
-
-                let text;
-                switch(key) {
-                case 'all':
-                    text = '전체';
-                    break;
-                case 'keyword':
-                    text = '키워드';
-                    break;
-                case 'user':
-                    text = '사용자';
-                    break;
-                case 'deleted':
-                    text = '삭제됨';
-                    break;
-                default:
-                    break;
-                }
-
-                const btn = <span class={`filter-count filter-count-${key}`}>{text} ({count[key]})</span>;
-                container.append(btn);
-                btn.addEventListener('click', () => {
-                    const list = document.querySelector('#comment .list-area');
-                    if(list.classList.contains(className)) {
-                        list.classList.remove(className);
-                        toggleHeader.classList.remove(className);
-                    }
-                    else {
-                        list.classList.add(className);
-                        toggleHeader.classList.add(className);
-                    }
-                });
-            }
-        }
-    }
-
-    for(const key of Object.keys(count)) {
-        const btn = container.querySelector(`.filter-count-${key}`);
-        if(btn) container.append(btn);
-    }
-}
-
-export function blockEmoticon(comments) {
-    const blockEmoticons = GM_getValue('blockEmoticon', defaultConfig.blockEmoticon);
+function blockEmoticon(comments) {
+    const blockEmoticons = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
 
     let list = [];
     for(const key in blockEmoticons) {
@@ -279,8 +201,8 @@ export function blockEmoticon(comments) {
     });
 }
 
-export function blockRatedown() {
-    if(!GM_getValue('blockRatedown', defaultConfig.blockRatedown)) return;
+function blockRatedown() {
+    if(!GM_getValue('blockRatedown', DefaultConfig.blockRatedown)) return;
 
     const ratedown = document.querySelector('#rateDown');
     if(ratedown == null) return;

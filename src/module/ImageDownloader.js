@@ -1,14 +1,17 @@
-import stylesheet from '../css/ImageDownloader.css';
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
+import { getBlob as download } from '../util/DownloadManager';
 
-export function apply() {
+import stylesheet from '../css/ImageDownloader.css';
+
+export default { apply };
+
+function apply() {
     const data = parse();
     if(data.length == 0) return;
 
-    document.head.append(<style>{stylesheet}</style>);
-
     const table = (
         <div class="article-image hidden">
+            <style>{stylesheet}</style>
             <table class="table align-middle" id="imageList">
                 <colgroup>
                     <col width="5%" />
@@ -58,7 +61,7 @@ export function apply() {
                     {d.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
                 </td>
                 <td>
-                    <a href="#" data-url={d.url}>{d.image}</a>
+                    <a href="#" data-url={d.url}>{d.name}</a>
                 </td>
             </tr>
         );
@@ -74,7 +77,14 @@ export function apply() {
             if(url != '') {
                 event.target.dataset.url = '';
                 const filename = event.target.textContent;
-                const file = await download(url, event.target, '다운로드 중...[percent]%', filename);
+                const file = await download(url,
+                    e => {
+                        const progress = Math.round(e.loaded / e.total * 100);
+                        event.target.textContent = `${filename}...${progress}%`;
+                    },
+                    () => {
+                        event.target.textContent = filename;
+                    });
                 window.saveAs(file, filename);
                 event.target.dataset.url = url;
             }
@@ -115,7 +125,11 @@ export function apply() {
         const zip = new JSZip();
         const total = downloadList.length;
         for(let i = 0; i < total; i += 1) {
-            const file = await download(downloadList[i], downloadBtn, `다운로드 중...[percent]% (${i}/${total})`);
+            const file = await download(downloadList[i],
+                e => {
+                    const progress = Math.round(e.loaded / e.total * 100);
+                    downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
+                });
             zip.file(`${`${i}`.padStart(3, '0')}_${nameList[i]}`, file);
         }
         downloadBtn.textContent = originalText;
@@ -125,7 +139,7 @@ export function apply() {
         const author = document.querySelector('.article-head .user-info');
         const channel = document.querySelector('.board-title a:not([class])');
 
-        let filename = GM_getValue('imageDownloaderFileName', defaultConfig.imageDownloaderFileName);
+        let filename = GM_getValue('imageDownloaderFileName', DefaultConfig.imageDownloaderFileName);
         const reservedWord = filename.match(/%\w*%/g);
         for(const word of reservedWord) {
             try {
@@ -148,7 +162,7 @@ export function apply() {
             }
             catch (error) {
                 console.warn(error);
-                filename = filename.replace(word, '');
+                filename = filename.replace(word, 'undefined');
             }
         }
         const zipblob = await zip.generateAsync({ type: 'blob' });
@@ -158,6 +172,7 @@ export function apply() {
     });
 }
 
+const IMAGE_TYPE = ['gif', 'png', 'jpg', 'jpeg', 'wepb'];
 function parse() {
     const images = document.querySelectorAll('.article-body img, .article-body video');
 
@@ -165,44 +180,20 @@ function parse() {
 
     images.forEach(element => {
         let src = element.src;
-
-        if(element.getAttribute('data-orig') != null) {
-            src += `.${element.getAttribute('data-orig')}`;
+        if(element.dataset.orig) {
+            src += `.${element.dataset.orig}`;
         }
 
-        const item = {};
-        item.thumb = `${src}?type=list`;
-        item.url = `${src}?type=orig`;
-        item.image = src.replace(/.*\.arca\.live\/.*\//, '').replace(/\..*\./, '.');
-        item.type = ['gif', 'png', 'jpg', 'jpeg', 'wepb'].indexOf(item.image.split('.')[1]) > -1 ? 'image' : 'video';
+        const filename = src.replace(/.*\.arca\.live\/.*\//, '').replace(/\..*\./, '.');
+        const item = {
+            thumb: `${src}?type=list`,
+            url: `${src}?type=orig`,
+            name: filename,
+            type: IMAGE_TYPE.indexOf(filename.split('.')[1]) > -1 ? 'image' : 'video',
+        };
 
         result.push(item);
     });
 
     return result;
-}
-
-export function download(url, element, progressString, loadString) {
-    return new Promise((resolve, reject) => {
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url,
-            responseType: 'blob',
-            onprogress: event => {
-                let text = null;
-                if(progressString) {
-                    text = progressString.replace('[percent]', Math.round(event.loaded / event.total * 100));
-                }
-                else {
-                    text = `${Math.round(event.loaded / event.total * 100)}%`;
-                }
-                if(element) element.textContent = text;
-            },
-            onload: response => {
-                if(loadString) element.textContent = loadString;
-                resolve(response.response);
-            },
-            onerror: reject,
-        });
-    });
 }

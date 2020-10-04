@@ -1,6 +1,8 @@
 import styles from '../css/IPScouter.module.css';
 
-const db = {
+export default { apply };
+
+const DB = {
     KT: [
         '1.96', '1.97', '1.98', '1.99', '1.100',
         '1.101', '1.102', '1.103', '1.104', '1.105',
@@ -59,7 +61,7 @@ const db = {
         '223.168', '223.169', '223.170', '223.171', '223.172',
         '223.173', '223.174', '223.175',
     ],
-    proxy: [
+    zenmate: [
         '5.79', '5.254', '31.3', '37.58', '37.221',
         '46.28', '46.183', '50.7', '62.210', '66.249',
         '89.238', '89.238', '91.221', '94.242', '95.141',
@@ -167,62 +169,36 @@ const db = {
         '92.48', '94.76', '95.215', '96.126'],
 };
 
-export function applyArticles(articles) {
-    articles.forEach(article => {
-        const ipElement = article.querySelector('small');
+const IPType = {
+    KT: { str: 'KT', color: styles.blue },
+    SK: { str: 'SK', color: styles.blue },
+    LG: { str: 'LG', color: styles.blue },
+    zenmate: { str: '젠메이트', color: styles.red },
+    tor: { str: '토르', color: styles.red },
+    hola: { str: '홀라', color: styles.red },
+};
 
-        if(ipElement) appendInfo(ipElement);
+function apply(rootView) {
+    const ipElements = rootView.querySelectorAll('.user-info small');
+
+    ipElements.forEach(ipElement => {
+        const ip = ipElement.textContent.replace(/\(|\)/g, '');
+        const [result, color] = checkIP(ip);
+
+        ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
     });
-}
-
-export function applyAuthor() {
-    const ipElement = document.querySelector('.article-head .user-info small');
-
-    if(ipElement) appendInfo(ipElement);
-}
-
-export function applyComments(comments) {
-    comments.forEach(comment => {
-        const ipElement = comment.querySelector('small');
-
-        if(ipElement) appendInfo(ipElement);
-    });
-}
-
-function appendInfo(ipElement) {
-    const ip = ipElement.textContent.replace(/\(|\)/g, '');
-    const [result, color] = checkIP(ip);
-
-    ipElement.parentNode.append(<span class={color}>{` - ${result}`}</span>);
 }
 
 function checkIP(ip) {
     let result = '고정';
     let color = styles.green;
 
-    if(db.KT.indexOf(ip) > -1) {
-        result = 'KT';
-        color = styles.blue;
-    }
-    else if(db.SK.indexOf(ip) > -1) {
-        result = 'SK';
-        color = styles.blue;
-    }
-    else if(db.LG.indexOf(ip) > -1) {
-        result = 'LG';
-        color = styles.blue;
-    }
-    else if(db.proxy.indexOf(ip) > -1) {
-        result = '젠메이트';
-        color = styles.red;
-    }
-    else if(db.tor.indexOf(ip) > -1) {
-        result = '토르';
-        color = styles.red;
-    }
-    else if(db.hola.indexOf(ip) > -1) {
-        result = '홀라';
-        color = styles.red;
+    for(const key of Object.keys(DB)) {
+        if(DB[key].indexOf(ip) > -1) {
+            result = IPType[key].str;
+            color = IPType[key].color;
+            break;
+        }
     }
 
     return [result, color];

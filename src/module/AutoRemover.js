@@ -1,14 +1,14 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
-import styles from '../css/Refresher.module.css';
+export default { removeArticle };
 
-export function removeArticle(articles) {
+function removeArticle(articles) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
-    const userlist = GM_getValue('autoRemoveUser', defaultConfig.autoRemoveUser);
-    const keywordlist = GM_getValue('autoRemoveKeyword', defaultConfig.autoRemoveKeyword);
-    const testMode = GM_getValue('useAutoRemoverTest', defaultConfig.useAutoRemoverTest);
+    const userlist = GM_getValue('autoRemoveUser', DefaultConfig.autoRemoveUser);
+    const keywordlist = GM_getValue('autoRemoveKeyword', DefaultConfig.autoRemoveKeyword);
+    const testMode = GM_getValue('useAutoRemoverTest', DefaultConfig.useAutoRemoverTest);
 
     const articleid = [];
 
@@ -22,7 +22,7 @@ export function removeArticle(articles) {
 
         if((titleAllow || authorAllow)) {
             if(testMode) {
-                item.classList.add(styles.target);
+                item.classList.add('target');
             }
             else {
                 articleid.push(checkbox.getAttribute('data-id'));

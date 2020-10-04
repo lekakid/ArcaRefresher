@@ -1,21 +1,13 @@
-import { defaultConfig } from './Setting';
+import DefaultConfig from '../core/DefaultConfig';
 
-export function apply(target) {
-    const users = document.querySelectorAll('.content-wrapper .user-info');
-    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+export default { apply, setHandler };
+
+function apply(rootView) {
+    const users = rootView.querySelectorAll('.user-info');
+    const memos = GM_getValue('userMemo', DefaultConfig.userMemo);
 
     users.forEach(user => {
-        let id = user.dataset.id;
-        if(id == undefined) {
-            id = user.innerText.trim();
-            const subid = user.querySelector('a[title], span[title]');
-            if(subid && subid.title.indexOf('#') > -1) {
-                id = subid.title.substring(subid.title.indexOf('#'));
-            }
-            user.dataset.id = id;
-        }
-
-        if(target && id != target) return;
+        const id = user.dataset.id;
 
         let slot = user.querySelector('.memo');
         if(memos[id]) {
@@ -33,31 +25,28 @@ export function apply(target) {
     });
 }
 
-export function applyHandler() {
-    const memos = GM_getValue('userMemo', defaultConfig.userMemo);
+function setHandler(rootView) {
+    const memos = GM_getValue('userMemo', DefaultConfig.userMemo);
 
-    const wrapper = document.querySelector('article .article-wrapper');
-    if(wrapper == null) return;
-
-    wrapper.addEventListener('click', event => {
+    rootView.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
 
         const user = event.target.closest('.user-info');
         if(user == null) return;
 
-        const id = user.getAttribute('data-id');
-        let memo = memos[id];
-        memo = prompt('이용자 메모를 설정합니다.\n', memo || '');
-        if(memo == null) return;
+        const id = user.dataset.id;
+        const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
+        if(newMemo == null) return;
 
         let slot = user.querySelector('.memo');
         if(slot == null) {
             slot = <span class="memo" />;
             user.append(slot);
         }
-        if(memo) {
-            slot.textContent = ` - ${memo}`;
-            memos[id] = memo;
+
+        if(newMemo) {
+            slot.textContent = ` - ${newMemo}`;
+            memos[id] = newMemo;
         }
         else {
             slot.remove();
@@ -65,6 +54,6 @@ export function applyHandler() {
         }
 
         GM_setValue('userMemo', memos);
-        apply(id);
+        apply(rootView);
     });
 }
