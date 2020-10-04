@@ -98,7 +98,7 @@ import { waitForElement } from './util/ElementDetector';
 
         let articles = targetElement.querySelectorAll('a.vrow');
         CategoryColor.apply(targetElement, channel);
-        BlockSystem.blockPreview(articles, channel);
+        BlockSystem.blockPreview(targetElement, channel);
         BlockSystem.blockContent(targetElement, channel);
 
         targetElement.addEventListener('ar_refresh', () => {
@@ -108,7 +108,7 @@ import { waitForElement } from './util/ElementDetector';
 
             articles = targetElement.querySelectorAll('a.vrow');
             CategoryColor.apply(targetElement, channel);
-            BlockSystem.blockPreview(articles, channel);
+            BlockSystem.blockPreview(targetElement, channel);
             BlockSystem.blockContent(targetElement, channel);
             AutoRemover.removeArticle(targetElement);
         });

@@ -7,8 +7,9 @@ export default {
     blockRatedown,
 };
 
-function blockPreview(articles, channel) {
+function blockPreview(rootView, channel) {
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
+    const articles = rootView.querySelectorAll('a.vrow');
 
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
