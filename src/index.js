@@ -97,7 +97,7 @@ import { waitForElement } from './util/ElementDetector';
         IPScouter.apply(targetElement);
 
         let articles = targetElement.querySelectorAll('a.vrow');
-        CategoryColor.apply(articles, channel);
+        CategoryColor.apply(targetElement, channel);
         BlockSystem.blockPreview(articles, channel);
         BlockSystem.blockContent(targetElement, channel);
 
@@ -107,7 +107,7 @@ import { waitForElement } from './util/ElementDetector';
             IPScouter.apply(targetElement);
 
             articles = targetElement.querySelectorAll('a.vrow');
-            CategoryColor.apply(articles, channel);
+            CategoryColor.apply(targetElement, channel);
             BlockSystem.blockPreview(articles, channel);
             BlockSystem.blockContent(targetElement, channel);
             AutoRemover.removeArticle(targetElement);
