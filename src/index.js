@@ -110,7 +110,7 @@ import { waitForElement } from './util/ElementDetector';
             CategoryColor.apply(articles, channel);
             BlockSystem.blockPreview(articles, channel);
             BlockSystem.blockContent(targetElement, channel);
-            AutoRemover.removeArticle(articles);
+            AutoRemover.removeArticle(targetElement);
         });
 
         if (type != 'board-included') {
