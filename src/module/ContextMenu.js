@@ -131,7 +131,7 @@ async function onClickContextMenu(event) {
                 event.target.textContent = originalText;
             });
         window.saveAs(imgBlob, `image.${imgBlob.type.split('/')[1]}`);
-        context.parentNode.classList.add('hidden');
+        context.classList.add('hidden');
     }
     if(event.target.id == 'copy-url') {
         event.preventDefault();
