@@ -59,8 +59,7 @@ import { waitForElement } from './util/ElementDetector';
 
             const commentView = targetElement.querySelector('#comment');
             if (commentView) {
-                const comments = commentView.querySelectorAll('.comment-item');
-                BlockSystem.blockEmoticon(comments);
+                BlockSystem.blockEmoticon(commentView);
                 BlockSystem.blockContent(commentView);
 
                 CommentRefresh.apply(commentView);
@@ -72,7 +71,7 @@ import { waitForElement } from './util/ElementDetector';
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
-                    BlockSystem.blockEmoticon(comments);
+                    BlockSystem.blockEmoticon(commentView);
                     BlockSystem.blockContent(commentView);
                     EmoticonBlock.apply(commentView);
                 });

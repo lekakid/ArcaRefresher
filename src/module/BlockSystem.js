@@ -180,7 +180,7 @@ function blockContent(rootView, channel) {
     if(!noticeConfig) targetElement.classList.add('show-filtered-notice');
 }
 
-function blockEmoticon(comments) {
+function blockEmoticon(rootView) {
     const blockEmoticons = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
 
     let list = [];
@@ -190,6 +190,7 @@ function blockEmoticon(comments) {
         }
     }
 
+    const comments = rootView.querySelectorAll('.comment-item');
     comments.forEach(item => {
         const emoticon = item.querySelector('.emoticon');
 
