@@ -17,6 +17,7 @@ import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
 import NotificationIconColor from './module/NotificationIconColor';
 import ShortCut from './module/ShortCut';
+import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
 
 import { waitForElement } from './util/ElementDetector';
@@ -122,8 +123,10 @@ import { waitForElement } from './util/ElementDetector';
 
     if (type == 'write') {
         await waitForElement('.fr-box');
+        // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');
         ClipboardUpload.apply(editor);
         MyImage.apply(editor);
+        TemporaryArticle.apply(editor);
     }
 }());
