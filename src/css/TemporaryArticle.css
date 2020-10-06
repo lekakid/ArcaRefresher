@@ -1,0 +1,45 @@
+.btns {
+    font-size: 0;
+}
+
+#articleList {
+    display: block;
+    position: absolute;
+
+    width: 400px;
+    max-height: 400px;
+
+    border: 1px solid #bbb;
+    background-color: #fff;
+
+    z-index: 5;
+}
+
+#articleList tbody {
+    display: block;
+    height: 300px;
+    overflow: auto;
+}
+
+#articleList tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#articleList th:nth-child(1),
+#articleList td:nth-child(1) {
+    width: 10%;
+}
+#articleList th:nth-child(2),
+#articleList td:nth-child(2) {
+    width: 65%;
+}
+#articleList th:nth-child(3),
+#articleList td:nth-child(3) {
+    width: 25%;
+}
+
+#articleList td:nth-child(3) {
+    font-size: .83em;
+}

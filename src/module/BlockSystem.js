@@ -7,8 +7,9 @@ export default {
     blockRatedown,
 };
 
-function blockPreview(articles, channel) {
+function blockPreview(rootView, channel) {
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
+    const articles = rootView.querySelectorAll('a.vrow');
 
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
@@ -179,7 +180,7 @@ function blockContent(rootView, channel) {
     if(!noticeConfig) targetElement.classList.add('show-filtered-notice');
 }
 
-function blockEmoticon(comments) {
+function blockEmoticon(rootView) {
     const blockEmoticons = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
 
     let list = [];
@@ -189,6 +190,7 @@ function blockEmoticon(comments) {
         }
     }
 
+    const comments = rootView.querySelectorAll('.comment-item');
     comments.forEach(item => {
         const emoticon = item.querySelector('.emoticon');
 

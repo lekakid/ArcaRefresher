@@ -2,7 +2,7 @@ import DefaultConfig from '../core/DefaultConfig';
 
 export default { removeArticle };
 
-function removeArticle(articles) {
+function removeArticle(rootView) {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
@@ -10,6 +10,7 @@ function removeArticle(articles) {
     const keywordlist = GM_getValue('autoRemoveKeyword', DefaultConfig.autoRemoveKeyword);
     const testMode = GM_getValue('useAutoRemoverTest', DefaultConfig.useAutoRemoverTest);
 
+    const articles = rootView.querySelectorAll('a.vrow');
     const articleid = [];
 
     articles.forEach(item => {

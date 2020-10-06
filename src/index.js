@@ -2,6 +2,7 @@ import PostProcessor from './core/PostProcessor';
 import Setting from './core/Setting';
 import DefaultConfig from './core/DefaultConfig';
 
+import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
 import AutoRemover from './module/AutoRemover';
 import BlockSystem from './module/BlockSystem';
@@ -17,6 +18,7 @@ import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
 import NotificationIconColor from './module/NotificationIconColor';
 import ShortCut from './module/ShortCut';
+import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
 
 import { waitForElement } from './util/ElementDetector';
@@ -30,8 +32,14 @@ import { waitForElement } from './util/ElementDetector';
     await waitForElement('.content-wrapper');
     Setting.setup(channel);
 
-    LiveModifier.apply();
-    NotificationIconColor.apply();
+    try {
+        LiveModifier.apply();
+        NotificationIconColor.apply();
+    }
+    catch(error) {
+        console.warn('글로벌 모듈 적용 중 오류 발생');
+        console.error(error);
+    }
 
     await waitForElement('footer');
 
@@ -51,6 +59,7 @@ import { waitForElement } from './util/ElementDetector';
             UserMemo.apply(articleWrapper);
             UserMemo.setHandler(articleWrapper);
             IPScouter.apply(articleWrapper);
+            AnonymousNick.apply(articleWrapper);
 
             LiveModifier.applyImageResize();
             ContextMenu.apply(articleWrapper);
@@ -59,8 +68,7 @@ import { waitForElement } from './util/ElementDetector';
 
             const commentView = targetElement.querySelector('#comment');
             if (commentView) {
-                const comments = commentView.querySelectorAll('.comment-item');
-                BlockSystem.blockEmoticon(comments);
+                BlockSystem.blockEmoticon(commentView);
                 BlockSystem.blockContent(commentView);
 
                 CommentRefresh.apply(commentView);
@@ -72,7 +80,7 @@ import { waitForElement } from './util/ElementDetector';
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
-                    BlockSystem.blockEmoticon(comments);
+                    BlockSystem.blockEmoticon(commentView);
                     BlockSystem.blockContent(commentView);
                     EmoticonBlock.apply(commentView);
                 });
@@ -96,9 +104,8 @@ import { waitForElement } from './util/ElementDetector';
         UserMemo.apply(targetElement);
         IPScouter.apply(targetElement);
 
-        let articles = targetElement.querySelectorAll('a.vrow');
-        CategoryColor.apply(articles, channel);
-        BlockSystem.blockPreview(articles, channel);
+        CategoryColor.apply(targetElement, channel);
+        BlockSystem.blockPreview(targetElement, channel);
         BlockSystem.blockContent(targetElement, channel);
 
         targetElement.addEventListener('ar_refresh', () => {
@@ -106,11 +113,10 @@ import { waitForElement } from './util/ElementDetector';
             UserMemo.apply(targetElement);
             IPScouter.apply(targetElement);
 
-            articles = targetElement.querySelectorAll('a.vrow');
-            CategoryColor.apply(articles, channel);
-            BlockSystem.blockPreview(articles, channel);
+            CategoryColor.apply(targetElement, channel);
+            BlockSystem.blockPreview(targetElement, channel);
             BlockSystem.blockContent(targetElement, channel);
-            AutoRemover.removeArticle(articles);
+            AutoRemover.removeArticle(targetElement);
         });
 
         if (type != 'board-included') {
@@ -125,8 +131,10 @@ import { waitForElement } from './util/ElementDetector';
 
     if (type == 'write') {
         await waitForElement('.fr-box');
+        // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');
         ClipboardUpload.apply(editor);
         MyImage.apply(editor);
+        TemporaryArticle.apply(editor);
     }
 }());
