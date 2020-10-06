@@ -31,8 +31,14 @@ import { waitForElement } from './util/ElementDetector';
     await waitForElement('.content-wrapper');
     Setting.setup(channel);
 
-    LiveModifier.apply();
-    NotificationIconColor.apply();
+    try {
+        LiveModifier.apply();
+        NotificationIconColor.apply();
+    }
+    catch(error) {
+        console.warn('글로벌 모듈 적용 중 오류 발생');
+        console.error(error);
+    }
 
     await waitForElement('footer');
 
