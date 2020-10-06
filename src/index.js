@@ -2,6 +2,7 @@ import PostProcessor from './core/PostProcessor';
 import Setting from './core/Setting';
 import DefaultConfig from './core/DefaultConfig';
 
+import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
 import AutoRemover from './module/AutoRemover';
 import BlockSystem from './module/BlockSystem';
@@ -58,6 +59,7 @@ import { waitForElement } from './util/ElementDetector';
             UserMemo.apply(articleWrapper);
             UserMemo.setHandler(articleWrapper);
             IPScouter.apply(articleWrapper);
+            AnonymousNick.apply(articleWrapper);
 
             LiveModifier.applyImageResize();
             ContextMenu.apply(articleWrapper);
