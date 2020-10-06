@@ -6,6 +6,8 @@ function apply() {
     const color = GM_getValue('notificationIconColor', DefaultConfig.notificationIconColor);
 
     const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
+    if(notificationIcon == null) return;
+
     const notiObserver = new MutationObserver(() => {
         if(notificationIcon.style.color) {
             notificationIcon.style.color = `#${color}`;
