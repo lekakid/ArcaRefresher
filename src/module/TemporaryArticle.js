@@ -26,8 +26,8 @@ function apply(editor) {
             </tfoot>
         </table>
     );
-    const saveBtn = <a href="#" class="btn btn-primary" id="tempSaveBtn">임시 저장</a>;
-    const loadBtn = <a href="#" class="btn btn-success" id="tempLoadBtn">불러오기</a>;
+    const saveBtn = <button class="btn btn-primary" id="tempSaveBtn">임시 저장</button>;
+    const loadBtn = <button class="btn btn-success" id="tempLoadBtn">불러오기</button>;
     const deleteBtn = list.querySelector('#tempDeleteBtn');
     const selectAll = list.querySelector('input[name="selectAll"]');
     const tbody = list.querySelector('tbody');
@@ -67,7 +67,8 @@ function apply(editor) {
             list.classList.add('hidden');
         }
     });
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', event => {
+        event.preventDefault();
         const timestamp = new Date().getTime();
 
         const title = document.querySelector('#inputTitle').value;
@@ -83,7 +84,9 @@ function apply(editor) {
         GM_setValue('tempArticles', tempArticles);
         alert('작성 중인 게시물이 저장되었습니다.');
     });
-    loadBtn.addEventListener('click', () => {
+    loadBtn.addEventListener('click', event => {
+        event.preventDefault();
+
         if(list.classList.contains('hidden')) {
             loadArticle();
 

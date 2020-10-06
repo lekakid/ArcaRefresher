@@ -1,3 +1,7 @@
+.btns {
+    font-size: 0;
+}
+
 #articleList {
     display: block;
     position: absolute;
@@ -34,5 +38,8 @@
 #articleList th:nth-child(3),
 #articleList td:nth-child(3) {
     width: 25%;
+}
+
+#articleList td:nth-child(3) {
     font-size: .83em;
 }
