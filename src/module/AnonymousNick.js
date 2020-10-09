@@ -23,6 +23,11 @@ function apply(rootView) {
         event.preventDefault();
 
         const userElements = rootView.querySelectorAll('.user-info');
+        const avatarElements = rootView.querySelectorAll('.avatar');
+
+        avatarElements.forEach(e => {
+            e.remove();
+        });
 
         const users = new Set();
         userElements.forEach(e => {
