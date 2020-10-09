@@ -14,11 +14,11 @@ const DefaultSuffix = [
 function apply(rootView) {
     const editMenu = rootView.querySelector('.edit-menu');
     if(editMenu.childElementCount) {
-        editMenu.append(<span class="sep" />);
+        editMenu.prepend(<span class="sep" />);
     }
 
     const btn = <a href="#"><span class="ion-wand" /> 익명화</a>;
-    editMenu.append(btn);
+    editMenu.prepend(btn);
     btn.addEventListener('click', event => {
         event.preventDefault();
 
