@@ -13,6 +13,8 @@ const DefaultSuffix = [
 
 function apply(rootView) {
     const editMenu = rootView.querySelector('.edit-menu');
+    if(editMenu == null) return;
+
     if(editMenu.childElementCount) {
         editMenu.prepend(<span class="sep" />);
     }
