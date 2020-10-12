@@ -13,16 +13,23 @@ const DefaultSuffix = [
 
 function apply(rootView) {
     const editMenu = rootView.querySelector('.edit-menu');
+    if(editMenu == null) return;
+
     if(editMenu.childElementCount) {
-        editMenu.append(<span class="sep" />);
+        editMenu.prepend(<span class="sep" />);
     }
 
     const btn = <a href="#"><span class="ion-wand" /> 익명화</a>;
-    editMenu.append(btn);
+    editMenu.prepend(btn);
     btn.addEventListener('click', event => {
         event.preventDefault();
 
         const userElements = rootView.querySelectorAll('.user-info');
+        const avatarElements = rootView.querySelectorAll('.avatar');
+
+        avatarElements.forEach(e => {
+            e.remove();
+        });
 
         const users = new Set();
         userElements.forEach(e => {
