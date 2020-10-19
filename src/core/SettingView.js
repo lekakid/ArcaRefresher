@@ -179,6 +179,19 @@ export default (
                         <hr />
                         <h5 class="card-title">뮤트 기능</h5>
                         <div class="row">
+                            <label class="col-md-3">공지사항 숨기기</label>
+                            <div class="col-md-9">
+                                <select id="hideNotice" data-type="bool">
+                                    <option value="false">보임</option>
+                                    <option value="true">숨김</option>
+                                </select>
+                                <p>
+                                    채널 공지사항을 숨깁니다.<br />
+                                    사이트 설정 혹은 스크립트 설정이 하나라도 켜지면 자동으로 적용됩니다.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
                             <label class="col-md-3">사용자 뮤트</label>
                             <div class="col-md-9">
                                 <textarea id="blockUser" rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />

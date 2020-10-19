@@ -31,7 +31,6 @@ const ContentTypeString = {
     keyword: '키워드',
     user: '사용자',
     category: '카테고리',
-    notice: '공지',
     deleted: '삭제됨',
     all: '전체',
 };
@@ -48,10 +47,12 @@ function blockContent(rootView, channel) {
     for(const key of Object.keys(ContentTypeString)) {
         count[key] = 0;
     }
+    let noticeCount = 0;
 
     let userlist = GM_getValue('blockUser', DefaultConfig.blockUser);
     let keywordlist = GM_getValue('blockKeyword', DefaultConfig.blockKeyword);
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
+    const noticeConfig = unsafeWindow.LiveConfig.hideChannelNotice || GM_getValue('hideNotice', DefaultConfig.hideNotice);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -78,8 +79,11 @@ function blockContent(rootView, channel) {
     }
 
     contents.forEach(item => {
-        const keywordText = item.querySelector(keywordSelector).innerText;
+        const keywordElement = item.querySelector(keywordSelector);
         const userElement = item.querySelector('.user-info');
+        if(!keywordElement && !userElement) return;
+
+        const keywordText = keywordElement.innerText;
         const userText = userElement.dataset.id;
         const categoryElement = item.querySelector('.badge');
         let category;
@@ -117,9 +121,11 @@ function blockContent(rootView, channel) {
         }
 
         if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
-            item.classList.add('filtered');
-            item.classList.add('filtered-notice');
-            count.notice += 1;
+            if(noticeConfig) {
+                item.classList.add('filtered');
+                item.classList.add('filtered-notice');
+                noticeCount += 1;
+            }
         }
 
         if(item.classList.contains('deleted')) {
@@ -161,23 +167,23 @@ function blockContent(rootView, channel) {
                         toggleHeader.classList.add(className);
                     }
                 });
-                if(key == 'notice') {
-                    // eslint-disable-next-line no-loop-func
-                    btn.addEventListener('click', () => {
-                        if(targetElement.classList.contains(className)) {
-                            GM_setValue('hideNotice', false);
-                        }
-                        else {
-                            GM_setValue('hideNotice', true);
-                        }
-                    });
-                }
             }
         }
     }
 
-    const noticeConfig = GM_getValue('hideNotice', DefaultConfig.hideNotice);
-    if(!noticeConfig) targetElement.classList.add('show-filtered-notice');
+    const noticeBtn = rootView.querySelector('.notice-unfilter');
+
+    if(noticeCount > 0 && !rootView.classList.contains('show-filtered-notice')) {
+        noticeBtn.style.display = '';
+        noticeBtn.querySelector('.notice-filter-count').textContent = noticeCount;
+        noticeBtn.addEventListener('click', () => {
+            rootView.classList.add('show-filtered-notice');
+            noticeBtn.style.display = 'none';
+        });
+    }
+    else {
+        noticeBtn.style.display = 'none';
+    }
 }
 
 function blockEmoticon(rootView) {
