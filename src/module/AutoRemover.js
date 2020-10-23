@@ -14,8 +14,10 @@ function removeArticle(rootView) {
     const articleid = [];
 
     articles.forEach(item => {
-        const title = item.querySelector('.col-title').innerText;
+        const titleElement = item.querySelector('.col-title');
         const userElement = item.querySelector('.user-info');
+        if(!titleElement || !userElement) return;
+        const title = titleElement.innerText;
         const author = userElement.dataset.id;
         const checkbox = item.querySelector('.batch-check');
 
