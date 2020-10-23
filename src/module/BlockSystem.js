@@ -81,7 +81,7 @@ function blockContent(rootView, channel) {
     contents.forEach(item => {
         const keywordElement = item.querySelector(keywordSelector);
         const userElement = item.querySelector('.user-info');
-        if(!keywordElement && !userElement) return;
+        if(!keywordElement || !userElement) return;
 
         const keywordText = keywordElement.innerText;
         const userText = userElement.dataset.id;
