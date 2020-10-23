@@ -1,6 +1,5 @@
 import PostProcessor from './core/PostProcessor';
 import Setting from './core/Setting';
-import DefaultConfig from './core/DefaultConfig';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -120,11 +119,7 @@ import { waitForElement } from './util/ElementDetector';
         });
 
         if (type != 'board-included') {
-            const refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
-            if (refreshTime) {
-                const refresher = new AutoRefresher(targetElement, refreshTime);
-                refresher.start();
-            }
+            new AutoRefresher(targetElement, refreshTime).start();
             ShortCut.apply('board');
         }
     }

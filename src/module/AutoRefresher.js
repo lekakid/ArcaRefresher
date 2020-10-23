@@ -6,11 +6,11 @@ import refreshersheet from '../css/AutoRefresher.css';
 export default class AutoRefresher {
     static instance;
 
-    constructor(rootView, refreshTime) {
+    constructor(rootView) {
         if(AutoRefresher.instance) return AutoRefresher.instance;
 
         this.rootView = rootView;
-        this.refreshTime = refreshTime;
+        this.refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
 
         if(this.refreshTime == 0) return this;
 
