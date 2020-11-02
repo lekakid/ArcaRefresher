@@ -42,18 +42,14 @@ import { waitForElement } from './util/ElementDetector';
 
     await waitForElement('footer');
 
-    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
-    if (targetElement == null) return;
+    const articleElement = document.querySelector('article');
+    const articleView = articleElement.querySelector('.article-view');
+    const boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
+    const writeView = articleElement.querySelector('.article-write');
 
-    let type = '';
-
-    if (targetElement.classList.contains('article-view')) type = 'article';
-    if (targetElement.classList.contains('list-table')) type = 'board';
-    if (targetElement.classList.contains('article-write')) type = 'write';
-
-    if (type == 'article') {
+    if (articleView) {
         try {
-            const articleWrapper = targetElement.querySelector('.article-wrapper');
+            const articleWrapper = articleView.querySelector('.article-wrapper');
             PostProcessor.parseUserInfo(articleWrapper);
             UserMemo.apply(articleWrapper);
             UserMemo.setHandler(articleWrapper);
@@ -65,7 +61,7 @@ import { waitForElement } from './util/ElementDetector';
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
 
-            const commentView = targetElement.querySelector('#comment');
+            const commentView = articleView.querySelector('#comment');
             if (commentView) {
                 BlockSystem.blockEmoticon(commentView);
                 BlockSystem.blockContent(commentView);
@@ -91,40 +87,43 @@ import { waitForElement } from './util/ElementDetector';
         }
 
         ShortCut.apply('article');
-
-        targetElement = targetElement.querySelector('.included-article-list .list-table');
-        if (targetElement) type = 'board-included';
     }
 
-    if (type.indexOf('board') > -1) {
+    if (boardView) {
         Setting.setupCategory(channel);
 
-        PostProcessor.parseUserInfo(targetElement);
-        UserMemo.apply(targetElement);
-        IPScouter.apply(targetElement);
+        PostProcessor.parseUserInfo(boardView);
+        UserMemo.apply(boardView);
+        IPScouter.apply(boardView);
 
-        CategoryColor.apply(targetElement, channel);
-        BlockSystem.blockPreview(targetElement, channel);
-        BlockSystem.blockContent(targetElement, channel);
+        CategoryColor.apply(boardView, channel);
+        BlockSystem.blockPreview(boardView, channel);
+        BlockSystem.blockContent(boardView, channel);
 
-        targetElement.addEventListener('ar_refresh', () => {
-            PostProcessor.parseUserInfo(targetElement);
-            UserMemo.apply(targetElement);
-            IPScouter.apply(targetElement);
+        boardView.addEventListener('ar_refresh', () => {
+            PostProcessor.parseUserInfo(boardView);
+            UserMemo.apply(boardView);
+            IPScouter.apply(boardView);
 
-            CategoryColor.apply(targetElement, channel);
-            BlockSystem.blockPreview(targetElement, channel);
-            BlockSystem.blockContent(targetElement, channel);
-            AutoRemover.removeArticle(targetElement);
+            CategoryColor.apply(boardView, channel);
+            BlockSystem.blockPreview(boardView, channel);
+            BlockSystem.blockContent(boardView, channel);
+            AutoRemover.removeArticle(boardView);
         });
 
-        if (type != 'board-included') {
-            new AutoRefresher(targetElement, refreshTime).start();
-            ShortCut.apply('board');
+        if (!boardView.closest('.included-article-list')) {
+            new AutoRefresher(boardView, refreshTime).start();
         }
     }
 
-    if (type == 'write') {
+    if(articleView) {
+        ShortCut.apply('article');
+    }
+    else if(boardView) {
+        ShortCut.apply('board');
+    }
+
+    if (writeView) {
         await waitForElement('.fr-box');
         // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');
