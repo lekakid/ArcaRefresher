@@ -22,8 +22,14 @@ import UserMemo from './module/UserMemo';
 
 import { waitForElement } from './util/ElementDetector';
 
+import FadeStyle from './css/Fade.css';
+import BlockSystemStyle from './css/BlockSystem.css';
+import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
+
 (async function () {
-    PostProcessor.addGlobalStyle();
+    // Load Global CSS
+    document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
+    document.head.append(<style>{BlockSystemStyle}</style>);
 
     const path = location.pathname.split('/');
     const channel = path[2] || '';
