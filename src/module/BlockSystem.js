@@ -43,6 +43,17 @@ function blockContent(rootView, channel) {
         return;
     }
 
+    // 댓글창 오류 방지로 대충 떼움. 나중에 고칠래
+    const unfilterBtn = rootView.querySelector('.notice-unfilter') || rootView;
+    const noticeCountElement = unfilterBtn.querySelector('.notice-filter-count');
+    if(noticeCountElement && noticeCountElement.textContent == '0') {
+        // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
+        unfilterBtn.addEventListener('click', () => {
+            rootView.classList.add('show-filtered-notice');
+            unfilterBtn.style.display = 'none';
+        });
+    }
+
     const count = {};
     for(const key of Object.keys(ContentTypeString)) {
         count[key] = 0;
@@ -171,18 +182,9 @@ function blockContent(rootView, channel) {
         }
     }
 
-    const noticeBtn = rootView.querySelector('.notice-unfilter');
-
     if(noticeCount > 0 && !rootView.classList.contains('show-filtered-notice')) {
-        noticeBtn.style.display = '';
-        noticeBtn.querySelector('.notice-filter-count').textContent = noticeCount;
-        noticeBtn.addEventListener('click', () => {
-            rootView.classList.add('show-filtered-notice');
-            noticeBtn.style.display = 'none';
-        });
-    }
-    else {
-        noticeBtn.style.display = 'none';
+        unfilterBtn.style.display = '';
+        noticeCountElement.textContent = noticeCount;
     }
 }
 

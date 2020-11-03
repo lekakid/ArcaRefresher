@@ -74,6 +74,10 @@ export default class AutoRefresher {
         }
 
         this.rootView.append(...newArticles);
+        const noticeUnfilterBtn = this.rootView.querySelector('.notice-unfilter');
+        const firstArticle = this.rootView.querySelector('a.vrow:not(.notice)');
+        firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
+
         this.rootView.dispatchEvent(new CustomEvent('ar_refresh'));
     }
 
