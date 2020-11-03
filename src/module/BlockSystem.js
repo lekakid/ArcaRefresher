@@ -96,7 +96,7 @@ function blockContent(rootView, channel) {
         if(!keywordElement || !userElement) return;
 
         const keywordText = keywordElement.innerText;
-        const userText = userElement.dataset.id;
+        const userText = Parser.getUserID(userElement);
         const categoryElement = item.querySelector('.badge');
         let category;
         if(categoryElement == null || categoryElement.textContent == '') {

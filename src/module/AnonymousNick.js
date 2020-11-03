@@ -1,3 +1,5 @@
+import Parser from '../core/Parser';
+
 export default { apply };
 
 const DefaultPrefix = [
@@ -33,7 +35,7 @@ function apply(rootView) {
 
         const users = new Set();
         userElements.forEach(e => {
-            users.add(e.dataset.id);
+            users.add(Parser.getUserID(e));
         });
 
         const alterNicks = new Set();
@@ -55,7 +57,7 @@ function apply(rootView) {
         }
 
         userElements.forEach(e => {
-            e.textContent = alterTable[e.dataset.id];
+            e.textContent = alterTable[Parser.getUserID(e)];
         });
     });
 }

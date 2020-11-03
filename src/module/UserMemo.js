@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import DefaultConfig from '../core/DefaultConfig';
 
 export default { apply, setHandler };
@@ -7,7 +8,7 @@ function apply(rootView) {
     const memos = GM_getValue('userMemo', DefaultConfig.userMemo);
 
     users.forEach(user => {
-        const id = user.dataset.id;
+        const id = Parser.getUserID(user);
 
         let slot = user.querySelector('.memo');
         if(memos[id]) {
@@ -34,7 +35,7 @@ function setHandler(rootView) {
         const user = event.target.closest('.user-info');
         if(user == null) return;
 
-        const id = user.dataset.id;
+        const id = Parser.getUserID(user);
         const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
         if(newMemo == null) return;
 

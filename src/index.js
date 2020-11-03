@@ -1,4 +1,3 @@
-import PostProcessor from './core/PostProcessor';
 import Setting from './core/Setting';
 
 import AnonymousNick from './module/AnonymousNick';
@@ -56,7 +55,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     if (articleView) {
         try {
             const articleWrapper = articleView.querySelector('.article-wrapper');
-            PostProcessor.parseUserInfo(articleWrapper);
             UserMemo.apply(articleWrapper);
             UserMemo.setHandler(articleWrapper);
             IPScouter.apply(articleWrapper);
@@ -77,7 +75,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                 FullAreaReply.apply(commentView);
 
                 commentView.addEventListener('ar_refresh', () => {
-                    PostProcessor.parseUserInfo(commentView);
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
@@ -98,7 +95,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     if (boardView) {
         Setting.setupCategory(channel);
 
-        PostProcessor.parseUserInfo(boardView);
         UserMemo.apply(boardView);
         IPScouter.apply(boardView);
 
@@ -107,7 +103,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         BlockSystem.blockContent(boardView, channel);
 
         boardView.addEventListener('ar_refresh', () => {
-            PostProcessor.parseUserInfo(boardView);
             UserMemo.apply(boardView);
             IPScouter.apply(boardView);
 

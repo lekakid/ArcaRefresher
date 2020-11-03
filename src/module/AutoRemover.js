@@ -19,7 +19,7 @@ function removeArticle(rootView) {
         const userElement = item.querySelector('.user-info');
         if(!titleElement || !userElement) return;
         const title = titleElement.innerText;
-        const author = userElement.dataset.id;
+        const author = Parser.getUserID(userElement);
         const checkbox = item.querySelector('.batch-check');
 
         const authorAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(author);
