@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import DefaultConfig from '../core/DefaultConfig';
 
 export default {
@@ -77,13 +78,13 @@ function blockContent(rootView, channel) {
     let targetElement = null;
     let insertPosition = '';
     if(rootView.classList.contains('list-table')) {
-        contents = rootView.querySelectorAll('a.vrow');
+        contents = Parser.getArticles(rootView);
         keywordSelector = '.col-title';
         targetElement = rootView;
         insertPosition = 'afterbegin';
     }
     else if(rootView.id == 'comment') {
-        contents = rootView.querySelectorAll('.comment-item');
+        contents = Parser.getComments(rootView);
         keywordSelector = '.message';
         targetElement = rootView.querySelector('.list-area');
         insertPosition = 'beforebegin';

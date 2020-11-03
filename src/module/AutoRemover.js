@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import DefaultConfig from '../core/DefaultConfig';
 
 export default { removeArticle };
@@ -10,7 +11,7 @@ function removeArticle(rootView) {
     const keywordlist = GM_getValue('autoRemoveKeyword', DefaultConfig.autoRemoveKeyword);
     const testMode = GM_getValue('useAutoRemoverTest', DefaultConfig.useAutoRemoverTest);
 
-    const articles = rootView.querySelectorAll('a.vrow');
+    const articles = Parser.getArticles(rootView);
     const articleid = [];
 
     articles.forEach(item => {

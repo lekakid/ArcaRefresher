@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 import DefaultConfig from '../core/DefaultConfig';
 
@@ -51,7 +52,7 @@ export default class AutoRefresher {
     }
 
     swapNewArticle(newArticles) {
-        const oldArticles = this.rootView.querySelectorAll('a.vrow');
+        const oldArticles = Parser.getArticles(this.rootView);
 
         const oldnums = [];
         for(const o of oldArticles) {
@@ -88,7 +89,8 @@ export default class AutoRefresher {
             req.open('GET', window.location.href);
             req.responseType = 'document';
             req.addEventListener('load', () => {
-                const articles = req.response.querySelectorAll('a.vrow');
+                const rootView = req.response.querySelector('div.board-article-list .list-table');
+                const articles = Parser.getArticles(rootView);
                 resolve(articles);
             });
             req.send();

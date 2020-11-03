@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import DefaultConfig from '../core/DefaultConfig';
 import { getContrastYIQ } from '../util/ColorManager';
 
@@ -5,7 +6,7 @@ export default { apply };
 
 function apply(rootView, channel) {
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
-    const articles = rootView.querySelectorAll('a.vrow');
+    const articles = Parser.getArticles(rootView);
 
     articles.forEach(article => {
         const category = article.querySelector('.badge');
