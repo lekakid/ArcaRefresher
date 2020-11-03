@@ -135,19 +135,19 @@ function blockContent(rootView, channel) {
             count.all += 1;
         }
 
+        if(item.classList.contains('deleted')) {
+            item.classList.add('filtered');
+            item.classList.add('filtered-deleted');
+            count.deleted += 1;
+            count.all += 1;
+        }
+
         if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
             if(noticeConfig) {
                 item.classList.add('filtered');
                 item.classList.add('filtered-notice');
                 noticeCount += 1;
             }
-        }
-
-        if(item.classList.contains('deleted')) {
-            item.classList.add('filtered');
-            item.classList.add('filtered-deleted');
-            count.deleted += 1;
-            count.all += 1;
         }
     });
 
