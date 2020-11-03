@@ -118,18 +118,21 @@ function blockContent(rootView, channel) {
             item.classList.add('filtered');
             item.classList.add('filtered-keyword');
             count.keyword += 1;
+            count.all += 1;
         }
 
         if(userAllow) {
             item.classList.add('filtered');
             item.classList.add('filtered-user');
             count.user += 1;
+            count.all += 1;
         }
 
         if(categoryAllow) {
             item.classList.add('filtered');
             item.classList.add('filtered-category');
             count.category += 1;
+            count.all += 1;
         }
 
         if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
@@ -143,9 +146,9 @@ function blockContent(rootView, channel) {
         if(item.classList.contains('deleted')) {
             item.classList.add('filtered');
             item.classList.add('filtered-deleted');
+            count.deleted += 1;
+            count.all += 1;
         }
-
-        if(item.classList.contains('filtered')) count.all += 1;
     });
 
     let toggleHeader = rootView.querySelector('.frontend-header');
