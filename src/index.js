@@ -3,18 +3,19 @@ import Setting from './core/Setting';
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
 import AutoRemover from './module/AutoRemover';
-import BlockSystem from './module/BlockSystem';
+import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
 import CommentRefresh from './module/CommentRefresh';
 import ContextMenu from './module/ContextMenu';
-import EmoticonBlock from './module/EmoticonBlock';
+import MuteEmoticon from './module/MuteEmoticon';
 import FullAreaReply from './module/FullAreaReply';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
 import NotificationIconColor from './module/NotificationIconColor';
+import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
@@ -35,6 +36,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    RatedownGuard.initialize();
+    MuteContent.initialize();
+    MuteEmoticon.initialize();
     UserMemo.initialize();
     LiveModifier.initialize();
 
@@ -63,25 +67,25 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             AnonymousNick.apply(articleWrapper);
 
             ContextMenu.apply(articleWrapper);
-            BlockSystem.blockRatedown();
+            RatedownGuard.apply();
             ImageDownloader.apply();
 
             const commentView = articleView.querySelector('#comment');
             if (commentView) {
-                BlockSystem.blockEmoticon(commentView);
-                BlockSystem.blockContent(commentView);
+                MuteEmoticon.mute(commentView);
+                MuteContent.muteContent(commentView);
 
                 CommentRefresh.apply(commentView);
-                EmoticonBlock.apply(commentView);
+                MuteEmoticon.apply(commentView);
                 FullAreaReply.apply(commentView);
 
                 commentView.addEventListener('ar_refresh', () => {
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
-                    BlockSystem.blockEmoticon(commentView);
-                    BlockSystem.blockContent(commentView);
-                    EmoticonBlock.apply(commentView);
+                    MuteContent.muteEmoticon(commentView);
+                    MuteContent.muteContent(commentView);
+                    MuteEmoticon.apply(commentView);
                 });
             }
         }
@@ -100,16 +104,16 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         IPScouter.apply(boardView);
 
         CategoryColor.apply(boardView, channel);
-        BlockSystem.blockPreview(boardView, channel);
-        BlockSystem.blockContent(boardView, channel);
+        MuteContent.blockPreview(boardView, channel);
+        MuteContent.muteContent(boardView, channel);
 
         boardView.addEventListener('ar_refresh', () => {
             UserMemo.apply(boardView);
             IPScouter.apply(boardView);
 
             CategoryColor.apply(boardView, channel);
-            BlockSystem.blockPreview(boardView, channel);
-            BlockSystem.blockContent(boardView, channel);
+            MuteContent.blockPreview(boardView, channel);
+            MuteContent.muteContent(boardView, channel);
             AutoRemover.removeArticle(boardView);
         });
 

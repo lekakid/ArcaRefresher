@@ -1,12 +1,51 @@
+import Setting from '../core/Setting';
 import Parser from '../core/Parser';
 import DefaultConfig from '../core/DefaultConfig';
 
 export default {
+    initialize,
     blockPreview,
-    blockContent,
-    blockEmoticon,
-    blockRatedown,
+    muteContent,
 };
+
+const BLOCK_USER = 'blockUser';
+const BLOCK_USER_DEFAULT = '';
+const BLOCK_KEYWORD = 'blockKeyword';
+const BLOCK_KEYWORD_DEFAULT = '';
+
+function initialize() {
+    const configElement = (
+        <>
+            <label class="col-md-3">사용자 뮤트</label>
+            <div class="col-md-9">
+                <textarea name="user" rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
+                <p>지정한 유저의 게시물과 댓글을 숨깁니다.</p>
+            </div>
+            <label class="col-md-3">키워드 뮤트</label>
+            <div class="col-md-9">
+                <textarea name="keyword" rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
+                <p>지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.</p>
+            </div>
+        </>
+    );
+
+    const userElement = configElement.querySelector('textarea[name="user"]');
+    const keywordElement = configElement.querySelector('textarea[name="keyword"]');
+
+    function load() {
+        const blockUser = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
+        const blockKeyword = GM_getValue(BLOCK_KEYWORD, BLOCK_KEYWORD_DEFAULT);
+
+        userElement.value = blockUser.join('\n');
+        keywordElement.value = blockKeyword.join('\n');
+    }
+    function save() {
+        GM_setValue(BLOCK_USER, userElement.value.split('\n').filter(i => i != ''));
+        GM_setValue(BLOCK_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
+    }
+
+    Setting.registConfig(configElement, 'muteConfig', save, load);
+}
 
 function blockPreview(rootView, channel) {
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
@@ -36,10 +75,10 @@ const ContentTypeString = {
     all: '전체',
 };
 
-function blockContent(rootView, channel) {
+function muteContent(rootView, channel) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            blockContent(rootView, channel);
+            muteContent(rootView, channel);
         }, { once: true });
         return;
     }
@@ -61,8 +100,8 @@ function blockContent(rootView, channel) {
     }
     let noticeCount = 0;
 
-    let userlist = GM_getValue('blockUser', DefaultConfig.blockUser);
-    let keywordlist = GM_getValue('blockKeyword', DefaultConfig.blockKeyword);
+    let userlist = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
+    let keywordlist = GM_getValue(BLOCK_KEYWORD, BLOCK_KEYWORD_DEFAULT);
     const categoryConfig = GM_getValue('category', DefaultConfig.category);
     const noticeConfig = unsafeWindow.LiveConfig.hideChannelNotice || GM_getValue('hideNotice', DefaultConfig.hideNotice);
 
@@ -190,40 +229,4 @@ function blockContent(rootView, channel) {
         unfilterBtn.style.display = '';
         noticeCountElement.textContent = noticeCount;
     }
-}
-
-function blockEmoticon(rootView) {
-    const blockEmoticons = GM_getValue('blockEmoticon', DefaultConfig.blockEmoticon);
-
-    let list = [];
-    for(const key in blockEmoticons) {
-        if({}.hasOwnProperty.call(blockEmoticons, key)) {
-            list = list.concat(blockEmoticons[key].bundle);
-        }
-    }
-
-    const comments = rootView.querySelectorAll('.comment-item');
-    comments.forEach(item => {
-        const emoticon = item.querySelector('.emoticon');
-
-        if(emoticon) {
-            const id = emoticon.dataset.id;
-            if(list.indexOf(id) > -1) {
-                emoticon.closest('.message').innerText = '[아카콘 뮤트됨]';
-            }
-        }
-    });
-}
-
-function blockRatedown() {
-    if(!GM_getValue('blockRatedown', DefaultConfig.blockRatedown)) return;
-
-    const ratedown = document.querySelector('#rateDown');
-    if(ratedown == null) return;
-
-    ratedown.addEventListener('click', e => {
-        if(!confirm('비추천을 눌렀습니다.\n계속하시겠습니까?')) {
-            e.preventDefault();
-        }
-    });
 }
