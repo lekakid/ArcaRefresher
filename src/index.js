@@ -35,6 +35,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    LiveModifier.initialize();
 
     try {
         LiveModifier.apply();
@@ -60,7 +61,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             IPScouter.apply(articleWrapper);
             AnonymousNick.apply(articleWrapper);
 
-            LiveModifier.applyImageResize();
             ContextMenu.apply(articleWrapper);
             BlockSystem.blockRatedown();
             ImageDownloader.apply();
