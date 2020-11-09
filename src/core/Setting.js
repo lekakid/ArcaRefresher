@@ -1,16 +1,30 @@
-import View from './SettingView';
-import DefaultConfig from './DefaultConfig';
+import stylesheet from '../css/Setting.css';
 
-import { getContrastYIQ, getRandomColor } from '../util/ColorManager';
+export default {
+    initialize,
+    registConfig,
+};
 
-export default { importConfig, setup, setupCategory };
+const saveCallbackList = [];
+const loadCallbackList = [];
+
+function registConfig(settingElement, category, saveCallback, loadCallback) {
+    const element = (
+        <div class="row">
+            {settingElement}
+        </div>
+    );
+    document.querySelector(`#refresherSetting #${category}`).append(element);
+    saveCallbackList.push(saveCallback);
+    loadCallbackList.push(loadCallback);
+}
 
 function importConfig(JSONString) {
     const data = JSON.parse(JSONString);
 
     for(const key of Object.keys(data)) {
-        if({}.hasOwnProperty.call(DefaultConfig, key)) {
-            if(data[key]) GM_setValue(key, data[key]);
+        if({}.hasOwnProperty.call(configData, key)) {
+            GM_setValue(key, data[key]);
         }
     }
 }
@@ -27,7 +41,7 @@ function exportConfig() {
     return result;
 }
 
-function reset() {
+function resetConfig() {
     const keys = GM_listValues();
 
     for(const key of keys) {
@@ -35,9 +49,9 @@ function reset() {
     }
 }
 
-function setup() {
+function initialize() {
     // 스크립트 설정 버튼 엘리먼트
-    const showSettingBtn = (
+    const showBtn = (
         <li class="nav-item dropdown" id="showSetting">
             <a aria-expanded="false" class="nav-link" href="#">
                 <span class="d-none d-sm-block">스크립트 설정</span>
@@ -46,18 +60,64 @@ function setup() {
         </li>
     );
 
-    // 설정 뷰
-    const settingWrapper = View;
     const contentWrapper = document.querySelector('.content-wrapper');
+    const settingContainer = (
+        <div class="hidden clearfix" id="refresherSetting">
+            <style>{stylesheet}</style>
+            <div class="row">
+                <div class="col-sm-0 col-md-2" />
+                <div class="col-sm-12 col-md-8">
+                    <div class="dialog card">
+                        <div class="card-block">
+                            <h4 class="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
+                            <hr />
+                            <h5 class="card-title">유틸리티</h5>
+                            <div id="utilityConfig" />
+                            <hr />
+                            <h5 class="card-title">요소 관리</h5>
+                            <div id="elementConfig" />
+                            <hr />
+                            <h5 class="card-title">메모 관리</h5>
+                            <div id="memoConfig" />
+                            <hr />
+                            <h5 class="card-title">카테고리 설정</h5>
+                            <div id="categoryConfig" />
+                            <hr />
+                            <h5 class="card-title">뮤트 설정</h5>
+                            <div id="muteConfig" />
+                            <hr />
+                            <h5 class="card-title">채널 관리자 기능</h5>
+                            <div id="channelAdminConfig" />
+                            <div class="row btns">
+                                <div class="col-12">
+                                    <a href="#" id="exportConfig" class="btn btn-primary">설정 내보내기</a>
+                                    <a href="#" id="importConfig" class="btn btn-secondary">설정 가져오기</a>
+                                    <a href="#" id="resetConfig" class="btn btn-danger">설정 초기화</a>
+                                </div>
+                            </div>
+                            <div class="row btns">
+                                <div class="col-12">
+                                    <a href="#" id="saveAndClose" class="btn btn-primary">저장</a>
+                                    <a href="#" id="closeSetting" class="btn btn-success">닫기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     // 설정 버튼 클릭 이벤트
-    showSettingBtn.addEventListener('click', () => {
-        if(settingWrapper.classList.contains('hidden')) {
-            loadConfig();
+    showBtn.addEventListener('click', () => {
+        if(settingContainer.classList.contains('hidden')) {
+            for(const func of loadCallbackList) {
+                func();
+            }
             contentWrapper.classList.add('disappear');
         }
         else {
-            settingWrapper.classList.add('disappear');
+            settingContainer.classList.add('disappear');
         }
     });
 
@@ -66,77 +126,46 @@ function setup() {
         if(contentWrapper.classList.contains('disappear')) {
             contentWrapper.classList.add('hidden');
             contentWrapper.classList.remove('disappear');
-            settingWrapper.classList.add('appear');
-            settingWrapper.classList.remove('hidden');
+            settingContainer.classList.add('appear');
+            settingContainer.classList.remove('hidden');
         }
         else if(contentWrapper.classList.contains('appear')) {
             contentWrapper.classList.remove('appear');
         }
     });
-    settingWrapper.addEventListener('animationend', () => {
-        if(settingWrapper.classList.contains('disappear')) {
-            settingWrapper.classList.add('hidden');
-            settingWrapper.classList.remove('disappear');
+    settingContainer.addEventListener('animationend', () => {
+        if(settingContainer.classList.contains('disappear')) {
+            settingContainer.classList.add('hidden');
+            settingContainer.classList.remove('disappear');
             contentWrapper.classList.add('appear');
             contentWrapper.classList.remove('hidden');
         }
-        else if(settingWrapper.classList.contains('appear')) {
-            settingWrapper.classList.remove('appear');
+        else if(settingContainer.classList.contains('appear')) {
+            settingContainer.classList.remove('appear');
         }
     });
 
-    // 헤더에 버튼 부착
-    document.querySelector('ul.navbar-nav').append(showSettingBtn);
-    contentWrapper.insertAdjacentElement('afterend', settingWrapper);
+    // 엘리먼트 부착
+    document.querySelector('ul.navbar-nav').append(showBtn);
+    contentWrapper.insertAdjacentElement('afterend', settingContainer);
 
-    const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    const textareaElements = settingWrapper.querySelectorAll('textarea');
-    const textElements = settingWrapper.querySelectorAll('input[type="text"]');
-    const listElements = settingWrapper.querySelectorAll('select[multiple]');
-    for(const element of listElements) {
-        const btnElement = <button href="#" class="btn btn-success">삭제</button>;
-        btnElement.addEventListener('click', event => {
-            event.target.disabled = true;
-
-            const removeElements = element.selectedOptions;
-            while(removeElements.length > 0) removeElements[0].remove();
-
-            event.target.disabled = false;
-        });
-        element.insertAdjacentElement('afterend', btnElement);
-    }
     // 이벤트 핸들러
-    settingWrapper.querySelector('#removeMyImage').addEventListener('click', event => {
-        event.target.disabled = true;
-        if(confirm('등록한 자짤을 삭제하시겠습니까?')) {
-            GM_setValue('myImage', '');
-            alert('삭제되었습니다.');
-        }
-        event.target.disabled = false;
-    });
-    settingWrapper.querySelector('#exportConfig').addEventListener('click', event => {
+    settingContainer.querySelector('#exportConfig').addEventListener('click', event => {
         event.preventDefault();
 
         const data = btoa(encodeURIComponent(exportConfig()));
         navigator.clipboard.writeText(data);
         alert('클립보드에 설정이 복사되었습니다.');
     });
-    settingWrapper.querySelector('#importConfig').addEventListener('click', event => {
+    settingContainer.querySelector('#importConfig').addEventListener('click', event => {
         event.preventDefault();
 
         let data = prompt('가져올 설정 데이터를 입력해주세요');
         if(data == null) return;
         try {
-            if(data == '') throw '[Setting/importConfig] 공백 값을 입력했습니다.';
+            if(data == '') throw '[Setting.importConfig] 공백 값을 입력했습니다.';
             data = decodeURIComponent(atob(data));
-
-            const config = JSON.parse(data);
-
-            for(const key in config) {
-                if({}.hasOwnProperty.call(config, key)) {
-                    GM_setValue(key, config[key]);
-                }
-            }
+            importConfig(data);
 
             location.reload();
         }
@@ -145,125 +174,28 @@ function setup() {
             console.error(error);
         }
     });
-    settingWrapper.querySelector('#resetConfig').addEventListener('click', event => {
+    settingContainer.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
 
         if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
 
-        reset();
+        resetConfig();
         location.reload();
     });
-    settingWrapper.querySelector('#saveAndClose').addEventListener('click', event => {
+    settingContainer.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
-
-        for(const element of comboElements) {
-            let value;
-            switch(element.dataset.type) {
-            case 'string':
-                value = element.value;
-                break;
-            case 'number':
-                value = Number(element.value);
-                break;
-            case 'bool':
-                value = element.value == 'true';
-                break;
-            default:
-                value = null;
-                break;
-            }
-            GM_setValue(element.id, value);
+        for(const func of saveCallbackList) {
+            func();
         }
 
-        for(const element of textElements) {
-            GM_setValue(element.id, element.value);
-        }
-
-        for(const element of textareaElements) {
-            let value;
-            if(element.value != '') {
-                value = element.value.split('\n');
-                value = value.filter(item => {
-                    return item != '';
-                });
-            }
-            else {
-                value = [];
-            }
-            GM_setValue(element.id, value);
-        }
-
-        for(const element of listElements) {
-            const data = GM_getValue(element.id, DefaultConfig[element.id]);
-            const options = element.querySelectorAll('option');
-            const keys = Array.from(options, o => o.value);
-            for(const key in data) {
-                if(keys.indexOf(key) == -1) delete data[key];
-            }
-            GM_setValue(element.id, data);
-        }
-
-        if(settingWrapper.querySelector('#categorySetting tbody').childElementCount == 0) {
-            location.reload();
-        }
+        location.reload();
     });
-    settingWrapper.querySelector('#closeSetting').addEventListener('click', () => {
-        settingWrapper.classList.add('disappear');
+    settingContainer.querySelector('#closeSetting').addEventListener('click', () => {
+        settingContainer.classList.add('disappear');
     });
 }
 
-function loadConfig() {
-    const settingWrapper = document.querySelector('#refresherSetting');
-
-    // 설정 값 불러오기
-    const comboElements = settingWrapper.querySelectorAll('select:not([multiple])');
-    for(const element of comboElements) {
-        element.value = GM_getValue(element.id, DefaultConfig[element.id]);
-    }
-    const textareaElements = settingWrapper.querySelectorAll('textarea');
-    for(const element of textareaElements) {
-        element.value = GM_getValue(element.id, DefaultConfig[element.id]).join('\n');
-    }
-    const textElements = settingWrapper.querySelectorAll('input[id][type="text"]');
-    for(const element of textElements) {
-        element.value = GM_getValue(element.id, DefaultConfig[element.id]);
-    }
-    const listElements = settingWrapper.querySelectorAll('select[multiple]');
-    for(const element of listElements) {
-        if(element.childElementCount) {
-            while(element.childElementCount) element.removeChild(element.firstChild);
-        }
-        const data = GM_getValue(element.id, DefaultConfig[element.id]);
-        for(const key of Object.keys(data)) {
-            const option = <option />;
-            option.value = key;
-
-            const reservedWord = element.dataset.textFormat.match(/%\w*%/g);
-            let text = element.dataset.textFormat;
-            if(text != '') {
-                for(const word of reservedWord) {
-                    switch(word) {
-                    case '%key%':
-                        text = text.replace(word, key);
-                        break;
-                    case '%value%':
-                        text = text.replace(word, data[key]);
-                        break;
-                    default:
-                        text = text.replace(word, data[key][word.replace(/%/g, '')]);
-                        break;
-                    }
-                }
-            }
-            else {
-                text = key;
-            }
-            option.textContent = text;
-            element.append(option);
-        }
-    }
-}
-
+/*
 function setupCategory(channel) {
     const settingWrapper = document.querySelector('#refresherSetting');
     const showSettingBtn = document.getElementById('showSetting');
@@ -371,3 +303,4 @@ function loadCategoryConfig(channel) {
         }
     }
 }
+*/

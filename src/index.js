@@ -34,7 +34,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     const channel = path[2] || '';
 
     await waitForElement('.content-wrapper');
-    Setting.setup(channel);
+    Setting.initialize();
 
     try {
         LiveModifier.apply();
@@ -93,7 +93,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     }
 
     if (boardView) {
-        Setting.setupCategory(channel);
+        // Setting.setupCategory(channel);
 
         UserMemo.apply(boardView);
         IPScouter.apply(boardView);
