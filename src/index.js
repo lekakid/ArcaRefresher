@@ -35,6 +35,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    UserMemo.initialize();
     LiveModifier.initialize();
 
     try {
