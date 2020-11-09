@@ -113,7 +113,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         });
 
         if (!boardView.closest('.included-article-list')) {
-            new AutoRefresher(boardView, refreshTime).start();
+            new AutoRefresher(boardView).start();
         }
     }
 
