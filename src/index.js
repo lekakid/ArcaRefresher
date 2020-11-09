@@ -2,7 +2,7 @@ import Setting from './core/Setting';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
-import AutoRemover from './module/AutoRemover';
+import ArticleRemover from './module/ArticleRemover';
 import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
@@ -36,6 +36,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    ArticleRemover.initialize();
     AutoRefresher.initialize();
     RatedownGuard.initialize();
     MuteContent.initialize();
@@ -99,8 +100,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     }
 
     if (boardView) {
-        // Setting.setupCategory(channel);
-
         UserMemo.apply(boardView);
         IPScouter.apply(boardView);
 
@@ -115,7 +114,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             CategoryColor.apply(boardView, channel);
             MuteContent.blockPreview(boardView, channel);
             MuteContent.muteContent(boardView, channel);
-            AutoRemover.removeArticle(boardView);
+            ArticleRemover.remove(boardView);
         });
 
         if (!boardView.closest('.included-article-list')) {
