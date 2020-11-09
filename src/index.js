@@ -36,6 +36,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    AutoRefresher.initialize();
     RatedownGuard.initialize();
     MuteContent.initialize();
     MuteEmoticon.initialize();
@@ -118,7 +119,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         });
 
         if (!boardView.closest('.included-article-list')) {
-            new AutoRefresher(boardView).start();
+            AutoRefresher.apply(boardView);
         }
     }
 
