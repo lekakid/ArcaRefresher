@@ -85,8 +85,8 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                     UserMemo.apply(commentView);
                     IPScouter.apply(commentView);
 
-                    MuteContent.muteContent(commentView);
                     MuteEmoticon.apply(commentView);
+                    MuteContent.muteContent(commentView);
                 });
             }
         }
