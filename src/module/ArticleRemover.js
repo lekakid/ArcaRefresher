@@ -53,7 +53,7 @@ function initialize() {
         GM_setValue(AUTO_REMOVE_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
     }
 
-    Setting.registConfig(configElement, 'channelAdminConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.CHANNEL_ADMIN, save, load);
 }
 
 function remove(rootView) {

@@ -87,7 +87,7 @@ function initialize() {
         GM_setValue(RESIZE_MEDIA, resizeMediaElement.value);
     }
 
-    Setting.registConfig(configElement, 'elementConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.INTERFACE, save, load);
 }
 
 function apply() {

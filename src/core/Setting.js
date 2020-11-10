@@ -1,8 +1,25 @@
 import stylesheet from '../css/Setting.css';
 
+const categoryKey = {
+    UTILITY: 'utility',
+    INTERFACE: 'interface',
+    MEMO: 'memo',
+    MUTE: 'mute',
+    CHANNEL_ADMIN: 'channelAdmin',
+};
+
 export default {
+    categoryKey,
     initialize,
     registConfig,
+};
+
+const configCategoryString = {
+    utility: '유틸리티',
+    interface: '인터페이스 변경',
+    memo: '메모 관리',
+    mute: '뮤트 설정',
+    channelAdmin: '채널 관리자 기능',
 };
 
 const saveCallbackList = [];
@@ -70,24 +87,7 @@ function initialize() {
                     <div class="dialog card">
                         <div class="card-block">
                             <h4 class="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
-                            <hr />
-                            <h5 class="card-title">유틸리티</h5>
-                            <div id="utilityConfig" />
-                            <hr />
-                            <h5 class="card-title">요소 관리</h5>
-                            <div id="elementConfig" />
-                            <hr />
-                            <h5 class="card-title">메모 관리</h5>
-                            <div id="memoConfig" />
-                            <hr />
-                            <h5 class="card-title">카테고리 설정</h5>
-                            <div id="categoryConfig" />
-                            <hr />
-                            <h5 class="card-title">뮤트 설정</h5>
-                            <div id="muteConfig" />
-                            <hr />
-                            <h5 class="card-title">채널 관리자 기능</h5>
-                            <div id="channelAdminConfig" />
+                            <div id="category" />
                             <div class="row btns">
                                 <div class="col-12">
                                     <a href="#" id="exportConfig" class="btn btn-primary">설정 내보내기</a>
@@ -107,6 +107,18 @@ function initialize() {
             </div>
         </div>
     );
+
+    // 설정 카테고리 생성
+    const categorySlot = settingContainer.querySelector('#category');
+    for(const key of Object.keys(configCategoryString)) {
+        categorySlot.append((
+            <>
+                <hr />
+                <h5 class="card-title">{configCategoryString[key]}</h5>
+                <div id={key} />
+            </>
+        ));
+    }
 
     // 설정 버튼 클릭 이벤트
     showBtn.addEventListener('click', () => {

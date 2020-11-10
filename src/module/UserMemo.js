@@ -51,7 +51,7 @@ function initialize() {
         GM_setValue(USER_MEMO, data);
     }
 
-    Setting.registConfig(configElement, 'memoConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.MEMO, save, load);
 }
 
 function apply(rootView) {

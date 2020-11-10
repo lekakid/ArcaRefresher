@@ -55,7 +55,7 @@ function initialize() {
         GM_setValue(HIDE_REFRESHER, hideRefresherElement.value == 'true');
     }
 
-    Setting.registConfig(configElement, 'utilityConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
 }
 
 function apply(rootView) {

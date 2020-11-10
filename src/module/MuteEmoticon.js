@@ -48,7 +48,7 @@ function initialize() {
         GM_setValue(BLOCK_EMOTICON, data);
     }
 
-    Setting.registConfig(configElement, 'muteConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.MUTE, save, load);
 }
 
 function mute(rootView) {

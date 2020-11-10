@@ -44,7 +44,7 @@ function initialize() {
         GM_setValue(BLOCK_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
     }
 
-    Setting.registConfig(configElement, 'muteConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.MUTE, save, load);
 }
 
 function blockPreview(rootView, channel) {

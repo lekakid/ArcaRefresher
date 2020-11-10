@@ -30,7 +30,7 @@ function initialize() {
         GM_setValue(RATEDOWN_GUARD, selectElement.value);
     }
 
-    Setting.registConfig(configElement, 'utilityConfig', save, load);
+    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
 }
 
 function apply() {
