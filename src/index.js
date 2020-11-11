@@ -39,6 +39,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ArticleRemover.initialize();
     AutoRefresher.initialize();
     CategoryColor.initialize(channel);
+    ImageDownloader.initialize();
     RatedownGuard.initialize();
     ShortCut.initialize();
     MuteContent.initialize();

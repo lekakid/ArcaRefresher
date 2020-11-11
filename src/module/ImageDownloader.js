@@ -1,9 +1,43 @@
-import DefaultConfig from '../core/DefaultConfig';
+import Setting from '../core/Setting';
 import { getBlob as download } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
-export default { apply };
+export default { initialize, apply };
+
+const FILENAME = 'imageDownloaderFileName';
+const FILENAME_DEFAULT = '%title%';
+
+function initialize() {
+    const configElement = (
+        <>
+            <label class="col-md-3">이미지 다운로드 이름</label>
+            <div class="col-md-9">
+                <input type="text" />
+                <p>
+                    이미지 일괄 다운로드 사용 시 저장할 파일 이름입니다.<br />
+                    %title% : 게시물 제목<br />
+                    %category% : 게시물 카테고리<br />
+                    %author% : 게시물 작성자<br />
+                    %channel% : 채널 이름<br />
+                </p>
+            </div>
+        </>
+    );
+
+    const inputElement = configElement.querySelector('input');
+
+    function load() {
+        const data = GM_getValue(FILENAME, FILENAME_DEFAULT);
+
+        inputElement.value = data;
+    }
+    function save() {
+        GM_setValue(FILENAME, inputElement.value);
+    }
+
+    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+}
 
 function apply() {
     const data = parse();
@@ -139,7 +173,7 @@ function apply() {
         const author = document.querySelector('.article-head .user-info');
         const channel = document.querySelector('.board-title a:not([class])');
 
-        let filename = GM_getValue('imageDownloaderFileName', DefaultConfig.imageDownloaderFileName);
+        let filename = GM_getValue(FILENAME, FILENAME_DEFAULT);
         const reservedWord = filename.match(/%\w*%/g);
         for(const word of reservedWord) {
             try {
