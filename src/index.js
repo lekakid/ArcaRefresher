@@ -44,6 +44,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ShortCut.initialize();
     MuteContent.initialize();
     MuteEmoticon.initialize();
+    NotificationIconColor.initialize();
     UserMemo.initialize();
     LiveModifier.initialize();
 
