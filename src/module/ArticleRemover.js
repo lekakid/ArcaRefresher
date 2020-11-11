@@ -43,12 +43,12 @@ function initialize() {
         const users = GM_getValue(AUTO_REMOVE_USER, AUTO_REMOVE_USER_DEFAULT);
         const keywords = GM_getValue(AUTO_REMOVE_KEYWORD, AUTO_REMOVE_KEYWORD_DEFAULT);
 
-        selectElement.value = testmode == 'true';
+        selectElement.value = testmode;
         userElement.value = users.join('\n');
         keywordElement.value = keywords.join('\n');
     }
     function save() {
-        GM_setValue(USE_AUTO_REMOVER_TEST, selectElement.value);
+        GM_setValue(USE_AUTO_REMOVER_TEST, selectElement.value == 'true');
         GM_setValue(AUTO_REMOVE_USER, userElement.value.split('\n').filter(i => i != ''));
         GM_setValue(AUTO_REMOVE_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
     }

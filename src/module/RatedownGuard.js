@@ -24,10 +24,10 @@ function initialize() {
     function load() {
         const data = GM_getValue(RATEDOWN_GUARD, RATEDOWN_GUARD_DEFAULT);
 
-        selectElement.value = data == 'true';
+        selectElement.value = data;
     }
     function save() {
-        GM_setValue(RATEDOWN_GUARD, selectElement.value);
+        GM_setValue(RATEDOWN_GUARD, selectElement.value == 'true');
     }
 
     Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
