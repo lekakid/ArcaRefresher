@@ -61,9 +61,9 @@ function initialize() {
         </>
     );
     const fixHeaderElement = configElement.querySelector('select[name="fixHeader"]');
-    const hideSideMenuElement = configElement.querySelector('select[name="hideAvatar"]');
-    const hideAvatarElement = configElement.querySelector('select[name="hideModified"]');
-    const hideModifiedElement = configElement.querySelector('select[name="hideSideMenu"]');
+    const hideAvatarElement = configElement.querySelector('select[name="hideAvatar"]');
+    const hideModifiedElement = configElement.querySelector('select[name="hideModified"]');
+    const hideSideMenuElement = configElement.querySelector('select[name="hideSideMenu"]');
     const resizeMediaElement = configElement.querySelector('input');
 
     function load() {
