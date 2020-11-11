@@ -40,6 +40,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     AutoRefresher.initialize();
     CategoryColor.initialize(channel);
     RatedownGuard.initialize();
+    ShortCut.initialize();
     MuteContent.initialize();
     MuteEmoticon.initialize();
     UserMemo.initialize();

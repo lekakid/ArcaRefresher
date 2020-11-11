@@ -1,9 +1,44 @@
-import DefaultConfig from '../core/DefaultConfig';
+import Setting from '../core/Setting';
 
-export default { apply };
+export default { initialize, apply };
+
+const USE_SHORTCUT = 'useShortcut';
+const USE_SHORTCUT_DAFAULT = false;
+
+function initialize() {
+    const configElement = (
+        <>
+            <label class="col-md-3">단축키 사용</label>
+            <div class="col-md-9">
+                <select>
+                    <option value="false">사용 안 함</option>
+                    <option value="true">사용</option>
+                </select>
+                <p>
+                    <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
+                        단축키 안내 바로가기
+                    </a>
+                </p>
+            </div>
+        </>
+    );
+
+    const selectElement = configElement.querySelector('select');
+
+    function load() {
+        const data = GM_getValue(USE_SHORTCUT, USE_SHORTCUT_DAFAULT);
+
+        selectElement.value = data;
+    }
+    function save() {
+        GM_setValue(USE_SHORTCUT, selectElement.value == 'true');
+    }
+
+    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+}
 
 function apply(view) {
-    if(!GM_getValue('useShortcut', DefaultConfig.useShortcut)) return;
+    if(!GM_getValue(USE_SHORTCUT, USE_SHORTCUT_DAFAULT)) return;
 
     if(view == 'article') {
         document.addEventListener('keydown', onArticle);
