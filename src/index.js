@@ -23,13 +23,11 @@ import UserMemo from './module/UserMemo';
 import { waitForElement } from './util/ElementDetector';
 
 import FadeStyle from './css/Fade.css';
-import BlockSystemStyle from './css/BlockSystem.css';
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
 (async function () {
     // Load Global CSS
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
-    document.head.append(<style>{BlockSystemStyle}</style>);
 
     const path = location.pathname.split('/');
     const channel = path[2] || '';
@@ -42,7 +40,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ImageDownloader.initialize();
     RatedownGuard.initialize();
     ShortCut.initialize();
-    MuteContent.initialize();
+    MuteContent.initialize(channel);
     MuteEmoticon.initialize();
     NotificationIconColor.initialize();
     UserMemo.initialize();
@@ -107,7 +105,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         IPScouter.apply(boardView);
 
         CategoryColor.apply(boardView, channel);
-        MuteContent.blockPreview(boardView, channel);
+        MuteContent.mutePreview(boardView, channel);
         MuteContent.muteContent(boardView, channel);
 
         boardView.addEventListener('ar_refresh', () => {
@@ -115,7 +113,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             IPScouter.apply(boardView);
 
             CategoryColor.apply(boardView, channel);
-            MuteContent.blockPreview(boardView, channel);
+            MuteContent.mutePreview(boardView, channel);
             MuteContent.muteContent(boardView, channel);
             ArticleRemover.remove(boardView);
         });
