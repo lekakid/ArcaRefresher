@@ -43,7 +43,7 @@ function initialize(channel) {
     for(const element of boardCategoryElements) {
         const name = element.textContent == '전체' ? '일반' : element.textContent;
         const tableCategoryElement = (
-            <tr id={name}>
+            <tr data-id={name}>
                 <td><span class="badge badge-success" style="margin: .25em">{`${name}`}</span><span class="title">제목</span></td>
                 <td><input type="text" name="badge" placeholder="000000" maxlength="6" /></td>
                 <td><input type="text" name="bg" placeholder="000000" maxlength="6" /></td>
@@ -108,7 +108,7 @@ function initialize(channel) {
 
         for(const category in colorConfig[channel]) {
             if(colorConfig[channel][category]) {
-                const row = tbody.querySelector(`tr#${category}`);
+                const row = tbody.querySelector(`tr[data-id="${category}"]`);
                 const badge = colorConfig[channel][category].badge;
                 const bgcolor = colorConfig[channel][category].bgcolor;
                 const bold = colorConfig[channel][category].bold;
@@ -147,12 +147,12 @@ function initialize(channel) {
         }
 
         for(const row of rows) {
-            if(!colorConfig[channel][row.id]) {
-                colorConfig[channel][row.id] = {};
+            if(!colorConfig[channel][row.dataset.id]) {
+                colorConfig[channel][row.dataset.id] = {};
             }
-            colorConfig[channel][row.id].badge = row.querySelector('input[name="badge"]').value.toUpperCase();
-            colorConfig[channel][row.id].bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
-            colorConfig[channel][row.id].bold = row.querySelector('input[name="bold"]').checked;
+            colorConfig[channel][row.dataset.id].badge = row.querySelector('input[name="badge"]').value.toUpperCase();
+            colorConfig[channel][row.dataset.id].bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
+            colorConfig[channel][row.dataset.id].bold = row.querySelector('input[name="bold"]').checked;
         }
 
         GM_setValue(CATEGORY_COLOR, colorConfig);
