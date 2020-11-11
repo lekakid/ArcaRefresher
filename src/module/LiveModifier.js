@@ -18,7 +18,7 @@ const RESIZE_MEDIA_DEFAULT = '100';
 function initialize() {
     const configElement = (
         <>
-            <label class="col-md-3">상단 헤더</label>
+            <label class="col-md-3">상단 헤더 고정</label>
             <div class="col-md-9">
                 <select name="fixHeader">
                     <option value="false">고정 안 함</option>
@@ -26,7 +26,7 @@ function initialize() {
                 </select>
                 <p />
             </div>
-            <label class="col-md-3">우측 사이드 메뉴</label>
+            <label class="col-md-3">우측 사이드 메뉴 숨김</label>
             <div class="col-md-9">
                 <select name="hideSideMenu">
                     <option value="false">보임</option>
@@ -34,7 +34,7 @@ function initialize() {
                 </select>
                 <p />
             </div>
-            <label class="col-md-3">프로필 아바타</label>
+            <label class="col-md-3">프로필 아바타 숨김</label>
             <div class="col-md-9">
                 <select name="hideAvatar">
                     <option value="false">보임</option>
@@ -42,7 +42,7 @@ function initialize() {
                 </select>
                 <p />
             </div>
-            <label class="col-md-3">댓글 *수정됨</label>
+            <label class="col-md-3">댓글 *수정됨 숨김</label>
             <div class="col-md-9">
                 <select name="hideModified">
                     <option value="false">보임</option>
