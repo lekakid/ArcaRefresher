@@ -1,6 +1,7 @@
 export default {
     getArticles,
     getComments,
+    getUserInfo,
     getUserID,
 };
 
@@ -20,6 +21,25 @@ function getComments(rootView) {
     }
 
     return rootView.querySelectorAll('.comment-item');
+}
+
+function getUserInfo(infoElement) {
+    if(!infoElement) {
+        console.error('[Parser.getUserInfo] 올바르지 않은 부모 엘리먼트 사용');
+        return null;
+    }
+
+    if(infoElement.dataset.info) {
+        return infoElement.dataset.info;
+    }
+
+    let id = infoElement.children[0].title || infoElement.children[0].textContent;
+    if(/\([0-9]*\.[0-9]*\)/.test(id)) {
+        id = infoElement.childNodes[0].textContent + id;
+    }
+
+    infoElement.dataset.info = id;
+    return id;
 }
 
 function getUserID(infoElement) {
