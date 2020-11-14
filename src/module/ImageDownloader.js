@@ -1,5 +1,6 @@
 import Setting from '../core/Setting';
-import { getBlob as download } from '../util/DownloadManager';
+import ContextMenu from '../core/ContextMenu';
+import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
@@ -37,6 +38,63 @@ function initialize() {
     }
 
     Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+
+    const copyClipboardItem = ContextMenu.createContextMenuItem('클립보드에 복사');
+    copyClipboardItem.addEventListener('click', async event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        const title = event.target.textContent;
+
+        const buffer = await getArrayBuffer(url,
+            e => {
+                const progress = Math.round(e.loaded / e.total * 100);
+                event.target.textContent = `${progress}%`;
+            },
+            () => {
+                event.target.textContent = title;
+            });
+        const blob = new Blob([buffer], { type: 'image/png' });
+        const item = new ClipboardItem({ [blob.type]: blob });
+        navigator.clipboard.write([item]);
+        ContextMenu.hideContextMenu();
+    });
+    const saveImageItem = ContextMenu.createContextMenuItem('이미지 저장');
+    saveImageItem.addEventListener('click', async event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        const title = event.target.textContent;
+
+        const file = await getBlob(url,
+            e => {
+                const progress = Math.round(e.loaded / e.total * 100);
+                event.target.textContent = `${progress}%`;
+            },
+            () => {
+                event.target.textContent = title;
+            });
+        window.saveAs(file, `image.${file.type.split('/')[1]}`);
+        ContextMenu.hideContextMenu();
+    });
+    const copyURLItem = ContextMenu.createContextMenuItem('이미지 주소 복사');
+    copyURLItem.addEventListener('click', event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        navigator.clipboard.writeText(url);
+        ContextMenu.hideContextMenu();
+    });
+
+    const contextElement = (
+        <div>
+            {copyClipboardItem}
+            {saveImageItem}
+            {copyURLItem}
+        </div>
+    );
+
+    ContextMenu.registContextMenu('clickOnImage', contextElement);
 }
 
 function apply() {
