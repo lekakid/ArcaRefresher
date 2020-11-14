@@ -1,4 +1,5 @@
 import Setting from './core/Setting';
+import ContextMenu from './core/ContextMenu';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -7,7 +8,6 @@ import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
 import CommentRefresh from './module/CommentRefresh';
-import ContextMenu from './module/ContextMenu';
 import MuteEmoticon from './module/MuteEmoticon';
 import FullAreaReply from './module/FullAreaReply';
 import IPScouter from './module/IPScouter';
@@ -34,6 +34,8 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Setting.initialize();
+    ContextMenu.initialize();
+
     ArticleRemover.initialize();
     AutoRefresher.initialize();
     CategoryColor.initialize(channel);
@@ -70,7 +72,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             IPScouter.apply(articleWrapper);
             AnonymousNick.apply(articleWrapper);
 
-            ContextMenu.apply(articleWrapper);
             RatedownGuard.apply();
             ImageDownloader.apply();
 
