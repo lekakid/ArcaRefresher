@@ -54,6 +54,10 @@ function initialize(channel) {
         tbody.append(tableCategoryElement);
     }
 
+    if(boardCategoryElements.length == 0) {
+        tbody.append(<tr><td colspan="4"><center>카테고리를 확인할 수 없습니다.</center></td></tr>);
+    }
+
     // 이벤트 핸들러
     tbody.addEventListener('keypress', event => {
         const regex = /[0-9a-fA-F]/;
@@ -100,6 +104,8 @@ function initialize(channel) {
     });
 
     function load() {
+        if(boardCategoryElements.length == 0) return;
+
         const colorConfig = GM_getValue(CATEGORY_COLOR, CATEGORY_COLOR_DEFAULT);
 
         if(!colorConfig[channel]) return;

@@ -83,7 +83,13 @@ function initialize(channel) {
         categoryContainer.append(muteCategoryItem);
     }
 
+    if(boardCategoryElements.length == 0) {
+        categoryContainer.append(<tr><td colspan="4"><center>카테고리를 확인할 수 없습니다.</center></td></tr>);
+    }
+
     function load() {
+        if(boardCategoryElements.length == 0) return;
+
         const hideNotice = GM_getValue(MUTE_NOTICE, MUTE_NOTICE_DEFAULT);
         const blockUser = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
         const blockKeyword = GM_getValue(BLOCK_KEYWORD, BLOCK_KEYWORD_DEFAULT);
