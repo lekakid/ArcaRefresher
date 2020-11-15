@@ -1,12 +1,12 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 
-export default { initialize, mute, apply };
+export default { addSetting, mute, apply };
 
 const BLOCK_EMOTICON = 'blockEmoticon';
 const BLOCK_EMOTICON_DEFAULT = {};
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">뮤트된 아카콘</label>
             <div class="col-md-9">
@@ -20,8 +20,8 @@ function initialize() {
         </>
     );
 
-    const selectElement = configElement.querySelector('select');
-    const deleteBtn = configElement.querySelector('button[name="delete"]');
+    const selectElement = settingElement.querySelector('select');
+    const deleteBtn = settingElement.querySelector('button[name="delete"]');
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
@@ -48,7 +48,7 @@ function initialize() {
         GM_setValue(BLOCK_EMOTICON, data);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.MUTE, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
 }
 
 function mute(rootView) {

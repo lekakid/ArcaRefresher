@@ -1,16 +1,16 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const FILENAME = 'imageDownloaderFileName';
 const FILENAME_DEFAULT = '%title%';
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">이미지 다운로드 이름</label>
             <div class="col-md-9">
@@ -26,7 +26,7 @@ function initialize() {
         </>
     );
 
-    const inputElement = configElement.querySelector('input');
+    const inputElement = settingElement.querySelector('input');
 
     function load() {
         const data = GM_getValue(FILENAME, FILENAME_DEFAULT);
@@ -37,7 +37,7 @@ function initialize() {
         GM_setValue(FILENAME, inputElement.value);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 
     const copyClipboardItem = ContextMenu.createContextMenuItem('클립보드에 복사');
     copyClipboardItem.addEventListener('click', async event => {

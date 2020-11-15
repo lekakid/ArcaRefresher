@@ -1,10 +1,10 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const REFRESH_TIME = 'refreshTime';
 const REFRESH_TIME_DEFAULT = 3;
@@ -16,8 +16,8 @@ let refreshTime = 0;
 let loader = null;
 let loopInterval = null;
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">자동 새로고침</label>
             <div class="col-md-9">
@@ -40,8 +40,8 @@ function initialize() {
         </>
     );
 
-    const refreshTimeElement = configElement.querySelector('select[name="refreshTime"]');
-    const hideRefresherElement = configElement.querySelector('select[name="hideRefresher"]');
+    const refreshTimeElement = settingElement.querySelector('select[name="refreshTime"]');
+    const hideRefresherElement = settingElement.querySelector('select[name="hideRefresher"]');
 
     function load() {
         const timeValue = GM_getValue(REFRESH_TIME, REFRESH_TIME_DEFAULT);
@@ -55,7 +55,7 @@ function initialize() {
         GM_setValue(HIDE_REFRESHER, hideRefresherElement.value == 'true');
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 }
 
 function apply(rootView) {

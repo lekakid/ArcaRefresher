@@ -1,12 +1,12 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const USE_SHORTCUT = 'useShortcut';
 const USE_SHORTCUT_DAFAULT = false;
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">단축키 사용</label>
             <div class="col-md-9">
@@ -23,7 +23,7 @@ function initialize() {
         </>
     );
 
-    const selectElement = configElement.querySelector('select');
+    const selectElement = settingElement.querySelector('select');
 
     function load() {
         const data = GM_getValue(USE_SHORTCUT, USE_SHORTCUT_DAFAULT);
@@ -34,7 +34,7 @@ function initialize() {
         GM_setValue(USE_SHORTCUT, selectElement.value == 'true');
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 }
 
 function apply(view) {

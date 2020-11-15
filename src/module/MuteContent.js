@@ -1,10 +1,10 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
 import MuteStyle from '../css/MuteContent.css';
 
 export default {
-    initialize,
+    addSetting,
     mutePreview,
     muteContent,
 };
@@ -18,10 +18,10 @@ const MUTE_CATEGORY_DEFAULT = {};
 const MUTE_NOTICE = 'hideNotice';
 const MUTE_NOTICE_DEFAULT = true;
 
-function initialize(channel) {
+function addSetting(channel) {
     document.head.append(<style>{MuteStyle}</style>);
 
-    const configElement = (
+    const settingElement = (
         <>
             <label class="col-md-3">공지사항 접기</label>
             <div class="col-md-9">
@@ -64,10 +64,10 @@ function initialize(channel) {
         </>
     );
 
-    const muteNoticeElement = configElement.querySelector('select');
-    const userElement = configElement.querySelector('textarea[name="user"]');
-    const keywordElement = configElement.querySelector('textarea[name="keyword"]');
-    const categoryContainer = configElement.querySelector('tbody');
+    const muteNoticeElement = settingElement.querySelector('select');
+    const userElement = settingElement.querySelector('textarea[name="user"]');
+    const keywordElement = settingElement.querySelector('textarea[name="keyword"]');
+    const categoryContainer = settingElement.querySelector('tbody');
 
     const boardCategoryElements = document.querySelectorAll('.board-category a');
 
@@ -133,7 +133,7 @@ function initialize(channel) {
         GM_setValue(MUTE_CATEGORY, data);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.MUTE, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
 }
 
 function mutePreview(rootView, channel) {

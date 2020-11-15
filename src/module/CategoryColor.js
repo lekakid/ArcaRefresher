@@ -1,14 +1,14 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const CATEGORY_COLOR = 'categoryColor';
 const CATEGORY_COLOR_DEFAULT = {};
 
-function initialize(channel) {
-    const configElement = (
+function addSetting(channel) {
+    const settingElement = (
         <>
             <label class="col-md-3">카테고리 색상 설정</label>
             <div class="col-md-9">
@@ -36,7 +36,7 @@ function initialize(channel) {
 
     // 카테고리 목록 등록
     const boardCategoryElements = document.querySelectorAll('.board-category a');
-    const tbody = configElement.querySelector('tbody');
+    const tbody = settingElement.querySelector('tbody');
 
     for(const element of boardCategoryElements) {
         const name = element.textContent == '전체' ? '일반' : element.textContent;
@@ -162,7 +162,7 @@ function initialize(channel) {
         GM_setValue(CATEGORY_COLOR, colorConfig);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.INTERFACE, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
 }
 
 function apply(rootView, channel) {

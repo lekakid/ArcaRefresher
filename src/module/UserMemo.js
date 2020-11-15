@@ -1,13 +1,13 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { initialize, apply, setHandler };
+export default { addSetting, apply, setHandler };
 
 const USER_MEMO = 'userMemo';
 const USER_MEMO_DEFAULT = {};
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">메모된 이용자</label>
             <div class="col-md-9">
@@ -20,8 +20,8 @@ function initialize() {
             </div>
         </>
     );
-    const selectElement = configElement.querySelector('select');
-    const deleteBtn = configElement.querySelector('button[name="delete"]');
+    const selectElement = settingElement.querySelector('select');
+    const deleteBtn = settingElement.querySelector('button[name="delete"]');
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
@@ -51,7 +51,7 @@ function initialize() {
         GM_setValue(USER_MEMO, data);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.MEMO, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.MEMO, save, load);
 }
 
 function apply(rootView) {

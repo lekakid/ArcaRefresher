@@ -1,12 +1,12 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const RATEDOWN_GUARD = 'blockRatedown';
 const RATEDOWN_GUARD_DEFAULT = false;
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">비추천 방지</label>
             <div class="col-md-9">
@@ -19,7 +19,7 @@ function initialize() {
         </>
     );
 
-    const selectElement = configElement.querySelector('select');
+    const selectElement = settingElement.querySelector('select');
 
     function load() {
         const data = GM_getValue(RATEDOWN_GUARD, RATEDOWN_GUARD_DEFAULT);
@@ -30,7 +30,7 @@ function initialize() {
         GM_setValue(RATEDOWN_GUARD, selectElement.value == 'true');
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 }
 
 function apply() {

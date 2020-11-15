@@ -1,4 +1,4 @@
-import Setting from './core/Setting';
+import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
 
 import AnonymousNick from './module/AnonymousNick';
@@ -34,22 +34,22 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     const channel = path[2] || '';
 
     await waitForElement('.content-wrapper');
-    Setting.initialize();
+    Configure.initialize();
     ContextMenu.initialize();
 
-    ArticleRemover.initialize();
-    AutoRefresher.initialize();
-    CategoryColor.initialize(channel);
-    ImageDownloader.initialize();
-    ImageSearch.initialize();
-    RatedownGuard.initialize();
-    ShortCut.initialize();
-    MuteContent.initialize(channel);
-    MuteEmoticon.initialize();
-    MyImage.initialize(channel);
-    NotificationIconColor.initialize();
-    UserMemo.initialize();
-    LiveModifier.initialize();
+    ArticleRemover.addSetting();
+    AutoRefresher.addSetting();
+    CategoryColor.addSetting(channel);
+    ImageDownloader.addSetting();
+    ImageSearch.addSetting();
+    RatedownGuard.addSetting();
+    ShortCut.addSetting();
+    MuteContent.addSetting(channel);
+    MuteEmoticon.addSetting();
+    MyImage.addSetting(channel);
+    NotificationIconColor.addSetting();
+    UserMemo.addSetting();
+    LiveModifier.addSetting();
 
     try {
         LiveModifier.apply();

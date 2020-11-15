@@ -1,7 +1,7 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { initialize, remove };
+export default { addSetting, remove };
 
 const AUTO_REMOVE_USER = 'autoRemoveUser';
 const AUTO_REMOVE_USER_DEFAULT = [];
@@ -10,8 +10,8 @@ const AUTO_REMOVE_KEYWORD_DEFAULT = [];
 const USE_AUTO_REMOVER_TEST = 'useAutoRemoverTest';
 const USE_AUTO_REMOVER_TEST_DEFAULT = true;
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">삭제 테스트 모드</label>
             <div class="col-md-9">
@@ -34,9 +34,9 @@ function initialize() {
         </>
     );
 
-    const selectElement = configElement.querySelector('select');
-    const userElement = configElement.querySelector('textarea[name="user"]');
-    const keywordElement = configElement.querySelector('textarea[name="keyword"]');
+    const selectElement = settingElement.querySelector('select');
+    const userElement = settingElement.querySelector('textarea[name="user"]');
+    const keywordElement = settingElement.querySelector('textarea[name="keyword"]');
 
     function load() {
         const testmode = GM_getValue(USE_AUTO_REMOVER_TEST, USE_AUTO_REMOVER_TEST_DEFAULT);
@@ -53,7 +53,7 @@ function initialize() {
         GM_setValue(AUTO_REMOVE_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.CHANNEL_ADMIN, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.CHANNEL_ADMIN, save, load);
 }
 
 function remove(rootView) {

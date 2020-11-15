@@ -1,8 +1,8 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 
 import sheetLiveModifier from '../css/LiveModifier.css';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const FIX_HEADER = 'fixHeader';
 const FIX_HEADER_DEFAULT = true;
@@ -15,8 +15,8 @@ const HIDE_SIDEMENU_DEFAULT = false;
 const RESIZE_MEDIA = 'resizeMedia';
 const RESIZE_MEDIA_DEFAULT = '100';
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">상단 헤더 고정</label>
             <div class="col-md-9">
@@ -60,11 +60,11 @@ function initialize() {
             </div>
         </>
     );
-    const fixHeaderElement = configElement.querySelector('select[name="fixHeader"]');
-    const hideAvatarElement = configElement.querySelector('select[name="hideAvatar"]');
-    const hideModifiedElement = configElement.querySelector('select[name="hideModified"]');
-    const hideSideMenuElement = configElement.querySelector('select[name="hideSideMenu"]');
-    const resizeMediaElement = configElement.querySelector('input');
+    const fixHeaderElement = settingElement.querySelector('select[name="fixHeader"]');
+    const hideAvatarElement = settingElement.querySelector('select[name="hideAvatar"]');
+    const hideModifiedElement = settingElement.querySelector('select[name="hideModified"]');
+    const hideSideMenuElement = settingElement.querySelector('select[name="hideSideMenu"]');
+    const resizeMediaElement = settingElement.querySelector('input');
 
     function load() {
         const fixHeader = GM_getValue(FIX_HEADER, FIX_HEADER_DEFAULT);
@@ -87,7 +87,7 @@ function initialize() {
         GM_setValue(RESIZE_MEDIA, resizeMediaElement.value);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.INTERFACE, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
 }
 
 function apply() {

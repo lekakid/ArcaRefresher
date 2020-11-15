@@ -1,13 +1,13 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const NOTIFY_COLOR = 'notificationIconColor';
 const NOTIFY_COLOR_DEFAULT = '';
 
-function initialize() {
-    const configElement = (
+function addSetting() {
+    const settingElement = (
         <>
             <label class="col-md-3">알림 아이콘 색상 변경</label>
             <div class="col-md-9">
@@ -21,7 +21,7 @@ function initialize() {
         </>
     );
 
-    const inputElement = configElement.querySelector('input');
+    const inputElement = settingElement.querySelector('input');
     const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
 
     // 이벤트 핸들러
@@ -54,7 +54,7 @@ function initialize() {
         GM_setValue(NOTIFY_COLOR, inputElement.value);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.INTERFACE, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
 }
 
 function apply() {

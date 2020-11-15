@@ -1,4 +1,4 @@
-import stylesheet from '../css/Setting.css';
+import stylesheet from '../css/Configure.css';
 
 const categoryKey = {
     UTILITY: 'utility',
@@ -11,7 +11,7 @@ const categoryKey = {
 export default {
     categoryKey,
     initialize,
-    registConfig,
+    addSetting,
 };
 
 const configCategoryString = {
@@ -25,13 +25,13 @@ const configCategoryString = {
 const saveCallbackList = [];
 const loadCallbackList = [];
 
-function registConfig(settingElement, category, saveCallback, loadCallback) {
-    const element = (
+function addSetting(element, category, saveCallback, loadCallback) {
+    const row = (
         <div class="row">
-            {settingElement}
+            {element}
         </div>
     );
-    document.querySelector(`#refresherSetting #${category}`).append(element);
+    document.querySelector(`#refresherSetting #${category}`).append(row);
     saveCallbackList.push(saveCallback);
     loadCallbackList.push(loadCallback);
 }
@@ -78,7 +78,7 @@ function initialize() {
     );
 
     const contentWrapper = document.querySelector('.content-wrapper');
-    const settingContainer = (
+    const configContainer = (
         <div class="hidden clearfix" id="refresherSetting">
             <style>{stylesheet}</style>
             <div class="row">
@@ -109,7 +109,7 @@ function initialize() {
     );
 
     // 설정 카테고리 생성
-    const categorySlot = settingContainer.querySelector('#category');
+    const categorySlot = configContainer.querySelector('#category');
     for(const key of Object.keys(configCategoryString)) {
         categorySlot.append((
             <>
@@ -122,14 +122,14 @@ function initialize() {
 
     // 설정 버튼 클릭 이벤트
     showBtn.addEventListener('click', () => {
-        if(settingContainer.classList.contains('hidden')) {
+        if(configContainer.classList.contains('hidden')) {
             for(const func of loadCallbackList) {
                 func();
             }
             contentWrapper.classList.add('disappear');
         }
         else {
-            settingContainer.classList.add('disappear');
+            configContainer.classList.add('disappear');
         }
     });
 
@@ -138,38 +138,38 @@ function initialize() {
         if(contentWrapper.classList.contains('disappear')) {
             contentWrapper.classList.add('hidden');
             contentWrapper.classList.remove('disappear');
-            settingContainer.classList.add('appear');
-            settingContainer.classList.remove('hidden');
+            configContainer.classList.add('appear');
+            configContainer.classList.remove('hidden');
         }
         else if(contentWrapper.classList.contains('appear')) {
             contentWrapper.classList.remove('appear');
         }
     });
-    settingContainer.addEventListener('animationend', () => {
-        if(settingContainer.classList.contains('disappear')) {
-            settingContainer.classList.add('hidden');
-            settingContainer.classList.remove('disappear');
+    configContainer.addEventListener('animationend', () => {
+        if(configContainer.classList.contains('disappear')) {
+            configContainer.classList.add('hidden');
+            configContainer.classList.remove('disappear');
             contentWrapper.classList.add('appear');
             contentWrapper.classList.remove('hidden');
         }
-        else if(settingContainer.classList.contains('appear')) {
-            settingContainer.classList.remove('appear');
+        else if(configContainer.classList.contains('appear')) {
+            configContainer.classList.remove('appear');
         }
     });
 
     // 엘리먼트 부착
     document.querySelector('ul.navbar-nav').append(showBtn);
-    contentWrapper.insertAdjacentElement('afterend', settingContainer);
+    contentWrapper.insertAdjacentElement('afterend', configContainer);
 
     // 이벤트 핸들러
-    settingContainer.querySelector('#exportConfig').addEventListener('click', event => {
+    configContainer.querySelector('#exportConfig').addEventListener('click', event => {
         event.preventDefault();
 
         const data = btoa(encodeURIComponent(exportConfig()));
         navigator.clipboard.writeText(data);
         alert('클립보드에 설정이 복사되었습니다.');
     });
-    settingContainer.querySelector('#importConfig').addEventListener('click', event => {
+    configContainer.querySelector('#importConfig').addEventListener('click', event => {
         event.preventDefault();
 
         let data = prompt('가져올 설정 데이터를 입력해주세요');
@@ -186,7 +186,7 @@ function initialize() {
             console.error(error);
         }
     });
-    settingContainer.querySelector('#resetConfig').addEventListener('click', event => {
+    configContainer.querySelector('#resetConfig').addEventListener('click', event => {
         event.preventDefault();
 
         if(!confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
@@ -194,7 +194,7 @@ function initialize() {
         resetConfig();
         location.reload();
     });
-    settingContainer.querySelector('#saveAndClose').addEventListener('click', event => {
+    configContainer.querySelector('#saveAndClose').addEventListener('click', event => {
         event.preventDefault();
         for(const func of saveCallbackList) {
             func();
@@ -202,7 +202,7 @@ function initialize() {
 
         location.reload();
     });
-    settingContainer.querySelector('#closeSetting').addEventListener('click', () => {
-        settingContainer.classList.add('disappear');
+    configContainer.querySelector('#closeSetting').addEventListener('click', () => {
+        configContainer.classList.add('disappear');
     });
 }

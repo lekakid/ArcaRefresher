@@ -1,13 +1,13 @@
-import Setting from '../core/Setting';
+import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 
-export default { initialize, apply };
+export default { addSetting, apply };
 
 const MY_IMAGES = 'myImages';
 const MY_IMAGES_DEFAULT = {};
 
-function initialize(channel) {
-    const configElement = (
+function addSetting(channel) {
+    const settingElement = (
         <>
             <label class="col-md-3">자짤 관리</label>
             <div class="col-md-9">
@@ -20,8 +20,8 @@ function initialize(channel) {
         </>
     );
 
-    const selectElement = configElement.querySelector('select');
-    const deleteBtn = configElement.querySelector('button[name="delete"]');
+    const selectElement = settingElement.querySelector('select');
+    const deleteBtn = settingElement.querySelector('button[name="delete"]');
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
@@ -50,7 +50,7 @@ function initialize(channel) {
         GM_setValue(MY_IMAGES, data);
     }
 
-    Setting.registConfig(configElement, Setting.categoryKey.UTILITY, save, load);
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 
     const addMyImageItem = ContextMenu.createContextMenuItem('자짤로 등록');
     addMyImageItem.addEventListener('click', event => {
