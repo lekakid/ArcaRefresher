@@ -122,8 +122,10 @@ function swapNewArticle(newArticles) {
 
     articleList.append(...newArticles);
     const noticeUnfilterBtn = articleList.querySelector('.notice-unfilter');
-    const firstArticle = articleList.querySelector('a.vrow:not(.notice)');
-    firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
+    if(noticeUnfilterBtn) {
+        const firstArticle = articleList.querySelector('a.vrow:not(.notice)');
+        firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
+    }
 
     articleList.dispatchEvent(new CustomEvent('ar_refresh'));
 }
