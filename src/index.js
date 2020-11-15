@@ -50,8 +50,8 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     ContextMenu.initialize();
     ImageDownloader.addContextMenu();
-    ImageSearch.addContextMenu();
     MyImage.addContextMenu();
+    ImageSearch.addContextMenu();
 
     try {
         LiveModifier.apply();
