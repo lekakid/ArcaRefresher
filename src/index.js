@@ -35,13 +35,10 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     await waitForElement('.content-wrapper');
     Configure.initialize();
-    ContextMenu.initialize();
-
     ArticleRemover.addSetting();
     AutoRefresher.addSetting();
     CategoryColor.addSetting(channel);
     ImageDownloader.addSetting();
-    ImageSearch.addSetting();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
     MuteContent.addSetting(channel);
@@ -50,6 +47,11 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     NotificationIconColor.addSetting();
     UserMemo.addSetting();
     LiveModifier.addSetting();
+
+    ContextMenu.initialize();
+    ImageDownloader.addContextMenu();
+    ImageSearch.addContextMenu();
+    MyImage.addContextMenu();
 
     try {
         LiveModifier.apply();

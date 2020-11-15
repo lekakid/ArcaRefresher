@@ -1,9 +1,9 @@
 import ContextMenu from '../core/ContextMenu';
 import { getBlob } from '../util/DownloadManager';
 
-export default { addSetting };
+export default { addContextMenu };
 
-function addSetting() {
+function addContextMenu() {
     const searchGoogleItem = ContextMenu.createContextMenuItem('Google 검색');
     searchGoogleItem.addEventListener('click', event => {
         event.preventDefault();

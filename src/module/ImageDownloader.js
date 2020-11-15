@@ -4,7 +4,7 @@ import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
-export default { addSetting, apply };
+export default { addSetting, addContextMenu, apply };
 
 const FILENAME = 'imageDownloaderFileName';
 const FILENAME_DEFAULT = '%title%';
@@ -38,7 +38,9 @@ function addSetting() {
     }
 
     Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+}
 
+function addContextMenu() {
     const copyClipboardItem = ContextMenu.createContextMenuItem('클립보드에 복사');
     copyClipboardItem.addEventListener('click', async event => {
         event.preventDefault();

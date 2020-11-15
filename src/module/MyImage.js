@@ -1,7 +1,7 @@
 import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 
-export default { addSetting, apply };
+export default { addSetting, addContextMenu, apply };
 
 const MY_IMAGES = 'myImages';
 const MY_IMAGES_DEFAULT = {};
@@ -51,7 +51,9 @@ function addSetting(channel) {
     }
 
     Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+}
 
+function addContextMenu() {
     const addMyImageItem = ContextMenu.createContextMenuItem('자짤로 등록');
     addMyImageItem.addEventListener('click', event => {
         event.preventDefault();
