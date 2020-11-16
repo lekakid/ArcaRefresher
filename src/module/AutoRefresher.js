@@ -11,7 +11,6 @@ const REFRESH_TIME_DEFAULT = 3;
 const HIDE_REFRESHER = 'hideRefresher';
 const HIDE_REFRESHER_DEFAULT = false;
 
-let articleList = null;
 let refreshTime = 0;
 let loader = null;
 let loopInterval = null;
@@ -58,11 +57,12 @@ function addSetting() {
     Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
 }
 
-function apply(rootView) {
+function apply() {
     refreshTime = GM_getValue(REFRESH_TIME, REFRESH_TIME_DEFAULT);
     if(refreshTime == 0) return;
 
-    articleList = rootView;
+    const articleList = Parser.queryView('board');
+
     loader = (
         <div id="autoRefresher" class={GM_getValue(HIDE_REFRESHER, HIDE_REFRESHER_DEFAULT) ? 'hidden' : ''}>
             <style>{refreshersheet}</style>
@@ -98,7 +98,7 @@ function apply(rootView) {
 }
 
 function swapNewArticle(newArticles) {
-    const oldArticles = Parser.getArticles(articleList);
+    const oldArticles = Parser.queryItems('articles', 'board');
 
     const oldnums = [];
     for(const o of oldArticles) {
@@ -120,6 +120,7 @@ function swapNewArticle(newArticles) {
         }
     }
 
+    const articleList = Parser.queryView('board');
     articleList.append(...newArticles);
     const noticeUnfilterBtn = articleList.querySelector('.notice-unfilter');
     if(noticeUnfilterBtn) {
@@ -138,7 +139,7 @@ async function routine() {
         req.responseType = 'document';
         req.addEventListener('load', () => {
             const rootView = req.response.querySelector('div.board-article-list .list-table');
-            const articles = Parser.getArticles(rootView);
+            const articles = Parser.queryItems('articles', null, rootView);
             resolve(articles);
         });
         req.send();

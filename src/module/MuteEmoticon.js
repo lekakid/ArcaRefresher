@@ -1,4 +1,5 @@
 import Configure from '../core/Configure';
+import Parser from '../core/Parser';
 
 export default { addSetting, mute, apply };
 
@@ -51,7 +52,7 @@ function addSetting() {
     Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
 }
 
-function mute(rootView) {
+function mute() {
     const blockEmoticons = GM_getValue(BLOCK_EMOTICON, BLOCK_EMOTICON_DEFAULT);
 
     let list = [];
@@ -61,7 +62,7 @@ function mute(rootView) {
         }
     }
 
-    const comments = rootView.querySelectorAll('.comment-item');
+    const comments = Parser.queryItems('comments', 'comment');
     comments.forEach(item => {
         const emoticon = item.querySelector('.emoticon');
 
@@ -74,8 +75,9 @@ function mute(rootView) {
     });
 }
 
-function apply(commentArea) {
-    const emoticons = commentArea.querySelectorAll('.emoticon');
+function apply() {
+    const commentArea = Parser.queryView('comment');
+    const emoticons = Parser.queryItems('emoticons', 'comment');
 
     emoticons.forEach(item => {
         const btn = (

@@ -56,7 +56,7 @@ function addSetting() {
     Configure.addSetting(settingElement, Configure.categoryKey.CHANNEL_ADMIN, save, load);
 }
 
-function remove(rootView) {
+function remove() {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
@@ -64,7 +64,7 @@ function remove(rootView) {
     const keywordlist = GM_getValue(AUTO_REMOVE_KEYWORD, AUTO_REMOVE_KEYWORD_DEFAULT);
     const testMode = GM_getValue(USE_AUTO_REMOVER_TEST, USE_AUTO_REMOVER_TEST_DEFAULT);
 
-    const articles = Parser.getArticles(rootView);
+    const articles = Parser.queryItems('articles', 'board');
     const articleid = [];
 
     articles.forEach(item => {

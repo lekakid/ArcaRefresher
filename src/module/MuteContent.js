@@ -137,10 +137,10 @@ function addSetting() {
     Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
 }
 
-function mutePreview(rootView) {
+function mutePreview() {
     const config = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
     const channel = Parser.getChannelID();
-    const articles = rootView.querySelectorAll('a.vrow');
+    const articles = Parser.queryItems('articles', 'board');
 
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
@@ -166,21 +166,23 @@ const ContentTypeString = {
     all: '전체',
 };
 
-function muteContent(rootView) {
+function muteContent(viewQuery) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            muteContent(rootView);
+            muteContent(viewQuery);
         }, { once: true });
         return;
     }
 
+    const articleBoard = Parser.queryView(viewQuery);
+
     // 댓글창 오류 방지로 대충 떼움. 나중에 고칠래
-    const unfilterBtn = rootView.querySelector('.notice-unfilter') || rootView;
+    const unfilterBtn = articleBoard.querySelector('.notice-unfilter') || articleBoard;
     const noticeCountElement = unfilterBtn.querySelector('.notice-filter-count');
     if(noticeCountElement && noticeCountElement.textContent == '0') {
         // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
         unfilterBtn.addEventListener('click', () => {
-            rootView.classList.add('show-filtered-notice');
+            articleBoard.classList.add('show-filtered-notice');
             unfilterBtn.style.display = 'none';
         });
     }
@@ -210,16 +212,16 @@ function muteContent(rootView) {
     let keywordSelector = '';
     let targetElement = null;
     let insertPosition = '';
-    if(rootView.classList.contains('list-table')) {
-        contents = Parser.getArticles(rootView);
+    if(viewQuery == 'board') {
+        contents = Parser.queryItems('articles', 'board');
         keywordSelector = '.col-title';
-        targetElement = rootView;
+        targetElement = articleBoard;
         insertPosition = 'afterbegin';
     }
-    else if(rootView.id == 'comment') {
-        contents = Parser.getComments(rootView);
+    else if(viewQuery == 'comment') {
+        contents = Parser.queryItems('comments', 'comment');
         keywordSelector = '.message';
-        targetElement = rootView.querySelector('.list-area');
+        targetElement = articleBoard.querySelector('.list-area');
         insertPosition = 'beforebegin';
     }
 
@@ -284,7 +286,7 @@ function muteContent(rootView) {
         }
     });
 
-    let toggleHeader = rootView.querySelector('.frontend-header');
+    let toggleHeader = articleBoard.querySelector('.frontend-header');
     if(toggleHeader) toggleHeader.remove();
     toggleHeader = (
         <div class="frontend-header">
@@ -319,7 +321,7 @@ function muteContent(rootView) {
         }
     }
 
-    if(noticeCount > 0 && !rootView.classList.contains('show-filtered-notice')) {
+    if(noticeCount > 0 && !articleBoard.classList.contains('show-filtered-notice')) {
         unfilterBtn.style.display = '';
         noticeCountElement.textContent = noticeCount;
     }

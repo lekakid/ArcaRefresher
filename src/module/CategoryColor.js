@@ -170,7 +170,7 @@ function addSetting() {
 function apply() {
     const categoryConfig = GM_getValue(CATEGORY_COLOR, CATEGORY_COLOR_DEFAULT);
     const channel = Parser.getChannelID();
-    const articles = Parser.getArticles();
+    const articles = Parser.queryItems('articles', 'board');
 
     articles.forEach(article => {
         const badgeElement = article.querySelector('.badge');

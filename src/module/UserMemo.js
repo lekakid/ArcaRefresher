@@ -1,10 +1,12 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { addSetting, apply, setHandler };
+export default { addSetting, apply };
 
 const USER_MEMO = 'userMemo';
 const USER_MEMO_DEFAULT = {};
+
+let handlerApplied = false;
 
 function addSetting() {
     const settingElement = (
@@ -54,8 +56,8 @@ function addSetting() {
     Configure.addSetting(settingElement, Configure.categoryKey.MEMO, save, load);
 }
 
-function apply(rootView) {
-    const users = rootView.querySelectorAll('.user-info');
+function apply() {
+    const users = Parser.queryItems('users');
     const memos = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
 
     users.forEach(user => {
@@ -75,13 +77,14 @@ function apply(rootView) {
             user.title = '';
         }
     });
-}
 
-function setHandler(rootView) {
-    const memos = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
+    const articleView = Parser.queryView('article');
+    if(!articleView || handlerApplied) return;
 
-    rootView.addEventListener('click', event => {
+    handlerApplied = true;
+    articleView.addEventListener('click', event => {
         if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
+        event.preventDefault();
 
         const user = event.target.closest('.user-info');
         if(user == null) return;
@@ -106,6 +109,6 @@ function setHandler(rootView) {
         }
 
         GM_setValue('userMemo', memos);
-        apply(rootView);
+        apply();
     });
 }

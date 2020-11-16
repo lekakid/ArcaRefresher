@@ -65,11 +65,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasArticle()) {
         try {
-            const articleWrapper = Parser.getArticleView();
-            UserMemo.apply(articleWrapper);
-            UserMemo.setHandler(articleWrapper);
-            IPScouter.apply(articleWrapper);
-            AnonymousNick.apply(articleWrapper);
+            UserMemo.apply();
+            IPScouter.apply('article');
+            AnonymousNick.apply();
 
             RatedownGuard.apply();
             ImageDownloader.apply();
@@ -81,44 +79,42 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     }
 
     if(Parser.hasComment()) {
-        const commentView = Parser.getCommentView();
-        MuteEmoticon.mute(commentView);
-        MuteContent.muteContent(commentView);
+        MuteEmoticon.mute();
+        MuteContent.muteContent('comment');
 
-        CommentRefresh.apply(commentView);
-        MuteEmoticon.apply(commentView);
-        FullAreaReply.apply(commentView);
+        CommentRefresh.apply();
+        MuteEmoticon.apply();
+        FullAreaReply.apply();
 
-        commentView.addEventListener('ar_refresh', () => {
-            UserMemo.apply(commentView);
-            IPScouter.apply(commentView);
+        Parser.queryView('comment').addEventListener('ar_refresh', () => {
+            UserMemo.apply();
+            IPScouter.apply('comment');
 
-            MuteEmoticon.apply(commentView);
-            MuteContent.muteContent(commentView);
+            MuteEmoticon.apply();
+            MuteContent.muteContent('comment');
         });
     }
 
     if(Parser.hasBoard()) {
-        const boardView = Parser.getBoardView();
-        UserMemo.apply(boardView);
-        IPScouter.apply(boardView);
+        UserMemo.apply();
+        IPScouter.apply('board');
 
         CategoryColor.apply();
-        MuteContent.mutePreview(boardView);
-        MuteContent.muteContent(boardView);
+        MuteContent.mutePreview();
+        MuteContent.muteContent('board');
 
-        boardView.addEventListener('ar_refresh', () => {
-            UserMemo.apply(boardView);
-            IPScouter.apply(boardView);
+        Parser.queryView('board').addEventListener('ar_refresh', () => {
+            UserMemo.apply();
+            IPScouter.apply('board');
 
-            CategoryColor.apply(boardView);
-            MuteContent.mutePreview(boardView);
-            MuteContent.muteContent(boardView);
-            ArticleRemover.remove(boardView);
+            CategoryColor.apply();
+            MuteContent.mutePreview();
+            MuteContent.muteContent('board');
+            ArticleRemover.remove();
         });
 
-        if (!boardView.closest('.included-article-list')) {
-            AutoRefresher.apply(boardView);
+        if (!Parser.hasArticle()) {
+            AutoRefresher.apply();
         }
     }
 

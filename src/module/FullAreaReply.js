@@ -1,6 +1,9 @@
+import Parser from '../core/Parser';
+
 export default { apply };
 
-function apply(commentArea) {
+function apply() {
+    const commentArea = Parser.queryView('comment');
     commentArea.addEventListener('click', event => {
         if(event.target.closest('form')) return;
 

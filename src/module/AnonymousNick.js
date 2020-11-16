@@ -13,7 +13,8 @@ const DefaultSuffix = [
     '윾돌이', '보노보노', '다비', '공룡', '아야',
 ];
 
-function apply(rootView) {
+function apply() {
+    const rootView = Parser.queryView('article');
     const editMenu = rootView.querySelector('.edit-menu');
     if(editMenu == null) return;
 

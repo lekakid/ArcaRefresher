@@ -6,12 +6,8 @@ export default {
     hasBoard,
     hasComment,
     hasWriteView,
-    getArticleView,
-    getBoardView,
-    getCommentView,
-    getWriteView,
-    getArticles,
-    getComments,
+    queryView,
+    queryItems,
     parseUserInfo,
     parseUserID,
 };
@@ -69,29 +65,38 @@ function hasWriteView() {
     return !!writeView;
 }
 
-function getArticleView() {
-    return articleView;
+function queryView(query) {
+    switch(query) {
+    case 'article':
+        return articleView;
+    case 'board':
+        return boardView;
+    case 'comment':
+        return commentView;
+    case 'write':
+        return writeView;
+    default:
+        return document;
+    }
 }
 
-function getBoardView() {
-    return boardView;
-}
+function queryItems(query, viewQuery, viewElement) {
+    const view = viewElement || queryView(viewQuery);
 
-function getCommentView() {
-    return commentView;
-}
-
-function getWriteView() {
-    return writeView;
-}
-
-function getArticles(rootView) {
-    if(!rootView) rootView = boardView;
-    return rootView.querySelectorAll('a.vrow:not(.notice-unfilter)');
-}
-
-function getComments() {
-    return commentView.querySelectorAll('.comment-item');
+    switch(query) {
+    case 'articles':
+        return view.querySelectorAll('a.vrow:not(.notice-unfilter)');
+    case 'comments':
+        return view.querySelectorAll('.comment-item');
+    case 'emoticons':
+        return view.querySelectorAll('.emoticon');
+    case 'users':
+        return view.querySelectorAll('.user-info');
+    case 'ips':
+        return view.querySelectorAll('.user-info small');
+    default:
+        return null;
+    }
 }
 
 function parseUserInfo(infoElement) {
