@@ -1,6 +1,7 @@
+import ArticleMenu from '../core/ArticleMenu';
 import Parser from '../core/Parser';
 
-export default { apply };
+export default { addArticleMenu };
 
 const DefaultPrefix = [
     '웃는', '화난', '불쌍한', '즐거운', '건장한',
@@ -13,22 +14,13 @@ const DefaultSuffix = [
     '윾돌이', '보노보노', '다비', '공룡', '아야',
 ];
 
-function apply() {
-    const rootView = Parser.queryView('article');
-    const editMenu = rootView.querySelector('.edit-menu');
-    if(editMenu == null) return;
-
-    if(editMenu.childElementCount) {
-        editMenu.prepend(<span class="sep" />);
-    }
-
-    const btn = <a href="#"><span class="ion-wand" /> 익명화</a>;
-    editMenu.prepend(btn);
+function addArticleMenu() {
+    const btn = ArticleMenu.appendMenuBtn('익명화', 'ion-wand', '게시물 작성자와 댓글 작성자를 일시적 익명으로 만듭니다.');
     btn.addEventListener('click', event => {
         event.preventDefault();
 
-        const userElements = rootView.querySelectorAll('.user-info');
-        const avatarElements = rootView.querySelectorAll('.avatar');
+        const userElements = Parser.queryItems('users', 'article');
+        const avatarElements = Parser.queryItems('avatars', 'article');
 
         avatarElements.forEach(e => {
             e.remove();

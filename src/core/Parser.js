@@ -92,6 +92,8 @@ function queryItems(query, viewQuery, viewElement) {
         return view.querySelectorAll('.emoticon');
     case 'users':
         return view.querySelectorAll('.user-info');
+    case 'avatars':
+        return view.querySelectorAll('.avatar');
     case 'ips':
         return view.querySelectorAll('.user-info small');
     default:

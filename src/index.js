@@ -65,9 +65,10 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasArticle()) {
         try {
+            AnonymousNick.addArticleMenu();
+
             UserMemo.apply();
             IPScouter.apply('article');
-            AnonymousNick.apply();
 
             RatedownGuard.apply();
             ImageDownloader.apply();
