@@ -7,7 +7,7 @@ export default { addSetting, apply };
 const CATEGORY_COLOR = 'categoryColor';
 const CATEGORY_COLOR_DEFAULT = {};
 
-function addSetting(channel) {
+function addSetting() {
     const settingElement = (
         <>
             <label class="col-md-3">카테고리 색상 설정</label>
@@ -103,6 +103,8 @@ function addSetting(channel) {
         }
     });
 
+    const channel = Parser.getChannelID();
+
     function load() {
         if(boardCategoryElements.length == 0) return;
 
@@ -165,9 +167,10 @@ function addSetting(channel) {
     Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
 }
 
-function apply(rootView, channel) {
+function apply() {
     const categoryConfig = GM_getValue(CATEGORY_COLOR, CATEGORY_COLOR_DEFAULT);
-    const articles = Parser.getArticles(rootView);
+    const channel = Parser.getChannelID();
+    const articles = Parser.getArticles();
 
     articles.forEach(article => {
         const badgeElement = article.querySelector('.badge');

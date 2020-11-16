@@ -1,12 +1,13 @@
 import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
+import Parser from '../core/Parser';
 
 export default { addSetting, addContextMenu, apply };
 
 const MY_IMAGES = 'myImages';
 const MY_IMAGES_DEFAULT = {};
 
-function addSetting(channel) {
+function addSetting() {
     const settingElement = (
         <>
             <label class="col-md-3">자짤 관리</label>
@@ -30,6 +31,8 @@ function addSetting(channel) {
 
         event.target.disabled = false;
     });
+
+    const channel = Parser.getChannelID();
 
     function load() {
         const data = GM_getValue(MY_IMAGES, MY_IMAGES_DEFAULT)[channel];
@@ -76,7 +79,8 @@ function addContextMenu() {
     ContextMenu.registContextMenu('clickOnImage', contextElement);
 }
 
-function apply(editor, channel) {
+function apply(editor) {
+    const channel = Parser.getChannelID();
     if(editor.core.isEmpty()) {
         const imgList = GM_getValue(MY_IMAGES, MY_IMAGES_DEFAULT)[channel];
         if(!imgList || !imgList.length) return;

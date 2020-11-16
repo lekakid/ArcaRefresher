@@ -1,26 +1,97 @@
 export default {
+    initialize,
+    getChannelID,
+    getCurrentState,
+    hasArticle,
+    hasBoard,
+    hasComment,
+    hasWriteView,
+    getArticleView,
+    getBoardView,
+    getCommentView,
+    getWriteView,
     getArticles,
     getComments,
     getUserInfo,
     getUserID,
 };
 
-function getArticles(rootView) {
-    if(!rootView || !rootView.closest('.list-table')) {
-        console.error('[Parser.getArticles] 올바르지 않은 부모 엘리먼트 사용');
-        return null;
-    }
+let articleView = null;
+let boardView = null;
+let commentView = null;
+let writeView = null;
 
+let currentChannel = '';
+let currentState = '';
+
+function initialize() {
+    const path = location.pathname.split('/');
+    currentChannel = path[2] || '';
+
+    const articleElement = document.querySelector('article');
+    articleView = articleElement.querySelector('.article-wrapper');
+    commentView = articleElement.querySelector('#comment');
+    boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
+    writeView = articleElement.querySelector('.article-write');
+
+    if(articleView) {
+        currentState = 'article';
+    }
+    else if(boardView) {
+        currentState = 'board';
+    }
+    else if(writeView) {
+        currentState = 'write';
+    }
+}
+
+function getChannelID() {
+    return currentChannel;
+}
+
+function getCurrentState() {
+    return currentState;
+}
+
+function hasArticle() {
+    return !!articleView;
+}
+
+function hasBoard() {
+    return !!boardView;
+}
+
+function hasComment() {
+    return !!commentView;
+}
+
+function hasWriteView() {
+    return !!writeView;
+}
+
+function getArticleView() {
+    return articleView;
+}
+
+function getBoardView() {
+    return boardView;
+}
+
+function getCommentView() {
+    return commentView;
+}
+
+function getWriteView() {
+    return writeView;
+}
+
+function getArticles(rootView) {
+    if(!rootView) rootView = boardView;
     return rootView.querySelectorAll('a.vrow:not(.notice-unfilter)');
 }
 
-function getComments(rootView) {
-    if(!rootView || !rootView.closest('#comment')) {
-        console.error('[Parser.getComments] 올바르지 않은 부모 엘리먼트 사용');
-        return null;
-    }
-
-    return rootView.querySelectorAll('.comment-item');
+function getComments() {
+    return commentView.querySelectorAll('.comment-item');
 }
 
 function getUserInfo(infoElement) {

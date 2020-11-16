@@ -18,7 +18,7 @@ const MUTE_CATEGORY_DEFAULT = {};
 const MUTE_NOTICE = 'hideNotice';
 const MUTE_NOTICE_DEFAULT = true;
 
-function addSetting(channel) {
+function addSetting() {
     document.head.append(<style>{MuteStyle}</style>);
 
     const settingElement = (
@@ -64,6 +64,7 @@ function addSetting(channel) {
         </>
     );
 
+    const channel = Parser.getChannelID();
     const muteNoticeElement = settingElement.querySelector('select');
     const userElement = settingElement.querySelector('textarea[name="user"]');
     const keywordElement = settingElement.querySelector('textarea[name="keyword"]');
@@ -136,8 +137,9 @@ function addSetting(channel) {
     Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
 }
 
-function mutePreview(rootView, channel) {
+function mutePreview(rootView) {
     const config = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
+    const channel = Parser.getChannelID();
     const articles = rootView.querySelectorAll('a.vrow');
 
     articles.forEach(article => {
@@ -164,10 +166,10 @@ const ContentTypeString = {
     all: '전체',
 };
 
-function muteContent(rootView, channel) {
+function muteContent(rootView) {
     if(document.readyState != 'complete') {
         window.addEventListener('load', () => {
-            muteContent(rootView, channel);
+            muteContent(rootView);
         }, { once: true });
         return;
     }
@@ -182,6 +184,8 @@ function muteContent(rootView, channel) {
             unfilterBtn.style.display = 'none';
         });
     }
+
+    const channel = Parser.getChannelID();
 
     const count = {};
     for(const key of Object.keys(ContentTypeString)) {

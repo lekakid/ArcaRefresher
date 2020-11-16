@@ -1,5 +1,6 @@
 import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
+import Parser from './core/Parser';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -30,20 +31,20 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     // Load Global CSS
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
 
-    const path = location.pathname.split('/');
-    const channel = path[2] || '';
+    await waitForElement('footer');
 
-    await waitForElement('.content-wrapper');
+    Parser.initialize();
+
     Configure.initialize();
     ArticleRemover.addSetting();
     AutoRefresher.addSetting();
-    CategoryColor.addSetting(channel);
+    CategoryColor.addSetting();
     ImageDownloader.addSetting();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
-    MuteContent.addSetting(channel);
+    MuteContent.addSetting();
     MuteEmoticon.addSetting();
-    MyImage.addSetting(channel);
+    MyImage.addSetting();
     NotificationIconColor.addSetting();
     UserMemo.addSetting();
     LiveModifier.addSetting();
@@ -62,16 +63,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         console.error(error);
     }
 
-    await waitForElement('footer');
-
-    const articleElement = document.querySelector('article');
-    const articleView = articleElement.querySelector('.article-view');
-    const boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
-    const writeView = articleElement.querySelector('.article-write');
-
-    if (articleView) {
+    if(Parser.hasArticle()) {
         try {
-            const articleWrapper = articleView.querySelector('.article-wrapper');
+            const articleWrapper = Parser.getArticleView();
             UserMemo.apply(articleWrapper);
             UserMemo.setHandler(articleWrapper);
             IPScouter.apply(articleWrapper);
@@ -79,48 +73,47 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
             RatedownGuard.apply();
             ImageDownloader.apply();
-
-            const commentView = articleView.querySelector('#comment');
-            if (commentView) {
-                MuteEmoticon.mute(commentView);
-                MuteContent.muteContent(commentView);
-
-                CommentRefresh.apply(commentView);
-                MuteEmoticon.apply(commentView);
-                FullAreaReply.apply(commentView);
-
-                commentView.addEventListener('ar_refresh', () => {
-                    UserMemo.apply(commentView);
-                    IPScouter.apply(commentView);
-
-                    MuteEmoticon.apply(commentView);
-                    MuteContent.muteContent(commentView);
-                });
-            }
         }
         catch (error) {
             console.warn('게시물 처리 중 오류 발생');
             console.error(error);
         }
-
-        ShortCut.apply('article');
     }
 
-    if (boardView) {
+    if(Parser.hasComment()) {
+        const commentView = Parser.getCommentView();
+        MuteEmoticon.mute(commentView);
+        MuteContent.muteContent(commentView);
+
+        CommentRefresh.apply(commentView);
+        MuteEmoticon.apply(commentView);
+        FullAreaReply.apply(commentView);
+
+        commentView.addEventListener('ar_refresh', () => {
+            UserMemo.apply(commentView);
+            IPScouter.apply(commentView);
+
+            MuteEmoticon.apply(commentView);
+            MuteContent.muteContent(commentView);
+        });
+    }
+
+    if(Parser.hasBoard()) {
+        const boardView = Parser.getBoardView();
         UserMemo.apply(boardView);
         IPScouter.apply(boardView);
 
-        CategoryColor.apply(boardView, channel);
-        MuteContent.mutePreview(boardView, channel);
-        MuteContent.muteContent(boardView, channel);
+        CategoryColor.apply();
+        MuteContent.mutePreview(boardView);
+        MuteContent.muteContent(boardView);
 
         boardView.addEventListener('ar_refresh', () => {
             UserMemo.apply(boardView);
             IPScouter.apply(boardView);
 
-            CategoryColor.apply(boardView, channel);
-            MuteContent.mutePreview(boardView, channel);
-            MuteContent.muteContent(boardView, channel);
+            CategoryColor.apply(boardView);
+            MuteContent.mutePreview(boardView);
+            MuteContent.muteContent(boardView);
             ArticleRemover.remove(boardView);
         });
 
@@ -129,19 +122,14 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         }
     }
 
-    if(articleView) {
-        ShortCut.apply('article');
-    }
-    else if(boardView) {
-        ShortCut.apply('board');
-    }
+    ShortCut.apply(Parser.getCurrentState());
 
-    if (writeView) {
+    if(Parser.hasWriteView()) {
         await waitForElement('.fr-box');
         // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');
         ClipboardUpload.apply(editor);
-        MyImage.apply(editor, channel);
+        MyImage.apply(editor);
         TemporaryArticle.apply(editor);
     }
 }());
