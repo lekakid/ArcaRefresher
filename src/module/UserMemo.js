@@ -59,7 +59,7 @@ function apply(rootView) {
     const memos = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
 
     users.forEach(user => {
-        const id = Parser.getUserID(user);
+        const id = Parser.parseUserID(user);
 
         let slot = user.querySelector('.memo');
         if(memos[id]) {
@@ -86,7 +86,7 @@ function setHandler(rootView) {
         const user = event.target.closest('.user-info');
         if(user == null) return;
 
-        const id = Parser.getUserID(user);
+        const id = Parser.parseUserID(user);
         const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
         if(newMemo == null) return;
 

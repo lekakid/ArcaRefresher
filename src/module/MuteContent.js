@@ -229,7 +229,7 @@ function muteContent(rootView) {
         if(!keywordElement || !userElement) return;
 
         const keywordText = keywordElement.innerText;
-        const userText = Parser.getUserInfo(userElement);
+        const userText = Parser.parseUserInfo(userElement);
         const categoryElement = item.querySelector('.badge');
         let category;
         if(categoryElement == null || categoryElement.textContent == '') {

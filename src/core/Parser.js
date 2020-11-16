@@ -12,8 +12,8 @@ export default {
     getWriteView,
     getArticles,
     getComments,
-    getUserInfo,
-    getUserID,
+    parseUserInfo,
+    parseUserID,
 };
 
 let articleView = null;
@@ -94,9 +94,9 @@ function getComments() {
     return commentView.querySelectorAll('.comment-item');
 }
 
-function getUserInfo(infoElement) {
+function parseUserInfo(infoElement) {
     if(!infoElement) {
-        console.error('[Parser.getUserInfo] 올바르지 않은 부모 엘리먼트 사용');
+        console.error('[Parser.parseUserInfo] 올바르지 않은 부모 엘리먼트 사용');
         return null;
     }
 
@@ -113,9 +113,9 @@ function getUserInfo(infoElement) {
     return id;
 }
 
-function getUserID(infoElement) {
+function parseUserID(infoElement) {
     if(!infoElement) {
-        console.error('[Parser.getUserID] 올바르지 않은 부모 엘리먼트 사용');
+        console.error('[Parser.parseUserID] 올바르지 않은 부모 엘리먼트 사용');
         return null;
     }
 

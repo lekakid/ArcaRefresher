@@ -35,7 +35,7 @@ function apply(rootView) {
 
         const users = new Set();
         userElements.forEach(e => {
-            users.add(Parser.getUserID(e));
+            users.add(Parser.parseUserID(e));
         });
 
         const alterNicks = new Set();
@@ -57,7 +57,7 @@ function apply(rootView) {
         }
 
         userElements.forEach(e => {
-            e.textContent = alterTable[Parser.getUserID(e)];
+            e.textContent = alterTable[Parser.parseUserID(e)];
         });
     });
 }
