@@ -32,7 +32,7 @@ function addSetting() {
         event.target.disabled = false;
     });
 
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
 
     function load() {
         const data = GM_getValue(MY_IMAGES, MY_IMAGES_DEFAULT)[channel];
@@ -80,7 +80,7 @@ function addContextMenu() {
 }
 
 function apply(editor) {
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
     if(editor.core.isEmpty()) {
         const imgList = GM_getValue(MY_IMAGES, MY_IMAGES_DEFAULT)[channel];
         if(!imgList || !imgList.length) return;

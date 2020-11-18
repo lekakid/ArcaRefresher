@@ -103,7 +103,7 @@ function addSetting() {
         }
     });
 
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
 
     function load() {
         if(boardCategoryElements.length == 0) return;
@@ -169,7 +169,7 @@ function addSetting() {
 
 function apply() {
     const categoryConfig = GM_getValue(CATEGORY_COLOR, CATEGORY_COLOR_DEFAULT);
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
     const articles = Parser.queryItems('articles', 'board');
 
     articles.forEach(article => {

@@ -64,7 +64,7 @@ function addSetting() {
         </>
     );
 
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
     const muteNoticeElement = settingElement.querySelector('select');
     const userElement = settingElement.querySelector('textarea[name="user"]');
     const keywordElement = settingElement.querySelector('textarea[name="keyword"]');
@@ -139,7 +139,7 @@ function addSetting() {
 
 function mutePreview() {
     const config = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
     const articles = Parser.queryItems('articles', 'board');
 
     articles.forEach(article => {
@@ -187,7 +187,7 @@ function muteContent(viewQuery) {
         });
     }
 
-    const channel = Parser.getChannelID();
+    const channel = Parser.getChannelInfo().id;
 
     const count = {};
     for(const key of Object.keys(ContentTypeString)) {

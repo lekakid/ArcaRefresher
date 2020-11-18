@@ -1,6 +1,7 @@
 export default {
     initialize,
-    getChannelID,
+    getChannelInfo,
+    getArticleInfo,
     getCurrentState,
     hasArticle,
     hasBoard,
@@ -18,20 +19,37 @@ let commentView = null;
 let writeView = null;
 
 let currentChannel = '';
+let currentChannelID = '';
 let currentState = '';
 
-function initialize() {
-    const path = location.pathname.split('/');
-    currentChannel = path[2] || '';
+let currentArticleTitle = '';
+let currentArticleCategory = '';
+let currentArticleAuthor = '';
+let currentArticleAuthorID = '';
 
+function initialize() {
     const articleElement = document.querySelector('article');
     articleView = articleElement.querySelector('.article-wrapper');
     commentView = articleElement.querySelector('#comment');
     boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
     writeView = articleElement.querySelector('.article-write');
 
+    if(boardView) {
+        currentChannel = articleElement.querySelector('.board-title a:not([class])').textContent;
+        currentChannelID = location.pathname.split('/')[2];
+    }
+
     if(articleView) {
         currentState = 'article';
+
+        const titleElement = articleView.querySelector('.article-head .title');
+        const categoryElement = articleView.querySelector('.article-head .badge');
+        const authorElement = articleView.querySelector('.article-head .user-info');
+
+        currentArticleTitle = (titleElement) ? titleElement.textContent : '';
+        currentArticleCategory = (categoryElement) ? categoryElement.textContent : '';
+        currentArticleAuthor = (authorElement) ? parseUserInfo(authorElement) : '';
+        currentArticleAuthorID = (authorElement) ? parseUserID(authorElement) : '';
     }
     else if(boardView) {
         currentState = 'board';
@@ -41,12 +59,29 @@ function initialize() {
     }
 }
 
-function getChannelID() {
-    return currentChannel;
-}
-
 function getCurrentState() {
     return currentState;
+}
+
+function getChannelInfo() {
+    return {
+        id: currentChannelID,
+        name: currentChannel,
+    };
+}
+
+function getArticleInfo() {
+    if(!articleView) {
+        console.error('[Parser.getArticleInfo] 게시물 확인 불가');
+        return;
+    }
+
+    return {
+        title: currentArticleTitle,
+        category: currentArticleCategory,
+        author: currentArticleAuthor,
+        authorID: currentArticleAuthorID,
+    };
 }
 
 function hasArticle() {
