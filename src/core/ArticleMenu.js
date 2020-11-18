@@ -4,6 +4,7 @@ export default { appendMenuBtn };
 
 function appendMenuBtn(name, icon, title) {
     const headerMenu = Parser.queryView('article').querySelector('.edit-menu');
+    if(!headerMenu) return;
 
     const element = (
         <a href="#" title={title}>
