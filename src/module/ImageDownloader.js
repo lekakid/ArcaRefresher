@@ -1,5 +1,6 @@
 import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
+import Parser from '../core/Parser';
 import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
@@ -228,10 +229,8 @@ function apply() {
         }
         downloadBtn.textContent = originalText;
 
-        const title = document.querySelector('.article-head .title');
-        const category = document.querySelector('.article-head .badge');
-        const author = document.querySelector('.article-head .user-info');
-        const channel = document.querySelector('.board-title a:not([class])');
+        const channelInfo = Parser.getChannelInfo();
+        const articleInfo = Parser.getArticleInfo();
 
         let filename = GM_getValue(FILENAME, FILENAME_DEFAULT);
         const reservedWord = filename.match(/%\w*%/g);
@@ -239,16 +238,16 @@ function apply() {
             try {
                 switch(word) {
                 case '%title%':
-                    filename = filename.replace(word, title.textContent.trim());
+                    filename = filename.replace(word, articleInfo.title);
                     break;
                 case '%category%':
-                    filename = filename.replace(word, category.textContent.trim());
+                    filename = filename.replace(word, articleInfo.category);
                     break;
                 case '%author%':
-                    filename = filename.replace(word, author.innerText.trim());
+                    filename = filename.replace(word, articleInfo.author);
                     break;
                 case '%channel%':
-                    filename = filename.replace(word, channel.textContent.trim());
+                    filename = filename.replace(word, channelInfo.name);
                     break;
                 default:
                     break;
