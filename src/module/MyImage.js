@@ -57,6 +57,7 @@ function addSetting() {
 }
 
 function addContextMenu() {
+    const channel = Parser.getChannelInfo().id;
     const addMyImageItem = ContextMenu.createContextMenuItem('자짤로 등록');
     addMyImageItem.addEventListener('click', event => {
         event.preventDefault();
