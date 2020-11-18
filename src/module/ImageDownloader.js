@@ -171,7 +171,7 @@ function apply() {
             if(url != '') {
                 event.target.dataset.url = '';
                 const filename = event.target.textContent;
-                const file = await download(url,
+                const file = await getBlob(url,
                     e => {
                         const progress = Math.round(e.loaded / e.total * 100);
                         event.target.textContent = `${filename}...${progress}%`;
@@ -219,7 +219,7 @@ function apply() {
         const zip = new JSZip();
         const total = downloadList.length;
         for(let i = 0; i < total; i += 1) {
-            const file = await download(downloadList[i],
+            const file = await getBlob(downloadList[i],
                 e => {
                     const progress = Math.round(e.loaded / e.total * 100);
                     downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
