@@ -1,3 +1,4 @@
+import Parser from '../core/Parser';
 import styles from '../css/IPScouter.module.css';
 
 export default { apply };
@@ -178,8 +179,8 @@ const IPType = {
     hola: { str: '홀라', color: styles.red },
 };
 
-function apply(rootView) {
-    const ipElements = rootView.querySelectorAll('.user-info small');
+function apply(viewQuery) {
+    const ipElements = Parser.queryItems('ips', viewQuery);
 
     ipElements.forEach(ipElement => {
         const ip = ipElement.textContent.replace(/\(|\)/g, '');

@@ -1,9 +1,104 @@
-import DefaultConfig from '../core/DefaultConfig';
-import { getBlob as download } from '../util/DownloadManager';
+import Configure from '../core/Configure';
+import ContextMenu from '../core/ContextMenu';
+import Parser from '../core/Parser';
+import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
-export default { apply };
+export default { addSetting, addContextMenu, apply };
+
+const FILENAME = 'imageDownloaderFileName';
+const FILENAME_DEFAULT = '%title%';
+
+function addSetting() {
+    const settingElement = (
+        <>
+            <label class="col-md-3">이미지 다운로드 이름</label>
+            <div class="col-md-9">
+                <input type="text" />
+                <p>
+                    이미지 일괄 다운로드 사용 시 저장할 파일 이름입니다.<br />
+                    %title% : 게시물 제목<br />
+                    %category% : 게시물 카테고리<br />
+                    %author% : 게시물 작성자<br />
+                    %channel% : 채널 이름<br />
+                </p>
+            </div>
+        </>
+    );
+
+    const inputElement = settingElement.querySelector('input');
+
+    function load() {
+        const data = GM_getValue(FILENAME, FILENAME_DEFAULT);
+
+        inputElement.value = data;
+    }
+    function save() {
+        GM_setValue(FILENAME, inputElement.value);
+    }
+
+    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+}
+
+function addContextMenu() {
+    const copyClipboardItem = ContextMenu.createContextMenuItem('클립보드에 복사');
+    copyClipboardItem.addEventListener('click', async event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        const title = event.target.textContent;
+
+        const buffer = await getArrayBuffer(url,
+            e => {
+                const progress = Math.round(e.loaded / e.total * 100);
+                event.target.textContent = `${progress}%`;
+            },
+            () => {
+                event.target.textContent = title;
+            });
+        const blob = new Blob([buffer], { type: 'image/png' });
+        const item = new ClipboardItem({ [blob.type]: blob });
+        navigator.clipboard.write([item]);
+        ContextMenu.hideContextMenu();
+    });
+    const saveImageItem = ContextMenu.createContextMenuItem('이미지 저장');
+    saveImageItem.addEventListener('click', async event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        const title = event.target.textContent;
+
+        const file = await getBlob(url,
+            e => {
+                const progress = Math.round(e.loaded / e.total * 100);
+                event.target.textContent = `${progress}%`;
+            },
+            () => {
+                event.target.textContent = title;
+            });
+        window.saveAs(file, `image.${file.type.split('/')[1]}`);
+        ContextMenu.hideContextMenu();
+    });
+    const copyURLItem = ContextMenu.createContextMenuItem('이미지 주소 복사');
+    copyURLItem.addEventListener('click', event => {
+        event.preventDefault();
+
+        const url = ContextMenu.getContextData('url');
+        navigator.clipboard.writeText(url);
+        ContextMenu.hideContextMenu();
+    });
+
+    const contextElement = (
+        <div>
+            {copyClipboardItem}
+            {saveImageItem}
+            {copyURLItem}
+        </div>
+    );
+
+    ContextMenu.registContextMenu('clickOnImage', contextElement);
+}
 
 function apply() {
     const data = parse();
@@ -77,7 +172,7 @@ function apply() {
             if(url != '') {
                 event.target.dataset.url = '';
                 const filename = event.target.textContent;
-                const file = await download(url,
+                const file = await getBlob(url,
                     e => {
                         const progress = Math.round(e.loaded / e.total * 100);
                         event.target.textContent = `${filename}...${progress}%`;
@@ -125,7 +220,7 @@ function apply() {
         const zip = new JSZip();
         const total = downloadList.length;
         for(let i = 0; i < total; i += 1) {
-            const file = await download(downloadList[i],
+            const file = await getBlob(downloadList[i],
                 e => {
                     const progress = Math.round(e.loaded / e.total * 100);
                     downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
@@ -134,27 +229,25 @@ function apply() {
         }
         downloadBtn.textContent = originalText;
 
-        const title = document.querySelector('.article-head .title');
-        const category = document.querySelector('.article-head .badge');
-        const author = document.querySelector('.article-head .user-info');
-        const channel = document.querySelector('.board-title a:not([class])');
+        const channelInfo = Parser.getChannelInfo();
+        const articleInfo = Parser.getArticleInfo();
 
-        let filename = GM_getValue('imageDownloaderFileName', DefaultConfig.imageDownloaderFileName);
+        let filename = GM_getValue(FILENAME, FILENAME_DEFAULT);
         const reservedWord = filename.match(/%\w*%/g);
         for(const word of reservedWord) {
             try {
                 switch(word) {
                 case '%title%':
-                    filename = filename.replace(word, title.textContent.trim());
+                    filename = filename.replace(word, articleInfo.title);
                     break;
                 case '%category%':
-                    filename = filename.replace(word, category.textContent.trim());
+                    filename = filename.replace(word, articleInfo.category);
                     break;
                 case '%author%':
-                    filename = filename.replace(word, author.innerText.trim());
+                    filename = filename.replace(word, articleInfo.author);
                     break;
                 case '%channel%':
-                    filename = filename.replace(word, channel.textContent.trim());
+                    filename = filename.replace(word, channelInfo.name);
                     break;
                 default:
                     break;

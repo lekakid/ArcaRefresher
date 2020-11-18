@@ -1,36 +1,58 @@
-import PostProcessor from './core/PostProcessor';
-import Setting from './core/Setting';
-import DefaultConfig from './core/DefaultConfig';
+import Configure from './core/Configure';
+import ContextMenu from './core/ContextMenu';
+import Parser from './core/Parser';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
-import AutoRemover from './module/AutoRemover';
-import BlockSystem from './module/BlockSystem';
+import ArticleRemover from './module/ArticleRemover';
+import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
 import CommentRefresh from './module/CommentRefresh';
-import ContextMenu from './module/ContextMenu';
-import EmoticonBlock from './module/EmoticonBlock';
+import MuteEmoticon from './module/MuteEmoticon';
 import FullAreaReply from './module/FullAreaReply';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
+import ImageSearch from './module/ImageSearch';
 import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
 import NotificationIconColor from './module/NotificationIconColor';
+import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
 
 import { waitForElement } from './util/ElementDetector';
 
+import FadeStyle from './css/Fade.css';
+import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
+
 (async function () {
-    PostProcessor.addGlobalStyle();
+    // Load Global CSS
+    document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
 
-    const path = location.pathname.split('/');
-    const channel = path[2] || '';
+    await waitForElement('footer');
 
-    await waitForElement('.content-wrapper');
-    Setting.setup(channel);
+    Parser.initialize();
+
+    Configure.initialize();
+    ArticleRemover.addSetting();
+    AutoRefresher.addSetting();
+    CategoryColor.addSetting();
+    ImageDownloader.addSetting();
+    RatedownGuard.addSetting();
+    ShortCut.addSetting();
+    MuteContent.addSetting();
+    MuteEmoticon.addSetting();
+    MyImage.addSetting();
+    NotificationIconColor.addSetting();
+    UserMemo.addSetting();
+    LiveModifier.addSetting();
+
+    ContextMenu.initialize();
+    ImageDownloader.addContextMenu();
+    MyImage.addContextMenu();
+    ImageSearch.addContextMenu();
 
     try {
         LiveModifier.apply();
@@ -41,95 +63,66 @@ import { waitForElement } from './util/ElementDetector';
         console.error(error);
     }
 
-    await waitForElement('footer');
-
-    let targetElement = document.querySelector('article > .article-view, article > div.board-article-list .list-table, article > .article-write');
-    if (targetElement == null) return;
-
-    let type = '';
-
-    if (targetElement.classList.contains('article-view')) type = 'article';
-    if (targetElement.classList.contains('list-table')) type = 'board';
-    if (targetElement.classList.contains('article-write')) type = 'write';
-
-    if (type == 'article') {
+    if(Parser.hasArticle()) {
         try {
-            const articleWrapper = targetElement.querySelector('.article-wrapper');
-            PostProcessor.parseUserInfo(articleWrapper);
-            UserMemo.apply(articleWrapper);
-            UserMemo.setHandler(articleWrapper);
-            IPScouter.apply(articleWrapper);
-            AnonymousNick.apply(articleWrapper);
+            MuteContent.addArticleMenu();
+            AnonymousNick.addArticleMenu();
 
-            LiveModifier.applyImageResize();
-            ContextMenu.apply(articleWrapper);
-            BlockSystem.blockRatedown();
+            UserMemo.apply();
+            IPScouter.apply('article');
+
+            RatedownGuard.apply();
             ImageDownloader.apply();
-
-            const commentView = targetElement.querySelector('#comment');
-            if (commentView) {
-                BlockSystem.blockEmoticon(commentView);
-                BlockSystem.blockContent(commentView);
-
-                CommentRefresh.apply(commentView);
-                EmoticonBlock.apply(commentView);
-                FullAreaReply.apply(commentView);
-
-                commentView.addEventListener('ar_refresh', () => {
-                    PostProcessor.parseUserInfo(commentView);
-                    UserMemo.apply(commentView);
-                    IPScouter.apply(commentView);
-
-                    BlockSystem.blockEmoticon(commentView);
-                    BlockSystem.blockContent(commentView);
-                    EmoticonBlock.apply(commentView);
-                });
-            }
         }
         catch (error) {
             console.warn('게시물 처리 중 오류 발생');
             console.error(error);
         }
-
-        ShortCut.apply('article');
-
-        targetElement = targetElement.querySelector('.included-article-list .list-table');
-        if (targetElement) type = 'board-included';
     }
 
-    if (type.indexOf('board') > -1) {
-        Setting.setupCategory(channel);
+    if(Parser.hasComment()) {
+        MuteEmoticon.mute();
+        MuteContent.muteContent('comment');
 
-        PostProcessor.parseUserInfo(targetElement);
-        UserMemo.apply(targetElement);
-        IPScouter.apply(targetElement);
+        CommentRefresh.apply();
+        MuteEmoticon.apply();
+        FullAreaReply.apply();
 
-        CategoryColor.apply(targetElement, channel);
-        BlockSystem.blockPreview(targetElement, channel);
-        BlockSystem.blockContent(targetElement, channel);
+        Parser.queryView('comment').addEventListener('ar_refresh', () => {
+            UserMemo.apply();
+            IPScouter.apply('comment');
 
-        targetElement.addEventListener('ar_refresh', () => {
-            PostProcessor.parseUserInfo(targetElement);
-            UserMemo.apply(targetElement);
-            IPScouter.apply(targetElement);
+            MuteEmoticon.apply();
+            MuteContent.muteContent('comment');
+        });
+    }
 
-            CategoryColor.apply(targetElement, channel);
-            BlockSystem.blockPreview(targetElement, channel);
-            BlockSystem.blockContent(targetElement, channel);
-            AutoRemover.removeArticle(targetElement);
+    if(Parser.hasBoard()) {
+        UserMemo.apply();
+        IPScouter.apply('board');
+
+        CategoryColor.apply();
+        MuteContent.mutePreview();
+        MuteContent.muteContent('board');
+
+        Parser.queryView('board').addEventListener('ar_refresh', () => {
+            UserMemo.apply();
+            IPScouter.apply('board');
+
+            CategoryColor.apply();
+            MuteContent.mutePreview();
+            MuteContent.muteContent('board');
+            ArticleRemover.remove();
         });
 
-        if (type != 'board-included') {
-            const refreshTime = GM_getValue('refreshTime', DefaultConfig.refreshTime);
-            if (refreshTime) {
-                const refresher = new AutoRefresher(targetElement, refreshTime);
-                refresher.start();
-            }
-            ShortCut.apply('board');
+        if (!Parser.hasArticle()) {
+            AutoRefresher.apply();
         }
     }
 
-    if (type == 'write') {
+    ShortCut.apply(Parser.getCurrentState());
+
+    if(Parser.hasWriteView()) {
         await waitForElement('.fr-box');
         // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');

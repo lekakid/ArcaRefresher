@@ -1,3 +1,7 @@
 .body .board-article .article-list .list-table.show-filtered-category .vrow.filtered-category {
     display: flex;
 }
+
+.body .board-article .show-filtered-category .filter-count-category {
+    color: #bbb;
+}

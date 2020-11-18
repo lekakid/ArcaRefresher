@@ -1,9 +1,11 @@
+import Parser from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
 export default { apply };
 
-function apply(commentArea) {
-    if(commentArea.querySelector('.alert')) {
+function apply() {
+    const commentArea = Parser.queryView('comment');
+    if(commentArea && commentArea.querySelector('.alert')) {
         // 댓글 작성 권한 없음
         return;
     }
