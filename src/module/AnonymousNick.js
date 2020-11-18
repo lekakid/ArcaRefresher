@@ -16,6 +16,7 @@ const DefaultSuffix = [
 
 function addArticleMenu() {
     const btn = ArticleMenu.appendMenuBtn('익명화', 'ion-wand', '게시물 작성자와 댓글 작성자를 일시적 익명으로 만듭니다.');
+    if(!btn) return;
     btn.addEventListener('click', event => {
         event.preventDefault();
 

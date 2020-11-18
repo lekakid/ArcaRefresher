@@ -2,7 +2,7 @@ import Parser from './Parser';
 
 export default { appendMenuBtn };
 
-function appendMenuBtn(name, icon, title) {
+function appendMenuBtn(name, icon, title, event) {
     const headerMenu = Parser.queryView('article').querySelector('.edit-menu');
     if(!headerMenu) return;
 
@@ -12,6 +12,8 @@ function appendMenuBtn(name, icon, title) {
             {` ${name}`}
         </a>
     );
+
+    element.addEventListener('click', event);
 
     if(headerMenu.childElementCount) {
         headerMenu.prepend(<span class="sep" />);

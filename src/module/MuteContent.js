@@ -148,8 +148,7 @@ function addArticleMenu() {
     const indexed = userList.indexOf(filter);
 
     if(indexed > -1) {
-        const btn = ArticleMenu.appendMenuBtn('뮤트 해제', 'ion-ios-refresh-empty', '게시물 작성자의 뮤트를 해제합니다.');
-        btn.addEventListener('click', event => {
+        ArticleMenu.appendMenuBtn('뮤트 해제', 'ion-ios-refresh-empty', '게시물 작성자의 뮤트를 해제합니다.', event => {
             event.preventDefault();
 
             userList.splice(indexed, 1);
@@ -158,8 +157,7 @@ function addArticleMenu() {
         });
     }
     else {
-        const btn = ArticleMenu.appendMenuBtn('뮤트', 'ion-ios-close', '게시물 작성자를 뮤트합니다.');
-        btn.addEventListener('click', event => {
+        ArticleMenu.appendMenuBtn('뮤트', 'ion-ios-close', '게시물 작성자를 뮤트합니다.', event => {
             event.preventDefault();
 
             userList.push(filter);
