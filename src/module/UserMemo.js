@@ -83,11 +83,12 @@ function apply() {
 
     handlerApplied = true;
     articleView.addEventListener('click', event => {
-        if(event.target.tagName != 'SPAN' && event.target.tagName != 'SMALL') return;
-        event.preventDefault();
+        if(event.target.closest('a')) return;
 
         const user = event.target.closest('.user-info');
         if(user == null) return;
+
+        event.preventDefault();
 
         const id = Parser.parseUserID(user);
         const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
