@@ -46,7 +46,7 @@ function initialize() {
         const categoryElement = articleView.querySelector('.article-head .badge');
         const authorElement = articleView.querySelector('.article-head .user-info');
 
-        currentArticleTitle = (titleElement) ? titleElement.textContent : '';
+        currentArticleTitle = (titleElement) ? titleElement.lastChild.textContent.trim() : '';
         currentArticleCategory = (categoryElement) ? categoryElement.textContent : '';
         currentArticleAuthor = (authorElement) ? parseUserInfo(authorElement) : '';
         currentArticleAuthorID = (authorElement) ? parseUserID(authorElement) : '';
