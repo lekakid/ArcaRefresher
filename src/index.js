@@ -65,6 +65,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasArticle()) {
         try {
+            MuteContent.addArticleMenu();
             AnonymousNick.addArticleMenu();
 
             UserMemo.apply();

@@ -1,3 +1,4 @@
+import ArticleMenu from '../core/ArticleMenu';
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
@@ -5,6 +6,7 @@ import MuteStyle from '../css/MuteContent.css';
 
 export default {
     addSetting,
+    addArticleMenu,
     mutePreview,
     muteContent,
 };
@@ -135,6 +137,36 @@ function addSetting() {
     }
 
     Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
+}
+
+function addArticleMenu() {
+    const userList = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
+    const articleInfo = Parser.getArticleInfo();
+    const user = articleInfo.author;
+    const userID = articleInfo.authorID.replace('(', '\\(').replace(')', '\\)').replace('.', '\\.');
+    const filter = `${user == userID ? '^' : ''}${userID}$`;
+    const indexed = userList.indexOf(filter);
+
+    if(indexed > -1) {
+        const btn = ArticleMenu.appendMenuBtn('뮤트 해제', 'ion-ios-refresh-empty', '게시물 작성자의 뮤트를 해제합니다.');
+        btn.addEventListener('click', event => {
+            event.preventDefault();
+
+            userList.splice(indexed, 1);
+            GM_setValue(BLOCK_USER, userList);
+            location.reload();
+        });
+    }
+    else {
+        const btn = ArticleMenu.appendMenuBtn('뮤트', 'ion-ios-close', '게시물 작성자를 뮤트합니다.');
+        btn.addEventListener('click', event => {
+            event.preventDefault();
+
+            userList.push(filter);
+            GM_setValue(BLOCK_USER, userList);
+            history.back();
+        });
+    }
 }
 
 function mutePreview() {
