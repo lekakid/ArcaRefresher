@@ -29,13 +29,14 @@ let currentArticleAuthorID = '';
 
 function initialize() {
     const articleElement = document.querySelector('article');
+    const boardTitle = articleElement.querySelector('.board-title');
     articleView = articleElement.querySelector('.article-wrapper');
     commentView = articleElement.querySelector('#comment');
     boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
     writeView = articleElement.querySelector('.article-write');
 
-    if(boardView) {
-        currentChannel = articleElement.querySelector('.board-title a:not([class])').textContent;
+    if(boardTitle) {
+        currentChannel = boardTitle.querySelector('a:not([class])').textContent;
         currentChannelID = location.pathname.split('/')[2];
     }
 
