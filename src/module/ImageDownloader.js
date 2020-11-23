@@ -272,7 +272,7 @@ function parse() {
     const result = [];
 
     images.forEach(element => {
-        let src = element.src;
+        let src = element.src.split('?')[0];
         if(element.dataset.orig) {
             src += `.${element.dataset.orig}`;
         }
