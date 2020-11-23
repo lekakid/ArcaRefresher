@@ -39,10 +39,9 @@ function addSetting(element, category, saveCallback, loadCallback) {
 function importConfig(JSONString) {
     const data = JSON.parse(JSONString);
 
+    // 임시 수정 설정 검증 루틴 필요
     for(const key of Object.keys(data)) {
-        if({}.hasOwnProperty.call(configData, key)) {
-            GM_setValue(key, data[key]);
-        }
+        GM_setValue(key, data[key]);
     }
 }
 

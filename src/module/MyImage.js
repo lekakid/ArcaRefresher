@@ -66,7 +66,7 @@ function addContextMenu() {
         if(!imgList[channel]) {
             imgList[channel] = [];
         }
-        imgList[channel].push(ContextMenu.getContextData('url'));
+        imgList[channel].push(ContextMenu.getContextData('url').split('?')[0]);
         GM_setValue(MY_IMAGES, imgList);
         ContextMenu.hideContextMenu();
     });

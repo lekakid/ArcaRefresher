@@ -12,9 +12,9 @@ export default {
 };
 
 const BLOCK_USER = 'blockUser';
-const BLOCK_USER_DEFAULT = '';
+const BLOCK_USER_DEFAULT = [];
 const BLOCK_KEYWORD = 'blockKeyword';
-const BLOCK_KEYWORD_DEFAULT = '';
+const BLOCK_KEYWORD_DEFAULT = [];
 const MUTE_CATEGORY = 'muteCategory';
 const MUTE_CATEGORY_DEFAULT = {};
 const MUTE_NOTICE = 'hideNotice';
