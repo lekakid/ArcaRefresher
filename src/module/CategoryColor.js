@@ -112,7 +112,8 @@ function addSetting() {
 
         if(!colorConfig[channel]) return;
 
-        for(const category in colorConfig[channel]) {
+        for(const element of tbody.children) {
+            const category = element.dataset.id;
             if(colorConfig[channel][category]) {
                 const row = tbody.querySelector(`tr[data-id="${category}"]`);
                 const badge = colorConfig[channel][category].badge;

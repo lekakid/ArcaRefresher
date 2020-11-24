@@ -104,7 +104,8 @@ function addSetting() {
         const muteCategory = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT)[channel];
         if(!muteCategory) return;
 
-        for(const category in muteCategory) {
+        for(const element of categoryContainer.children) {
+            const category = element.dataset.id;
             if(muteCategory[category]) {
                 const row = categoryContainer.querySelector(`tr[data-id="${category}"]`);
 
