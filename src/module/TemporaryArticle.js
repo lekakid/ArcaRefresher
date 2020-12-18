@@ -27,7 +27,7 @@ function apply(editor) {
         </table>
     );
     const saveBtn = <button class="btn btn-primary" id="tempSaveBtn">임시 저장</button>;
-    const loadBtn = <button class="btn btn-success" id="tempLoadBtn">불러오기</button>;
+    const loadBtn = <button class="btn btn-arca" id="tempLoadBtn">불러오기</button>;
     const deleteBtn = list.querySelector('#tempDeleteBtn');
     const selectAll = list.querySelector('input[name="selectAll"]');
     const tbody = list.querySelector('tbody');

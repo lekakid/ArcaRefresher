@@ -12,7 +12,7 @@ function addSetting() {
             <label class="col-md-3">뮤트된 아카콘</label>
             <div class="col-md-9">
                 <select size="6" multiple="" />
-                <button name="delete" class="btn btn-success">삭제</button>
+                <button name="delete" class="btn btn-arca">삭제</button>
                 <p>
                     아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
                     Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.

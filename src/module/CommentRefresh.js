@@ -11,7 +11,7 @@ function apply() {
     }
 
     const btn = (
-        <button class="btn btn-success" style="margin-left: 1rem">
+        <button class="btn btn-arca" style="margin-left: 1rem">
             <span class="icon ion-android-refresh" />
             <span> 새로고침</span>
         </button>
