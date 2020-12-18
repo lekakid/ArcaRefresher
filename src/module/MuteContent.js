@@ -205,17 +205,21 @@ function muteContent(viewQuery) {
         return;
     }
 
-    const articleBoard = Parser.queryView(viewQuery);
+    const itemContainer = Parser.queryView(viewQuery);
 
-    // 댓글창 오류 방지로 대충 떼움. 나중에 고칠래
-    const unfilterBtn = articleBoard.querySelector('.notice-unfilter') || articleBoard;
-    const noticeCountElement = unfilterBtn.querySelector('.notice-filter-count');
-    if(noticeCountElement && noticeCountElement.textContent == '0') {
+    let unfilterBtn = itemContainer.querySelector('.notice-unfilter');
+    if(viewQuery == 'board' && !unfilterBtn) {
         // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
+        unfilterBtn = (
+            <a class="vrow notice notice-unfilter">
+                <div class="vrow-top">숨겨진 공지 펼치기(<span class="notice-filter-count">2</span>개) <span class="ion-android-archive" /></div>
+            </a>
+        );
         unfilterBtn.addEventListener('click', () => {
-            articleBoard.classList.add('show-filtered-notice');
+            itemContainer.classList.add('show-filtered-notice');
             unfilterBtn.style.display = 'none';
         });
+        itemContainer.querySelector('a.vrow:not(.notice)').insertAdjacentElement('beforebegin', unfilterBtn);
     }
 
     const channel = Parser.getChannelInfo().id;
@@ -246,13 +250,13 @@ function muteContent(viewQuery) {
     if(viewQuery == 'board') {
         contents = Parser.queryItems('articles', 'board');
         keywordSelector = '.col-title';
-        targetElement = articleBoard;
+        targetElement = itemContainer;
         insertPosition = 'afterbegin';
     }
     else if(viewQuery == 'comment') {
         contents = Parser.queryItems('comments', 'comment');
         keywordSelector = '.message';
-        targetElement = articleBoard.querySelector('.list-area');
+        targetElement = itemContainer.querySelector('.list-area');
         insertPosition = 'beforebegin';
     }
 
@@ -317,7 +321,7 @@ function muteContent(viewQuery) {
         }
     });
 
-    let toggleHeader = articleBoard.querySelector('.frontend-header');
+    let toggleHeader = itemContainer.querySelector('.frontend-header');
     if(toggleHeader) toggleHeader.remove();
     toggleHeader = (
         <div class="frontend-header">
@@ -352,8 +356,8 @@ function muteContent(viewQuery) {
         }
     }
 
-    if(noticeCount > 0 && !articleBoard.classList.contains('show-filtered-notice')) {
-        unfilterBtn.style.display = '';
+    if(noticeCount > 0 && !itemContainer.classList.contains('show-filtered-notice')) {
+        const noticeCountElement = unfilterBtn.querySelector('.notice-filter-count');
         noticeCountElement.textContent = noticeCount;
     }
 }
