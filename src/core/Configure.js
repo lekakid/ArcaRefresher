@@ -97,7 +97,7 @@ function initialize() {
                             <div class="row btns">
                                 <div class="col-12">
                                     <a href="#" id="saveAndClose" class="btn btn-primary">저장</a>
-                                    <a href="#" id="closeSetting" class="btn btn-success">닫기</a>
+                                    <a href="#" id="closeSetting" class="btn btn-arca">닫기</a>
                                 </div>
                             </div>
                         </div>

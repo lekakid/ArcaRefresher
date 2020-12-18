@@ -121,14 +121,14 @@ function apply() {
                 <tbody />
                 <tfoot>
                     <td colspan="3">
-                        <button class="btn btn-success">일괄 다운로드</button>
+                        <button class="btn btn-arca">일괄 다운로드</button>
                     </td>
                 </tfoot>
             </table>
         </div>
     );
 
-    const enableBtn = <a href="#" class="btn btn-success"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
+    const enableBtn = <a href="#" class="btn btn-arca"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
     enableBtn.addEventListener('click', event => {
         event.preventDefault();
 
