@@ -114,6 +114,10 @@ function apply(editor) {
     });
 
     btns.insertAdjacentElement('afterend', list);
-    btns.prepend(saveBtn);
-    btns.prepend(loadBtn);
+    btns.prepend(
+        <div style="margin-bottom: 1rem">
+            {saveBtn}
+            {loadBtn}
+        </div>,
+    );
 }
