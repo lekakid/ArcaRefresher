@@ -8,6 +8,10 @@
     z-index: 20;
 }
 
+.content-wrapper.hide-recent-visit .visited-channel-list {
+    display: none;
+}
+
 .content-wrapper.hide-avatar .avatar {
     display: none !important;
 }
