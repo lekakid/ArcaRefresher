@@ -12,6 +12,8 @@ const HIDE_MODIFIED = 'hideModified';
 const HIDE_MODIFIED_DEFAULT = false;
 const HIDE_SIDEMENU = 'hideSideMenu';
 const HIDE_SIDEMENU_DEFAULT = false;
+const HIDE_RECENT_VISIT = 'hideRecentVisit';
+const HIDE_RECENT_VISIT_DEFAULT = false;
 const RESIZE_MEDIA = 'resizeMedia';
 const RESIZE_MEDIA_DEFAULT = '100';
 
@@ -23,6 +25,14 @@ function addSetting() {
                 <select name="fixHeader">
                     <option value="false">고정 안 함</option>
                     <option value="true">고정</option>
+                </select>
+                <p />
+            </div>
+            <label class="col-md-3">최근 방문 채널 숨김</label>
+            <div class="col-md-9">
+                <select name="hideRecentVisit">
+                    <option value="false">보임</option>
+                    <option value="true">숨김</option>
                 </select>
                 <p />
             </div>
@@ -61,6 +71,7 @@ function addSetting() {
         </>
     );
     const fixHeaderElement = settingElement.querySelector('select[name="fixHeader"]');
+    const hideRecentVisitElement = settingElement.querySelector('select[name="hideRecentVisit"]');
     const hideAvatarElement = settingElement.querySelector('select[name="hideAvatar"]');
     const hideModifiedElement = settingElement.querySelector('select[name="hideModified"]');
     const hideSideMenuElement = settingElement.querySelector('select[name="hideSideMenu"]');
@@ -68,12 +79,14 @@ function addSetting() {
 
     function load() {
         const fixHeader = GM_getValue(FIX_HEADER, FIX_HEADER_DEFAULT);
+        const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, HIDE_RECENT_VISIT_DEFAULT);
         const hideAvatar = GM_getValue(HIDE_AVATAR, HIDE_AVATAR_DEFAULT);
         const hideModified = GM_getValue(HIDE_MODIFIED, HIDE_MODIFIED_DEFAULT);
         const hideSideMenu = GM_getValue(HIDE_SIDEMENU, HIDE_SIDEMENU_DEFAULT);
         const resizeMedia = GM_getValue(RESIZE_MEDIA, RESIZE_MEDIA_DEFAULT);
 
         fixHeaderElement.value = fixHeader;
+        hideRecentVisitElement.value = hideRecentVisit;
         hideAvatarElement.value = hideAvatar;
         hideModifiedElement.value = hideModified;
         hideSideMenuElement.value = hideSideMenu;
@@ -81,6 +94,7 @@ function addSetting() {
     }
     function save() {
         GM_setValue(FIX_HEADER, fixHeaderElement.value == 'true');
+        GM_setValue(HIDE_RECENT_VISIT, hideRecentVisitElement.value == 'true');
         GM_setValue(HIDE_AVATAR, hideAvatarElement.value == 'true');
         GM_setValue(HIDE_MODIFIED, hideModifiedElement.value == 'true');
         GM_setValue(HIDE_SIDEMENU, hideSideMenuElement.value == 'true');
@@ -96,6 +110,9 @@ function apply() {
 
     const fixHeader = GM_getValue(FIX_HEADER, FIX_HEADER_DEFAULT);
     if(fixHeader) document.body.classList.add('fix-header');
+
+    const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, HIDE_RECENT_VISIT_DEFAULT);
+    if(hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
 
     const hideAvatar = GM_getValue(HIDE_AVATAR, HIDE_AVATAR_DEFAULT);
     if(hideAvatar) contentWrapper.classList.add('hide-avatar');
