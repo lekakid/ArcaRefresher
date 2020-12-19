@@ -234,8 +234,8 @@ function apply() {
 
         let filename = GM_getValue(FILENAME, FILENAME_DEFAULT);
         const reservedWord = filename.match(/%\w*%/g);
-        for(const word of reservedWord) {
-            try {
+        if(reservedWord) {
+            for(const word of reservedWord) {
                 switch(word) {
                 case '%title%':
                     filename = filename.replace(word, articleInfo.title);
@@ -252,10 +252,6 @@ function apply() {
                 default:
                     break;
                 }
-            }
-            catch (error) {
-                console.warn(error);
-                filename = filename.replace(word, 'undefined');
             }
         }
         const zipblob = await zip.generateAsync({ type: 'blob' });
