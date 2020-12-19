@@ -67,7 +67,7 @@ function mute() {
         const emoticon = item.querySelector('.emoticon');
 
         if(emoticon) {
-            const id = emoticon.dataset.id;
+            const id = Number(emoticon.dataset.id);
             if(list.indexOf(id) > -1) {
                 emoticon.closest('.message').innerText = '[아카콘 뮤트됨]';
             }
@@ -134,7 +134,7 @@ function getEmoticonBundle(bundleID) {
         req.open('GET', `/api/emoticon/${bundleID}`);
         req.responseType = 'json';
         req.addEventListener('load', () => {
-            const bundle = Object.keys(req.response);
+            const bundle = req.response.map(item => item.id);
             resolve(bundle);
         });
         req.send();
