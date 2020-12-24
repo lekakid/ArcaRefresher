@@ -16,6 +16,7 @@ import ImageDownloader from './module/ImageDownloader';
 import ImageSearch from './module/ImageSearch';
 import LiveModifier from './module/LiveModifier';
 import MyImage from './module/MyImage';
+import NewWindow from './module/NewWindow';
 import NotificationIconColor from './module/NotificationIconColor';
 import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
@@ -48,6 +49,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     MuteContent.addSetting();
     MuteEmoticon.addSetting();
     MyImage.addSetting();
+    NewWindow.addSetting();
     NotificationIconColor.addSetting();
     UserMemo.addSetting();
     LiveModifier.addSetting();
@@ -107,6 +109,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         CategoryColor.apply();
         MuteContent.mutePreview();
         MuteContent.muteContent('board');
+        NewWindow.apply();
 
         Parser.queryView('board').addEventListener('ar_refresh', () => {
             UserMemo.apply();
@@ -115,6 +118,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             CategoryColor.apply();
             MuteContent.mutePreview();
             MuteContent.muteContent('board');
+            NewWindow.apply();
             ArticleRemover.remove();
         });
 
