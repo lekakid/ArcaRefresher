@@ -25,15 +25,22 @@ const configCategoryString = {
 const saveCallbackList = [];
 const loadCallbackList = [];
 
-function addSetting(element, category, saveCallback, loadCallback) {
+function addSetting(settingObject) {
+    const { category, header, option, description, callback } = settingObject;
+    const { save, load } = callback;
+
     const row = (
         <div class="row">
-            {element}
+            <label class="col-md-3">{header}</label>
+            <div class="col-md-9">
+                {option}
+                {description && <p>{description}</p>}
+            </div>
         </div>
     );
     document.querySelector(`#refresherSetting #${category}`).append(row);
-    saveCallbackList.push(saveCallback);
-    loadCallbackList.push(loadCallback);
+    saveCallbackList.push(save);
+    loadCallbackList.push(load);
 }
 
 function importConfig(JSONString) {
