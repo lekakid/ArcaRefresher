@@ -1,4 +1,17 @@
-export async function waitForElement(selector) {
+export default { load };
+
+async function load() {
+    const path = location.pathname;
+
+    if(path.indexOf('/b/') > -1) {
+        await waitForElement('footer');
+    }
+    else {
+        await waitForElement('.content-wrapper');
+    }
+}
+
+async function waitForElement(selector) {
     let targetElement = document.querySelector(selector);
 
     if(targetElement) return Promise.resolve(targetElement);

@@ -1,6 +1,7 @@
 import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
 import Parser from './core/Parser';
+import PageLoader from './core/PageLoader';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -23,19 +24,14 @@ import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
 
-import { waitForElement } from './util/ElementDetector';
-
 import FadeStyle from './css/Fade.css';
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
 (async function () {
-    // head 로딩 대기
-    await waitForElement('head');
+    await PageLoader.load();
 
     // Load Global CSS
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
-
-    await waitForElement('footer');
 
     Parser.initialize();
 
