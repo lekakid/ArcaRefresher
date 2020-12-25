@@ -11,34 +11,31 @@ const FILENAME = 'imageDownloaderFileName';
 const FILENAME_DEFAULT = '%title%';
 
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">이미지 다운로드 이름</label>
-            <div class="col-md-9">
-                <input type="text" />
-                <p>
-                    이미지 일괄 다운로드 사용 시 저장할 파일 이름입니다.<br />
-                    %title% : 게시물 제목<br />
-                    %category% : 게시물 카테고리<br />
-                    %author% : 게시물 작성자<br />
-                    %channel% : 채널 이름<br />
-                </p>
-            </div>
-        </>
+    const downloadName = (
+        <input type="text" />
     );
-
-    const inputElement = settingElement.querySelector('input');
-
-    function load() {
-        const data = GM_getValue(FILENAME, FILENAME_DEFAULT);
-
-        inputElement.value = data;
-    }
-    function save() {
-        GM_setValue(FILENAME, inputElement.value);
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+    Configure.addSetting({
+        category: Configure.categoryKey.UTILITY,
+        header: '이미지 다운로드 포맷',
+        option: downloadName,
+        description: (
+            <>
+                이미지 일괄 다운로드 사용 시 저장할 파일의 이름 포맷입니다.<br />
+                %title%: 게시물 제목<br />
+                %category%: 게시물 카테고리<br />
+                %author%: 게시물 작성자<br />
+                %channel%: 채널 이름<br />
+            </>
+        ),
+        callback: {
+            save() {
+                GM_setValue(FILENAME, downloadName.value);
+            },
+            load() {
+                downloadName.value = GM_getValue(FILENAME, '%title%');
+            },
+        },
+    });
 }
 
 function addContextMenu() {

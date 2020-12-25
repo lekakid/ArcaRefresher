@@ -5,125 +5,155 @@ import sheetLiveModifier from '../css/LiveModifier.css';
 export default { addSetting, apply };
 
 const FIX_HEADER = 'fixHeader';
-const FIX_HEADER_DEFAULT = true;
 const HIDE_RECENT_VISIT = 'hideRecentVisit';
-const HIDE_RECENT_VISIT_DEFAULT = false;
 const HIDE_SIDEMENU = 'hideSideMenu';
-const HIDE_SIDEMENU_DEFAULT = false;
 const HIDE_AVATAR = 'hideAvatar';
-const HIDE_AVATAR_DEFAULT = false;
 const HIDE_MODIFIED = 'hideModified';
-const HIDE_MODIFIED_DEFAULT = false;
 const RESIZE_MEDIA = 'resizeMedia';
-const RESIZE_MEDIA_DEFAULT = '100';
 
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">상단 헤더 고정</label>
-            <div class="col-md-9">
-                <select name="fixHeader">
-                    <option value="false">고정 안 함</option>
-                    <option value="true">고정</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">최근 방문 채널 숨김</label>
-            <div class="col-md-9">
-                <select name="hideRecentVisit">
-                    <option value="false">보임</option>
-                    <option value="true">숨김</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">우측 사이드 메뉴 숨김</label>
-            <div class="col-md-9">
-                <select name="hideSideMenu">
-                    <option value="false">보임</option>
-                    <option value="true">숨김</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">프로필 아바타 숨김</label>
-            <div class="col-md-9">
-                <select name="hideAvatar">
-                    <option value="false">보임</option>
-                    <option value="true">숨김</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">댓글 *수정됨 숨김</label>
-            <div class="col-md-9">
-                <select name="hideModified">
-                    <option value="false">보임</option>
-                    <option value="true">숨김</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">본문 이미지, 동영상 사이즈</label>
-            <div class="col-md-9">
-                <input type="text" name="resizeMedia" />
-                <p>
-                    본문 가로 길이를 기준 비율로 이미지, 동영상 크기를 조절합니다.<br />
-                    0~100(%) 사이로 입력
-                </p>
-            </div>
-        </>
+    const fixHeader = (
+        <select>
+            <option value="false">고정 안 함</option>
+            <option value="true">고정</option>
+        </select>
     );
-    const fixHeaderElement = settingElement.querySelector('select[name="fixHeader"]');
-    const hideRecentVisitElement = settingElement.querySelector('select[name="hideRecentVisit"]');
-    const hideSideMenuElement = settingElement.querySelector('select[name="hideSideMenu"]');
-    const hideAvatarElement = settingElement.querySelector('select[name="hideAvatar"]');
-    const hideModifiedElement = settingElement.querySelector('select[name="hideModified"]');
-    const resizeMediaElement = settingElement.querySelector('input');
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '상단 헤더 고정',
+        option: fixHeader,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(FIX_HEADER, fixHeader.value == 'true');
+            },
+            load() {
+                fixHeader.value = GM_getValue(FIX_HEADER, true);
+            },
+        },
+    });
 
-    function load() {
-        const fixHeader = GM_getValue(FIX_HEADER, FIX_HEADER_DEFAULT);
-        const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, HIDE_RECENT_VISIT_DEFAULT);
-        const hideSideMenu = GM_getValue(HIDE_SIDEMENU, HIDE_SIDEMENU_DEFAULT);
-        const hideAvatar = GM_getValue(HIDE_AVATAR, HIDE_AVATAR_DEFAULT);
-        const hideModified = GM_getValue(HIDE_MODIFIED, HIDE_MODIFIED_DEFAULT);
-        const resizeMedia = GM_getValue(RESIZE_MEDIA, RESIZE_MEDIA_DEFAULT);
+    const hideRecentVisit = (
+        <select>
+            <option value="false">보임</option>
+            <option value="true">숨김</option>
+        </select>
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '최근 방문 채널 숨김',
+        option: hideRecentVisit,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(HIDE_RECENT_VISIT, hideRecentVisit.value == 'true');
+            },
+            load() {
+                hideRecentVisit.value = GM_getValue(HIDE_RECENT_VISIT, false);
+            },
+        },
+    });
 
-        fixHeaderElement.value = fixHeader;
-        hideRecentVisitElement.value = hideRecentVisit;
-        hideSideMenuElement.value = hideSideMenu;
-        hideAvatarElement.value = hideAvatar;
-        hideModifiedElement.value = hideModified;
-        resizeMediaElement.value = resizeMedia;
-    }
-    function save() {
-        GM_setValue(FIX_HEADER, fixHeaderElement.value == 'true');
-        GM_setValue(HIDE_RECENT_VISIT, hideRecentVisitElement.value == 'true');
-        GM_setValue(HIDE_SIDEMENU, hideSideMenuElement.value == 'true');
-        GM_setValue(HIDE_AVATAR, hideAvatarElement.value == 'true');
-        GM_setValue(HIDE_MODIFIED, hideModifiedElement.value == 'true');
-        GM_setValue(RESIZE_MEDIA, resizeMediaElement.value);
-    }
+    const hideSideMenu = (
+        <select>
+            <option value="false">보임</option>
+            <option value="true">숨김</option>
+        </select>
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '우측 사이드 메뉴 숨김',
+        option: hideSideMenu,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(HIDE_SIDEMENU, hideSideMenu.value == 'true');
+            },
+            load() {
+                hideSideMenu.value = GM_getValue(HIDE_SIDEMENU, false);
+            },
+        },
+    });
 
-    Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
+    const hideAvatar = (
+        <select>
+            <option value="false">보임</option>
+            <option value="true">숨김</option>
+        </select>
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '프로필 아바타 숨김',
+        option: hideAvatar,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(HIDE_AVATAR, hideAvatar.value == 'true');
+            },
+            load() {
+                hideAvatar.value = GM_getValue(HIDE_AVATAR, false);
+            },
+        },
+    });
+
+    const hideModified = (
+        <select>
+            <option value="false">보임</option>
+            <option value="true">숨김</option>
+        </select>
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '댓글 *수정됨 숨김',
+        option: hideModified,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(HIDE_MODIFIED, hideModified.value == 'true');
+            },
+            load() {
+                hideModified.value = GM_getValue(HIDE_MODIFIED, false);
+            },
+        },
+    });
+
+    const resizeMedia = <input type="text" name="resizeMedia" />;
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '본문 이미지, 동영상 사이즈',
+        option: resizeMedia,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(RESIZE_MEDIA, resizeMedia.value);
+            },
+            load() {
+                resizeMedia.value = GM_getValue(RESIZE_MEDIA, '100');
+            },
+        },
+    });
 }
 
 function apply() {
     document.head.append(<style>{sheetLiveModifier}</style>);
     const contentWrapper = document.querySelector('.content-wrapper');
 
-    const fixHeader = GM_getValue(FIX_HEADER, FIX_HEADER_DEFAULT);
+    const fixHeader = GM_getValue(FIX_HEADER, true);
     if(fixHeader) document.body.classList.add('fix-header');
 
-    const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, HIDE_RECENT_VISIT_DEFAULT);
+    const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, false);
     if(hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
 
-    const hideSideMenu = GM_getValue(HIDE_SIDEMENU, HIDE_SIDEMENU_DEFAULT);
+    const hideSideMenu = GM_getValue(HIDE_SIDEMENU, false);
     if(hideSideMenu) contentWrapper.classList.add('hide-sidemenu');
 
-    const hideAvatar = GM_getValue(HIDE_AVATAR, HIDE_AVATAR_DEFAULT);
+    const hideAvatar = GM_getValue(HIDE_AVATAR, false);
     if(hideAvatar) contentWrapper.classList.add('hide-avatar');
 
-    const hideModified = GM_getValue(HIDE_MODIFIED, HIDE_MODIFIED_DEFAULT);
+    const hideModified = GM_getValue(HIDE_MODIFIED, false);
     if(hideModified) contentWrapper.classList.add('hide-modified');
 
-    const resizeMedia = GM_getValue(RESIZE_MEDIA, RESIZE_MEDIA_DEFAULT);
+    const resizeMedia = GM_getValue(RESIZE_MEDIA, '100');
     const css = `.article-body img, .article-body video {
         max-width: ${resizeMedia}% !important;
     }`;

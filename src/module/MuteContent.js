@@ -12,136 +12,145 @@ export default {
 };
 
 const BLOCK_USER = 'blockUser';
-const BLOCK_USER_DEFAULT = [];
 const BLOCK_KEYWORD = 'blockKeyword';
-const BLOCK_KEYWORD_DEFAULT = [];
 const MUTE_CATEGORY = 'muteCategory';
-const MUTE_CATEGORY_DEFAULT = {};
 const MUTE_NOTICE = 'hideNotice';
-const MUTE_NOTICE_DEFAULT = true;
 
 function addSetting() {
     document.head.append(<style>{MuteStyle}</style>);
 
-    const settingElement = (
-        <>
-            <label class="col-md-3">공지사항 접기</label>
-            <div class="col-md-9">
-                <select>
-                    <option value="false">사용 안 함</option>
-                    <option value="true">사용</option>
-                </select>
-                <p />
-            </div>
-            <label class="col-md-3">사용자 뮤트</label>
-            <div class="col-md-9">
-                <textarea name="user" rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
-                <p>지정한 유저의 게시물과 댓글을 숨깁니다.</p>
-            </div>
-            <label class="col-md-3">키워드 뮤트</label>
-            <div class="col-md-9">
-                <textarea name="keyword" rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
-                <p>지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.</p>
-            </div>
-            <label class="col-md-3">카테고리 뮤트</label>
-            <div class="col-md-9">
-                <table class="table align-middle">
-                    <colgroup>
-                        <col width="40%" />
-                        <col width="30%" />
-                        <col width="30%" />
-                    </colgroup>
-                    <thead>
-                        <th>이름</th>
-                        <th>미리보기 뮤트</th>
-                        <th>게시물 뮤트</th>
-                    </thead>
-                    <tbody />
-                </table>
-                <p>
-                    미리보기 뮤트: 해당 카테고리 게시물의 미리보기를 제거합니다.<br />
-                    게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
-                </p>
-            </div>
-        </>
+    const hideNotice = (
+        <select>
+            <option value="false">사용 안 함</option>
+            <option value="true">사용</option>
+        </select>
     );
+    Configure.addSetting({
+        category: Configure.categoryKey.MUTE,
+        header: '공지사항 접기',
+        option: hideNotice,
+        description: '',
+        callback: {
+            save() {
+                GM_setValue(MUTE_NOTICE, hideNotice.value == 'true');
+            },
+            load() {
+                hideNotice.value = GM_getValue(MUTE_NOTICE, false);
+            },
+        },
+    });
 
-    const channel = Parser.getChannelInfo().id;
-    const muteNoticeElement = settingElement.querySelector('select');
-    const userElement = settingElement.querySelector('textarea[name="user"]');
-    const keywordElement = settingElement.querySelector('textarea[name="keyword"]');
-    const categoryContainer = settingElement.querySelector('tbody');
+    const userMute = <textarea rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />;
+    Configure.addSetting({
+        category: Configure.categoryKey.MUTE,
+        header: '사용자 뮤트',
+        option: userMute,
+        description: '지정한 유저의 게시물과 댓글을 숨깁니다.',
+        callback: {
+            save() {
+                GM_setValue(BLOCK_USER, userMute.value.split('\n').filter(i => i != ''));
+            },
+            load() {
+                userMute.value = GM_getValue(BLOCK_USER, false).join('\n');
+            },
+        },
+    });
+
+    const keywordMute = <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />;
+    Configure.addSetting({
+        category: Configure.categoryKey.MUTE,
+        header: '키워드 뮤트',
+        option: keywordMute,
+        description: '지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.',
+        callback: {
+            save() {
+                GM_setValue(BLOCK_KEYWORD, keywordMute.value.split('\n').filter(i => i != ''));
+            },
+            load() {
+                keywordMute.value = GM_getValue(BLOCK_KEYWORD, false).join('\n');
+            },
+        },
+    });
 
     const boardCategoryElements = document.querySelectorAll('.board-category a');
+    if(!boardCategoryElements.length) return;
+
+    const tbody = <tbody />;
+    const categoryMute = (
+        <table class="table align-middle">
+            <colgroup>
+                <col width="40%" />
+                <col width="30%" />
+                <col width="30%" />
+            </colgroup>
+            <thead>
+                <th>이름</th>
+                <th>미리보기 뮤트</th>
+                <th>게시물 뮤트</th>
+            </thead>
+            {tbody}
+        </table>
+    );
 
     for(const element of boardCategoryElements) {
         const name = element.textContent == '전체' ? '일반' : element.textContent;
-        const muteCategoryItem = (
+        tbody.append(
             <tr data-id={name}>
                 <td>{name}</td>
                 <td><label><input type="checkbox" name="mutePreview" style="margin: .25em" /> 적용</label></td>
                 <td><label><input type="checkbox" name="muteArticle" style="margin: .25em" /> 적용</label></td>
-            </tr>
+            </tr>,
         );
-        categoryContainer.append(muteCategoryItem);
     }
 
-    if(boardCategoryElements.length == 0) {
-        categoryContainer.append(<tr><td colspan="4"><center>카테고리를 확인할 수 없습니다.</center></td></tr>);
-    }
+    const channel = Parser.getChannelInfo().id;
+    Configure.addSetting({
+        category: Configure.categoryKey.MUTE,
+        header: '카테고리 뮤트',
+        option: categoryMute,
+        description: (
+            <>
+                미리보기 뮤트: 해당 카테고리 게시물의 미리보기를 제거합니다.<br />
+                게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
+            </>
+        ),
+        callback: {
+            save() {
+                const data = GM_getValue(MUTE_CATEGORY, { [channel]: {} });
 
-    function load() {
-        if(boardCategoryElements.length == 0) return;
+                const rows = tbody.querySelectorAll('tr');
+                for(const row of rows) {
+                    const { id } = row.dataset;
+                    data[channel] = {
+                        ...data[channel],
+                        [id]: {
+                            mutePreview: row.querySelector('input[name="mutePreview"]').checked,
+                            muteArticle: row.querySelector('input[name="muteArticle"]').checked,
+                        },
+                    };
+                }
 
-        const hideNotice = GM_getValue(MUTE_NOTICE, MUTE_NOTICE_DEFAULT);
-        const blockUser = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
-        const blockKeyword = GM_getValue(BLOCK_KEYWORD, BLOCK_KEYWORD_DEFAULT);
+                GM_setValue(MUTE_CATEGORY, data);
+            },
+            load() {
+                const muteCategory = GM_getValue(MUTE_CATEGORY, {})[channel];
+                if(!muteCategory) return;
 
-        muteNoticeElement.value = hideNotice;
-        userElement.value = blockUser.join('\n');
-        keywordElement.value = blockKeyword.join('\n');
+                for(const element of tbody.children) {
+                    const { id } = element.dataset;
 
-        const muteCategory = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT)[channel];
-        if(!muteCategory) return;
-
-        for(const element of categoryContainer.children) {
-            const category = element.dataset.id;
-            if(muteCategory[category]) {
-                const row = categoryContainer.querySelector(`tr[data-id="${category}"]`);
-
-                row.querySelector('input[name="mutePreview"]').checked = muteCategory[category].mutePreview;
-                row.querySelector('input[name="muteArticle"]').checked = muteCategory[category].muteArticle;
-            }
-        }
-    }
-    function save() {
-        GM_setValue(MUTE_NOTICE, muteNoticeElement.value == 'true');
-        GM_setValue(BLOCK_USER, userElement.value.split('\n').filter(i => i != ''));
-        GM_setValue(BLOCK_KEYWORD, keywordElement.value.split('\n').filter(i => i != ''));
-
-        const data = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
-        if(!data[channel]) {
-            data[channel] = {};
-        }
-
-        const rows = categoryContainer.querySelectorAll('tr');
-
-        for(const row of rows) {
-            if(!data[channel][row.dataset.id]) {
-                data[channel][row.dataset.id] = {};
-            }
-            data[channel][row.dataset.id].mutePreview = row.querySelector('input[name="mutePreview"]').checked;
-            data[channel][row.dataset.id].muteArticle = row.querySelector('input[name="muteArticle"]').checked;
-        }
-
-        GM_setValue(MUTE_CATEGORY, data);
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
+                    if(muteCategory[id]) {
+                        element.querySelector('input[name="mutePreview"]').checked = muteCategory[id].mutePreview;
+                        element.querySelector('input[name="muteArticle"]').checked = muteCategory[id].muteArticle;
+                    }
+                }
+            },
+        },
+    });
 }
 
 function addArticleMenu() {
-    const userList = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
+    const userList = GM_getValue(BLOCK_USER, []);
     const articleInfo = Parser.getArticleInfo();
     const user = articleInfo.author;
     const userID = articleInfo.authorID.replace('(', '\\(').replace(')', '\\)').replace('.', '\\.');
@@ -169,23 +178,24 @@ function addArticleMenu() {
 }
 
 function mutePreview() {
-    const config = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
     const channel = Parser.getChannelInfo().id;
-    const articles = Parser.queryItems('articles', 'board');
+    const config = GM_getValue(MUTE_CATEGORY, {})[channel];
+    if(!config) return;
 
+    const articles = Parser.queryItems('articles', 'board');
     articles.forEach(article => {
         const badge = article.querySelector('.badge');
         if(badge == null) return;
 
         let category = badge.textContent;
         category = (category == '') ? '일반' : category;
+        if(!config[category]) return;
+
+        const { mutePreview: filtered } = config[category];
+        if(!filtered) return;
+
         const preview = article.querySelector('.vrow-preview');
-
-        if(config[channel] && config[channel][category]) {
-            const filtered = config[channel][category].mutePreview || false;
-
-            if(filtered && preview != null) preview.remove();
-        }
+        if(preview) preview.remove();
     });
 }
 
@@ -212,7 +222,7 @@ function muteContent(viewQuery) {
         // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
         unfilterBtn = (
             <a class="vrow notice notice-unfilter">
-                <div class="vrow-top">숨겨진 공지 펼치기(<span class="notice-filter-count">2</span>개) <span class="ion-android-archive" /></div>
+                <div class="vrow-top">숨겨진 공지 펼치기(<span class="notice-filter-count">0</span>개) <span class="ion-android-archive" /></div>
             </a>
         );
         unfilterBtn.addEventListener('click', () => {
@@ -230,11 +240,11 @@ function muteContent(viewQuery) {
     }
     let noticeCount = 0;
 
-    let userlist = GM_getValue(BLOCK_USER, BLOCK_USER_DEFAULT);
-    let keywordlist = GM_getValue(BLOCK_KEYWORD, BLOCK_KEYWORD_DEFAULT);
-    const categoryConfig = GM_getValue(MUTE_CATEGORY, MUTE_CATEGORY_DEFAULT);
+    let userlist = GM_getValue(BLOCK_USER, []);
+    let keywordlist = GM_getValue(BLOCK_KEYWORD, []);
+    const categoryConfig = GM_getValue(MUTE_CATEGORY, {})[channel];
     let noticeConfig = unsafeWindow.LiveConfig.hideChannelNotice;
-    noticeConfig = noticeConfig || GM_getValue(MUTE_NOTICE, MUTE_NOTICE_DEFAULT);
+    noticeConfig = noticeConfig || GM_getValue(MUTE_NOTICE, false);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -280,8 +290,8 @@ function muteContent(viewQuery) {
         const userAllow = userlist.length == 0 ? false : new RegExp(userlist.join('|')).test(userText);
         let categoryAllow = false;
 
-        if(channel && categoryConfig[channel] && categoryConfig[channel][category]) {
-            categoryAllow = categoryConfig[channel][category].muteArticle;
+        if(channel && categoryConfig && categoryConfig[category]) {
+            categoryAllow = categoryConfig[category].muteArticle;
         }
 
         if(keywordAllow) {
