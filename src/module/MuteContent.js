@@ -158,21 +158,31 @@ function addArticleMenu() {
     const indexed = userList.indexOf(filter);
 
     if(indexed > -1) {
-        ArticleMenu.appendMenuBtn('뮤트 해제', 'ion-ios-refresh-empty', '게시물 작성자의 뮤트를 해제합니다.', event => {
-            event.preventDefault();
+        ArticleMenu.addHeaderBtn({
+            text: '뮤트 해제',
+            icon: 'ion-ios-refresh-empty',
+            description: '게시물 작성자의 뮤트를 해제합니다.',
+            onClick(event) {
+                event.preventDefault();
 
-            userList.splice(indexed, 1);
-            GM_setValue(BLOCK_USER, userList);
-            location.reload();
+                userList.splice(indexed, 1);
+                GM_setValue(BLOCK_USER, userList);
+                location.reload();
+            },
         });
     }
     else {
-        ArticleMenu.appendMenuBtn('뮤트', 'ion-ios-close', '게시물 작성자를 뮤트합니다.', event => {
-            event.preventDefault();
+        ArticleMenu.addHeaderBtn({
+            text: '뮤트',
+            icon: 'ion-ios-close',
+            description: '게시물 작성자를 뮤트합니다.',
+            onClick(event) {
+                event.preventDefault();
 
-            userList.push(filter);
-            GM_setValue(BLOCK_USER, userList);
-            history.back();
+                userList.push(filter);
+                GM_setValue(BLOCK_USER, userList);
+                history.back();
+            },
         });
     }
 }
