@@ -37,7 +37,7 @@ function addSetting() {
             save() {
                 const data = GM_getValue(USER_MEMO, {});
 
-                const keys = Array.from(selectElement.children, e => e.value);
+                const keys = Array.from(memoList.children, e => e.value);
                 for(const key in data) {
                     if(keys.indexOf(key) == -1) delete data[key];
                 }
