@@ -69,17 +69,19 @@ function addSetting() {
 
 function addContextMenu() {
     const channel = Parser.getChannelInfo().id;
-    const addMyImageItem = ContextMenu.createMenu('자짤로 등록');
-    addMyImageItem.addEventListener('click', event => {
-        event.preventDefault();
+    const addMyImageItem = ContextMenu.createMenu({
+        text: '자짤로 등록',
+        onClick(event) {
+            event.preventDefault();
 
-        const imgList = Configure.get(MY_IMAGES);
-        if(!imgList[channel]) {
-            imgList[channel] = [];
-        }
-        imgList[channel].push(ContextMenu.getContextData('url').split('?')[0]);
-        Configure.set(MY_IMAGES, imgList);
-        ContextMenu.hide();
+            const imgList = Configure.get(MY_IMAGES);
+            if(!imgList[channel]) {
+                imgList[channel] = [];
+            }
+            imgList[channel].push(ContextMenu.getContextData('url').split('?')[0]);
+            Configure.set(MY_IMAGES, imgList);
+            ContextMenu.hide();
+        },
     });
 
     const contextElement = (

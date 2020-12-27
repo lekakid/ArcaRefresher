@@ -86,8 +86,11 @@ function removeMenuAll() {
     }
 }
 
-function createMenu(textContent, title) {
-    return (<a href="#" class="item" title={(title) || ''}>{textContent}</a>);
+function createMenu(MenuItem) {
+    const { text, description, onClick } = MenuItem;
+    const menuItem = <a href="#" class="item" title={(description) || false}>{text}</a>;
+    menuItem.addEventListener('click', onClick);
+    return menuItem;
 }
 
 function getContextData(name) {
