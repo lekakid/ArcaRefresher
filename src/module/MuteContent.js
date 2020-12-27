@@ -24,6 +24,7 @@ function load() {
             muteContent('comment');
         }
         if(Parser.hasBoard()) {
+            muteNotice();
             mutePreview();
             muteContent('board');
         }
@@ -240,6 +241,44 @@ function mutePreview() {
     });
 }
 
+function muteNotice() {
+    if(!Configure.get(MUTE_NOTICE)) return;
+
+    if(document.readyState != 'complete') {
+        window.addEventListener('load', () => {
+            muteNotice();
+        }, { once: true });
+        return;
+    }
+
+    const itemContainer = Parser.queryView('board');
+    const notices = itemContainer.querySelectorAll('a.vrow.notice-board');
+    let noticeCount = 0;
+    for(const notice of notices) {
+        if(notice != notices[notices.length - 1]) {
+            notice.classList.add('filtered');
+            notice.classList.add('filtered-notice');
+            noticeCount += 1;
+        }
+        else {
+            let unfilterBtn = itemContainer.querySelector('.notice-unfilter');
+            if(!unfilterBtn) {
+                // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
+                unfilterBtn = (
+                    <a class="vrow notice notice-unfilter">
+                        <div class="vrow-top">숨겨진 공지 펼치기(<span class="notice-filter-count">{noticeCount}</span>개) <span class="ion-android-archive" /></div>
+                    </a>
+                );
+                unfilterBtn.addEventListener('click', () => {
+                    itemContainer.classList.add('show-filtered-notice');
+                    unfilterBtn.style.display = 'none';
+                });
+                notice.insertAdjacentElement('afterend', unfilterBtn);
+            }
+        }
+    }
+}
+
 const ContentTypeString = {
     keyword: '키워드',
     user: '사용자',
@@ -258,34 +297,15 @@ function muteContent(viewQuery) {
 
     const itemContainer = Parser.queryView(viewQuery);
 
-    let unfilterBtn = itemContainer.querySelector('.notice-unfilter');
-    if(viewQuery == 'board' && !unfilterBtn) {
-        // 사용자가 공식 공지 숨기기 기능을 사용하지 않음
-        unfilterBtn = (
-            <a class="vrow notice notice-unfilter">
-                <div class="vrow-top">숨겨진 공지 펼치기(<span class="notice-filter-count">0</span>개) <span class="ion-android-archive" /></div>
-            </a>
-        );
-        unfilterBtn.addEventListener('click', () => {
-            itemContainer.classList.add('show-filtered-notice');
-            unfilterBtn.style.display = 'none';
-        });
-        itemContainer.querySelector('a.vrow:not(.notice)').insertAdjacentElement('beforebegin', unfilterBtn);
-    }
-
-    const channel = Parser.getChannelInfo().id;
-
     const count = {};
     for(const key of Object.keys(ContentTypeString)) {
         count[key] = 0;
     }
-    let noticeCount = 0;
 
+    const channel = Parser.getChannelInfo().id;
     let userlist = Configure.get(BLOCK_USER, []);
     let keywordlist = Configure.get(BLOCK_KEYWORD, []);
     const categoryConfig = Configure.get(MUTE_CATEGORY, {})[channel];
-    let noticeConfig = unsafeWindow.LiveConfig.hideChannelNotice;
-    noticeConfig = noticeConfig || Configure.get(MUTE_NOTICE, false);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);
@@ -362,14 +382,6 @@ function muteContent(viewQuery) {
             count.deleted += 1;
             count.all += 1;
         }
-
-        if(item.classList.contains('notice-board') && item.nextElementSibling.classList.contains('notice-board')) {
-            if(noticeConfig) {
-                item.classList.add('filtered');
-                item.classList.add('filtered-notice');
-                noticeCount += 1;
-            }
-        }
     });
 
     let toggleHeader = itemContainer.querySelector('.frontend-header');
@@ -405,10 +417,5 @@ function muteContent(viewQuery) {
                 });
             }
         }
-    }
-
-    if(noticeCount > 0 && !itemContainer.classList.contains('show-filtered-notice')) {
-        const noticeCountElement = unfilterBtn.querySelector('.notice-filter-count');
-        noticeCountElement.textContent = noticeCount;
     }
 }
