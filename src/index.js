@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    UserMemo.addSetting();
 
     ContextMenu.initialize();
 
@@ -58,40 +57,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     NotificationIconColor.load();
     RatedownGuard.load();
     ShortCut.load();
+    UserMemo.load();
 
     ClipboardUpload.load();
     MyImage.load();
     TemporaryArticle.load();
-
-    if(Parser.hasArticle()) {
-        try {
-            UserMemo.apply();
-        }
-        catch (error) {
-            console.error(error);
-            console.warn('게시물 처리 중 오류 발생');
-        }
-    }
-
-    if(Parser.hasComment()) {
-            callback() {
-                // 모듈 로딩 방식 리팩토링 후 분리
-        CommentRefresh.addRefreshCallback({
-            priority: 100,
-                UserMemo.apply();
-            },
-    }
-    if(Parser.hasBoard()) {
-        });
-
-        UserMemo.apply();
-
-            priority: 100,
-        AutoRefresher.addRefreshCallback({
-            callback() {
-                UserMemo.apply();
-                // 모듈 로딩 방식 리팩토링 후 분리
-            },
-        });
-    }
 }());

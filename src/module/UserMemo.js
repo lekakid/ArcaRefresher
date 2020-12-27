@@ -1,11 +1,34 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+import AutoRefresher from './AutoRefresher';
+import CommentRefresh from './CommentRefresh';
+
+export default { load };
 
 const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
 let handlerApplied = false;
+
+function load() {
+    try {
+        addSetting();
+
+        apply();
+
+        AutoRefresher.addRefreshCallback({
+            priority: 100,
+            callback: apply,
+        });
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback: apply,
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const memoList = <select size="6" multiple="" />;
