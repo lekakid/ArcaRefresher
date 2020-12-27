@@ -59,6 +59,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     FullAreaReply.load();
     ImageDownloader.load();
     ImageSearch.load();
+    IPScouter.load();
 
     try {
         LiveModifier.apply();
@@ -74,7 +75,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             MuteContent.addArticleMenu();
 
             UserMemo.apply();
-            IPScouter.apply('article');
 
             RatedownGuard.apply();
         }
@@ -95,7 +95,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             callback() {
                 // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
-                IPScouter.apply('comment');
 
                 MuteEmoticon.apply();
                 MuteContent.muteContent('comment');
@@ -105,7 +104,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasBoard()) {
         UserMemo.apply();
-        IPScouter.apply('board');
 
         MuteContent.mutePreview();
         MuteContent.muteContent('board');
@@ -116,7 +114,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             callback() {
                 // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
-                IPScouter.apply('board');
 
                 MuteContent.mutePreview();
                 MuteContent.muteContent('board');
