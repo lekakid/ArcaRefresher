@@ -58,6 +58,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ArticleRemover.load();
     AutoRefresher.load();
     CategoryColor.load();
+    CommentRefresh.load();
 
     try {
         LiveModifier.apply();
@@ -88,7 +89,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         MuteEmoticon.mute();
         MuteContent.muteContent('comment');
 
-        CommentRefresh.apply();
         MuteEmoticon.apply();
         FullAreaReply.apply();
 
