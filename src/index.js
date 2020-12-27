@@ -1,7 +1,7 @@
 import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
 import Parser from './core/Parser';
-import PageLoader from './core/PageLoader';
+import { waitForElement } from './util/ElementDetector';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -28,10 +28,12 @@ import FadeStyle from './css/Fade.css';
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
 (async function () {
-    await PageLoader.load();
+    await waitForElement('head');
 
     // Load Global CSS
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
+
+    await waitForElement('.content-wrapper');
 
     Parser.initialize();
 
