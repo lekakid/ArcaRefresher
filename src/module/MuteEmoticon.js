@@ -1,9 +1,32 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
+import CommentRefresh from './CommentRefresh';
 
-export default { addSetting, mute, apply };
+export default { load };
 
 const BLOCK_EMOTICON = { key: 'blockEmoticon', defaultValue: {} };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasComment()) {
+            mute();
+            apply();
+        }
+
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback() {
+                mute();
+                apply();
+            },
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const muteEmoticon = <select size="6" multiple="" />;

@@ -40,7 +40,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Configure.initialize();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
-    MuteEmoticon.addSetting();
     MyImage.addSetting();
     NewWindow.addSetting();
     NotificationIconColor.addSetting();
@@ -60,6 +59,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     IPScouter.load();
     LiveModifier.load();
     MuteContent.load();
+    MuteEmoticon.load();
 
     try {
         NotificationIconColor.apply();
@@ -82,17 +82,11 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     }
 
     if(Parser.hasComment()) {
-        MuteEmoticon.mute();
-
-        MuteEmoticon.apply();
-
         CommentRefresh.addRefreshCallback({
             priority: 100,
             callback() {
                 // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
-
-                MuteEmoticon.apply();
             },
         });
     }
