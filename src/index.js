@@ -59,6 +59,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     AutoRefresher.load();
     CategoryColor.load();
     CommentRefresh.load();
+    FullAreaReply.load();
 
     try {
         LiveModifier.apply();
@@ -90,7 +91,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         MuteContent.muteContent('comment');
 
         MuteEmoticon.apply();
-        FullAreaReply.apply();
 
         CommentRefresh.addRefreshCallback({
             priority: 100,
