@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    ShortCut.addSetting();
     UserMemo.addSetting();
 
     ContextMenu.initialize();
@@ -58,6 +57,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     NewWindow.load();
     NotificationIconColor.load();
     RatedownGuard.load();
+    ShortCut.load();
 
     ClipboardUpload.load();
     MyImage.load();
@@ -93,8 +93,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             },
         });
     }
-
-    ShortCut.apply(Parser.getCurrentState());
 
     if(Parser.hasWriteView()) {
         await waitForElement('.fr-box');
