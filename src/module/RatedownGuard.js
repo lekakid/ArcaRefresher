@@ -1,8 +1,22 @@
 import Configure from '../core/Configure';
+import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+export default { load };
 
 const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const ratedownBlock = (

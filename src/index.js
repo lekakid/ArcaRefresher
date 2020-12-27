@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    RatedownGuard.addSetting();
     ShortCut.addSetting();
     UserMemo.addSetting();
 
@@ -58,6 +57,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     MuteEmoticon.load();
     NewWindow.load();
     NotificationIconColor.load();
+    RatedownGuard.load();
 
     ClipboardUpload.load();
     MyImage.load();
@@ -65,8 +65,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     if(Parser.hasArticle()) {
         try {
             UserMemo.apply();
-
-            RatedownGuard.apply();
         }
         catch (error) {
             console.warn('게시물 처리 중 오류 발생');
