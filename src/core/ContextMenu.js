@@ -2,9 +2,9 @@ import contextSheet from '../css/ContextMenu.css';
 
 export default {
     initialize,
-    hideContextMenu,
-    registContextMenu,
-    createContextMenuItem,
+    hide,
+    addMenuGroup,
+    createMenu,
     getContextData,
 };
 
@@ -22,7 +22,7 @@ function initialize() {
 
     document.addEventListener('contextmenu', event => {
         if(!contextMenuView.classList.contains('hidden')) {
-            hideContextMenu();
+            hide();
             return;
         }
 
@@ -31,10 +31,10 @@ function initialize() {
                 const url = event.target.parentNode.href;
                 contextMenuView.dataset.url = url;
 
-                removeContextMenu();
-                appendContextMenu(eventList.clickOnImage);
+                removeMenuAll();
+                appendMenu(eventList.clickOnImage);
 
-                showContextMenu(event);
+                show(event);
                 event.preventDefault();
                 // return;
             }
@@ -44,7 +44,7 @@ function initialize() {
         if(contextMenuView.classList.contains('hidden')) return;
         if(event.target.closest('#context-menu')) return;
 
-        hideContextMenu();
+        hide();
         event.preventDefault();
     });
     document.addEventListener('scroll', () => {
@@ -52,16 +52,16 @@ function initialize() {
     });
 }
 
-function showContextMenu(event) {
+function show(event) {
     contextMenuView.classList.remove('hidden');
     contextMenuView.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
 }
 
-function hideContextMenu() {
+function hide() {
     contextMenuView.classList.add('hidden');
 }
 
-function registContextMenu(event, contextElement) {
+function addMenuGroup(event, contextElement) {
     if(!eventList.hasOwnProperty(event)) {
         console.error('[ContextMenu.registContextMenu] 존재하지 않는 이벤트 등록');
         return;
@@ -70,13 +70,7 @@ function registContextMenu(event, contextElement) {
     eventList[event].push(contextElement);
 }
 
-function removeContextMenu() {
-    while(contextMenuView.childElementCount) {
-        contextMenuView.removeChild(contextMenuView.children[0]);
-    }
-}
-
-function appendContextMenu(elementArray) {
+function appendMenu(elementArray) {
     let count = 0;
 
     for(const element of elementArray) {
@@ -86,7 +80,13 @@ function appendContextMenu(elementArray) {
     }
 }
 
-function createContextMenuItem(textContent, title) {
+function removeMenuAll() {
+    while(contextMenuView.childElementCount) {
+        contextMenuView.removeChild(contextMenuView.children[0]);
+    }
+}
+
+function createMenu(textContent, title) {
     return (<a href="#" class="item" title={(title) || ''}>{textContent}</a>);
 }
 

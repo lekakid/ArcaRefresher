@@ -16,23 +16,23 @@ function load() {
 }
 
 function addContextMenu() {
-    const searchGoogleItem = ContextMenu.createContextMenuItem('Google 검색');
+    const searchGoogleItem = ContextMenu.createMenu('Google 검색');
     searchGoogleItem.addEventListener('click', event => {
         event.preventDefault();
 
         const url = ContextMenu.getContextData('url');
         window.open(`https://www.google.com/searchbyimage?safe=off&image_url=${url}`);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const searchYandexItem = ContextMenu.createContextMenuItem('Yandex 검색', '러시아 검색엔진입니다.');
+    const searchYandexItem = ContextMenu.createMenu('Yandex 검색', '러시아 검색엔진입니다.');
     searchYandexItem.addEventListener('click', event => {
         event.preventDefault();
 
         const url = ContextMenu.getContextData('url');
         window.open(`https://yandex.com/images/search?rpt=imageview&url=${url}`);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const searchSauceNaoItem = ContextMenu.createContextMenuItem('SauceNao 검색', '망가, 픽시브 이미지 검색을 지원합니다.');
+    const searchSauceNaoItem = ContextMenu.createMenu('SauceNao 검색', '망가, 픽시브 이미지 검색을 지원합니다.');
     searchSauceNaoItem.addEventListener('click', async event => {
         event.preventDefault();
 
@@ -67,9 +67,9 @@ function addContextMenu() {
         const resultDocument = docParser.parseFromString(result.responseText, 'text/html');
         const replaceURL = resultDocument.querySelector('#yourimage a').href.split('image=')[1];
         window.open(`https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const searchTwigatenItem = ContextMenu.createContextMenuItem('TwitGaTen 검색', '트위터 이미지 검색을 지원합니다.');
+    const searchTwigatenItem = ContextMenu.createMenu('TwitGaTen 검색', '트위터 이미지 검색을 지원합니다.');
     searchTwigatenItem.addEventListener('click', async event => {
         event.preventDefault();
 
@@ -99,9 +99,9 @@ function addContextMenu() {
         });
 
         window.open(result.finalUrl);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const searchAscii2dItem = ContextMenu.createContextMenuItem('Ascii2D 검색', '트위터, 픽시브 이미지 검색을 지원합니다.');
+    const searchAscii2dItem = ContextMenu.createMenu('Ascii2D 검색', '트위터, 픽시브 이미지 검색을 지원합니다.');
     searchAscii2dItem.addEventListener('click', async event => {
         event.preventDefault();
 
@@ -148,7 +148,7 @@ function addContextMenu() {
         });
 
         window.open(result.finalUrl);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
 
     const contextElement = (
@@ -161,5 +161,5 @@ function addContextMenu() {
         </div>
     );
 
-    ContextMenu.registContextMenu('clickOnImage', contextElement);
+    ContextMenu.addMenuGroup('clickOnImage', contextElement);
 }

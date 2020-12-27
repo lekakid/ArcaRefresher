@@ -52,7 +52,7 @@ function addSetting() {
 }
 
 function addContextMenu() {
-    const copyClipboardItem = ContextMenu.createContextMenuItem('클립보드에 복사');
+    const copyClipboardItem = ContextMenu.createMenu('클립보드에 복사');
     copyClipboardItem.addEventListener('click', async event => {
         event.preventDefault();
 
@@ -70,9 +70,9 @@ function addContextMenu() {
         const blob = new Blob([buffer], { type: 'image/png' });
         const item = new ClipboardItem({ [blob.type]: blob });
         navigator.clipboard.write([item]);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const saveImageItem = ContextMenu.createContextMenuItem('이미지 저장');
+    const saveImageItem = ContextMenu.createMenu('이미지 저장');
     saveImageItem.addEventListener('click', async event => {
         event.preventDefault();
 
@@ -88,15 +88,15 @@ function addContextMenu() {
                 event.target.textContent = title;
             });
         window.saveAs(file, `image.${file.type.split('/')[1]}`);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
-    const copyURLItem = ContextMenu.createContextMenuItem('이미지 주소 복사');
+    const copyURLItem = ContextMenu.createMenu('이미지 주소 복사');
     copyURLItem.addEventListener('click', event => {
         event.preventDefault();
 
         const url = ContextMenu.getContextData('url');
         navigator.clipboard.writeText(url);
-        ContextMenu.hideContextMenu();
+        ContextMenu.hide();
     });
 
     const contextElement = (
@@ -107,7 +107,7 @@ function addContextMenu() {
         </div>
     );
 
-    ContextMenu.registContextMenu('clickOnImage', contextElement);
+    ContextMenu.addMenuGroup('clickOnImage', contextElement);
 }
 
 function apply() {
