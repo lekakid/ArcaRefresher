@@ -4,7 +4,7 @@ import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
 
-export default { addSetting, apply, addRefreshCallback };
+export default { load, addRefreshCallback };
 
 const REFRESH_TIME = { key: 'refreshTime', defaultValue: 3 };
 const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
@@ -14,6 +14,20 @@ let loader = null;
 let loopInterval = null;
 
 const refreshCallbackList = [];
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) return;
+        if(Parser.hasBoard()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const refreshTimeSelect = (

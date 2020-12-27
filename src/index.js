@@ -34,113 +34,33 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
 
     await waitForElement('.content-wrapper');
+    Configure.initialize();
+    ContextMenu.initialize();
 
+    LiveModifier.load();
+    NotificationIconColor.load();
+
+    await waitForElement('footer');
     Parser.initialize();
 
-    Configure.initialize();
-    ArticleRemover.addSetting();
-    AutoRefresher.addSetting();
-    CategoryColor.addSetting();
-    ImageDownloader.addSetting();
-    RatedownGuard.addSetting();
-    ShortCut.addSetting();
-    MuteContent.addSetting();
-    MuteEmoticon.addSetting();
-    MyImage.addSetting();
-    NewWindow.addSetting();
-    NotificationIconColor.addSetting();
-    UserMemo.addSetting();
-    LiveModifier.addSetting();
+    AutoRefresher.load();
+    CommentRefresh.load();
 
-    ContextMenu.initialize();
-    ImageDownloader.addContextMenu();
-    MyImage.addContextMenu();
-    ImageSearch.addContextMenu();
+    AnonymousNick.load();
+    ArticleRemover.load();
+    CategoryColor.load();
+    FullAreaReply.load();
+    ImageDownloader.load();
+    ImageSearch.load();
+    IPScouter.load();
+    MuteContent.load();
+    MuteEmoticon.load();
+    NewWindow.load();
+    RatedownGuard.load();
+    ShortCut.load();
+    UserMemo.load();
 
-    try {
-        LiveModifier.apply();
-        NotificationIconColor.apply();
-    }
-    catch(error) {
-        console.warn('글로벌 모듈 적용 중 오류 발생');
-        console.error(error);
-    }
-
-    if(Parser.hasArticle()) {
-        try {
-            MuteContent.addArticleMenu();
-            AnonymousNick.addArticleMenu();
-
-            UserMemo.apply();
-            IPScouter.apply('article');
-
-            RatedownGuard.apply();
-            ImageDownloader.apply();
-        }
-        catch (error) {
-            console.warn('게시물 처리 중 오류 발생');
-            console.error(error);
-        }
-    }
-
-    if(Parser.hasComment()) {
-        MuteEmoticon.mute();
-        MuteContent.muteContent('comment');
-
-        CommentRefresh.apply();
-        MuteEmoticon.apply();
-        FullAreaReply.apply();
-
-        CommentRefresh.addRefreshCallback({
-            priority: 100,
-            callback() {
-                // 모듈 로딩 방식 리팩토링 후 분리
-                UserMemo.apply();
-                IPScouter.apply('comment');
-
-                MuteEmoticon.apply();
-                MuteContent.muteContent('comment');
-            },
-        });
-    }
-
-    if(Parser.hasBoard()) {
-        UserMemo.apply();
-        IPScouter.apply('board');
-
-        CategoryColor.apply();
-        MuteContent.mutePreview();
-        MuteContent.muteContent('board');
-        NewWindow.apply();
-
-        AutoRefresher.addRefreshCallback({
-            priority: 100,
-            callback() {
-                // 모듈 로딩 방식 리팩토링 후 분리
-                UserMemo.apply();
-                IPScouter.apply('board');
-
-                CategoryColor.apply();
-                MuteContent.mutePreview();
-                MuteContent.muteContent('board');
-                NewWindow.apply();
-                ArticleRemover.remove();
-            },
-        });
-
-        if (!Parser.hasArticle()) {
-            AutoRefresher.apply();
-        }
-    }
-
-    ShortCut.apply(Parser.getCurrentState());
-
-    if(Parser.hasWriteView()) {
-        await waitForElement('.fr-box');
-        // const FroalaEditor = unsafeWindow.FroalaEditor;
-        const editor = unsafeWindow.FroalaEditor('#content');
-        ClipboardUpload.apply(editor);
-        MyImage.apply(editor);
-        TemporaryArticle.apply(editor);
-    }
+    ClipboardUpload.load();
+    MyImage.load();
+    TemporaryArticle.load();
 }());

@@ -1,9 +1,20 @@
 import Configure from '../core/Configure';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { addSetting, apply };
+export default { load };
 
 const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
+
+function load() {
+    try {
+        addSetting();
+
+        apply();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const inputElement = <input type="text" placeholder="FFC107" />;

@@ -1,11 +1,29 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { addSetting, remove };
+import AutoRefresher from './AutoRefresher';
+
+export default { load };
 
 const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: true };
 const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
 const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: [] };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasBoard()) {
+            AutoRefresher.addRefreshCallback({
+                priority: 999,
+                callback: remove,
+            });
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const removeTestMode = (

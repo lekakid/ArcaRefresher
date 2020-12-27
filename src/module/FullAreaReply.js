@@ -1,6 +1,17 @@
 import Parser from '../core/Parser';
 
-export default { apply };
+export default { load };
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            apply();
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
 function apply() {
     const commentArea = Parser.queryView('comment');

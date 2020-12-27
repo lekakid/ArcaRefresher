@@ -1,7 +1,7 @@
 import ArticleMenu from '../core/ArticleMenu';
 import Parser from '../core/Parser';
 
-export default { addArticleMenu };
+export default { load };
 
 const DefaultPrefix = [
     '웃는', '화난', '불쌍한', '즐거운', '건장한',
@@ -13,6 +13,17 @@ const DefaultSuffix = [
     '미호', '캬루', '둘리', '도바킨', '테레사',
     '윾돌이', '보노보노', '다비', '공룡', '아야',
 ];
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            addArticleMenu();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addArticleMenu() {
     ArticleMenu.addHeaderBtn({

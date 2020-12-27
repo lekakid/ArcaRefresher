@@ -1,8 +1,25 @@
 import Configure from '../core/Configure';
+import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+export default { load };
 
 const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            apply('article');
+        }
+        else if(Parser.hasBoard()) {
+            apply('board');
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const shortCut = (

@@ -1,10 +1,29 @@
 import Configure from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
+import { waitForElement } from '../util/ElementDetector';
 
-export default { addSetting, addContextMenu, apply };
+export default { load };
 
 const MY_IMAGES = { key: 'myImages', defaultValue: {} };
+
+async function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            addContextMenu();
+        }
+
+        if(Parser.hasWriteView()) {
+            await waitForElement('.fr-box');
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const imgList = <select size="6" multiple="" />;
@@ -72,8 +91,9 @@ function addContextMenu() {
     ContextMenu.registContextMenu('clickOnImage', contextElement);
 }
 
-function apply(editor) {
+function apply() {
     const channel = Parser.getChannelInfo().id;
+    const editor = unsafeWindow.FroalaEditor('#content');
     if(editor.core.isEmpty()) {
         const imgList = Configure.get(MY_IMAGES)[channel];
         if(!imgList || !imgList.length) return;

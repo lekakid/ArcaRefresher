@@ -1,9 +1,20 @@
 import Parser from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
-export default { apply, addRefreshCallback };
+export default { load, addRefreshCallback };
 
 const refreshCallbackList = [];
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function apply() {
     const commentArea = Parser.queryView('comment');

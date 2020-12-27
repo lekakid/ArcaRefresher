@@ -1,7 +1,19 @@
 import ContextMenu from '../core/ContextMenu';
+import Parser from '../core/Parser';
 import { getBlob } from '../util/DownloadManager';
 
-export default { addContextMenu };
+export default { load };
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            addContextMenu();
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
 function addContextMenu() {
     const searchGoogleItem = ContextMenu.createContextMenuItem('Google 검색');

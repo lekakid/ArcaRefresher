@@ -3,18 +3,49 @@ import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
 import MuteStyle from '../css/MuteContent.css';
+import AutoRefresher from './AutoRefresher';
+import CommentRefresh from './CommentRefresh';
 
-export default {
-    addSetting,
-    addArticleMenu,
-    mutePreview,
-    muteContent,
-};
+export default { load };
 
 const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
 const BLOCK_KEYWORD = { key: 'blockKeyword', defaultValue: [] };
 const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
 const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            addArticleMenu();
+        }
+        if(Parser.hasComment()) {
+            muteContent('comment');
+        }
+        if(Parser.hasBoard()) {
+            mutePreview();
+            muteContent('board');
+        }
+
+        AutoRefresher.addRefreshCallback({
+            priority: 100,
+            callback() {
+                mutePreview();
+                muteContent('board');
+            },
+        });
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback() {
+                muteContent('comment');
+            },
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     document.head.append(<style>{MuteStyle}</style>);
