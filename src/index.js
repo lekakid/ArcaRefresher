@@ -34,27 +34,28 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
 
     await waitForElement('.content-wrapper');
+    Configure.initialize();
+    ContextMenu.initialize();
 
+    LiveModifier.load();
+    NotificationIconColor.load();
+
+    await waitForElement('footer');
     Parser.initialize();
 
-    Configure.initialize();
-
-    ContextMenu.initialize();
+    AutoRefresher.load();
+    CommentRefresh.load();
 
     AnonymousNick.load();
     ArticleRemover.load();
-    AutoRefresher.load();
     CategoryColor.load();
-    CommentRefresh.load();
     FullAreaReply.load();
     ImageDownloader.load();
     ImageSearch.load();
     IPScouter.load();
-    LiveModifier.load();
     MuteContent.load();
     MuteEmoticon.load();
     NewWindow.load();
-    NotificationIconColor.load();
     RatedownGuard.load();
     ShortCut.load();
     UserMemo.load();
