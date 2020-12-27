@@ -10,7 +10,7 @@ const TEMPORARY_ARTICLES = { key: 'tempArticles', defaultValue: {} };
 
 async function load() {
     try {
-        await waitForElement();
+        await waitForElement('.fr-box');
         apply();
     }
     catch(error) {
