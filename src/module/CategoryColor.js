@@ -1,10 +1,30 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
+
+import AutoRefresher from './AutoRefresher';
 import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
 
-export default { addSetting, apply };
+export default { load };
 
 const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasBoard()) {
+            apply();
+        }
+
+        AutoRefresher.addRefreshCallback({
+            priority: 0,
+            callback: apply,
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     // 카테고리 목록 등록

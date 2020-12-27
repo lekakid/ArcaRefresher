@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    CategoryColor.addSetting();
     ImageDownloader.addSetting();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
@@ -58,6 +57,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     AnonymousNick.load();
     ArticleRemover.load();
     AutoRefresher.load();
+    CategoryColor.load();
 
     try {
         LiveModifier.apply();
@@ -109,7 +109,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         UserMemo.apply();
         IPScouter.apply('board');
 
-        CategoryColor.apply();
         MuteContent.mutePreview();
         MuteContent.muteContent('board');
         NewWindow.apply();
@@ -121,7 +120,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                 UserMemo.apply();
                 IPScouter.apply('board');
 
-                CategoryColor.apply();
                 MuteContent.mutePreview();
                 MuteContent.muteContent('board');
                 NewWindow.apply();
