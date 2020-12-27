@@ -5,9 +5,23 @@ import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
 
-export default { addSetting, addContextMenu, apply };
+export default { load };
 
 const FILENAME = { key: 'imageDownloaderFileName', defaultValue: '%title%' };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            addContextMenu();
+            apply();
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const downloadName = (

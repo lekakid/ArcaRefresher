@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    ImageDownloader.addSetting();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
     MuteContent.addSetting();
@@ -50,7 +49,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     LiveModifier.addSetting();
 
     ContextMenu.initialize();
-    ImageDownloader.addContextMenu();
     MyImage.addContextMenu();
     ImageSearch.addContextMenu();
 
@@ -60,6 +58,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     CategoryColor.load();
     CommentRefresh.load();
     FullAreaReply.load();
+    ImageDownloader.load();
 
     try {
         LiveModifier.apply();
@@ -78,7 +77,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
             IPScouter.apply('article');
 
             RatedownGuard.apply();
-            ImageDownloader.apply();
         }
         catch (error) {
             console.warn('게시물 처리 중 오류 발생');
