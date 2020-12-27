@@ -36,11 +36,11 @@ function addSetting() {
         option: removeKeywordList,
         description: '지정한 유저가 작성한 게시물을 삭제합니다.',
         callback: {
-            save: () => {
-                Configure.set(AUTO_REMOVE_USER, removeKeywordList.value.split('\n').filter(i => i != ''));
+            save() {
+                Configure.set(AUTO_REMOVE_KEYWORD, removeKeywordList.value.split('\n').filter(i => i != ''));
             },
-            load: () => {
-                removeKeywordList.value = Configure.get(AUTO_REMOVE_USER).join('\n');
+            load() {
+                removeKeywordList.value = Configure.get(AUTO_REMOVE_KEYWORD).join('\n');
             },
         },
     });
@@ -52,10 +52,10 @@ function addSetting() {
         option: removeUserList,
         description: '지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.',
         callback: {
-            save: () => {
+            save() {
                 Configure.set(AUTO_REMOVE_USER, removeUserList.value.split('\n').filter(i => i != ''));
             },
-            load: () => {
+            load() {
                 removeUserList.value = Configure.get(AUTO_REMOVE_USER).join('\n');
             },
         },
