@@ -1,9 +1,22 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+export default { load };
 
 const OPEN_NEW_WINDOW = { key: 'openNewWindow', defaultValue: false };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasBoard()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const newWindow = (
