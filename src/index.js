@@ -40,7 +40,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Configure.initialize();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
-    NotificationIconColor.addSetting();
     UserMemo.addSetting();
 
     ContextMenu.initialize();
@@ -58,17 +57,10 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     MuteContent.load();
     MuteEmoticon.load();
     NewWindow.load();
+    NotificationIconColor.load();
 
     ClipboardUpload.load();
     MyImage.load();
-
-    try {
-        NotificationIconColor.apply();
-    }
-    catch(error) {
-        console.warn('글로벌 모듈 적용 중 오류 발생');
-        console.error(error);
-    }
 
     if(Parser.hasArticle()) {
         try {
