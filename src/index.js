@@ -91,12 +91,16 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         MuteEmoticon.apply();
         FullAreaReply.apply();
 
-        Parser.queryView('comment').addEventListener('ar_refresh', () => {
-            UserMemo.apply();
-            IPScouter.apply('comment');
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback() {
+                // 모듈 로딩 방식 리팩토링 후 분리
+                UserMemo.apply();
+                IPScouter.apply('comment');
 
-            MuteEmoticon.apply();
-            MuteContent.muteContent('comment');
+                MuteEmoticon.apply();
+                MuteContent.muteContent('comment');
+            },
         });
     }
 
@@ -109,15 +113,19 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         MuteContent.muteContent('board');
         NewWindow.apply();
 
-        Parser.queryView('board').addEventListener('ar_refresh', () => {
-            UserMemo.apply();
-            IPScouter.apply('board');
+        AutoRefresher.addRefreshCallback({
+            priority: 100,
+            callback() {
+                // 모듈 로딩 방식 리팩토링 후 분리
+                UserMemo.apply();
+                IPScouter.apply('board');
 
-            CategoryColor.apply();
-            MuteContent.mutePreview();
-            MuteContent.muteContent('board');
-            NewWindow.apply();
-            ArticleRemover.remove();
+                CategoryColor.apply();
+                MuteContent.mutePreview();
+                MuteContent.muteContent('board');
+                NewWindow.apply();
+                ArticleRemover.remove();
+            },
         });
 
         if (!Parser.hasArticle()) {
