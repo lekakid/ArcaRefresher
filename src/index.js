@@ -57,6 +57,8 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     MyImage.addContextMenu();
     ImageSearch.addContextMenu();
 
+    AnonymousNick.load();
+
     try {
         LiveModifier.apply();
         NotificationIconColor.apply();
@@ -69,7 +71,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     if(Parser.hasArticle()) {
         try {
             MuteContent.addArticleMenu();
-            AnonymousNick.addArticleMenu();
 
             UserMemo.apply();
             IPScouter.apply('article');
