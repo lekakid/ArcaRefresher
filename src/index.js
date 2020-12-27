@@ -40,7 +40,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Configure.initialize();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
-    MuteContent.addSetting();
     MuteEmoticon.addSetting();
     MyImage.addSetting();
     NewWindow.addSetting();
@@ -60,6 +59,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ImageSearch.load();
     IPScouter.load();
     LiveModifier.load();
+    MuteContent.load();
 
     try {
         NotificationIconColor.apply();
@@ -71,8 +71,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasArticle()) {
         try {
-            MuteContent.addArticleMenu();
-
             UserMemo.apply();
 
             RatedownGuard.apply();
@@ -85,7 +83,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     if(Parser.hasComment()) {
         MuteEmoticon.mute();
-        MuteContent.muteContent('comment');
 
         MuteEmoticon.apply();
 
@@ -96,7 +93,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                 UserMemo.apply();
 
                 MuteEmoticon.apply();
-                MuteContent.muteContent('comment');
             },
         });
     }
@@ -104,8 +100,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     if(Parser.hasBoard()) {
         UserMemo.apply();
 
-        MuteContent.mutePreview();
-        MuteContent.muteContent('board');
         NewWindow.apply();
 
         AutoRefresher.addRefreshCallback({
@@ -114,8 +108,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                 // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
 
-                MuteContent.mutePreview();
-                MuteContent.muteContent('board');
                 NewWindow.apply();
             },
         });
