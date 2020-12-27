@@ -40,13 +40,11 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Configure.initialize();
     RatedownGuard.addSetting();
     ShortCut.addSetting();
-    MyImage.addSetting();
     NewWindow.addSetting();
     NotificationIconColor.addSetting();
     UserMemo.addSetting();
 
     ContextMenu.initialize();
-    MyImage.addContextMenu();
 
     AnonymousNick.load();
     ArticleRemover.load();
@@ -61,8 +59,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     MuteContent.load();
     MuteEmoticon.load();
 
-    await waitForElement('.fr-box');
     ClipboardUpload.load();
+    MyImage.load();
+
     try {
         NotificationIconColor.apply();
     }
@@ -115,7 +114,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
         await waitForElement('.fr-box');
         // const FroalaEditor = unsafeWindow.FroalaEditor;
         const editor = unsafeWindow.FroalaEditor('#content');
-        MyImage.apply(editor);
         TemporaryArticle.apply(editor);
     }
 }());
