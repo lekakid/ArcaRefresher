@@ -46,7 +46,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     NewWindow.addSetting();
     NotificationIconColor.addSetting();
     UserMemo.addSetting();
-    LiveModifier.addSetting();
 
     ContextMenu.initialize();
     MyImage.addContextMenu();
@@ -60,9 +59,9 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     ImageDownloader.load();
     ImageSearch.load();
     IPScouter.load();
+    LiveModifier.load();
 
     try {
-        LiveModifier.apply();
         NotificationIconColor.apply();
     }
     catch(error) {

@@ -2,7 +2,7 @@ import Configure from '../core/Configure';
 
 import sheetLiveModifier from '../css/LiveModifier.css';
 
-export default { addSetting, apply };
+export default { load };
 
 const FIX_HEADER = { key: 'fixHeader', defaultValue: true };
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
@@ -10,6 +10,17 @@ const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 const RESIZE_MEDIA = { key: 'resizeMedia', defaultValue: '100' };
+
+function load() {
+    try {
+        addSetting();
+
+        apply();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
     const fixHeader = (
