@@ -1,13 +1,25 @@
 import Configure from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
+import { waitForElement } from '../util/ElementDetector';
 
 import stylesheet from '../css/TemporaryArticle.css';
 
-export default { apply };
+export default { load };
 
 const TEMPORARY_ARTICLES = { key: 'tempArticles', defaultValue: {} };
 
-function apply(editor) {
+async function load() {
+    try {
+        await waitForElement();
+        apply();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
+
+function apply() {
+    const editor = unsafeWindow.FroalaEditor('#content');
     const tempArticles = Configure.get(TEMPORARY_ARTICLES);
 
     const btns = document.querySelector('.btns');

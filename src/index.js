@@ -61,43 +61,37 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     ClipboardUpload.load();
     MyImage.load();
+    TemporaryArticle.load();
 
     if(Parser.hasArticle()) {
         try {
             UserMemo.apply();
         }
         catch (error) {
-            console.warn('게시물 처리 중 오류 발생');
             console.error(error);
+            console.warn('게시물 처리 중 오류 발생');
         }
     }
 
     if(Parser.hasComment()) {
+            callback() {
+                // 모듈 로딩 방식 리팩토링 후 분리
         CommentRefresh.addRefreshCallback({
             priority: 100,
-            callback() {
-                // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
             },
-        });
     }
-
     if(Parser.hasBoard()) {
+        });
+
         UserMemo.apply();
 
-        AutoRefresher.addRefreshCallback({
             priority: 100,
+        AutoRefresher.addRefreshCallback({
             callback() {
-                // 모듈 로딩 방식 리팩토링 후 분리
                 UserMemo.apply();
+                // 모듈 로딩 방식 리팩토링 후 분리
             },
         });
-    }
-
-    if(Parser.hasWriteView()) {
-        await waitForElement('.fr-box');
-        // const FroalaEditor = unsafeWindow.FroalaEditor;
-        const editor = unsafeWindow.FroalaEditor('#content');
-        TemporaryArticle.apply(editor);
     }
 }());
