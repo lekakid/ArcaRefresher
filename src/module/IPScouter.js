@@ -187,7 +187,6 @@ function load() {
     try {
         if(Parser.hasArticle()) {
             apply('article');
-            apply('comment');
         }
         if(Parser.hasBoard()) {
             apply('board');
