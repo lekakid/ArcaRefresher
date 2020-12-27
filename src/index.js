@@ -50,7 +50,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     ContextMenu.initialize();
     MyImage.addContextMenu();
-    ImageSearch.addContextMenu();
 
     AnonymousNick.load();
     ArticleRemover.load();
@@ -59,6 +58,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     CommentRefresh.load();
     FullAreaReply.load();
     ImageDownloader.load();
+    ImageSearch.load();
 
     try {
         LiveModifier.apply();
