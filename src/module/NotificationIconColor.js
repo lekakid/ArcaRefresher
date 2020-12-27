@@ -3,7 +3,7 @@ import { getRandomColor } from '../util/ColorManager';
 
 export default { addSetting, apply };
 
-const NOTIFY_COLOR = 'notificationIconColor';
+const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 
 function addSetting() {
     const inputElement = <input type="text" placeholder="FFC107" />;
@@ -43,17 +43,17 @@ function addSetting() {
         ),
         callback: {
             save() {
-                GM_setValue(NOTIFY_COLOR, inputElement.value);
+                Configure.set(NOTIFY_COLOR, inputElement.value);
             },
             load() {
-                inputElement.value = GM_getValue(NOTIFY_COLOR, '');
+                inputElement.value = Configure.get(NOTIFY_COLOR);
             },
         },
     });
 }
 
 function apply() {
-    const color = GM_getValue(NOTIFY_COLOR, '');
+    const color = Configure.get(NOTIFY_COLOR);
 
     const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
     if(notificationIcon == null) return;

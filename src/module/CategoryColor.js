@@ -4,7 +4,7 @@ import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
 
 export default { addSetting, apply };
 
-const CATEGORY_COLOR = 'categoryColor';
+const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
 function addSetting() {
     // 카테고리 목록 등록
@@ -96,7 +96,7 @@ function addSetting() {
         description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',
         callback: {
             save() {
-                const colorConfig = GM_getValue(CATEGORY_COLOR, { [channel]: {} });
+                const colorConfig = Configure.get(CATEGORY_COLOR);
 
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {
@@ -112,10 +112,10 @@ function addSetting() {
                     };
                 }
 
-                GM_setValue(CATEGORY_COLOR, colorConfig);
+                Configure.set(CATEGORY_COLOR, colorConfig);
             },
             load() {
-                const channelConfig = GM_getValue(CATEGORY_COLOR, {})[channel];
+                const channelConfig = Configure.get(CATEGORY_COLOR)[channel];
                 if(!channelConfig) return;
 
                 for(const element of tbody.children) {
@@ -155,7 +155,7 @@ function addSetting() {
 }
 
 function apply() {
-    const categoryConfig = GM_getValue(CATEGORY_COLOR, {});
+    const categoryConfig = Configure.get(CATEGORY_COLOR);
     const channel = Parser.getChannelInfo().id;
     if(!categoryConfig[channel]) return;
 

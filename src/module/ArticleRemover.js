@@ -3,9 +3,9 @@ import Parser from '../core/Parser';
 
 export default { addSetting, remove };
 
-const AUTO_REMOVE_USER = 'autoRemoveUser';
-const AUTO_REMOVE_KEYWORD = 'autoRemoveKeyword';
-const USE_AUTO_REMOVER_TEST = 'useAutoRemoverTest';
+const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: true };
+const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
+const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: [] };
 
 function addSetting() {
     const removeTestMode = (
@@ -21,10 +21,10 @@ function addSetting() {
         description: '게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.',
         callback: {
             save() {
-                GM_setValue(USE_AUTO_REMOVER_TEST, removeTestMode.value == 'true');
+                Configure.set(USE_AUTO_REMOVER_TEST, removeTestMode.value == 'true');
             },
             load() {
-                removeTestMode.value = GM_getValue(USE_AUTO_REMOVER_TEST, true);
+                removeTestMode.value = Configure.get(USE_AUTO_REMOVER_TEST);
             },
         },
     });
@@ -37,10 +37,10 @@ function addSetting() {
         description: '지정한 유저가 작성한 게시물을 삭제합니다.',
         callback: {
             save: () => {
-                GM_setValue(AUTO_REMOVE_USER, removeKeywordList.value.split('\n').filter(i => i != ''));
+                Configure.set(AUTO_REMOVE_USER, removeKeywordList.value.split('\n').filter(i => i != ''));
             },
             load: () => {
-                removeKeywordList.value = GM_getValue(AUTO_REMOVE_USER, []).join('\n');
+                removeKeywordList.value = Configure.get(AUTO_REMOVE_USER).join('\n');
             },
         },
     });
@@ -53,10 +53,10 @@ function addSetting() {
         description: '지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.',
         callback: {
             save: () => {
-                GM_setValue(AUTO_REMOVE_USER, removeUserList.value.split('\n').filter(i => i != ''));
+                Configure.set(AUTO_REMOVE_USER, removeUserList.value.split('\n').filter(i => i != ''));
             },
             load: () => {
-                removeUserList.value = GM_getValue(AUTO_REMOVE_USER, []).join('\n');
+                removeUserList.value = Configure.get(AUTO_REMOVE_USER).join('\n');
             },
         },
     });
@@ -66,9 +66,9 @@ function remove() {
     const form = document.querySelector('.batch-delete-form');
     if(form == null) return false;
 
-    const userlist = GM_getValue(AUTO_REMOVE_USER, []);
-    const keywordlist = GM_getValue(AUTO_REMOVE_KEYWORD, []);
-    const testMode = GM_getValue(USE_AUTO_REMOVER_TEST, true);
+    const userlist = Configure.get(AUTO_REMOVE_USER);
+    const keywordlist = Configure.get(AUTO_REMOVE_KEYWORD);
+    const testMode = Configure.get(USE_AUTO_REMOVER_TEST);
 
     const articles = Parser.queryItems('articles', 'board');
     const articleid = [];

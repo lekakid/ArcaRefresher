@@ -4,12 +4,12 @@ import sheetLiveModifier from '../css/LiveModifier.css';
 
 export default { addSetting, apply };
 
-const FIX_HEADER = 'fixHeader';
-const HIDE_RECENT_VISIT = 'hideRecentVisit';
-const HIDE_SIDEMENU = 'hideSideMenu';
-const HIDE_AVATAR = 'hideAvatar';
-const HIDE_MODIFIED = 'hideModified';
-const RESIZE_MEDIA = 'resizeMedia';
+const FIX_HEADER = { key: 'fixHeader', defaultValue: true };
+const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
+const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
+const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
+const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
+const RESIZE_MEDIA = { key: 'resizeMedia', defaultValue: '100' };
 
 function addSetting() {
     const fixHeader = (
@@ -25,10 +25,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(FIX_HEADER, fixHeader.value == 'true');
+                Configure.set(FIX_HEADER, fixHeader.value == 'true');
             },
             load() {
-                fixHeader.value = GM_getValue(FIX_HEADER, true);
+                fixHeader.value = Configure.get(FIX_HEADER);
             },
         },
     });
@@ -46,10 +46,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(HIDE_RECENT_VISIT, hideRecentVisit.value == 'true');
+                Configure.set(HIDE_RECENT_VISIT, hideRecentVisit.value == 'true');
             },
             load() {
-                hideRecentVisit.value = GM_getValue(HIDE_RECENT_VISIT, false);
+                hideRecentVisit.value = Configure.get(HIDE_RECENT_VISIT);
             },
         },
     });
@@ -67,10 +67,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(HIDE_SIDEMENU, hideSideMenu.value == 'true');
+                Configure.set(HIDE_SIDEMENU, hideSideMenu.value == 'true');
             },
             load() {
-                hideSideMenu.value = GM_getValue(HIDE_SIDEMENU, false);
+                hideSideMenu.value = Configure.get(HIDE_SIDEMENU);
             },
         },
     });
@@ -88,10 +88,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(HIDE_AVATAR, hideAvatar.value == 'true');
+                Configure.set(HIDE_AVATAR, hideAvatar.value == 'true');
             },
             load() {
-                hideAvatar.value = GM_getValue(HIDE_AVATAR, false);
+                hideAvatar.value = Configure.get(HIDE_AVATAR);
             },
         },
     });
@@ -109,10 +109,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(HIDE_MODIFIED, hideModified.value == 'true');
+                Configure.set(HIDE_MODIFIED, hideModified.value == 'true');
             },
             load() {
-                hideModified.value = GM_getValue(HIDE_MODIFIED, false);
+                hideModified.value = Configure.get(HIDE_MODIFIED);
             },
         },
     });
@@ -125,10 +125,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(RESIZE_MEDIA, resizeMedia.value);
+                Configure.set(RESIZE_MEDIA, resizeMedia.value);
             },
             load() {
-                resizeMedia.value = GM_getValue(RESIZE_MEDIA, '100');
+                resizeMedia.value = Configure.get(RESIZE_MEDIA);
             },
         },
     });
@@ -138,22 +138,22 @@ function apply() {
     document.head.append(<style>{sheetLiveModifier}</style>);
     const contentWrapper = document.querySelector('.content-wrapper');
 
-    const fixHeader = GM_getValue(FIX_HEADER, true);
+    const fixHeader = Configure.get(FIX_HEADER);
     if(fixHeader) document.body.classList.add('fix-header');
 
-    const hideRecentVisit = GM_getValue(HIDE_RECENT_VISIT, false);
+    const hideRecentVisit = Configure.get(HIDE_RECENT_VISIT);
     if(hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
 
-    const hideSideMenu = GM_getValue(HIDE_SIDEMENU, false);
+    const hideSideMenu = Configure.get(HIDE_SIDEMENU);
     if(hideSideMenu) contentWrapper.classList.add('hide-sidemenu');
 
-    const hideAvatar = GM_getValue(HIDE_AVATAR, false);
+    const hideAvatar = Configure.get(HIDE_AVATAR);
     if(hideAvatar) contentWrapper.classList.add('hide-avatar');
 
-    const hideModified = GM_getValue(HIDE_MODIFIED, false);
+    const hideModified = Configure.get(HIDE_MODIFIED);
     if(hideModified) contentWrapper.classList.add('hide-modified');
 
-    const resizeMedia = GM_getValue(RESIZE_MEDIA, '100');
+    const resizeMedia = Configure.get(RESIZE_MEDIA);
     const css = `.article-body img, .article-body video {
         max-width: ${resizeMedia}% !important;
     }`;

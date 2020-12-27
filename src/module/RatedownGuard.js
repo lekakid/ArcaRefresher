@@ -2,7 +2,7 @@ import Configure from '../core/Configure';
 
 export default { addSetting, apply };
 
-const RATEDOWN_GUARD = 'blockRatedown';
+const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
 
 function addSetting() {
     const ratedownBlock = (
@@ -18,17 +18,17 @@ function addSetting() {
         description: '비추천 버튼을 클릭하면 다시 한 번 확인창을 띄웁니다.',
         callback: {
             save() {
-                GM_setValue(RATEDOWN_GUARD, ratedownBlock.value == 'true');
+                Configure.set(RATEDOWN_GUARD, ratedownBlock.value == 'true');
             },
             load() {
-                ratedownBlock.value = GM_getValue(RATEDOWN_GUARD, false);
+                ratedownBlock.value = Configure.get(RATEDOWN_GUARD);
             },
         },
     });
 }
 
 function apply() {
-    if(!GM_getValue(RATEDOWN_GUARD, false)) return;
+    if(!Configure.get(RATEDOWN_GUARD)) return;
 
     const ratedown = document.querySelector('#rateDown');
     if(ratedown == null) return;

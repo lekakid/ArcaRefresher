@@ -2,7 +2,7 @@ import Configure from '../core/Configure';
 
 export default { addSetting, apply };
 
-const USE_SHORTCUT = 'useShortcut';
+const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
 
 function addSetting() {
     const shortCut = (
@@ -22,17 +22,17 @@ function addSetting() {
         ),
         callback: {
             save() {
-                GM_setValue(USE_SHORTCUT, shortCut.value);
+                Configure.set(USE_SHORTCUT, shortCut.value);
             },
             load() {
-                shortCut.value = GM_getValue(USE_SHORTCUT, false);
+                shortCut.value = Configure.get(USE_SHORTCUT);
             },
         },
     });
 }
 
 function apply(view) {
-    if(!GM_getValue(USE_SHORTCUT, false)) return;
+    if(!Configure.get(USE_SHORTCUT)) return;
 
     if(view == 'article') {
         document.addEventListener('keydown', onArticle);

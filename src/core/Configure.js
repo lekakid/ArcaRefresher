@@ -12,6 +12,8 @@ export default {
     categoryKey,
     initialize,
     addSetting,
+    get,
+    set,
 };
 
 const configCategoryString = {
@@ -211,4 +213,20 @@ function initialize() {
     configContainer.querySelector('#closeSetting').addEventListener('click', () => {
         configContainer.classList.add('disappear');
     });
+}
+
+function get({ key, defaultValue }) {
+    if(Array.isArray(defaultValue)) {
+        return GM_getValue(key, [...defaultValue]);
+    }
+
+    if(typeof defaultValue == 'object') {
+        return GM_getValue(key, { ...defaultValue });
+    }
+
+    return GM_getValue(key, defaultValue);
+}
+
+function set({ key }, value) {
+    GM_setValue(key, value);
 }

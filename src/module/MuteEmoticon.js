@@ -3,7 +3,7 @@ import Parser from '../core/Parser';
 
 export default { addSetting, mute, apply };
 
-const BLOCK_EMOTICON = 'blockEmoticon';
+const BLOCK_EMOTICON = { key: 'blockEmoticon', defaultValue: {} };
 
 function addSetting() {
     const muteEmoticon = <select size="6" multiple="" />;
@@ -33,16 +33,16 @@ function addSetting() {
         ),
         callback: {
             save() {
-                const data = GM_getValue(BLOCK_EMOTICON, {});
+                const data = Configure.get(BLOCK_EMOTICON);
 
                 const keys = Array.from(muteEmoticon.children, e => e.value);
                 for(const key in data) {
                     if(keys.indexOf(key) == -1) delete data[key];
                 }
-                GM_setValue(BLOCK_EMOTICON, data);
+                Configure.set(BLOCK_EMOTICON, data);
             },
             load() {
-                const data = GM_getValue(BLOCK_EMOTICON, {});
+                const data = Configure.get(BLOCK_EMOTICON);
                 for(const key of Object.keys(data)) {
                     muteEmoticon.append(<option value={key}>{data[key].name}</option>);
                 }
@@ -52,7 +52,7 @@ function addSetting() {
 }
 
 function mute() {
-    const blockEmoticons = GM_getValue(BLOCK_EMOTICON, {});
+    const blockEmoticons = Configure.get(BLOCK_EMOTICON);
 
     let list = [];
     for(const key in blockEmoticons) {
@@ -104,9 +104,9 @@ function apply() {
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);
 
-        const blockEmoticon = GM_getValue(BLOCK_EMOTICON, {});
+        const blockEmoticon = Configure.get(BLOCK_EMOTICON);
         blockEmoticon[bundleID] = { name, bundle };
-        GM_setValue(BLOCK_EMOTICON, blockEmoticon);
+        Configure.set(BLOCK_EMOTICON, blockEmoticon);
         location.reload();
     });
 }

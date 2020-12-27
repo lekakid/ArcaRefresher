@@ -1,11 +1,14 @@
+import Configure from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
 
 import stylesheet from '../css/TemporaryArticle.css';
 
 export default { apply };
 
+const TEMPORARY_ARTICLES = { key: 'tempArticles', defaultValue: {} };
+
 function apply(editor) {
-    const tempArticles = GM_getValue('tempArticles', {});
+    const tempArticles = Configure.get(TEMPORARY_ARTICLES);
 
     const btns = document.querySelector('.btns');
     const list = (
@@ -81,7 +84,7 @@ function apply(editor) {
         if(!list.classList.contains('hidden')) {
             loadArticle();
         }
-        GM_setValue('tempArticles', tempArticles);
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
         alert('작성 중인 게시물이 저장되었습니다.');
     });
     loadBtn.addEventListener('click', event => {
@@ -107,7 +110,7 @@ function apply(editor) {
                 e.remove();
             }
         }
-        GM_setValue('tempArticles', tempArticles);
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
 
         selectAll.checked = false;
         setPosition();

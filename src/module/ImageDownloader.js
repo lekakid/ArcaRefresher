@@ -7,8 +7,7 @@ import stylesheet from '../css/ImageDownloader.css';
 
 export default { addSetting, addContextMenu, apply };
 
-const FILENAME = 'imageDownloaderFileName';
-const FILENAME_DEFAULT = '%title%';
+const FILENAME = { key: 'imageDownloaderFileName', defaultValue: '%title%' };
 
 function addSetting() {
     const downloadName = (
@@ -29,10 +28,10 @@ function addSetting() {
         ),
         callback: {
             save() {
-                GM_setValue(FILENAME, downloadName.value);
+                Configure.set(FILENAME, downloadName.value);
             },
             load() {
-                downloadName.value = GM_getValue(FILENAME, '%title%');
+                downloadName.value = Configure.get(FILENAME);
             },
         },
     });
@@ -229,7 +228,7 @@ function apply() {
         const channelInfo = Parser.getChannelInfo();
         const articleInfo = Parser.getArticleInfo();
 
-        let filename = GM_getValue(FILENAME, FILENAME_DEFAULT);
+        let filename = Configure.get(FILENAME);
         const reservedWord = filename.match(/%\w*%/g);
         if(reservedWord) {
             for(const word of reservedWord) {

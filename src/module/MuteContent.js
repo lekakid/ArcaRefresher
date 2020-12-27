@@ -11,10 +11,10 @@ export default {
     muteContent,
 };
 
-const BLOCK_USER = 'blockUser';
-const BLOCK_KEYWORD = 'blockKeyword';
-const MUTE_CATEGORY = 'muteCategory';
-const MUTE_NOTICE = 'hideNotice';
+const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
+const BLOCK_KEYWORD = { key: 'blockKeyword', defaultValue: [] };
+const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
+const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
 
 function addSetting() {
     document.head.append(<style>{MuteStyle}</style>);
@@ -32,10 +32,10 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(MUTE_NOTICE, hideNotice.value == 'true');
+                Configure.set(MUTE_NOTICE, hideNotice.value == 'true');
             },
             load() {
-                hideNotice.value = GM_getValue(MUTE_NOTICE, false);
+                hideNotice.value = Configure.get(MUTE_NOTICE);
             },
         },
     });
@@ -48,10 +48,10 @@ function addSetting() {
         description: '지정한 유저의 게시물과 댓글을 숨깁니다.',
         callback: {
             save() {
-                GM_setValue(BLOCK_USER, userMute.value.split('\n').filter(i => i != ''));
+                Configure.set(BLOCK_USER, userMute.value.split('\n').filter(i => i != ''));
             },
             load() {
-                userMute.value = GM_getValue(BLOCK_USER, false).join('\n');
+                userMute.value = Configure.get(BLOCK_USER).join('\n');
             },
         },
     });
@@ -64,10 +64,10 @@ function addSetting() {
         description: '지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.',
         callback: {
             save() {
-                GM_setValue(BLOCK_KEYWORD, keywordMute.value.split('\n').filter(i => i != ''));
+                Configure.set(BLOCK_KEYWORD, keywordMute.value.split('\n').filter(i => i != ''));
             },
             load() {
-                keywordMute.value = GM_getValue(BLOCK_KEYWORD, false).join('\n');
+                keywordMute.value = Configure.get(BLOCK_KEYWORD).join('\n');
             },
         },
     });
@@ -116,7 +116,7 @@ function addSetting() {
         ),
         callback: {
             save() {
-                const data = GM_getValue(MUTE_CATEGORY, { [channel]: {} });
+                const data = Configure.get(MUTE_CATEGORY);
 
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {
@@ -130,10 +130,10 @@ function addSetting() {
                     };
                 }
 
-                GM_setValue(MUTE_CATEGORY, data);
+                Configure.set(MUTE_CATEGORY, data);
             },
             load() {
-                const muteCategory = GM_getValue(MUTE_CATEGORY, {})[channel];
+                const muteCategory = Configure.get(MUTE_CATEGORY)[channel];
                 if(!muteCategory) return;
 
                 for(const element of tbody.children) {
@@ -150,7 +150,7 @@ function addSetting() {
 }
 
 function addArticleMenu() {
-    const userList = GM_getValue(BLOCK_USER, []);
+    const userList = Configure.get(BLOCK_USER);
     const articleInfo = Parser.getArticleInfo();
     const user = articleInfo.author;
     const userID = articleInfo.authorID.replace('(', '\\(').replace(')', '\\)').replace('.', '\\.');
@@ -166,7 +166,7 @@ function addArticleMenu() {
                 event.preventDefault();
 
                 userList.splice(indexed, 1);
-                GM_setValue(BLOCK_USER, userList);
+                Configure.set(BLOCK_USER, userList);
                 location.reload();
             },
         });
@@ -180,7 +180,7 @@ function addArticleMenu() {
                 event.preventDefault();
 
                 userList.push(filter);
-                GM_setValue(BLOCK_USER, userList);
+                Configure.set(BLOCK_USER, userList);
                 history.back();
             },
         });
@@ -189,7 +189,7 @@ function addArticleMenu() {
 
 function mutePreview() {
     const channel = Parser.getChannelInfo().id;
-    const config = GM_getValue(MUTE_CATEGORY, {})[channel];
+    const config = Configure.get(MUTE_CATEGORY)[channel];
     if(!config) return;
 
     const articles = Parser.queryItems('articles', 'board');
@@ -250,11 +250,11 @@ function muteContent(viewQuery) {
     }
     let noticeCount = 0;
 
-    let userlist = GM_getValue(BLOCK_USER, []);
-    let keywordlist = GM_getValue(BLOCK_KEYWORD, []);
-    const categoryConfig = GM_getValue(MUTE_CATEGORY, {})[channel];
+    let userlist = Configure.get(BLOCK_USER, []);
+    let keywordlist = Configure.get(BLOCK_KEYWORD, []);
+    const categoryConfig = Configure.get(MUTE_CATEGORY, {})[channel];
     let noticeConfig = unsafeWindow.LiveConfig.hideChannelNotice;
-    noticeConfig = noticeConfig || GM_getValue(MUTE_NOTICE, false);
+    noticeConfig = noticeConfig || Configure.get(MUTE_NOTICE, false);
 
     if((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute != undefined) {
         userlist.push(...unsafeWindow.LiveConfig.mute.users);

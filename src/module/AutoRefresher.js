@@ -6,10 +6,8 @@ import refreshersheet from '../css/AutoRefresher.css';
 
 export default { addSetting, apply };
 
-const REFRESH_TIME = 'refreshTime';
-const REFRESH_TIME_DEFAULT = 3;
-const HIDE_REFRESHER = 'hideRefresher';
-const HIDE_REFRESHER_DEFAULT = false;
+const REFRESH_TIME = { key: 'refreshTime', defaultValue: 3 };
+const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
 
 let refreshTime = 0;
 let loader = null;
@@ -31,10 +29,10 @@ function addSetting() {
         description: '일정 시간마다 게시물 목록을 갱신합니다.',
         callback: {
             save() {
-                GM_setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
+                Configure.set(REFRESH_TIME, Number(refreshTimeSelect.value));
             },
             load() {
-                refreshTimeSelect.value = GM_getValue(REFRESH_TIME, 3);
+                refreshTimeSelect.value = Configure.get(REFRESH_TIME);
             },
         },
     });
@@ -52,23 +50,23 @@ function addSetting() {
         description: '',
         callback: {
             save() {
-                GM_setValue(HIDE_REFRESHER, hideRefreshSign.value == 'true');
+                Configure.set(HIDE_REFRESHER, hideRefreshSign.value == 'true');
             },
             load() {
-                hideRefreshSign.value = GM_getValue(HIDE_REFRESHER, false);
+                hideRefreshSign.value = Configure.get(HIDE_REFRESHER);
             },
         },
     });
 }
 
 function apply() {
-    refreshTime = GM_getValue(REFRESH_TIME, REFRESH_TIME_DEFAULT);
+    refreshTime = Configure.get(REFRESH_TIME);
     if(refreshTime == 0) return;
 
     const articleList = Parser.queryView('board');
 
     loader = (
-        <div id="autoRefresher" class={GM_getValue(HIDE_REFRESHER, HIDE_REFRESHER_DEFAULT) ? 'hidden' : ''}>
+        <div id="autoRefresher" class={Configure.get(HIDE_REFRESHER) ? 'hidden' : ''}>
             <style>{refreshersheet}</style>
         </div>
     );

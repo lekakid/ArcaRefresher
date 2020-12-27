@@ -3,7 +3,7 @@ import Parser from '../core/Parser';
 
 export default { addSetting, apply };
 
-const USER_MEMO = 'userMemo';
+const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
 let handlerApplied = false;
 
@@ -35,16 +35,16 @@ function addSetting() {
         ),
         callback: {
             save() {
-                const data = GM_getValue(USER_MEMO, {});
+                const data = Configure.get(USER_MEMO);
 
                 const keys = Array.from(memoList.children, e => e.value);
                 for(const key in data) {
                     if(keys.indexOf(key) == -1) delete data[key];
                 }
-                GM_setValue(USER_MEMO, data);
+                Configure.set(USER_MEMO, data);
             },
             load() {
-                const data = GM_getValue(USER_MEMO, {});
+                const data = Configure.get(USER_MEMO);
                 while(memoList.childElementCount) {
                     memoList.removeChild(memoList.children[0]);
                 }
@@ -59,7 +59,7 @@ function addSetting() {
 
 function apply() {
     const users = Parser.queryItems('users');
-    const memos = GM_getValue(USER_MEMO, {});
+    const memos = Configure.get(USER_MEMO);
 
     users.forEach(user => {
         const id = Parser.parseUserID(user);
@@ -110,7 +110,7 @@ function apply() {
             delete memos[id];
         }
 
-        GM_setValue('userMemo', memos);
+        Configure.set(USER_MEMO, memos);
         apply();
     });
 }
