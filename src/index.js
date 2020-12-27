@@ -38,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
     Parser.initialize();
 
     Configure.initialize();
-    AutoRefresher.addSetting();
     CategoryColor.addSetting();
     ImageDownloader.addSetting();
     RatedownGuard.addSetting();
@@ -58,6 +57,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     AnonymousNick.load();
     ArticleRemover.load();
+    AutoRefresher.load();
 
     try {
         LiveModifier.apply();
@@ -127,10 +127,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
                 NewWindow.apply();
             },
         });
-
-        if (!Parser.hasArticle()) {
-            AutoRefresher.apply();
-        }
     }
 
     ShortCut.apply(Parser.getCurrentState());
