@@ -6,6 +6,7 @@ import { waitForElement } from './util/ElementDetector';
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
 import ArticleRemover from './module/ArticleRemover';
+import BlockImageNewWindow from './module/BlockImageNewWindow';
 import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
@@ -48,6 +49,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
     AnonymousNick.load();
     ArticleRemover.load();
+    BlockImageNewWindow.load();
     CategoryColor.load();
     FullAreaReply.load();
     ImageDownloader.load();
