@@ -122,15 +122,25 @@ function addSetting() {
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {
                     const { id } = row.dataset;
+                    const badge = row.querySelector('input[name="badge"]').value.toUpperCase();
+                    const bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
+                    const bold = row.querySelector('input[name="bold"]').checked;
 
-                    colorConfig[channel] = {
-                        ...colorConfig[channel],
-                        [id]: {
-                            badge: row.querySelector('input[name="badge"]').value.toUpperCase(),
-                            bgcolor: row.querySelector('input[name="bg"]').value.toUpperCase(),
-                            bold: row.querySelector('input[name="bold"]').checked,
-                        },
-                    };
+                    if(badge || bgcolor || bold) {
+                        colorConfig[channel] = {
+                            ...colorConfig[channel],
+                            [id]: {
+                                badge,
+                                bgcolor,
+                                bold,
+                            },
+                        };
+                    }
+                    else {
+                        if(colorConfig[channel][id]) {
+                            delete colorConfig[channel][id];
+                        }
+                    }
                 }
 
                 Configure.set(CATEGORY_COLOR, colorConfig);
