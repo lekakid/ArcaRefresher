@@ -17,7 +17,7 @@ function addHeaderBtn(buttonObject) {
     headerMenu.prepend(
         <>
             {element}
-            {headerMenu.childElementCount && <span class="sep" />}
+            {headerMenu.childElementCount > 0 && <span class="sep" />}
         </>,
     );
 }
