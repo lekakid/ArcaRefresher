@@ -60,7 +60,16 @@ function initialize() {
 function show(event) {
     contextMenuWrapper.classList.remove('hidden');
     if(!mobile) {
-        contextMenuView.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
+        const x = event.clientX + 2;
+        const rect = contextMenuView.getBoundingClientRect();
+        let y;
+        if(event.clientY + rect.height > window.innerHeight) {
+            y = event.clientY - rect.height - 2;
+        }
+        else {
+            y = event.clientY + 2;
+        }
+        contextMenuView.setAttribute('style', `left: ${x}px; top: ${y}px`);
     }
 }
 
