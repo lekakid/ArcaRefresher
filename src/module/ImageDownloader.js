@@ -161,6 +161,9 @@ function apply() {
     }
 
     itemContainer.addEventListener('dblclick', event => {
+        event.preventDefault();
+        window.getSelection().removeAllRanges();
+
         const label = event.target.closest('.item');
         if(label) {
             event.preventDefault();
