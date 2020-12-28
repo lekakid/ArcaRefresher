@@ -187,7 +187,7 @@ function apply() {
 
         const categoryElement = article.querySelector('.badge');
         if(!categoryElement) return;
-        const category = categoryElement.textContent;
+        const category = (categoryElement.textContent) ? categoryElement.textContent : '일반';
 
         if(!channelConfig[category]) return;
 
