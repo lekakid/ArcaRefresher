@@ -4,67 +4,90 @@ import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
 
-export default { addSetting, apply };
+export default { load, addRefreshCallback };
 
-const REFRESH_TIME = 'refreshTime';
-const REFRESH_TIME_DEFAULT = 3;
-const HIDE_REFRESHER = 'hideRefresher';
-const HIDE_REFRESHER_DEFAULT = false;
+const REFRESH_TIME = { key: 'refreshTime', defaultValue: 3 };
+const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
 
 let refreshTime = 0;
 let loader = null;
 let loopInterval = null;
 
+const refreshCallbackList = [];
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) return;
+        if(Parser.hasBoard()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
+
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">자동 새로고침</label>
-            <div class="col-md-9">
-                <select name="refreshTime" data-type="number">
-                    <option value="0">사용 안 함</option>
-                    <option value="3">3초</option>
-                    <option value="5">5초</option>
-                    <option value="10">10초</option>
-                </select>
-                <p>일정 시간마다 게시물 목록을 갱신합니다.</p>
-            </div>
-            <label class="col-md-3">새로고침 애니메이션 숨김</label>
-            <div class="col-md-9">
-                <select name="hideRefresher" data-type="bool">
-                    <option value="false">사용 안 함</option>
-                    <option value="true">사용</option>
-                </select>
-                <p />
-            </div>
-        </>
+    const refreshTimeSelect = (
+        <select>
+            <option value="0">사용 안 함</option>
+            <option value="3">3초</option>
+            <option value="5">5초</option>
+            <option value="10">10초</option>
+        </select>
     );
+    Configure.addSetting({
+        category: Configure.categoryKey.UTILITY,
+        header: '자동 새로고침',
+        option: refreshTimeSelect,
+        description: '일정 시간마다 게시물 목록을 갱신합니다.',
+        callback: {
+            save() {
+                Configure.set(REFRESH_TIME, Number(refreshTimeSelect.value));
+            },
+            load() {
+                refreshTimeSelect.value = Configure.get(REFRESH_TIME);
+            },
+        },
+    });
 
-    const refreshTimeElement = settingElement.querySelector('select[name="refreshTime"]');
-    const hideRefresherElement = settingElement.querySelector('select[name="hideRefresher"]');
+    const hideRefreshSign = (
+        <select>
+            <option value="false">보임</option>
+            <option value="true">숨김</option>
+        </select>
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.UTILITY,
+        header: '새로고침 애니메이션 숨김',
+        option: hideRefreshSign,
+        description: '',
+        callback: {
+            save() {
+                Configure.set(HIDE_REFRESHER, hideRefreshSign.value == 'true');
+            },
+            load() {
+                hideRefreshSign.value = Configure.get(HIDE_REFRESHER);
+            },
+        },
+    });
+}
 
-    function load() {
-        const timeValue = GM_getValue(REFRESH_TIME, REFRESH_TIME_DEFAULT);
-        const hideValue = GM_getValue(HIDE_REFRESHER, HIDE_REFRESHER_DEFAULT);
-
-        refreshTimeElement.value = timeValue;
-        hideRefresherElement.value = hideValue;
-    }
-    function save() {
-        GM_setValue(REFRESH_TIME, Number(refreshTimeElement.value));
-        GM_setValue(HIDE_REFRESHER, hideRefresherElement.value == 'true');
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+function addRefreshCallback(callback) {
+    refreshCallbackList.push(callback);
+    refreshCallbackList.sort((a, b) => a.priority - b.priority);
 }
 
 function apply() {
-    refreshTime = GM_getValue(REFRESH_TIME, REFRESH_TIME_DEFAULT);
+    refreshTime = Configure.get(REFRESH_TIME);
     if(refreshTime == 0) return;
 
     const articleList = Parser.queryView('board');
 
     loader = (
-        <div id="autoRefresher" class={GM_getValue(HIDE_REFRESHER, HIDE_REFRESHER_DEFAULT) ? 'hidden' : ''}>
+        <div id="autoRefresher" class={Configure.get(HIDE_REFRESHER) ? 'hidden' : ''}>
             <style>{refreshersheet}</style>
         </div>
     );
@@ -128,7 +151,9 @@ function swapNewArticle(newArticles) {
         firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
     }
 
-    articleList.dispatchEvent(new CustomEvent('ar_refresh'));
+    for(const { callback } of refreshCallbackList) {
+        callback();
+    }
 }
 
 async function routine() {

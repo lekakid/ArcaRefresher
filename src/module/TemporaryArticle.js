@@ -1,11 +1,26 @@
+import Configure from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
+import { waitForElement } from '../util/ElementDetector';
 
 import stylesheet from '../css/TemporaryArticle.css';
 
-export default { apply };
+export default { load };
 
-function apply(editor) {
-    const tempArticles = GM_getValue('tempArticles', {});
+const TEMPORARY_ARTICLES = { key: 'tempArticles', defaultValue: {} };
+
+async function load() {
+    try {
+        await waitForElement('.fr-box');
+        apply();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
+
+function apply() {
+    const editor = unsafeWindow.FroalaEditor('#content');
+    const tempArticles = Configure.get(TEMPORARY_ARTICLES);
 
     const btns = document.querySelector('.btns');
     const list = (
@@ -81,7 +96,7 @@ function apply(editor) {
         if(!list.classList.contains('hidden')) {
             loadArticle();
         }
-        GM_setValue('tempArticles', tempArticles);
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
         alert('작성 중인 게시물이 저장되었습니다.');
     });
     loadBtn.addEventListener('click', event => {
@@ -107,13 +122,17 @@ function apply(editor) {
                 e.remove();
             }
         }
-        GM_setValue('tempArticles', tempArticles);
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
 
         selectAll.checked = false;
         setPosition();
     });
 
     btns.insertAdjacentElement('afterend', list);
-    btns.prepend(saveBtn);
-    btns.prepend(loadBtn);
+    btns.prepend(
+        <div style="margin-bottom: 1rem">
+            {saveBtn}
+            {loadBtn}
+        </div>,
+    );
 }

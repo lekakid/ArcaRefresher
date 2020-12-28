@@ -1,44 +1,55 @@
 import Configure from '../core/Configure';
+import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+export default { load };
 
-const USE_SHORTCUT = 'useShortcut';
-const USE_SHORTCUT_DAFAULT = false;
+const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasArticle()) {
+            apply('article');
+        }
+        else if(Parser.hasBoard()) {
+            apply('board');
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">단축키 사용</label>
-            <div class="col-md-9">
-                <select>
-                    <option value="false">사용 안 함</option>
-                    <option value="true">사용</option>
-                </select>
-                <p>
-                    <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
-                        단축키 안내 바로가기
-                    </a>
-                </p>
-            </div>
-        </>
+    const shortCut = (
+        <select>
+            <option value="false">사용 안 함</option>
+            <option value="true">사용</option>
+        </select>
     );
-
-    const selectElement = settingElement.querySelector('select');
-
-    function load() {
-        const data = GM_getValue(USE_SHORTCUT, USE_SHORTCUT_DAFAULT);
-
-        selectElement.value = data;
-    }
-    function save() {
-        GM_setValue(USE_SHORTCUT, selectElement.value == 'true');
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.UTILITY, save, load);
+    Configure.addSetting({
+        category: Configure.categoryKey.UTILITY,
+        header: '단축키 사용',
+        option: shortCut,
+        description: (
+            <a href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99" target="_blank" rel="noreferrer">
+                단축키 안내 바로가기
+            </a>
+        ),
+        callback: {
+            save() {
+                Configure.set(USE_SHORTCUT, shortCut.value);
+            },
+            load() {
+                shortCut.value = Configure.get(USE_SHORTCUT);
+            },
+        },
+    });
 }
 
 function apply(view) {
-    if(!GM_getValue(USE_SHORTCUT, USE_SHORTCUT_DAFAULT)) return;
+    if(!Configure.get(USE_SHORTCUT)) return;
 
     if(view == 'article') {
         document.addEventListener('keydown', onArticle);

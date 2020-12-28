@@ -1,7 +1,20 @@
 import Parser from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
-export default { apply };
+export default { load, addRefreshCallback };
+
+const refreshCallbackList = [];
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            apply();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function apply() {
     const commentArea = Parser.queryView('comment');
@@ -39,7 +52,10 @@ function apply() {
                 time.textContent = getDateStr(time.dateTime);
             });
             commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
-            commentArea.dispatchEvent(new CustomEvent('ar_refresh'));
+
+            for(const { callback } of refreshCallbackList) {
+                callback();
+            }
         }
 
         btn.disabled = false;
@@ -48,6 +64,11 @@ function apply() {
 
     btn.addEventListener('click', onClick);
     clonebtn.addEventListener('click', onClick);
+}
+
+function addRefreshCallback(callback) {
+    refreshCallbackList.push(callback);
+    refreshCallbackList.sort((a, b) => a.priority - b.priority);
 }
 
 function getRefreshData() {

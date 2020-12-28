@@ -1,7 +1,11 @@
 import Parser from '../core/Parser';
+
+import AutoRefresher from './AutoRefresher';
+import CommentRefresh from './CommentRefresh';
+
 import styles from '../css/IPScouter.module.css';
 
-export default { apply };
+export default { load };
 
 const DB = {
     KT: [
@@ -178,6 +182,33 @@ const IPType = {
     tor: { str: '토르', color: styles.red },
     hola: { str: '홀라', color: styles.red },
 };
+
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            apply('article');
+        }
+        if(Parser.hasBoard()) {
+            apply('board');
+        }
+
+        AutoRefresher.addRefreshCallback({
+            priority: 0,
+            callback() {
+                apply('board');
+            },
+        });
+        CommentRefresh.addRefreshCallback({
+            priority: 0,
+            callback() {
+                apply('comment');
+            },
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function apply(viewQuery) {
     const ipElements = Parser.queryItems('ips', viewQuery);

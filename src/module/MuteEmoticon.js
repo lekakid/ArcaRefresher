@@ -1,59 +1,81 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
+import CommentRefresh from './CommentRefresh';
 
-export default { addSetting, mute, apply };
+export default { load };
 
-const BLOCK_EMOTICON = 'blockEmoticon';
-const BLOCK_EMOTICON_DEFAULT = {};
+const BLOCK_EMOTICON = { key: 'blockEmoticon', defaultValue: {} };
+
+function load() {
+    try {
+        addSetting();
+
+        if(Parser.hasComment()) {
+            mute();
+            apply();
+        }
+
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback() {
+                mute();
+                apply();
+            },
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">뮤트된 아카콘</label>
-            <div class="col-md-9">
-                <select size="6" multiple="" />
-                <button name="delete" class="btn btn-arca">삭제</button>
-                <p>
-                    아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
-                    Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
-                </p>
-            </div>
-        </>
-    );
-
-    const selectElement = settingElement.querySelector('select');
-    const deleteBtn = settingElement.querySelector('button[name="delete"]');
+    const muteEmoticon = <select size="6" multiple="" />;
+    const deleteBtn = <button class="btn btn-arca">삭제</button>;
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
-        const removeElements = selectElement.selectedOptions;
+        const removeElements = muteEmoticon.selectedOptions;
         while(removeElements.length > 0) removeElements[0].remove();
 
         event.target.disabled = false;
     });
+    Configure.addSetting({
+        category: Configure.categoryKey.MUTE,
+        header: '뮤트된 아카콘',
+        option: (
+            <>
+                {muteEmoticon}
+                {deleteBtn}
+            </>
+        ),
+        description: (
+            <>
+                아카콘 뮤트는 댓글에서 할 수 있습니다.<br />
+                Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+            </>
+        ),
+        callback: {
+            save() {
+                const data = Configure.get(BLOCK_EMOTICON);
 
-    function load() {
-        const data = GM_getValue(BLOCK_EMOTICON, BLOCK_EMOTICON_DEFAULT);
-
-        for(const key of Object.keys(data)) {
-            selectElement.append(<option value={key}>{data[key].name}</option>);
-        }
-    }
-    function save() {
-        const data = GM_getValue(BLOCK_EMOTICON, BLOCK_EMOTICON_DEFAULT);
-
-        const keys = Array.from(selectElement.children, e => e.value);
-        for(const key in data) {
-            if(keys.indexOf(key) == -1) delete data[key];
-        }
-        GM_setValue(BLOCK_EMOTICON, data);
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.MUTE, save, load);
+                const keys = Array.from(muteEmoticon.children, e => e.value);
+                for(const key in data) {
+                    if(keys.indexOf(key) == -1) delete data[key];
+                }
+                Configure.set(BLOCK_EMOTICON, data);
+            },
+            load() {
+                const data = Configure.get(BLOCK_EMOTICON);
+                for(const key of Object.keys(data)) {
+                    muteEmoticon.append(<option value={key}>{data[key].name}</option>);
+                }
+            },
+        },
+    });
 }
 
 function mute() {
-    const blockEmoticons = GM_getValue(BLOCK_EMOTICON, BLOCK_EMOTICON_DEFAULT);
+    const blockEmoticons = Configure.get(BLOCK_EMOTICON);
 
     let list = [];
     for(const key in blockEmoticons) {
@@ -105,9 +127,9 @@ function apply() {
         const [name, bundleID] = await getEmoticonInfo(id);
         const bundle = await getEmoticonBundle(bundleID);
 
-        const blockEmoticon = GM_getValue(BLOCK_EMOTICON, BLOCK_EMOTICON_DEFAULT);
+        const blockEmoticon = Configure.get(BLOCK_EMOTICON);
         blockEmoticon[bundleID] = { name, bundle };
-        GM_setValue(BLOCK_EMOTICON, blockEmoticon);
+        Configure.set(BLOCK_EMOTICON, blockEmoticon);
         location.reload();
     });
 }

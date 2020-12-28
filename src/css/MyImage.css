@@ -1,0 +1,19 @@
+#refresherSetting #MyImage .grid-wrapper {
+    display: grid;
+    width: 100%;
+    min-height: calc(100px + 1rem + 2px);
+    border: 1px solid #bbb;
+    padding: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(100px, auto));
+    gap: 0.5rem;
+    justify-items: center;
+}
+
+#refresherSetting #MyImage .grid-item {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #bbb;
+    margin: 0;
+    background-size: cover;
+}

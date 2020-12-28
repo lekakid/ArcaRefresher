@@ -1,64 +1,88 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
 
-export default { addSetting, apply };
+import AutoRefresher from './AutoRefresher';
+import CommentRefresh from './CommentRefresh';
 
-const USER_MEMO = 'userMemo';
-const USER_MEMO_DEFAULT = {};
+export default { load };
+
+const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
 let handlerApplied = false;
 
+function load() {
+    try {
+        addSetting();
+
+        apply();
+
+        AutoRefresher.addRefreshCallback({
+            priority: 100,
+            callback: apply,
+        });
+        CommentRefresh.addRefreshCallback({
+            priority: 100,
+            callback: apply,
+        });
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
+
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">메모된 이용자</label>
-            <div class="col-md-9">
-                <select size="6" multiple="" />
-                <button name="delete" class="btn btn-arca">삭제</button>
-                <p>
-                    메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.<br />
-                    Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
-                </p>
-            </div>
-        </>
-    );
-    const selectElement = settingElement.querySelector('select');
-    const deleteBtn = settingElement.querySelector('button[name="delete"]');
+    const memoList = <select size="6" multiple="" />;
+    const deleteBtn = <button class="btn btn-arca">삭제</button>;
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
-        const removeElements = selectElement.selectedOptions;
+        const removeElements = memoList.selectedOptions;
         while(removeElements.length > 0) removeElements[0].remove();
 
         event.target.disabled = false;
     });
+    Configure.addSetting({
+        category: Configure.categoryKey.MEMO,
+        header: '메모된 이용자',
+        option: (
+            <>
+                {memoList}
+                {deleteBtn}
+            </>
+        ),
+        description: (
+            <>
+                메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.<br />
+                Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+            </>
+        ),
+        callback: {
+            save() {
+                const data = Configure.get(USER_MEMO);
 
-    function load() {
-        const data = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
-        while(selectElement.childElementCount) {
-            selectElement.removeChild(selectElement.children[0]);
-        }
+                const keys = Array.from(memoList.children, e => e.value);
+                for(const key in data) {
+                    if(keys.indexOf(key) == -1) delete data[key];
+                }
+                Configure.set(USER_MEMO, data);
+            },
+            load() {
+                const data = Configure.get(USER_MEMO);
+                while(memoList.childElementCount) {
+                    memoList.removeChild(memoList.children[0]);
+                }
 
-        for(const key of Object.keys(data)) {
-            selectElement.append(<option value={key}>{`${key}-${data[key]}`}</option>);
-        }
-    }
-    function save() {
-        const data = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
-
-        const keys = Array.from(selectElement.children, e => e.value);
-        for(const key in data) {
-            if(keys.indexOf(key) == -1) delete data[key];
-        }
-        GM_setValue(USER_MEMO, data);
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.MEMO, save, load);
+                for(const key of Object.keys(data)) {
+                    memoList.append(<option value={key}>{`${key}-${data[key]}`}</option>);
+                }
+            },
+        },
+    });
 }
 
 function apply() {
     const users = Parser.queryItems('users');
-    const memos = GM_getValue(USER_MEMO, USER_MEMO_DEFAULT);
+    const memos = Configure.get(USER_MEMO);
 
     users.forEach(user => {
         const id = Parser.parseUserID(user);
@@ -109,7 +133,7 @@ function apply() {
             delete memos[id];
         }
 
-        GM_setValue('userMemo', memos);
+        Configure.set(USER_MEMO, memos);
         apply();
     });
 }

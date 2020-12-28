@@ -1,7 +1,7 @@
 import ArticleMenu from '../core/ArticleMenu';
 import Parser from '../core/Parser';
 
-export default { addArticleMenu };
+export default { load };
 
 const DefaultPrefix = [
     '웃는', '화난', '불쌍한', '즐거운', '건장한',
@@ -14,44 +14,58 @@ const DefaultSuffix = [
     '윾돌이', '보노보노', '다비', '공룡', '아야',
 ];
 
+function load() {
+    try {
+        if(Parser.hasArticle()) {
+            addArticleMenu();
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
+
 function addArticleMenu() {
-    const btn = ArticleMenu.appendMenuBtn('익명화', 'ion-wand', '게시물 작성자와 댓글 작성자를 일시적 익명으로 만듭니다.');
-    if(!btn) return;
-    btn.addEventListener('click', event => {
-        event.preventDefault();
+    ArticleMenu.addHeaderBtn({
+        text: '익명화',
+        icon: 'ion-wand',
+        description: '게시물 작성자와 댓글 작성자를 일시적 익명으로 만듭니다.',
+        onClick(event) {
+            event.preventDefault();
 
-        const userElements = Parser.queryItems('users', 'article');
-        const avatarElements = Parser.queryItems('avatars', 'article');
+            const userElements = Parser.queryItems('users', 'article');
+            const avatarElements = Parser.queryItems('avatars', 'article');
 
-        avatarElements.forEach(e => {
-            e.remove();
-        });
+            avatarElements.forEach(e => {
+                e.remove();
+            });
 
-        const users = new Set();
-        userElements.forEach(e => {
-            users.add(Parser.parseUserID(e));
-        });
+            const users = new Set();
+            userElements.forEach(e => {
+                users.add(Parser.parseUserID(e));
+            });
 
-        const alterNicks = new Set();
-        let overcount = 1;
+            const alterNicks = new Set();
+            let overcount = 1;
 
-        while(alterNicks.size < users.size) {
-            if(alterNicks.size < DefaultPrefix.length * DefaultSuffix.length) {
-                const numPrefix = Math.floor(Math.random() * DefaultPrefix.length);
-                const numSuffix = Math.floor(Math.random() * DefaultSuffix.length);
-                alterNicks.add(`${DefaultPrefix[numPrefix]} ${DefaultSuffix[numSuffix]}`);
+            while(alterNicks.size < users.size) {
+                if(alterNicks.size < DefaultPrefix.length * DefaultSuffix.length) {
+                    const numPrefix = Math.floor(Math.random() * DefaultPrefix.length);
+                    const numSuffix = Math.floor(Math.random() * DefaultSuffix.length);
+                    alterNicks.add(`${DefaultPrefix[numPrefix]} ${DefaultSuffix[numSuffix]}`);
+                }
+                else {
+                    alterNicks.add(`비둘기 ${`${overcount++}`.padStart(4, '0')}`);
+                }
             }
-            else {
-                alterNicks.add(`비둘기 ${`${overcount++}`.padStart(4, '0')}`);
+            const alterTable = {};
+            for(let i = 0; i < users.size; i += 1) {
+                alterTable[[...users][i]] = [...alterNicks][i];
             }
-        }
-        const alterTable = {};
-        for(let i = 0; i < users.size; i += 1) {
-            alterTable[[...users][i]] = [...alterNicks][i];
-        }
 
-        userElements.forEach(e => {
-            e.textContent = alterTable[Parser.parseUserID(e)];
-        });
+            userElements.forEach(e => {
+                e.textContent = alterTable[Parser.parseUserID(e)];
+            });
+        },
     });
 }

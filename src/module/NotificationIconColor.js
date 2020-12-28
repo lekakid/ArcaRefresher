@@ -1,27 +1,23 @@
 import Configure from '../core/Configure';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { addSetting, apply };
+export default { load };
 
-const NOTIFY_COLOR = 'notificationIconColor';
-const NOTIFY_COLOR_DEFAULT = '';
+const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
+
+function load() {
+    try {
+        addSetting();
+
+        apply();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 function addSetting() {
-    const settingElement = (
-        <>
-            <label class="col-md-3">알림 아이콘 색상 변경</label>
-            <div class="col-md-9">
-                <input type="text" placeholder="FFC107" />
-                <p>
-                    알림 아이콘의 점등 색상을 변경합니다.<br />
-                    색상을 입력하면 알림 아이콘에서 미리 볼 수 있습니다.<br />
-                    더블 클릭으로 무작위 색상을 선택할 수 있습니다.
-                </p>
-            </div>
-        </>
-    );
-
-    const inputElement = settingElement.querySelector('input');
+    const inputElement = <input type="text" placeholder="FFC107" />;
     const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
 
     // 이벤트 핸들러
@@ -45,20 +41,30 @@ function addSetting() {
         notificationIcon.style.color = color;
     });
 
-    function load() {
-        const data = GM_getValue(NOTIFY_COLOR, NOTIFY_COLOR_DEFAULT);
-
-        inputElement.value = data;
-    }
-    function save() {
-        GM_setValue(NOTIFY_COLOR, inputElement.value);
-    }
-
-    Configure.addSetting(settingElement, Configure.categoryKey.INTERFACE, save, load);
+    Configure.addSetting({
+        category: Configure.categoryKey.INTERFACE,
+        header: '알림 아이콘 색상 변경',
+        option: inputElement,
+        description: (
+            <>
+                알림 아이콘의 점등 색상을 변경합니다.<br />
+                색상을 입력하면 알림 아이콘에서 미리 볼 수 있습니다.<br />
+                더블 클릭으로 무작위 색상을 선택할 수 있습니다.
+            </>
+        ),
+        callback: {
+            save() {
+                Configure.set(NOTIFY_COLOR, inputElement.value);
+            },
+            load() {
+                inputElement.value = Configure.get(NOTIFY_COLOR);
+            },
+        },
+    });
 }
 
 function apply() {
-    const color = GM_getValue(NOTIFY_COLOR, NOTIFY_COLOR_DEFAULT);
+    const color = Configure.get(NOTIFY_COLOR);
 
     const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
     if(notificationIcon == null) return;

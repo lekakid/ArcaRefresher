@@ -1,23 +1,23 @@
 import Parser from './Parser';
 
-export default { appendMenuBtn };
+export default { addHeaderBtn };
 
-function appendMenuBtn(name, icon, title, event) {
+function addHeaderBtn(buttonObject) {
+    const { text, icon, description, onClick } = buttonObject;
     const headerMenu = Parser.queryView('article').querySelector('.edit-menu');
-    if(!headerMenu) return;
 
     const element = (
-        <a href="#" title={title}>
+        <a href="#" title={description}>
             {icon && <span class={icon} />}
-            {` ${name}`}
+            {` ${text}`}
         </a>
     );
+    element.addEventListener('click', onClick);
 
-    element.addEventListener('click', event);
-
-    if(headerMenu.childElementCount) {
-        headerMenu.prepend(<span class="sep" />);
-    }
-    headerMenu.prepend(element);
-    return element;
+    headerMenu.prepend(
+        <>
+            {element}
+            {headerMenu.childElementCount > 0 && <span class="sep" />}
+        </>,
+    );
 }

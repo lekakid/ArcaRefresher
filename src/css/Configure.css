@@ -38,9 +38,9 @@
     #refresherSetting select,
     #refresherSetting textarea,
     #refresherSetting input[type="text"] {
-        color: #55595c;
-        background-color: #fff;
-        border: 1px solid #bbb;
+        color: #e2e2e2;
+        background-color: #181a1b;
+        border: 1px solid #43494c;
     }
     
     #refresherSetting input[disabled] {

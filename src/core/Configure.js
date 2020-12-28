@@ -12,6 +12,8 @@ export default {
     categoryKey,
     initialize,
     addSetting,
+    get,
+    set,
 };
 
 const configCategoryString = {
@@ -25,15 +27,22 @@ const configCategoryString = {
 const saveCallbackList = [];
 const loadCallbackList = [];
 
-function addSetting(element, category, saveCallback, loadCallback) {
+function addSetting(settingObject) {
+    const { category, header, option, description, callback } = settingObject;
+    const { save, load } = callback;
+
     const row = (
         <div class="row">
-            {element}
+            <label class="col-md-3">{header}</label>
+            <div class="col-md-9">
+                {option}
+                {description && <p>{description}</p>}
+            </div>
         </div>
     );
     document.querySelector(`#refresherSetting #${category}`).append(row);
-    saveCallbackList.push(saveCallback);
-    loadCallbackList.push(loadCallback);
+    saveCallbackList.push(save);
+    loadCallbackList.push(load);
 }
 
 function importConfig(JSONString) {
@@ -204,4 +213,20 @@ function initialize() {
     configContainer.querySelector('#closeSetting').addEventListener('click', () => {
         configContainer.classList.add('disappear');
     });
+}
+
+function get({ key, defaultValue }) {
+    if(Array.isArray(defaultValue)) {
+        return GM_getValue(key, [...defaultValue]);
+    }
+
+    if(typeof defaultValue == 'object') {
+        return GM_getValue(key, { ...defaultValue });
+    }
+
+    return GM_getValue(key, defaultValue);
+}
+
+function set({ key }, value) {
+    GM_setValue(key, value);
 }
