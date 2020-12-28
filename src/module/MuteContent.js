@@ -154,13 +154,22 @@ function addSetting() {
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {
                     const { id } = row.dataset;
-                    data[channel] = {
-                        ...data[channel],
-                        [id]: {
-                            mutePreview: row.querySelector('input[name="mutePreview"]').checked,
-                            muteArticle: row.querySelector('input[name="muteArticle"]').checked,
-                        },
-                    };
+
+                    const preview = row.querySelector('input[name="mutePreview"]').checked;
+                    const article = row.querySelector('input[name="muteArticle"]').checked;
+
+                    if(preview || article) {
+                        data[channel] = {
+                            ...data[channel],
+                            [id]: {
+                                mutePreview: preview,
+                                muteArticle: article,
+                            },
+                        };
+                    }
+                    else {
+                        delete data[channel][id];
+                    }
                 }
 
                 Configure.set(MUTE_CATEGORY, data);
