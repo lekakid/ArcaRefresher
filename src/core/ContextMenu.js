@@ -27,7 +27,7 @@ function initialize() {
         contextMenuWrapper.classList.add('mobile');
     }
 
-    document.addEventListener('contextmenu', event => {
+    function callEvent(event) {
         if(!contextMenuWrapper.classList.contains('hidden')) {
             hide();
             return;
@@ -44,7 +44,18 @@ function initialize() {
                 event.preventDefault();
             }
         }
-    });
+    }
+
+    if(mobile) {
+        document.addEventListener('touchstart', event => {
+            if(event.touches.length == 2) {
+                callEvent(event);
+            }
+        });
+    }
+    else {
+        document.addEventListener('contextmenu', callEvent);
+    }
     document.addEventListener('click', event => {
         if(contextMenuWrapper.classList.contains('hidden')) return;
         if(event.target.closest('#context-menu')) return;
