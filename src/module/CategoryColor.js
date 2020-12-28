@@ -13,6 +13,7 @@ function load() {
         addSetting();
 
         if(Parser.hasBoard()) {
+            generateColorStyle();
             apply();
         }
 
@@ -174,12 +175,43 @@ function addSetting() {
     });
 }
 
-function apply() {
-    const categoryConfig = Configure.get(CATEGORY_COLOR);
-    const channel = Parser.getChannelInfo().id;
-    if(!categoryConfig[channel]) return;
+const styleTable = {};
 
-    const channelConfig = categoryConfig[channel];
+function generateColorStyle() {
+    const channel = Parser.getChannelInfo().id;
+    const categoryConfig = Configure.get(CATEGORY_COLOR)[channel];
+
+    if(!categoryConfig) return;
+
+    const style = [];
+    for(const key in categoryConfig) {
+        if(categoryConfig[key]) {
+            const { badge, bgcolor, bold } = categoryConfig[key];
+            let styleKey;
+            do {
+                styleKey = Math.random().toString(36).substr(2);
+            } while(styleTable[styleKey]);
+
+            style.push(`
+                .color_${styleKey} {
+                    background-color: #${bgcolor};
+                    color: ${getContrastYIQ(bgcolor)};
+                    font-weight: ${bold ? 'bold' : 'normal'}
+                }
+    
+                .color_${styleKey} .badge {
+                    background-color: #${badge};
+                    color: ${getContrastYIQ(badge)};
+                }
+            `);
+            styleTable[key] = styleKey;
+        }
+    }
+
+    document.head.append(<style>{style.join('\n')}</style>);
+}
+
+function apply() {
     const articles = Parser.queryItems('articles', 'board');
 
     articles.forEach(article => {
@@ -188,22 +220,8 @@ function apply() {
         const categoryElement = article.querySelector('.badge');
         if(!categoryElement) return;
         const category = (categoryElement.textContent) ? categoryElement.textContent : '일반';
+        if(!styleTable[category]) return;
 
-        if(!channelConfig[category]) return;
-
-        const { badge, bgcolor, bold } = channelConfig[category];
-        if(badge) {
-            const badgeYIQ = getContrastYIQ(badge);
-            categoryElement.style.backgroundColor = `#${badge}`;
-            categoryElement.style.color = badgeYIQ;
-        }
-        if(bgcolor) {
-            const bgYIQ = getContrastYIQ(bgcolor);
-            article.style.backgroundColor = `#${bgcolor}`;
-            article.style.color = bgYIQ;
-        }
-        if(bold) {
-            article.style.fontWeight = 'bold';
-        }
+        article.classList.add(`color_${styleTable[category]}`);
     });
 }
