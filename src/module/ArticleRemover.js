@@ -5,9 +5,9 @@ import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
-const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: true };
+const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: [] };
 const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
-const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: [] };
+const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: true };
 
 function load() {
     try {
