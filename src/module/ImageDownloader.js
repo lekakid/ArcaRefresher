@@ -8,6 +8,7 @@ import stylesheet from '../css/ImageDownloader.css';
 export default { load };
 
 const FILENAME = { key: 'imageDownloaderFileName', defaultValue: '%title%' };
+const IMAGENAME = { key: 'imageDonwloaderImageName', defaultValue: '%num%' };
 
 function load() {
     try {
@@ -29,15 +30,15 @@ function addSetting() {
     );
     Configure.addSetting({
         category: Configure.categoryKey.UTILITY,
-        header: '이미지 다운로드 포맷',
+        header: '이미지 일괄 다운로드 압축파일 이름',
         option: downloadName,
         description: (
             <>
-                이미지 일괄 다운로드 사용 시 저장할 파일의 이름 포맷입니다.<br />
+                이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름 포맷입니다.<br />
                 %title%: 게시물 제목<br />
                 %category%: 게시물 카테고리<br />
                 %author%: 게시물 작성자<br />
-                %channel%: 채널 이름<br />
+                %channel%: 채널 이름
             </>
         ),
         callback: {
@@ -46,6 +47,33 @@ function addSetting() {
             },
             load() {
                 downloadName.value = Configure.get(FILENAME);
+            },
+        },
+    });
+
+    const imageName = (
+        <input type="text" />
+    );
+    Configure.addSetting({
+        category: Configure.categoryKey.UTILITY,
+        header: '이미지 일괄 다운로드 이미지 이름',
+        option: imageName,
+        description: (
+            <>
+                이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.<br />
+                %num%: 넘버링(반드시 사용)<br />
+                %title%: 게시물 제목<br />
+                %category%: 게시물 카테고리<br />
+                %author%: 게시물 작성자<br />
+                %channel%: 채널 이름
+            </>
+        ),
+        callback: {
+            save() {
+                Configure.set(IMAGENAME, imageName.value);
+            },
+            load() {
+                imageName.value = Configure.get(IMAGENAME);
             },
         },
     });
@@ -120,128 +148,57 @@ function apply() {
     const data = parse();
     if(data.length == 0) return;
 
-    const table = (
-        <div class="article-image hidden">
-            <style>{stylesheet}</style>
-            <table class="table align-middle" id="imageList">
-                <colgroup>
-                    <col width="5%" />
-                    <col width="10%" />
-                    <col width="85%" />
-                </colgroup>
-                <thead>
-                    <th><input type="checkbox" name="selectAll" /></th>
-                    <th>썸네일</th>
-                    <th>파일명</th>
-                </thead>
-                <tbody />
-                <tfoot>
-                    <td colspan="3">
-                        <button class="btn btn-arca">일괄 다운로드</button>
-                    </td>
-                </tfoot>
-            </table>
-        </div>
-    );
-
-    const enableBtn = <a href="#" class="btn btn-arca"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
-    enableBtn.addEventListener('click', event => {
-        event.preventDefault();
-
-        if(table.classList.contains('hidden')) {
-            table.classList.remove('hidden');
-        }
-        else {
-            table.classList.add('hidden');
-        }
-    });
-
-    document.querySelector('.article-body')
-        .insertAdjacentElement('afterend', enableBtn)
-        .insertAdjacentElement('afterend', table);
-    const list = table.querySelector('tbody');
-
+    const itemContainer = <div class="image-list" />;
     for(const d of data) {
-        const itemElement = (
-            <tr>
-                <td>
+        const style = { backgroundImage: `url(${d.thumb})` };
+        itemContainer.append(
+            <div>
+                <label class="item" style={style} data-url={d.url}>
                     <input type="checkbox" name="select" />
-                </td>
-                <td>
-                    {d.type == 'image' && <img src={d.thumb} />}
-                    {d.type != 'image' && <div class="video-placeholder"><span class="ion-ios-videocam"> 동영상</span></div>}
-                </td>
-                <td>
-                    <a href="#" data-url={d.url}>{d.name}</a>
-                </td>
-            </tr>
+                </label>
+            </div>,
         );
-
-        list.append(itemElement);
     }
 
-    table.addEventListener('click', async event => {
-        if(event.target.tagName == 'A') {
+    itemContainer.addEventListener('dblclick', event => {
+        const label = event.target.closest('.item');
+        if(label) {
             event.preventDefault();
+            const value = !label.children[0].checked;
 
-            const url = event.target.dataset.url;
-            if(url != '') {
-                event.target.dataset.url = '';
-                const filename = event.target.textContent;
-                const file = await getBlob(url,
-                    e => {
-                        const progress = Math.round(e.loaded / e.total * 100);
-                        event.target.textContent = `${filename}...${progress}%`;
-                    },
-                    () => {
-                        event.target.textContent = filename;
-                    });
-                window.saveAs(file, filename);
-                event.target.dataset.url = url;
-            }
-        }
-        else if(event.target.name == 'selectAll') {
-            const inputElements = table.querySelectorAll('input[type="checkbox"]');
-            for(const i of inputElements) {
-                i.checked = event.target.checked;
+            for(const child of itemContainer.children) {
+                child.querySelector('input[type="checkbox"]').checked = value;
             }
         }
     });
 
-    const downloadBtn = table.querySelector('tfoot button');
+    const downloadBtn = <button class="btn btn-arca">일괄 다운로드</button>;
     downloadBtn.addEventListener('click', async event => {
         event.preventDefault();
         downloadBtn.disabled = true;
 
-        const checkboxElements = list.querySelectorAll('input[type="checkbox"]');
-        const urlElements = list.querySelectorAll('a');
+        const checkedElements = itemContainer.querySelectorAll('input[type="checkbox"]:checked');
 
-        const originalText = downloadBtn.textContent;
-
-        const downloadList = [];
-        const nameList = [];
-        for(let i = 0; i < urlElements.length; i += 1) {
-            if(checkboxElements[i].checked) {
-                downloadList.push(urlElements[i].dataset.url);
-                nameList.push(urlElements[i].textContent);
-            }
-        }
-
-        if(downloadList.length == 0) {
+        if(checkedElements.length == 0) {
             alert('선택된 파일이 없습니다.');
             downloadBtn.disabled = false;
             return;
         }
 
         const zip = new JSZip();
-        const total = downloadList.length;
-        for(let i = 0; i < total; i += 1) {
-            const file = await getBlob(downloadList[i],
+        const originalText = downloadBtn.textContent;
+        const total = checkedElements.length;
+        for(let i = 0; i < checkedElements.length; i++) {
+            const url = checkedElements[i].parentNode.dataset.url;
+            const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
+            const file = await getBlob(url,
                 e => {
                     const progress = Math.round(e.loaded / e.total * 100);
                     downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
                 });
-            zip.file(`${`${i}`.padStart(3, '0')}_${nameList[i]}`, file);
+
+            const filename = replaceData(Configure.get(IMAGENAME)).replace('%num%', `${i}`.padStart(3, '0'));
+            zip.file(`${filename}${ext}`, file);
         }
         downloadBtn.textContent = originalText;
 
@@ -275,29 +232,75 @@ function apply() {
 
         downloadBtn.disabled = false;
     });
+
+    const wrapper = (
+        <div class="article-image hidden">
+            <style>{stylesheet}</style>
+            {itemContainer}
+            <div>더블클릭을 하면 이미지를 모두 선택할 수 있습니다.</div>
+            {downloadBtn}
+        </div>
+    );
+
+    const enableBtn = <a href="#" class="btn btn-arca"><span class="ion-ios-download-outline" /> 이미지 다운로드 목록 보이기</a>;
+    enableBtn.addEventListener('click', event => {
+        event.preventDefault();
+
+        if(wrapper.classList.contains('hidden')) {
+            wrapper.classList.remove('hidden');
+        }
+        else {
+            wrapper.classList.add('hidden');
+        }
+    });
+
+    document.querySelector('.article-body')
+        .insertAdjacentElement('afterend', enableBtn)
+        .insertAdjacentElement('afterend', wrapper);
 }
 
-const IMAGE_TYPE = ['gif', 'png', 'jpg', 'jpeg', 'wepb'];
+function replaceData(string) {
+    const articleInfo = Parser.getArticleInfo();
+    const channelInfo = Parser.getChannelInfo();
+
+    const reservedWord = string.match(/%\w*%/g);
+    if(reservedWord) {
+        for(const word of reservedWord) {
+            switch(word) {
+            case '%title%':
+                string = string.replace(word, articleInfo.title);
+                break;
+            case '%category%':
+                string = string.replace(word, articleInfo.category);
+                break;
+            case '%author%':
+                string = string.replace(word, articleInfo.author);
+                break;
+            case '%channel%':
+                string = string.replace(word, channelInfo.name);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    return string;
+}
+
 function parse() {
-    const images = document.querySelectorAll('.article-body img, .article-body video');
+    const images = document.querySelectorAll('.article-body  img, .article-body video:not([controls])');
 
     const result = [];
 
     images.forEach(element => {
-        let src = element.src.split('?')[0];
-        if(element.dataset.orig) {
-            src += `.${element.dataset.orig}`;
-        }
+        const filepath = element.src.split('?')[0];
 
-        const filename = src.replace(/.*\.arca\.live\/.*\//, '').replace(/\..*\./, '.');
-        const item = {
-            thumb: `${src}?type=list`,
-            url: `${src}?type=orig`,
-            name: filename,
-            type: IMAGE_TYPE.indexOf(filename.split('.')[1]) > -1 ? 'image' : 'video',
-        };
-
-        result.push(item);
+        result.push({
+            thumb: `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=list`,
+            url: `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=orig`,
+            type: 'image',
+        });
     });
 
     return result;
