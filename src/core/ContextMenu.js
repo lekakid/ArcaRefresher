@@ -12,16 +12,23 @@ const eventList = {
     clickOnImage: [],
 };
 
-const contextMenuView = <div class="menu hidden" id="context-menu" />;
+const contextMenuView = <div class="menu" id="context-menu" />;
+const contextMenuWrapper = <div class="hidden" id="context-wrapper">{contextMenuView}</div>;
+let mobile = false;
 
 function initialize() {
     // on/off 설정 넣어
 
     document.head.append(<style>{contextSheet}</style>);
-    document.body.append(contextMenuView);
+    document.body.append(contextMenuWrapper);
+
+    if(window.outerWidth <= 768) {
+        mobile = true;
+        contextMenuWrapper.classList.add('mobile');
+    }
 
     document.addEventListener('contextmenu', event => {
-        if(!contextMenuView.classList.contains('hidden')) {
+        if(!contextMenuWrapper.classList.contains('hidden')) {
             hide();
             return;
         }
@@ -39,24 +46,26 @@ function initialize() {
         }
     });
     document.addEventListener('click', event => {
-        if(contextMenuView.classList.contains('hidden')) return;
+        if(contextMenuWrapper.classList.contains('hidden')) return;
         if(event.target.closest('#context-menu')) return;
 
         hide();
         event.preventDefault();
     });
     document.addEventListener('scroll', () => {
-        contextMenuView.classList.add('hidden');
+        hide();
     });
 }
 
 function show(event) {
-    contextMenuView.classList.remove('hidden');
-    contextMenuView.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
+    contextMenuWrapper.classList.remove('hidden');
+    if(!mobile) {
+        contextMenuView.setAttribute('style', `left: ${event.clientX + 2}px; top: ${event.clientY + 2}px`);
+    }
 }
 
 function hide() {
-    contextMenuView.classList.add('hidden');
+    contextMenuWrapper.classList.add('hidden');
 }
 
 function addMenuGroup(event, contextElement) {
