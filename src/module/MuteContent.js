@@ -32,6 +32,7 @@ function load() {
         AutoRefresher.addRefreshCallback({
             priority: 100,
             callback() {
+                muteNotice();
                 mutePreview();
                 muteContent('board');
             },
