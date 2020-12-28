@@ -150,6 +150,7 @@ function addSetting() {
         callback: {
             save() {
                 const data = Configure.get(MUTE_CATEGORY);
+                if(!data[channel]) data[channel] = {};
 
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {

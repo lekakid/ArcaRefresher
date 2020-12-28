@@ -118,6 +118,7 @@ function addSetting() {
         callback: {
             save() {
                 const colorConfig = Configure.get(CATEGORY_COLOR);
+                if(!colorConfig[channel]) colorConfig[channel] = {};
 
                 const rows = tbody.querySelectorAll('tr');
                 for(const row of rows) {
