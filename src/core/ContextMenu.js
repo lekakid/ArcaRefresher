@@ -27,16 +27,14 @@ function initialize() {
         }
 
         if(event.target.closest('.article-body')) {
-            if(event.target.closest('img') || (event.target.closest('video') && event.target.dataset.orig)) {
-                const url = event.target.parentNode.href;
-                contextMenuView.dataset.url = url;
+            if(event.target.closest('img, video:not([controls])')) {
+                contextMenuView.dataset.url = `${event.target.src}${(event.target.tagName == 'VIDEO' ? '.gif' : '')}?type=orig`;
 
                 removeMenuAll();
                 appendMenu(eventList.clickOnImage);
 
                 show(event);
                 event.preventDefault();
-                // return;
             }
         }
     });
