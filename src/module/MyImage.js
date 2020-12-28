@@ -3,6 +3,8 @@ import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
 import { waitForElement } from '../util/ElementDetector';
 
+import stylesheet from '../css/MyImage.css';
+
 export default { load };
 
 const MY_IMAGES = { key: 'myImages', defaultValue: {} };
@@ -26,13 +28,29 @@ async function load() {
 }
 
 function addSetting() {
-    const imgList = <select size="6" multiple="" />;
+    const imgList = <div class="grid-wrapper" />;
+    imgList.addEventListener('dblclick', event => {
+        event.preventDefault();
+        window.getSelection().removeAllRanges();
+
+        const label = event.target.closest('.grid-item');
+        if(label) {
+            event.preventDefault();
+            const value = !label.children[0].checked;
+
+            for(const child of imgList.children) {
+                child.querySelector('input[type="checkbox"]').checked = value;
+            }
+        }
+    });
     const deleteBtn = <button class="btn btn-arca">삭제</button>;
     deleteBtn.addEventListener('click', event => {
         event.target.disabled = true;
 
-        const removeElements = imgList.selectedOptions;
-        while(removeElements.length > 0) removeElements[0].remove();
+        const removeElements = imgList.querySelectorAll('input[type="checkbox"]:checked');
+        for(const element of removeElements) {
+            element.closest('div').remove();
+        }
 
         event.target.disabled = false;
     });
@@ -41,17 +59,18 @@ function addSetting() {
         category: Configure.categoryKey.UTILITY,
         header: '자짤 관리',
         option: (
-            <>
+            <div id="MyImage">
+                <style>{stylesheet}</style>
                 {imgList}
                 {deleteBtn}
-            </>
+            </div>
         ),
-        description: 'Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.',
+        description: '더블을 하면 이미지를 모두 선택할 수 있습니다.',
         callback: {
             save() {
                 const data = Configure.get(MY_IMAGES);
 
-                const images = Array.from(imgList.children, e => e.value);
+                const images = Array.from(imgList.children, e => e.children[0].dataset.url);
                 data[channel] = images;
                 Configure.set(MY_IMAGES, data);
             },
@@ -59,8 +78,16 @@ function addSetting() {
                 const data = Configure.get(MY_IMAGES)[channel];
                 if(!data) return;
 
+                while(imgList.firstChild) imgList.lastChild.remove();
                 for(const i of data) {
-                    imgList.append(<option value={i}>{i}</option>);
+                    const style = { backgroundImage: `url(${i}?type=list)` };
+                    imgList.append(
+                        <div>
+                            <label class="grid-item" style={style} data-url={i}>
+                                <input type="checkbox" name="select" />
+                            </label>
+                        </div>,
+                    );
                 }
             },
         },
