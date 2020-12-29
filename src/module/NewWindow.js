@@ -1,5 +1,6 @@
 import Configure from '../core/Configure';
 import Parser from '../core/Parser';
+import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
@@ -12,6 +13,11 @@ function load() {
         if(Parser.hasBoard()) {
             apply();
         }
+
+        AutoRefresher.addRefreshCallback({
+            priority: 100,
+            callback: apply,
+        });
     }
     catch(error) {
         console.error(error);

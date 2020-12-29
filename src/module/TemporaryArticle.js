@@ -128,11 +128,30 @@ function apply() {
         setPosition();
     });
 
+    const submitBtn = btns.querySelector('#submitBtn');
     btns.insertAdjacentElement('afterend', list);
     btns.prepend(
-        <div style="margin-bottom: 1rem">
+        <>
+            <style>
+                {`
+                    .btns {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr 9fr 1fr;
+                        grid-template-areas:
+                            "  save     load     .   submit"
+                            "    .        .      .      .  "
+                            "recapcha recapcha recapcha recapcha";
+                        grid-row-gap: 1rem;
+                    }
+                    .btns > #tempSaveBtn { grid-area: save; }
+                    .btns > #tempLoadBtn { grid-area: load; }
+                    .btns > div { grid-area: recapcha; }
+                    .btns > #submitBtn { grid-area: submit; }
+                `}
+            </style>
             {saveBtn}
             {loadBtn}
-        </div>,
+            {submitBtn}
+        </>,
     );
 }
