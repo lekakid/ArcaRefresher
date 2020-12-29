@@ -205,13 +205,13 @@ function generateColorStyle() {
 
             style.push(`
                 .color_${styleKey} {
-                    background-color: #${bgcolor};
+                    background-color: #${bgcolor} !important;
                     color: ${getContrastYIQ(bgcolor)};
                     font-weight: ${bold ? 'bold' : 'normal'}
                 }
     
                 .color_${styleKey} .badge {
-                    background-color: #${badge};
+                    background-color: #${badge} !important;
                     color: ${getContrastYIQ(badge)};
                 }
             `);
