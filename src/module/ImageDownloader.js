@@ -205,31 +205,8 @@ function apply() {
         }
         downloadBtn.textContent = originalText;
 
-        const channelInfo = Parser.getChannelInfo();
-        const articleInfo = Parser.getArticleInfo();
-
         let filename = Configure.get(FILENAME);
-        const reservedWord = filename.match(/%\w*%/g);
-        if(reservedWord) {
-            for(const word of reservedWord) {
-                switch(word) {
-                case '%title%':
-                    filename = filename.replace(word, articleInfo.title);
-                    break;
-                case '%category%':
-                    filename = filename.replace(word, articleInfo.category);
-                    break;
-                case '%author%':
-                    filename = filename.replace(word, articleInfo.author);
-                    break;
-                case '%channel%':
-                    filename = filename.replace(word, channelInfo.name);
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
+        filename = replaceData(filename);
         const zipblob = await zip.generateAsync({ type: 'blob' });
         window.saveAs(zipblob, `${filename}.zip`);
 
@@ -266,27 +243,10 @@ function replaceData(string) {
     const articleInfo = Parser.getArticleInfo();
     const channelInfo = Parser.getChannelInfo();
 
-    const reservedWord = string.match(/%\w*%/g);
-    if(reservedWord) {
-        for(const word of reservedWord) {
-            switch(word) {
-            case '%title%':
-                string = string.replace(word, articleInfo.title);
-                break;
-            case '%category%':
-                string = string.replace(word, articleInfo.category);
-                break;
-            case '%author%':
-                string = string.replace(word, articleInfo.author);
-                break;
-            case '%channel%':
-                string = string.replace(word, channelInfo.name);
-                break;
-            default:
-                break;
-            }
-        }
-    }
+    string = string.replace('%title%', articleInfo.title);
+    string = string.replace('%category%', articleInfo.category);
+    string = string.replace('%author%', articleInfo.author);
+    string = string.replace('%channel%', channelInfo.name);
 
     return string;
 }
