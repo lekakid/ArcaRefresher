@@ -61,7 +61,10 @@ function addSetting() {
         description: (
             <>
                 이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.<br />
-                %num%: 넘버링(반드시 사용)<br />
+                orig 혹은 num을 사용하여 이름을 구분해야 정상 저장됩니다.<br />
+                <br />
+                %orig%: 이미지 업로드명 (64자 코드)<br />
+                %num%: 넘버링 (000~999)<br />
                 %title%: 게시물 제목<br />
                 %category%: 게시물 카테고리<br />
                 %author%: 게시물 작성자<br />
@@ -107,8 +110,12 @@ function addContextMenu() {
         async onClick(event) {
             event.preventDefault();
 
-            const url = ContextMenu.getContextData('url');
             const title = event.target.textContent;
+            const url = ContextMenu.getContextData('url');
+            const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
+            let imagename = replaceData(Configure.get(IMAGENAME));
+            imagename = imagename.replace('%num%', '000');
+            imagename = imagename.replace('%orig%', url.match(/[0-9a-f]{64}/)[0]);
 
             const file = await getBlob(url,
                 e => {
@@ -118,7 +125,7 @@ function addContextMenu() {
                 () => {
                     event.target.textContent = title;
                 });
-            window.saveAs(file, `image.${file.type.split('/')[1]}`);
+            window.saveAs(file, `${imagename}${ext}`);
             ContextMenu.hide();
         },
     });
@@ -153,7 +160,7 @@ function apply() {
         const style = { backgroundImage: `url(${d.thumb})` };
         itemContainer.append(
             <div>
-                <label class="item" style={style} data-url={d.url}>
+                <label class="item" style={style} data-url={d.url} data-filename={d.filename}>
                     <input type="checkbox" name="select" />
                 </label>
             </div>,
@@ -191,8 +198,10 @@ function apply() {
         const zip = new JSZip();
         const originalText = downloadBtn.textContent;
         const total = checkedElements.length;
+        const configureName = Configure.get(IMAGENAME);
         for(let i = 0; i < checkedElements.length; i++) {
-            const url = checkedElements[i].parentNode.dataset.url;
+            let imagename = replaceData(configureName);
+            const { url, filename: orig } = checkedElements[i].parentNode.dataset;
             const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
             const file = await getBlob(url,
                 e => {
@@ -200,36 +209,14 @@ function apply() {
                     downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
                 });
 
-            const filename = replaceData(Configure.get(IMAGENAME)).replace('%num%', `${i}`.padStart(3, '0'));
-            zip.file(`${filename}${ext}`, file);
+            imagename = imagename.replace('%orig%', orig);
+            imagename = imagename.replace('%num%', `${i}`.padStart(3, '0'));
+            zip.file(`${imagename}${ext}`, file);
         }
         downloadBtn.textContent = originalText;
 
-        const channelInfo = Parser.getChannelInfo();
-        const articleInfo = Parser.getArticleInfo();
-
         let filename = Configure.get(FILENAME);
-        const reservedWord = filename.match(/%\w*%/g);
-        if(reservedWord) {
-            for(const word of reservedWord) {
-                switch(word) {
-                case '%title%':
-                    filename = filename.replace(word, articleInfo.title);
-                    break;
-                case '%category%':
-                    filename = filename.replace(word, articleInfo.category);
-                    break;
-                case '%author%':
-                    filename = filename.replace(word, articleInfo.author);
-                    break;
-                case '%channel%':
-                    filename = filename.replace(word, channelInfo.name);
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
+        filename = replaceData(filename);
         const zipblob = await zip.generateAsync({ type: 'blob' });
         window.saveAs(zipblob, `${filename}.zip`);
 
@@ -266,27 +253,10 @@ function replaceData(string) {
     const articleInfo = Parser.getArticleInfo();
     const channelInfo = Parser.getChannelInfo();
 
-    const reservedWord = string.match(/%\w*%/g);
-    if(reservedWord) {
-        for(const word of reservedWord) {
-            switch(word) {
-            case '%title%':
-                string = string.replace(word, articleInfo.title);
-                break;
-            case '%category%':
-                string = string.replace(word, articleInfo.category);
-                break;
-            case '%author%':
-                string = string.replace(word, articleInfo.author);
-                break;
-            case '%channel%':
-                string = string.replace(word, channelInfo.name);
-                break;
-            default:
-                break;
-            }
-        }
-    }
+    string = string.replace('%title%', articleInfo.title);
+    string = string.replace('%category%', articleInfo.category);
+    string = string.replace('%author%', articleInfo.author);
+    string = string.replace('%channel%', channelInfo.name);
 
     return string;
 }
@@ -299,10 +269,14 @@ function parse() {
     images.forEach(element => {
         const filepath = element.src.split('?')[0];
 
+        const thumb = `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=list`;
+        const url = `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=orig`;
+        const filename = filepath.match(/[0-9a-f]{64}/)[0];
+
         result.push({
-            thumb: `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=list`,
-            url: `${filepath}${element.tagName == 'VIDEO' ? '.gif' : ''}?type=orig`,
-            type: 'image',
+            thumb,
+            url,
+            filename,
         });
     });
 

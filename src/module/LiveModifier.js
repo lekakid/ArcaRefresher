@@ -4,7 +4,6 @@ import sheetLiveModifier from '../css/LiveModifier.css';
 
 export default { load };
 
-const FIX_HEADER = { key: 'fixHeader', defaultValue: true };
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
 const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
@@ -23,27 +22,6 @@ function load() {
 }
 
 function addSetting() {
-    const fixHeader = (
-        <select>
-            <option value="false">고정 안 함</option>
-            <option value="true">고정</option>
-        </select>
-    );
-    Configure.addSetting({
-        category: Configure.categoryKey.INTERFACE,
-        header: '상단 헤더 고정',
-        option: fixHeader,
-        description: '',
-        callback: {
-            save() {
-                Configure.set(FIX_HEADER, fixHeader.value == 'true');
-            },
-            load() {
-                fixHeader.value = Configure.get(FIX_HEADER);
-            },
-        },
-    });
-
     const hideRecentVisit = (
         <select>
             <option value="false">보임</option>
@@ -148,9 +126,6 @@ function addSetting() {
 function apply() {
     document.head.append(<style>{sheetLiveModifier}</style>);
     const contentWrapper = document.querySelector('.content-wrapper');
-
-    const fixHeader = Configure.get(FIX_HEADER);
-    if(fixHeader) document.body.classList.add('fix-header');
 
     const hideRecentVisit = Configure.get(HIDE_RECENT_VISIT);
     if(hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
