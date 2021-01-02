@@ -54,9 +54,9 @@ function apply() {
         while(list.firstChild) list.lastChild.remove();
         for(const key of Object.keys(tempArticles)) {
             list.append(
-                <tr>
+                <tr data-id={key}>
                     <td><input type="checkbox" name="select" /></td>
-                    <td><a href="#" data-id={key}>{tempArticles[key].title}</a></td>
+                    <td><a href="#">{tempArticles[key].title}</a></td>
                     <td>{getDateStr(tempArticles[key].time).split(' ')[0]}</td>
                 </tr>,
             );
@@ -71,7 +71,8 @@ function apply() {
         }
 
         if(event.target.tagName == 'A') {
-            const id = event.target.dataset.id;
+            const row = event.target.closest('tr');
+            const id = row.dataset.id;
             const title = document.querySelector('#inputTitle');
             title.value = tempArticles[id].title;
             editor.html.set(tempArticles[id].content);
@@ -87,7 +88,8 @@ function apply() {
 
         const checkedItems = list.querySelectorAll('input[name="select"]:checked');
         checkedItems.forEach(i => {
-            const id = i.dataset.id;
+            const row = i.closest('tr');
+            const id = row.dataset.id;
             delete tempArticles[id];
         });
 
