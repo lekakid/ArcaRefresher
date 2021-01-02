@@ -136,10 +136,9 @@ function apply() {
                 {`
                     .btns {
                         display: grid;
-                        grid-template-columns: 1fr 1fr 9fr 1fr;
+                        grid-template-columns: 7rem 7rem 1fr 7rem;
                         grid-template-areas:
                             "  save     load     .   submit"
-                            "    .        .      .      .  "
                             "recapcha recapcha recapcha recapcha";
                         grid-row-gap: 1rem;
                     }
