@@ -22,114 +22,89 @@ function apply() {
     const editor = unsafeWindow.FroalaEditor('#content');
     const tempArticles = Configure.get(TEMPORARY_ARTICLES);
 
-    const btns = document.querySelector('.btns');
-    const list = (
-        <table class="table align-middle hidden" id="articleList">
+    const selectAll = <input type="checkbox" name="selectAll" />;
+    const deleteBtn = <button class="btn btn-danger" id="tempDeleteBtn">삭제</button>;
+    const closeBtn = <button class="btn btn-arca" id="tempCloseBtn">닫기</button>;
+    const list = <tbody />;
+    const wrapper = (
+        <div class="hidden" id="tempArticleWrapper">
             <style>{stylesheet}</style>
-            <thead>
-                <tr>
-                    <th><input type="checkbox" name="selectAll" /></th>
-                    <th>제목</th>
-                    <th>시간</th>
-                </tr>
-            </thead>
-            <tbody />
-            <tfoot>
-                <td colspan="3" style="text-align:center;">
-                    <button class="btn btn-danger" id="tempDeleteBtn">삭제</button>
-                </td>
-            </tfoot>
-        </table>
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>{selectAll}</th>
+                        <th>제목</th>
+                        <th>시간</th>
+                    </tr>
+                </thead>
+                {list}
+                <tfoot>
+                    <td colspan="3" style="text-align:center;">
+                        {deleteBtn}
+                        {closeBtn}
+                    </td>
+                </tfoot>
+            </table>
+        </div>
     );
-    const saveBtn = <button class="btn btn-primary" id="tempSaveBtn">임시 저장</button>;
-    const loadBtn = <button class="btn btn-arca" id="tempLoadBtn">불러오기</button>;
-    const deleteBtn = list.querySelector('#tempDeleteBtn');
-    const selectAll = list.querySelector('input[name="selectAll"]');
-    const tbody = list.querySelector('tbody');
-
-    function setPosition() {
-        list.style.top = `${loadBtn.offsetTop - list.offsetHeight - 5}px`;
-        list.style.left = `${loadBtn.offsetLeft - list.offsetWidth / 2}px`;
-    }
 
     function loadArticle() {
         selectAll.checked = false;
 
-        while(tbody.childElementCount) tbody.removeChild(tbody.childNodes[0]);
+        while(list.firstChild) list.lastChild.remove();
         for(const key of Object.keys(tempArticles)) {
-            const row = (
+            list.append(
                 <tr>
                     <td><input type="checkbox" name="select" /></td>
                     <td><a href="#" data-id={key}>{tempArticles[key].title}</a></td>
                     <td>{getDateStr(tempArticles[key].time).split(' ')[0]}</td>
-                </tr>
+                </tr>,
             );
-            tbody.append(row);
         }
     }
 
-    list.addEventListener('click', event => {
+    wrapper.addEventListener('click', event => {
         if(event.target.name == 'selectAll') {
             list.querySelectorAll('input[name="select"]').forEach(e => {
                 e.checked = event.target.checked;
             });
         }
-        else if(event.target.tagName == 'A') {
+
+        if(event.target.tagName == 'A') {
             const id = event.target.dataset.id;
             const title = document.querySelector('#inputTitle');
             title.value = tempArticles[id].title;
             editor.html.set(tempArticles[id].content);
-            list.classList.add('hidden');
+            wrapper.classList.add('hidden');
         }
-    });
-    saveBtn.addEventListener('click', event => {
-        event.preventDefault();
-        const timestamp = new Date().getTime();
 
-        const title = document.querySelector('#inputTitle').value;
-
-        tempArticles[timestamp] = {
-            title: title || '제목 없음',
-            time: timestamp,
-            content: editor.html.get(true),
-        };
-        if(!list.classList.contains('hidden')) {
-            loadArticle();
-        }
-        Configure.set(TEMPORARY_ARTICLES, tempArticles);
-        alert('작성 중인 게시물이 저장되었습니다.');
-    });
-    loadBtn.addEventListener('click', event => {
-        event.preventDefault();
-
-        if(list.classList.contains('hidden')) {
-            loadArticle();
-
-            list.classList.remove('hidden');
-            setPosition();
-        }
-        else {
-            list.classList.add('hidden');
+        if(!event.target.closest('table')) {
+            wrapper.classList.add('hidden');
         }
     });
     deleteBtn.addEventListener('click', event => {
         event.preventDefault();
-        for(let i = tbody.childElementCount - 1; i >= 0; i -= 1) {
-            const e = tbody.childNodes[i];
-            if(e.querySelector('input[name="select"]').checked) {
-                const id = e.querySelector('a').dataset.id;
-                delete tempArticles[id];
-                e.remove();
-            }
-        }
-        Configure.set(TEMPORARY_ARTICLES, tempArticles);
 
-        selectAll.checked = false;
-        setPosition();
+        const checkedItems = list.querySelectorAll('input[name="select"]:checked');
+        checkedItems.forEach(i => {
+            const id = i.dataset.id;
+            delete tempArticles[id];
+        });
+
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
+        loadArticle();
+    });
+    closeBtn.addEventListener('click', event => {
+        event.preventDefault();
+
+        wrapper.classList.add('hidden');
     });
 
+    const btns = document.querySelector('.btns');
+    const saveBtn = <button class="btn btn-primary" id="tempSaveBtn">임시 저장</button>;
+    const loadBtn = <button class="btn btn-arca" id="tempLoadBtn">불러오기</button>;
     const submitBtn = btns.querySelector('#submitBtn');
-    btns.insertAdjacentElement('afterend', list);
+    btns.insertAdjacentElement('afterend', wrapper);
     btns.prepend(
         <>
             <style>
@@ -153,4 +128,31 @@ function apply() {
             {submitBtn}
         </>,
     );
+
+    saveBtn.addEventListener('click', event => {
+        event.preventDefault();
+        const timestamp = new Date().getTime();
+
+        const title = document.querySelector('#inputTitle').value;
+
+        tempArticles[timestamp] = {
+            title: title || '제목 없음',
+            time: timestamp,
+            content: editor.html.get(true),
+        };
+        if(!wrapper.classList.contains('hidden')) {
+            loadArticle();
+        }
+        Configure.set(TEMPORARY_ARTICLES, tempArticles);
+        alert('작성 중인 게시물이 저장되었습니다.');
+    });
+    loadBtn.addEventListener('click', event => {
+        event.preventDefault();
+
+        if(wrapper.classList.contains('hidden')) {
+            loadArticle();
+
+            wrapper.classList.remove('hidden');
+        }
+    });
 }
