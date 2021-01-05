@@ -78,7 +78,17 @@ function addSetting() {
         category: Configure.categoryKey.MUTE,
         header: '사용자 뮤트',
         option: userMute,
-        description: '지정한 유저의 게시물과 댓글을 숨깁니다.',
+        description: (
+            <>
+                지정한 유저의 게시물과 댓글을 숨깁니다.<br />
+                Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.<br />
+                사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록<br />
+                <ul>
+                    <li>소괄호()</li>
+                    <li>마침표.</li>
+                </ul>
+            </>
+        ),
         callback: {
             save() {
                 Configure.set(BLOCK_USER, userMute.value.split('\n').filter(i => i != ''));
@@ -94,7 +104,28 @@ function addSetting() {
         category: Configure.categoryKey.MUTE,
         header: '키워드 뮤트',
         option: keywordMute,
-        description: '지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.',
+        description: (
+            <>
+                지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.<br />
+                Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.<br />
+                사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록<br />
+                <ul>
+                    <li>소괄호()</li>
+                    <li>중괄호{'{}'}</li>
+                    <li>대괄호[]</li>
+                    <li>마침표.</li>
+                    <li>플러스+</li>
+                    <li>물음표?</li>
+                    <li>달러기호$</li>
+                    <li>캐럿^</li>
+                    <li>별*</li>
+                    <li>슬래시/</li>
+                    <li>역슬래시\</li>
+                    <li>하이픈-</li>
+                    <li>파이프|</li>
+                </ul>
+            </>
+        ),
         callback: {
             save() {
                 Configure.set(BLOCK_KEYWORD, keywordMute.value.split('\n').filter(i => i != ''));
