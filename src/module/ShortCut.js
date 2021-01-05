@@ -39,7 +39,7 @@ function addSetting() {
         ),
         callback: {
             save() {
-                Configure.set(USE_SHORTCUT, shortCut.value);
+                Configure.set(USE_SHORTCUT, shortCut.value == 'true');
             },
             load() {
                 shortCut.value = Configure.get(USE_SHORTCUT);
