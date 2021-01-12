@@ -60,9 +60,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MUTE,
     header: '공지사항 접기',
-    option: hideNotice,
+    view: hideNotice,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(MUTE_NOTICE, hideNotice.value === 'true');
       },
@@ -78,7 +78,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MUTE,
     header: '사용자 뮤트',
-    option: userMute,
+    view: userMute,
     description: (
       <>
         지정한 유저의 게시물과 댓글을 숨깁니다.
@@ -93,7 +93,7 @@ function addSetting() {
         </ul>
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(
           BLOCK_USER,
@@ -112,7 +112,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MUTE,
     header: '키워드 뮤트',
-    option: keywordMute,
+    view: keywordMute,
     description: (
       <>
         지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.
@@ -138,7 +138,7 @@ function addSetting() {
         </ul>
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(
           BLOCK_KEYWORD,
@@ -194,7 +194,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MUTE,
     header: '카테고리 뮤트',
-    option: categoryMute,
+    view: categoryMute,
     description: (
       <>
         미리보기 뮤트: 해당 카테고리 게시물의 미리보기를 제거합니다.
@@ -202,7 +202,7 @@ function addSetting() {
         게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         const data = Configure.get(MUTE_CATEGORY);
         if (!data[channel]) data[channel] = {};

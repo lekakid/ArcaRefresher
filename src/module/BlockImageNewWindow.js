@@ -30,9 +30,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '컨텐츠 원본보기 방지',
-    option: setting,
+    view: setting,
     description: '게시물 조회 시 이미지 등을 클릭하면 원본 이미지가 열리는 기능을 막습니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(BLOCK_IMAGE_NEW_WINDOW, setting.value === 'true');
       },

@@ -30,9 +30,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '최근 방문 채널 숨김',
-    option: hideRecentVisit,
+    view: hideRecentVisit,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
       },
@@ -51,9 +51,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '우측 사이드 메뉴 숨김',
-    option: hideSideMenu,
+    view: hideSideMenu,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(HIDE_SIDEMENU, hideSideMenu.value === 'true');
       },
@@ -72,9 +72,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '프로필 아바타 숨김',
-    option: hideAvatar,
+    view: hideAvatar,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(HIDE_AVATAR, hideAvatar.value === 'true');
       },
@@ -93,9 +93,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '댓글 *수정됨 숨김',
-    option: hideModified,
+    view: hideModified,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(HIDE_MODIFIED, hideModified.value === 'true');
       },
@@ -109,9 +109,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '본문 이미지, 동영상 사이즈',
-    option: resizeMedia,
+    view: resizeMedia,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(RESIZE_MEDIA, resizeMedia.value);
       },

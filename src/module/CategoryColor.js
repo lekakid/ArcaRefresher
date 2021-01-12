@@ -133,9 +133,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '카테고리 색상 설정',
-    option: table,
+    view: table,
     description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',
-    callback: {
+    valueCallback: {
       save() {
         const colorConfig = Configure.get(CATEGORY_COLOR);
         if (!colorConfig[channel]) colorConfig[channel] = {};

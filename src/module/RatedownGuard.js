@@ -27,9 +27,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '비추천 방지',
-    option: ratedownBlock,
+    view: ratedownBlock,
     description: '비추천 버튼을 클릭하면 다시 한 번 확인창을 띄웁니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(RATEDOWN_GUARD, ratedownBlock.value === 'true');
       },

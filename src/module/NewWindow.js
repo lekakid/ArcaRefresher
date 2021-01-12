@@ -33,9 +33,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '게시물 새 창으로 열기',
-    option: newWindow,
+    view: newWindow,
     description: '게시물 클릭 시 새창으로 띄워줍니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(OPEN_NEW_WINDOW, newWindow.value === 'true');
       },

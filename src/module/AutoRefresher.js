@@ -40,9 +40,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '자동 새로고침',
-    option: refreshTimeSelect,
+    view: refreshTimeSelect,
     description: '일정 시간마다 게시물 목록을 갱신합니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(REFRESH_TIME, Number(refreshTimeSelect.value));
       },
@@ -61,9 +61,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '새로고침 애니메이션 숨김',
-    option: hideRefreshSign,
+    view: hideRefreshSign,
     description: '',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(HIDE_REFRESHER, hideRefreshSign.value === 'true');
       },

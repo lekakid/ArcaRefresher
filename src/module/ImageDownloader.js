@@ -28,7 +28,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '이미지 일괄 다운로드 압축파일 이름',
-    option: downloadName,
+    view: downloadName,
     description: (
       <>
         이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름 포맷입니다.
@@ -42,7 +42,7 @@ function addSetting() {
         %channel%: 채널 이름
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(FILENAME, downloadName.value);
       },
@@ -56,7 +56,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '이미지 일괄 다운로드 이미지 이름',
-    option: imageName,
+    view: imageName,
     description: (
       <>
         이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.
@@ -77,7 +77,7 @@ function addSetting() {
         %channel%: 채널 이름
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(IMAGENAME, imageName.value);
       },

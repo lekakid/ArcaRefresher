@@ -43,7 +43,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.INTERFACE,
     header: '알림 아이콘 색상 변경',
-    option: inputElement,
+    view: inputElement,
     description: (
       <>
         알림 아이콘의 점등 색상을 변경합니다.
@@ -53,7 +53,7 @@ function addSetting() {
         더블 클릭으로 무작위 색상을 선택할 수 있습니다.
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(NOTIFY_COLOR, inputElement.value);
       },

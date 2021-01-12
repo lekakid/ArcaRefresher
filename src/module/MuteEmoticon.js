@@ -41,7 +41,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MUTE,
     header: '뮤트된 아카콘',
-    option: (
+    view: (
       <>
         {muteEmoticon}
         {deleteBtn}
@@ -54,7 +54,7 @@ function addSetting() {
         Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         const data = Configure.get(BLOCK_EMOTICON);
 

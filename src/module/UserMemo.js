@@ -43,7 +43,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.MEMO,
     header: '메모된 이용자',
-    option: (
+    view: (
       <>
         {memoList}
         {deleteBtn}
@@ -56,7 +56,7 @@ function addSetting() {
         Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
       </>
     ),
-    callback: {
+    valueCallback: {
       save() {
         const data = Configure.get(USER_MEMO);
 

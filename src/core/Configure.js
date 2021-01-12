@@ -27,15 +27,23 @@ const configCategoryString = {
 const saveCallbackList = [];
 const loadCallbackList = [];
 
-function addSetting(settingObject) {
-  const { category, header, option, description, callback } = settingObject;
-  const { save, load } = callback;
-
+/**
+ * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
+ * @param {Object} param                        파라미터 오브젝트
+ * @param {string} param.category               설정이 위치할 분류
+ * @param {string} param.header                 설정의 이름
+ * @param {string} param.view                   사용자가 상호작용할 인터페이스
+ * @param {string} [param.description]          하단에 표기되는 설명
+ * @param {Object} param.valueCallback          콜백함수 오브젝트
+ * @param {function} param.valueCallback.save   저장 버튼을 누를 시 호출할 콜백 함수
+ * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
+ */
+function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
   const row = (
     <div className="row">
       <label className="col-md-3">{header}</label>
       <div className="col-md-9">
-        {option}
+        {view}
         {description && <p>{description}</p>}
       </div>
     </div>

@@ -57,7 +57,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '자짤 관리',
-    option: (
+    view: (
       <div id="MyImage">
         <style>{stylesheet}</style>
         {imgList}
@@ -65,7 +65,7 @@ function addSetting() {
       </div>
     ),
     description: '더블을 하면 이미지를 모두 선택할 수 있습니다.',
-    callback: {
+    valueCallback: {
       save() {
         const data = Configure.get(MY_IMAGES);
 

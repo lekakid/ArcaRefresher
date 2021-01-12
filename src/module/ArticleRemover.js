@@ -34,9 +34,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.CHANNEL_ADMIN,
     header: '삭제 테스트 모드',
-    option: removeTestMode,
+    view: removeTestMode,
     description: '게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(USE_AUTO_REMOVER_TEST, removeTestMode.value === 'true');
       },
@@ -52,9 +52,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.CHANNEL_ADMIN,
     header: '게시물 삭제 키워드 목록',
-    option: removeKeywordList,
+    view: removeKeywordList,
     description: '지정한 유저가 작성한 게시물을 삭제합니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(
           AUTO_REMOVE_KEYWORD,
@@ -73,9 +73,9 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.CHANNEL_ADMIN,
     header: '게시물 삭제 유저 목록',
-    option: removeUserList,
+    view: removeUserList,
     description: '지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.',
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(
           AUTO_REMOVE_USER,

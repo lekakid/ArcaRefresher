@@ -29,7 +29,7 @@ function addSetting() {
   Configure.addSetting({
     category: Configure.categoryKey.UTILITY,
     header: '단축키 사용',
-    option: shortCut,
+    view: shortCut,
     description: (
       <a
         href="https://github.com/lekakid/ArcaRefresher/wiki/Feature#%EB%8B%A8%EC%B6%95%ED%82%A4%EB%A1%9C-%EB%B9%A0%EB%A5%B8-%EC%9D%B4%EB%8F%99"
@@ -39,7 +39,7 @@ function addSetting() {
         단축키 안내 바로가기
       </a>
     ),
-    callback: {
+    valueCallback: {
       save() {
         Configure.set(USE_SHORTCUT, shortCut.value === 'true');
       },
