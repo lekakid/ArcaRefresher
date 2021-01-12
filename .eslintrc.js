@@ -3,6 +3,7 @@ module.exports = {
   extends: [
     require.resolve('@gera2ld/plaid/eslint'),
     require.resolve('@gera2ld/plaid-common-react/eslint'),
+    'prettier',
   ],
   settings: {
     'import/resolver': {
@@ -14,21 +15,16 @@ module.exports = {
   },
   globals: {
     VM: true,
+    GM_setValue: true,
+    GM_getValue: true,
+    GM_deleteValue: true,
+    GM_listValues: true,
+    GM_xmlhttpRequest: true,
+    unsafeWindow: true,
+    ClipboardItem: true,
+    JSZip: true,
   },
   rules: {
-    'indent': ["error", 4],
-    'react/jsx-indent': "off",
-    'react/no-unknown-property': "off",
-    'react/style-prop-object': "off",
-    'linebreak-style': 0,
-    'keyword-spacing': "off",
-    'no-restricted-globals':"off",
-    'eqeqeq':"off",
-    'no-plusplus':"off",
-    'brace-style':["error", "stroustrup"],
-    'func-names': "off",
-    'no-undef': "off",
-    'no-alert': "off",
-    'no-prototype-builtins': "off",
-  }
+    'no-alert': 'off',
+  },
 };
