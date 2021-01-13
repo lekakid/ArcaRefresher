@@ -7,6 +7,58 @@ import styles from '../css/IPScouter.module.css';
 
 export default { load };
 
+function load() {
+  try {
+    if (Parser.hasArticle()) {
+      apply('article');
+    }
+    if (Parser.hasBoard()) {
+      apply('board');
+    }
+
+    AutoRefresher.addRefreshCallback({
+      priority: 0,
+      callback() {
+        apply('board');
+      },
+    });
+    CommentRefresh.addRefreshCallback({
+      priority: 0,
+      callback() {
+        apply('comment');
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function apply(viewQuery) {
+  const ipElements = Parser.queryItems('ips', viewQuery);
+
+  ipElements.forEach((ipElement) => {
+    const ip = ipElement.textContent.replace(/\(|\)/g, '');
+    const [result, color] = checkIP(ip);
+
+    ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
+  });
+}
+
+function checkIP(ip) {
+  let result = '고정';
+  let color = styles.green;
+
+  for (const key of Object.keys(DB)) {
+    if (DB[key].indexOf(ip) > -1) {
+      result = IPType[key].str;
+      color = IPType[key].color;
+      break;
+    }
+  }
+
+  return [result, color];
+}
+
 const DB = {
   KT: [
     '1.96',
@@ -729,55 +781,3 @@ const IPType = {
   tor: { str: '토르', color: styles.red },
   hola: { str: '홀라', color: styles.red },
 };
-
-function load() {
-  try {
-    if (Parser.hasArticle()) {
-      apply('article');
-    }
-    if (Parser.hasBoard()) {
-      apply('board');
-    }
-
-    AutoRefresher.addRefreshCallback({
-      priority: 0,
-      callback() {
-        apply('board');
-      },
-    });
-    CommentRefresh.addRefreshCallback({
-      priority: 0,
-      callback() {
-        apply('comment');
-      },
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-function apply(viewQuery) {
-  const ipElements = Parser.queryItems('ips', viewQuery);
-
-  ipElements.forEach((ipElement) => {
-    const ip = ipElement.textContent.replace(/\(|\)/g, '');
-    const [result, color] = checkIP(ip);
-
-    ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
-  });
-}
-
-function checkIP(ip) {
-  let result = '고정';
-  let color = styles.green;
-
-  for (const key of Object.keys(DB)) {
-    if (DB[key].indexOf(ip) > -1) {
-      result = IPType[key].str;
-      color = IPType[key].color;
-      break;
-    }
-  }
-
-  return [result, color];
-}
