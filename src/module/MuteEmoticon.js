@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 import CommentRefresh from './CommentRefresh';
 
@@ -8,7 +8,7 @@ const BLOCK_EMOTICON = { key: 'blockEmoticon', defaultValue: {} };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasComment()) {
       mute();
@@ -27,7 +27,7 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const muteEmoticon = <select size="6" multiple="" />;
   const deleteBtn = <button className="btn btn-arca">삭제</button>;
   deleteBtn.addEventListener('click', (event) => {
@@ -38,8 +38,8 @@ function addSetting() {
 
     event.target.disabled = false;
   });
-  Configure.addSetting({
-    category: Configure.categoryKey.MUTE,
+  addSetting({
+    category: categoryKey.MUTE,
     header: '뮤트된 아카콘',
     view: (
       <>
@@ -56,16 +56,16 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        const data = Configure.get(BLOCK_EMOTICON);
+        const data = getValue(BLOCK_EMOTICON);
 
         const keys = Array.from(muteEmoticon.children, (e) => e.value);
         for (const key in data) {
           if (keys.indexOf(key) === -1) delete data[key];
         }
-        Configure.set(BLOCK_EMOTICON, data);
+        setValue(BLOCK_EMOTICON, data);
       },
       load() {
-        const data = Configure.get(BLOCK_EMOTICON);
+        const data = getValue(BLOCK_EMOTICON);
         for (const key of Object.keys(data)) {
           muteEmoticon.append(<option value={key}>{data[key].name}</option>);
         }
@@ -75,7 +75,7 @@ function addSetting() {
 }
 
 function mute() {
-  const blockEmoticons = Configure.get(BLOCK_EMOTICON);
+  const blockEmoticons = getValue(BLOCK_EMOTICON);
 
   let list = [];
   for (const key in blockEmoticons) {
@@ -127,9 +127,9 @@ function apply() {
     const [name, bundleID] = await getEmoticonInfo(id);
     const bundle = await getEmoticonBundle(bundleID);
 
-    const blockEmoticon = Configure.get(BLOCK_EMOTICON);
+    const blockEmoticon = getValue(BLOCK_EMOTICON);
     blockEmoticon[bundleID] = { name, bundle };
-    Configure.set(BLOCK_EMOTICON, blockEmoticon);
+    setValue(BLOCK_EMOTICON, blockEmoticon);
     window.location.reload();
   });
 }

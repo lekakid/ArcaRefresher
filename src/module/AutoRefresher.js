@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 
@@ -17,7 +17,7 @@ const refreshCallbackList = [];
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasArticle()) return;
     if (Parser.hasBoard()) {
@@ -28,7 +28,7 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const refreshTimeSelect = (
     <select>
       <option value="0">사용 안 함</option>
@@ -37,17 +37,17 @@ function addSetting() {
       <option value="10">10초</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '자동 새로고침',
     view: refreshTimeSelect,
     description: '일정 시간마다 게시물 목록을 갱신합니다.',
     valueCallback: {
       save() {
-        Configure.set(REFRESH_TIME, Number(refreshTimeSelect.value));
+        setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
       },
       load() {
-        refreshTimeSelect.value = Configure.get(REFRESH_TIME);
+        refreshTimeSelect.value = getValue(REFRESH_TIME);
       },
     },
   });
@@ -58,17 +58,17 @@ function addSetting() {
       <option value="true">숨김</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '새로고침 애니메이션 숨김',
     view: hideRefreshSign,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(HIDE_REFRESHER, hideRefreshSign.value === 'true');
+        setValue(HIDE_REFRESHER, hideRefreshSign.value === 'true');
       },
       load() {
-        hideRefreshSign.value = Configure.get(HIDE_REFRESHER);
+        hideRefreshSign.value = getValue(HIDE_REFRESHER);
       },
     },
   });
@@ -80,13 +80,13 @@ function addRefreshCallback(callback) {
 }
 
 function apply() {
-  refreshTime = Configure.get(REFRESH_TIME);
+  refreshTime = getValue(REFRESH_TIME);
   if (refreshTime === 0) return;
 
   const articleList = Parser.queryView('board');
 
   loader = (
-    <div id="autoRefresher" className={Configure.get(HIDE_REFRESHER) ? 'hidden' : ''}>
+    <div id="autoRefresher" className={getValue(HIDE_REFRESHER) ? 'hidden' : ''}>
       <style>{refreshersheet}</style>
     </div>
   );

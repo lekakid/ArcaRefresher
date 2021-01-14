@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
@@ -10,7 +10,7 @@ const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasBoard()) {
       generateColorStyle();
@@ -26,7 +26,7 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   // 카테고리 목록 등록
   const boardCategoryElements = document.querySelectorAll('.board-category a');
   if (!boardCategoryElements.length) return;
@@ -130,14 +130,14 @@ function addSetting() {
 
   const channel = Parser.getChannelInfo().id;
 
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '카테고리 색상 설정',
     view: table,
     description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',
     valueCallback: {
       save() {
-        const colorConfig = Configure.get(CATEGORY_COLOR);
+        const colorConfig = getValue(CATEGORY_COLOR);
         if (!colorConfig[channel]) colorConfig[channel] = {};
 
         const rows = tbody.querySelectorAll('tr');
@@ -163,10 +163,10 @@ function addSetting() {
           }
         }
 
-        Configure.set(CATEGORY_COLOR, colorConfig);
+        setValue(CATEGORY_COLOR, colorConfig);
       },
       load() {
-        const channelConfig = Configure.get(CATEGORY_COLOR)[channel];
+        const channelConfig = getValue(CATEGORY_COLOR)[channel];
         if (!channelConfig) return;
 
         for (const element of tbody.children) {
@@ -209,7 +209,7 @@ const styleTable = {};
 
 function generateColorStyle() {
   const channel = Parser.getChannelInfo().id;
-  const categoryConfig = Configure.get(CATEGORY_COLOR)[channel];
+  const categoryConfig = getValue(CATEGORY_COLOR)[channel];
 
   if (!categoryConfig) return;
 

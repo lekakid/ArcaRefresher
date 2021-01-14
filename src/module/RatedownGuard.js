@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 export default { load };
@@ -7,7 +7,7 @@ const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasArticle()) {
       apply();
@@ -17,31 +17,31 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const ratedownBlock = (
     <select>
       <option value="false">사용 안 함</option>
       <option value="true">사용</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '비추천 방지',
     view: ratedownBlock,
     description: '비추천 버튼을 클릭하면 다시 한 번 확인창을 띄웁니다.',
     valueCallback: {
       save() {
-        Configure.set(RATEDOWN_GUARD, ratedownBlock.value === 'true');
+        setValue(RATEDOWN_GUARD, ratedownBlock.value === 'true');
       },
       load() {
-        ratedownBlock.value = Configure.get(RATEDOWN_GUARD);
+        ratedownBlock.value = getValue(RATEDOWN_GUARD);
       },
     },
   });
 }
 
 function apply() {
-  if (!Configure.get(RATEDOWN_GUARD)) return;
+  if (!getValue(RATEDOWN_GUARD)) return;
 
   const ratedown = document.querySelector('#rateDown');
   if (ratedown == null) return;

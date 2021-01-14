@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
 import { waitForElement } from '../util/ElementDetector';
@@ -11,7 +11,7 @@ const MY_IMAGES = { key: 'myImages', defaultValue: {} };
 
 async function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasArticle()) {
       addContextMenu();
@@ -26,7 +26,7 @@ async function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const imgList = <div className="grid-wrapper" />;
   imgList.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -54,8 +54,8 @@ function addSetting() {
     event.target.disabled = false;
   });
   const channel = Parser.getChannelInfo().id;
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '자짤 관리',
     view: (
       <div id="MyImage">
@@ -67,14 +67,14 @@ function addSetting() {
     description: '더블을 하면 이미지를 모두 선택할 수 있습니다.',
     valueCallback: {
       save() {
-        const data = Configure.get(MY_IMAGES);
+        const data = getValue(MY_IMAGES);
 
         const images = Array.from(imgList.children, (e) => e.children[0].dataset.url);
         data[channel] = images;
-        Configure.set(MY_IMAGES, data);
+        setValue(MY_IMAGES, data);
       },
       load() {
-        const data = Configure.get(MY_IMAGES)[channel];
+        const data = getValue(MY_IMAGES)[channel];
         if (!data) return;
 
         while (imgList.firstChild) imgList.lastChild.remove();
@@ -100,12 +100,12 @@ function addContextMenu() {
     onClick(event) {
       event.preventDefault();
 
-      const imgList = Configure.get(MY_IMAGES);
+      const imgList = getValue(MY_IMAGES);
       if (!imgList[channel]) {
         imgList[channel] = [];
       }
       imgList[channel].push(ContextMenu.getContextData('url').split('?')[0]);
-      Configure.set(MY_IMAGES, imgList);
+      setValue(MY_IMAGES, imgList);
       ContextMenu.hide();
     },
   });
@@ -119,7 +119,7 @@ function apply() {
   const channel = Parser.getChannelInfo().id;
   const editor = unsafeWindow.FroalaEditor('#content');
   if (editor.core.isEmpty()) {
-    const imgList = Configure.get(MY_IMAGES)[channel];
+    const imgList = getValue(MY_IMAGES)[channel];
     if (!imgList || !imgList.length) return;
 
     const img = imgList[Math.floor(Math.random() * imgList.length)];

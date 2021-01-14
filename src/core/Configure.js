@@ -1,19 +1,11 @@
 import stylesheet from '../css/Configure.css';
 
-const categoryKey = {
+export const categoryKey = {
   UTILITY: 'utility',
   INTERFACE: 'interface',
   MEMO: 'memo',
   MUTE: 'mute',
   CHANNEL_ADMIN: 'channelAdmin',
-};
-
-export default {
-  categoryKey,
-  initialize,
-  addSetting,
-  get,
-  set,
 };
 
 const configCategoryString = {
@@ -38,7 +30,7 @@ const loadCallbackList = [];
  * @param {function} param.valueCallback.save   저장 버튼을 누를 시 호출할 콜백 함수
  * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
  */
-function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
+export function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
   const row = (
     <div className="row">
       <label className="col-md-3">{header}</label>
@@ -51,6 +43,34 @@ function addSetting({ category, header, view, description, valueCallback: { save
   document.querySelector(`#refresherSetting #${category}`).append(row);
   saveCallbackList.push(save);
   loadCallbackList.push(load);
+}
+
+/**
+ * 설정 값을 가져옵니다.
+ * @param {Object} keyObject           { key, defaultValue }
+ * @param {string} keyObject.key       키 값
+ * @param {*} keyObject.defaultValue   값이 없을 시 기본값
+ * @return {*}                         저장된 설정 값
+ */
+export function getValue({ key, defaultValue }) {
+  if (Array.isArray(defaultValue)) {
+    return GM_getValue(key, [...defaultValue]);
+  }
+
+  if (typeof defaultValue === 'object') {
+    return GM_getValue(key, { ...defaultValue });
+  }
+
+  return GM_getValue(key, defaultValue);
+}
+
+/**
+ * 설정 값을 저장합니다.
+ * @param {Object} param  { key, ...rest }
+ * @param {*} value       저장할 값
+ */
+export function setValue({ key }, value) {
+  GM_setValue(key, value);
 }
 
 function importConfig(JSONString) {
@@ -82,7 +102,7 @@ function resetConfig() {
   }
 }
 
-function initialize() {
+export default function initialize() {
   // 스크립트 설정 버튼 엘리먼트
   const showBtn = (
     <li className="nav-item dropdown" id="showSetting">
@@ -229,32 +249,4 @@ function initialize() {
   configContainer.querySelector('#closeSetting').addEventListener('click', () => {
     configContainer.classList.add('disappear');
   });
-}
-
-/**
- * 설정 값을 가져옵니다.
- * @param {Object} keyObject           { key, defaultValue }
- * @param {string} keyObject.key       키 값
- * @param {*} keyObject.defaultValue   값이 없을 시 기본값
- * @return {*}                         저장된 설정 값
- */
-function get({ key, defaultValue }) {
-  if (Array.isArray(defaultValue)) {
-    return GM_getValue(key, [...defaultValue]);
-  }
-
-  if (typeof defaultValue === 'object') {
-    return GM_getValue(key, { ...defaultValue });
-  }
-
-  return GM_getValue(key, defaultValue);
-}
-
-/**
- * 설정 값을 저장합니다.
- * @param {Object} param  { key, ...rest }
- * @param {*} value       저장할 값
- */
-function set({ key }, value) {
-  GM_setValue(key, value);
 }

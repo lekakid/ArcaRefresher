@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 
 import sheetLiveModifier from '../css/LiveModifier.css';
 
@@ -12,7 +12,7 @@ const RESIZE_MEDIA = { key: 'resizeMedia', defaultValue: '100' };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     apply();
   } catch (error) {
@@ -20,24 +20,24 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const hideRecentVisit = (
     <select>
       <option value="false">보임</option>
       <option value="true">숨김</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '최근 방문 채널 숨김',
     view: hideRecentVisit,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
+        setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
       },
       load() {
-        hideRecentVisit.value = Configure.get(HIDE_RECENT_VISIT);
+        hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
       },
     },
   });
@@ -48,17 +48,17 @@ function addSetting() {
       <option value="true">숨김</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '우측 사이드 메뉴 숨김',
     view: hideSideMenu,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(HIDE_SIDEMENU, hideSideMenu.value === 'true');
+        setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
       },
       load() {
-        hideSideMenu.value = Configure.get(HIDE_SIDEMENU);
+        hideSideMenu.value = getValue(HIDE_SIDEMENU);
       },
     },
   });
@@ -69,17 +69,17 @@ function addSetting() {
       <option value="true">숨김</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '프로필 아바타 숨김',
     view: hideAvatar,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(HIDE_AVATAR, hideAvatar.value === 'true');
+        setValue(HIDE_AVATAR, hideAvatar.value === 'true');
       },
       load() {
-        hideAvatar.value = Configure.get(HIDE_AVATAR);
+        hideAvatar.value = getValue(HIDE_AVATAR);
       },
     },
   });
@@ -90,33 +90,33 @@ function addSetting() {
       <option value="true">숨김</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '댓글 *수정됨 숨김',
     view: hideModified,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(HIDE_MODIFIED, hideModified.value === 'true');
+        setValue(HIDE_MODIFIED, hideModified.value === 'true');
       },
       load() {
-        hideModified.value = Configure.get(HIDE_MODIFIED);
+        hideModified.value = getValue(HIDE_MODIFIED);
       },
     },
   });
 
   const resizeMedia = <input type="text" name="resizeMedia" />;
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '본문 이미지, 동영상 사이즈',
     view: resizeMedia,
     description: '',
     valueCallback: {
       save() {
-        Configure.set(RESIZE_MEDIA, resizeMedia.value);
+        setValue(RESIZE_MEDIA, resizeMedia.value);
       },
       load() {
-        resizeMedia.value = Configure.get(RESIZE_MEDIA);
+        resizeMedia.value = getValue(RESIZE_MEDIA);
       },
     },
   });
@@ -126,19 +126,19 @@ function apply() {
   document.head.append(<style>{sheetLiveModifier}</style>);
   const contentWrapper = document.querySelector('.content-wrapper');
 
-  const hideRecentVisit = Configure.get(HIDE_RECENT_VISIT);
+  const hideRecentVisit = getValue(HIDE_RECENT_VISIT);
   if (hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
 
-  const hideSideMenu = Configure.get(HIDE_SIDEMENU);
+  const hideSideMenu = getValue(HIDE_SIDEMENU);
   if (hideSideMenu) contentWrapper.classList.add('hide-sidemenu');
 
-  const hideAvatar = Configure.get(HIDE_AVATAR);
+  const hideAvatar = getValue(HIDE_AVATAR);
   if (hideAvatar) contentWrapper.classList.add('hide-avatar');
 
-  const hideModified = Configure.get(HIDE_MODIFIED);
+  const hideModified = getValue(HIDE_MODIFIED);
   if (hideModified) contentWrapper.classList.add('hide-modified');
 
-  const resizeMedia = Configure.get(RESIZE_MEDIA);
+  const resizeMedia = getValue(RESIZE_MEDIA);
   const css = `.article-body img, .article-body video {
         max-width: ${resizeMedia}% !important;
     }`;

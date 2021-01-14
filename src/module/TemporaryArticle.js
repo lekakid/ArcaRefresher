@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { getValue, setValue } from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
 import { waitForElement } from '../util/ElementDetector';
 
@@ -19,7 +19,7 @@ async function load() {
 
 function apply() {
   const editor = unsafeWindow.FroalaEditor('#content');
-  const tempArticles = Configure.get(TEMPORARY_ARTICLES);
+  const tempArticles = getValue(TEMPORARY_ARTICLES);
 
   const selectAll = <input type="checkbox" name="selectAll" />;
   const deleteBtn = (
@@ -104,7 +104,7 @@ function apply() {
       delete tempArticles[id];
     });
 
-    Configure.set(TEMPORARY_ARTICLES, tempArticles);
+    setValue(TEMPORARY_ARTICLES, tempArticles);
     loadArticle();
   });
   closeBtn.addEventListener('click', (event) => {
@@ -164,7 +164,7 @@ function apply() {
     if (!wrapper.classList.contains('hidden')) {
       loadArticle();
     }
-    Configure.set(TEMPORARY_ARTICLES, tempArticles);
+    setValue(TEMPORARY_ARTICLES, tempArticles);
     alert('작성 중인 게시물이 저장되었습니다.');
   });
   loadBtn.addEventListener('click', (event) => {

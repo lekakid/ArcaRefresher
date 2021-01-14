@@ -40,7 +40,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   );
 
   await waitForElement('.content-wrapper');
-  Configure.initialize();
+  Configure();
   ContextMenu.initialize();
 
   LiveModifier.load();

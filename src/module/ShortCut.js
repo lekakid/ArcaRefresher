@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 export default { load };
@@ -7,7 +7,7 @@ const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasArticle()) {
       apply('article');
@@ -19,15 +19,15 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const shortCut = (
     <select>
       <option value="false">사용 안 함</option>
       <option value="true">사용</option>
     </select>
   );
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '단축키 사용',
     view: shortCut,
     description: (
@@ -41,17 +41,17 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        Configure.set(USE_SHORTCUT, shortCut.value === 'true');
+        setValue(USE_SHORTCUT, shortCut.value === 'true');
       },
       load() {
-        shortCut.value = Configure.get(USE_SHORTCUT);
+        shortCut.value = getValue(USE_SHORTCUT);
       },
     },
   });
 }
 
 function apply(view) {
-  if (!Configure.get(USE_SHORTCUT)) return;
+  if (!getValue(USE_SHORTCUT)) return;
 
   if (view === 'article') {
     document.addEventListener('keydown', onArticle);

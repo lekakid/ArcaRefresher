@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
@@ -12,7 +12,7 @@ let handlerApplied = false;
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     apply();
 
@@ -29,7 +29,7 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const memoList = <select size="6" multiple="" />;
   const deleteBtn = <button className="btn btn-arca">삭제</button>;
   deleteBtn.addEventListener('click', (event) => {
@@ -40,8 +40,8 @@ function addSetting() {
 
     event.target.disabled = false;
   });
-  Configure.addSetting({
-    category: Configure.categoryKey.MEMO,
+  addSetting({
+    category: categoryKey.MEMO,
     header: '메모된 이용자',
     view: (
       <>
@@ -58,16 +58,16 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        const data = Configure.get(USER_MEMO);
+        const data = getValue(USER_MEMO);
 
         const keys = Array.from(memoList.children, (e) => e.value);
         for (const key in data) {
           if (keys.indexOf(key) === -1) delete data[key];
         }
-        Configure.set(USER_MEMO, data);
+        setValue(USER_MEMO, data);
       },
       load() {
-        const data = Configure.get(USER_MEMO);
+        const data = getValue(USER_MEMO);
         while (memoList.childElementCount) {
           memoList.removeChild(memoList.children[0]);
         }
@@ -82,7 +82,7 @@ function addSetting() {
 
 function apply() {
   const users = Parser.queryItems('users');
-  const memos = Configure.get(USER_MEMO);
+  const memos = getValue(USER_MEMO);
 
   users.forEach((user) => {
     const id = Parser.parseUserID(user);
@@ -131,7 +131,7 @@ function apply() {
       delete memos[id];
     }
 
-    Configure.set(USER_MEMO, memos);
+    setValue(USER_MEMO, memos);
     apply();
   });
 }

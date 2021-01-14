@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
 import { getBlob, getArrayBuffer } from '../util/DownloadManager';
@@ -12,7 +12,7 @@ const IMAGENAME = { key: 'imageDonwloaderImageName', defaultValue: '%num%' };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     if (Parser.hasArticle()) {
       addContextMenu();
@@ -23,10 +23,10 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const downloadName = <input type="text" />;
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '이미지 일괄 다운로드 압축파일 이름',
     view: downloadName,
     description: (
@@ -44,17 +44,17 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        Configure.set(FILENAME, downloadName.value);
+        setValue(FILENAME, downloadName.value);
       },
       load() {
-        downloadName.value = Configure.get(FILENAME);
+        downloadName.value = getValue(FILENAME);
       },
     },
   });
 
   const imageName = <input type="text" />;
-  Configure.addSetting({
-    category: Configure.categoryKey.UTILITY,
+  addSetting({
+    category: categoryKey.UTILITY,
     header: '이미지 일괄 다운로드 이미지 이름',
     view: imageName,
     description: (
@@ -79,10 +79,10 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        Configure.set(IMAGENAME, imageName.value);
+        setValue(IMAGENAME, imageName.value);
       },
       load() {
-        imageName.value = Configure.get(IMAGENAME);
+        imageName.value = getValue(IMAGENAME);
       },
     },
   });
@@ -121,7 +121,7 @@ function addContextMenu() {
       const title = event.target.textContent;
       const url = ContextMenu.getContextData('url');
       const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
-      let imagename = replaceData(Configure.get(IMAGENAME));
+      let imagename = replaceData(getValue(IMAGENAME));
       imagename = imagename.replace('%num%', '000');
       imagename = imagename.replace('%orig%', url.match(/[0-9a-f]{64}/)[0]);
 
@@ -208,7 +208,7 @@ function apply() {
     const zip = new JSZip();
     const originalText = downloadBtn.textContent;
     const total = checkedElements.length;
-    const configureName = Configure.get(IMAGENAME);
+    const configureName = getValue(IMAGENAME);
     for (let i = 0; i < checkedElements.length; i += 1) {
       let imagename = replaceData(configureName);
       const { url, filename: orig } = checkedElements[i].parentNode.dataset;
@@ -224,7 +224,7 @@ function apply() {
     }
     downloadBtn.textContent = originalText;
 
-    let filename = Configure.get(FILENAME);
+    let filename = getValue(FILENAME);
     filename = replaceData(filename);
     const zipblob = await zip.generateAsync({ type: 'blob' });
     window.saveAs(zipblob, `${filename}.zip`);

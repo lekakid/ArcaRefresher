@@ -1,4 +1,4 @@
-import Configure from '../core/Configure';
+import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
 import { getRandomColor } from '../util/ColorManager';
 
 export default { load };
@@ -7,7 +7,7 @@ const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 
 function load() {
   try {
-    addSetting();
+    setupSetting();
 
     apply();
   } catch (error) {
@@ -15,7 +15,7 @@ function load() {
   }
 }
 
-function addSetting() {
+function setupSetting() {
   const inputElement = <input type="text" placeholder="FFC107" />;
   const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
 
@@ -40,8 +40,8 @@ function addSetting() {
     notificationIcon.style.color = color;
   });
 
-  Configure.addSetting({
-    category: Configure.categoryKey.INTERFACE,
+  addSetting({
+    category: categoryKey.INTERFACE,
     header: '알림 아이콘 색상 변경',
     view: inputElement,
     description: (
@@ -55,17 +55,17 @@ function addSetting() {
     ),
     valueCallback: {
       save() {
-        Configure.set(NOTIFY_COLOR, inputElement.value);
+        setValue(NOTIFY_COLOR, inputElement.value);
       },
       load() {
-        inputElement.value = Configure.get(NOTIFY_COLOR);
+        inputElement.value = getValue(NOTIFY_COLOR);
       },
     },
   });
 }
 
 function apply() {
-  const color = Configure.get(NOTIFY_COLOR);
+  const color = getValue(NOTIFY_COLOR);
 
   const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
   if (notificationIcon === null) return;
