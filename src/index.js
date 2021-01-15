@@ -1,6 +1,7 @@
 import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
 import Parser from './core/Parser';
+import Transition from './core/Transition';
 import { waitForElement } from './util/ElementDetector';
 
 import AnonymousNick from './module/AnonymousNick';
@@ -25,19 +26,14 @@ import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
 import UserMemo from './module/UserMemo';
 
-import FadeStyle from './css/Fade.css';
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
 (async function App() {
   await waitForElement('head');
 
   // Load Global CSS
-  document.head.append(
-    <style>
-      {FadeStyle}
-      {IPScouterStyle}
-    </style>
-  );
+  document.head.append(<style>{IPScouterStyle}</style>);
+  Transition();
 
   await waitForElement('.content-wrapper');
   Configure();

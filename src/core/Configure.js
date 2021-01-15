@@ -1,3 +1,5 @@
+import { useFade } from './Transition';
+
 import stylesheet from '../css/Configure.css';
 
 const CATEGORY = {
@@ -132,7 +134,7 @@ function renderCategory() {
 }
 
 export default function initialize() {
-  // 스크립트 설정 버튼 엘리먼트
+  // 설정 버튼 엘리먼트
   const showBtn = (
     <li className="nav-item dropdown" id="showSetting">
       <a aria-expanded="false" className="nav-link" href="#">
@@ -143,84 +145,56 @@ export default function initialize() {
       </a>
     </li>
   );
+  showBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    toggleFunction();
+    document.body.style.overflow = 'hidden';
+    for (const func of loadCallbackList) {
+      func();
+    }
+  });
+  document.querySelector('ul.navbar-nav').append(showBtn);
 
-  const contentWrapper = document.querySelector('.content-wrapper');
+  // 설정 메뉴 엘리먼트
   const configContainer = (
-    <div className="hidden clearfix" id="refresherSetting">
+    <div id="refresherSetting">
       <style>{stylesheet}</style>
-      <div className="row">
-        <div className="col-sm-0 col-md-2" />
-        <div className="col-sm-12 col-md-8">
-          <div className="dialog card">
-            <div className="card-block">
-              <h4 className="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
-              {renderCategory()}
-              <div className="row btns">
-                <div className="col-12">
-                  <a href="#" id="exportConfig" className="btn btn-primary">
-                    설정 내보내기
-                  </a>
-                  <a href="#" id="importConfig" className="btn btn-secondary">
-                    설정 가져오기
-                  </a>
-                  <a href="#" id="resetConfig" className="btn btn-danger">
-                    설정 초기화
-                  </a>
-                </div>
-              </div>
-              <div className="row btns">
-                <div className="col-12">
-                  <a href="#" id="saveAndClose" className="btn btn-primary">
-                    저장
-                  </a>
-                  <a href="#" id="closeSetting" className="btn btn-arca">
-                    닫기
-                  </a>
-                </div>
-              </div>
-            </div>
+      <div className="settings">
+        {renderCategory()}
+        <div className="row btns">
+          <div className="col-12">
+            <a href="#" id="exportConfig" className="btn btn-primary">
+              설정 내보내기
+            </a>
+            <a href="#" id="importConfig" className="btn btn-secondary">
+              설정 가져오기
+            </a>
+            <a href="#" id="resetConfig" className="btn btn-danger">
+              설정 초기화
+            </a>
+          </div>
+        </div>
+        <div className="row btns">
+          <div className="col-12">
+            <a href="#" id="saveAndClose" className="btn btn-primary">
+              저장
+            </a>
+            <a href="#" id="closeSetting" className="btn btn-arca">
+              닫기
+            </a>
           </div>
         </div>
       </div>
     </div>
   );
+  const toggleFunction = useFade(configContainer);
+  configContainer.addEventListener('click', (event) => {
+    if (event.target.closest('.card-block')) return;
 
-  // 설정 버튼 클릭 이벤트
-  showBtn.addEventListener('click', () => {
-    if (configContainer.classList.contains('hidden')) {
-      for (const func of loadCallbackList) {
-        func();
-      }
-      contentWrapper.classList.add('disappear');
-    } else {
-      configContainer.classList.add('disappear');
-    }
+    toggleFunction();
+    document.body.style.overflow = '';
   });
-
-  // 애니메이션 처리
-  contentWrapper.addEventListener('animationend', () => {
-    if (contentWrapper.classList.contains('disappear')) {
-      contentWrapper.classList.add('hidden');
-      contentWrapper.classList.remove('disappear');
-      configContainer.classList.add('appear');
-      configContainer.classList.remove('hidden');
-    } else if (contentWrapper.classList.contains('appear')) {
-      contentWrapper.classList.remove('appear');
-    }
-  });
-  configContainer.addEventListener('animationend', () => {
-    if (configContainer.classList.contains('disappear')) {
-      configContainer.classList.add('hidden');
-      configContainer.classList.remove('disappear');
-      contentWrapper.classList.add('appear');
-      contentWrapper.classList.remove('hidden');
-    } else if (configContainer.classList.contains('appear')) {
-      configContainer.classList.remove('appear');
-    }
-  });
-
-  // 엘리먼트 부착
-  document.querySelector('ul.navbar-nav').append(showBtn);
+  const contentWrapper = document.querySelector('.content-wrapper');
   contentWrapper.insertAdjacentElement('afterend', configContainer);
 
   // 이벤트 핸들러

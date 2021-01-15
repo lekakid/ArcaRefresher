@@ -1,9 +1,31 @@
 #refresherSetting {
-  margin: 0 auto;
-  max-width: 1300px;
-  border: 1px solid #bbb;
-  background-color: #fff;
-  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 50000;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+#refresherSetting .settings {
+  max-width: 700px;
+  height: calc(100% - 4rem);
+  border: 1px solid #43494c;
+  background-color: white;
+  margin: 2rem;
+  padding: 2rem;
+  z-index: 500;
+
+  overflow: scroll;
+}
+
+#refresherSetting .row {
+  margin-bottom: 0.5rem;
 }
 
 #refresherSetting select,
@@ -29,8 +51,12 @@
   display: inline;
 }
 
+#refresherSetting table {
+  overflow-x: scroll;
+}
+
 @media (prefers-color-scheme: dark) {
-  #refresherSetting {
+  #refresherSetting .card-block {
     border: 1px solid #43494c;
     background-color: #181a1b;
   }

@@ -2,12 +2,12 @@
   display: none !important;
 }
 
-.appear {
+.fade-in {
   animation: fadein 0.25s;
   animation-fill-mode: forwards;
 }
 
-.disappear {
+.fade-out {
   animation: fadeout 0.25s;
   animation-fill-mode: forwards;
 }
