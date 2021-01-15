@@ -1,20 +1,20 @@
 export async function waitForElement(selector) {
-    let targetElement = document.querySelector(selector);
+  let targetElement = document.querySelector(selector);
 
-    if(targetElement) return Promise.resolve(targetElement);
+  if (targetElement) return Promise.resolve(targetElement);
 
-    return new Promise(resolve => {
-        const observer = new MutationObserver(() => {
-            targetElement = document.querySelector(selector);
+  return new Promise((resolve) => {
+    const observer = new MutationObserver(() => {
+      targetElement = document.querySelector(selector);
 
-            if(targetElement) {
-                observer.disconnect();
-                resolve(targetElement);
-            }
-        });
-        observer.observe(document, {
-            childList: true,
-            subtree: true,
-        });
+      if (targetElement) {
+        observer.disconnect();
+        resolve(targetElement);
+      }
     });
+    observer.observe(document, {
+      childList: true,
+      subtree: true,
+    });
+  });
 }

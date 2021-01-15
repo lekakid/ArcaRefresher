@@ -1,15 +1,15 @@
 :global .vcol.col-author {
-    width: 7.5rem !important;
+  width: 7.5rem !important;
 }
 
 .green {
-    color: rgb(37, 141, 37)
+  color: rgb(37, 141, 37);
 }
 
 .red {
-    color: rgb(236, 69, 69)
+  color: rgb(236, 69, 69);
 }
 
 .blue {
-    color: rgb(56, 174, 252)
+  color: rgb(56, 174, 252);
 }

@@ -28,41 +28,46 @@ import UserMemo from './module/UserMemo';
 import FadeStyle from './css/Fade.css';
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
-(async function () {
-    await waitForElement('head');
+(async function App() {
+  await waitForElement('head');
 
-    // Load Global CSS
-    document.head.append(<style>{FadeStyle}{IPScouterStyle}</style>);
+  // Load Global CSS
+  document.head.append(
+    <style>
+      {FadeStyle}
+      {IPScouterStyle}
+    </style>
+  );
 
-    await waitForElement('.content-wrapper');
-    Configure.initialize();
-    ContextMenu.initialize();
+  await waitForElement('.content-wrapper');
+  Configure.initialize();
+  ContextMenu.initialize();
 
-    LiveModifier.load();
-    NotificationIconColor.load();
+  LiveModifier.load();
+  NotificationIconColor.load();
 
-    await waitForElement('footer');
-    Parser.initialize();
+  await waitForElement('footer');
+  Parser.initialize();
 
-    AutoRefresher.load();
-    CommentRefresh.load();
+  AutoRefresher.load();
+  CommentRefresh.load();
 
-    AnonymousNick.load();
-    ArticleRemover.load();
-    BlockImageNewWindow.load();
-    CategoryColor.load();
-    FullAreaReply.load();
-    ImageDownloader.load();
-    ImageSearch.load();
-    IPScouter.load();
-    MuteContent.load();
-    MuteEmoticon.load();
-    NewWindow.load();
-    RatedownGuard.load();
-    ShortCut.load();
-    UserMemo.load();
+  AnonymousNick.load();
+  ArticleRemover.load();
+  BlockImageNewWindow.load();
+  CategoryColor.load();
+  FullAreaReply.load();
+  ImageDownloader.load();
+  ImageSearch.load();
+  IPScouter.load();
+  MuteContent.load();
+  MuteEmoticon.load();
+  NewWindow.load();
+  RatedownGuard.load();
+  ShortCut.load();
+  UserMemo.load();
 
-    ClipboardUpload.load();
-    MyImage.load();
-    TemporaryArticle.load();
-}());
+  ClipboardUpload.load();
+  MyImage.load();
+  TemporaryArticle.load();
+})();

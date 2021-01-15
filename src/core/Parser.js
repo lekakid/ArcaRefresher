@@ -1,16 +1,16 @@
 export default {
-    initialize,
-    getChannelInfo,
-    getArticleInfo,
-    getCurrentState,
-    hasArticle,
-    hasBoard,
-    hasComment,
-    hasWriteView,
-    queryView,
-    queryItems,
-    parseUserInfo,
-    parseUserID,
+  initialize,
+  getChannelInfo,
+  getArticleInfo,
+  getCurrentState,
+  hasArticle,
+  hasBoard,
+  hasComment,
+  hasWriteView,
+  queryView,
+  queryItems,
+  parseUserInfo,
+  parseUserID,
 };
 
 let articleView = null;
@@ -28,149 +28,149 @@ let currentArticleAuthor = '';
 let currentArticleAuthorID = '';
 
 function initialize() {
-    const articleElement = document.querySelector('article');
-    const boardTitle = articleElement.querySelector('.board-title');
-    articleView = articleElement.querySelector('.article-wrapper');
-    commentView = articleElement.querySelector('#comment');
-    boardView = articleElement.querySelector('div.board-article-list .list-table, div.included-article-list .list-table');
-    writeView = articleElement.querySelector('.article-write');
+  const articleElement = document.querySelector('article');
+  const boardTitle = articleElement.querySelector('.board-title');
+  articleView = articleElement.querySelector('.article-wrapper');
+  commentView = articleElement.querySelector('#comment');
+  boardView = articleElement.querySelector(
+    'div.board-article-list .list-table, div.included-article-list .list-table'
+  );
+  writeView = articleElement.querySelector('.article-write');
 
-    if(boardTitle) {
-        currentChannel = boardTitle.querySelector('a:not([class])').textContent;
-        currentChannelID = location.pathname.split('/')[2];
-    }
+  if (boardTitle) {
+    currentChannel = boardTitle.querySelector('a:not([class])').textContent;
+    currentChannelID = window.location.pathname.split('/')[2];
+  }
 
-    if(articleView) {
-        currentState = 'article';
+  if (articleView) {
+    currentState = 'article';
 
-        const titleElement = articleView.querySelector('.article-head .title');
-        const categoryElement = articleView.querySelector('.article-head .badge');
-        const authorElement = articleView.querySelector('.article-head .user-info');
+    const titleElement = articleView.querySelector('.article-head .title');
+    const categoryElement = articleView.querySelector('.article-head .badge');
+    const authorElement = articleView.querySelector('.article-head .user-info');
 
-        currentArticleTitle = (titleElement) ? titleElement.lastChild.textContent.trim() : '';
-        currentArticleCategory = (categoryElement) ? categoryElement.textContent : '';
-        currentArticleAuthor = (authorElement) ? parseUserInfo(authorElement) : '';
-        currentArticleAuthorID = (authorElement) ? parseUserID(authorElement) : '';
-    }
-    else if(boardView) {
-        currentState = 'board';
-    }
-    else if(writeView) {
-        currentState = 'write';
-    }
+    currentArticleTitle = titleElement ? titleElement.lastChild.textContent.trim() : '';
+    currentArticleCategory = categoryElement ? categoryElement.textContent : '';
+    currentArticleAuthor = authorElement ? parseUserInfo(authorElement) : '';
+    currentArticleAuthorID = authorElement ? parseUserID(authorElement) : '';
+  } else if (boardView) {
+    currentState = 'board';
+  } else if (writeView) {
+    currentState = 'write';
+  }
 }
 
 function getCurrentState() {
-    return currentState;
+  return currentState;
 }
 
 function getChannelInfo() {
-    return {
-        id: currentChannelID,
-        name: currentChannel,
-    };
+  return {
+    id: currentChannelID,
+    name: currentChannel,
+  };
 }
 
 function getArticleInfo() {
-    if(!articleView) {
-        console.error('[Parser.getArticleInfo] 게시물 확인 불가');
-        return;
-    }
+  if (!articleView) {
+    console.error('[Parser.getArticleInfo] 게시물 확인 불가');
+    return;
+  }
 
-    return {
-        title: currentArticleTitle,
-        category: currentArticleCategory,
-        author: currentArticleAuthor,
-        authorID: currentArticleAuthorID,
-    };
+  return {
+    title: currentArticleTitle,
+    category: currentArticleCategory,
+    author: currentArticleAuthor,
+    authorID: currentArticleAuthorID,
+  };
 }
 
 function hasArticle() {
-    return !!articleView;
+  return !!articleView;
 }
 
 function hasBoard() {
-    return !!boardView;
+  return !!boardView;
 }
 
 function hasComment() {
-    return !!commentView;
+  return !!commentView;
 }
 
 function hasWriteView() {
-    return !!writeView;
+  return !!writeView;
 }
 
 function queryView(query) {
-    switch(query) {
+  switch (query) {
     case 'article':
-        return articleView;
+      return articleView;
     case 'board':
-        return boardView;
+      return boardView;
     case 'comment':
-        return commentView;
+      return commentView;
     case 'write':
-        return writeView;
+      return writeView;
     default:
-        return document;
-    }
+      return document;
+  }
 }
 
 function queryItems(query, viewQuery, viewElement) {
-    const view = viewElement || queryView(viewQuery);
+  const view = viewElement || queryView(viewQuery);
 
-    switch(query) {
+  switch (query) {
     case 'articles':
-        return view.querySelectorAll('a.vrow:not(.notice-unfilter)');
+      return view.querySelectorAll('a.vrow:not(.notice-unfilter)');
     case 'comments':
-        return view.querySelectorAll('.comment-item');
+      return view.querySelectorAll('.comment-item');
     case 'emoticons':
-        return view.querySelectorAll('.emoticon');
+      return view.querySelectorAll('.emoticon');
     case 'users':
-        return view.querySelectorAll('.user-info');
+      return view.querySelectorAll('.user-info');
     case 'avatars':
-        return view.querySelectorAll('.avatar');
+      return view.querySelectorAll('.avatar');
     case 'ips':
-        return view.querySelectorAll('.user-info small');
+      return view.querySelectorAll('.user-info small');
     default:
-        return null;
-    }
+      return null;
+  }
 }
 
 function parseUserInfo(infoElement) {
-    if(!infoElement) {
-        console.error('[Parser.parseUserInfo] 올바르지 않은 부모 엘리먼트 사용');
-        return null;
-    }
+  if (!infoElement) {
+    console.error('[Parser.parseUserInfo] 올바르지 않은 부모 엘리먼트 사용');
+    return null;
+  }
 
-    if(infoElement.dataset.info) {
-        return infoElement.dataset.info;
-    }
+  if (infoElement.dataset.info) {
+    return infoElement.dataset.info;
+  }
 
-    let id = infoElement.children[0].title || infoElement.children[0].textContent;
-    if(/\([0-9]*\.[0-9]*\)/.test(id)) {
-        id = infoElement.childNodes[0].textContent + id;
-    }
+  let id = infoElement.children[0].title || infoElement.children[0].textContent;
+  if (/\([0-9]*\.[0-9]*\)/.test(id)) {
+    id = infoElement.childNodes[0].textContent + id;
+  }
 
-    infoElement.dataset.info = id;
-    return id;
+  infoElement.dataset.info = id;
+  return id;
 }
 
 function parseUserID(infoElement) {
-    if(!infoElement) {
-        console.error('[Parser.parseUserID] 올바르지 않은 부모 엘리먼트 사용');
-        return null;
-    }
+  if (!infoElement) {
+    console.error('[Parser.parseUserID] 올바르지 않은 부모 엘리먼트 사용');
+    return null;
+  }
 
-    if(infoElement.dataset.id) {
-        return infoElement.dataset.id;
-    }
+  if (infoElement.dataset.id) {
+    return infoElement.dataset.id;
+  }
 
-    let id = infoElement.children[0].title || infoElement.children[0].textContent;
-    if(id.indexOf('#') > -1) {
-        id = id.substring(id.indexOf('#'));
-    }
+  let id = infoElement.children[0].title || infoElement.children[0].textContent;
+  if (id.indexOf('#') > -1) {
+    id = id.substring(id.indexOf('#'));
+  }
 
-    infoElement.dataset.id = id;
-    return id;
+  infoElement.dataset.id = id;
+  return id;
 }

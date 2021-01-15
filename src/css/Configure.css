@@ -1,49 +1,49 @@
 #refresherSetting {
-    margin: 0 auto;
-    max-width: 1300px;
-    border: 1px solid #bbb;
-    background-color: #fff;
-    padding: 1rem;
+  margin: 0 auto;
+  max-width: 1300px;
+  border: 1px solid #bbb;
+  background-color: #fff;
+  padding: 1rem;
 }
 
 #refresherSetting select,
 #refresherSetting textarea,
-#refresherSetting input[type="text"] {
-    display: block;
-    width: 100%;
-    padding: .5rem .75rem;
-    color: #55595c;
-    background-color: #fff;
-    border: 1px solid #bbb;
+#refresherSetting input[type='text'] {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  color: #55595c;
+  background-color: #fff;
+  border: 1px solid #bbb;
 }
 
 #refresherSetting input[disabled] {
-    background-color: #eee;
+  background-color: #eee;
 }
 
 #refresherSetting select {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 #refresherSetting label {
-    display: inline;
+  display: inline;
 }
 
-@media (prefers-color-scheme:dark) {
-    #refresherSetting {
-        border: 1px solid #43494c;
-        background-color: #181a1b;
-    }
-    
-    #refresherSetting select,
-    #refresherSetting textarea,
-    #refresherSetting input[type="text"] {
-        color: #e2e2e2;
-        background-color: #181a1b;
-        border: 1px solid #43494c;
-    }
-    
-    #refresherSetting input[disabled] {
-        background-color: #999;
-    }
+@media (prefers-color-scheme: dark) {
+  #refresherSetting {
+    border: 1px solid #43494c;
+    background-color: #181a1b;
+  }
+
+  #refresherSetting select,
+  #refresherSetting textarea,
+  #refresherSetting input[type='text'] {
+    color: #e2e2e2;
+    background-color: #181a1b;
+    border: 1px solid #43494c;
+  }
+
+  #refresherSetting input[disabled] {
+    background-color: #999;
+  }
 }
