@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 export default { load };
@@ -25,7 +25,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '비추천 방지',
     view: ratedownBlock,
     description: '비추천 버튼을 클릭하면 다시 한 번 확인창을 띄웁니다.',

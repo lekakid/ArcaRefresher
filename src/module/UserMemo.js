@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
@@ -41,7 +41,7 @@ function setupSetting() {
     event.target.disabled = false;
   });
   addSetting({
-    category: categoryKey.MEMO,
+    category: 'MEMO',
     header: '메모된 이용자',
     view: (
       <>

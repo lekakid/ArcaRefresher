@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
 import { waitForElement } from '../util/ElementDetector';
@@ -55,7 +55,7 @@ function setupSetting() {
   });
   const channel = Parser.getChannelInfo().id;
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '자짤 관리',
     view: (
       <div id="MyImage">

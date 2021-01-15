@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 import CommentRefresh from './CommentRefresh';
 
@@ -39,7 +39,7 @@ function setupSetting() {
     event.target.disabled = false;
   });
   addSetting({
-    category: categoryKey.MUTE,
+    category: 'MUTE',
     header: '뮤트된 아카콘',
     view: (
       <>

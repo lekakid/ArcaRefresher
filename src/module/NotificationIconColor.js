@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import { getRandomColor } from '../util/ColorManager';
 
 export default { load };
@@ -41,7 +41,7 @@ function setupSetting() {
   });
 
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '알림 아이콘 색상 변경',
     view: inputElement,
     description: (

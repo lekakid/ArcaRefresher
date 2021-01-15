@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 
@@ -38,7 +38,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '자동 새로고침',
     view: refreshTimeSelect,
     description: '일정 시간마다 게시물 목록을 갱신합니다.',
@@ -59,7 +59,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '새로고침 애니메이션 숨김',
     view: hideRefreshSign,
     description: '',

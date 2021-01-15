@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
@@ -32,7 +32,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.CHANNEL_ADMIN,
+    category: 'ADMIN',
     header: '삭제 테스트 모드',
     view: removeTestMode,
     description: '게시물을 삭제하지 않고 어떤 게시물이 선택되는지 붉은 색으로 보여줍니다.',
@@ -50,7 +50,7 @@ function setupSetting() {
     <textarea rows="6" placeholder="삭제할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
   addSetting({
-    category: categoryKey.CHANNEL_ADMIN,
+    category: 'ADMIN',
     header: '게시물 삭제 키워드 목록',
     view: removeKeywordList,
     description: '지정한 유저가 작성한 게시물을 삭제합니다.',
@@ -71,7 +71,7 @@ function setupSetting() {
     <textarea rows="6" placeholder="삭제할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
   );
   addSetting({
-    category: categoryKey.CHANNEL_ADMIN,
+    category: 'ADMIN',
     header: '게시물 삭제 유저 목록',
     view: removeUserList,
     description: '지정한 키워드가 포함된 제목을 가진 게시물을 삭제합니다.',

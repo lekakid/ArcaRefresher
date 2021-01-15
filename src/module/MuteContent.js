@@ -1,5 +1,5 @@
 import ArticleMenu from '../core/ArticleMenu';
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import MuteStyle from '../css/MuteContent.css';
@@ -58,7 +58,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.MUTE,
+    category: 'MUTE',
     header: '공지사항 접기',
     view: hideNotice,
     description: '',
@@ -76,7 +76,7 @@ function setupSetting() {
     <textarea rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
   );
   addSetting({
-    category: categoryKey.MUTE,
+    category: 'MUTE',
     header: '사용자 뮤트',
     view: userMute,
     description: (
@@ -110,7 +110,7 @@ function setupSetting() {
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
   addSetting({
-    category: categoryKey.MUTE,
+    category: 'MUTE',
     header: '키워드 뮤트',
     view: keywordMute,
     description: (
@@ -192,7 +192,7 @@ function setupSetting() {
 
   const channel = Parser.getChannelInfo().id;
   addSetting({
-    category: categoryKey.MUTE,
+    category: 'MUTE',
     header: '카테고리 뮤트',
     view: categoryMute,
     description: (

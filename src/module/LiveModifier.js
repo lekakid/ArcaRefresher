@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 
 import sheetLiveModifier from '../css/LiveModifier.css';
 
@@ -28,7 +28,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '최근 방문 채널 숨김',
     view: hideRecentVisit,
     description: '',
@@ -49,7 +49,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '우측 사이드 메뉴 숨김',
     view: hideSideMenu,
     description: '',
@@ -70,7 +70,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '프로필 아바타 숨김',
     view: hideAvatar,
     description: '',
@@ -91,7 +91,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '댓글 *수정됨 숨김',
     view: hideModified,
     description: '',
@@ -107,7 +107,7 @@ function setupSetting() {
 
   const resizeMedia = <input type="text" name="resizeMedia" />;
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '본문 이미지, 동영상 사이즈',
     view: resizeMedia,
     description: '',

@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import Parser from '../core/Parser';
 import { getBlob, getArrayBuffer } from '../util/DownloadManager';
@@ -26,7 +26,7 @@ function load() {
 function setupSetting() {
   const downloadName = <input type="text" />;
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '이미지 일괄 다운로드 압축파일 이름',
     view: downloadName,
     description: (
@@ -54,7 +54,7 @@ function setupSetting() {
 
   const imageName = <input type="text" />;
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '이미지 일괄 다운로드 이미지 이름',
     view: imageName,
     description: (

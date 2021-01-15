@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 import AutoRefresher from './AutoRefresher';
 
@@ -31,7 +31,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '게시물 새 창으로 열기',
     view: newWindow,
     description: '게시물 클릭 시 새창으로 띄워줍니다.',

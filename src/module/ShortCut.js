@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 export default { load };
@@ -27,7 +27,7 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: categoryKey.UTILITY,
+    category: 'UTILITY',
     header: '단축키 사용',
     view: shortCut,
     description: (

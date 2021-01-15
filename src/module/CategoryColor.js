@@ -1,4 +1,4 @@
-import { categoryKey, addSetting, getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import Parser from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
@@ -131,7 +131,7 @@ function setupSetting() {
   const channel = Parser.getChannelInfo().id;
 
   addSetting({
-    category: categoryKey.INTERFACE,
+    category: 'INTERFACE',
     header: '카테고리 색상 설정',
     view: table,
     description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',

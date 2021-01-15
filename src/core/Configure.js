@@ -1,19 +1,31 @@
 import stylesheet from '../css/Configure.css';
 
-export const categoryKey = {
-  UTILITY: 'utility',
-  INTERFACE: 'interface',
-  MEMO: 'memo',
-  MUTE: 'mute',
-  CHANNEL_ADMIN: 'channelAdmin',
-};
-
-const configCategoryString = {
-  utility: '유틸리티',
-  interface: '인터페이스 변경',
-  memo: '메모 관리',
-  mute: '뮤트 설정',
-  channelAdmin: '채널 관리자 기능',
+const CATEGORY = {
+  UTILITY: {
+    text: '유틸리티',
+    wrapper: null,
+    group: <div />,
+  },
+  INTERFACE: {
+    text: '인터페이스',
+    wrapper: null,
+    group: <div />,
+  },
+  MEMO: {
+    text: '메모',
+    wrapper: null,
+    group: <div />,
+  },
+  MUTE: {
+    text: '뮤트',
+    wrapper: null,
+    group: <div />,
+  },
+  ADMIN: {
+    text: '채널 관리자',
+    wrapper: null,
+    group: <div />,
+  },
 };
 
 const saveCallbackList = [];
@@ -31,7 +43,7 @@ const loadCallbackList = [];
  * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
  */
 export function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
-  const row = (
+  CATEGORY[category].group.append(
     <div className="row">
       <label className="col-md-3">{header}</label>
       <div className="col-md-9">
@@ -40,7 +52,6 @@ export function addSetting({ category, header, view, description, valueCallback:
       </div>
     </div>
   );
-  document.querySelector(`#refresherSetting #${category}`).append(row);
   saveCallbackList.push(save);
   loadCallbackList.push(load);
 }
@@ -102,6 +113,24 @@ function resetConfig() {
   }
 }
 
+function renderCategory() {
+  const categoryArray = [];
+
+  for (const key in CATEGORY) {
+    if (CATEGORY[key]) {
+      CATEGORY[key].wrapper = (
+        <div>
+          <h5 className="card-title">{CATEGORY[key].text}</h5>
+          {CATEGORY[key].group}
+        </div>
+      );
+      categoryArray.push(CATEGORY[key].wrapper);
+    }
+  }
+
+  return categoryArray;
+}
+
 export default function initialize() {
   // 스크립트 설정 버튼 엘리먼트
   const showBtn = (
@@ -125,7 +154,7 @@ export default function initialize() {
           <div className="dialog card">
             <div className="card-block">
               <h4 className="card-title">아카 리프레셔(Arca Refresher) 설정</h4>
-              <div id="category" />
+              {renderCategory()}
               <div className="row btns">
                 <div className="col-12">
                   <a href="#" id="exportConfig" className="btn btn-primary">
@@ -155,18 +184,6 @@ export default function initialize() {
       </div>
     </div>
   );
-
-  // 설정 카테고리 생성
-  const categorySlot = configContainer.querySelector('#category');
-  for (const key of Object.keys(configCategoryString)) {
-    categorySlot.append(
-      <>
-        <hr />
-        <h5 className="card-title">{configCategoryString[key]}</h5>
-        <div id={key} />
-      </>
-    );
-  }
 
   // 설정 버튼 클릭 이벤트
   showBtn.addEventListener('click', () => {
