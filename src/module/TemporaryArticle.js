@@ -130,19 +130,19 @@ function apply() {
     <>
       <style>
         {`
-                    .btns {
-                        display: grid;
-                        grid-template-columns: 7rem 7rem 1fr 7rem;
-                        grid-template-areas:
-                            "  save     load     .   submit"
-                            "recapcha recapcha recapcha recapcha";
-                        grid-row-gap: 1rem;
-                    }
-                    .btns > #tempSaveBtn { grid-area: save; }
-                    .btns > #tempLoadBtn { grid-area: load; }
-                    .btns > div { grid-area: recapcha; }
-                    .btns > #submitBtn { grid-area: submit; }
-                `}
+          .btns {
+            display: grid;
+            grid-template-columns: 7rem 7rem 1fr 7rem;
+            grid-template-areas:
+              "  save     load     .   submit"
+              "recapcha recapcha recapcha recapcha";
+            grid-row-gap: 1rem;
+          }
+          .btns > #tempSaveBtn { grid-area: save; }
+          .btns > #tempLoadBtn { grid-area: load; }
+          .btns > div { grid-area: recapcha; }
+          .btns > #submitBtn { grid-area: submit; }
+        `}
       </style>
       {saveBtn}
       {loadBtn}
