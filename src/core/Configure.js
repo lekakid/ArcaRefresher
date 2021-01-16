@@ -189,7 +189,7 @@ export default function initialize() {
   );
   const toggleFunction = useFade(configContainer);
   configContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.card-block')) return;
+    if (event.target.closest('.settings')) return;
 
     toggleFunction();
     document.body.style.overflow = '';
