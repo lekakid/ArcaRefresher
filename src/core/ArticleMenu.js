@@ -1,5 +1,3 @@
-import Parser from './Parser';
-
 export default { addHeaderBtn };
 
 /**
@@ -11,7 +9,8 @@ export default { addHeaderBtn };
  * @param {Function} param.onClick      버튼을 클릭 시 호출할 콜백 함수
  */
 function addHeaderBtn({ text, icon, description, onClick }) {
-  const headerMenu = Parser.queryView('article').querySelector('.edit-menu');
+  const headerMenu = document.querySelector('.edit-menu');
+  if (!headerMenu) return;
 
   const element = (
     <a href="#" title={description}>

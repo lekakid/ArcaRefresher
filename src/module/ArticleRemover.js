@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage, parseUserID } from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
 
@@ -13,7 +13,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasBoard()) {
+    if (CurrentPage.Component.Board) {
       AutoRefresher.addRefreshCallback({
         priority: 999,
         callback: remove,
@@ -97,7 +97,7 @@ function remove() {
   const keywordlist = getValue(AUTO_REMOVE_KEYWORD);
   const testMode = getValue(USE_AUTO_REMOVER_TEST);
 
-  const articles = Parser.queryItems('articles', 'board');
+  const articles = document.querySelectorAll('a.vrow:not(.notice)');
   const articleid = [];
 
   articles.forEach((item) => {
@@ -105,7 +105,7 @@ function remove() {
     const userElement = item.querySelector('.user-info');
     if (!titleElement || !userElement) return;
     const title = titleElement.innerText;
-    const author = Parser.parseUserID(userElement);
+    const author = parseUserID(userElement);
     const checkbox = item.querySelector('.batch-check');
 
     const authorAllow = userlist.length === 0 ? false : new RegExp(userlist.join('|')).test(author);

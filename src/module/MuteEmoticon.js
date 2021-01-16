@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import CommentRefresh from './CommentRefresh';
 
 export default { load };
@@ -10,7 +10,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasComment()) {
+    if (CurrentPage.Component.Comment) {
       mute();
       apply();
     }
@@ -84,7 +84,7 @@ function mute() {
     }
   }
 
-  const comments = Parser.queryItems('comments', 'comment');
+  const comments = document.querySelectorAll('#comment .comment-item');
   comments.forEach((item) => {
     const emoticon = item.querySelector('.emoticon');
 
@@ -98,8 +98,8 @@ function mute() {
 }
 
 function apply() {
-  const commentArea = Parser.queryView('comment');
-  const emoticons = Parser.queryItems('emoticons', 'comment');
+  const commentArea = document.querySelector('#comment');
+  const emoticons = commentArea.querySelectorAll('.emoticon');
 
   emoticons.forEach((item) => {
     const btn = (

@@ -1,4 +1,4 @@
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
 export default { load, addRefreshCallback };
@@ -7,7 +7,7 @@ const refreshCallbackList = [];
 
 function load() {
   try {
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       apply();
     }
   } catch (error) {
@@ -16,7 +16,7 @@ function load() {
 }
 
 function apply() {
-  const commentArea = Parser.queryView('comment');
+  const commentArea = document.querySelector('#comment');
   if (commentArea && commentArea.querySelector('.alert')) {
     // 댓글 작성 권한 없음
     return;

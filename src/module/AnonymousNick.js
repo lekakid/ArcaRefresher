@@ -1,5 +1,5 @@
 import ArticleMenu from '../core/ArticleMenu';
-import Parser from '../core/Parser';
+import { CurrentPage, parseUserID } from '../core/Parser';
 
 export default { load };
 
@@ -40,7 +40,7 @@ const DefaultSuffix = [
 
 function load() {
   try {
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       addArticleMenu();
     }
   } catch (error) {
@@ -56,8 +56,8 @@ function addArticleMenu() {
     onClick(event) {
       event.preventDefault();
 
-      const userElements = Parser.queryItems('users', 'article');
-      const avatarElements = Parser.queryItems('avatars', 'article');
+      const userElements = document.querySelectorAll('.article-wrapper .user-info');
+      const avatarElements = document.querySelectorAll('.article-wrapper .avatar');
 
       avatarElements.forEach((e) => {
         e.remove();
@@ -65,7 +65,7 @@ function addArticleMenu() {
 
       const users = new Set();
       userElements.forEach((e) => {
-        users.add(Parser.parseUserID(e));
+        users.add(parseUserID(e));
       });
 
       const alterNicks = new Set();
@@ -86,7 +86,7 @@ function addArticleMenu() {
       }
 
       userElements.forEach((e) => {
-        e.textContent = alterTable[Parser.parseUserID(e)];
+        e.textContent = alterTable[parseUserID(e)];
       });
     },
   });

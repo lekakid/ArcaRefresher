@@ -1,6 +1,6 @@
 import ArticleMenu from '../core/ArticleMenu';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage, parseUserInfo } from '../core/Parser';
 
 import MuteStyle from '../css/MuteContent.css';
 import AutoRefresher from './AutoRefresher';
@@ -17,13 +17,13 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       addArticleMenu();
     }
-    if (Parser.hasComment()) {
+    if (CurrentPage.Component.Comment) {
       muteContent('comment');
     }
-    if (Parser.hasBoard()) {
+    if (CurrentPage.Component.Board) {
       muteNotice();
       mutePreview();
       muteContent('board');
@@ -190,7 +190,7 @@ function setupSetting() {
     );
   }
 
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   addSetting({
     category: 'MUTE',
     header: '카테고리 뮤트',
@@ -250,9 +250,10 @@ function setupSetting() {
 
 function addArticleMenu() {
   const userList = getValue(BLOCK_USER);
-  const articleInfo = Parser.getArticleInfo();
-  const user = articleInfo.author;
-  const userID = articleInfo.authorID.replace('(', '\\(').replace(')', '\\)').replace('.', '\\.');
+  const user = CurrentPage.Article.Author;
+  const userID = CurrentPage.Article.AuthorID.replace('(', '\\(')
+    .replace(')', '\\)')
+    .replace('.', '\\.');
   const filter = `${user === userID ? '^' : ''}${userID}$`;
   const indexed = userList.indexOf(filter);
 
@@ -286,11 +287,11 @@ function addArticleMenu() {
 }
 
 function mutePreview() {
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   const config = getValue(MUTE_CATEGORY)[channel];
   if (!config) return;
 
-  const articles = Parser.queryItems('articles', 'board');
+  const articles = document.querySelectorAll('a.vrow:not(.notice)');
   articles.forEach((article) => {
     const badge = article.querySelector('.badge');
     if (badge === null) return;
@@ -321,7 +322,9 @@ function muteNotice() {
     return;
   }
 
-  const itemContainer = Parser.queryView('board');
+  const itemContainer = document.querySelector(
+    'div.board-article-list .list-table, div.included-article-list .list-table'
+  );
   const notices = itemContainer.querySelectorAll('a.vrow.notice-board');
   let noticeCount = 0;
   for (const notice of notices) {
@@ -372,14 +375,12 @@ function muteContent(viewQuery) {
     return;
   }
 
-  const itemContainer = Parser.queryView(viewQuery);
-
   const count = {};
   for (const key of Object.keys(ContentTypeString)) {
     count[key] = 0;
   }
 
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   let userlist = getValue(BLOCK_USER, []);
   let keywordlist = getValue(BLOCK_KEYWORD, []);
   const categoryConfig = getValue(MUTE_CATEGORY, {})[channel];
@@ -391,19 +392,24 @@ function muteContent(viewQuery) {
     keywordlist = Array.from(new Set(keywordlist));
   }
 
+  let itemContainer;
   let contents = null;
   let keywordSelector = '';
   let targetElement = null;
   let insertPosition = '';
   if (viewQuery === 'board') {
-    contents = Parser.queryItems('articles', 'board');
-    keywordSelector = '.col-title';
+    itemContainer = document.querySelector(
+      'div.board-article-list .list-table, div.included-article-list .list-table'
+    );
     targetElement = itemContainer;
+    contents = document.querySelectorAll('a.vrow:not(.notice)');
+    keywordSelector = '.col-title';
     insertPosition = 'afterbegin';
   } else if (viewQuery === 'comment') {
-    contents = Parser.queryItems('comments', 'comment');
-    keywordSelector = '.message';
+    itemContainer = document.querySelector('#comment');
     targetElement = itemContainer.querySelector('.list-area');
+    contents = document.querySelectorAll('#comment .comment-item');
+    keywordSelector = '.message';
     insertPosition = 'beforebegin';
   }
 
@@ -413,7 +419,7 @@ function muteContent(viewQuery) {
     if (!keywordElement || !userElement) return;
 
     const keywordText = keywordElement.innerText;
-    const userText = Parser.parseUserInfo(userElement);
+    const userText = parseUserInfo(userElement);
     const categoryElement = item.querySelector('.badge');
     let category;
     if (categoryElement === null || categoryElement.textContent === '') {

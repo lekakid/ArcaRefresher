@@ -1,143 +1,71 @@
-export default {
-  initialize,
-  getChannelInfo,
-  getArticleInfo,
-  getCurrentState,
-  hasArticle,
-  hasBoard,
-  hasComment,
-  hasWriteView,
-  queryView,
-  queryItems,
-  parseUserInfo,
-  parseUserID,
+export const CurrentPage = {
+  Channel: {
+    ID: '',
+    Name: '',
+  },
+  Article: {
+    Title: '',
+    Category: '',
+    Author: '',
+    AuthorID: '',
+    URL: '',
+  },
+  Category: [],
+  Component: {
+    Article: false,
+    Comment: false,
+    Board: false,
+    Write: false,
+  },
 };
 
-let articleView = null;
-let boardView = null;
-let commentView = null;
-let writeView = null;
-
-let currentChannel = '';
-let currentChannelID = '';
-let currentState = '';
-
-let currentArticleTitle = '';
-let currentArticleCategory = '';
-let currentArticleAuthor = '';
-let currentArticleAuthorID = '';
-
-function initialize() {
+export default function initialize() {
   const articleElement = document.querySelector('article');
   const boardTitle = articleElement.querySelector('.board-title');
-  articleView = articleElement.querySelector('.article-wrapper');
-  commentView = articleElement.querySelector('#comment');
-  boardView = articleElement.querySelector(
-    'div.board-article-list .list-table, div.included-article-list .list-table'
+  const articleView = articleElement.querySelector('.article-wrapper');
+  const commentView = articleElement.querySelector('#comment');
+  const boardView = articleElement.querySelector(
+    'div.board-article-list, div.included-article-list'
   );
-  writeView = articleElement.querySelector('.article-write');
+  const writeView = articleElement.querySelector('.article-write');
 
   if (boardTitle) {
-    currentChannel = boardTitle.querySelector('a:not([class])').textContent;
-    currentChannelID = window.location.pathname.split('/')[2];
+    CurrentPage.Channel = {
+      ID: window.location.pathname.split('/')[2],
+      Name: boardTitle.querySelector('a:not([class])').textContent,
+    };
   }
 
   if (articleView) {
-    currentState = 'article';
-
     const titleElement = articleView.querySelector('.article-head .title');
     const categoryElement = articleView.querySelector('.article-head .badge');
     const authorElement = articleView.querySelector('.article-head .user-info');
+    const linkElement = articleView.querySelector('.article-body .article-link a');
 
-    currentArticleTitle = titleElement ? titleElement.lastChild.textContent.trim() : '';
-    currentArticleCategory = categoryElement ? categoryElement.textContent : '';
-    currentArticleAuthor = authorElement ? parseUserInfo(authorElement) : '';
-    currentArticleAuthorID = authorElement ? parseUserID(authorElement) : '';
-  } else if (boardView) {
-    currentState = 'board';
-  } else if (writeView) {
-    currentState = 'write';
+    CurrentPage.Article = {
+      Title: titleElement.lastChild.textContent.trim(),
+      Category: categoryElement ? categoryElement.textContent : '',
+      Author: parseUserInfo(authorElement),
+      AuthorID: parseUserID(authorElement),
+      URL: linkElement.href,
+    };
   }
-}
 
-function getCurrentState() {
-  return currentState;
-}
+  if (boardView) {
+    const categoryElements = boardView.querySelectorAll('.board-category a');
+    const categoryArray = Array.prototype.slice.call(categoryElements);
+    CurrentPage.Category = categoryArray.map((e) => e.textContent);
+  }
 
-function getChannelInfo() {
-  return {
-    id: currentChannelID,
-    name: currentChannel,
+  CurrentPage.Component = {
+    Article: !!articleView,
+    Comment: !!commentView,
+    Board: !!boardView,
+    Write: !!writeView,
   };
 }
 
-function getArticleInfo() {
-  if (!articleView) {
-    console.error('[Parser.getArticleInfo] 게시물 확인 불가');
-    return;
-  }
-
-  return {
-    title: currentArticleTitle,
-    category: currentArticleCategory,
-    author: currentArticleAuthor,
-    authorID: currentArticleAuthorID,
-  };
-}
-
-function hasArticle() {
-  return !!articleView;
-}
-
-function hasBoard() {
-  return !!boardView;
-}
-
-function hasComment() {
-  return !!commentView;
-}
-
-function hasWriteView() {
-  return !!writeView;
-}
-
-function queryView(query) {
-  switch (query) {
-    case 'article':
-      return articleView;
-    case 'board':
-      return boardView;
-    case 'comment':
-      return commentView;
-    case 'write':
-      return writeView;
-    default:
-      return document;
-  }
-}
-
-function queryItems(query, viewQuery, viewElement) {
-  const view = viewElement || queryView(viewQuery);
-
-  switch (query) {
-    case 'articles':
-      return view.querySelectorAll('a.vrow:not(.notice-unfilter)');
-    case 'comments':
-      return view.querySelectorAll('.comment-item');
-    case 'emoticons':
-      return view.querySelectorAll('.emoticon');
-    case 'users':
-      return view.querySelectorAll('.user-info');
-    case 'avatars':
-      return view.querySelectorAll('.avatar');
-    case 'ips':
-      return view.querySelectorAll('.user-info small');
-    default:
-      return null;
-  }
-}
-
-function parseUserInfo(infoElement) {
+export function parseUserInfo(infoElement) {
   if (!infoElement) {
     console.error('[Parser.parseUserInfo] 올바르지 않은 부모 엘리먼트 사용');
     return null;
@@ -156,7 +84,7 @@ function parseUserInfo(infoElement) {
   return id;
 }
 
-function parseUserID(infoElement) {
+export function parseUserID(infoElement) {
   if (!infoElement) {
     console.error('[Parser.parseUserID] 올바르지 않은 부모 엘리먼트 사용');
     return null;

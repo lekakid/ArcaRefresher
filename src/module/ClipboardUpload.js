@@ -1,11 +1,11 @@
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { waitForElement } from '../util/ElementDetector';
 
 export default { load };
 
 async function load() {
   try {
-    if (Parser.hasWriteView()) {
+    if (CurrentPage.Component.Write) {
       await waitForElement('.fr-box');
       apply();
     }

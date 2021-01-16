@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { parseUserID } from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
@@ -81,11 +81,11 @@ function setupSetting() {
 }
 
 function apply() {
-  const users = Parser.queryItems('users');
+  const users = document.querySelectorAll('.user-info');
   const memos = getValue(USER_MEMO);
 
   users.forEach((user) => {
-    const id = Parser.parseUserID(user);
+    const id = parseUserID(user);
 
     let slot = user.querySelector('.memo');
     if (memos[id]) {
@@ -101,7 +101,7 @@ function apply() {
     }
   });
 
-  const articleView = Parser.queryView('article');
+  const articleView = document.querySelector('.article-wrapper');
   if (!articleView || handlerApplied) return;
 
   handlerApplied = true;
@@ -113,7 +113,7 @@ function apply() {
 
     event.preventDefault();
 
-    const id = Parser.parseUserID(user);
+    const id = parseUserID(user);
     const newMemo = prompt('이용자 메모를 설정합니다.\n', memos[id] || '');
     if (newMemo == null) return;
 

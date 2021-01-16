@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 
 export default { load };
 
@@ -9,9 +9,9 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       apply('article');
-    } else if (Parser.hasBoard()) {
+    } else if (CurrentPage.Component.Board) {
       apply('board');
     }
   } catch (error) {

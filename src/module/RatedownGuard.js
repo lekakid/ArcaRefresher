@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 
 export default { load };
 
@@ -9,7 +9,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       apply();
     }
   } catch (error) {

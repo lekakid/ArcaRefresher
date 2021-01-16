@@ -1,12 +1,12 @@
 import ContextMenu from '../core/ContextMenu';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { getBlob } from '../util/DownloadManager';
 
 export default { load };
 
 function load() {
   try {
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       addContextMenu();
     }
   } catch (error) {

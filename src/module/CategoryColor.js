@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
 import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
@@ -12,7 +12,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasBoard()) {
+    if (CurrentPage.Component.Board) {
       generateColorStyle();
       apply();
     }
@@ -128,7 +128,7 @@ function setupSetting() {
     }
   });
 
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
 
   addSetting({
     category: 'INTERFACE',
@@ -208,7 +208,7 @@ function setupSetting() {
 const styleTable = {};
 
 function generateColorStyle() {
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   const categoryConfig = getValue(CATEGORY_COLOR)[channel];
 
   if (!categoryConfig) return;
@@ -242,7 +242,7 @@ function generateColorStyle() {
 }
 
 function apply() {
-  const articles = Parser.queryItems('articles', 'board');
+  const articles = document.querySelectorAll('a.vrow:not(.notice)');
 
   articles.forEach((article) => {
     if (article.childElementCount < 2) return;

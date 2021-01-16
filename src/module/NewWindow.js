@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import AutoRefresher from './AutoRefresher';
 
 export default { load };
@@ -10,7 +10,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasBoard()) {
+    if (CurrentPage.Component.Board) {
       apply();
     }
 
@@ -50,7 +50,7 @@ function apply() {
   const value = getValue(OPEN_NEW_WINDOW);
   if (!value) return;
 
-  const articles = Parser.queryItems('articles', 'board');
+  const articles = document.querySelectorAll('a.vrow:not(.notice-unfilter)');
 
   for (const article of articles) {
     article.setAttribute('target', '_blank');

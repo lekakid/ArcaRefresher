@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
@@ -19,8 +19,8 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) return;
-    if (Parser.hasBoard()) {
+    if (CurrentPage.Component.Article) return;
+    if (CurrentPage.Component.Board) {
       apply();
     }
   } catch (error) {
@@ -83,7 +83,7 @@ function apply() {
   refreshTime = getValue(REFRESH_TIME);
   if (refreshTime === 0) return;
 
-  const articleList = Parser.queryView('board');
+  const articleList = document.querySelector('div.board-article-list .list-table');
 
   loader = (
     <div id="autoRefresher" className={getValue(HIDE_REFRESHER) ? 'hidden' : ''}>
@@ -119,7 +119,8 @@ function apply() {
 }
 
 function swapNewArticle(newArticles) {
-  const oldArticles = Parser.queryItems('articles', 'board');
+  const articleList = document.querySelector('div.board-article-list .list-table');
+  const oldArticles = document.querySelectorAll('a.vrow:not(.notice-unfilter)');
 
   const oldnums = [];
   for (const o of oldArticles) {
@@ -141,7 +142,6 @@ function swapNewArticle(newArticles) {
     }
   }
 
-  const articleList = Parser.queryView('board');
   articleList.append(...newArticles);
   const noticeUnfilterBtn = articleList.querySelector('.notice-unfilter');
   if (noticeUnfilterBtn) {
@@ -162,7 +162,7 @@ async function routine() {
     req.responseType = 'document';
     req.addEventListener('load', () => {
       const rootView = req.response.querySelector('div.board-article-list .list-table');
-      const articles = Parser.queryItems('articles', null, rootView);
+      const articles = rootView.querySelectorAll('a.vrow:not(.notice-unfilter)');
       resolve(articles);
     });
     req.send();

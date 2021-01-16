@@ -1,5 +1,3 @@
-import Parser from '../core/Parser';
-
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 
@@ -9,12 +7,7 @@ export default { load };
 
 function load() {
   try {
-    if (Parser.hasArticle()) {
-      apply('article');
-    }
-    if (Parser.hasBoard()) {
-      apply('board');
-    }
+    apply();
 
     AutoRefresher.addRefreshCallback({
       priority: 0,
@@ -34,8 +27,20 @@ function load() {
 }
 
 function apply(viewQuery) {
-  const ipElements = Parser.queryItems('ips', viewQuery);
+  let parentElement = document;
+  if (viewQuery === 'board') {
+    parentElement = document.querySelector(
+      'div.board-article-list .list-table, div.included-article-list .list-table'
+    );
+  }
+  if (viewQuery === 'article') {
+    parentElement = document.querySelector('.article-head');
+  }
+  if (viewQuery === 'comment') {
+    parentElement = document.querySelector('#comment');
+  }
 
+  const ipElements = parentElement.querySelectorAll('.user-info small');
   ipElements.forEach((ipElement) => {
     const ip = ipElement.textContent.replace(/\(|\)/g, '');
     const [result, color] = checkIP(ip);

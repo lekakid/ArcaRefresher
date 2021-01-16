@@ -43,7 +43,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   NotificationIconColor.load();
 
   await waitForElement('footer');
-  Parser.initialize();
+  Parser();
 
   AutoRefresher.load();
   CommentRefresh.load();

@@ -1,10 +1,10 @@
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 
 export default { load };
 
 function load() {
   try {
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       apply();
     }
   } catch (error) {
@@ -13,7 +13,7 @@ function load() {
 }
 
 function apply() {
-  const commentArea = Parser.queryView('comment');
+  const commentArea = document.querySelector('#comment');
   commentArea.addEventListener('click', (event) => {
     if (event.target.closest('form')) return;
 

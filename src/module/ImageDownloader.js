@@ -1,6 +1,6 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { getBlob, getArrayBuffer } from '../util/DownloadManager';
 
 import stylesheet from '../css/ImageDownloader.css';
@@ -14,7 +14,7 @@ function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       addContextMenu();
       apply();
     }
@@ -263,13 +263,10 @@ function apply() {
 }
 
 function replaceData(string) {
-  const articleInfo = Parser.getArticleInfo();
-  const channelInfo = Parser.getChannelInfo();
-
-  string = string.replace('%title%', articleInfo.title);
-  string = string.replace('%category%', articleInfo.category);
-  string = string.replace('%author%', articleInfo.author);
-  string = string.replace('%channel%', channelInfo.name);
+  string = string.replace('%title%', CurrentPage.Article.Title);
+  string = string.replace('%category%', CurrentPage.Article.Category);
+  string = string.replace('%author%', CurrentPage.Article.Author);
+  string = string.replace('%channel%', CurrentPage.Channel.Name);
 
   return string;
 }

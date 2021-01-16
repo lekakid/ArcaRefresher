@@ -1,6 +1,6 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
-import Parser from '../core/Parser';
+import { CurrentPage } from '../core/Parser';
 import { waitForElement } from '../util/ElementDetector';
 
 import stylesheet from '../css/MyImage.css';
@@ -13,11 +13,11 @@ async function load() {
   try {
     setupSetting();
 
-    if (Parser.hasArticle()) {
+    if (CurrentPage.Component.Article) {
       addContextMenu();
     }
 
-    if (Parser.hasWriteView()) {
+    if (CurrentPage.Component.Write) {
       await waitForElement('.fr-box');
       apply();
     }
@@ -53,7 +53,7 @@ function setupSetting() {
 
     event.target.disabled = false;
   });
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   addSetting({
     category: 'UTILITY',
     header: '자짤 관리',
@@ -94,7 +94,7 @@ function setupSetting() {
 }
 
 function addContextMenu() {
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   const addMyImageItem = ContextMenu.createMenu({
     text: '자짤로 등록',
     onClick(event) {
@@ -116,7 +116,7 @@ function addContextMenu() {
 }
 
 function apply() {
-  const channel = Parser.getChannelInfo().id;
+  const channel = CurrentPage.Channel.ID;
   const editor = unsafeWindow.FroalaEditor('#content');
   if (editor.core.isEmpty()) {
     const imgList = getValue(MY_IMAGES)[channel];
