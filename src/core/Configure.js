@@ -156,56 +156,14 @@ export default function initialize() {
   document.querySelector('ul.navbar-nav').append(showBtn);
 
   // 설정 메뉴 엘리먼트
-  const configContainer = (
-    <div id="refresherSetting">
-      <style>{stylesheet}</style>
-      <div className="settings">
-        {renderCategory()}
-        <div className="row btns">
-          <div className="col-12">
-            <a href="#" id="exportConfig" className="btn btn-primary">
-              설정 내보내기
-            </a>
-            <a href="#" id="importConfig" className="btn btn-secondary">
-              설정 가져오기
-            </a>
-            <a href="#" id="resetConfig" className="btn btn-danger">
-              설정 초기화
-            </a>
-          </div>
-        </div>
-        <div className="row btns">
-          <div className="col-12">
-            <a href="#" id="saveAndClose" className="btn btn-primary">
-              저장
-            </a>
-            <a href="#" id="closeSetting" className="btn btn-arca">
-              닫기
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-  const toggleFunction = useFade(configContainer);
-  configContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.settings')) return;
-
-    toggleFunction();
-    document.body.style.overflow = '';
-  });
-  const contentWrapper = document.querySelector('.content-wrapper');
-  contentWrapper.insertAdjacentElement('afterend', configContainer);
-
-  // 이벤트 핸들러
-  configContainer.querySelector('#exportConfig').addEventListener('click', (event) => {
+  function onExport(event) {
     event.preventDefault();
 
     const data = btoa(encodeURIComponent(exportConfig()));
     navigator.clipboard.writeText(data);
     alert('클립보드에 설정이 복사되었습니다.');
-  });
-  configContainer.querySelector('#importConfig').addEventListener('click', (event) => {
+  }
+  function onImport(event) {
     event.preventDefault();
 
     let data = prompt('가져올 설정 데이터를 입력해주세요');
@@ -220,24 +178,54 @@ export default function initialize() {
       alert('올바르지 않은 데이터입니다.');
       console.error(error);
     }
-  });
-  configContainer.querySelector('#resetConfig').addEventListener('click', (event) => {
+  }
+  function onReset(event) {
     event.preventDefault();
 
     if (!window.confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
 
     resetConfig();
     window.location.reload();
-  });
-  configContainer.querySelector('#saveAndClose').addEventListener('click', (event) => {
+  }
+  function onSave(event) {
     event.preventDefault();
     for (const func of saveCallbackList) {
       func();
     }
 
     window.location.reload();
+  }
+
+  const configContainer = (
+    <div id="refresherSetting">
+      <style>{stylesheet}</style>
+      <div className="settings">
+        {renderCategory()}
+        <div className="btn-grid">
+          <a href="#" className="btn btn-primary" onClick={onExport}>
+            내보내기
+          </a>
+          <a href="#" className="btn btn-secondary" onClick={onImport}>
+            가져오기
+          </a>
+          <a href="#" className="btn btn-danger" onClick={onReset}>
+            초기화
+          </a>
+          <a href="#" className="btn btn-arca" onClick={onSave}>
+            저장
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+
+  const toggleFunction = useFade(configContainer);
+  configContainer.addEventListener('click', (event) => {
+    if (event.target.closest('.settings')) return;
+
+    toggleFunction();
+    document.body.style.overflow = '';
   });
-  configContainer.querySelector('#closeSetting').addEventListener('click', () => {
-    configContainer.classList.add('disappear');
-  });
+  const contentWrapper = document.querySelector('.content-wrapper');
+  contentWrapper.insertAdjacentElement('afterend', configContainer);
 }

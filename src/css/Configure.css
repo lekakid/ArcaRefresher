@@ -24,6 +24,29 @@
   overflow: scroll;
 }
 
+#refresherSetting .btn-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas:
+    '. . . export import reset'
+    '. . . . . .'
+    '. . . . . save';
+  grid-row-gap: 0.5rem;
+}
+
+#refresherSetting .btn-grid a:nth-child(1) {
+  grid-area: export;
+}
+#refresherSetting .btn-grid a:nth-child(2) {
+  grid-area: import;
+}
+#refresherSetting .btn-grid a:nth-child(3) {
+  grid-area: reset;
+}
+#refresherSetting .btn-grid a:nth-child(4) {
+  grid-area: save;
+}
+
 #refresherSetting .row {
   margin-bottom: 0.5rem;
 }
@@ -71,5 +94,17 @@
 
   #refresherSetting input[disabled] {
     background-color: #999;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #refresherSetting .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      'export import reset'
+      '. . .'
+      'save save save';
+    grid-row-gap: 0.5rem;
   }
 }
