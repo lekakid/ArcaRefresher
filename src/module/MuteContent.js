@@ -200,8 +200,9 @@ function setupSetting() {
     ),
     valueCallback: {
       save() {
-        const data = getValue(MUTE_CATEGORY);
-        if (!data[channel]) data[channel] = {};
+        const config = getValue(MUTE_CATEGORY);
+        let channelConfig = config[channel];
+        if (!channelConfig) channelConfig = {};
 
         const rows = tbody.querySelectorAll('tr');
         for (const row of rows) {
@@ -211,32 +212,27 @@ function setupSetting() {
           const article = row.querySelector('input[name="muteArticle"]').checked;
 
           if (preview || article) {
-            data[channel] = {
-              ...data[channel],
-              [id]: {
-                mutePreview: preview,
-                muteArticle: article,
-              },
+            channelConfig[id] = {
+              mutePreview: preview,
+              muteArticle: article,
             };
           } else {
-            delete data[channel][id];
+            delete channelConfig[id];
           }
         }
 
-        setValue(MUTE_CATEGORY, data);
+        setValue(MUTE_CATEGORY, { ...config, [channel]: channelConfig });
       },
       load() {
-        const muteCategory = getValue(MUTE_CATEGORY)[channel];
-        if (!muteCategory) return;
+        const config = getValue(MUTE_CATEGORY)[channel];
+        if (!config) return;
 
         for (const element of tbody.children) {
           const { id } = element.dataset;
 
-          if (muteCategory[id]) {
-            element.querySelector('input[name="mutePreview"]').checked =
-              muteCategory[id].mutePreview;
-            element.querySelector('input[name="muteArticle"]').checked =
-              muteCategory[id].muteArticle;
+          if (config[id]) {
+            element.querySelector('input[name="mutePreview"]').checked = config[id].mutePreview;
+            element.querySelector('input[name="muteArticle"]').checked = config[id].muteArticle;
           }
         }
       },

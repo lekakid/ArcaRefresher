@@ -134,8 +134,9 @@ function setupSetting() {
     description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',
     valueCallback: {
       save() {
-        const colorConfig = getValue(CATEGORY_COLOR);
-        if (!colorConfig[channel]) colorConfig[channel] = {};
+        const config = getValue(CATEGORY_COLOR);
+        let channelConfig = config[channel];
+        if (!channelConfig) channelConfig = {};
 
         const rows = tbody.querySelectorAll('tr');
         for (const row of rows) {
@@ -145,32 +146,27 @@ function setupSetting() {
           const bold = row.querySelector('input[name="bold"]').checked;
 
           if (badge || bgcolor || bold) {
-            colorConfig[channel] = {
-              ...colorConfig[channel],
-              [id]: {
-                badge,
-                bgcolor,
-                bold,
-              },
+            channelConfig[id] = {
+              badge,
+              bgcolor,
+              bold,
             };
           } else {
-            if (colorConfig[channel][id]) {
-              delete colorConfig[channel][id];
-            }
+            delete channelConfig[id];
           }
         }
 
-        setValue(CATEGORY_COLOR, colorConfig);
+        setValue(CATEGORY_COLOR, { ...config, [channel]: channelConfig });
       },
       load() {
-        const channelConfig = getValue(CATEGORY_COLOR)[channel];
-        if (!channelConfig) return;
+        const config = getValue(CATEGORY_COLOR)[channel];
+        if (!config) return;
 
         for (const element of tbody.children) {
           const { id } = element.dataset;
 
-          if (channelConfig[id]) {
-            const { badge, bgcolor, bold } = channelConfig[id];
+          if (config[id]) {
+            const { badge, bgcolor, bold } = config[id];
 
             const tdElement = element.querySelector('td');
             const badgeElement = element.querySelector('.badge');
