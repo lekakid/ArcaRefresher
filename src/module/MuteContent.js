@@ -151,9 +151,6 @@ function setupSetting() {
     },
   });
 
-  const boardCategoryElements = document.querySelectorAll('.board-category a');
-  if (!boardCategoryElements.length) return;
-
   const tbody = <tbody />;
   const categoryMute = (
     <table className="table align-middle">
@@ -171,8 +168,7 @@ function setupSetting() {
     </table>
   );
 
-  for (const element of boardCategoryElements) {
-    const name = element.textContent === '전체' ? '일반' : element.textContent;
+  for (const name of CurrentPage.Category) {
     tbody.append(
       <tr data-id={name}>
         <td>{name}</td>
