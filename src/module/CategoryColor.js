@@ -48,7 +48,10 @@ function setupSetting() {
     </table>
   );
 
-  for (const name of CurrentPage.Category) {
+  for (const category of CurrentPage.Category) {
+    let name = category;
+    if (category === '전체') name = '일반';
+
     tbody.append(
       <tr data-id={name}>
         <td>
