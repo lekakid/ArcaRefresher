@@ -192,8 +192,8 @@ export default function initialize() {
   const configContainer = (
     <div id="refresherSetting">
       <style>{stylesheet}</style>
-      <div className="settings">
-        {renderCategory()}
+      <div className="background">
+        <div className="settings">{renderCategory()}</div>
         <div className="btn-grid">
           <button className="btn btn-primary" onClick={onExport}>
             내보내기
@@ -214,7 +214,7 @@ export default function initialize() {
 
   const toggleFunction = useFade(configContainer);
   configContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.settings')) return;
+    if (event.target.closest('.background')) return;
 
     toggleFunction();
     document.body.style.overflow = '';

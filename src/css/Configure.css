@@ -12,7 +12,7 @@
   align-content: center;
 }
 
-#refresherSetting .settings {
+#refresherSetting .background {
   max-width: 700px;
   height: calc(100% - 4rem);
   border: 1px solid #43494c;
@@ -21,17 +21,24 @@
   padding: 2rem;
   z-index: 500;
 
+  display: flex;
+  flex-direction: column;
+}
+
+#refresherSetting .settings {
+  width: 100%;
   overflow: scroll;
 }
 
 #refresherSetting .btn-grid {
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  padding-top: 0.5rem;
+
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-areas:
-    '. . . export import reset'
-    '. . . . . .'
-    '. . . . . save';
-  grid-row-gap: 0.5rem;
+  grid-template-areas: 'export import reset . . save';
 }
 
 #refresherSetting .btn-grid button:nth-child(1) {
@@ -49,6 +56,8 @@
 
 #refresherSetting .row {
   margin-bottom: 0.5rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 #refresherSetting select,
@@ -98,6 +107,9 @@
 }
 
 @media screen and (max-width: 768px) {
+  #refresherSetting .background {
+    padding: 1rem;
+  }
   #refresherSetting .btn-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
