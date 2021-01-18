@@ -25,7 +25,13 @@
   flex-direction: column;
 }
 
+#refresherSetting .search {
+  padding-bottom: 0.5rem;
+}
+
 #refresherSetting .settings {
+  flex-grow: 1;
+
   width: 100%;
   overflow: scroll;
 }

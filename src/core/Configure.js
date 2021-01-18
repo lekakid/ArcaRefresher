@@ -33,6 +33,8 @@ const CATEGORY = {
 const saveCallbackList = [];
 const loadCallbackList = [];
 
+const settingList = [];
+
 /**
  * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
  * @param {Object} param                        파라미터 오브젝트
@@ -45,7 +47,7 @@ const loadCallbackList = [];
  * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
  */
 export function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
-  CATEGORY[category].group.append(
+  const row = (
     <div className="row">
       <label className="col-md-3">{header}</label>
       <div className="col-md-9">
@@ -54,8 +56,14 @@ export function addSetting({ category, header, view, description, valueCallback:
       </div>
     </div>
   );
+  CATEGORY[category].group.append(row);
   saveCallbackList.push(save);
   loadCallbackList.push(load);
+
+  settingList.push({
+    header,
+    row,
+  });
 }
 
 /**
@@ -156,6 +164,25 @@ export default function initialize() {
   document.querySelector('ul.navbar-nav').append(showBtn);
 
   // 설정 메뉴 엘리먼트
+  function onSearch(event) {
+    const value = event.target.value;
+    if (value) {
+      settingList.forEach(({ header, row }) => {
+        if (header.indexOf(value) > -1) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    } else {
+      settingList.forEach(({ row }) => {
+        row.classList.remove('hidden');
+      });
+    }
+  }
+  function onSearchClick(event) {
+    event.target.select();
+  }
   function onExport() {
     const data = btoa(encodeURIComponent(exportConfig()));
     navigator.clipboard.writeText(data);
@@ -193,6 +220,9 @@ export default function initialize() {
     <div id="refresherSetting">
       <style>{stylesheet}</style>
       <div className="background">
+        <div className="search">
+          <input type="text" placeholder="설정 검색" onClick={onSearchClick} onInput={onSearch} />
+        </div>
         <div className="settings">{renderCategory()}</div>
         <div className="btn-grid">
           <button className="btn btn-primary" onClick={onExport}>
@@ -213,7 +243,7 @@ export default function initialize() {
   );
 
   const toggleFunction = useFade(configContainer);
-  configContainer.addEventListener('click', (event) => {
+  configContainer.addEventListener('mousedown', (event) => {
     if (event.target.closest('.background')) return;
 
     toggleFunction();
