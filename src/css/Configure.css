@@ -34,16 +34,16 @@
   grid-row-gap: 0.5rem;
 }
 
-#refresherSetting .btn-grid a:nth-child(1) {
+#refresherSetting .btn-grid button:nth-child(1) {
   grid-area: export;
 }
-#refresherSetting .btn-grid a:nth-child(2) {
+#refresherSetting .btn-grid button:nth-child(2) {
   grid-area: import;
 }
-#refresherSetting .btn-grid a:nth-child(3) {
+#refresherSetting .btn-grid button:nth-child(3) {
   grid-area: reset;
 }
-#refresherSetting .btn-grid a:nth-child(4) {
+#refresherSetting .btn-grid button:nth-child(4) {
   grid-area: save;
 }
 

@@ -156,16 +156,12 @@ export default function initialize() {
   document.querySelector('ul.navbar-nav').append(showBtn);
 
   // 설정 메뉴 엘리먼트
-  function onExport(event) {
-    event.preventDefault();
-
+  function onExport() {
     const data = btoa(encodeURIComponent(exportConfig()));
     navigator.clipboard.writeText(data);
     alert('클립보드에 설정이 복사되었습니다.');
   }
-  function onImport(event) {
-    event.preventDefault();
-
+  function onImport() {
     let data = prompt('가져올 설정 데이터를 입력해주세요');
     if (data === null) return;
     try {
@@ -179,16 +175,13 @@ export default function initialize() {
       console.error(error);
     }
   }
-  function onReset(event) {
-    event.preventDefault();
-
+  function onReset() {
     if (!window.confirm('모든 설정이 초기화 됩니다. 계속하시겠습니까?')) return;
 
     resetConfig();
     window.location.reload();
   }
-  function onSave(event) {
-    event.preventDefault();
+  function onSave() {
     for (const func of saveCallbackList) {
       func();
     }
@@ -202,18 +195,18 @@ export default function initialize() {
       <div className="settings">
         {renderCategory()}
         <div className="btn-grid">
-          <a href="#" className="btn btn-primary" onClick={onExport}>
+          <button className="btn btn-primary" onClick={onExport}>
             내보내기
-          </a>
-          <a href="#" className="btn btn-secondary" onClick={onImport}>
+          </button>
+          <button className="btn btn-secondary" onClick={onImport}>
             가져오기
-          </a>
-          <a href="#" className="btn btn-danger" onClick={onReset}>
+          </button>
+          <button className="btn btn-danger" onClick={onReset}>
             초기화
-          </a>
-          <a href="#" className="btn btn-arca" onClick={onSave}>
+          </button>
+          <button className="btn btn-arca" onClick={onSave}>
             저장
-          </a>
+          </button>
         </div>
       </div>
     </div>
