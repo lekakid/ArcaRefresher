@@ -39,21 +39,26 @@ function setupSetting() {
     event.target.disabled = false;
   });
   addSetting({
-    category: 'MUTE',
-    header: '뮤트된 아카콘',
-    view: (
-      <>
-        {muteEmoticon}
-        {deleteBtn}
-      </>
-    ),
-    description: (
-      <>
-        아카콘 뮤트는 댓글에서 할 수 있습니다.
-        <br />
-        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
-      </>
-    ),
+    header: '아카콘',
+    group: [
+      {
+        title: '뮤트 설정',
+        description: (
+          <>
+            아카콘 뮤트는 댓글에서 할 수 있습니다.
+            <br />
+            Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+          </>
+        ),
+        content: (
+          <>
+            {muteEmoticon}
+            {deleteBtn}
+          </>
+        ),
+        type: 'wide',
+      },
+    ],
     valueCallback: {
       save() {
         const data = getValue(BLOCK_EMOTICON);

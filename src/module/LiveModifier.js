@@ -27,95 +27,62 @@ function setupSetting() {
       <option value="true">숨김</option>
     </select>
   );
-  addSetting({
-    category: 'INTERFACE',
-    header: '최근 방문 채널 숨김',
-    view: hideRecentVisit,
-    description: '',
-    valueCallback: {
-      save() {
-        setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
-      },
-      load() {
-        hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
-      },
-    },
-  });
-
   const hideSideMenu = (
     <select>
       <option value="false">보임</option>
       <option value="true">숨김</option>
     </select>
   );
-  addSetting({
-    category: 'INTERFACE',
-    header: '우측 사이드 메뉴 숨김',
-    view: hideSideMenu,
-    description: '',
-    valueCallback: {
-      save() {
-        setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
-      },
-      load() {
-        hideSideMenu.value = getValue(HIDE_SIDEMENU);
-      },
-    },
-  });
-
   const hideAvatar = (
     <select>
       <option value="false">보임</option>
       <option value="true">숨김</option>
     </select>
   );
-  addSetting({
-    category: 'INTERFACE',
-    header: '프로필 아바타 숨김',
-    view: hideAvatar,
-    description: '',
-    valueCallback: {
-      save() {
-        setValue(HIDE_AVATAR, hideAvatar.value === 'true');
-      },
-      load() {
-        hideAvatar.value = getValue(HIDE_AVATAR);
-      },
-    },
-  });
-
   const hideModified = (
     <select>
       <option value="false">보임</option>
       <option value="true">숨김</option>
     </select>
   );
-  addSetting({
-    category: 'INTERFACE',
-    header: '댓글 *수정됨 숨김',
-    view: hideModified,
-    description: '',
-    valueCallback: {
-      save() {
-        setValue(HIDE_MODIFIED, hideModified.value === 'true');
-      },
-      load() {
-        hideModified.value = getValue(HIDE_MODIFIED);
-      },
-    },
-  });
-
   const resizeMedia = <input type="text" name="resizeMedia" />;
   addSetting({
-    category: 'INTERFACE',
-    header: '본문 이미지, 동영상 사이즈',
-    view: resizeMedia,
-    description: '',
+    header: '레이아웃 커스텀',
+    group: [
+      {
+        title: '최근 방문 채널 숨김',
+        content: hideRecentVisit,
+      },
+      {
+        title: '우측 사이드 메뉴 숨김',
+        content: hideSideMenu,
+      },
+      {
+        title: '프로필 아바타 숨김',
+        content: hideAvatar,
+      },
+      {
+        title: '댓글 *수정됨 숨김',
+        content: hideModified,
+      },
+      {
+        title: '본문 이미지, 동영상 사이즈',
+        content: resizeMedia,
+      },
+    ],
     valueCallback: {
       save() {
+        setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
+        setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
+        setValue(HIDE_AVATAR, hideAvatar.value === 'true');
+        setValue(HIDE_MODIFIED, hideModified.value === 'true');
         setValue(RESIZE_MEDIA, resizeMedia.value);
       },
       load() {
+        hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
+        hideSideMenu.value = getValue(HIDE_SIDEMENU);
+        hideAvatar.value = getValue(HIDE_AVATAR);
+        hideModified.value = getValue(HIDE_MODIFIED);
         resizeMedia.value = getValue(RESIZE_MEDIA);
       },
     },

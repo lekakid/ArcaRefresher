@@ -31,10 +31,13 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: 'INTERFACE',
-    header: '게시물 새 창으로 열기',
-    view: newWindow,
-    description: '게시물 클릭 시 새창으로 띄워줍니다.',
+    header: '새 창으로 열기',
+    group: [
+      {
+        title: '게시물 클릭 시 새 창으로 열기',
+        content: newWindow,
+      },
+    ],
     valueCallback: {
       save() {
         setValue(OPEN_NEW_WINDOW, newWindow.value === 'true');

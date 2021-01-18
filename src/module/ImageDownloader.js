@@ -25,64 +25,61 @@ function load() {
 
 function setupSetting() {
   const downloadName = <input type="text" />;
+  const imageName = <input type="text" />;
+
   addSetting({
-    category: 'UTILITY',
-    header: '이미지 일괄 다운로드 압축파일 이름',
-    view: downloadName,
-    description: (
-      <>
-        이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름 포맷입니다.
-        <br />
-        %title%: 게시물 제목
-        <br />
-        %category%: 게시물 카테고리
-        <br />
-        %author%: 게시물 작성자
-        <br />
-        %channel%: 채널 이름
-      </>
-    ),
+    header: '이미지 일괄 다운로드',
+    group: [
+      {
+        title: '압축파일 이름',
+        description: (
+          <>
+            이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름 포맷입니다.
+            <br />
+            %title%: 게시물 제목
+            <br />
+            %category%: 게시물 카테고리
+            <br />
+            %author%: 게시물 작성자
+            <br />
+            %channel%: 채널 이름
+          </>
+        ),
+        content: downloadName,
+        type: 'wide',
+      },
+      {
+        title: '저장할 이미지 이름',
+        description: (
+          <>
+            이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.
+            <br />
+            orig 혹은 num을 사용하여 이름을 구분해야 정상 저장됩니다.
+            <br />
+            <br />
+            %orig%: 이미지 업로드명 (64자 코드)
+            <br />
+            %num%: 넘버링 (000~999)
+            <br />
+            %title%: 게시물 제목
+            <br />
+            %category%: 게시물 카테고리
+            <br />
+            %author%: 게시물 작성자
+            <br />
+            %channel%: 채널 이름
+          </>
+        ),
+        content: imageName,
+        type: 'wide',
+      },
+    ],
     valueCallback: {
       save() {
         setValue(FILENAME, downloadName.value);
       },
       load() {
         downloadName.value = getValue(FILENAME);
-      },
-    },
-  });
-
-  const imageName = <input type="text" />;
-  addSetting({
-    category: 'UTILITY',
-    header: '이미지 일괄 다운로드 이미지 이름',
-    view: imageName,
-    description: (
-      <>
-        이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.
-        <br />
-        orig 혹은 num을 사용하여 이름을 구분해야 정상 저장됩니다.
-        <br />
-        <br />
-        %orig%: 이미지 업로드명 (64자 코드)
-        <br />
-        %num%: 넘버링 (000~999)
-        <br />
-        %title%: 게시물 제목
-        <br />
-        %category%: 게시물 카테고리
-        <br />
-        %author%: 게시물 작성자
-        <br />
-        %channel%: 채널 이름
-      </>
-    ),
-    valueCallback: {
-      save() {
-        setValue(IMAGENAME, imageName.value);
-      },
-      load() {
-        imageName.value = getValue(IMAGENAME);
       },
     },
   });

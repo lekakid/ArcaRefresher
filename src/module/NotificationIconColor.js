@@ -41,18 +41,22 @@ function setupSetting() {
   });
 
   addSetting({
-    category: 'INTERFACE',
-    header: '알림 아이콘 색상 변경',
-    view: inputElement,
-    description: (
-      <>
-        알림 아이콘의 점등 색상을 변경합니다.
-        <br />
-        색상을 입력하면 알림 아이콘에서 미리 볼 수 있습니다.
-        <br />
-        더블 클릭으로 무작위 색상을 선택할 수 있습니다.
-      </>
-    ),
+    header: '알림 아이콘',
+    group: [
+      {
+        title: '색상 변경',
+        description: (
+          <>
+            알림 아이콘의 점등 색상을 변경합니다.
+            <br />
+            색상을 입력하면 알림 아이콘에서 미리 볼 수 있습니다.
+            <br />
+            더블 클릭으로 무작위 색상을 선택할 수 있습니다.
+          </>
+        ),
+        content: inputElement,
+      },
+    ],
     valueCallback: {
       save() {
         setValue(NOTIFY_COLOR, inputElement.value);

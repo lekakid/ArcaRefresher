@@ -26,7 +26,7 @@
 }
 
 #refresherSetting .search {
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 #refresherSetting .settings {
@@ -60,10 +60,77 @@
   grid-area: save;
 }
 
-#refresherSetting .row {
-  margin-bottom: 0.5rem;
-  margin-left: 0;
-  margin-right: 0;
+#refresherSetting .group {
+  border: 1px solid #bbb;
+  border-radius: 0.25rem;
+  margin-bottom: 2rem;
+  padding: 0.25rem;
+}
+
+#refresherSetting .item {
+  margin: 0 0.25rem;
+  padding: 0.5rem;
+}
+
+#refresherSetting .item:first-child {
+  margin-top: 0;
+}
+
+#refresherSetting .item:last-child {
+  margin-bottom: 0;
+}
+
+#refresherSetting .item.default {
+  display: grid;
+  grid-template-columns: 9fr 3fr;
+  grid-template-areas:
+    '   header   setting'
+    'description .';
+  grid-column-gap: 0.5rem;
+}
+
+#refresherSetting .item.default:not(:last-child) {
+  border-bottom: 1px solid #bbb;
+}
+
+#refresherSetting .item.wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'header'
+    'setting'
+    'description';
+}
+
+#refresherSetting .item > label {
+  grid-area: header;
+  margin-bottom: 0.25rem;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+#refresherSetting .item.default > label {
+  border-right: 1px solid #bbb;
+}
+
+#refresherSetting .item > p {
+  grid-area: description;
+  margin-bottom: 0;
+  color: #666666;
+}
+
+#refresherSetting .item.wide > p {
+  grid-area: description;
+  margin-bottom: 0;
+  padding-left: 0.5rem;
+  color: #666666;
+}
+
+#refresherSetting .item > div {
+  grid-area: setting;
+  margin: 0.5rem;
 }
 
 #refresherSetting select,
@@ -71,6 +138,7 @@
 #refresherSetting input[type='text'] {
   display: block;
   width: 100%;
+  margin: 0;
   padding: 0.5rem 0.75rem;
   color: #55595c;
   background-color: #fff;
@@ -123,6 +191,18 @@
       'export import reset'
       '. . .'
       'save save save';
-    grid-row-gap: 0.5rem;
+    grid-row-gap: 0.25rem;
+  }
+  #refresherSetting .item.default {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'header'
+      'setting'
+      'description';
+  }
+
+  #refresherSetting .item.default > label {
+    border-right: none;
   }
 }

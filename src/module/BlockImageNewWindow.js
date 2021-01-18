@@ -28,10 +28,13 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: 'INTERFACE',
-    header: '컨텐츠 원본보기 방지',
-    view: setting,
-    description: '게시물 조회 시 이미지 등을 클릭하면 원본 이미지가 열리는 기능을 막습니다.',
+    header: '컨텐츠 원본보기',
+    group: [
+      {
+        title: '게시물 이미지 비디오 클릭 시 원본보기 방지',
+        content: setting,
+      },
+    ],
     valueCallback: {
       save() {
         setValue(BLOCK_IMAGE_NEW_WINDOW, setting.value === 'true');

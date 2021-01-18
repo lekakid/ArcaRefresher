@@ -37,21 +37,6 @@ function setupSetting() {
       <option value="10">10초</option>
     </select>
   );
-  addSetting({
-    category: 'UTILITY',
-    header: '자동 새로고침',
-    view: refreshTimeSelect,
-    description: '일정 시간마다 게시물 목록을 갱신합니다.',
-    valueCallback: {
-      save() {
-        setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
-      },
-      load() {
-        refreshTimeSelect.value = getValue(REFRESH_TIME);
-      },
-    },
-  });
-
   const hideRefreshSign = (
     <select>
       <option value="false">보임</option>
@@ -59,15 +44,24 @@ function setupSetting() {
     </select>
   );
   addSetting({
-    category: 'UTILITY',
-    header: '새로고침 애니메이션 숨김',
-    view: hideRefreshSign,
-    description: '',
+    header: '자동 새로고침',
+    group: [
+      {
+        title: '갱신 시간 설정',
+        content: refreshTimeSelect,
+      },
+      {
+        title: '회전하는 원 애니메이션 숨김',
+        content: hideRefreshSign,
+      },
+    ],
     valueCallback: {
       save() {
+        setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
         setValue(HIDE_REFRESHER, hideRefreshSign.value === 'true');
       },
       load() {
+        refreshTimeSelect.value = getValue(REFRESH_TIME);
         hideRefreshSign.value = getValue(HIDE_REFRESHER);
       },
     },

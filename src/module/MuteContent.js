@@ -57,100 +57,12 @@ function setupSetting() {
       <option value="true">사용</option>
     </select>
   );
-  addSetting({
-    category: 'MUTE',
-    header: '공지사항 접기',
-    view: hideNotice,
-    description: '',
-    valueCallback: {
-      save() {
-        setValue(MUTE_NOTICE, hideNotice.value === 'true');
-      },
-      load() {
-        hideNotice.value = getValue(MUTE_NOTICE);
-      },
-    },
-  });
-
   const userMute = (
     <textarea rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
   );
-  addSetting({
-    category: 'MUTE',
-    header: '사용자 뮤트',
-    view: userMute,
-    description: (
-      <>
-        지정한 유저의 게시물과 댓글을 숨깁니다.
-        <br />
-        Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
-        <br />
-        사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
-        <br />
-        <ul>
-          <li>소괄호()</li>
-          <li>마침표.</li>
-        </ul>
-      </>
-    ),
-    valueCallback: {
-      save() {
-        setValue(
-          BLOCK_USER,
-          userMute.value.split('\n').filter((i) => i !== '')
-        );
-      },
-      load() {
-        userMute.value = getValue(BLOCK_USER).join('\n');
-      },
-    },
-  });
-
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
-  addSetting({
-    category: 'MUTE',
-    header: '키워드 뮤트',
-    view: keywordMute,
-    description: (
-      <>
-        지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.
-        <br />
-        Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
-        <br />
-        사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
-        <br />
-        <ul>
-          <li>소괄호()</li>
-          <li>중괄호{'{}'}</li>
-          <li>대괄호[]</li>
-          <li>마침표.</li>
-          <li>플러스+</li>
-          <li>물음표?</li>
-          <li>달러기호$</li>
-          <li>캐럿^</li>
-          <li>별*</li>
-          <li>슬래시/</li>
-          <li>역슬래시\</li>
-          <li>하이픈-</li>
-          <li>파이프|</li>
-        </ul>
-      </>
-    ),
-    valueCallback: {
-      save() {
-        setValue(
-          BLOCK_KEYWORD,
-          keywordMute.value.split('\n').filter((i) => i !== '')
-        );
-      },
-      load() {
-        keywordMute.value = getValue(BLOCK_KEYWORD).join('\n');
-      },
-    },
-  });
-
   const tbody = <tbody />;
   const categoryMute = (
     <table className="table align-middle">
@@ -190,19 +102,88 @@ function setupSetting() {
   }
 
   const channel = CurrentPage.Channel.ID;
+
   addSetting({
-    category: 'MUTE',
-    header: '카테고리 뮤트',
-    view: categoryMute,
-    description: (
-      <>
-        미리보기 뮤트: 해당 카테고리 게시물의 미리보기를 제거합니다.
-        <br />
-        게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
-      </>
-    ),
+    header: '뮤트',
+    group: [
+      {
+        title: '공지사항 접기',
+        content: hideNotice,
+      },
+      {
+        title: '사용자 목록',
+        description: (
+          <>
+            지정한 유저의 게시물과 댓글을 숨깁니다.
+            <br />
+            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
+            <br />
+            사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
+            <br />
+            <ul>
+              <li>소괄호()</li>
+              <li>마침표.</li>
+            </ul>
+          </>
+        ),
+        content: userMute,
+        type: 'wide',
+      },
+      {
+        title: '키워드 목록',
+        description: (
+          <>
+            지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.
+            <br />
+            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
+            <br />
+            사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
+            <br />
+            <ul>
+              <li>소괄호()</li>
+              <li>중괄호{'{}'}</li>
+              <li>대괄호[]</li>
+              <li>마침표.</li>
+              <li>플러스+</li>
+              <li>물음표?</li>
+              <li>달러기호$</li>
+              <li>캐럿^</li>
+              <li>별*</li>
+              <li>슬래시/</li>
+              <li>역슬래시\</li>
+              <li>하이픈-</li>
+              <li>파이프|</li>
+            </ul>
+          </>
+        ),
+        content: keywordMute,
+        type: 'wide',
+      },
+      {
+        title: '카테고리 설정',
+        description: (
+          <>
+            미리보기 뮤트: 해당 카테고리 게시물의 미리보기를 제거합니다.
+            <br />
+            게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
+          </>
+        ),
+        content: categoryMute,
+        type: 'wide',
+      },
+    ],
     valueCallback: {
       save() {
+        setValue(MUTE_NOTICE, hideNotice.value === 'true');
+        setValue(
+          BLOCK_USER,
+          userMute.value.split('\n').filter((i) => i !== '')
+        );
+        setValue(
+          BLOCK_KEYWORD,
+          keywordMute.value.split('\n').filter((i) => i !== '')
+        );
+
         const config = getValue(MUTE_CATEGORY);
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
@@ -227,6 +208,10 @@ function setupSetting() {
         setValue(MUTE_CATEGORY, { ...config, [channel]: channelConfig });
       },
       load() {
+        hideNotice.value = getValue(MUTE_NOTICE);
+        userMute.value = getValue(BLOCK_USER).join('\n');
+        keywordMute.value = getValue(BLOCK_KEYWORD).join('\n');
+
         const config = getValue(MUTE_CATEGORY)[channel];
         if (!config) return;
 

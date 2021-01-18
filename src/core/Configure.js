@@ -2,68 +2,48 @@ import { useFade } from './Transition';
 
 import stylesheet from '../css/Configure.css';
 
-const CATEGORY = {
-  UTILITY: {
-    text: '유틸리티',
-    wrapper: null,
-    group: <div />,
-  },
-  INTERFACE: {
-    text: '인터페이스',
-    wrapper: null,
-    group: <div />,
-  },
-  MEMO: {
-    text: '메모',
-    wrapper: null,
-    group: <div />,
-  },
-  MUTE: {
-    text: '뮤트',
-    wrapper: null,
-    group: <div />,
-  },
-  ADMIN: {
-    text: '채널 관리자',
-    wrapper: null,
-    group: <div />,
-  },
-};
-
 const saveCallbackList = [];
 const loadCallbackList = [];
 
+const settingContainer = <div className="settings" />;
 const settingList = [];
 
 /**
  * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
  * @param {Object} param                        파라미터 오브젝트
- * @param {string} param.category               설정이 위치할 분류
- * @param {string} param.header                 설정의 이름
- * @param {string} param.view                   사용자가 상호작용할 인터페이스
- * @param {string} [param.description]          하단에 표기되는 설명
+ * @param {string} param.header                 설정 그룹 이름
+ * @param {Array} param.group                   설정 그룹
+ * @param {Element} param.group.title           표기할 설정명
+ * @param {Element} param.group.description     표기할 설정 부연설명
+ * @param {Element} param.group.item            상호작용할 엘리먼트
+ * @param {string} [param.group.type]           설정 표기 방식
  * @param {Object} param.valueCallback          콜백함수 오브젝트
  * @param {function} param.valueCallback.save   저장 버튼을 누를 시 호출할 콜백 함수
  * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
  */
-export function addSetting({ category, header, view, description, valueCallback: { save, load } }) {
+export function addSetting({ header, group, valueCallback: { save, load } }) {
   const row = (
-    <div className="row">
-      <label className="col-md-3">{header}</label>
-      <div className="col-md-9">
-        {view}
-        {description && <p>{description}</p>}
+    <div className="section">
+      <h5>{header}</h5>
+      <div className="group">
+        {group.map(({ title, description, content, type }) => {
+          const item = (
+            <div className={`item ${type || 'default'}`}>
+              {description && <p>{description}</p>}
+              <label>{title}</label>
+              <div>{content}</div>
+            </div>
+          );
+          settingList.push({ title, description, item });
+          return item;
+        })}
       </div>
     </div>
   );
-  CATEGORY[category].group.append(row);
   saveCallbackList.push(save);
   loadCallbackList.push(load);
 
-  settingList.push({
-    header,
-    row,
-  });
+  settingContainer.append(row);
 }
 
 /**
@@ -123,24 +103,6 @@ function resetConfig() {
   }
 }
 
-function renderCategory() {
-  const categoryArray = [];
-
-  for (const key in CATEGORY) {
-    if (CATEGORY[key]) {
-      CATEGORY[key].wrapper = (
-        <div>
-          <h5 className="card-title">{CATEGORY[key].text}</h5>
-          {CATEGORY[key].group}
-        </div>
-      );
-      categoryArray.push(CATEGORY[key].wrapper);
-    }
-  }
-
-  return categoryArray;
-}
-
 export default function initialize() {
   // 설정 버튼 엘리먼트
   const showBtn = (
@@ -167,16 +129,16 @@ export default function initialize() {
   function onSearch(event) {
     const value = event.target.value;
     if (value) {
-      settingList.forEach(({ header, row }) => {
-        if (header.indexOf(value) > -1) {
-          row.classList.remove('hidden');
+      settingList.forEach(({ title, item }) => {
+        if (title.indexOf(value) > -1) {
+          item.classList.remove('hidden');
         } else {
-          row.classList.add('hidden');
+          item.classList.add('hidden');
         }
       });
     } else {
-      settingList.forEach(({ row }) => {
-        row.classList.remove('hidden');
+      settingList.forEach(({ item }) => {
+        item.classList.remove('hidden');
       });
     }
   }
@@ -220,10 +182,11 @@ export default function initialize() {
     <div id="refresherSetting">
       <style>{stylesheet}</style>
       <div className="background">
+        <h4>Arca Refresher</h4>
         <div className="search">
           <input type="text" placeholder="설정 검색" onClick={onSearchClick} onInput={onSearch} />
         </div>
-        <div className="settings">{renderCategory()}</div>
+        {settingContainer}
         <div className="btn-grid">
           <button className="btn btn-primary" onClick={onExport}>
             내보내기

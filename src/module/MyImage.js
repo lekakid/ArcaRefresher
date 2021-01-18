@@ -55,16 +55,21 @@ function setupSetting() {
   });
   const channel = CurrentPage.Channel.ID;
   addSetting({
-    category: 'UTILITY',
-    header: '자짤 관리',
-    view: (
-      <div id="MyImage">
-        <style>{stylesheet}</style>
-        {imgList}
-        {deleteBtn}
-      </div>
-    ),
-    description: '더블을 하면 이미지를 모두 선택할 수 있습니다.',
+    header: '자짤',
+    group: [
+      {
+        title: '목록 관리',
+        description: '더블 클릭으로 모두 선택합니다.',
+        content: (
+          <div id="MyImage">
+            <style>{stylesheet}</style>
+            {imgList}
+            {deleteBtn}
+          </div>
+        ),
+        type: 'wide',
+      },
+    ],
     valueCallback: {
       save() {
         const data = getValue(MY_IMAGES);

@@ -41,21 +41,26 @@ function setupSetting() {
     event.target.disabled = false;
   });
   addSetting({
-    category: 'MEMO',
-    header: '메모된 이용자',
-    view: (
-      <>
-        {memoList}
-        {deleteBtn}
-      </>
-    ),
-    description: (
-      <>
-        메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.
-        <br />
-        Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
-      </>
-    ),
+    header: '메모',
+    group: [
+      {
+        title: '메모 목록',
+        description: (
+          <>
+            메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.
+            <br />
+            Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+          </>
+        ),
+        content: (
+          <>
+            {memoList}
+            {deleteBtn}
+          </>
+        ),
+        type: 'wide',
+      },
+    ],
     valueCallback: {
       save() {
         const data = getValue(USER_MEMO);
