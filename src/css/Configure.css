@@ -157,10 +157,6 @@
   display: inline;
 }
 
-#refresherSetting table {
-  overflow-x: scroll;
-}
-
 @media (prefers-color-scheme: dark) {
   #refresherSetting .card-block {
     border: 1px solid #43494c;

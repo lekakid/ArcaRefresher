@@ -4,6 +4,8 @@ import { CurrentPage } from '../core/Parser';
 import AutoRefresher from './AutoRefresher';
 import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
 
+import styles, { stylesheet } from '../css/CategoryColor.module.css';
+
 export default { load };
 
 const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
@@ -28,85 +30,73 @@ function load() {
 
 function setupSetting() {
   // 카테고리 목록 등록
+  const settingWrapper = (
+    <div className={styles.wrapper}>
+      <style>{stylesheet}</style>
+      {CurrentPage.Category.map((category) => {
+        let name = category;
+        if (category === '전체') name = '일반';
 
-  const tbody = <tbody />;
-  const table = (
-    <table className="table align-middle">
-      <colgroup>
-        <col width="40%" />
-        <col width="20%" />
-        <col width="20%" />
-        <col width="20%" />
-      </colgroup>
-      <thead>
-        <th>이름</th>
-        <th>뱃지색</th>
-        <th>배경색</th>
-        <th>굵게</th>
-      </thead>
-      {tbody}
-    </table>
+        return (
+          <div className={styles.item} data-id={name}>
+            <div>
+              <span className="badge badge-success" style={{ margin: '0.25rem' }}>
+                {name}
+              </span>
+              제목
+            </div>
+            <div>
+              <input
+                type="text"
+                name="bg"
+                placeholder="뱃지색"
+                maxLength="6"
+                disabled={name === '일반'}
+              />
+            </div>
+            <div>
+              <input type="text" name="badge" placeholder="배경색" maxLength="6" />
+            </div>
+            <div>
+              <label>
+                <input type="checkbox" name="bold" style={{ margin: '0.25rem' }} /> 굵게
+              </label>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 
-  for (const category of CurrentPage.Category) {
-    let name = category;
-    if (category === '전체') name = '일반';
-
-    tbody.append(
-      <tr data-id={name}>
-        <td>
-          <span className="badge badge-success" style={{ margin: '0.25rem' }}>
-            {`${name}`}
-          </span>
-          <span className="title">제목</span>
-        </td>
-        <td>
-          <input
-            type="text"
-            name="badge"
-            placeholder="000000"
-            maxLength="6"
-            disabled={name === '일반'}
-          />
-        </td>
-        <td>
-          <input type="text" name="bg" placeholder="000000" maxLength="6" />
-        </td>
-        <td>
-          <label>
-            <input type="checkbox" name="bold" style={{ margin: '0.25rem' }} /> 적용
-          </label>
-        </td>
-      </tr>
-    );
-  }
-
   // 이벤트 핸들러
-  tbody.addEventListener('keypress', (event) => {
+  settingWrapper.addEventListener('keypress', (event) => {
     const regex = /[0-9a-fA-F]/;
     if (!regex.test(event.key)) event.preventDefault();
   });
-  tbody.addEventListener('dblclick', (event) => {
+  settingWrapper.addEventListener('dblclick', (event) => {
     if (event.target.tagName !== 'INPUT') return;
     if (event.target.disabled) return;
 
+    const row = event.target.closest(`.${styles.item}`);
     const color = getRandomColor();
     const yiq = getContrastYIQ(color);
 
     if (event.target.name === 'badge') {
       event.target.value = color;
-      event.target.closest('tr').querySelector('.badge').style.backgroundColor = `#${color}`;
-      event.target.closest('tr').querySelector('.badge').style.color = yiq;
+      row.querySelector('.badge').style.backgroundColor = `#${color}`;
+      row.querySelector('.badge').style.color = yiq;
     }
     if (event.target.name === 'bg') {
       event.target.value = color;
-      event.target.closest('tr').querySelector('td').style.backgroundColor = `#${color}`;
-      event.target.closest('tr').querySelector('.title').style.color = yiq;
+      row.querySelector('td').style.backgroundColor = `#${color}`;
+      row.querySelector('.title').style.color = yiq;
     }
   });
-  tbody.addEventListener('input', (event) => {
+  settingWrapper.addEventListener('input', (event) => {
     let color = '';
     let yiq = '';
+
+    const row = event.target.closest(`.${styles.item}`);
 
     if (event.target.value.length === 6) {
       color = `#${event.target.value}`;
@@ -114,17 +104,15 @@ function setupSetting() {
     }
 
     if (event.target.name === 'badge') {
-      event.target.closest('tr').querySelector('.badge').style.backgroundColor = color;
-      event.target.closest('tr').querySelector('.badge').style.color = yiq;
+      row.querySelector('.badge').style.backgroundColor = color;
+      row.querySelector('.badge').style.color = yiq;
     }
     if (event.target.name === 'bg') {
-      event.target.closest('tr').querySelector('td').style.backgroundColor = color;
-      event.target.closest('tr').querySelector('.title').style.color = yiq;
+      row.querySelector('td').style.backgroundColor = color;
+      row.style.color = yiq;
     }
     if (event.target.name === 'bold') {
-      event.target.closest('tr').querySelector('.title').style.fontWeight = event.target.checked
-        ? 'bold'
-        : '';
+      row.style.fontWeight = event.target.checked ? 'bold' : '';
     }
   });
 
@@ -136,7 +124,7 @@ function setupSetting() {
       {
         title: '색상 변경',
         description: '더블 클릭으로 무작위 색상을 선택합니다.',
-        content: table,
+        content: settingWrapper,
         type: 'wide',
       },
     ],
@@ -146,9 +134,9 @@ function setupSetting() {
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
 
-        const rows = tbody.querySelectorAll('tr');
+        const rows = settingWrapper.querySelectorAll(`.${styles.item}`);
         for (const row of rows) {
-          const { id } = row.dataset;
+          const id = row.dataset.id;
           const badge = row.querySelector('input[name="badge"]').value.toUpperCase();
           const bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
           const bold = row.querySelector('input[name="bold"]').checked;
@@ -170,18 +158,18 @@ function setupSetting() {
         const config = getValue(CATEGORY_COLOR)[channel];
         if (!config) return;
 
-        for (const element of tbody.children) {
-          const { id } = element.dataset;
+        const rows = settingWrapper.querySelectorAll(`.${styles.item}`);
+        for (const row of rows) {
+          const id = row.dataset.id;
 
           if (config[id]) {
             const { badge, bgcolor, bold } = config[id];
 
-            const tdElement = element.querySelector('td');
-            const badgeElement = element.querySelector('.badge');
-            const titleElement = element.querySelector('.title');
-            const badgeInput = element.querySelector('input[name="badge"]');
-            const bgInput = element.querySelector('input[name="bg"]');
-            const boldInput = element.querySelector('input[name="bold"]');
+            const backgroundElement = row.querySelector('div:first-child');
+            const badgeElement = row.querySelector('.badge');
+            const badgeInput = row.querySelector('input[name="badge"]');
+            const bgInput = row.querySelector('input[name="bg"]');
+            const boldInput = row.querySelector('input[name="bold"]');
 
             badgeInput.value = badge;
             if (badge) {
@@ -191,13 +179,13 @@ function setupSetting() {
 
             bgInput.value = bgcolor;
             if (bgcolor) {
-              tdElement.style.backgroundColor = `#${bgcolor}`;
-              titleElement.style.color = getContrastYIQ(bgcolor);
+              backgroundElement.style.backgroundColor = `#${bgcolor}`;
+              backgroundElement.style.color = getContrastYIQ(bgcolor);
             }
 
             boldInput.checked = bold;
             if (bold) {
-              titleElement.style.fontWeight = 'bold';
+              backgroundElement.style.fontWeight = 'bold';
             }
           }
         }
@@ -223,18 +211,20 @@ function generateColorStyle() {
         styleKey = Math.random().toString(36).substr(2);
       } while (styleTable[styleKey]);
 
-      style.push(`
-                .color_${styleKey} {
-                    background-color: #${bgcolor} !important;
-                    color: ${getContrastYIQ(bgcolor)};
-                    font-weight: ${bold ? 'bold' : 'normal'}
-                }
-    
-                .color_${styleKey} .badge {
-                    background-color: #${badge} !important;
-                    color: ${getContrastYIQ(badge)};
-                }
-            `);
+      style.push(
+        `
+          .color_${styleKey} {
+            background-color: #${bgcolor} !important;
+            color: ${getContrastYIQ(bgcolor)};
+            font-weight: ${bold ? 'bold' : 'normal'}
+          }
+
+          .color_${styleKey} .badge {
+            background-color: #${badge} !important;
+            color: ${getContrastYIQ(badge)};
+          }
+        `
+      );
       styleTable[key] = styleKey;
     }
   }
