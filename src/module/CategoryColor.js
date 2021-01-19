@@ -79,7 +79,7 @@ function setupSetting() {
         );
         const [badgeInput, badgeContainer] = renderColorPicker('#373a3c', name === '일반');
         const [bgInput, bgContainer] = renderColorPicker('#fff', false);
-        const boldInput = <input type="checkbox" name="bold" style={{ margin: '0.25rem' }} />;
+        const boldInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
 
         badgeContainer.on('save', (color) => {
           if (color) {
@@ -116,7 +116,7 @@ function setupSetting() {
         };
 
         return (
-          <div className={styles.item} data-id={name}>
+          <div className={styles.item}>
             {bgElement}
             <div>{badgeInput}</div>
             <div>{bgInput}</div>
