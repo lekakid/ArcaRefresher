@@ -16,10 +16,9 @@ import FullAreaReply from './module/FullAreaReply';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import ImageSearch from './module/ImageSearch';
-import LiveModifier from './module/LiveModifier';
+import LiveModifier from './module/LayoutCustomizer';
 import MyImage from './module/MyImage';
 import NewWindow from './module/NewWindow';
-import NotificationIconColor from './module/NotificationIconColor';
 import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
@@ -39,7 +38,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   ContextMenu.initialize();
 
   LiveModifier.load();
-  NotificationIconColor.load();
 
   await waitForElement('footer');
   Parser();

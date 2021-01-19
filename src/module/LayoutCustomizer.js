@@ -1,6 +1,7 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 
-import sheetLiveModifier from '../css/LiveModifier.css';
+import sheetLiveModifier from '../css/LayoutCustomizer.css';
+import { getRandomColor } from '../util/ColorManager';
 
 export default { load };
 
@@ -9,6 +10,7 @@ const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 const RESIZE_MEDIA = { key: 'resizeMedia', defaultValue: '100' };
+const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 
 function load() {
   try {
@@ -45,6 +47,44 @@ function setupSetting() {
       <option value="true">숨김</option>
     </select>
   );
+  const notifyColor = <input type="text" placeholder="FFC107" maxLength="6" />;
+  const notificationIcon = (
+    <span
+      className="ion-android-notifications"
+      style={{
+        padding: '0.3rem',
+        fontSize: '1.25rem',
+        textAlign: 'center',
+        border: '1px solid #3d414d',
+        backgroundColor: '#3d414d',
+        color: '#fff',
+      }}
+    />
+  );
+
+  // 이벤트 핸들러
+  notifyColor.addEventListener('keypress', (event) => {
+    const regex = /[0-9a-fA-F]/;
+    if (!regex.test(event.key)) event.preventDefault();
+  });
+  notifyColor.addEventListener('dblclick', (event) => {
+    const color = getRandomColor();
+
+    event.target.value = color;
+    notificationIcon.style.color = `#${color}`;
+  });
+  notifyColor.addEventListener('input', (event) => {
+    let color = '';
+
+    if (event.target.value.length === 6) {
+      color = `#${event.target.value}`;
+    } else {
+      color = '#fff';
+    }
+
+    notificationIcon.style.color = color;
+  });
+
   const resizeMedia = <input type="text" name="resizeMedia" />;
   addSetting({
     header: '레이아웃 커스텀',
@@ -69,6 +109,22 @@ function setupSetting() {
         title: '본문 이미지, 동영상 사이즈',
         content: resizeMedia,
       },
+      {
+        title: '알림 아이콘 점등 색상 변경',
+        description: (
+          <>
+            색상을 입력하면 알림 아이콘에서 미리 볼 수 있습니다.
+            <br />
+            더블 클릭으로 무작위 색상을 선택할 수 있습니다.
+          </>
+        ),
+        content: (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {notifyColor}
+            {notificationIcon}
+          </div>
+        ),
+      },
     ],
     valueCallback: {
       save() {
@@ -77,6 +133,7 @@ function setupSetting() {
         setValue(HIDE_AVATAR, hideAvatar.value === 'true');
         setValue(HIDE_MODIFIED, hideModified.value === 'true');
         setValue(RESIZE_MEDIA, resizeMedia.value);
+        setValue(NOTIFY_COLOR, notifyColor.value);
       },
       load() {
         hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
@@ -84,6 +141,9 @@ function setupSetting() {
         hideAvatar.value = getValue(HIDE_AVATAR);
         hideModified.value = getValue(HIDE_MODIFIED);
         resizeMedia.value = getValue(RESIZE_MEDIA);
+        notifyColor.value = getValue(NOTIFY_COLOR);
+
+        notificationIcon.style.color = '#fff';
       },
     },
   });
@@ -111,4 +171,16 @@ function apply() {
     }`;
 
   document.head.append(<style>{css}</style>);
+
+  const color = getValue(NOTIFY_COLOR);
+
+  const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
+  if (notificationIcon === null) return;
+
+  const notiObserver = new MutationObserver(() => {
+    if (notificationIcon.style.color) {
+      notificationIcon.style.color = `#${color}`;
+    }
+  });
+  notiObserver.observe(notificationIcon, { attributes: true });
 }
