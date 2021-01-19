@@ -1,0 +1,55 @@
+:global
+  .body
+  .board-article
+  .article-list
+  .list-table.show-filtered-category
+  .vrow.filtered-category {
+  display: flex;
+}
+
+:global .body .board-article .show-filtered-category .filter-count-category {
+  color: #bbb;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  min-height: 3rem;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-areas: 'category opts';
+  align-items: stretch;
+
+  border-top: 1px solid #bbb;
+}
+
+@media screen and (max-width: 768px) {
+  .item {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'category'
+      'opts';
+  }
+}
+
+.item label {
+  margin: 0;
+}
+
+.item > div {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+}
+
+.item > div:nth-child(1) {
+  grid-area: category;
+}
+
+.item > div:nth-child(2) {
+  grid-area: opts;
+}

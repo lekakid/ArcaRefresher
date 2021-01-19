@@ -2,9 +2,10 @@ import ArticleMenu from '../core/ArticleMenu';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserInfo } from '../core/Parser';
 
-import MuteStyle from '../css/MuteContent.css';
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
+
+import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
 
 export default { load };
 
@@ -49,7 +50,7 @@ function load() {
 }
 
 function setupSetting() {
-  document.head.append(<style>{MuteStyle}</style>);
+  document.head.append(<style>{stylesheet}</style>);
 
   const hideNotice = (
     <select>
@@ -63,43 +64,33 @@ function setupSetting() {
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
-  const tbody = <tbody />;
-  const categoryMute = (
-    <table className="table align-middle">
-      <colgroup>
-        <col width="40%" />
-        <col width="30%" />
-        <col width="30%" />
-      </colgroup>
-      <thead>
-        <th>이름</th>
-        <th>미리보기 뮤트</th>
-        <th>게시물 뮤트</th>
-      </thead>
-      {tbody}
-    </table>
+  const categoryContainer = {};
+  const categoryWrapper = (
+    <div className={MuteStyle.wrapper}>
+      {CurrentPage.Category.map((category) => {
+        let name = category;
+        if (category === '전체') name = '일반';
+
+        const previewInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
+        const articleInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
+
+        categoryContainer[name] = {
+          previewMute: previewInput,
+          articleMute: articleInput,
+        };
+
+        return (
+          <div className={MuteStyle.item}>
+            <div>{name}</div>
+            <div>
+              <label>{previewInput}미리보기 뮤트</label>
+              <label>{articleInput}게시물 뮤트</label>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
-
-  for (const category of CurrentPage.Category) {
-    let name = category;
-    if (category === '전체') name = '일반';
-
-    tbody.append(
-      <tr data-id={name}>
-        <td>{name}</td>
-        <td>
-          <label>
-            <input type="checkbox" name="mutePreview" style={{ margin: '0.25rem' }} /> 적용
-          </label>
-        </td>
-        <td>
-          <label>
-            <input type="checkbox" name="muteArticle" style={{ margin: '0.25rem' }} /> 적용
-          </label>
-        </td>
-      </tr>
-    );
-  }
 
   const channel = CurrentPage.Channel.ID;
 
@@ -168,7 +159,7 @@ function setupSetting() {
             게시물 뮤트: 해당 카테고리의 게시물을 숨깁니다.
           </>
         ),
-        content: categoryMute,
+        content: categoryWrapper,
         type: 'wide',
       },
     ],
@@ -188,20 +179,20 @@ function setupSetting() {
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
 
-        const rows = tbody.querySelectorAll('tr');
-        for (const row of rows) {
-          const { id } = row.dataset;
+        for (const key in categoryContainer) {
+          if (categoryContainer[key]) {
+            const row = categoryContainer[key];
+            const preview = row.previewMute.checked;
+            const article = row.articleMute.checked;
 
-          const preview = row.querySelector('input[name="mutePreview"]').checked;
-          const article = row.querySelector('input[name="muteArticle"]').checked;
-
-          if (preview || article) {
-            channelConfig[id] = {
-              mutePreview: preview,
-              muteArticle: article,
-            };
-          } else {
-            delete channelConfig[id];
+            if (preview || article) {
+              channelConfig[key] = {
+                mutePreview: preview,
+                muteArticle: article,
+              };
+            } else {
+              delete channelConfig[key];
+            }
           }
         }
 
@@ -215,12 +206,11 @@ function setupSetting() {
         const config = getValue(MUTE_CATEGORY)[channel];
         if (!config) return;
 
-        for (const element of tbody.children) {
-          const { id } = element.dataset;
-
-          if (config[id]) {
-            element.querySelector('input[name="mutePreview"]').checked = config[id].mutePreview;
-            element.querySelector('input[name="muteArticle"]').checked = config[id].muteArticle;
+        for (const key in categoryContainer) {
+          if (config[key]) {
+            const { mutePreview: preview, muteArticle: article } = config[key];
+            categoryContainer[key].previewMute.checked = preview;
+            categoryContainer[key].articleMute.checked = article;
           }
         }
       },
