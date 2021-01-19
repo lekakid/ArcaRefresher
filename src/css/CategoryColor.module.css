@@ -7,7 +7,7 @@
   min-height: 3rem;
 
   display: grid;
-  grid-template-columns: 3fr 2fr 2fr 5fr;
+  grid-template-columns: 4fr 1fr 1fr 6fr;
   grid-template-areas: 'category badge bg etc';
   align-items: stretch;
 
@@ -16,11 +16,10 @@
 
 @media screen and (max-width: 768px) {
   .item {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 4fr 1fr 1fr;
     grid-template-areas:
-      'category category'
-      'badge bg'
-      'etc etc';
+      'category badge bg'
+      'etc etc etc';
   }
 }
 
@@ -30,6 +29,11 @@
 
 .bold {
   font-weight: 700;
+}
+
+:global .pickr {
+  border: 1px solid #bbb;
+  border-radius: 0.15em;
 }
 
 .item > div {

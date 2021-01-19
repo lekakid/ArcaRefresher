@@ -2,7 +2,7 @@ import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
-import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
+import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
 
@@ -28,93 +28,106 @@ function load() {
   }
 }
 
+function renderColorPicker(defaultColor, disabled) {
+  const element = <div className="pickr" />;
+  const wrapper = <>{element}</>;
+  const handler = new window.Pickr({
+    el: element,
+    theme: 'nano',
+    disabled,
+    lockOpacity: true,
+    default: defaultColor,
+    components: {
+      palette: false,
+      preview: true,
+      opacity: false,
+      hue: true,
+
+      interaction: {
+        hex: true,
+        hsv: true,
+        input: true,
+        clear: true,
+        save: true,
+      },
+    },
+  }).on('save', () => handler.hide());
+
+  return [wrapper, handler];
+}
+
 function setupSetting() {
-  // 카테고리 목록 등록
+  const dataContainer = {};
   const settingWrapper = (
     <div className={styles.wrapper}>
       <style>{stylesheet}</style>
+      <style>{GM_getResourceText('colorpicker')}</style>
       {CurrentPage.Category.map((category) => {
         let name = category;
         if (category === '전체') name = '일반';
 
+        const badgeElement = (
+          <span className="badge badge-success" style={{ margin: '0.25rem' }}>
+            {name}
+          </span>
+        );
+        const bgElement = (
+          <div>
+            {badgeElement}
+            제목
+          </div>
+        );
+        const [badgeInput, badgeContainer] = renderColorPicker('#373a3c', name === '일반');
+        const [bgInput, bgContainer] = renderColorPicker('#fff', false);
+        const boldInput = <input type="checkbox" name="bold" style={{ margin: '0.25rem' }} />;
+
+        badgeContainer.on('save', (color) => {
+          if (color) {
+            const badge = color.toHEXA().toString();
+            badgeElement.style.backgroundColor = badge;
+            badgeElement.style.color = getContrastYIQ(badge);
+          } else {
+            badgeElement.style.backgroundColor = '';
+            badgeElement.style.color = '';
+          }
+        });
+        bgContainer.on('save', (color) => {
+          if (color) {
+            const bg = color.toHEXA().toString();
+            bgElement.style.background = `linear-gradient(90deg, ${bg}, rgba(255, 255, 255, 0))`;
+            bgElement.style.color = getContrastYIQ(bg);
+          } else {
+            bgElement.style.background = '';
+            bgElement.style.color = '';
+          }
+        });
+        boldInput.addEventListener('click', () => {
+          bgElement.style.fontWeight = boldInput.checked ? 'bold' : '';
+        });
+
+        dataContainer[name] = {
+          test: {
+            bg: bgElement,
+            badge: badgeElement,
+          },
+          badge: badgeContainer,
+          bgcolor: bgContainer,
+          bold: boldInput,
+        };
+
         return (
           <div className={styles.item} data-id={name}>
+            {bgElement}
+            <div>{badgeInput}</div>
+            <div>{bgInput}</div>
             <div>
-              <span className="badge badge-success" style={{ margin: '0.25rem' }}>
-                {name}
-              </span>
-              제목
-            </div>
-            <div>
-              <input
-                type="text"
-                name="bg"
-                placeholder="뱃지색"
-                maxLength="6"
-                disabled={name === '일반'}
-              />
-            </div>
-            <div>
-              <input type="text" name="badge" placeholder="배경색" maxLength="6" />
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" name="bold" style={{ margin: '0.25rem' }} /> 굵게
-              </label>
+              <label>{boldInput}굵게</label>
             </div>
           </div>
         );
       })}
     </div>
   );
-
-  // 이벤트 핸들러
-  settingWrapper.addEventListener('keypress', (event) => {
-    const regex = /[0-9a-fA-F]/;
-    if (!regex.test(event.key)) event.preventDefault();
-  });
-  settingWrapper.addEventListener('dblclick', (event) => {
-    if (event.target.tagName !== 'INPUT') return;
-    if (event.target.disabled) return;
-
-    const row = event.target.closest(`.${styles.item}`);
-    const color = getRandomColor();
-    const yiq = getContrastYIQ(color);
-
-    if (event.target.name === 'badge') {
-      event.target.value = color;
-      row.querySelector('.badge').style.backgroundColor = `#${color}`;
-      row.querySelector('.badge').style.color = yiq;
-    }
-    if (event.target.name === 'bg') {
-      event.target.value = color;
-      row.querySelector('td').style.backgroundColor = `#${color}`;
-      row.querySelector('.title').style.color = yiq;
-    }
-  });
-  settingWrapper.addEventListener('input', (event) => {
-    let color = '';
-    let yiq = '';
-
-    const row = event.target.closest(`.${styles.item}`);
-
-    if (event.target.value.length === 6) {
-      color = `#${event.target.value}`;
-      yiq = getContrastYIQ(event.target.value);
-    }
-
-    if (event.target.name === 'badge') {
-      row.querySelector('.badge').style.backgroundColor = color;
-      row.querySelector('.badge').style.color = yiq;
-    }
-    if (event.target.name === 'bg') {
-      row.querySelector('td').style.backgroundColor = color;
-      row.style.color = yiq;
-    }
-    if (event.target.name === 'bold') {
-      row.style.fontWeight = event.target.checked ? 'bold' : '';
-    }
-  });
 
   const channel = CurrentPage.Channel.ID;
 
@@ -123,7 +136,6 @@ function setupSetting() {
     group: [
       {
         title: '색상 변경',
-        description: '더블 클릭으로 무작위 색상을 선택합니다.',
         content: settingWrapper,
         type: 'wide',
       },
@@ -134,21 +146,21 @@ function setupSetting() {
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
 
-        const rows = settingWrapper.querySelectorAll(`.${styles.item}`);
-        for (const row of rows) {
-          const id = row.dataset.id;
-          const badge = row.querySelector('input[name="badge"]').value.toUpperCase();
-          const bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
-          const bold = row.querySelector('input[name="bold"]').checked;
+        for (const key in dataContainer) {
+          if (dataContainer[key]) {
+            const badge = dataContainer[key].badge.getSelectedColor();
+            const bgcolor = dataContainer[key].bgcolor.getSelectedColor();
+            const bold = dataContainer[key].bold.checked;
 
-          if (badge || bgcolor || bold) {
-            channelConfig[id] = {
-              badge,
-              bgcolor,
-              bold,
-            };
-          } else {
-            delete channelConfig[id];
+            if (badge || bgcolor || bold) {
+              channelConfig[key] = {
+                badge: badge ? badge.toHEXA().toString() : '',
+                bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
+                bold,
+              };
+            } else {
+              delete channelConfig[key];
+            }
           }
         }
 
@@ -158,35 +170,21 @@ function setupSetting() {
         const config = getValue(CATEGORY_COLOR)[channel];
         if (!config) return;
 
-        const rows = settingWrapper.querySelectorAll(`.${styles.item}`);
-        for (const row of rows) {
-          const id = row.dataset.id;
+        for (const key in dataContainer) {
+          if (config[key]) {
+            const { badge, bgcolor, bold } = config[key];
 
-          if (config[id]) {
-            const { badge, bgcolor, bold } = config[id];
+            dataContainer[key].badge.setColor(badge || null, !badge);
+            dataContainer[key].bgcolor.setColor(bgcolor || null, !bgcolor);
+            dataContainer[key].bold.checked = bold;
 
-            const backgroundElement = row.querySelector('div:first-child');
-            const badgeElement = row.querySelector('.badge');
-            const badgeInput = row.querySelector('input[name="badge"]');
-            const bgInput = row.querySelector('input[name="bg"]');
-            const boldInput = row.querySelector('input[name="bold"]');
+            const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
 
-            badgeInput.value = badge;
-            if (badge) {
-              badgeElement.style.backgroundColor = `#${badge}`;
-              badgeElement.style.color = getContrastYIQ(badge);
-            }
-
-            bgInput.value = bgcolor;
-            if (bgcolor) {
-              backgroundElement.style.backgroundColor = `#${bgcolor}`;
-              backgroundElement.style.color = getContrastYIQ(bgcolor);
-            }
-
-            boldInput.checked = bold;
-            if (bold) {
-              backgroundElement.style.fontWeight = 'bold';
-            }
+            badgeElement.style.backgroundColor = badge;
+            badgeElement.style.color = getContrastYIQ(badge);
+            bgElement.style.background = `linear-gradient(90deg, ${bgcolor}, rgba(255, 255, 255, 0))`;
+            bgElement.style.color = getContrastYIQ(bgcolor);
+            bgElement.style.fontWeight = bold && 'bold';
           }
         }
       },
@@ -214,13 +212,13 @@ function generateColorStyle() {
       style.push(
         `
           .color_${styleKey} {
-            background-color: #${bgcolor} !important;
+            background-color: ${bgcolor} !important;
             color: ${getContrastYIQ(bgcolor)};
             font-weight: ${bold ? 'bold' : 'normal'}
           }
 
           .color_${styleKey} .badge {
-            background-color: #${badge} !important;
+            background-color: ${badge} !important;
             color: ${getContrastYIQ(badge)};
           }
         `
