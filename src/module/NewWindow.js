@@ -4,19 +4,24 @@ import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
-const OPEN_NEW_WINDOW = { key: 'openNewWindow', defaultValue: false };
+const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
+const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
 
 function load() {
   try {
     setupSetting();
 
     if (CurrentPage.Component.Board) {
-      apply();
+      applyOpenNewWindow();
+    }
+
+    if (CurrentPage.Component.Article) {
+      applyBlockNewWindow();
     }
 
     AutoRefresher.addRefreshCallback({
       priority: 100,
-      callback: apply,
+      callback: applyOpenNewWindow,
     });
   } catch (error) {
     console.error(error);
@@ -24,38 +29,65 @@ function load() {
 }
 
 function setupSetting() {
-  const newWindow = (
+  const openArticle = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  const blockMedia = (
     <select>
       <option value="false">사용 안 함</option>
       <option value="true">사용</option>
     </select>
   );
   addSetting({
-    header: '새 창으로 열기',
+    header: '창 열기',
     group: [
       {
         title: '게시물 클릭 시 새 창으로 열기',
-        content: newWindow,
+        content: openArticle,
+      },
+      {
+        title: '이미지, 비디오 클릭 시 새 창으로 열기 방지',
+        content: blockMedia,
       },
     ],
     valueCallback: {
       save() {
-        setValue(OPEN_NEW_WINDOW, newWindow.value === 'true');
+        setValue(OPEN_ARTICLE, openArticle.value === 'true');
+        setValue(BLOCK_MEDIA, blockMedia.value === 'true');
       },
       load() {
-        newWindow.value = getValue(OPEN_NEW_WINDOW);
+        openArticle.value = getValue(OPEN_ARTICLE);
+        blockMedia.value = getValue(BLOCK_MEDIA);
       },
     },
   });
 }
 
-function apply() {
-  const value = getValue(OPEN_NEW_WINDOW);
+function applyOpenNewWindow() {
+  const value = getValue(OPEN_ARTICLE);
   if (!value) return;
 
   const articles = document.querySelectorAll('a.vrow:not(.notice-unfilter)');
 
   for (const article of articles) {
     article.setAttribute('target', '_blank');
+  }
+}
+
+function applyBlockNewWindow() {
+  if (!getValue(BLOCK_MEDIA)) return;
+
+  const targetElements = document.querySelectorAll(
+    '.article-body img, .article-body video:not([controls])'
+  );
+
+  for (const element of targetElements) {
+    const a = <a />;
+
+    element.insertAdjacentElement('beforebegin', a);
+    a.append(element);
   }
 }
