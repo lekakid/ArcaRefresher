@@ -295,6 +295,7 @@ function muteNotice() {
   const itemContainer = document.querySelector(
     'div.board-article-list .list-table, div.included-article-list .list-table'
   );
+  if (!itemContainer) return;
   const notices = itemContainer.querySelectorAll('a.vrow.notice-board');
   let noticeCount = 0;
   for (const notice of notices) {
@@ -382,6 +383,8 @@ function muteContent(viewQuery) {
     keywordSelector = '.message';
     insertPosition = 'beforebegin';
   }
+
+  if (!itemContainer) return;
 
   contents.forEach((item) => {
     const keywordElement = item.querySelector(keywordSelector);
