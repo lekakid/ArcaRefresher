@@ -45,9 +45,9 @@ export default function initialize() {
     CurrentPage.Article = {
       Title: titleElement.lastChild.textContent.trim(),
       Category: categoryElement ? categoryElement.textContent : '',
-      Author: parseUserInfo(authorElement),
-      AuthorID: parseUserID(authorElement),
-      URL: linkElement.href,
+      Author: authorElement ? parseUserInfo(authorElement) : '',
+      AuthorID: authorElement ? parseUserID(authorElement) : '',
+      URL: linkElement ? linkElement.href : window.location.href,
     };
   }
 
