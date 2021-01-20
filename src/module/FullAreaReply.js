@@ -4,7 +4,7 @@ export default { load };
 
 function load() {
   try {
-    if (CurrentPage.Component.Article) {
+    if (CurrentPage.Component.Comment) {
       apply();
     }
   } catch (error) {
