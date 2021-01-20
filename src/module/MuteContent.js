@@ -352,9 +352,9 @@ function muteContent(viewQuery) {
   }
 
   const channel = CurrentPage.Channel.ID;
-  let userlist = getValue(BLOCK_USER, []);
-  let keywordlist = getValue(BLOCK_KEYWORD, []);
-  const categoryConfig = getValue(MUTE_CATEGORY, {})[channel];
+  let userlist = getValue(BLOCK_USER);
+  let keywordlist = getValue(BLOCK_KEYWORD);
+  const categoryConfig = getValue(MUTE_CATEGORY)[channel];
 
   if ((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute !== undefined) {
     userlist.push(...unsafeWindow.LiveConfig.mute.users);
