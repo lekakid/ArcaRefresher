@@ -17,7 +17,7 @@ function load() {
 
 function apply() {
   const commentArea = document.querySelector('#comment');
-  if (commentArea && commentArea.querySelector('.alert')) {
+  if (!commentArea || commentArea.querySelector('.alert')) {
     // 댓글 작성 권한 없음
     return;
   }
