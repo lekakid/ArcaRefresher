@@ -6,7 +6,7 @@ const saveCallbackList = [];
 const loadCallbackList = [];
 
 const settingContainer = <div className="settings" />;
-const settingList = [];
+const GroupList = [];
 
 /**
  * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
@@ -22,28 +22,38 @@ const settingList = [];
  * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
  */
 export function addSetting({ header, group, valueCallback: { save, load } }) {
-  const row = (
-    <div className="section">
-      <h5>{header}</h5>
-      <div className="group">
-        {group.map(({ title, description, content, type }) => {
-          const item = (
-            <div className={`item ${type || 'default'}`}>
-              {description && <p>{description}</p>}
-              <label>{title}</label>
-              <div>{content}</div>
-            </div>
-          );
-          settingList.push({ title, description, item });
-          return item;
-        })}
+  const itemElementList = [];
+  const itemList = group.map(({ title, description, content, type }) => {
+    const item = (
+      <div className={`item ${type || 'default'}`}>
+        {description && <p>{description}</p>}
+        <label>{title}</label>
+        <div>{content}</div>
       </div>
-    </div>
-  );
+    );
+    itemElementList.push({
+      text: title,
+      element: item,
+    });
+    return item;
+  });
+
+  const groupElement = <div className="group">{itemList}</div>;
+  GroupList.push({
+    text: header,
+    element: groupElement,
+    items: itemElementList,
+  });
+
   saveCallbackList.push(save);
   loadCallbackList.push(load);
 
-  settingContainer.append(row);
+  settingContainer.append(
+    <div className="section">
+      <h5>{header}</h5>
+      {groupElement}
+    </div>
+  );
 }
 
 /**
@@ -129,16 +139,41 @@ export default function initialize() {
   function onSearch(event) {
     const value = event.target.value;
     if (value) {
-      settingList.forEach(({ title, item }) => {
-        if (title.indexOf(value) > -1) {
-          item.classList.remove('hidden');
+      GroupList.forEach(({ text, element, items }) => {
+        if (text.indexOf(value) === -1) {
+          let searchCount = 0;
+          let lastIndex = 0;
+          items.forEach(({ text: itemText, element: itemElement }, index) => {
+            if (itemText.indexOf(value) > -1) {
+              searchCount += 1;
+              lastIndex = index;
+              itemElement.classList.remove('hidden');
+              itemElement.classList.remove('lastChild');
+            } else {
+              itemElement.classList.add('hidden');
+            }
+          });
+          items[lastIndex].element.classList.add('lastChild');
+          if (searchCount) {
+            element.parentNode.classList.remove('hidden');
+          } else {
+            element.parentNode.classList.add('hidden');
+          }
         } else {
-          item.classList.add('hidden');
+          element.parentNode.classList.remove('hidden');
+          items.forEach(({ element: itemElement }) => {
+            itemElement.classList.remove('hidden');
+            itemElement.classList.remove('lastChild');
+          });
         }
       });
     } else {
-      settingList.forEach(({ item }) => {
-        item.classList.remove('hidden');
+      GroupList.forEach(({ element, items }) => {
+        element.parentNode.classList.remove('hidden');
+        items.forEach(({ element: itemElement }) => {
+          itemElement.classList.remove('hidden');
+          itemElement.classList.remove('lastChild');
+        });
       });
     }
   }

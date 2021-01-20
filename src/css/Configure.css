@@ -17,7 +17,7 @@
 }
 
 #refresherSetting .background {
-  max-width: 700px;
+  width: 700px;
   height: calc(100% - 4rem);
   border: 1px solid #43494c;
   background-color: white;
@@ -93,7 +93,7 @@
   grid-column-gap: 0.5rem;
 }
 
-#refresherSetting .item.default:not(:last-child) {
+#refresherSetting .item:not(:last-child):not(.lastChild) {
   border-bottom: 1px solid #bbb;
 }
 
