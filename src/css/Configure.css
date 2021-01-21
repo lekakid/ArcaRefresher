@@ -162,7 +162,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  #refresherSetting .card-block {
+  #refresherSetting .background {
     border: 1px solid #43494c;
     background-color: #181a1b;
   }
