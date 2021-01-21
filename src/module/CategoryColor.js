@@ -28,7 +28,7 @@ function load() {
   }
 }
 
-function renderColorPicker(defaultColor, disabled) {
+function renderColorPicker(disabled) {
   const element = <div className="pickr" />;
   const wrapper = <>{element}</>;
   const handler = new window.Pickr({
@@ -36,7 +36,7 @@ function renderColorPicker(defaultColor, disabled) {
     theme: 'nano',
     disabled,
     lockOpacity: true,
-    default: defaultColor,
+    default: null,
     components: {
       palette: false,
       preview: true,
@@ -77,9 +77,9 @@ function setupSetting() {
             제목
           </div>
         );
-        const [badgeInput, badgeContainer] = renderColorPicker('#373a3c', name === '일반');
-        const [bgInput, bgContainer] = renderColorPicker('#fff', false);
-        const boldInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
+        const [badgeInput, badgeContainer] = renderColorPicker(name === '일반');
+        const [bgInput, bgContainer] = renderColorPicker(false);
+        const boldInput = <input type="checkbox" />;
 
         badgeContainer.on('save', (color) => {
           if (color) {
@@ -121,7 +121,10 @@ function setupSetting() {
             <div>{badgeInput}</div>
             <div>{bgInput}</div>
             <div>
-              <label>{boldInput}굵게</label>
+              <label title="게시물 제목이 굵게 표시됩니다.">
+                {boldInput}
+                <span>굵게</span>
+              </label>
             </div>
           </div>
         );
@@ -174,8 +177,8 @@ function setupSetting() {
           if (config[key]) {
             const { badge, bgcolor, bold } = config[key];
 
-            dataContainer[key].badge.setColor(badge || null, !badge);
-            dataContainer[key].bgcolor.setColor(bgcolor || null, !bgcolor);
+            dataContainer[key].badge.setColor(badge || null);
+            dataContainer[key].bgcolor.setColor(bgcolor || null);
             dataContainer[key].bold.checked = bold;
 
             const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
@@ -209,7 +212,7 @@ function generateColorStyle() {
         styleKey = Math.random().toString(36).substr(2);
       } while (styleTable[styleKey]);
 
-      if(bgcolor) {
+      if (bgcolor) {
         style.push(
           `
             .color_${styleKey} {
@@ -217,9 +220,9 @@ function generateColorStyle() {
               color: ${getContrastYIQ(bgcolor)};
             }
           `
-        )
+        );
       }
-      if(badge) {
+      if (badge) {
         style.push(
           `
             .color_${styleKey} .badge {
@@ -229,14 +232,14 @@ function generateColorStyle() {
           `
         );
       }
-      if(bold) {
+      if (bold) {
         style.push(
           `
             .color_${styleKey} .title {
               font-weight: ${bold ? 'bold' : 'normal'}
             }
           `
-        )
+        );
       }
       styleTable[key] = styleKey;
     }
