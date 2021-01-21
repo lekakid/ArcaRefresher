@@ -80,6 +80,7 @@ function setupSetting() {
         const [badgeInput, badgeContainer] = renderColorPicker(name === '일반');
         const [bgInput, bgContainer] = renderColorPicker(false);
         const boldInput = <input type="checkbox" />;
+        const disableVisitedInput = <input type="checkbox" />;
 
         badgeContainer.on('save', (color) => {
           if (color) {
@@ -113,6 +114,7 @@ function setupSetting() {
           badge: badgeContainer,
           bgcolor: bgContainer,
           bold: boldInput,
+          disableVisited: disableVisitedInput,
         };
 
         return (
@@ -124,6 +126,10 @@ function setupSetting() {
               <label title="게시물 제목이 굵게 표시됩니다.">
                 {boldInput}
                 <span>굵게</span>
+              </label>
+              <label title="열어본 게시물이 회색으로 표시되지 않습니다.">
+                {disableVisitedInput}
+                <span>열람 색 제거</span>
               </label>
             </div>
           </div>
@@ -154,12 +160,14 @@ function setupSetting() {
             const badge = dataContainer[key].badge.getSelectedColor();
             const bgcolor = dataContainer[key].bgcolor.getSelectedColor();
             const bold = dataContainer[key].bold.checked;
+            const disableVisited = dataContainer[key].disableVisited.checked;
 
             if (badge || bgcolor || bold) {
               channelConfig[key] = {
                 badge: badge ? badge.toHEXA().toString() : '',
                 bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
                 bold,
+                disableVisited,
               };
             } else {
               delete channelConfig[key];
@@ -175,11 +183,12 @@ function setupSetting() {
 
         for (const key in dataContainer) {
           if (config[key]) {
-            const { badge, bgcolor, bold } = config[key];
+            const { badge, bgcolor, bold, disableVisited } = config[key];
 
             dataContainer[key].badge.setColor(badge || null);
             dataContainer[key].bgcolor.setColor(bgcolor || null);
             dataContainer[key].bold.checked = bold;
+            dataContainer[key].disableVisited.checked = disableVisited;
 
             const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
 
@@ -206,7 +215,7 @@ function generateColorStyle() {
   const style = [];
   for (const key in categoryConfig) {
     if (categoryConfig[key]) {
-      const { badge, bgcolor, bold } = categoryConfig[key];
+      const { badge, bgcolor, bold, disableVisited } = categoryConfig[key];
       let styleKey;
       do {
         styleKey = Math.random().toString(36).substr(2);
@@ -237,6 +246,15 @@ function generateColorStyle() {
           `
             .color_${styleKey} .title {
               font-weight: ${bold ? 'bold' : 'normal'}
+            }
+          `
+        );
+      }
+      if (disableVisited) {
+        style.push(
+          `
+            .color_${styleKey}:visited {
+              color: ${bgcolor ? getContrastYIQ(bgcolor) : 'var(--color-text-color)'} !important;
             }
           `
         );
