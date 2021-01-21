@@ -77,9 +77,11 @@ function setupSetting() {
     valueCallback: {
       save() {
         setValue(FILENAME, downloadName.value);
+        setValue(IMAGENAME, imageName.value);
       },
       load() {
         downloadName.value = getValue(FILENAME);
+        imageName.value = getValue(IMAGENAME);
       },
     },
   });
