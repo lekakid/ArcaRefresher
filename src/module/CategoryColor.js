@@ -209,25 +209,40 @@ function generateColorStyle() {
         styleKey = Math.random().toString(36).substr(2);
       } while (styleTable[styleKey]);
 
-      style.push(
-        `
-          .color_${styleKey} {
-            background-color: ${bgcolor} !important;
-            color: ${getContrastYIQ(bgcolor)};
-            font-weight: ${bold ? 'bold' : 'normal'}
-          }
-
-          .color_${styleKey} .badge {
-            background-color: ${badge} !important;
-            color: ${getContrastYIQ(badge)};
-          }
-        `
-      );
+      if(bgcolor) {
+        style.push(
+          `
+            .color_${styleKey} {
+              background-color: ${bgcolor} !important;
+              color: ${getContrastYIQ(bgcolor)};
+            }
+          `
+        )
+      }
+      if(badge) {
+        style.push(
+          `
+            .color_${styleKey} .badge {
+              background-color: ${badge} !important;
+              color: ${getContrastYIQ(badge)};
+            }
+          `
+        );
+      }
+      if(bold) {
+        style.push(
+          `
+            .color_${styleKey} .title {
+              font-weight: ${bold ? 'bold' : 'normal'}
+            }
+          `
+        )
+      }
       styleTable[key] = styleKey;
     }
   }
 
-  document.head.append(<style>{style.join('\n')}</style>);
+  document.head.append(<style>{style}</style>);
 }
 
 function apply() {
