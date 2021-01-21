@@ -1,53 +1,53 @@
 #tempArticleWrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #tempArticleWrapper table {
-    max-width: 400px;
-    width: 100%;
-    max-height: 400px;
-    height: 100%;
+  max-width: 400px;
+  width: 100%;
+  max-height: 400px;
+  height: 100%;
 
-    border: 1px solid #bbb;
-    background-color: #fff;
+  border: 1px solid #bbb;
+  background-color: #fff;
 }
 
 #tempArticleWrapper tbody {
-    display: block;
-    height: 300px;
-    overflow: auto;
+  display: block;
+  height: 300px;
+  overflow: auto;
 }
 
 #tempArticleWrapper tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 #tempArticleWrapper th:nth-child(1),
 #tempArticleWrapper td:nth-child(1) {
-    width: 10%;
+  width: 10%;
 }
 #tempArticleWrapper th:nth-child(2),
 #tempArticleWrapper td:nth-child(2) {
-    width: 65%;
+  width: 65%;
 }
 #tempArticleWrapper th:nth-child(3),
 #tempArticleWrapper td:nth-child(3) {
-    width: 25%;
+  width: 25%;
 }
 
 #tempArticleWrapper td:nth-child(3) {
-    font-size: .83em;
+  font-size: 0.83em;
 }

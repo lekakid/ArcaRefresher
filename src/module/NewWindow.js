@@ -1,59 +1,93 @@
-import Configure from '../core/Configure';
-import Parser from '../core/Parser';
+import { addSetting, getValue, setValue } from '../core/Configure';
+import { CurrentPage } from '../core/Parser';
 import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
-const OPEN_NEW_WINDOW = { key: 'openNewWindow', defaultValue: false };
+const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
+const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
 
 function load() {
-    try {
-        addSetting();
+  try {
+    setupSetting();
 
-        if(Parser.hasBoard()) {
-            apply();
-        }
-
-        AutoRefresher.addRefreshCallback({
-            priority: 100,
-            callback: apply,
-        });
+    if (CurrentPage.Component.Board) {
+      applyOpenNewWindow();
     }
-    catch(error) {
-        console.error(error);
-    }
-}
 
-function addSetting() {
-    const newWindow = (
-        <select>
-            <option value="false">사용 안 함</option>
-            <option value="true">사용</option>
-        </select>
-    );
-    Configure.addSetting({
-        category: Configure.categoryKey.INTERFACE,
-        header: '게시물 새 창으로 열기',
-        option: newWindow,
-        description: '게시물 클릭 시 새창으로 띄워줍니다.',
-        callback: {
-            save() {
-                Configure.set(OPEN_NEW_WINDOW, newWindow.value == 'true');
-            },
-            load() {
-                newWindow.value = Configure.get(OPEN_NEW_WINDOW);
-            },
-        },
+    if (CurrentPage.Component.Article) {
+      applyBlockNewWindow();
+    }
+
+    AutoRefresher.addRefreshCallback({
+      priority: 100,
+      callback: applyOpenNewWindow,
     });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-function apply() {
-    const value = Configure.get(OPEN_NEW_WINDOW);
-    if(!value) return;
+function setupSetting() {
+  const openArticle = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  const blockMedia = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  addSetting({
+    header: '창 열기',
+    group: [
+      {
+        title: '게시물 클릭 시 새 창으로 열기',
+        content: openArticle,
+      },
+      {
+        title: '이미지, 비디오 클릭 시 새 창으로 열기 방지',
+        content: blockMedia,
+      },
+    ],
+    valueCallback: {
+      save() {
+        setValue(OPEN_ARTICLE, openArticle.value === 'true');
+        setValue(BLOCK_MEDIA, blockMedia.value === 'true');
+      },
+      load() {
+        openArticle.value = getValue(OPEN_ARTICLE);
+        blockMedia.value = getValue(BLOCK_MEDIA);
+      },
+    },
+  });
+}
 
-    const articles = Parser.queryItems('articles', 'board');
+function applyOpenNewWindow() {
+  const value = getValue(OPEN_ARTICLE);
+  if (!value) return;
 
-    for(const article of articles) {
-        article.setAttribute('target', '_blank');
-    }
+  const articles = document.querySelectorAll('a.vrow:not(.notice-unfilter)');
+
+  for (const article of articles) {
+    article.setAttribute('target', '_blank');
+  }
+}
+
+function applyBlockNewWindow() {
+  if (!getValue(BLOCK_MEDIA)) return;
+
+  const targetElements = document.querySelectorAll(
+    '.article-body img, .article-body video:not([controls])'
+  );
+
+  for (const element of targetElements) {
+    const a = <a />;
+
+    element.insertAdjacentElement('beforebegin', a);
+    a.append(element);
+  }
 }

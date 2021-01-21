@@ -1,49 +1,208 @@
+.body .nav-control {
+  z-index: 3000;
+}
+
 #refresherSetting {
-    margin: 0 auto;
-    max-width: 1300px;
-    border: 1px solid #bbb;
-    background-color: #fff;
-    padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 5000;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+#refresherSetting .background {
+  width: 700px;
+  height: calc(100% - 4rem);
+  border: 1px solid #43494c;
+  background-color: white;
+  margin: 2rem;
+  padding: 2rem;
+  z-index: 500;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#refresherSetting .search {
+  padding-bottom: 1rem;
+}
+
+#refresherSetting .settings {
+  flex-grow: 1;
+
+  width: 100%;
+  overflow: scroll;
+}
+
+#refresherSetting .btn-grid {
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  padding-top: 0.5rem;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas: 'export import reset . . save';
+}
+
+#refresherSetting .btn-grid button:nth-child(1) {
+  grid-area: export;
+}
+#refresherSetting .btn-grid button:nth-child(2) {
+  grid-area: import;
+}
+#refresherSetting .btn-grid button:nth-child(3) {
+  grid-area: reset;
+}
+#refresherSetting .btn-grid button:nth-child(4) {
+  grid-area: save;
+}
+
+#refresherSetting .group {
+  border: 1px solid #bbb;
+  border-radius: 0.25rem;
+  margin-bottom: 2rem;
+  padding: 0.25rem;
+}
+
+#refresherSetting .item {
+  margin: 0 0.25rem;
+  padding: 0.5rem;
+}
+
+#refresherSetting .item:first-child {
+  margin-top: 0;
+}
+
+#refresherSetting .item:last-child {
+  margin-bottom: 0;
+}
+
+#refresherSetting .item.default {
+  display: grid;
+  grid-template-columns: 9fr 3fr;
+  grid-template-areas:
+    '   header   setting'
+    'description .';
+  grid-column-gap: 0.5rem;
+}
+
+#refresherSetting .item:not(:last-child):not(.lastChild) {
+  border-bottom: 1px solid #bbb;
+}
+
+#refresherSetting .item.wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'header'
+    'setting'
+    'description';
+}
+
+#refresherSetting .item > label {
+  grid-area: header;
+  margin-bottom: 0.25rem;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+#refresherSetting .item.default > label {
+  border-right: 1px solid #bbb;
+}
+
+#refresherSetting .item > p {
+  grid-area: description;
+  margin-bottom: 0;
+  color: #666666;
+}
+
+#refresherSetting .item.wide > p {
+  grid-area: description;
+  margin-bottom: 0;
+  padding-left: 0.5rem;
+  color: #666666;
+}
+
+#refresherSetting .item > div {
+  grid-area: setting;
+  margin: 0.5rem;
 }
 
 #refresherSetting select,
 #refresherSetting textarea,
-#refresherSetting input[type="text"] {
-    display: block;
-    width: 100%;
-    padding: .5rem .75rem;
-    color: #55595c;
-    background-color: #fff;
-    border: 1px solid #bbb;
+#refresherSetting input[type='text'] {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  color: #55595c;
+  background-color: #fff;
+  border: 1px solid #bbb;
 }
 
 #refresherSetting input[disabled] {
-    background-color: #eee;
+  background-color: #eee;
 }
 
 #refresherSetting select {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 #refresherSetting label {
-    display: inline;
+  display: inline;
 }
 
-@media (prefers-color-scheme:dark) {
-    #refresherSetting {
-        border: 1px solid #43494c;
-        background-color: #181a1b;
-    }
-    
-    #refresherSetting select,
-    #refresherSetting textarea,
-    #refresherSetting input[type="text"] {
-        color: #e2e2e2;
-        background-color: #181a1b;
-        border: 1px solid #43494c;
-    }
-    
-    #refresherSetting input[disabled] {
-        background-color: #999;
-    }
+@media (prefers-color-scheme: dark) {
+  #refresherSetting .card-block {
+    border: 1px solid #43494c;
+    background-color: #181a1b;
+  }
+
+  #refresherSetting select,
+  #refresherSetting textarea,
+  #refresherSetting input[type='text'] {
+    color: #e2e2e2;
+    background-color: #181a1b;
+    border: 1px solid #43494c;
+  }
+
+  #refresherSetting input[disabled] {
+    background-color: #999;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #refresherSetting .background {
+    padding: 1rem;
+  }
+  #refresherSetting .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      'export import reset'
+      '. . .'
+      'save save save';
+    grid-row-gap: 0.25rem;
+  }
+  #refresherSetting .item.default {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'header'
+      'setting'
+      'description';
+  }
+
+  #refresherSetting .item.default > label {
+    border-right: none;
+  }
 }

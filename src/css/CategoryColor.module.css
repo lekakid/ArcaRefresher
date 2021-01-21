@@ -1,0 +1,59 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  min-height: 3rem;
+
+  display: grid;
+  grid-template-columns: 4fr 1fr 1fr 6fr;
+  grid-template-areas: 'category badge bg etc';
+  align-items: stretch;
+
+  border-top: 1px solid #bbb;
+}
+
+@media screen and (max-width: 768px) {
+  .item {
+    grid-template-columns: 4fr 1fr 1fr;
+    grid-template-areas:
+      'category badge bg'
+      'etc etc etc';
+  }
+}
+
+.item label {
+  margin: 0;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+:global .pickr {
+  border: 1px solid #bbb;
+  border-radius: 0.15em;
+}
+
+.item > div {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+}
+
+.item > div:nth-child(1) {
+  grid-area: category;
+}
+
+.item > div:nth-child(2) {
+  grid-area: badge;
+}
+
+.item > div:nth-child(3) {
+  grid-area: bg;
+}
+
+.item > div:nth-child(4) {
+  grid-area: etc;
+}

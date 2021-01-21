@@ -1,238 +1,261 @@
-import Configure from '../core/Configure';
-import Parser from '../core/Parser';
+import { addSetting, getValue, setValue } from '../core/Configure';
+import { CurrentPage } from '../core/Parser';
 
 import AutoRefresher from './AutoRefresher';
-import { getRandomColor, getContrastYIQ } from '../util/ColorManager';
+import { getContrastYIQ } from '../util/ColorManager';
+
+import styles, { stylesheet } from '../css/CategoryColor.module.css';
 
 export default { load };
 
 const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
 function load() {
-    try {
-        addSetting();
+  try {
+    setupSetting();
 
-        if(Parser.hasBoard()) {
-            generateColorStyle();
-            apply();
-        }
+    if (CurrentPage.Component.Board) {
+      generateColorStyle();
+      apply();
+    }
 
-        AutoRefresher.addRefreshCallback({
-            priority: 0,
-            callback: apply,
-        });
-    }
-    catch(error) {
-        console.error(error);
-    }
+    AutoRefresher.addRefreshCallback({
+      priority: 0,
+      callback: apply,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-function addSetting() {
-    // 카테고리 목록 등록
-    const boardCategoryElements = document.querySelectorAll('.board-category a');
-    if(!boardCategoryElements.length) return;
+function renderColorPicker(defaultColor, disabled) {
+  const element = <div className="pickr" />;
+  const wrapper = <>{element}</>;
+  const handler = new window.Pickr({
+    el: element,
+    theme: 'nano',
+    disabled,
+    lockOpacity: true,
+    default: defaultColor,
+    components: {
+      palette: false,
+      preview: true,
+      opacity: false,
+      hue: true,
 
-    const tbody = <tbody />;
-    const table = (
-        <table class="table align-middle">
-            <colgroup>
-                <col width="40%" />
-                <col width="20%" />
-                <col width="20%" />
-                <col width="20%" />
-            </colgroup>
-            <thead>
-                <th>이름</th>
-                <th>뱃지색</th>
-                <th>배경색</th>
-                <th>굵게</th>
-            </thead>
-            {tbody}
-        </table>
-    );
+      interaction: {
+        hex: true,
+        hsv: true,
+        input: true,
+        clear: true,
+        save: true,
+      },
+    },
+  }).on('save', () => handler.hide());
 
-    for(const element of boardCategoryElements) {
-        const name = element.textContent == '전체' ? '일반' : element.textContent;
-        tbody.append(
-            <tr data-id={name}>
-                <td><span class="badge badge-success" style="margin: .25em">{`${name}`}</span><span class="title">제목</span></td>
-                <td><input type="text" name="badge" placeholder="000000" maxlength="6" disabled={name == '일반'} /></td>
-                <td><input type="text" name="bg" placeholder="000000" maxlength="6" /></td>
-                <td><label><input type="checkbox" name="bold" style="margin: .25em" /> 적용</label></td>
-            </tr>,
+  return [wrapper, handler];
+}
+
+function setupSetting() {
+  const dataContainer = {};
+  const settingWrapper = (
+    <div className={styles.wrapper}>
+      <style>{stylesheet}</style>
+      <style>{GM_getResourceText('colorpicker')}</style>
+      {CurrentPage.Category.map((category) => {
+        let name = category;
+        if (category === '전체') name = '일반';
+
+        const badgeElement = (
+          <span className="badge badge-success" style={{ margin: '0.25rem' }}>
+            {name}
+          </span>
         );
-    }
+        const bgElement = (
+          <div>
+            {badgeElement}
+            제목
+          </div>
+        );
+        const [badgeInput, badgeContainer] = renderColorPicker('#373a3c', name === '일반');
+        const [bgInput, bgContainer] = renderColorPicker('#fff', false);
+        const boldInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
 
-    // 이벤트 핸들러
-    tbody.addEventListener('keypress', event => {
-        const regex = /[0-9a-fA-F]/;
-        if(!regex.test(event.key)) event.preventDefault();
-    });
-    tbody.addEventListener('dblclick', event => {
-        if(event.target.tagName != 'INPUT') return;
-        if(event.target.disabled) return;
+        badgeContainer.on('save', (color) => {
+          if (color) {
+            const badge = color.toHEXA().toString();
+            badgeElement.style.backgroundColor = badge;
+            badgeElement.style.color = getContrastYIQ(badge);
+          } else {
+            badgeElement.style.backgroundColor = '';
+            badgeElement.style.color = '';
+          }
+        });
+        bgContainer.on('save', (color) => {
+          if (color) {
+            const bg = color.toHEXA().toString();
+            bgElement.style.background = `linear-gradient(90deg, ${bg}, rgba(255, 255, 255, 0))`;
+            bgElement.style.color = getContrastYIQ(bg);
+          } else {
+            bgElement.style.background = '';
+            bgElement.style.color = '';
+          }
+        });
+        boldInput.addEventListener('click', () => {
+          bgElement.style.fontWeight = boldInput.checked ? 'bold' : '';
+        });
 
-        const color = getRandomColor();
-        const yiq = getContrastYIQ(color);
+        dataContainer[name] = {
+          test: {
+            bg: bgElement,
+            badge: badgeElement,
+          },
+          badge: badgeContainer,
+          bgcolor: bgContainer,
+          bold: boldInput,
+        };
 
-        if(event.target.name == 'badge') {
-            event.target.value = color;
-            event.target.closest('tr').querySelector('.badge').style.backgroundColor = `#${color}`;
-            event.target.closest('tr').querySelector('.badge').style.color = yiq;
+        return (
+          <div className={styles.item}>
+            {bgElement}
+            <div>{badgeInput}</div>
+            <div>{bgInput}</div>
+            <div>
+              <label>{boldInput}굵게</label>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const channel = CurrentPage.Channel.ID;
+
+  addSetting({
+    header: '카테고리 색상 설정',
+    group: [
+      {
+        title: '색상 변경',
+        content: settingWrapper,
+        type: 'wide',
+      },
+    ],
+    valueCallback: {
+      save() {
+        const config = getValue(CATEGORY_COLOR);
+        let channelConfig = config[channel];
+        if (!channelConfig) channelConfig = {};
+
+        for (const key in dataContainer) {
+          if (dataContainer[key]) {
+            const badge = dataContainer[key].badge.getSelectedColor();
+            const bgcolor = dataContainer[key].bgcolor.getSelectedColor();
+            const bold = dataContainer[key].bold.checked;
+
+            if (badge || bgcolor || bold) {
+              channelConfig[key] = {
+                badge: badge ? badge.toHEXA().toString() : '',
+                bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
+                bold,
+              };
+            } else {
+              delete channelConfig[key];
+            }
+          }
         }
-        if(event.target.name == 'bg') {
-            event.target.value = color;
-            event.target.closest('tr').querySelector('td').style.backgroundColor = `#${color}`;
-            event.target.closest('tr').querySelector('.title').style.color = yiq;
+
+        setValue(CATEGORY_COLOR, { ...config, [channel]: channelConfig });
+      },
+      load() {
+        const config = getValue(CATEGORY_COLOR)[channel];
+        if (!config) return;
+
+        for (const key in dataContainer) {
+          if (config[key]) {
+            const { badge, bgcolor, bold } = config[key];
+
+            dataContainer[key].badge.setColor(badge || null, !badge);
+            dataContainer[key].bgcolor.setColor(bgcolor || null, !bgcolor);
+            dataContainer[key].bold.checked = bold;
+
+            const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
+
+            badgeElement.style.backgroundColor = badge;
+            badgeElement.style.color = getContrastYIQ(badge);
+            bgElement.style.background = `linear-gradient(90deg, ${bgcolor}, rgba(255, 255, 255, 0))`;
+            bgElement.style.color = getContrastYIQ(bgcolor);
+            bgElement.style.fontWeight = bold && 'bold';
+          }
         }
-    });
-    tbody.addEventListener('input', event => {
-        let color = '';
-        let yiq = '';
-
-        if(event.target.value.length == 6) {
-            color = `#${event.target.value}`;
-            yiq = getContrastYIQ(event.target.value);
-        }
-
-        if(event.target.name == 'badge') {
-            event.target.closest('tr').querySelector('.badge').style.backgroundColor = color;
-            event.target.closest('tr').querySelector('.badge').style.color = yiq;
-        }
-        if(event.target.name == 'bg') {
-            event.target.closest('tr').querySelector('td').style.backgroundColor = color;
-            event.target.closest('tr').querySelector('.title').style.color = yiq;
-        }
-        if(event.target.name == 'bold') {
-            event.target.closest('tr').querySelector('.title').style.fontWeight = event.target.checked ? 'bold' : '';
-        }
-    });
-
-    const channel = Parser.getChannelInfo().id;
-
-    Configure.addSetting({
-        category: Configure.categoryKey.INTERFACE,
-        header: '카테고리 색상 설정',
-        option: table,
-        description: '더블 클릭으로 무작위 색상을 선택할 수 있습니다.',
-        callback: {
-            save() {
-                const colorConfig = Configure.get(CATEGORY_COLOR);
-                if(!colorConfig[channel]) colorConfig[channel] = {};
-
-                const rows = tbody.querySelectorAll('tr');
-                for(const row of rows) {
-                    const { id } = row.dataset;
-                    const badge = row.querySelector('input[name="badge"]').value.toUpperCase();
-                    const bgcolor = row.querySelector('input[name="bg"]').value.toUpperCase();
-                    const bold = row.querySelector('input[name="bold"]').checked;
-
-                    if(badge || bgcolor || bold) {
-                        colorConfig[channel] = {
-                            ...colorConfig[channel],
-                            [id]: {
-                                badge,
-                                bgcolor,
-                                bold,
-                            },
-                        };
-                    }
-                    else {
-                        if(colorConfig[channel][id]) {
-                            delete colorConfig[channel][id];
-                        }
-                    }
-                }
-
-                Configure.set(CATEGORY_COLOR, colorConfig);
-            },
-            load() {
-                const channelConfig = Configure.get(CATEGORY_COLOR)[channel];
-                if(!channelConfig) return;
-
-                for(const element of tbody.children) {
-                    const { id } = element.dataset;
-
-                    if(channelConfig[id]) {
-                        const { badge, bgcolor, bold } = channelConfig[id];
-
-                        const tdElement = element.querySelector('td');
-                        const badgeElement = element.querySelector('.badge');
-                        const titleElement = element.querySelector('.title');
-                        const badgeInput = element.querySelector('input[name="badge"]');
-                        const bgInput = element.querySelector('input[name="bg"]');
-                        const boldInput = element.querySelector('input[name="bold"]');
-
-                        badgeInput.value = badge;
-                        if(badge) {
-                            badgeElement.style.backgroundColor = `#${badge}`;
-                            badgeElement.style.color = getContrastYIQ(badge);
-                        }
-
-                        bgInput.value = bgcolor;
-                        if(bgcolor) {
-                            tdElement.style.backgroundColor = `#${bgcolor}`;
-                            titleElement.style.color = getContrastYIQ(bgcolor);
-                        }
-
-                        boldInput.checked = bold;
-                        if(bold) {
-                            titleElement.style.fontWeight = 'bold';
-                        }
-                    }
-                }
-            },
-        },
-    });
+      },
+    },
+  });
 }
 
 const styleTable = {};
 
 function generateColorStyle() {
-    const channel = Parser.getChannelInfo().id;
-    const categoryConfig = Configure.get(CATEGORY_COLOR)[channel];
+  const channel = CurrentPage.Channel.ID;
+  const categoryConfig = getValue(CATEGORY_COLOR)[channel];
 
-    if(!categoryConfig) return;
+  if (!categoryConfig) return;
 
-    const style = [];
-    for(const key in categoryConfig) {
-        if(categoryConfig[key]) {
-            const { badge, bgcolor, bold } = categoryConfig[key];
-            let styleKey;
-            do {
-                styleKey = Math.random().toString(36).substr(2);
-            } while(styleTable[styleKey]);
+  const style = [];
+  for (const key in categoryConfig) {
+    if (categoryConfig[key]) {
+      const { badge, bgcolor, bold } = categoryConfig[key];
+      let styleKey;
+      do {
+        styleKey = Math.random().toString(36).substr(2);
+      } while (styleTable[styleKey]);
 
-            style.push(`
-                .color_${styleKey} {
-                    background-color: #${bgcolor} !important;
-                    color: ${getContrastYIQ(bgcolor)};
-                    font-weight: ${bold ? 'bold' : 'normal'}
-                }
-    
-                .color_${styleKey} .badge {
-                    background-color: #${badge} !important;
-                    color: ${getContrastYIQ(badge)};
-                }
-            `);
-            styleTable[key] = styleKey;
-        }
+      if(bgcolor) {
+        style.push(
+          `
+            .color_${styleKey} {
+              background-color: ${bgcolor} !important;
+              color: ${getContrastYIQ(bgcolor)};
+            }
+          `
+        )
+      }
+      if(badge) {
+        style.push(
+          `
+            .color_${styleKey} .badge {
+              background-color: ${badge} !important;
+              color: ${getContrastYIQ(badge)};
+            }
+          `
+        );
+      }
+      if(bold) {
+        style.push(
+          `
+            .color_${styleKey} .title {
+              font-weight: ${bold ? 'bold' : 'normal'}
+            }
+          `
+        )
+      }
+      styleTable[key] = styleKey;
     }
+  }
 
-    document.head.append(<style>{style.join('\n')}</style>);
+  document.head.append(<style>{style}</style>);
 }
 
 function apply() {
-    const articles = Parser.queryItems('articles', 'board');
+  const articles = document.querySelectorAll('a.vrow:not(.notice)');
 
-    articles.forEach(article => {
-        if(article.childElementCount < 2) return;
+  articles.forEach((article) => {
+    if (article.childElementCount < 2) return;
 
-        const categoryElement = article.querySelector('.badge');
-        if(!categoryElement) return;
-        const category = (categoryElement.textContent) ? categoryElement.textContent : '일반';
-        if(!styleTable[category]) return;
+    const categoryElement = article.querySelector('.badge');
+    if (!categoryElement) return;
+    const category = categoryElement.textContent ? categoryElement.textContent : '일반';
+    if (!styleTable[category]) return;
 
-        article.classList.add(`color_${styleTable[category]}`);
-    });
+    article.classList.add(`color_${styleTable[category]}`);
+  });
 }
