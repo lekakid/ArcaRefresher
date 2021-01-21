@@ -149,16 +149,20 @@
   border: 1px solid #bbb;
 }
 
+#refresherSetting input[type='checkbox'] {
+  margin: 0.25rem;
+}
+
 #refresherSetting input[disabled] {
   background-color: #eee;
 }
-
 #refresherSetting select {
   overflow: scroll;
 }
 
 #refresherSetting label {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
 }
 
 @media (prefers-color-scheme: dark) {
