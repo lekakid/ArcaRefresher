@@ -28,7 +28,7 @@ function setupSetting() {
   const imageName = <input type="text" />;
 
   addSetting({
-    header: '이미지 일괄 다운로드',
+    header: '이미지 다운로드',
     group: [
       {
         title: '압축파일 이름',
