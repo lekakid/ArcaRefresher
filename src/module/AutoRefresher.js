@@ -119,7 +119,7 @@ function swapNewArticle(newArticles) {
   let insertLocation = document.querySelector('a.vrow:not(.notice)');
 
   for (const n of newArticles) {
-    const existingArticle = oldArticles.find(o => o.pathname == n.pathname);
+    const existingArticle = oldArticles.find((o) => o.pathname === n.pathname);
 
     if (existingArticle) {
       existingArticle.replaceWith(n);
