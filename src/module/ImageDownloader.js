@@ -124,17 +124,25 @@ function addContextMenu() {
       imagename = imagename.replace('%num%', '000');
       imagename = imagename.replace('%orig%', url.match(/[0-9a-f]{64}/)[0]);
 
-      const file = await getBlob(
-        url,
-        (e) => {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          event.target.textContent = `${progress}%`;
-        },
-        () => {
-          event.target.textContent = title;
-        }
-      );
-      window.saveAs(file, `${imagename}${ext}`);
+      try {
+        const file = await getBlob(
+          url,
+          (e) => {
+            const progress = Math.round((e.loaded / e.total) * 100);
+            event.target.textContent = `${progress}%`;
+          },
+          () => {
+            event.target.textContent = title;
+          }
+        );
+        window.saveAs(file, `${imagename}${ext}`);
+      } catch (error) {
+        alert(
+          `개발자 도구(F12)의 콘솔창의 오류 메세지를 같이 제보 바랍니다.\n사유: ${error.message}`
+        );
+        console.error(error);
+      }
+
       ContextMenu.hide();
     },
   });
@@ -208,18 +216,24 @@ function apply() {
     const originalText = downloadBtn.textContent;
     const total = checkedElements.length;
     const configureName = getValue(IMAGENAME);
+    let errorCount = 0;
     for (let i = 0; i < checkedElements.length; i += 1) {
       let imagename = replaceData(configureName);
       const { url, filename: orig } = checkedElements[i].parentNode.dataset;
       const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
-      const file = await getBlob(url, (e) => {
-        const progress = Math.round((e.loaded / e.total) * 100);
-        downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
-      });
+      try {
+        const file = await getBlob(url, (e) => {
+          const progress = Math.round((e.loaded / e.total) * 100);
+          downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
+        });
 
-      imagename = imagename.replace('%orig%', orig);
-      imagename = imagename.replace('%num%', `${i}`.padStart(3, '0'));
-      zip.file(`${imagename}${ext}`, file);
+        imagename = imagename.replace('%orig%', orig);
+        imagename = imagename.replace('%num%', `${i}`.padStart(3, '0'));
+        zip.file(`${imagename}${ext}`, file);
+      } catch (error) {
+        errorCount += 1;
+        console.error(error);
+      }
     }
     downloadBtn.textContent = originalText;
 
@@ -227,6 +241,12 @@ function apply() {
     filename = replaceData(filename);
     const zipblob = await zip.generateAsync({ type: 'blob' });
     window.saveAs(zipblob, `${filename}.zip`);
+
+    if (errorCount) {
+      alert(
+        `개발자 도구(F12)의 콘솔창의 오류 메세지를 같이 제보 바랍니다.\n사유: 일괄 다운로드 중 오류 발생`
+      );
+    }
 
     downloadBtn.disabled = false;
   });
