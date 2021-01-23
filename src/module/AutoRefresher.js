@@ -114,17 +114,19 @@ function apply() {
 
 function swapNewArticle(newArticles) {
   const articleList = document.querySelector('div.board-article-list .list-table');
-  const oldArticles = document.querySelectorAll('a.vrow:not(.notice-unfilter)');
+  const oldArticles = [...document.querySelectorAll('a.vrow:not(.notice-unfilter)')];
 
-  const oldnums = [];
-  for (const o of oldArticles) {
-    oldnums.push(o.pathname.split('/')[3]);
-    o.remove();
-  }
+  let insertLocation = document.querySelector('a.vrow:not(.notice)');
 
   for (const n of newArticles) {
-    if (oldnums.indexOf(n.pathname.split('/')[3]) === -1) {
+    const existingArticle = oldArticles.find(o => o.pathname == n.pathname);
+
+    if (existingArticle) {
+      existingArticle.replaceWith(n);
+    } else {
       n.setAttribute('style', 'animation: light 0.5s');
+      articleList.insertBefore(n, insertLocation);
+      insertLocation = n;
     }
 
     const lazywrapper = n.querySelector('noscript');
@@ -136,7 +138,6 @@ function swapNewArticle(newArticles) {
     }
   }
 
-  articleList.append(...newArticles);
   const noticeUnfilterBtn = articleList.querySelector('.notice-unfilter');
   if (noticeUnfilterBtn) {
     const firstArticle = articleList.querySelector('a.vrow:not(.notice)');
