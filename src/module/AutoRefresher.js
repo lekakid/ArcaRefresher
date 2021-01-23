@@ -130,7 +130,7 @@ function swapNewArticle(newArticles) {
     }
 
     const lazywrapper = n.querySelector('noscript');
-    if (lazywrapper) lazywrapper.outerHTML = lazywrapper.innerHTML;
+    if (lazywrapper) lazywrapper.replaceWith(lazywrapper.firstChild);
 
     const time = n.querySelector('time');
     if (time && in24(time.dateTime)) {
