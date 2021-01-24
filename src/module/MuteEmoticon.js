@@ -124,46 +124,58 @@ function apply() {
   commentArea.addEventListener('click', async (event) => {
     if (!event.target.classList.contains('block-emoticon')) return;
 
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    event.target.textContent = '뮤트 처리 중...';
-    event.target.classList.remove('block-emoticon');
-    const id = event.target.dataset.id;
-    const [name, bundleID] = await getEmoticonInfo(id);
-    const bundle = await getEmoticonBundle(bundleID);
+      event.target.textContent = '뮤트 처리 중...';
+      event.target.classList.remove('block-emoticon');
+      const id = event.target.dataset.id;
+      const [name, bundleID] = await getEmoticonInfo(id);
+      const bundle = await getEmoticonBundle(bundleID);
 
-    const blockEmoticon = getValue(BLOCK_EMOTICON);
-    blockEmoticon[bundleID] = { name, bundle };
-    setValue(BLOCK_EMOTICON, blockEmoticon);
+      const blockEmoticon = getValue(BLOCK_EMOTICON);
+      blockEmoticon[bundleID] = { name, bundle };
+      setValue(BLOCK_EMOTICON, blockEmoticon);
+    } catch (error) {
+      alert(error);
+    }
     window.location.reload();
   });
 }
 
 function getEmoticonInfo(id) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest();
 
     req.open('GET', `/api/emoticon/shop/${id}`);
     req.responseType = 'document';
-    req.addEventListener('load', () => {
+    req.timeout = 10000;
+    req.onload = () => {
       const name = req.response.querySelector('.article-head .title').innerText;
       const bundleID = req.response.URL.split('/e/')[1];
       resolve([name, bundleID]);
-    });
+    };
+    req.ontimeout = () => {
+      reject('이모티콘 번들 정보를 얻어오지 못했습니다.');
+    };
     req.send();
   });
 }
 
 function getEmoticonBundle(bundleID) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest();
 
     req.open('GET', `/api/emoticon/${bundleID}`);
     req.responseType = 'json';
-    req.addEventListener('load', () => {
+    req.timeout = 10000;
+    req.onload = () => {
       const bundle = req.response.map((item) => item.id);
       resolve(bundle);
-    });
+    };
+    req.ontimeout = () => {
+      reject('이모티콘 목록 정보를 받아오지 못했습니다.');
+    };
     req.send();
   });
 }

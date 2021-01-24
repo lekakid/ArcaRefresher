@@ -45,7 +45,9 @@ function apply(viewQuery) {
     const ip = ipElement.textContent.replace(/\(|\)/g, '');
     const [result, color] = checkIP(ip);
 
-    ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
+    if(!ipElement.querySelector('span')) {
+      ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
+    }
   });
 }
 

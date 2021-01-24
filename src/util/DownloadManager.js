@@ -11,7 +11,9 @@ export function getBlob(url, onProgress, onLoad) {
         if (onLoad) onLoad();
         resolve(response.response);
       },
-      onerror: reject,
+      onerror: (error) => {
+        reject(new Error('이미지 blob 다운로드 중 오류 발생', error));
+      },
     });
   });
 }
@@ -29,7 +31,9 @@ export function getArrayBuffer(url, onProgress, onLoad) {
         if (onLoad) onLoad();
         resolve(response.response);
       },
-      onerror: reject,
+      onerror: (error) => {
+        reject(new Error('이미지 arraybuffer 다운로드 중 오류 발생', error));
+      },
     });
   });
 }
