@@ -1,9 +1,7 @@
 import ArticleMenu from '../core/ArticleMenu';
-import { addOnModifyArticle } from '../core/AREventHandler';
+import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserInfo } from '../core/Parser';
-
-import CommentRefresh from './CommentRefresh';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
 
@@ -38,7 +36,7 @@ function load() {
         muteContent('board');
       },
     });
-    CommentRefresh.addRefreshCallback({
+    addOnModifyComment({
       priority: 100,
       callback() {
         muteContent('comment');

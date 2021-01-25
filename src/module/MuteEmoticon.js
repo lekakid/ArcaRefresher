@@ -1,6 +1,6 @@
+import { addOnModifyComment } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
-import CommentRefresh from './CommentRefresh';
 
 export default { load };
 
@@ -15,7 +15,7 @@ function load() {
       apply();
     }
 
-    CommentRefresh.addRefreshCallback({
+    addOnModifyComment({
       priority: 100,
       callback() {
         mute();

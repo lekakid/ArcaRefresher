@@ -1,9 +1,7 @@
 import { CurrentPage } from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
-export default { load, addRefreshCallback };
-
-const refreshCallbackList = [];
+export default { load };
 
 function load() {
   try {
@@ -52,9 +50,7 @@ function apply() {
       });
       commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
 
-      for (const { callback } of refreshCallbackList) {
-        callback();
-      }
+      document.dispatchEvent(new Event('ar_comment'));
     }
 
     btn.disabled = false;
@@ -63,11 +59,6 @@ function apply() {
 
   btn.addEventListener('click', onClick);
   clonebtn.addEventListener('click', onClick);
-}
-
-function addRefreshCallback(callback) {
-  refreshCallbackList.push(callback);
-  refreshCallbackList.sort((a, b) => a.priority - b.priority);
 }
 
 function getRefreshData() {

@@ -1,8 +1,6 @@
-import { addOnModifyArticle } from '../core/AREventHandler';
+import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { parseUserID } from '../core/Parser';
-
-import CommentRefresh from './CommentRefresh';
 
 export default { load };
 
@@ -20,7 +18,7 @@ function load() {
       priority: 100,
       callback: apply,
     });
-    CommentRefresh.addRefreshCallback({
+    addOnModifyComment({
       priority: 100,
       callback: apply,
     });

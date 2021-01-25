@@ -1,5 +1,4 @@
-import { addOnModifyArticle } from '../core/AREventHandler';
-import CommentRefresh from './CommentRefresh';
+import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
 
 import styles from '../css/IPScouter.module.css';
 
@@ -15,7 +14,7 @@ function load() {
         apply('board');
       },
     });
-    CommentRefresh.addRefreshCallback({
+    addOnModifyComment({
       priority: 0,
       callback() {
         apply('comment');
