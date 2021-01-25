@@ -1,7 +1,6 @@
+import { addOnModifyArticle } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserID } from '../core/Parser';
-
-import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
@@ -14,7 +13,7 @@ function load() {
     setupSetting();
 
     if (CurrentPage.Component.Board) {
-      AutoRefresher.addRefreshCallback({
+      addOnModifyArticle({
         priority: 999,
         callback: remove,
       });
