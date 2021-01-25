@@ -40,14 +40,13 @@ function apply(viewQuery) {
     parentElement = document.querySelector('#comment');
   }
 
-  const ipElements = parentElement.querySelectorAll('.user-info small');
+  const ipElements = parentElement.querySelectorAll('.user-info small:not(.ips)');
   ipElements.forEach((ipElement) => {
     const ip = ipElement.textContent.replace(/\(|\)/g, '');
     const [result, color] = checkIP(ip);
 
-    if(!ipElement.querySelector('span')) {
-      ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
-    }
+    ipElement.classList.add('ips');
+    ipElement.parentNode.append(<span className={color}>{` - ${result}`}</span>);
   });
 }
 
