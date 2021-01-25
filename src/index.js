@@ -1,3 +1,4 @@
+import AREventHandler from './core/AREventHandler';
 import Configure from './core/Configure';
 import ContextMenu from './core/ContextMenu';
 import Parser from './core/Parser';
@@ -31,6 +32,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
 
   // Load Global CSS
   document.head.append(<style>{IPScouterStyle}</style>);
+  AREventHandler();
   Transition();
 
   await waitForElement('.content-wrapper');

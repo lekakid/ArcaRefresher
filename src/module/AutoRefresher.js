@@ -4,7 +4,7 @@ import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
 
-export default { load, addRefreshCallback };
+export default { load };
 
 const REFRESH_TIME = { key: 'refreshTime', defaultValue: 3 };
 const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
@@ -12,8 +12,6 @@ const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
 let refreshTime = 0;
 let loader = null;
 let loopInterval = null;
-
-const refreshCallbackList = [];
 
 function load() {
   try {
@@ -66,11 +64,6 @@ function setupSetting() {
       },
     },
   });
-}
-
-function addRefreshCallback(callback) {
-  refreshCallbackList.push(callback);
-  refreshCallbackList.sort((a, b) => a.priority - b.priority);
 }
 
 function apply() {
@@ -144,9 +137,7 @@ function swapNewArticle(newArticles) {
     firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
   }
 
-  for (const { callback } of refreshCallbackList) {
-    callback();
-  }
+  document.dispatchEvent(new Event('ar_article'));
 }
 
 async function routine() {

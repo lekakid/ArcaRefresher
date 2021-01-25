@@ -2,14 +2,14 @@
   width: 7.5rem !important;
 }
 
-.green {
+:global(.ips) + .green {
   color: rgb(37, 141, 37);
 }
 
-.red {
+:global(.ips) + .red {
   color: rgb(236, 69, 69);
 }
 
-.blue {
+:global(.ips) + .blue {
   color: rgb(56, 174, 252);
 }
