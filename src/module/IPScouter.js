@@ -1,4 +1,4 @@
-import AutoRefresher from './AutoRefresher';
+import { addOnModifyArticle } from '../core/AREventHandler';
 import CommentRefresh from './CommentRefresh';
 
 import styles from '../css/IPScouter.module.css';
@@ -9,7 +9,7 @@ function load() {
   try {
     apply();
 
-    AutoRefresher.addRefreshCallback({
+    addOnModifyArticle({
       priority: 0,
       callback() {
         apply('board');

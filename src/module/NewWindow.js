@@ -1,6 +1,6 @@
+import { addOnModifyArticle } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
-import AutoRefresher from './AutoRefresher';
 
 export default { load };
 
@@ -19,7 +19,7 @@ function load() {
       applyBlockNewWindow();
     }
 
-    AutoRefresher.addRefreshCallback({
+    addOnModifyArticle({
       priority: 100,
       callback: applyOpenNewWindow,
     });

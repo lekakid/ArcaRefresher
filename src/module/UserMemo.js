@@ -1,7 +1,7 @@
+import { addOnModifyArticle } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { parseUserID } from '../core/Parser';
 
-import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 
 export default { load };
@@ -16,7 +16,7 @@ function load() {
 
     apply();
 
-    AutoRefresher.addRefreshCallback({
+    addOnModifyArticle({
       priority: 100,
       callback: apply,
     });

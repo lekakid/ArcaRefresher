@@ -1,8 +1,8 @@
 import ArticleMenu from '../core/ArticleMenu';
+import { addOnModifyArticle } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserInfo } from '../core/Parser';
 
-import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
@@ -30,7 +30,7 @@ function load() {
       muteContent('board');
     }
 
-    AutoRefresher.addRefreshCallback({
+    addOnModifyArticle({
       priority: 100,
       callback() {
         muteNotice();

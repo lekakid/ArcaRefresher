@@ -1,7 +1,7 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
+import { addOnModifyArticle } from '../core/AREventHandler';
 import { CurrentPage } from '../core/Parser';
 
-import AutoRefresher from './AutoRefresher';
 import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
@@ -19,7 +19,7 @@ function load() {
       apply();
     }
 
-    AutoRefresher.addRefreshCallback({
+    addOnModifyArticle({
       priority: 0,
       callback: apply,
     });
