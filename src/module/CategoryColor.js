@@ -162,7 +162,7 @@ function setupSetting() {
             const bold = dataContainer[key].bold.checked;
             const disableVisited = dataContainer[key].disableVisited.checked;
 
-            if (badge || bgcolor || bold) {
+            if (badge || bgcolor || bold || disableVisited) {
               channelConfig[key] = {
                 badge: badge ? badge.toHEXA().toString() : '',
                 bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
@@ -192,11 +192,17 @@ function setupSetting() {
 
             const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
 
-            badgeElement.style.backgroundColor = badge;
-            badgeElement.style.color = getContrastYIQ(badge);
-            bgElement.style.background = `linear-gradient(90deg, ${bgcolor}, rgba(255, 255, 255, 0))`;
-            bgElement.style.color = getContrastYIQ(bgcolor);
-            bgElement.style.fontWeight = bold && 'bold';
+            if (badge) {
+              badgeElement.style.backgroundColor = badge;
+              badgeElement.style.color = getContrastYIQ(badge);
+            }
+            if (bgcolor) {
+              bgElement.style.background = `linear-gradient(90deg, ${bgcolor}, rgba(255, 255, 255, 0))`;
+              bgElement.style.color = getContrastYIQ(bgcolor);
+            }
+            if (bold) {
+              bgElement.style.fontWeight = 'bold';
+            }
           }
         }
       },
