@@ -138,6 +138,7 @@ function apply() {
       setValue(BLOCK_EMOTICON, blockEmoticon);
     } catch (error) {
       alert(error);
+      console.error(error);
     }
     window.location.reload();
   });
@@ -145,37 +146,51 @@ function apply() {
 
 function getEmoticonInfo(id) {
   return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-
-    req.open('GET', `/api/emoticon/shop/${id}`);
-    req.responseType = 'document';
-    req.timeout = 10000;
-    req.onload = () => {
-      const name = req.response.querySelector('.article-head .title').innerText;
-      const bundleID = req.response.URL.split('/e/')[1];
-      resolve([name, bundleID]);
-    };
-    req.ontimeout = () => {
-      reject('이모티콘 번들 정보를 얻어오지 못했습니다.');
-    };
-    req.send();
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: `/api/emoticon/shop/${id}`,
+      responseType: 'document',
+      timeout: 10000,
+      onload({ response }) {
+        try {
+          const name = response.querySelector('.article-head .title').textContent;
+          const bundleID = response
+            .querySelector('.article-body form')
+            .action.split('/e/')[1]
+            .split('/')[0];
+          resolve([name, bundleID]);
+        } catch (error) {
+          reject(
+            new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 삭제, 사이트 구조 변경, 기타')
+          );
+        }
+      },
+      ontimeout() {
+        reject(new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: Timeout'));
+      },
+      onerror(error) {
+        reject(new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 접속 실패', error));
+      },
+    });
   });
 }
 
 function getEmoticonBundle(bundleID) {
   return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-
-    req.open('GET', `/api/emoticon/${bundleID}`);
-    req.responseType = 'json';
-    req.timeout = 10000;
-    req.onload = () => {
-      const bundle = req.response.map((item) => item.id);
-      resolve(bundle);
-    };
-    req.ontimeout = () => {
-      reject('이모티콘 목록 정보를 받아오지 못했습니다.');
-    };
-    req.send();
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: `/api/emoticon/${bundleID}`,
+      responseType: 'json',
+      onload({ response }) {
+        const bundle = response.map((item) => item.id);
+        resolve(bundle);
+      },
+      ontimeout() {
+        reject(new Error('이모티콘 번들 정보를 받아오지 못했습니다.\n사유: Timeout'));
+      },
+      onerror(error) {
+        reject(new Error('이모티콘 번들 정보를 받아오지 못했습니다.\n사유: 접속 실패', error));
+      },
+    });
   });
 }
