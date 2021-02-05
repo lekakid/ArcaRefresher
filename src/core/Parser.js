@@ -77,7 +77,7 @@ export function parseUserInfo(infoElement) {
 
   const dataElement = infoElement.querySelector('[data-filter]');
   const data = dataElement.dataset.filter;
-  const id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|[^0-9]+$/g)[0];
+  const id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|^[^,#]+$/g)[0];
 
   let info;
   if (data.indexOf('#') > -1) {
@@ -104,7 +104,7 @@ export function parseUserID(infoElement) {
   }
 
   const data = infoElement.querySelector('[data-filter]').dataset.filter;
-  let id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|[^0-9]+$/g)[0];
+  let id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|^[^,#]+$/g)[0];
 
   if (data.indexOf(',') > -1) {
     id = `(${id})`;
