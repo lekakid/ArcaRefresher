@@ -75,13 +75,22 @@ export function parseUserInfo(infoElement) {
     return infoElement.dataset.info;
   }
 
-  let id = infoElement.children[0].title || infoElement.children[0].textContent;
-  if (/\([0-9]*\.[0-9]*\)/.test(id)) {
-    id = infoElement.childNodes[0].textContent + id;
+  const dataElement = infoElement.querySelector('[data-filter]');
+  const data = dataElement.dataset.filter;
+  const id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|[^0-9]+$/g)[0];
+
+  let info;
+  if (data.indexOf('#') > -1) {
+    info = `${dataElement.textContent}${id}`;
+  }
+  if (data.indexOf(',') > -1) {
+    info = `${dataElement.textContent}(${id})`;
+  } else {
+    info = id;
   }
 
-  infoElement.dataset.info = id;
-  return id;
+  infoElement.dataset.info = info;
+  return info;
 }
 
 export function parseUserID(infoElement) {
@@ -94,9 +103,11 @@ export function parseUserID(infoElement) {
     return infoElement.dataset.id;
   }
 
-  let id = infoElement.children[0].title || infoElement.children[0].textContent;
-  if (id.indexOf('#') > -1) {
-    id = id.substring(id.indexOf('#'));
+  const data = infoElement.querySelector('[data-filter]').dataset.filter;
+  let id = data.match(/#[0-9]{8}|[0-9]{1,3}\.[0-9]{1,3}|[^0-9]+$/g)[0];
+
+  if (data.indexOf(',') > -1) {
+    id = `(${id})`;
   }
 
   infoElement.dataset.id = id;

@@ -84,7 +84,7 @@ function setupSetting() {
 }
 
 function apply() {
-  const users = document.querySelectorAll('.user-info');
+  const users = document.querySelectorAll('span.user-info');
   const memos = getValue(USER_MEMO);
 
   users.forEach((user) => {
