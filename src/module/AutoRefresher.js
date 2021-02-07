@@ -141,19 +141,31 @@ function swapNewArticle(newArticles) {
 }
 
 async function routine() {
-  const newArticles = await new Promise((resolve) => {
-    const req = new XMLHttpRequest();
+  try {
+    const newArticles = await new Promise((resolve, reject) => {
+      const req = new XMLHttpRequest();
 
-    req.open('GET', window.location.href);
-    req.responseType = 'document';
-    req.addEventListener('load', () => {
-      const rootView = req.response.querySelector('div.board-article-list .list-table');
-      const articles = rootView.querySelectorAll('a.vrow:not(.notice-unfilter)');
-      resolve(articles);
+      req.open('GET', window.location.href);
+      req.responseType = 'document';
+      req.timeout = 10000;
+      req.onload = () => {
+        const rootView = req.response.querySelector('div.board-article-list .list-table');
+        const articles = rootView.querySelectorAll('a.vrow:not(.notice-unfilter)');
+        resolve(articles);
+      };
+      req.ontimeout = () => {
+        reject(new Error('[AutoRefresher] 연결 시간 초과'));
+      };
+      req.onerror = () => {
+        reject(new Error('[AutoRefresher] 연결 거부'));
+      };
+      req.send();
     });
-    req.send();
-  });
-  swapNewArticle(newArticles);
+    swapNewArticle(newArticles);
+  } catch (error) {
+    console.error(error);
+  }
+
   animate();
 }
 
