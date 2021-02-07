@@ -4,13 +4,21 @@ const onModifyCommentCallback = [];
 export default function initialize() {
   document.addEventListener('ar_article', () => {
     for (const { callback } of onModifyArticleCallback) {
-      callback();
+      try {
+        callback();
+      } catch (error) {
+        console.error(error);
+      }
     }
   });
 
   document.addEventListener('ar_comment', () => {
     for (const { callback } of onModifyCommentCallback) {
-      callback();
+      try {
+        callback();
+      } catch (error) {
+        console.error(error);
+      }
     }
   });
 }
