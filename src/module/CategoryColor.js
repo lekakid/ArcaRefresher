@@ -266,7 +266,7 @@ function generateColorStyle() {
         style.push(
           `
             .color_${styleKey} .title {
-              font-weight: ${bold ? 'bold' : 'normal'}
+              font-weight: bold;
             }
           `
         );
@@ -275,7 +275,7 @@ function generateColorStyle() {
         style.push(
           `
             .color_${styleKey} .title {
-              text-decoration: ${bold ? 'line-through' : 'normal'}
+              text-decoration: line-through;
             }
           `
         );
