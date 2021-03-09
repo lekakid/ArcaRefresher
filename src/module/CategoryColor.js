@@ -80,6 +80,7 @@ function setupSetting() {
         const [badgeInput, badgeContainer] = renderColorPicker(name === '일반');
         const [bgInput, bgContainer] = renderColorPicker(false);
         const boldInput = <input type="checkbox" />;
+        const throughInput = <input type="checkbox" />;
         const disableVisitedInput = <input type="checkbox" />;
 
         badgeContainer.on('save', (color) => {
@@ -105,6 +106,9 @@ function setupSetting() {
         boldInput.addEventListener('click', () => {
           bgElement.style.fontWeight = boldInput.checked ? 'bold' : '';
         });
+        throughInput.addEventListener('click', () => {
+          bgElement.style.textDecoration = throughInput.checked ? 'line-through' : '';
+        });
 
         dataContainer[name] = {
           test: {
@@ -114,6 +118,7 @@ function setupSetting() {
           badge: badgeContainer,
           bgcolor: bgContainer,
           bold: boldInput,
+          through: throughInput,
           disableVisited: disableVisitedInput,
         };
 
@@ -126,6 +131,10 @@ function setupSetting() {
               <label title="게시물 제목이 굵게 표시됩니다.">
                 {boldInput}
                 <span>굵게</span>
+              </label>
+              <label title="게시물 제목에 취소선을 긋습니다.">
+                {throughInput}
+                <span>취소선</span>
               </label>
               <label title="열어본 게시물이 회색으로 표시되지 않습니다.">
                 {disableVisitedInput}
@@ -160,6 +169,7 @@ function setupSetting() {
             const badge = dataContainer[key].badge.getSelectedColor();
             const bgcolor = dataContainer[key].bgcolor.getSelectedColor();
             const bold = dataContainer[key].bold.checked;
+            const through = dataContainer[key].through.checked;
             const disableVisited = dataContainer[key].disableVisited.checked;
 
             if (badge || bgcolor || bold || disableVisited) {
@@ -167,6 +177,7 @@ function setupSetting() {
                 badge: badge ? badge.toHEXA().toString() : '',
                 bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
                 bold,
+                through,
                 disableVisited,
               };
             } else {
@@ -183,11 +194,12 @@ function setupSetting() {
 
         for (const key in dataContainer) {
           if (config[key]) {
-            const { badge, bgcolor, bold, disableVisited } = config[key];
+            const { badge, bgcolor, bold, through, disableVisited } = config[key];
 
             dataContainer[key].badge.setColor(badge || null);
             dataContainer[key].bgcolor.setColor(bgcolor || null);
             dataContainer[key].bold.checked = bold;
+            dataContainer[key].through.checked = through;
             dataContainer[key].disableVisited.checked = disableVisited;
 
             const { badge: badgeElement, bg: bgElement } = dataContainer[key].test;
@@ -202,6 +214,9 @@ function setupSetting() {
             }
             if (bold) {
               bgElement.style.fontWeight = 'bold';
+            }
+            if (through) {
+              bgElement.style.textDecoration = 'line-through';
             }
           }
         }
@@ -221,7 +236,7 @@ function generateColorStyle() {
   const style = [];
   for (const key in categoryConfig) {
     if (categoryConfig[key]) {
-      const { badge, bgcolor, bold, disableVisited } = categoryConfig[key];
+      const { badge, bgcolor, bold, through, disableVisited } = categoryConfig[key];
       let styleKey;
       do {
         styleKey = Math.random().toString(36).substr(2);
@@ -252,6 +267,15 @@ function generateColorStyle() {
           `
             .color_${styleKey} .title {
               font-weight: ${bold ? 'bold' : 'normal'}
+            }
+          `
+        );
+      }
+      if (through) {
+        style.push(
+          `
+            .color_${styleKey} .title {
+              text-decoration: ${bold ? 'line-through' : 'normal'}
             }
           `
         );
