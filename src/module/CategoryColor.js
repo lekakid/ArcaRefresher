@@ -164,6 +164,14 @@ function setupSetting() {
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
 
+        const defaultConfig = {
+          badge: '',
+          bgcolor: '',
+          bold: false,
+          through: false,
+          disableVisited: false,
+        };
+
         for (const key in dataContainer) {
           if (dataContainer[key]) {
             const badge = dataContainer[key].badge.getSelectedColor();
@@ -172,15 +180,15 @@ function setupSetting() {
             const through = dataContainer[key].through.checked;
             const disableVisited = dataContainer[key].disableVisited.checked;
 
-            if (badge || bgcolor || bold || disableVisited) {
-              channelConfig[key] = {
-                badge: badge ? badge.toHEXA().toString() : '',
-                bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
-                bold,
-                through,
-                disableVisited,
-              };
-            } else {
+            channelConfig[key] = {
+              badge: badge ? badge.toHEXA().toString() : '',
+              bgcolor: bgcolor ? bgcolor.toHEXA().toString() : '',
+              bold,
+              through,
+              disableVisited,
+            };
+
+            if (JSON.stringify(channelConfig[key]) === JSON.stringify(defaultConfig)) {
               delete channelConfig[key];
             }
           }
@@ -266,7 +274,7 @@ function generateColorStyle() {
         style.push(
           `
             .color_${styleKey} .title {
-              font-weight: ${bold ? 'bold' : 'normal'}
+              font-weight: bold;
             }
           `
         );
@@ -275,7 +283,7 @@ function generateColorStyle() {
         style.push(
           `
             .color_${styleKey} .title {
-              text-decoration: ${bold ? 'line-through' : 'normal'}
+              text-decoration: line-through;
             }
           `
         );

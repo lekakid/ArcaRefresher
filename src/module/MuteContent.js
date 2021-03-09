@@ -178,18 +178,23 @@ function setupSetting() {
         let channelConfig = config[channel];
         if (!channelConfig) channelConfig = {};
 
+        const defaultConfig = {
+          mutePreview: false,
+          muteArticle: false,
+        };
+
         for (const key in categoryContainer) {
           if (categoryContainer[key]) {
             const row = categoryContainer[key];
             const preview = row.previewMute.checked;
             const article = row.articleMute.checked;
 
-            if (preview || article) {
-              channelConfig[key] = {
-                mutePreview: preview,
-                muteArticle: article,
-              };
-            } else {
+            channelConfig[key] = {
+              mutePreview: preview,
+              muteArticle: article,
+            };
+
+            if (JSON.stringify(channelConfig) === JSON.stringify(defaultConfig)) {
               delete channelConfig[key];
             }
           }
