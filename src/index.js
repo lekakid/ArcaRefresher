@@ -13,7 +13,7 @@ import CategoryColor from './module/CategoryColor';
 import ClipboardUpload from './module/ClipboardUpload';
 import CommentRefresh from './module/CommentRefresh';
 import MuteEmoticon from './module/MuteEmoticon';
-import FullAreaReply from './module/FullAreaReply';
+import FullAreaReply from './module/EnhancedReply';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import ImageSearch from './module/ImageSearch';

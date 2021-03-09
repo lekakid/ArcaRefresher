@@ -30,9 +30,11 @@ function setupSetting() {
   const refreshTimeSelect = (
     <select>
       <option value="0">사용 안 함</option>
-      <option value="3">3초</option>
       <option value="5">5초</option>
       <option value="10">10초</option>
+      <option value="20">20초</option>
+      <option value="30">30초</option>
+      <option value="60">1분</option>
     </select>
   );
   const hideRefreshSign = (

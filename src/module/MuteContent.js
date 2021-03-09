@@ -23,6 +23,7 @@ function load() {
       muteContent('comment');
     }
     if (CurrentPage.Component.Board) {
+      muteSidebar();
       muteNotice();
       mutePreview();
       muteContent('board');
@@ -474,4 +475,24 @@ function muteContent(viewQuery) {
       }
     }
   }
+}
+
+function muteSidebar() {
+  let keywordlist = getValue(BLOCK_KEYWORD);
+
+  if ((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute !== undefined) {
+    keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
+    keywordlist = Array.from(new Set(keywordlist));
+  }
+
+  if (keywordlist.length === 0) return;
+
+  const contents = document.querySelectorAll(
+    '#recentLive .link-list a, #recentChannelHeadline .link-list a'
+  );
+  contents.forEach((e) => {
+    if (new RegExp(keywordlist.join('|')).test(e.textContent)) {
+      e.replaceWith(<span>키워드 뮤트 됨</span>);
+    }
+  });
 }

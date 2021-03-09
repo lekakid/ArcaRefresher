@@ -9,6 +9,10 @@ export default { load };
 
 const FILENAME = { key: 'imageDownloaderFileName', defaultValue: '%title%' };
 const IMAGENAME = { key: 'imageDonwloaderImageName', defaultValue: '%num%' };
+const ZIP_COMMENT = {
+  key: 'imageDownloaderZipComment',
+  defaultValue: '[%channel%] %title% - %url%',
+};
 
 function load() {
   try {
@@ -26,6 +30,7 @@ function load() {
 function setupSetting() {
   const downloadName = <input type="text" />;
   const imageName = <input type="text" />;
+  const zipComment = <textarea rows="6" />;
 
   addSetting({
     header: '이미지 다운로드',
@@ -73,15 +78,37 @@ function setupSetting() {
         content: imageName,
         type: 'wide',
       },
+      {
+        title: '압축파일 코멘트',
+        description: (
+          <>
+            이미지 일괄 다운로드 사용 시 저장할 압축파일에 남길 코멘트입니다.
+            <br />
+            %title%: 게시물 제목
+            <br />
+            %category%: 게시물 카테고리
+            <br />
+            %author%: 게시물 작성자
+            <br />
+            %channel%: 채널 이름
+            <br />
+            %url%: 게시물 주소
+          </>
+        ),
+        content: zipComment,
+        type: 'wide',
+      },
     ],
     valueCallback: {
       save() {
         setValue(FILENAME, downloadName.value);
         setValue(IMAGENAME, imageName.value);
+        setValue(ZIP_COMMENT, zipComment.value);
       },
       load() {
         downloadName.value = getValue(FILENAME);
         imageName.value = getValue(IMAGENAME);
+        zipComment.value = getValue(ZIP_COMMENT);
       },
     },
   });
@@ -237,9 +264,12 @@ function apply() {
     }
     downloadBtn.textContent = originalText;
 
+    let comment = getValue(ZIP_COMMENT);
+    comment = replaceData(comment);
+
     let filename = getValue(FILENAME);
     filename = replaceData(filename);
-    const zipblob = await zip.generateAsync({ type: 'blob' });
+    const zipblob = await zip.generateAsync({ type: 'blob', comment });
     window.saveAs(zipblob, `${filename}.zip`);
 
     if (errorCount) {
@@ -286,6 +316,7 @@ function replaceData(string) {
   string = string.replace('%category%', CurrentPage.Article.Category);
   string = string.replace('%author%', CurrentPage.Article.Author);
   string = string.replace('%channel%', CurrentPage.Channel.Name);
+  string = string.replace('%url%', CurrentPage.Article.URL);
 
   return string;
 }
