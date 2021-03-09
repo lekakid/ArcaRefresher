@@ -9,7 +9,8 @@ const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
 const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
-const RESIZE_MEDIA = { key: 'resizeMedia', defaultValue: '100' };
+const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
+const RESIZE_VIDEO = { key: 'resizeVideo', defaultValue: '100' };
 const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 
 function load() {
@@ -85,7 +86,9 @@ function setupSetting() {
     notificationIcon.style.color = color;
   });
 
-  const resizeMedia = <input type="text" name="resizeMedia" />;
+  const resizeImage = <input type="text" />;
+  const resizeVideo = <input type="text" />;
+
   addSetting({
     header: '레이아웃 커스텀',
     group: [
@@ -106,8 +109,12 @@ function setupSetting() {
         content: hideModified,
       },
       {
-        title: '본문 이미지, 동영상 사이즈',
-        content: resizeMedia,
+        title: '본문 이미지 사이즈',
+        content: resizeImage,
+      },
+      {
+        title: '본문 동영상 사이즈',
+        content: resizeVideo,
       },
       {
         title: '알림 아이콘 점등 색상 변경',
@@ -132,7 +139,8 @@ function setupSetting() {
         setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
         setValue(HIDE_AVATAR, hideAvatar.value === 'true');
         setValue(HIDE_MODIFIED, hideModified.value === 'true');
-        setValue(RESIZE_MEDIA, resizeMedia.value);
+        setValue(RESIZE_IMAGE, resizeImage.value);
+        setValue(RESIZE_VIDEO, resizeVideo.value);
         setValue(NOTIFY_COLOR, notifyColor.value);
       },
       load() {
@@ -140,7 +148,8 @@ function setupSetting() {
         hideSideMenu.value = getValue(HIDE_SIDEMENU);
         hideAvatar.value = getValue(HIDE_AVATAR);
         hideModified.value = getValue(HIDE_MODIFIED);
-        resizeMedia.value = getValue(RESIZE_MEDIA);
+        resizeImage.value = getValue(RESIZE_IMAGE);
+        resizeVideo.value = getValue(RESIZE_VIDEO);
         notifyColor.value = getValue(NOTIFY_COLOR);
 
         notificationIcon.style.color = '#fff';
@@ -165,12 +174,17 @@ function apply() {
   const hideModified = getValue(HIDE_MODIFIED);
   if (hideModified) contentWrapper.classList.add('hide-modified');
 
-  const resizeMedia = getValue(RESIZE_MEDIA);
-  const css = `.article-body img, .article-body video {
-        max-width: ${resizeMedia}% !important;
+  const resizeImage = getValue(RESIZE_IMAGE);
+  const imageCSS = `.article-body  img, .article-body video:not([controls]) {
+        max-width: ${resizeImage}% !important;
     }`;
+  document.head.append(<style>{imageCSS}</style>);
 
-  document.head.append(<style>{css}</style>);
+  const resizeVideo = getValue(RESIZE_VIDEO);
+  const videoCSS = `.article-body video[controls] {
+        max-width: ${resizeVideo}% !important;
+    }`;
+  document.head.append(<style>{videoCSS}</style>);
 
   const color = getValue(NOTIFY_COLOR);
 
