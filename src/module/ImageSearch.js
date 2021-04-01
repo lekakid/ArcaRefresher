@@ -1,6 +1,6 @@
 import ContextMenu from '../core/ContextMenu';
 import { CurrentPage } from '../core/Parser';
-import { getBlob } from '../util/DownloadManager';
+import { getBlob } from '../util/HttpRequest';
 
 export default { load };
 

@@ -1,7 +1,7 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import { CurrentPage } from '../core/Parser';
-import { getBlob, getArrayBuffer } from '../util/DownloadManager';
+import { getBlob, getArrayBuffer } from '../util/HttpRequest';
 
 import stylesheet from '../css/ImageDownloader.css';
 
