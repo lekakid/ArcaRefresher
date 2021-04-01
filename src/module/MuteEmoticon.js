@@ -1,6 +1,7 @@
 import { addOnModifyComment } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
+import { getDocument } from '../util/HttpRequest';
 
 export default { load };
 
@@ -144,35 +145,23 @@ function apply() {
   });
 }
 
-function getEmoticonInfo(id) {
-  return new Promise((resolve, reject) => {
-    GM_xmlhttpRequest({
-      method: 'GET',
-      url: `/api/emoticon/shop/${id}`,
-      responseType: 'document',
-      timeout: 10000,
-      onload({ response }) {
-        try {
-          const name = response.querySelector('.article-head .title').textContent;
-          const bundleID = response
-            .querySelector('.article-body form')
-            .action.split('/e/')[1]
-            .split('/')[0];
-          resolve([name, bundleID]);
-        } catch (error) {
-          reject(
-            new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 삭제, 사이트 구조 변경, 기타')
-          );
-        }
-      },
-      ontimeout() {
-        reject(new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: Timeout'));
-      },
-      onerror(error) {
-        reject(new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 접속 실패', error));
-      },
-    });
+async function getEmoticonInfo(id) {
+  const response = await getDocument({
+    method: 'GET',
+    url: `/api/emoticon/shop/${id}`,
+    timeout: 10000,
+    error: new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 접속 실패'),
   });
+  try {
+    const name = response.querySelector('.article-head .title').textContent;
+    const bundleID = response
+      .querySelector('.article-body form')
+      .action.split('/e/')[1]
+      .split('/')[0];
+    return [name, bundleID];
+  } catch (error) {
+    throw new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 삭제, 사이트 구조 변경, 기타');
+  }
 }
 
 function getEmoticonBundle(bundleID) {

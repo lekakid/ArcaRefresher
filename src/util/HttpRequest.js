@@ -37,3 +37,23 @@ export function getArrayBuffer(url, onProgress, onLoad) {
     });
   });
 }
+
+export function getDocument({ method, url, timeout, data, error }) {
+  return new Promise((resolve, reject) => {
+    GM_xmlhttpRequest({
+      method,
+      url,
+      timeout,
+      data,
+      onload(response) {
+        resolve(new DOMParser().parseFromString(response.responseText, 'text/html'));
+      },
+      ontimeout() {
+        reject(error);
+      },
+      onerror() {
+        reject(error);
+      },
+    });
+  });
+}
