@@ -1,6 +1,6 @@
 import ContextMenu from '../core/ContextMenu';
 import { CurrentPage } from '../core/Parser';
-import { getBlob } from '../util/DownloadManager';
+import { getBlob, getDocument } from '../util/HttpRequest';
 
 export default { load };
 
@@ -56,26 +56,18 @@ function addContextMenu() {
           }
         );
 
-        const docParser = new DOMParser();
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
         formdata.append('frame', 1);
         formdata.append('database', 999);
 
-        const result = await new Promise((resolve, reject) => {
-          GM_xmlhttpRequest({
-            method: 'POST',
-            url: 'https://saucenao.com/search.php',
-            data: formdata,
-            onload: resolve,
-            onerror: () => {
-              reject(new Error('SauceNao 연결 거부 됨'));
-            },
-          });
+        const response = await getDocument({
+          method: 'POST',
+          url: 'https://saucenao.com/search.php',
+          data: formdata,
+          error: new Error('SauceNao 연결 거부 됨'),
         });
-
-        const resultDocument = docParser.parseFromString(result.responseText, 'text/html');
-        const searchedImage = resultDocument.querySelector('#yourimage a');
+        const searchedImage = response.querySelector('#yourimage a');
         if (!searchedImage) throw new Error('SauceNao 이미지 업로드 실패');
         const replaceURL = searchedImage.href.split('image=')[1];
         window.open(
