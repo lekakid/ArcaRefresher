@@ -1,3 +1,4 @@
+import { dispatchAREvent } from '../core/AREventHandler';
 import { CurrentPage } from '../core/Parser';
 import { getDateStr } from '../util/DateManager';
 
@@ -50,7 +51,7 @@ function apply() {
       });
       commentArea.querySelector('.title').insertAdjacentElement('afterend', newComments);
 
-      document.dispatchEvent(new Event('ar_comment'));
+      dispatchAREvent('CommentChange');
     }
 
     btn.disabled = false;

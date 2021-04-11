@@ -1,4 +1,4 @@
-import { addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
 import { getDocument } from '../util/HttpRequest';
@@ -11,15 +11,19 @@ function load() {
   try {
     setupSetting();
 
+    if (CurrentPage.Component.Article) {
+      muteArticle();
+    }
+
     if (CurrentPage.Component.Comment) {
-      mute();
+      muteComment();
       apply();
     }
 
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 100,
       callback() {
-        mute();
+        muteComment();
         apply();
       },
     });
@@ -80,7 +84,30 @@ function setupSetting() {
   });
 }
 
-function mute() {
+function muteArticle() {
+  const blockEmoticons = getValue(BLOCK_EMOTICON);
+
+  let list = [];
+  for (const key in blockEmoticons) {
+    if ({}.hasOwnProperty.call(blockEmoticons, key)) {
+      list = list.concat(blockEmoticons[key].url);
+    }
+  }
+
+  const images = document.querySelectorAll('.article-body img');
+
+  images.forEach((e) => {
+    if (e.clientWidth > 100 || e.clientHeight > 100) return;
+
+    const url = e.src.replace('https:', '');
+
+    if (list.indexOf(url) > -1) {
+      e.replaceWith(<p>[아카콘 뮤트됨]</p>);
+    }
+  });
+}
+
+function muteComment() {
   const blockEmoticons = getValue(BLOCK_EMOTICON);
 
   let list = [];
@@ -132,10 +159,10 @@ function apply() {
       event.target.classList.remove('block-emoticon');
       const id = event.target.dataset.id;
       const [name, bundleID] = await getEmoticonInfo(id);
-      const bundle = await getEmoticonBundle(bundleID);
+      const [bundle, url] = await getEmoticonBundle(bundleID);
 
       const blockEmoticon = getValue(BLOCK_EMOTICON);
-      blockEmoticon[bundleID] = { name, bundle };
+      blockEmoticon[bundleID] = { name, bundle, url };
       setValue(BLOCK_EMOTICON, blockEmoticon);
     } catch (error) {
       alert(error);
@@ -172,7 +199,8 @@ function getEmoticonBundle(bundleID) {
       responseType: 'json',
       onload({ response }) {
         const bundle = response.map((item) => item.id);
-        resolve(bundle);
+        const url = response.map((item) => item.imageUrl);
+        resolve([bundle, url]);
       },
       ontimeout() {
         reject(new Error('이모티콘 번들 정보를 받아오지 못했습니다.\n사유: Timeout'));

@@ -1,4 +1,4 @@
-import { addOnModifyArticle } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
 
@@ -19,7 +19,7 @@ function load() {
       applyBlockNewWindow();
     }
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 100,
       callback: applyOpenNewWindow,
     });

@@ -1,4 +1,4 @@
-import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { parseUserID } from '../core/Parser';
 
@@ -14,11 +14,11 @@ function load() {
 
     apply();
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 100,
       callback: apply,
     });
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 100,
       callback: apply,
     });
@@ -28,16 +28,8 @@ function load() {
 }
 
 function setupSetting() {
-  const memoList = <select size="6" multiple="" />;
-  const deleteBtn = <button className="btn btn-arca">삭제</button>;
-  deleteBtn.addEventListener('click', (event) => {
-    event.target.disabled = true;
+  const memoTextarea = <textarea rows="6" placeholder="닉네임::메모" />;
 
-    const removeElements = memoList.selectedOptions;
-    while (removeElements.length > 0) removeElements[0].remove();
-
-    event.target.disabled = false;
-  });
   addSetting({
     header: '메모',
     group: [
@@ -45,39 +37,37 @@ function setupSetting() {
         title: '메모 목록',
         description: (
           <>
-            메모는 게시물 작성자, 댓글 작성자 아이콘(IP)을 클릭해 할 수 있습니다.
+            아래의 양식을 지켜주시기 바랍니다.
             <br />
-            Ctrl, Shift, 마우스 드래그를 이용해서 여러개를 동시에 선택 할 수 있습니다.
+            <ul>
+              <li>고정닉::메모</li>
+              <li>#00000000::메모</li>
+              <li>(000.000)::메모</li>
+            </ul>
           </>
         ),
-        content: (
-          <>
-            {memoList}
-            {deleteBtn}
-          </>
-        ),
+        content: memoTextarea,
         type: 'wide',
       },
     ],
     valueCallback: {
       save() {
-        const data = getValue(USER_MEMO);
-
-        const keys = Array.from(memoList.children, (e) => e.value);
-        for (const key in data) {
-          if (keys.indexOf(key) === -1) delete data[key];
+        const memoList = memoTextarea.value.split('\n').filter((i) => i !== '');
+        const data = {};
+        for (const m of memoList) {
+          const [key, value] = m.split('::');
+          data[key] = value;
         }
+
         setValue(USER_MEMO, data);
       },
       load() {
         const data = getValue(USER_MEMO);
-        while (memoList.childElementCount) {
-          memoList.removeChild(memoList.children[0]);
-        }
-
+        const memoList = [];
         for (const key of Object.keys(data)) {
-          memoList.append(<option value={key}>{`${key}-${data[key]}`}</option>);
+          memoList.push(`${key}::${data[key]}`);
         }
+        memoTextarea.value = memoList.join('\n');
       },
     },
   });
