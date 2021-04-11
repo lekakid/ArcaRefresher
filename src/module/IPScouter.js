@@ -1,4 +1,4 @@
-import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 
 import styles from '../css/IPScouter.module.css';
 
@@ -8,13 +8,13 @@ function load() {
   try {
     apply();
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 0,
       callback() {
         apply('board');
       },
     });
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 0,
       callback() {
         apply('comment');

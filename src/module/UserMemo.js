@@ -1,4 +1,4 @@
-import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { parseUserID } from '../core/Parser';
 
@@ -14,11 +14,11 @@ function load() {
 
     apply();
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 100,
       callback: apply,
     });
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 100,
       callback: apply,
     });

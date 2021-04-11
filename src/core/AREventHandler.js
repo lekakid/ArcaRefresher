@@ -1,34 +1,27 @@
-const onModifyArticleCallback = [];
-const onModifyCommentCallback = [];
+const AREvents = {
+  ArticleChange: [],
+  CommentChange: [],
+};
 
 export default function initialize() {
-  document.addEventListener('ar_article', () => {
-    for (const { callback } of onModifyArticleCallback) {
-      try {
-        callback();
-      } catch (error) {
-        console.error(error);
+  for (const event of Object.keys(AREvents)) {
+    document.addEventListener(`AR_${event}`, () => {
+      for (const { callback } of AREvents[event]) {
+        try {
+          callback();
+        } catch (error) {
+          console.error(error);
+        }
       }
-    }
-  });
-
-  document.addEventListener('ar_comment', () => {
-    for (const { callback } of onModifyCommentCallback) {
-      try {
-        callback();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
+    });
+  }
 }
 
-export function addOnModifyArticle(callbackObject) {
-  onModifyArticleCallback.push(callbackObject);
-  onModifyArticleCallback.sort((a, b) => a.priority - b.priority);
+export function addAREventListener(event, callback) {
+  AREvents[event].push(callback);
+  AREvents[event].sort((a, b) => a.priority - b.priority);
 }
 
-export function addOnModifyComment(callbackObject) {
-  onModifyCommentCallback.push(callbackObject);
-  onModifyCommentCallback.sort((a, b) => a.priority - b.priority);
+export function dispatchAREvent(event) {
+  document.dispatchEvent(new Event(`AR_${event}`));
 }

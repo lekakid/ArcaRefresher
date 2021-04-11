@@ -1,3 +1,4 @@
+import { dispatchAREvent } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
@@ -139,7 +140,7 @@ function swapNewArticle(newArticles) {
     firstArticle.insertAdjacentElement('beforebegin', noticeUnfilterBtn);
   }
 
-  document.dispatchEvent(new Event('ar_article'));
+  dispatchAREvent('ArticleChange');
 }
 
 async function routine() {

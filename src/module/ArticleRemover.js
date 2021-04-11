@@ -1,4 +1,4 @@
-import { addOnModifyArticle } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserID } from '../core/Parser';
 
@@ -13,7 +13,7 @@ function load() {
     setupSetting();
 
     if (CurrentPage.Component.Board) {
-      addOnModifyArticle({
+      addAREventListener('ArticleChange', {
         priority: 999,
         callback: remove,
       });

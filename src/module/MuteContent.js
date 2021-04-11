@@ -1,5 +1,5 @@
 import ArticleMenu from '../core/ArticleMenu';
-import { addOnModifyArticle, addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage, parseUserInfo } from '../core/Parser';
 
@@ -29,7 +29,7 @@ function load() {
       muteContent('board');
     }
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 100,
       callback() {
         muteNotice();
@@ -37,7 +37,7 @@ function load() {
         muteContent('board');
       },
     });
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 100,
       callback() {
         muteContent('comment');

@@ -1,4 +1,4 @@
-import { addOnModifyComment } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { CurrentPage } from '../core/Parser';
 import { getDocument } from '../util/HttpRequest';
@@ -16,7 +16,7 @@ function load() {
       apply();
     }
 
-    addOnModifyComment({
+    addAREventListener('CommentChange', {
       priority: 100,
       callback() {
         mute();

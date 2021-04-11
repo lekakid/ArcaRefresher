@@ -1,5 +1,5 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { addOnModifyArticle } from '../core/AREventHandler';
+import { addAREventListener } from '../core/AREventHandler';
 import { CurrentPage } from '../core/Parser';
 
 import { getContrastYIQ } from '../util/ColorManager';
@@ -19,7 +19,7 @@ function load() {
       apply();
     }
 
-    addOnModifyArticle({
+    addAREventListener('ArticleChange', {
       priority: 0,
       callback: apply,
     });
