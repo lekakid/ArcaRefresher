@@ -15,6 +15,8 @@ const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
 const RESIZE_VIDEO = { key: 'resizeVideo', defaultValue: '100' };
 // ----------------------------------- 댓글 레이아웃 -----------------------------------
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
+const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
+const FORCE_OPEN_COMMENT = { key: 'forceOpenComment', defaultValue: false };
 
 function load() {
   try {
@@ -169,21 +171,45 @@ function setupSetting() {
       <option value="true">숨김</option>
     </select>
   );
+  const wideCommentArea = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  const forceOpenComment = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
 
   addSetting({
     header: '댓글 레이아웃',
     group: [
       {
-        title: '댓글 *수정됨 숨김',
+        title: '*수정됨 숨김',
         content: hideModified,
+      },
+      {
+        title: '클릭하면 답글창이 바로 열리게 하기',
+        content: wideCommentArea,
+      },
+      {
+        title: '접힌 댓글 바로 펼쳐보기',
+        content: forceOpenComment,
       },
     ],
     valueCallback: {
       save() {
         setValue(HIDE_MODIFIED, hideModified.value === 'true');
+        setValue(WIDE_AREA, wideCommentArea.value === 'true');
+        setValue(FORCE_OPEN_COMMENT, forceOpenComment.value === 'true');
       },
       load() {
         hideModified.value = getValue(HIDE_MODIFIED);
+        forceOpenComment.value = getValue(FORCE_OPEN_COMMENT);
+        wideCommentArea.value = getValue(WIDE_AREA);
       },
     },
   });
@@ -233,4 +259,29 @@ function apply() {
 
   const hideModified = getValue(HIDE_MODIFIED);
   if (hideModified) contentWrapper.classList.add('hide-modified');
+
+  const wideCommentArea = getValue(WIDE_AREA);
+  if (wideCommentArea) {
+    const commentArea = document.querySelector('#comment');
+    commentArea.addEventListener('click', (event) => {
+      if (event.target.closest('form')) return;
+
+      const element = event.target.closest('a, .emoticon, .btn-more, .message');
+      if (element == null) return;
+      if (!element.classList.contains('message')) return;
+
+      event.preventDefault();
+
+      element.parentNode.querySelector('.reply-link').click();
+    });
+  }
+
+  const forceOpenComment = getValue(FORCE_OPEN_COMMENT);
+  if (forceOpenComment) {
+    const foldedReplyList = document.querySelectorAll('#comment .btn-more');
+    foldedReplyList.forEach((e) => {
+      e.style.display = 'none';
+      e.closest('.message').style.maxHeight = 'none';
+    });
+  }
 }
