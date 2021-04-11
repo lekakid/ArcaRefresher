@@ -5,13 +5,16 @@ import { getRandomColor } from '../util/ColorManager';
 
 export default { load };
 
+// ---------------------------------- 사이트 레이아웃 ----------------------------------
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
 const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
-const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
+const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
+// ----------------------------------- 본문 레이아웃 -----------------------------------
 const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
 const RESIZE_VIDEO = { key: 'resizeVideo', defaultValue: '100' };
-const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
+// ----------------------------------- 댓글 레이아웃 -----------------------------------
+const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 
 function load() {
   try {
@@ -24,6 +27,7 @@ function load() {
 }
 
 function setupSetting() {
+  // ---------------------------------- 사이트 레이아웃 ----------------------------------
   const hideRecentVisit = (
     <select>
       <option value="false">보임</option>
@@ -37,12 +41,6 @@ function setupSetting() {
     </select>
   );
   const hideAvatar = (
-    <select>
-      <option value="false">보임</option>
-      <option value="true">숨김</option>
-    </select>
-  );
-  const hideModified = (
     <select>
       <option value="false">보임</option>
       <option value="true">숨김</option>
@@ -86,11 +84,8 @@ function setupSetting() {
     notificationIcon.style.color = color;
   });
 
-  const resizeImage = <input type="text" />;
-  const resizeVideo = <input type="text" />;
-
   addSetting({
-    header: '레이아웃 커스텀',
+    header: '사이트 레이아웃',
     group: [
       {
         title: '최근 방문 채널 숨김',
@@ -103,18 +98,6 @@ function setupSetting() {
       {
         title: '프로필 아바타 숨김',
         content: hideAvatar,
-      },
-      {
-        title: '댓글 *수정됨 숨김',
-        content: hideModified,
-      },
-      {
-        title: '본문 이미지 사이즈',
-        content: resizeImage,
-      },
-      {
-        title: '본문 동영상 사이즈',
-        content: resizeVideo,
       },
       {
         title: '알림 아이콘 점등 색상 변경',
@@ -138,21 +121,69 @@ function setupSetting() {
         setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
         setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
         setValue(HIDE_AVATAR, hideAvatar.value === 'true');
-        setValue(HIDE_MODIFIED, hideModified.value === 'true');
-        setValue(RESIZE_IMAGE, resizeImage.value);
-        setValue(RESIZE_VIDEO, resizeVideo.value);
         setValue(NOTIFY_COLOR, notifyColor.value);
       },
       load() {
         hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
         hideSideMenu.value = getValue(HIDE_SIDEMENU);
         hideAvatar.value = getValue(HIDE_AVATAR);
-        hideModified.value = getValue(HIDE_MODIFIED);
-        resizeImage.value = getValue(RESIZE_IMAGE);
-        resizeVideo.value = getValue(RESIZE_VIDEO);
         notifyColor.value = getValue(NOTIFY_COLOR);
 
         notificationIcon.style.color = '#fff';
+      },
+    },
+  });
+
+  // ----------------------------------- 본문 레이아웃 -----------------------------------
+  const resizeImage = <input type="text" />;
+  const resizeVideo = <input type="text" />;
+
+  addSetting({
+    header: '게시물 레이아웃',
+    group: [
+      {
+        title: '이미지 사이즈',
+        content: resizeImage,
+      },
+      {
+        title: '동영상 사이즈',
+        content: resizeVideo,
+      },
+    ],
+    valueCallback: {
+      save() {
+        setValue(RESIZE_IMAGE, resizeImage.value);
+        setValue(RESIZE_VIDEO, resizeVideo.value);
+      },
+      load() {
+        resizeImage.value = getValue(RESIZE_IMAGE);
+        resizeVideo.value = getValue(RESIZE_VIDEO);
+      },
+    },
+  });
+
+  // ----------------------------------- 댓글 레이아웃 -----------------------------------
+  const hideModified = (
+    <select>
+      <option value="false">보임</option>
+      <option value="true">숨김</option>
+    </select>
+  );
+
+  addSetting({
+    header: '댓글 레이아웃',
+    group: [
+      {
+        title: '댓글 *수정됨 숨김',
+        content: hideModified,
+      },
+    ],
+    valueCallback: {
+      save() {
+        setValue(HIDE_MODIFIED, hideModified.value === 'true');
+      },
+      load() {
+        hideModified.value = getValue(HIDE_MODIFIED);
       },
     },
   });
@@ -161,6 +192,8 @@ function setupSetting() {
 function apply() {
   document.head.append(<style>{sheetLiveModifier}</style>);
   const contentWrapper = document.querySelector('.content-wrapper');
+
+  // ---------------------------------- 사이트 레이아웃 ----------------------------------
 
   const hideRecentVisit = getValue(HIDE_RECENT_VISIT);
   if (hideRecentVisit) contentWrapper.classList.add('hide-recent-visit');
@@ -171,8 +204,18 @@ function apply() {
   const hideAvatar = getValue(HIDE_AVATAR);
   if (hideAvatar) contentWrapper.classList.add('hide-avatar');
 
-  const hideModified = getValue(HIDE_MODIFIED);
-  if (hideModified) contentWrapper.classList.add('hide-modified');
+  const color = getValue(NOTIFY_COLOR);
+  const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
+  if (notificationIcon === null) return;
+
+  const notiObserver = new MutationObserver(() => {
+    if (notificationIcon.style.color) {
+      notificationIcon.style.color = `#${color}`;
+    }
+  });
+  notiObserver.observe(notificationIcon, { attributes: true });
+
+  // ----------------------------------- 본문 레이아웃 -----------------------------------
 
   const resizeImage = getValue(RESIZE_IMAGE);
   const imageCSS = `.article-body  img, .article-body video:not([controls]) {
@@ -186,15 +229,8 @@ function apply() {
     }`;
   document.head.append(<style>{videoCSS}</style>);
 
-  const color = getValue(NOTIFY_COLOR);
+  // ----------------------------------- 댓글 레이아웃 -----------------------------------
 
-  const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
-  if (notificationIcon === null) return;
-
-  const notiObserver = new MutationObserver(() => {
-    if (notificationIcon.style.color) {
-      notificationIcon.style.color = `#${color}`;
-    }
-  });
-  notiObserver.observe(notificationIcon, { attributes: true });
+  const hideModified = getValue(HIDE_MODIFIED);
+  if (hideModified) contentWrapper.classList.add('hide-modified');
 }
