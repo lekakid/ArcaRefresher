@@ -8,6 +8,8 @@ const loadCallbackList = [];
 const settingContainer = <div className="settings" />;
 const GroupList = [];
 
+const exportAnchor = <a download="setting.txt" />;
+
 /**
  * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
  * @param {Object} param                        파라미터 오브젝트
@@ -87,7 +89,6 @@ export function setValue({ key }, value) {
 function importConfig(JSONString) {
   const data = JSON.parse(JSONString);
 
-  // 임시 수정 설정 검증 루틴 필요
   for (const key of Object.keys(data)) {
     GM_setValue(key, data[key]);
   }
@@ -181,21 +182,36 @@ export default function initialize() {
     event.target.select();
   }
   function onExport() {
-    const data = btoa(encodeURIComponent(exportConfig()));
-    navigator.clipboard.writeText(data);
-    alert('클립보드에 설정이 복사되었습니다.');
+    const data = exportConfig();
+    const textfile = new Blob([data], { type: 'text/plain' });
+    const textURL = window.URL.createObjectURL(textfile);
+    window.URL.revokeObjectURL(exportAnchor.href);
+    exportAnchor.href = textURL;
+    exportAnchor.click();
   }
-  function onImport() {
-    let data = prompt('가져올 설정 데이터를 입력해주세요');
-    if (data === null) return;
+  async function onImport() {
+    const file = await new Promise((resolve) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'text/plain';
+      input.onchange = (event) => {
+        resolve(event.target.files[0]);
+      };
+      input.click();
+    });
+    const data = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsText(file);
+    });
     try {
-      if (data === '') throw '[Setting.importConfig] 공백 값을 입력했습니다.';
-      data = decodeURIComponent(atob(data));
       importConfig(data);
 
       window.location.reload();
     } catch (error) {
-      alert('올바르지 않은 데이터입니다.');
+      alert(`올바르지 않은 데이터입니다.\n${error}`);
       console.error(error);
     }
   }
