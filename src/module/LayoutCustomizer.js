@@ -232,14 +232,14 @@ function apply() {
 
   const color = getValue(NOTIFY_COLOR);
   const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
-  if (notificationIcon === null) return;
-
-  const notiObserver = new MutationObserver(() => {
-    if (notificationIcon.style.color) {
-      notificationIcon.style.color = `#${color}`;
-    }
-  });
-  notiObserver.observe(notificationIcon, { attributes: true });
+  if (notificationIcon) {
+    const notiObserver = new MutationObserver(() => {
+      if (notificationIcon.style.color) {
+        notificationIcon.style.color = `#${color}`;
+      }
+    });
+    notiObserver.observe(notificationIcon, { attributes: true });
+  }
 
   // ----------------------------------- 본문 레이아웃 -----------------------------------
 
