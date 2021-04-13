@@ -260,6 +260,11 @@ function apply() {
   const hideModified = getValue(HIDE_MODIFIED);
   if (hideModified) contentWrapper.classList.add('hide-modified');
 
+  const forceOpenComment = getValue(FORCE_OPEN_COMMENT);
+  if (forceOpenComment) {
+    contentWrapper.classList.add('force-open-comment');
+  }
+
   const wideCommentArea = getValue(WIDE_AREA);
   if (wideCommentArea) {
     const commentArea = document.querySelector('#comment');
@@ -273,15 +278,6 @@ function apply() {
       event.preventDefault();
 
       element.parentNode.querySelector('.reply-link').click();
-    });
-  }
-
-  const forceOpenComment = getValue(FORCE_OPEN_COMMENT);
-  if (forceOpenComment) {
-    const foldedReplyList = document.querySelectorAll('#comment .btn-more');
-    foldedReplyList.forEach((e) => {
-      e.style.display = 'none';
-      e.closest('.message').style.maxHeight = 'none';
     });
   }
 }
