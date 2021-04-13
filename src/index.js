@@ -16,7 +16,7 @@ import MuteEmoticon from './module/MuteEmoticon';
 import IPScouter from './module/IPScouter';
 import ImageDownloader from './module/ImageDownloader';
 import ImageSearch from './module/ImageSearch';
-import LiveModifier from './module/LayoutCustomizer';
+import LayoutCustomizer from './module/LayoutCustomizer';
 import MyImage from './module/MyImage';
 import NewWindow from './module/NewWindow';
 import RatedownGuard from './module/RatedownGuard';
@@ -38,7 +38,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   Configure();
   ContextMenu.initialize();
 
-  LiveModifier.load();
+  LayoutCustomizer.load();
 
   await waitForElement('footer');
   Parser();
@@ -52,6 +52,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   ImageDownloader.load();
   ImageSearch.load();
   IPScouter.load();
+  LayoutCustomizer.loadOnComplete();
   MuteContent.load();
   MuteEmoticon.load();
   NewWindow.load();
