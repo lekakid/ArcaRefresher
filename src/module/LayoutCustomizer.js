@@ -1,9 +1,10 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
+import { CurrentPage } from '../core/Parser';
 
 import sheetLiveModifier from '../css/LayoutCustomizer.css';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { load };
+export default { load, loadOnComplete };
 
 // ---------------------------------- 사이트 레이아웃 ----------------------------------
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
@@ -23,6 +24,16 @@ function load() {
     setupSetting();
 
     apply();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function loadOnComplete() {
+  try {
+    if (CurrentPage.Component.Comment) {
+      applyOnComplete();
+    }
   } catch (error) {
     console.error(error);
   }
@@ -232,14 +243,14 @@ function apply() {
 
   const color = getValue(NOTIFY_COLOR);
   const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');
-  if (notificationIcon === null) return;
-
-  const notiObserver = new MutationObserver(() => {
-    if (notificationIcon.style.color) {
-      notificationIcon.style.color = `#${color}`;
-    }
-  });
-  notiObserver.observe(notificationIcon, { attributes: true });
+  if (notificationIcon) {
+    const notiObserver = new MutationObserver(() => {
+      if (notificationIcon.style.color) {
+        notificationIcon.style.color = `#${color}`;
+      }
+    });
+    notiObserver.observe(notificationIcon, { attributes: true });
+  }
 
   // ----------------------------------- 본문 레이아웃 -----------------------------------
 
@@ -260,6 +271,14 @@ function apply() {
   const hideModified = getValue(HIDE_MODIFIED);
   if (hideModified) contentWrapper.classList.add('hide-modified');
 
+  const forceOpenComment = getValue(FORCE_OPEN_COMMENT);
+  if (forceOpenComment) {
+    contentWrapper.classList.add('force-open-comment');
+  }
+}
+
+// TODO: 모듈에서 자체적으로 실행 타이밍을 정하는 방식으로 변경
+function applyOnComplete() {
   const wideCommentArea = getValue(WIDE_AREA);
   if (wideCommentArea) {
     const commentArea = document.querySelector('#comment');
@@ -273,15 +292,6 @@ function apply() {
       event.preventDefault();
 
       element.parentNode.querySelector('.reply-link').click();
-    });
-  }
-
-  const forceOpenComment = getValue(FORCE_OPEN_COMMENT);
-  if (forceOpenComment) {
-    const foldedReplyList = document.querySelectorAll('#comment .btn-more');
-    foldedReplyList.forEach((e) => {
-      e.style.display = 'none';
-      e.closest('.message').style.maxHeight = 'none';
     });
   }
 }
