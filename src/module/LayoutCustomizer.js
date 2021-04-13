@@ -1,9 +1,10 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
+import { CurrentPage } from '../core/Parser';
 
 import sheetLiveModifier from '../css/LayoutCustomizer.css';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { load };
+export default { load, loadOnComplete };
 
 // ---------------------------------- 사이트 레이아웃 ----------------------------------
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
@@ -23,6 +24,16 @@ function load() {
     setupSetting();
 
     apply();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function loadOnComplete() {
+  try {
+    if (CurrentPage.Component.Comment) {
+      applyOnComplete();
+    }
   } catch (error) {
     console.error(error);
   }
@@ -264,7 +275,10 @@ function apply() {
   if (forceOpenComment) {
     contentWrapper.classList.add('force-open-comment');
   }
+}
 
+// TODO: 모듈에서 자체적으로 실행 타이밍을 정하는 방식으로 변경
+function applyOnComplete() {
   const wideCommentArea = getValue(WIDE_AREA);
   if (wideCommentArea) {
     const commentArea = document.querySelector('#comment');
