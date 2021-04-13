@@ -36,3 +36,11 @@
     margin: 0;
   }
 }
+
+.content-wrapper.force-open-comment #comment .message {
+  max-height: none !important;
+}
+
+.content-wrapper.force-open-comment #comment .btn-more {
+  display: none !important;
+}
