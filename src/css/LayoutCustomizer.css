@@ -8,7 +8,7 @@
   z-index: 20;
 }
 
-.content-wrapper.hide-recent-visit .visited-channel-list {
+.content-wrapper.hide-recent-visit .visited-channel-wrap {
   display: none;
 }
 

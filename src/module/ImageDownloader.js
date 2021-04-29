@@ -1,7 +1,7 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import ContextMenu from '../core/ContextMenu';
 import { CurrentPage } from '../core/Parser';
-import { getBlob, getArrayBuffer } from '../util/HttpRequest';
+import { getBlob } from '../util/HttpRequest';
 
 import stylesheet from '../css/ImageDownloader.css';
 
@@ -122,7 +122,7 @@ function addContextMenu() {
 
       const url = ContextMenu.getContextData('url');
       const title = event.target.textContent;
-
+      /*
       const buffer = await getArrayBuffer(
         url,
         (e) => {
@@ -136,6 +136,37 @@ function addContextMenu() {
       const blob = new Blob([buffer], { type: 'image/png' });
       const item = new ClipboardItem({ [blob.type]: blob });
       navigator.clipboard.write([item]);
+      */
+
+      const rawData = await getBlob(
+        url,
+        (e) => {
+          const progress = Math.round((e.loaded / e.total) * 100);
+          event.target.textContent = `${progress}%`;
+        },
+        () => {
+          event.target.textContent = '클립보드에 복사 중...';
+        }
+      );
+
+      const canvas = document.createElement('canvas');
+      const canvasContext = canvas.getContext('2d');
+      const convertedBlob = await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          canvasContext.drawImage(img, 0, 0);
+          canvas.toBlob((blob) => {
+            resolve(blob);
+          });
+        };
+        img.src = URL.createObjectURL(rawData);
+      });
+      const item = new ClipboardItem({ [convertedBlob.type]: convertedBlob });
+      navigator.clipboard.write([item]);
+      event.target.textContent = title;
+
       ContextMenu.hide();
     },
   });
