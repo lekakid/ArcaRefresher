@@ -165,23 +165,21 @@
   align-items: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  #refresherSetting .background {
-    border: 1px solid #43494c;
-    background-color: #181a1b;
-  }
+html.theme-dark #refresherSetting .background {
+  border: 1px solid #43494c;
+  background-color: #181a1b;
+}
 
-  #refresherSetting select,
-  #refresherSetting textarea,
-  #refresherSetting input[type='text'] {
-    color: #e2e2e2;
-    background-color: #181a1b;
-    border: 1px solid #43494c;
-  }
+html.theme-dark #refresherSetting select,
+html.theme-dark #refresherSetting textarea,
+html.theme-dark #refresherSetting input[type='text'] {
+  color: #e2e2e2;
+  background-color: #181a1b;
+  border: 1px solid #43494c;
+}
 
-  #refresherSetting input[disabled] {
-    background-color: #999;
-  }
+html.theme-dark #refresherSetting input[disabled] {
+  background-color: #999;
 }
 
 @media screen and (max-width: 768px) {

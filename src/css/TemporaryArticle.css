@@ -23,6 +23,12 @@
   background-color: #fff;
 }
 
+html.theme-dark #tempArticleWrapper table {
+  color: #e2e2e2;
+  border: 1px solid #43494c;
+  background-color: #181a1b;
+}
+
 #tempArticleWrapper tbody {
   display: block;
   height: 300px;
