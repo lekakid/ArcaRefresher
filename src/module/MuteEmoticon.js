@@ -180,14 +180,13 @@ async function getEmoticonInfo(id) {
     error: new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 접속 실패'),
   });
   try {
-    const name = response.querySelector('.article-head .title').textContent;
-    const bundleID = response
-      .querySelector('.article-body form')
-      .action.split('/e/')[1]
-      .split('/')[0];
+    const bundleID = response.finalUrl.match(/[0-9]+$/)[0];
+    const nameElement = response.response.querySelector('.article-head .title');
+    let name = `삭제된 이모티콘 - ${bundleID}`;
+    if (nameElement) name = nameElement.textContent;
     return [name, bundleID];
   } catch (error) {
-    throw new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 삭제, 사이트 구조 변경, 기타');
+    throw new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 사이트 구조 변경, 기타');
   }
 }
 
