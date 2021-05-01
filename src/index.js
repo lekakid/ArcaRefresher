@@ -10,7 +10,6 @@ import AutoRefresher from './module/AutoRefresher';
 import ArticleRemover from './module/ArticleRemover';
 import MuteContent from './module/MuteContent';
 import CategoryColor from './module/CategoryColor';
-import ClipboardUpload from './module/ClipboardUpload';
 import CommentRefresh from './module/CommentRefresh';
 import MuteEmoticon from './module/MuteEmoticon';
 import IPScouter from './module/IPScouter';
@@ -60,7 +59,6 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   ShortCut.load();
   UserMemo.load();
 
-  ClipboardUpload.load();
   MyImage.load();
   TemporaryArticle.load();
 })();
