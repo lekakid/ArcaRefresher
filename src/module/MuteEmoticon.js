@@ -76,6 +76,7 @@ function setupSetting() {
       },
       load() {
         const data = getValue(BLOCK_EMOTICON);
+        while (muteEmoticon.firstChild) muteEmoticon.lastChild.remove();
         for (const key of Object.keys(data)) {
           muteEmoticon.append(<option value={key}>{data[key].name}</option>);
         }
