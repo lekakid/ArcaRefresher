@@ -233,7 +233,7 @@ export default function initialize() {
     <div id="refresherSetting">
       <style>{stylesheet}</style>
       <div className="background">
-        <h4>Arca Refresher</h4>
+        <h4>Arca Refresher {GM_info.script.version}</h4>
         <div className="search">
           <input type="text" placeholder="설정 검색" onClick={onSearchClick} onInput={onSearch} />
         </div>
