@@ -117,12 +117,17 @@ function mutePreview() {
     }
   }
 
-  const images = document.querySelectorAll('.vrow-preview');
+  const images = document.querySelectorAll('.vrow-preview noscript, .vrow-preview img');
   images.forEach((e) => {
-    const url = e.textContent.match(/\/\/.+\?/g)[0].replace('?', '');
+    let url;
+    if (e.matches('img')) {
+      url = e.src.replace('https:', '').replace('?type=list', '');
+    } else {
+      url = e.textContent.match(/\/\/.+\?/g)[0].replace('?', '');
+    }
 
     if (list.indexOf(url) > -1) {
-      e.remove();
+      e.parentNode.remove();
     }
   });
 }
