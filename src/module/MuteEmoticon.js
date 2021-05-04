@@ -11,6 +11,10 @@ function load() {
   try {
     setupSetting();
 
+    if (CurrentPage.Component.Board) {
+      mutePreview();
+    }
+
     if (CurrentPage.Component.Article) {
       muteArticle();
     }
@@ -19,6 +23,13 @@ function load() {
       muteComment();
       apply();
     }
+
+    addAREventListener('ArticleChange', {
+      priority: 100,
+      callback() {
+        mutePreview();
+      },
+    });
 
     addAREventListener('CommentChange', {
       priority: 100,
@@ -82,6 +93,37 @@ function setupSetting() {
         }
       },
     },
+  });
+}
+
+function mutePreview() {
+  if (document.readyState !== 'complete') {
+    window.addEventListener(
+      'load',
+      () => {
+        mutePreview();
+      },
+      { once: true }
+    );
+    return;
+  }
+
+  const blockEmoticons = getValue(BLOCK_EMOTICON);
+
+  let list = [];
+  for (const key in blockEmoticons) {
+    if ({}.hasOwnProperty.call(blockEmoticons, key)) {
+      list = list.concat(blockEmoticons[key].url);
+    }
+  }
+
+  const images = document.querySelectorAll('.vrow-preview');
+  images.forEach((e) => {
+    const url = e.textContent.match(/\/\/.+\?/g)[0].replace('?', '');
+
+    if (list.indexOf(url) > -1) {
+      e.remove();
+    }
   });
 }
 
