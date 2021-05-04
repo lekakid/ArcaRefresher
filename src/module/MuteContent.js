@@ -11,6 +11,7 @@ const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
 const BLOCK_KEYWORD = { key: 'blockKeyword', defaultValue: [] };
 const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
 const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
+const MUTE_REPLY_TYPE = { key: 'muteReplyType', defaultValue: 'target-only' };
 
 function load() {
   try {
@@ -57,6 +58,12 @@ function setupSetting() {
       <option value="true">사용</option>
     </select>
   );
+  const muteReplyType = (
+    <select>
+      <option value="target-only">뮤트 대상만</option>
+      <option value="contain-child">답글을 포함</option>
+    </select>
+  );
   const userMute = (
     <textarea rows="6" placeholder="뮤트할 이용자의 닉네임을 입력, 줄바꿈으로 구별합니다." />
   );
@@ -99,6 +106,10 @@ function setupSetting() {
       {
         title: '공지사항 접기',
         content: hideNotice,
+      },
+      {
+        title: '댓글을 숨길 때',
+        content: muteReplyType,
       },
       {
         title: '사용자 목록',
@@ -165,6 +176,7 @@ function setupSetting() {
     valueCallback: {
       save() {
         setValue(MUTE_NOTICE, hideNotice.value === 'true');
+        setValue(MUTE_REPLY_TYPE, muteReplyType.value);
         setValue(
           BLOCK_USER,
           userMute.value.split('\n').filter((i) => i !== '')
@@ -204,6 +216,7 @@ function setupSetting() {
       },
       load() {
         hideNotice.value = getValue(MUTE_NOTICE);
+        muteReplyType.value = getValue(MUTE_REPLY_TYPE);
         userMute.value = getValue(BLOCK_USER).join('\n');
         keywordMute.value = getValue(BLOCK_KEYWORD).join('\n');
 
@@ -421,9 +434,13 @@ function muteComment() {
     return;
   }
 
-  const container = document.querySelector('#comment .list-area');
-  const items = container.querySelectorAll('.comment-item');
+  const muteType = getValue(MUTE_REPLY_TYPE);
 
+  const container = document.querySelector('#comment .list-area');
+  if (!container) return;
+  const items = container.querySelectorAll(
+    muteType === 'target-only' ? '.comment-item' : '.comment-wrapper'
+  );
   const count = mapFilter(
     [...items].map((e) => {
       const userElement = e.querySelector('.user-info');
