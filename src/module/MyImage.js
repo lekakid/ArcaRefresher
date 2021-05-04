@@ -44,7 +44,9 @@ function setupSetting() {
       })}
     </select>
   );
-  if (!channelSelect.querySelector(`option[value=${currentChannel}]`)) {
+  if (!currentChannel) {
+    channelSelect.querySelector('option[value=_shared_]').selected = true;
+  } else if (!channelSelect.querySelector(`option[value=${currentChannel}]`)) {
     channelSelect.append(
       <option value={currentChannel} selected>
         {currentChannel}
@@ -83,7 +85,9 @@ function setupSetting() {
       })}
     </select>
   );
-  if (!moveSelect.querySelector(`option[value=${currentChannel}]`)) {
+  if (!currentChannel) {
+    moveSelect.querySelector('option[value=_shared_]').selected = true;
+  } else if (!moveSelect.querySelector(`option[value=${currentChannel}]`)) {
     moveSelect.append(<option value={currentChannel}>{currentChannel}</option>);
   }
 
@@ -138,7 +142,8 @@ function setupSetting() {
   const load = () => {
     config = getValue(MY_IMAGES);
 
-    channelSelect.querySelector(`option[value=${currentChannel}]`).selected = true;
+    if (currentChannel)
+      channelSelect.querySelector(`option[value=${currentChannel}]`).selected = true;
     channelSelect.dispatchEvent(new Event('change'));
   };
 
@@ -191,7 +196,7 @@ function addContextMenu() {
     onClick(event) {
       event.preventDefault();
 
-      const channel = CurrentPage.Channel.ID;
+      const channel = CurrentPage.Channel.ID || '_shared_';
       config[channel] = [
         ...(config[channel] || []),
         ContextMenu.getContextData('url').split('?')[0],
