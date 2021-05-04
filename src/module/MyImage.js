@@ -5,11 +5,11 @@ import { waitForElement } from '../util/ElementDetector';
 
 import stylesheet from '../css/MyImage.css';
 
-export default { load };
+export default { load: loadModule };
 
 const MY_IMAGES = { key: 'myImages', defaultValue: {} };
 
-async function load() {
+async function loadModule() {
   try {
     setupSetting();
 
@@ -27,6 +27,70 @@ async function load() {
 }
 
 function setupSetting() {
+  let config = getValue(MY_IMAGES);
+  const currentChannel = CurrentPage.Channel.ID;
+  const channelSelect = (
+    <select>
+      <option value="_shared_">공용 자짤</option>
+      {Object.keys(config).map((channel) => {
+        if (channel === '_shared_') {
+          return null;
+        }
+        return (
+          <option value={channel} selected={channel === currentChannel}>
+            {channel}
+          </option>
+        );
+      })}
+    </select>
+  );
+  if (!currentChannel) {
+    channelSelect.querySelector('option[value=_shared_]').selected = true;
+  } else if (!channelSelect.querySelector(`option[value=${currentChannel}]`)) {
+    channelSelect.append(
+      <option value={currentChannel} selected>
+        {currentChannel}
+      </option>
+    );
+  }
+  channelSelect.addEventListener('change', () => {
+    while (imgList.firstChild) imgList.lastChild.remove();
+
+    const imgArray = config[channelSelect.value];
+    if (!imgArray) return;
+
+    for (const i of imgArray) {
+      const style = { backgroundImage: `url(${i}?type=list)` };
+      imgList.append(
+        <div>
+          <label className="grid-item" style={style} data-url={i}>
+            <input type="checkbox" name="select" />
+          </label>
+        </div>
+      );
+    }
+  });
+  const moveSelect = (
+    <select>
+      <option value="" selected>
+        이동할 채널 선택
+      </option>
+      <option value="_trash_">휴지통</option>
+      <option value="_shared_">공용 자짤</option>
+      {Object.keys(config).map((channel) => {
+        if (channel === '_shared_') {
+          return null;
+        }
+        return <option value={channel}>{channel}</option>;
+      })}
+    </select>
+  );
+  if (!currentChannel) {
+    moveSelect.querySelector('option[value=_shared_]').selected = true;
+  } else if (!moveSelect.querySelector(`option[value=${currentChannel}]`)) {
+    moveSelect.append(<option value={currentChannel}>{currentChannel}</option>);
+  }
+
   const imgList = <div className="grid-wrapper" />;
   imgList.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -42,80 +106,112 @@ function setupSetting() {
       }
     }
   });
-  const deleteBtn = <button className="btn btn-arca">삭제</button>;
-  deleteBtn.addEventListener('click', (event) => {
+
+  const moveBtn = <button className="btn btn-arca">이동</button>;
+  moveBtn.addEventListener('click', (event) => {
     event.target.disabled = true;
 
-    const removeElements = imgList.querySelectorAll('input[type="checkbox"]:checked');
-    for (const element of removeElements) {
-      element.closest('div').remove();
+    const selectedChannel = channelSelect.value;
+    const targetChannel = moveSelect.value;
+    if (!targetChannel) alert('이동할 채널을 선택해주세요');
+
+    const targets = imgList.querySelectorAll('input[type="checkbox"]:checked');
+    if (targets.length) {
+      for (const element of targets) {
+        const url = element.closest('label').dataset.url;
+        if (targetChannel !== '_trash_') {
+          if (!config[targetChannel]) config[targetChannel] = [];
+          config[targetChannel] = [...config[targetChannel], url];
+        }
+        config[selectedChannel].splice(config[selectedChannel].indexOf(url), 1);
+
+        element.closest('div').remove();
+      }
     }
 
     event.target.disabled = false;
   });
-  const channel = CurrentPage.Channel.ID;
+
+  const save = () => {
+    Object.keys(config).forEach((c) => {
+      if (config[c].length === 0) delete config[c];
+    });
+    setValue(MY_IMAGES, config);
+  };
+
+  const load = () => {
+    config = getValue(MY_IMAGES);
+
+    if (currentChannel)
+      channelSelect.querySelector(`option[value=${currentChannel}]`).selected = true;
+    channelSelect.dispatchEvent(new Event('change'));
+  };
+
+  const content = (
+    <div id="MyImage">
+      <style>{stylesheet}</style>
+      {channelSelect}
+      {moveSelect}
+      {imgList}
+      {moveBtn}
+    </div>
+  );
+
   addSetting({
     header: '자짤',
     group: [
       {
         title: '목록 관리',
         description: '더블 클릭으로 모두 선택합니다.',
-        content: (
-          <div id="MyImage">
-            <style>{stylesheet}</style>
-            {imgList}
-            {deleteBtn}
-          </div>
-        ),
+        content,
         type: 'wide',
       },
     ],
     valueCallback: {
-      save() {
-        const data = getValue(MY_IMAGES);
-
-        const images = Array.from(imgList.children, (e) => e.children[0].dataset.url);
-        data[channel] = images;
-        setValue(MY_IMAGES, data);
-      },
-      load() {
-        const data = getValue(MY_IMAGES)[channel];
-        if (!data) return;
-
-        while (imgList.firstChild) imgList.lastChild.remove();
-        for (const i of data) {
-          const style = { backgroundImage: `url(${i}?type=list)` };
-          imgList.append(
-            <div>
-              <label className="grid-item" style={style} data-url={i}>
-                <input type="checkbox" name="select" />
-              </label>
-            </div>
-          );
-        }
-      },
+      save,
+      load,
     },
   });
 }
 
 function addContextMenu() {
-  const channel = CurrentPage.Channel.ID;
-  const addMyImageItem = ContextMenu.createMenu({
-    text: '자짤로 등록',
+  const config = getValue(MY_IMAGES);
+
+  const addShareImageItem = ContextMenu.createMenu({
+    text: '공용 자짤로 등록',
     onClick(event) {
       event.preventDefault();
 
-      const imgList = getValue(MY_IMAGES);
-      if (!imgList[channel]) {
-        imgList[channel] = [];
-      }
-      imgList[channel].push(ContextMenu.getContextData('url').split('?')[0]);
-      setValue(MY_IMAGES, imgList);
+      const channel = '_shared_';
+      config[channel] = [
+        ...(config[channel] || []),
+        ContextMenu.getContextData('url').split('?')[0],
+      ];
+      setValue(MY_IMAGES, config);
+      ContextMenu.hide();
+    },
+  });
+  const addChannelImageItem = ContextMenu.createMenu({
+    text: '채널 자짤로 등록',
+    onClick(event) {
+      event.preventDefault();
+
+      const channel = CurrentPage.Channel.ID || '_shared_';
+      config[channel] = [
+        ...(config[channel] || []),
+        ContextMenu.getContextData('url').split('?')[0],
+      ];
+      setValue(MY_IMAGES, config);
       ContextMenu.hide();
     },
   });
 
-  const contextElement = <div>{addMyImageItem}</div>;
+  const contextElement = (
+    <div>
+      {addShareImageItem}
+      {addChannelImageItem}
+    </div>
+  );
 
   ContextMenu.addMenuGroup('clickOnImage', contextElement);
 }
@@ -124,7 +220,11 @@ function apply() {
   const channel = CurrentPage.Channel.ID;
   const editor = unsafeWindow.FroalaEditor('#content');
   if (editor.core.isEmpty()) {
-    const imgList = getValue(MY_IMAGES)[channel];
+    const config = getValue(MY_IMAGES);
+    const channelImgList = config[channel] || [];
+    // eslint-disable-next-line dot-notation
+    const shareImageList = config['_shared_'] || [];
+    const imgList = [...channelImgList, ...shareImageList];
     if (!imgList || !imgList.length) return;
 
     const img = imgList[Math.floor(Math.random() * imgList.length)];

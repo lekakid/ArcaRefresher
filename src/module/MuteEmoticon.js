@@ -11,6 +11,10 @@ function load() {
   try {
     setupSetting();
 
+    if (CurrentPage.Component.Board) {
+      mutePreview();
+    }
+
     if (CurrentPage.Component.Article) {
       muteArticle();
     }
@@ -19,6 +23,13 @@ function load() {
       muteComment();
       apply();
     }
+
+    addAREventListener('ArticleChange', {
+      priority: 100,
+      callback() {
+        mutePreview();
+      },
+    });
 
     addAREventListener('CommentChange', {
       priority: 100,
@@ -76,11 +87,48 @@ function setupSetting() {
       },
       load() {
         const data = getValue(BLOCK_EMOTICON);
+        while (muteEmoticon.firstChild) muteEmoticon.lastChild.remove();
         for (const key of Object.keys(data)) {
           muteEmoticon.append(<option value={key}>{data[key].name}</option>);
         }
       },
     },
+  });
+}
+
+function mutePreview() {
+  if (document.readyState !== 'complete') {
+    window.addEventListener(
+      'load',
+      () => {
+        mutePreview();
+      },
+      { once: true }
+    );
+    return;
+  }
+
+  const blockEmoticons = getValue(BLOCK_EMOTICON);
+
+  let list = [];
+  for (const key in blockEmoticons) {
+    if ({}.hasOwnProperty.call(blockEmoticons, key)) {
+      list = list.concat(blockEmoticons[key].url);
+    }
+  }
+
+  const images = document.querySelectorAll('.vrow-preview noscript, .vrow-preview img');
+  images.forEach((e) => {
+    let url;
+    if (e.matches('img')) {
+      url = e.src.replace('https:', '').replace('?type=list', '');
+    } else {
+      url = e.textContent.match(/\/\/.+\?/g)[0].replace('?', '');
+    }
+
+    if (list.indexOf(url) > -1) {
+      e.parentNode.remove();
+    }
   });
 }
 
@@ -180,14 +228,13 @@ async function getEmoticonInfo(id) {
     error: new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 접속 실패'),
   });
   try {
-    const name = response.querySelector('.article-head .title').textContent;
-    const bundleID = response
-      .querySelector('.article-body form')
-      .action.split('/e/')[1]
-      .split('/')[0];
+    const bundleID = response.finalUrl.match(/[0-9]+$/)[0];
+    const nameElement = response.response.querySelector('.article-head .title');
+    let name = `삭제된 이모티콘 - ${bundleID}`;
+    if (nameElement) name = nameElement.textContent;
     return [name, bundleID];
   } catch (error) {
-    throw new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 삭제, 사이트 구조 변경, 기타');
+    throw new Error('이모티콘 정보를 받아오지 못했습니다.\n사유: 사이트 구조 변경, 기타');
   }
 }
 

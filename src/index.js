@@ -21,6 +21,7 @@ import NewWindow from './module/NewWindow';
 import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
+import UserColor from './module/UserColor';
 import UserMemo from './module/UserMemo';
 
 import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
@@ -57,6 +58,7 @@ import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
   NewWindow.load();
   RatedownGuard.load();
   ShortCut.load();
+  UserColor.load();
   UserMemo.load();
 
   MyImage.load();

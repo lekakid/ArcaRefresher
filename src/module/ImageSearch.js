@@ -56,6 +56,11 @@ function addContextMenu() {
           }
         );
 
+        if (blob.size > 15 * 1024 * 1024) {
+          alert('SauceNao 업로드 용량 제한(15MB)을 초과했습니다.');
+          return;
+        }
+
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
         formdata.append('frame', 1);
@@ -67,8 +72,9 @@ function addContextMenu() {
           data: formdata,
           error: new Error('SauceNao 연결 거부 됨'),
         });
-        const searchedImage = response.querySelector('#yourimage a');
+        const searchedImage = response.response.querySelector('#yourimage a');
         if (!searchedImage) throw new Error('SauceNao 이미지 업로드 실패');
+
         const replaceURL = searchedImage.href.split('image=')[1];
         window.open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${replaceURL}`

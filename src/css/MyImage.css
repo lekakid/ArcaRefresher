@@ -1,3 +1,39 @@
+#refresherSetting #MyImage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'channel move'
+    'images images'
+    'btn btn';
+}
+
+@media screen and (max-width: 768px) {
+  #refresherSetting #MyImage {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'channel'
+      'move'
+      'images'
+      'btn';
+  }
+}
+
+#refresherSetting #MyImage > *:nth-child(2) {
+  grid-area: channel;
+}
+
+#refresherSetting #MyImage > *:nth-child(3) {
+  grid-area: move;
+}
+
+#refresherSetting #MyImage > *:nth-child(4) {
+  grid-area: images;
+}
+
+#refresherSetting #MyImage > *:nth-child(5) {
+  grid-area: btn;
+}
+
 #refresherSetting #MyImage .grid-wrapper {
   display: grid;
   width: 100%;

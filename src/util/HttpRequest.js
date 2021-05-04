@@ -46,7 +46,10 @@ export function getDocument({ method, url, timeout, data, error }) {
       timeout,
       data,
       onload(response) {
-        resolve(new DOMParser().parseFromString(response.responseText, 'text/html'));
+        resolve({
+          ...response,
+          response: new DOMParser().parseFromString(response.responseText, 'text/html'),
+        });
       },
       ontimeout() {
         reject(error);

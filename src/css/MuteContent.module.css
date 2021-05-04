@@ -7,8 +7,37 @@
   display: flex;
 }
 
-:global .body .board-article .show-filtered-category .filter-count-category {
-  color: #bbb;
+:global .body .board-article .article-comment .list-area .comment-wrapper.filtered,
+:global .body .board-article .article-list .list-table .vrow.filtered {
+  display: none;
+}
+
+:global .body .board-article .article-comment .list-area.show-filtered .comment-wrapper.filtered,
+:global
+  .body
+  .board-article
+  .article-comment
+  .list-area.show-filtered-deleted
+  .comment-wrapper.filtered-deleted,
+:global
+  .body
+  .board-article
+  .article-comment
+  .list-area.show-filtered-keyword
+  .comment-wrapper.filtered-keyword,
+:global
+  .body
+  .board-article
+  .article-comment
+  .list-area.show-filtered-notice
+  .comment-wrapper.filtered-notice,
+:global
+  .body
+  .board-article
+  .article-comment
+  .list-area.show-filtered-user
+  .comment-wrapper.filtered-user {
+  display: block;
 }
 
 .wrapper {

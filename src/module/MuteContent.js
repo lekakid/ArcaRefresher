@@ -11,6 +11,7 @@ const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
 const BLOCK_KEYWORD = { key: 'blockKeyword', defaultValue: [] };
 const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
 const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
+const MUTE_REPLY_TYPE = { key: 'muteReplyType', defaultValue: 'target-only' };
 
 function load() {
   try {
@@ -20,13 +21,13 @@ function load() {
       addArticleMenu();
     }
     if (CurrentPage.Component.Comment) {
-      muteContent('comment');
+      muteComment();
     }
     if (CurrentPage.Component.Board) {
       muteSidebar();
       muteNotice();
       mutePreview();
-      muteContent('board');
+      muteArticle();
     }
 
     addAREventListener('ArticleChange', {
@@ -34,13 +35,13 @@ function load() {
       callback() {
         muteNotice();
         mutePreview();
-        muteContent('board');
+        muteArticle();
       },
     });
     addAREventListener('CommentChange', {
       priority: 100,
       callback() {
-        muteContent('comment');
+        muteComment();
       },
     });
   } catch (error) {
@@ -55,6 +56,12 @@ function setupSetting() {
     <select>
       <option value="false">사용 안 함</option>
       <option value="true">사용</option>
+    </select>
+  );
+  const muteReplyType = (
+    <select>
+      <option value="target-only">뮤트 대상만</option>
+      <option value="contain-child">답글을 포함</option>
     </select>
   );
   const userMute = (
@@ -99,6 +106,10 @@ function setupSetting() {
       {
         title: '공지사항 접기',
         content: hideNotice,
+      },
+      {
+        title: '댓글을 숨길 때',
+        content: muteReplyType,
       },
       {
         title: '사용자 목록',
@@ -165,6 +176,7 @@ function setupSetting() {
     valueCallback: {
       save() {
         setValue(MUTE_NOTICE, hideNotice.value === 'true');
+        setValue(MUTE_REPLY_TYPE, muteReplyType.value);
         setValue(
           BLOCK_USER,
           userMute.value.split('\n').filter((i) => i !== '')
@@ -204,6 +216,7 @@ function setupSetting() {
       },
       load() {
         hideNotice.value = getValue(MUTE_NOTICE);
+        muteReplyType.value = getValue(MUTE_REPLY_TYPE);
         userMute.value = getValue(BLOCK_USER).join('\n');
         keywordMute.value = getValue(BLOCK_KEYWORD).join('\n');
 
@@ -338,148 +351,205 @@ const ContentTypeString = {
   all: '전체',
 };
 
-function muteContent(viewQuery) {
+const ArticleHeader = { element: null };
+function muteArticle() {
   if (document.readyState !== 'complete') {
-    window.addEventListener(
-      'load',
-      () => {
-        muteContent(viewQuery);
-      },
-      { once: true }
-    );
+    window.addEventListener('load', muteArticle, { once: true });
     return;
   }
 
+  const container = document.querySelector(
+    'div.board-article-list .list-table, div.included-article-list .list-table'
+  );
+  const items = container.querySelectorAll('a.vrow:not(.notice)');
+  const count = mapFilter(
+    [...items].map((e) => {
+      const userElement = e.querySelector('.user-info');
+      const keywordElement = e.querySelector('.title');
+      const categoryElement = e.querySelector('.badge');
+      return {
+        element: e,
+        user: parseUserInfo(userElement),
+        content: keywordElement.textContent,
+        category: categoryElement.textContent || '일반',
+      };
+    })
+  );
+
+  if (!ArticleHeader.element) {
+    ArticleHeader.element = container.querySelector('.frontend-header');
+    if (ArticleHeader.element) ArticleHeader.element.remove();
+    ArticleHeader.element = (
+      <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
+        <span className="filter-title">필터된 게시물</span>
+        <span className="filter-count-container">
+          {Object.keys(count).map((key) => {
+            const onClick = () => {
+              const className = `show-filtered${key === 'all' ? '' : `-${key}`}`;
+              if (container.classList.contains(className)) {
+                container.classList.remove(className);
+              } else {
+                container.classList.add(className);
+              }
+            };
+            ArticleHeader[key] = (
+              <span
+                className={`filter-count 
+                  filter-count${key === 'all' ? '' : `-${key}`} 
+                  ${count[key] === 0 ? 'hidden' : ''}`}
+                onClick={onClick}
+              >
+                {ContentTypeString[key]} ({count[key]})
+              </span>
+            );
+            return ArticleHeader[key];
+          })}
+        </span>
+      </div>
+    );
+    container.insertAdjacentElement('afterbegin', ArticleHeader.element);
+    return;
+  }
+
+  if (count.all === 0) {
+    ArticleHeader.element.classList.add('hidden');
+    return;
+  }
+  ArticleHeader.element.classList.remove('hidden');
+  Object.keys(count).forEach((key) => {
+    if (count[key] === 0) {
+      ArticleHeader[key].classList.add('hidden');
+      return;
+    }
+
+    ArticleHeader[key].classList.remove('hidden');
+    ArticleHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+  });
+}
+
+const CommentHeader = { element: null };
+function muteComment() {
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', muteComment, { once: true });
+    return;
+  }
+
+  const muteType = getValue(MUTE_REPLY_TYPE);
+
+  const container = document.querySelector('#comment .list-area');
+  if (!container) return;
+  const items = container.querySelectorAll(
+    muteType === 'target-only' ? '.comment-item' : '.comment-wrapper'
+  );
+  const count = mapFilter(
+    [...items].map((e) => {
+      const userElement = e.querySelector('.user-info');
+      const keywordElement = e.querySelector('.message');
+      return {
+        element: e,
+        user: parseUserInfo(userElement),
+        content: keywordElement.textContent,
+        category: '',
+      };
+    })
+  );
+
+  if (!CommentHeader.element) {
+    CommentHeader.element = container.previousElementSibling;
+    if (CommentHeader.element.classList.contains('frontend-header')) CommentHeader.element.remove();
+    CommentHeader.element = (
+      <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
+        <span className="filter-title">필터된 댓글</span>
+        <span className="filter-count-container">
+          {Object.keys(count).map((key) => {
+            const onClick = () => {
+              const className = `show-filtered${key === 'all' ? '' : `-${key}`}`;
+              if (container.classList.contains(className)) {
+                container.classList.remove(className);
+              } else {
+                container.classList.add(className);
+              }
+            };
+            CommentHeader[key] = (
+              <span
+                className={`filter-count 
+                filter-count${key === 'all' ? '' : `-${key}`} 
+                ${count[key] === 0 ? 'hidden' : ''}`}
+                onClick={onClick}
+              >
+                {ContentTypeString[key]} ({count[key]})
+              </span>
+            );
+            return CommentHeader[key];
+          })}
+        </span>
+      </div>
+    );
+    container.insertAdjacentElement('beforebegin', CommentHeader.element);
+    return;
+  }
+
+  container.insertAdjacentElement('beforebegin', CommentHeader.element);
+  if (count.all === 0) {
+    CommentHeader.element.classList.add('hidden');
+    return;
+  }
+  CommentHeader.element.classList.remove('hidden');
+  Object.keys(count).forEach((key) => {
+    if (count[key] === 0) {
+      CommentHeader[key].classList.add('hidden');
+      return;
+    }
+
+    CommentHeader[key].classList.remove('hidden');
+    CommentHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+  });
+}
+
+function mapFilter(items) {
   const count = {};
   for (const key of Object.keys(ContentTypeString)) {
     count[key] = 0;
   }
 
   const channel = CurrentPage.Channel.ID;
-  let userlist = getValue(BLOCK_USER);
-  let keywordlist = getValue(BLOCK_KEYWORD);
-  const categoryConfig = getValue(MUTE_CATEGORY)[channel];
+  const { users, keywords } = unsafeWindow.LiveConfig.mute || { users: [], keywords: [] };
+  const userlist = Array.from(new Set([...users, ...getValue(BLOCK_USER)]));
+  const keywordlist = Array.from(new Set([...keywords, ...getValue(BLOCK_KEYWORD)]));
+  const categoryConfig = getValue(MUTE_CATEGORY)[channel] || {};
 
-  if ((unsafeWindow.LiveConfig || undefined) && unsafeWindow.LiveConfig.mute !== undefined) {
-    userlist.push(...unsafeWindow.LiveConfig.mute.users);
-    keywordlist.push(...unsafeWindow.LiveConfig.mute.keywords);
-    userlist = Array.from(new Set(userlist));
-    keywordlist = Array.from(new Set(keywordlist));
-  }
-
-  let itemContainer;
-  let contents = null;
-  let keywordSelector = '';
-  let targetElement = null;
-  let insertPosition = '';
-  if (viewQuery === 'board') {
-    itemContainer = document.querySelector(
-      'div.board-article-list .list-table, div.included-article-list .list-table'
-    );
-    targetElement = itemContainer;
-    contents = document.querySelectorAll('a.vrow:not(.notice)');
-    keywordSelector = '.col-title';
-    insertPosition = 'afterbegin';
-  } else if (viewQuery === 'comment') {
-    itemContainer = document.querySelector('#comment');
-    targetElement = itemContainer.querySelector('.list-area');
-    contents = document.querySelectorAll('#comment .comment-item');
-    keywordSelector = '.message';
-    insertPosition = 'beforebegin';
-  }
-
-  if (!itemContainer) return;
-
-  contents.forEach((item) => {
-    const keywordElement = item.querySelector(keywordSelector);
-    const userElement = item.querySelector('.user-info');
-    if (!keywordElement || !userElement) return;
-
-    const keywordText = keywordElement.innerText;
-    const userText = parseUserInfo(userElement);
-    const categoryElement = item.querySelector('.badge');
-    let category;
-    if (categoryElement === null || categoryElement.textContent === '') {
-      category = '일반';
-    } else {
-      category = categoryElement.textContent;
-    }
-
-    const keywordAllow =
-      keywordlist.length === 0 ? false : new RegExp(keywordlist.join('|')).test(keywordText);
-    const userAllow = userlist.length === 0 ? false : new RegExp(userlist.join('|')).test(userText);
-    let categoryAllow = false;
-
-    if (channel && categoryConfig && categoryConfig[category]) {
-      categoryAllow = categoryConfig[category].muteArticle;
-    }
-
-    if (keywordAllow) {
-      item.classList.add('filtered');
-      item.classList.add('filtered-keyword');
-      count.keyword += 1;
-      count.all += 1;
-    }
-
-    if (userAllow) {
-      item.classList.add('filtered');
-      item.classList.add('filtered-user');
+  items.forEach(({ element, user, content, category }) => {
+    if (userlist.length && new RegExp(userlist.join('|')).test(user)) {
+      element.classList.add('filtered');
+      element.classList.add('filtered-user');
       count.user += 1;
       count.all += 1;
     }
 
-    if (categoryAllow) {
-      item.classList.add('filtered');
-      item.classList.add('filtered-category');
+    if (keywordlist.length && new RegExp(keywordlist.join('|')).test(content)) {
+      element.classList.add('filtered');
+      element.classList.add('filtered-keyword');
+      count.keyword += 1;
+      count.all += 1;
+    }
+
+    const { muteArticle: muteCategory } = categoryConfig[category] || { muteArticle: false };
+    if (muteCategory) {
+      element.classList.add('filtered');
+      element.classList.add('filtered-category');
       count.category += 1;
       count.all += 1;
     }
 
-    if (item.classList.contains('deleted')) {
-      item.classList.add('filtered');
-      item.classList.add('filtered-deleted');
+    if (element.classList.contains('deleted')) {
+      element.classList.add('filtered');
+      element.classList.add('filtered-deleted');
       count.deleted += 1;
       count.all += 1;
     }
   });
 
-  let toggleHeader = itemContainer.querySelector('.frontend-header');
-  if (toggleHeader) toggleHeader.remove();
-  toggleHeader = (
-    <div className="frontend-header">
-      <span className="filter-title">필터된 게시물</span>
-      <span className="filter-count-container" />
-    </div>
-  );
-
-  const container = toggleHeader.querySelector('.filter-count-container');
-
-  if (count.all > 0) {
-    targetElement.insertAdjacentElement(insertPosition, toggleHeader);
-
-    for (const key of Object.keys(count)) {
-      if (count[key] > 0) {
-        let className = `show-filtered-${key}`;
-        if (key === 'all') className = 'show-filtered';
-
-        const btn = (
-          <span className={`filter-count filter-count-${key}`}>
-            {ContentTypeString[key]} ({count[key]})
-          </span>
-        );
-        container.append(btn);
-        btn.addEventListener('click', () => {
-          if (targetElement.classList.contains(className)) {
-            targetElement.classList.remove(className);
-            toggleHeader.classList.remove(className);
-          } else {
-            targetElement.classList.add(className);
-            toggleHeader.classList.add(className);
-          }
-        });
-      }
-    }
-  }
+  return count;
 }
 
 function muteSidebar() {
