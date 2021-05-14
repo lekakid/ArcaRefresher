@@ -15,6 +15,7 @@ const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
 const RESIZE_VIDEO = { key: 'resizeVideo', defaultValue: '100' };
 // ----------------------------------- 댓글 레이아웃 -----------------------------------
+const HIDE_COMMENT = { key: 'hideComment', defaultValue: false };
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
 const FORCE_OPEN_COMMENT = { key: 'forceOpenComment', defaultValue: false };
@@ -176,6 +177,12 @@ function setupSetting() {
   });
 
   // ----------------------------------- 댓글 레이아웃 -----------------------------------
+  const hideComment = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
   const hideModified = (
     <select>
       <option value="false">보임</option>
@@ -199,6 +206,10 @@ function setupSetting() {
     header: '댓글 레이아웃',
     group: [
       {
+        title: '댓글창 접어두기',
+        content: hideComment,
+      },
+      {
         title: '*수정됨 숨김',
         content: hideModified,
       },
@@ -213,11 +224,13 @@ function setupSetting() {
     ],
     valueCallback: {
       save() {
+        setValue(HIDE_COMMENT, hideComment.value === 'true');
         setValue(HIDE_MODIFIED, hideModified.value === 'true');
         setValue(WIDE_AREA, wideCommentArea.value === 'true');
         setValue(FORCE_OPEN_COMMENT, forceOpenComment.value === 'true');
       },
       load() {
+        hideComment.value = getValue(HIDE_COMMENT);
         hideModified.value = getValue(HIDE_MODIFIED);
         forceOpenComment.value = getValue(FORCE_OPEN_COMMENT);
         wideCommentArea.value = getValue(WIDE_AREA);
@@ -279,6 +292,22 @@ function apply() {
 
 // TODO: 모듈에서 자체적으로 실행 타이밍을 정하는 방식으로 변경
 function applyOnComplete() {
+  const hideComment = getValue(HIDE_COMMENT);
+  if (hideComment) {
+    const comment = document.querySelector('#comment');
+    const showCommentBtn = (
+      <button className="btn btn-arca" style={{ width: '100%', margin: '0.5rem 0' }}>
+        댓글 보이기
+      </button>
+    );
+    showCommentBtn.addEventListener('click', (e) => {
+      e.target.classList.add('hidden');
+      comment.classList.remove('hidden');
+    });
+    comment.insertAdjacentElement('beforebegin', showCommentBtn);
+    comment.classList.add('hidden');
+  }
+
   const wideCommentArea = getValue(WIDE_AREA);
   if (wideCommentArea) {
     const commentArea = document.querySelector('#comment');
