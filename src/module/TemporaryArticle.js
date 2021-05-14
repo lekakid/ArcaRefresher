@@ -1,4 +1,4 @@
-import { getValue, setValue } from '../core/Configure';
+import { addSetting, getValue, setValue } from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
 import { waitForElement } from '../util/ElementDetector';
 
@@ -7,9 +7,11 @@ import stylesheet from '../css/TemporaryArticle.css';
 export default { load };
 
 const TEMPORARY_ARTICLES = { key: 'tempArticles', defaultValue: {} };
+const INCLUDE_TITLE = { key: 'includeTitle', defaultValue: 'include' };
 
 async function load() {
   try {
+    setupSetting();
     await waitForElement('.fr-box');
     apply();
   } catch (error) {
@@ -17,9 +19,38 @@ async function load() {
   }
 }
 
+function setupSetting() {
+  const includeTitle = (
+    <select>
+      <option value="include">제목을 포함</option>
+      <option value="confirm">매번 묻기</option>
+      <option value="exclude">제목을 제외</option>
+    </select>
+  );
+
+  addSetting({
+    header: '게시물 임시 저장',
+    group: [
+      {
+        title: '불러올 때 게시물 제목 처리',
+        content: includeTitle,
+      },
+    ],
+    valueCallback: {
+      save() {
+        setValue(INCLUDE_TITLE, includeTitle.value);
+      },
+      load() {
+        includeTitle.value = getValue(INCLUDE_TITLE);
+      },
+    },
+  });
+}
+
 function apply() {
   const editor = unsafeWindow.FroalaEditor('#content');
   const tempArticles = getValue(TEMPORARY_ARTICLES);
+  const includeTitle = getValue(INCLUDE_TITLE);
 
   const selectAll = <input type="checkbox" name="selectAll" />;
   const deleteBtn = (
@@ -85,7 +116,13 @@ function apply() {
       const row = event.target.closest('tr');
       const id = row.dataset.id;
       const title = document.querySelector('#inputTitle');
-      title.value = tempArticles[id].title;
+      if (
+        includeTitle === 'include' ||
+        // eslint-disable-next-line no-restricted-globals
+        (includeTitle === 'confirm' && confirm('게시물 제목을 저장한 제목으로 변경하시겠습니까?'))
+      ) {
+        title.value = tempArticles[id].title;
+      }
       editor.html.set(tempArticles[id].content);
       wrapper.classList.add('hidden');
     }
