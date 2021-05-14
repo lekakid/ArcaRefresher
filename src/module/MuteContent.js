@@ -369,9 +369,9 @@ function muteArticle() {
       const categoryElement = e.querySelector('.badge');
       return {
         element: e,
-        user: parseUserInfo(userElement),
-        content: keywordElement.textContent,
-        category: categoryElement.textContent || '일반',
+        user: userElement ? parseUserInfo(userElement) : '',
+        content: keywordElement ? keywordElement.textContent : '',
+        category: categoryElement ? categoryElement.textContent || '일반' : '',
       };
     })
   );
