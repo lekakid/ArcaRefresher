@@ -19,8 +19,8 @@
 #refresherSetting .background {
   width: 700px;
   height: calc(100% - 4rem);
-  border: 1px solid #43494c;
-  background-color: white;
+  border: 1px solid var(--color-border-outer);
+  background-color: var(--color-bg-main);
   margin: 2rem;
   padding: 2rem;
   z-index: 500;
@@ -65,7 +65,7 @@
 }
 
 #refresherSetting .group {
-  border: 1px solid #bbb;
+  border: 1px solid var(--color-border-outer);
   border-radius: 0.25rem;
   margin-bottom: 2rem;
   padding: 0.25rem;
@@ -94,7 +94,7 @@
 }
 
 #refresherSetting .item:not(:last-child):not(.lastChild) {
-  border-bottom: 1px solid #bbb;
+  border-bottom: 1px solid var(--color-border-outer);
 }
 
 #refresherSetting .item.wide {
@@ -116,20 +116,20 @@
 }
 
 #refresherSetting .item.default > label {
-  border-right: 1px solid #bbb;
+  border-right: 1px solid var(--color-border-inner);
 }
 
 #refresherSetting .item > p {
   grid-area: description;
   margin-bottom: 0;
-  color: #666666;
+  color: var(--color-text-muted);
 }
 
 #refresherSetting .item.wide > p {
   grid-area: description;
   margin-bottom: 0;
   padding-left: 0.5rem;
-  color: #666666;
+  color: var(--color-text-muted);
 }
 
 #refresherSetting .item > div {
@@ -144,9 +144,9 @@
   width: 100%;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  color: #55595c;
-  background-color: #fff;
-  border: 1px solid #bbb;
+  color: var(--color-text-color);
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border-outer);
 }
 
 #refresherSetting input[type='checkbox'] {
@@ -154,7 +154,7 @@
 }
 
 #refresherSetting input[disabled] {
-  background-color: #eee;
+  background-color: var(--color-bg-body);
 }
 #refresherSetting select {
   overflow: scroll;
@@ -163,23 +163,6 @@
 #refresherSetting label {
   display: inline-flex;
   align-items: center;
-}
-
-html.theme-dark #refresherSetting .background {
-  border: 1px solid #43494c;
-  background-color: #181a1b;
-}
-
-html.theme-dark #refresherSetting select,
-html.theme-dark #refresherSetting textarea,
-html.theme-dark #refresherSetting input[type='text'] {
-  color: #e2e2e2;
-  background-color: #181a1b;
-  border: 1px solid #43494c;
-}
-
-html.theme-dark #refresherSetting input[disabled] {
-  background-color: #999;
 }
 
 @media screen and (max-width: 768px) {

@@ -53,7 +53,7 @@
   grid-template-areas: 'category opts';
   align-items: stretch;
 
-  border-top: 1px solid #bbb;
+  border-top: 1px solid var(--color-border-outer);
 }
 
 @media screen and (max-width: 768px) {

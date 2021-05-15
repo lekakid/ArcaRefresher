@@ -11,7 +11,7 @@
   grid-template-areas: 'category badge bg etc';
   align-items: stretch;
 
-  border-top: 1px solid #bbb;
+  border-top: 1px solid var(--color-border-outer);
 }
 
 @media screen and (max-width: 768px) {
@@ -32,7 +32,7 @@
 }
 
 :global .pickr {
-  border: 1px solid #bbb;
+  border: 1px solid var(--color-border-outer);
   border-radius: 0.15em;
 }
 
