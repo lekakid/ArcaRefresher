@@ -1,9 +1,11 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
-import ContextMenu from '../core/ContextMenu';
-import { CurrentPage } from '../core/Parser';
+import * as ContextMenu from '../core/ContextMenu';
 import { getBlob } from '../util/HttpRequest';
 
 import stylesheet from '../css/ImageDownloader.css';
+import { waitForElement } from '../core/LoadManager';
+import { COMMENT_VIEW } from '../core/ArcaSelector';
+import { parseChannelTitle, parseUserInfo } from '../core/Parser';
 
 export default { load };
 
@@ -14,11 +16,11 @@ const ZIP_COMMENT = {
   defaultValue: '[%channel%] %title% - %url%',
 };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(COMMENT_VIEW)) {
       addContextMenu();
       apply();
     }
@@ -352,7 +354,25 @@ function replaceData(string) {
   return string;
 }
 
+const CurrentPage = {
+  Title: '',
+  Category: '',
+  Author: '',
+  ChannelName: '',
+  URL: '',
+};
+
 function parse() {
+  const titleElement = document.querySelector('.article-head .title');
+  CurrentPage.Title = titleElement ? titleElement.textContent : '제목 없음';
+  const categoryElement = document.querySelector('.article-head .badge');
+  CurrentPage.Category = categoryElement ? categoryElement.textContent : '일반';
+  const authorElement = document.querySelector('.article-head .user-info');
+  CurrentPage.Author = authorElement ? parseUserInfo(authorElement) : '익명';
+  CurrentPage.ChannelName = parseChannelTitle();
+  const urlElement = document.querySelector('.article-body .article-link a');
+  CurrentPage.URL = urlElement ? urlElement.href : window.location.href;
+
   const images = document.querySelectorAll(
     '.article-body  img, .article-body video:not([controls])'
   );

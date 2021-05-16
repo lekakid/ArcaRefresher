@@ -1,6 +1,8 @@
 import transitionSheet from '../css/Transition.css';
+import { waitForElement } from './LoadManager';
 
-export default function initilaize() {
+export async function initilaize() {
+  await waitForElement('head');
   document.head.append(<style>{transitionSheet}</style>);
 }
 

@@ -1,6 +1,7 @@
 import { useFade } from './Transition';
 
 import stylesheet from '../css/Configure.css';
+import { waitForElement } from './LoadManager';
 
 const saveCallbackList = [];
 const loadCallbackList = [];
@@ -114,7 +115,9 @@ function resetConfig() {
   }
 }
 
-export default function initialize() {
+export async function initialize() {
+  await waitForElement('.content-wrapper');
+
   // 설정 버튼 엘리먼트
   const showBtn = (
     <li className="nav-item dropdown" id="showSetting">

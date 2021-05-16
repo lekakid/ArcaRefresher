@@ -1,12 +1,13 @@
-import ContextMenu from '../core/ContextMenu';
-import { CurrentPage } from '../core/Parser';
+import { COMMENT_VIEW } from '../core/ArcaSelector';
+import * as ContextMenu from '../core/ContextMenu';
+import { waitForElement } from '../core/LoadManager';
 import { getBlob, getDocument } from '../util/HttpRequest';
 
 export default { load };
 
-function load() {
+async function load() {
   try {
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(COMMENT_VIEW)) {
       addContextMenu();
     }
   } catch (error) {

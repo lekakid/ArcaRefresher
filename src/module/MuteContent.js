@@ -1,9 +1,17 @@
 import ArticleMenu from '../core/ArticleMenu';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage, parseUserInfo } from '../core/Parser';
+import { parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
+import { waitForElement } from '../core/LoadManager';
+import {
+  ARTICLE_BODY,
+  AUTHOR_INFO,
+  BOARD_VIEW,
+  CATEGORYS,
+  FOOTER_VIEW,
+} from '../core/ArcaSelector';
 
 export default { load };
 
@@ -13,18 +21,16 @@ const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
 const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
 const MUTE_REPLY_TYPE = { key: 'muteReplyType', defaultValue: 'target-only' };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_BODY)) {
       addArticleMenu();
     }
-    if (CurrentPage.Component.Comment) {
-      muteComment();
-    }
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(FOOTER_VIEW)) {
       muteSidebar();
+      muteComment();
       muteNotice();
       mutePreview();
       muteArticle();
@@ -50,8 +56,6 @@ function load() {
 }
 
 function setupSetting() {
-  document.head.append(<style>{stylesheet}</style>);
-
   const hideNotice = (
     <select>
       <option value="false">사용 안 함</option>
@@ -70,12 +74,14 @@ function setupSetting() {
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
+  const category = [...document.querySelectorAll(CATEGORYS)];
   const categoryContainer = {};
   const categoryWrapper = (
     <div className={MuteStyle.wrapper}>
-      {CurrentPage.Category.map((category) => {
-        let name = category;
-        if (category === '전체') name = '일반';
+      <style>{stylesheet}</style>
+      {category.map((c) => {
+        let name = c.textContent;
+        if (name === '전체') name = '일반';
 
         const previewInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
         const articleInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
@@ -98,7 +104,7 @@ function setupSetting() {
     </div>
   );
 
-  const channel = CurrentPage.Channel.ID;
+  const channel = window.location.pathname.split('/')[2];
 
   addSetting({
     header: '뮤트',
@@ -236,11 +242,12 @@ function setupSetting() {
 }
 
 function addArticleMenu() {
+  const userInfo = document.querySelector(AUTHOR_INFO);
+  if (!userInfo) return;
+
   const userList = getValue(BLOCK_USER);
-  const user = CurrentPage.Article.Author;
-  const userID = CurrentPage.Article.AuthorID.replace('(', '\\(')
-    .replace(')', '\\)')
-    .replace('.', '\\.');
+  const user = parseUserInfo(userInfo);
+  const userID = parseUserID(userInfo).replace(')', '\\)').replace('.', '\\.');
   const filter = `${user === userID ? '^' : ''}${userID}$`;
   const indexed = userList.indexOf(filter);
 
@@ -274,7 +281,7 @@ function addArticleMenu() {
 }
 
 function mutePreview() {
-  const channel = CurrentPage.Channel.ID;
+  const channel = parseChannelID();
   const config = getValue(MUTE_CATEGORY)[channel];
   if (!config) return;
 
@@ -358,9 +365,9 @@ function muteArticle() {
     return;
   }
 
-  const container = document.querySelector(
-    'div.board-article-list .list-table, div.included-article-list .list-table'
-  );
+  const container = document.querySelector(BOARD_VIEW);
+  if (!container) return;
+
   const items = container.querySelectorAll('a.vrow:not(.notice)');
   const count = mapFilter(
     [...items].map((e) => {
@@ -512,7 +519,7 @@ function mapFilter(items) {
     count[key] = 0;
   }
 
-  const channel = CurrentPage.Channel.ID;
+  const channel = parseChannelID();
   const { users, keywords } = unsafeWindow.LiveConfig.mute || { users: [], keywords: [] };
   const userlist = Array.from(new Set([...users, ...getValue(BLOCK_USER)]));
   const keywordlist = Array.from(new Set([...keywords, ...getValue(BLOCK_KEYWORD)]));

@@ -1,8 +1,8 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { getDateStr } from '../util/DateManager';
-import { waitForElement } from '../util/ElementDetector';
 
 import stylesheet from '../css/TemporaryArticle.css';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
@@ -12,8 +12,10 @@ const INCLUDE_TITLE = { key: 'includeTitle', defaultValue: 'include' };
 async function load() {
   try {
     setupSetting();
-    await waitForElement('.fr-box');
-    apply();
+
+    if (await waitForElement('.fr-box')) {
+      apply();
+    }
   } catch (error) {
     console.error(error);
   }

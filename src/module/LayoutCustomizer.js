@@ -1,10 +1,11 @@
+import { COMMENT_VIEW } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 import sheetLiveModifier from '../css/LayoutCustomizer.css';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { load, loadOnComplete };
+export default { load };
 
 // ---------------------------------- 사이트 레이아웃 ----------------------------------
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
@@ -20,20 +21,19 @@ const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
 const FORCE_OPEN_COMMENT = { key: 'forceOpenComment', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    apply();
-  } catch (error) {
-    console.error(error);
-  }
-}
+    await waitForElement('head');
+    applyStyle();
 
-function loadOnComplete() {
-  try {
-    if (CurrentPage.Component.Comment) {
-      applyOnComplete();
+    if (await waitForElement('.content-wrapper')) {
+      onLoadSite();
+    }
+
+    if (await waitForElement(COMMENT_VIEW)) {
+      onLoadArticle();
     }
   } catch (error) {
     console.error(error);
@@ -239,8 +239,7 @@ function setupSetting() {
   });
 }
 
-function apply() {
-  document.head.append(<style>{sheetLiveModifier}</style>);
+function onLoadSite() {
   const contentWrapper = document.querySelector('.content-wrapper');
 
   // ---------------------------------- 사이트 레이아웃 ----------------------------------
@@ -264,6 +263,10 @@ function apply() {
     });
     notiObserver.observe(notificationIcon, { attributes: true });
   }
+}
+
+function onLoadArticle() {
+  const contentWrapper = document.querySelector('.content-wrapper');
 
   // ----------------------------------- 본문 레이아웃 -----------------------------------
 
@@ -288,10 +291,7 @@ function apply() {
   if (forceOpenComment) {
     contentWrapper.classList.add('force-open-comment');
   }
-}
 
-// TODO: 모듈에서 자체적으로 실행 타이밍을 정하는 방식으로 변경
-function applyOnComplete() {
   const hideComment = getValue(HIDE_COMMENT);
   if (hideComment) {
     const comment = document.querySelector('#comment');
@@ -323,4 +323,8 @@ function applyOnComplete() {
       element.parentNode.querySelector('.reply-link').click();
     });
   }
+}
+
+async function applyStyle() {
+  document.head.append(<style>{sheetLiveModifier}</style>);
 }

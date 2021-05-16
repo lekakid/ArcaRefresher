@@ -1,11 +1,14 @@
+import { FOOTER_VIEW } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
+import { waitForElement } from '../core/LoadManager';
 
-import styles from '../css/IPScouter.module.css';
+import styles, { stylesheet } from '../css/IPScouter.module.css';
 
 export default { load };
 
-function load() {
+async function load() {
   try {
+    await waitForElement(FOOTER_VIEW);
     apply();
 
     addAREventListener('ArticleChange', {
@@ -26,6 +29,8 @@ function load() {
 }
 
 function apply(viewQuery) {
+  document.head.append(<style>{stylesheet}</style>);
+
   let parentElement = document;
   if (viewQuery === 'board') {
     parentElement = document.querySelector(

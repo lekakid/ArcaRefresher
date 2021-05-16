@@ -1,28 +1,35 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { addAREventListener } from '../core/AREventHandler';
-import { CurrentPage } from '../core/Parser';
 
 import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
+import { waitForElement } from '../core/LoadManager';
+import {
+  BOARD_VIEW,
+  CATEGORYS,
+  FOOTER_VIEW,
+  NOT_NOTICE_ARTICLES_ON_BOARD,
+} from '../core/ArcaSelector';
 
 export default { load };
 
 const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
-function load() {
+async function load() {
   try {
-    setupSetting();
+    if (await waitForElement(BOARD_VIEW)) {
+      setupSetting();
 
-    if (CurrentPage.Component.Board) {
       generateColorStyle();
+      await waitForElement(FOOTER_VIEW);
       apply();
-    }
 
-    addAREventListener('ArticleChange', {
-      priority: 0,
-      callback: apply,
-    });
+      addAREventListener('ArticleChange', {
+        priority: 0,
+        callback: apply,
+      });
+    }
   } catch (error) {
     console.error(error);
   }
@@ -57,14 +64,15 @@ function renderColorPicker(disabled) {
 }
 
 function setupSetting() {
+  const category = [...document.querySelectorAll(CATEGORYS)];
   const dataContainer = {};
   const settingWrapper = (
     <div className={styles.wrapper}>
       <style>{stylesheet}</style>
       <style>{GM_getResourceText('colorpicker')}</style>
-      {CurrentPage.Category.map((category) => {
-        let name = category;
-        if (category === '전체') name = '일반';
+      {category.map((c) => {
+        let name = c.textContent;
+        if (name === '전체') name = '일반';
 
         const badgeElement = (
           <span className="badge badge-success" style={{ margin: '0.25rem' }}>
@@ -147,7 +155,7 @@ function setupSetting() {
     </div>
   );
 
-  const channel = CurrentPage.Channel.ID;
+  const channel = window.location.pathname.split('/')[2];
 
   addSetting({
     header: '카테고리 색상 설정',
@@ -236,7 +244,7 @@ function setupSetting() {
 const styleTable = {};
 
 function generateColorStyle() {
-  const channel = CurrentPage.Channel.ID;
+  const channel = window.location.pathname.split('/')[2];
   const categoryConfig = getValue(CATEGORY_COLOR)[channel];
 
   if (!categoryConfig) return;
@@ -305,7 +313,7 @@ function generateColorStyle() {
 }
 
 function apply() {
-  const articles = document.querySelectorAll('a.vrow:not(.notice)');
+  const articles = document.querySelectorAll(NOT_NOTICE_ARTICLES_ON_BOARD);
 
   articles.forEach((article) => {
     if (article.childElementCount < 2) return;

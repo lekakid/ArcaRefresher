@@ -1,15 +1,16 @@
+import { ARTICLE_VIEW } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_VIEW)) {
       apply();
     }
   } catch (error) {

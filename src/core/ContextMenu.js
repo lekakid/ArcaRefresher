@@ -1,12 +1,5 @@
 import contextSheet from '../css/ContextMenu.css';
-
-export default {
-  initialize,
-  hide,
-  addMenuGroup,
-  createMenu,
-  getContextData,
-};
+import { waitForElement } from './LoadManager';
 
 const eventList = {
   clickOnImage: [],
@@ -20,9 +13,10 @@ const contextMenuWrapper = (
 );
 let mobile = false;
 
-function initialize() {
+export async function initialize() {
   // on/off 설정 넣어
 
+  await waitForElement('body');
   document.head.append(<style>{contextSheet}</style>);
   document.body.append(contextMenuWrapper);
 
@@ -88,11 +82,11 @@ function show(event) {
   }
 }
 
-function hide() {
+export function hide() {
   contextMenuWrapper.classList.add('hidden');
 }
 
-function addMenuGroup(event, contextElement) {
+export function addMenuGroup(event, contextElement) {
   if (!eventList[event]) {
     console.error('[ContextMenu.registContextMenu] 존재하지 않는 이벤트 등록');
     return;
@@ -117,7 +111,7 @@ function removeMenuAll() {
   }
 }
 
-function createMenu(MenuItem) {
+export function createMenu(MenuItem) {
   const { text, description, onClick } = MenuItem;
   const menuItem = (
     <a href="#" className="item" title={description || false}>
@@ -128,6 +122,6 @@ function createMenu(MenuItem) {
   return menuItem;
 }
 
-function getContextData(name) {
+export function getContextData(name) {
   return contextMenuView.dataset[name];
 }

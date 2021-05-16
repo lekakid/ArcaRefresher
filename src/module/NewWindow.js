@@ -1,21 +1,22 @@
+import { ARTICLE_VIEW, BOARD_VIEW } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
 const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(BOARD_VIEW)) {
       applyOpenNewWindow();
     }
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_VIEW)) {
       applyBlockNewWindow();
     }
 

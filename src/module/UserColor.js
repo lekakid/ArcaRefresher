@@ -1,16 +1,18 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { addAREventListener } from '../core/AREventHandler';
-import { CurrentPage, parseUserID } from '../core/Parser';
+import { parseUserID } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
+import { FOOTER_VIEW } from '../core/ArcaSelector';
 
 export default { load };
 
 const USER_COLOR = { key: 'userColor', defaultValue: {} };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(FOOTER_VIEW)) {
       apply();
     }
 

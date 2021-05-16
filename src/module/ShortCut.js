@@ -1,17 +1,18 @@
+import { ARTICLE_VIEW, BOARD_VIEW } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_VIEW)) {
       apply('article');
-    } else if (CurrentPage.Component.Board) {
+    } else if (await waitForElement(BOARD_VIEW)) {
       apply('board');
     }
   } catch (error) {

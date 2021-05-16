@@ -1,6 +1,8 @@
+import { BOARD_VIEW } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage, parseUserID } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
+import { parseUserID } from '../core/Parser';
 
 export default { load };
 
@@ -8,11 +10,11 @@ const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: [] };
 const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
 const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: true };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(BOARD_VIEW)) {
       addAREventListener('ArticleChange', {
         priority: 999,
         callback: remove,

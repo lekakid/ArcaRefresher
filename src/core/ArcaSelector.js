@@ -3,6 +3,7 @@ export const BOARD_VIEW =
 export const ARTICLE_VIEW = '.article-wrapper';
 export const ARTICLE_BODY = '.article-body';
 export const COMMENT_VIEW = '#comment';
+export const COMMENT_SUBTITLE = '#comment .subtitle';
 export const WRITE_VIEW = '.article-write';
 export const FOOTER_VIEW = 'footer';
 
