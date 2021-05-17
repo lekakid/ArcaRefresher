@@ -126,10 +126,7 @@
 }
 
 #refresherSetting .item.wide > p {
-  grid-area: description;
-  margin-bottom: 0;
   padding-left: 0.5rem;
-  color: var(--color-text-muted);
 }
 
 #refresherSetting .item > div {

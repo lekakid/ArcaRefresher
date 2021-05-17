@@ -1,6 +1,7 @@
 .fix-header .root-container {
   padding-top: 42px;
 }
+
 .fix-header .navbar-wrapper {
   top: 0px;
   position: fixed !important;
@@ -15,13 +16,11 @@
 .content-wrapper.hide-avatar .avatar {
   display: none !important;
 }
+
 .content-wrapper.hide-avatar .input-wrapper > .input {
   width: calc(100% - 4.5rem - 0.5rem) !important;
 }
 
-.list-table.hide-notice a.notice {
-  display: none !important;
-}
 .content-wrapper.hide-modified b.modified {
   display: none !important;
 }
