@@ -345,11 +345,11 @@ function apply() {
 }
 
 function replaceData(string) {
-  string = string.replace('%title%', CurrentPage.Article.Title);
-  string = string.replace('%category%', CurrentPage.Article.Category);
-  string = string.replace('%author%', CurrentPage.Article.Author);
-  string = string.replace('%channel%', CurrentPage.Channel.Name);
-  string = string.replace('%url%', CurrentPage.Article.URL);
+  string = string.replace('%title%', CurrentPage.Title);
+  string = string.replace('%category%', CurrentPage.Category);
+  string = string.replace('%author%', CurrentPage.Author);
+  string = string.replace('%channel%', CurrentPage.ChannelName);
+  string = string.replace('%url%', CurrentPage.URL);
 
   return string;
 }
