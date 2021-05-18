@@ -33,7 +33,7 @@ function setupSetting() {
         content: ratedownBlock,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(RATEDOWN_GUARD, ratedownBlock.value === 'true');
       },

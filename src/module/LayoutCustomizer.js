@@ -129,7 +129,7 @@ function setupSetting() {
         ),
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
         setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
@@ -163,7 +163,7 @@ function setupSetting() {
         content: resizeVideo,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(RESIZE_IMAGE, resizeImage.value);
         setValue(RESIZE_VIDEO, resizeVideo.value);
@@ -221,7 +221,7 @@ function setupSetting() {
         content: forceOpenComment,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(HIDE_COMMENT, hideComment.value === 'true');
         setValue(HIDE_MODIFIED, hideModified.value === 'true');

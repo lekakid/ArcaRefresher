@@ -58,7 +58,7 @@ function setupSetting() {
         content: hideRefreshSign,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
         setValue(HIDE_REFRESHER, hideRefreshSign.value === 'true');

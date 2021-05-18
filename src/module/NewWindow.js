@@ -54,7 +54,7 @@ function setupSetting() {
         content: blockMedia,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(OPEN_ARTICLE, openArticle.value === 'true');
         setValue(BLOCK_MEDIA, blockMedia.value === 'true');

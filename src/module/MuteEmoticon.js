@@ -73,7 +73,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const data = getValue(BLOCK_EMOTICON);
 

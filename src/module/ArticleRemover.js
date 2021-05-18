@@ -58,7 +58,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(USE_AUTO_REMOVER_TEST, removeTestMode.value === 'true');
         setValue(

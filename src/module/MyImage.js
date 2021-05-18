@@ -169,7 +169,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save: saveConfig,
       load: loadConfig,
     },

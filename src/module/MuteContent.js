@@ -173,7 +173,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(MUTE_NOTICE, hideNotice.value === 'true');
         setValue(MUTE_REPLY_TYPE, muteReplyType.value);

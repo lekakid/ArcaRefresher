@@ -101,7 +101,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(FILENAME, downloadName.value);
         setValue(IMAGENAME, imageName.value);

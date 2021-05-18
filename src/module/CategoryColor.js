@@ -160,7 +160,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const config = getValue(CATEGORY_COLOR);
         let channelConfig = config[channel];

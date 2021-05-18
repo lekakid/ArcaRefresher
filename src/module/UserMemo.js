@@ -54,7 +54,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const memoList = memoTextarea.value.split('\n').filter((i) => i !== '');
         const data = {};

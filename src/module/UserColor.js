@@ -48,7 +48,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const userList = userTextarea.value.split('\n').filter((i) => i !== '');
         const data = {};

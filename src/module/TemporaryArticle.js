@@ -41,7 +41,7 @@ function setupSetting() {
         content: includeTitle,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(INCLUDE_TITLE, includeTitle.value);
       },

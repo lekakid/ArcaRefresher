@@ -3,8 +3,8 @@ import { useFade } from './Transition';
 import stylesheet from '../css/Configure.css';
 import { waitForElement } from './LoadManager';
 
-const saveCallbackList = [];
-const loadCallbackList = [];
+const saveConfigHandlers = [];
+const loadConfigHandlers = [];
 
 const settingContainer = <div className="settings" />;
 const GroupList = [];
@@ -13,16 +13,16 @@ const exportAnchor = <a download="setting.txt" />;
 
 /**
  * 스크립트 설정 버튼을 누르면 나오는 설정창에 모듈의 설정을 추가해줍니다.
- * @param {Object} param                        파라미터 오브젝트
- * @param {string} param.header                 설정 그룹 이름
- * @param {Array} param.group                   설정 그룹
- * @param {Element} param.group.title           표기할 설정명
- * @param {Element} param.group.description     표기할 설정 부연설명
- * @param {Element} param.group.item            상호작용할 엘리먼트
- * @param {string} [param.group.type]           설정 표기 방식
- * @param {Object} param.valueCallback          콜백함수 오브젝트
- * @param {function} param.valueCallback.save   저장 버튼을 누를 시 호출할 콜백 함수
- * @param {function} param.valueCallback.load   불러오기 버튼을 누를 시 호출할 콜백 함수
+ * @param {Object} param                            파라미터 오브젝트
+ * @param {string} param.header                     설정 그룹 이름
+ * @param {Array} param.group                       설정 그룹
+ * @param {Element} param.group.title               표기할 설정명
+ * @param {Element} param.group.description         표기할 설정 부연설명
+ * @param {Element} param.group.item                상호작용할 엘리먼트
+ * @param {string} [param.group.type]               설정 표기 방식
+ * @param {Object} param.configHandler              콜백함수 오브젝트
+ * @param {function} param.configHandler.save       설정 저장
+ * @param {function} param.configHandler.load       설정 불러오기
  */
 export function addSetting({ header, group, valueCallback: { save, load } }) {
   const itemElementList = [];
@@ -48,8 +48,8 @@ export function addSetting({ header, group, valueCallback: { save, load } }) {
     items: itemElementList,
   });
 
-  saveCallbackList.push(save);
-  loadCallbackList.push(load);
+  saveConfigHandlers.push(save);
+  loadConfigHandlers.push(load);
 
   settingContainer.append(
     <div className="section">
@@ -133,7 +133,7 @@ export async function initialize() {
     event.preventDefault();
     toggleFunction();
     document.body.style.overflow = 'hidden';
-    for (const func of loadCallbackList) {
+    for (const func of loadConfigHandlers) {
       func();
     }
   });
@@ -225,8 +225,8 @@ export async function initialize() {
     window.location.reload();
   }
   function onSave() {
-    for (const func of saveCallbackList) {
-      func();
+    for (const save of saveConfigHandlers) {
+      save();
     }
 
     window.location.reload();

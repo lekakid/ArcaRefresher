@@ -44,7 +44,7 @@ function setupSetting() {
         content: shortCut,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(USE_SHORTCUT, shortCut.value === 'true');
       },
