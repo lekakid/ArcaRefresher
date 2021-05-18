@@ -9,6 +9,7 @@ export default { load };
 async function load() {
   try {
     await waitForElement(BOARD_LOADED);
+    appendStyle();
     apply();
 
     addAREventListener('ArticleChange', {
@@ -28,9 +29,11 @@ async function load() {
   }
 }
 
-function apply(viewQuery) {
+function appendStyle() {
   document.head.append(<style>{stylesheet}</style>);
+}
 
+function apply(viewQuery) {
   let parentElement = document;
   if (viewQuery === 'board') {
     parentElement = document.querySelector(
