@@ -5,12 +5,7 @@ import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
 import { waitForElement } from '../core/LoadManager';
-import {
-  BOARD_VIEW,
-  CATEGORYS,
-  FOOTER_VIEW,
-  NOT_NOTICE_ARTICLES_ON_BOARD,
-} from '../core/ArcaSelector';
+import { BOARD_LOADED, BOARD_CATEGORIES, BOARD_ARTICLES } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -18,11 +13,10 @@ const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
 async function load() {
   try {
-    if (await waitForElement(BOARD_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       setupSetting();
 
       generateColorStyle();
-      await waitForElement(FOOTER_VIEW);
       apply();
 
       addAREventListener('ArticleChange', {
@@ -64,7 +58,7 @@ function renderColorPicker(disabled) {
 }
 
 function setupSetting() {
-  const category = [...document.querySelectorAll(CATEGORYS)];
+  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
   const dataContainer = {};
   const settingWrapper = (
     <div className={styles.wrapper}>
@@ -313,7 +307,7 @@ function generateColorStyle() {
 }
 
 function apply() {
-  const articles = document.querySelectorAll(NOT_NOTICE_ARTICLES_ON_BOARD);
+  const articles = document.querySelectorAll(BOARD_ARTICLES);
 
   articles.forEach((article) => {
     if (article.childElementCount < 2) return;

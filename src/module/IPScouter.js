@@ -1,4 +1,4 @@
-import { FOOTER_VIEW } from '../core/ArcaSelector';
+import { BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { waitForElement } from '../core/LoadManager';
 
@@ -8,7 +8,7 @@ export default { load };
 
 async function load() {
   try {
-    await waitForElement(FOOTER_VIEW);
+    await waitForElement(BOARD_LOADED);
     apply();
 
     addAREventListener('ArticleChange', {

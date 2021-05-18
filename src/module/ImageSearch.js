@@ -1,4 +1,4 @@
-import { COMMENT_VIEW } from '../core/ArcaSelector';
+import { COMMENT_LOADED } from '../core/ArcaSelector';
 import * as ContextMenu from '../core/ContextMenu';
 import { waitForElement } from '../core/LoadManager';
 import { getBlob, getDocument } from '../util/HttpRequest';
@@ -7,7 +7,7 @@ export default { load };
 
 async function load() {
   try {
-    if (await waitForElement(COMMENT_VIEW)) {
+    if (await waitForElement(COMMENT_LOADED)) {
       addContextMenu();
     }
   } catch (error) {

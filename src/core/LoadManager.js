@@ -1,6 +1,6 @@
 const request = {};
 
-export async function waitForElement(selector) {
+export async function waitForElement(selector, ignoreLoadEvent) {
   if (request[selector]) {
     if (request[selector].load) return request[selector].exist;
     return request[selector].promise;
@@ -31,11 +31,15 @@ export async function waitForElement(selector) {
           observer.disconnect();
           request[selector].load = true;
           request[selector].exist = true;
-          window.removeEventListener('load', onload);
+          if (!ignoreLoadEvent) {
+            window.removeEventListener('load', onload);
+          }
           resolve(true);
         }
       });
-      window.addEventListener('load', onload);
+      if (!ignoreLoadEvent) {
+        window.addEventListener('load', onload);
+      }
       observer.observe(document, {
         childList: true,
         subtree: true,

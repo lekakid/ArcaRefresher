@@ -5,13 +5,7 @@ import { parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
 import { waitForElement } from '../core/LoadManager';
-import {
-  ARTICLE_BODY,
-  AUTHOR_INFO,
-  BOARD_VIEW,
-  CATEGORYS,
-  FOOTER_VIEW,
-} from '../core/ArcaSelector';
+import { ARTICLE_LOADED, BOARD_LOADED, BOARD_VIEW, BOARD_CATEGORIES } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -25,10 +19,10 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(ARTICLE_BODY)) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       addArticleMenu();
     }
-    if (await waitForElement(FOOTER_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       muteSidebar();
       muteComment();
       muteNotice();
@@ -74,7 +68,7 @@ function setupSetting() {
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
-  const category = [...document.querySelectorAll(CATEGORYS)];
+  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
   const categoryContainer = {};
   const categoryWrapper = (
     <div className={MuteStyle.wrapper}>
@@ -241,6 +235,7 @@ function setupSetting() {
   });
 }
 
+const AUTHOR_INFO = '.article-head .user-info';
 function addArticleMenu() {
   const userInfo = document.querySelector(AUTHOR_INFO);
   if (!userInfo) return;

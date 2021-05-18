@@ -1,4 +1,4 @@
-import { BOARD_VIEW } from '../core/ArcaSelector';
+import { BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { waitForElement } from '../core/LoadManager';
@@ -14,7 +14,7 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(BOARD_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       addAREventListener('ArticleChange', {
         priority: 999,
         callback: remove,

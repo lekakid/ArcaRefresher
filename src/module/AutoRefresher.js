@@ -4,7 +4,7 @@ import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
 import { waitForElement } from '../core/LoadManager';
-import { ARTICLE_VIEW, BOARD_VIEW } from '../core/ArcaSelector';
+import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -19,9 +19,9 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(ARTICLE_VIEW)) return;
+    if (await waitForElement(ARTICLE_LOADED)) return;
 
-    if (await waitForElement(BOARD_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       apply();
     }
   } catch (error) {

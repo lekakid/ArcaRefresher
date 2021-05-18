@@ -1,4 +1,4 @@
-import { COMMENT_VIEW } from '../core/ArcaSelector';
+import { COMMENT_LOADED, HEADER_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { waitForElement } from '../core/LoadManager';
 
@@ -28,11 +28,10 @@ async function load() {
     await waitForElement('head');
     applyStyle();
 
-    if (await waitForElement('.content-wrapper')) {
-      onLoadSite();
-    }
+    await waitForElement(HEADER_LOADED);
+    onLoadSite();
 
-    if (await waitForElement(COMMENT_VIEW)) {
+    if (await waitForElement(COMMENT_LOADED)) {
       onLoadArticle();
     }
   } catch (error) {

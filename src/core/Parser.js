@@ -1,4 +1,4 @@
-import { CHANNEL_TITLE } from './ArcaSelector';
+const CHANNEL_TITLE = '.board-title a:not([class])';
 
 export function parseChannelID() {
   try {

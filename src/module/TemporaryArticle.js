@@ -3,6 +3,7 @@ import { getDateStr } from '../util/DateManager';
 
 import stylesheet from '../css/TemporaryArticle.css';
 import { waitForElement } from '../core/LoadManager';
+import { WRITE_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -13,7 +14,7 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement('.fr-box')) {
+    if (await waitForElement(WRITE_LOADED, true)) {
       apply();
     }
   } catch (error) {

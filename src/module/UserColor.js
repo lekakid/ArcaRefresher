@@ -2,7 +2,7 @@ import { addSetting, getValue, setValue } from '../core/Configure';
 import { addAREventListener } from '../core/AREventHandler';
 import { parseUserID } from '../core/Parser';
 import { waitForElement } from '../core/LoadManager';
-import { FOOTER_VIEW } from '../core/ArcaSelector';
+import { BOARD_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -12,7 +12,7 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(FOOTER_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       apply();
     }
 

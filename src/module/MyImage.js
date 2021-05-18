@@ -1,4 +1,4 @@
-import { COMMENT_VIEW } from '../core/ArcaSelector';
+import { COMMENT_LOADED, WRITE_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import * as ContextMenu from '../core/ContextMenu';
 import { waitForElement } from '../core/LoadManager';
@@ -14,11 +14,11 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(COMMENT_VIEW)) {
+    if (await waitForElement(COMMENT_LOADED)) {
       addContextMenu();
     }
 
-    if (await waitForElement('.fr-box')) {
+    if (await waitForElement(WRITE_LOADED, true)) {
       apply();
     }
   } catch (error) {

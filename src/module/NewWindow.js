@@ -1,4 +1,4 @@
-import { ARTICLE_VIEW, BOARD_VIEW } from '../core/ArcaSelector';
+import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { waitForElement } from '../core/LoadManager';
@@ -12,11 +12,11 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(BOARD_VIEW)) {
+    if (await waitForElement(BOARD_LOADED)) {
       applyOpenNewWindow();
     }
 
-    if (await waitForElement(ARTICLE_VIEW)) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       applyBlockNewWindow();
     }
 

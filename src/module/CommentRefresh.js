@@ -1,4 +1,4 @@
-import { COMMENT_SUBTITLE } from '../core/ArcaSelector';
+import { COMMENT_LOADED } from '../core/ArcaSelector';
 import { dispatchAREvent } from '../core/AREventHandler';
 import { waitForElement } from '../core/LoadManager';
 import { getDateStr } from '../util/DateManager';
@@ -7,7 +7,7 @@ export default { load };
 
 async function load() {
   try {
-    if (await waitForElement(COMMENT_SUBTITLE)) {
+    if (await waitForElement(COMMENT_LOADED)) {
       apply();
     }
   } catch (error) {

@@ -1,4 +1,4 @@
-import { ARTICLE_BODY } from '../core/ArcaSelector';
+import { ARTICLE_LOADED } from '../core/ArcaSelector';
 import ArticleMenu from '../core/ArticleMenu';
 import { waitForElement } from '../core/LoadManager';
 import { parseUserID } from '../core/Parser';
@@ -42,7 +42,7 @@ const DefaultSuffix = [
 
 async function load() {
   try {
-    if (await waitForElement(ARTICLE_BODY)) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       addArticleMenu();
     }
   } catch (error) {
