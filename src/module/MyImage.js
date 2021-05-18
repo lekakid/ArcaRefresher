@@ -18,6 +18,8 @@ async function load() {
       addContextMenu();
     }
 
+    const isWriteView = /(write|edit)(\/|$)/.test(window.location.pathname);
+    if (!isWriteView) return;
     if (await waitForElement(WRITE_LOADED, true)) {
       apply();
     }
