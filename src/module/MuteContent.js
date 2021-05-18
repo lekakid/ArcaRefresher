@@ -174,6 +174,23 @@ function setupSetting() {
       },
     ],
     configHandler: {
+      validate() {
+        try {
+          const removeKeywordConfig = keywordMute.value.split('\n').filter((i) => i !== '');
+          RegExp(removeKeywordConfig);
+        } catch (error) {
+          keywordMute.focus();
+          throw new Error('게시물 뮤트 키워드 목록이 정규식 규칙을 위반했습니다.');
+        }
+
+        try {
+          const removeUserConfig = userMute.value.split('\n').filter((i) => i !== '');
+          RegExp(removeUserConfig);
+        } catch (error) {
+          userMute.focus();
+          throw new Error('게시물 뮤트 유저 목록이 정규식 규칙을 위반했습니다.');
+        }
+      },
       save() {
         setValue(MUTE_NOTICE, hideNotice.value === 'true');
         setValue(MUTE_REPLY_TYPE, muteReplyType.value);

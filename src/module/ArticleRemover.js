@@ -59,6 +59,23 @@ function setupSetting() {
       },
     ],
     configHandler: {
+      validate() {
+        try {
+          const removeKeywordConfig = removeKeywordList.value.split('\n').filter((i) => i !== '');
+          RegExp(removeKeywordConfig);
+        } catch (error) {
+          removeKeywordList.focus();
+          throw new Error('게시물 삭제 키워드 목록이 정규식 규칙을 위반했습니다.');
+        }
+
+        try {
+          const removeUserConfig = removeUserList.value.split('\n').filter((i) => i !== '');
+          RegExp(removeUserConfig);
+        } catch (error) {
+          removeUserList.focus();
+          throw new Error('게시물 삭제 유저 목록이 정규식 규칙을 위반했습니다.');
+        }
+      },
       save() {
         setValue(USE_AUTO_REMOVER_TEST, removeTestMode.value === 'true');
         setValue(

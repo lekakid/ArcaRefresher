@@ -3,6 +3,7 @@ import { useFade } from './Transition';
 import stylesheet from '../css/Configure.css';
 import { waitForElement } from './LoadManager';
 
+const validateConfigHandlers = [];
 const saveConfigHandlers = [];
 const loadConfigHandlers = [];
 
@@ -21,10 +22,11 @@ const exportAnchor = <a download="setting.txt" />;
  * @param {Element} param.group.item                상호작용할 엘리먼트
  * @param {string} [param.group.type]               설정 표기 방식
  * @param {Object} param.configHandler              콜백함수 오브젝트
+ * @param {function} param.configHandler.validate   설정 저장 전 유효성 검증 함수
  * @param {function} param.configHandler.save       설정 저장
  * @param {function} param.configHandler.load       설정 불러오기
  */
-export function addSetting({ header, group, valueCallback: { save, load } }) {
+export function addSetting({ header, group, configHandler: { validate, save, load } }) {
   const itemElementList = [];
   const itemList = group.map(({ title, description, content, type }) => {
     const item = (
@@ -48,6 +50,7 @@ export function addSetting({ header, group, valueCallback: { save, load } }) {
     items: itemElementList,
   });
 
+  if (validate) validateConfigHandlers.push(validate);
   saveConfigHandlers.push(save);
   loadConfigHandlers.push(load);
 
@@ -225,6 +228,15 @@ export async function initialize() {
     window.location.reload();
   }
   function onSave() {
+    for (const validate of validateConfigHandlers) {
+      try {
+        validate();
+      } catch (error) {
+        alert(`저장 중 오류가 발생했습니다.\n${error}`);
+        return;
+      }
+    }
+
     for (const save of saveConfigHandlers) {
       save();
     }
