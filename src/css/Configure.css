@@ -37,7 +37,7 @@
   flex-grow: 1;
 
   width: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #refresherSetting .btn-grid {
