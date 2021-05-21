@@ -1,12 +1,13 @@
+import { COMMENT_LOADED } from '../core/ArcaSelector';
 import { dispatchAREvent } from '../core/AREventHandler';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 import { getDateStr } from '../util/DateManager';
 
 export default { load };
 
-function load() {
+async function load() {
   try {
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(COMMENT_LOADED)) {
       apply();
     }
   } catch (error) {

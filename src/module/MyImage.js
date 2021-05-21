@@ -1,24 +1,26 @@
+import { COMMENT_LOADED, WRITE_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import ContextMenu from '../core/ContextMenu';
-import { CurrentPage } from '../core/Parser';
-import { waitForElement } from '../util/ElementDetector';
+import * as ContextMenu from '../core/ContextMenu';
+import { waitForElement } from '../core/LoadManager';
+import { parseChannelID } from '../core/Parser';
 
 import stylesheet from '../css/MyImage.css';
 
-export default { load: loadModule };
+export default { load };
 
 const MY_IMAGES = { key: 'myImages', defaultValue: {} };
 
-async function loadModule() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(COMMENT_LOADED)) {
       addContextMenu();
     }
 
-    if (CurrentPage.Component.Write) {
-      await waitForElement('.fr-box');
+    const isWriteView = /(write|edit)(\/|$)/.test(window.location.pathname);
+    if (!isWriteView) return;
+    if (await waitForElement(WRITE_LOADED, true)) {
       apply();
     }
   } catch (error) {
@@ -28,7 +30,7 @@ async function loadModule() {
 
 function setupSetting() {
   let config = getValue(MY_IMAGES);
-  const currentChannel = CurrentPage.Channel.ID;
+  const currentChannel = parseChannelID();
   const channelSelect = (
     <select>
       <option value="_shared_">공용 자짤</option>
@@ -132,14 +134,14 @@ function setupSetting() {
     event.target.disabled = false;
   });
 
-  const save = () => {
+  const saveConfig = () => {
     Object.keys(config).forEach((c) => {
       if (config[c].length === 0) delete config[c];
     });
     setValue(MY_IMAGES, config);
   };
 
-  const load = () => {
+  const loadConfig = () => {
     config = getValue(MY_IMAGES);
 
     if (currentChannel)
@@ -167,9 +169,9 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
-      save,
-      load,
+    configHandler: {
+      save: saveConfig,
+      load: loadConfig,
     },
   });
 }
@@ -196,7 +198,7 @@ function addContextMenu() {
     onClick(event) {
       event.preventDefault();
 
-      const channel = CurrentPage.Channel.ID || '_shared_';
+      const channel = parseChannelID() || '_shared_';
       config[channel] = [
         ...(config[channel] || []),
         ContextMenu.getContextData('url').split('?')[0],
@@ -217,7 +219,7 @@ function addContextMenu() {
 }
 
 function apply() {
-  const channel = CurrentPage.Channel.ID;
+  const channel = parseChannelID();
   const editor = unsafeWindow.FroalaEditor('#content');
   if (editor.core.isEmpty()) {
     const config = getValue(MY_IMAGES);

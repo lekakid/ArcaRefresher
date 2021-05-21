@@ -1,5 +1,7 @@
+import { BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
+import { waitForElement } from '../core/LoadManager';
 import { parseUserID } from '../core/Parser';
 
 export default { load };
@@ -8,11 +10,13 @@ const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
 let handlerApplied = false;
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    apply();
+    if (await waitForElement(BOARD_LOADED)) {
+      apply();
+    }
 
     addAREventListener('ArticleChange', {
       priority: 100,
@@ -50,7 +54,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const memoList = memoTextarea.value.split('\n').filter((i) => i !== '');
         const data = {};

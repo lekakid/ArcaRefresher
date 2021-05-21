@@ -1,15 +1,16 @@
+import { ARTICLE_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       apply();
     }
   } catch (error) {
@@ -32,7 +33,7 @@ function setupSetting() {
         content: ratedownBlock,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(RATEDOWN_GUARD, ratedownBlock.value === 'true');
       },

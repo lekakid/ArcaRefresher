@@ -3,7 +3,7 @@ const AREvents = {
   CommentChange: [],
 };
 
-export default function initialize() {
+export function initialize() {
   for (const event of Object.keys(AREvents)) {
     document.addEventListener(`AR_${event}`, () => {
       for (const { callback } of AREvents[event]) {

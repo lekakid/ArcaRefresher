@@ -1,17 +1,18 @@
+import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const USE_SHORTCUT = { key: 'useShortcut', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       apply('article');
-    } else if (CurrentPage.Component.Board) {
+    } else if (await waitForElement(BOARD_LOADED)) {
       apply('board');
     }
   } catch (error) {
@@ -43,7 +44,7 @@ function setupSetting() {
         content: shortCut,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(USE_SHORTCUT, shortCut.value === 'true');
       },

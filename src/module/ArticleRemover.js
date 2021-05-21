@@ -1,6 +1,8 @@
+import { BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage, parseUserID } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
+import { parseUserID } from '../core/Parser';
 
 export default { load };
 
@@ -8,11 +10,11 @@ const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: [] };
 const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
 const USE_AUTO_REMOVER_TEST = { key: 'useAutoRemoverTest', defaultValue: true };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(BOARD_LOADED)) {
       addAREventListener('ArticleChange', {
         priority: 999,
         callback: remove,
@@ -56,7 +58,24 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
+      validate() {
+        try {
+          const removeKeywordConfig = removeKeywordList.value.split('\n').filter((i) => i !== '');
+          RegExp(removeKeywordConfig);
+        } catch (error) {
+          removeKeywordList.focus();
+          throw new Error('게시물 삭제 키워드 목록이 정규식 규칙을 위반했습니다.');
+        }
+
+        try {
+          const removeUserConfig = removeUserList.value.split('\n').filter((i) => i !== '');
+          RegExp(removeUserConfig);
+        } catch (error) {
+          removeUserList.focus();
+          throw new Error('게시물 삭제 유저 목록이 정규식 규칙을 위반했습니다.');
+        }
+      },
       save() {
         setValue(USE_AUTO_REMOVER_TEST, removeTestMode.value === 'true');
         setValue(

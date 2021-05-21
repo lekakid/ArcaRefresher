@@ -1,9 +1,10 @@
 import { dispatchAREvent } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
 import { getTimeStr, in24 } from '../util/DateManager';
 
 import refreshersheet from '../css/AutoRefresher.css';
+import { waitForElement } from '../core/LoadManager';
+import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -14,12 +15,13 @@ let refreshTime = 0;
 let loader = null;
 let loopInterval = null;
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Article) return;
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(ARTICLE_LOADED)) return;
+
+    if (await waitForElement(BOARD_LOADED)) {
       apply();
     }
   } catch (error) {
@@ -56,7 +58,7 @@ function setupSetting() {
         content: hideRefreshSign,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(REFRESH_TIME, Number(refreshTimeSelect.value));
         setValue(HIDE_REFRESHER, hideRefreshSign.value === 'true');

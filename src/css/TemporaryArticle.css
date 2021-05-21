@@ -19,14 +19,9 @@
   max-height: 400px;
   height: 100%;
 
-  border: 1px solid #bbb;
-  background-color: #fff;
-}
-
-html.theme-dark #tempArticleWrapper table {
-  color: #e2e2e2;
-  border: 1px solid #43494c;
-  background-color: #181a1b;
+  color: var(--color-text-color);
+  border: 1px solid var(--color-border-outer);
+  background-color: var(--color-bg-main);
 }
 
 #tempArticleWrapper tbody {

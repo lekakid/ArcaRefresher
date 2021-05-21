@@ -1,16 +1,18 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { addAREventListener } from '../core/AREventHandler';
-import { CurrentPage, parseUserID } from '../core/Parser';
+import { parseUserID } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
+import { BOARD_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
 const USER_COLOR = { key: 'userColor', defaultValue: {} };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(BOARD_LOADED)) {
       apply();
     }
 
@@ -46,7 +48,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const userList = userTextarea.value.split('\n').filter((i) => i !== '');
         const data = {};

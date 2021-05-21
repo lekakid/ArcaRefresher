@@ -1,11 +1,15 @@
+import { BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
+import { waitForElement } from '../core/LoadManager';
 
-import styles from '../css/IPScouter.module.css';
+import styles, { stylesheet } from '../css/IPScouter.module.css';
 
 export default { load };
 
-function load() {
+async function load() {
   try {
+    await waitForElement(BOARD_LOADED);
+    appendStyle();
     apply();
 
     addAREventListener('ArticleChange', {
@@ -23,6 +27,10 @@ function load() {
   } catch (error) {
     console.error(error);
   }
+}
+
+function appendStyle() {
+  document.head.append(<style>{stylesheet}</style>);
 }
 
 function apply(viewQuery) {

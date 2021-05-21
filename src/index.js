@@ -1,9 +1,7 @@
-import AREventHandler from './core/AREventHandler';
-import Configure from './core/Configure';
-import ContextMenu from './core/ContextMenu';
-import Parser from './core/Parser';
-import Transition from './core/Transition';
-import { waitForElement } from './util/ElementDetector';
+import * as AREventHandler from './core/AREventHandler';
+import * as Configure from './core/Configure';
+import * as ContextMenu from './core/ContextMenu';
+import * as Transition from './core/Transition';
 
 import AnonymousNick from './module/AnonymousNick';
 import AutoRefresher from './module/AutoRefresher';
@@ -24,35 +22,26 @@ import TemporaryArticle from './module/TemporaryArticle';
 import UserColor from './module/UserColor';
 import UserMemo from './module/UserMemo';
 
-import { stylesheet as IPScouterStyle } from './css/IPScouter.module.css';
+(function App() {
+  // Event Related Core Module
+  AREventHandler.initialize();
 
-(async function App() {
-  await waitForElement('head');
-
-  // Load Global CSS
-  document.head.append(<style>{IPScouterStyle}</style>);
-  AREventHandler();
-  Transition();
-
-  await waitForElement('.content-wrapper');
-  Configure();
+  // UI Related Core Module
+  Transition.initilaize();
+  Configure.initialize();
   ContextMenu.initialize();
 
-  LayoutCustomizer.load();
-
-  await waitForElement('footer');
-  Parser();
-
+  // Feature Module
   AutoRefresher.load();
   CommentRefresh.load();
 
+  LayoutCustomizer.load();
   AnonymousNick.load();
   ArticleRemover.load();
   CategoryColor.load();
   ImageDownloader.load();
   ImageSearch.load();
   IPScouter.load();
-  LayoutCustomizer.loadOnComplete();
   MuteContent.load();
   MuteEmoticon.load();
   NewWindow.load();

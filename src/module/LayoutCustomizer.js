@@ -1,10 +1,11 @@
+import { COMMENT_LOADED, HEADER_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 import sheetLiveModifier from '../css/LayoutCustomizer.css';
 import { getRandomColor } from '../util/ColorManager';
 
-export default { load, loadOnComplete };
+export default { load };
 
 // ---------------------------------- 사이트 레이아웃 ----------------------------------
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
@@ -15,24 +16,23 @@ const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
 const RESIZE_VIDEO = { key: 'resizeVideo', defaultValue: '100' };
 // ----------------------------------- 댓글 레이아웃 -----------------------------------
+const HIDE_COMMENT = { key: 'hideComment', defaultValue: false };
 const HIDE_MODIFIED = { key: 'hideModified', defaultValue: false };
 const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
 const FORCE_OPEN_COMMENT = { key: 'forceOpenComment', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    apply();
-  } catch (error) {
-    console.error(error);
-  }
-}
+    await waitForElement('head');
+    applyStyle();
 
-function loadOnComplete() {
-  try {
-    if (CurrentPage.Component.Comment) {
-      applyOnComplete();
+    await waitForElement(HEADER_LOADED);
+    onLoadSite();
+
+    if (await waitForElement(COMMENT_LOADED)) {
+      onLoadArticle();
     }
   } catch (error) {
     console.error(error);
@@ -129,7 +129,7 @@ function setupSetting() {
         ),
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
         setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
@@ -163,7 +163,7 @@ function setupSetting() {
         content: resizeVideo,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(RESIZE_IMAGE, resizeImage.value);
         setValue(RESIZE_VIDEO, resizeVideo.value);
@@ -176,6 +176,12 @@ function setupSetting() {
   });
 
   // ----------------------------------- 댓글 레이아웃 -----------------------------------
+  const hideComment = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
   const hideModified = (
     <select>
       <option value="false">보임</option>
@@ -199,6 +205,10 @@ function setupSetting() {
     header: '댓글 레이아웃',
     group: [
       {
+        title: '댓글창 접어두기',
+        content: hideComment,
+      },
+      {
         title: '*수정됨 숨김',
         content: hideModified,
       },
@@ -211,13 +221,15 @@ function setupSetting() {
         content: forceOpenComment,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
+        setValue(HIDE_COMMENT, hideComment.value === 'true');
         setValue(HIDE_MODIFIED, hideModified.value === 'true');
         setValue(WIDE_AREA, wideCommentArea.value === 'true');
         setValue(FORCE_OPEN_COMMENT, forceOpenComment.value === 'true');
       },
       load() {
+        hideComment.value = getValue(HIDE_COMMENT);
         hideModified.value = getValue(HIDE_MODIFIED);
         forceOpenComment.value = getValue(FORCE_OPEN_COMMENT);
         wideCommentArea.value = getValue(WIDE_AREA);
@@ -226,8 +238,7 @@ function setupSetting() {
   });
 }
 
-function apply() {
-  document.head.append(<style>{sheetLiveModifier}</style>);
+function onLoadSite() {
   const contentWrapper = document.querySelector('.content-wrapper');
 
   // ---------------------------------- 사이트 레이아웃 ----------------------------------
@@ -251,6 +262,10 @@ function apply() {
     });
     notiObserver.observe(notificationIcon, { attributes: true });
   }
+}
+
+function onLoadArticle() {
+  const contentWrapper = document.querySelector('.content-wrapper');
 
   // ----------------------------------- 본문 레이아웃 -----------------------------------
 
@@ -275,10 +290,23 @@ function apply() {
   if (forceOpenComment) {
     contentWrapper.classList.add('force-open-comment');
   }
-}
 
-// TODO: 모듈에서 자체적으로 실행 타이밍을 정하는 방식으로 변경
-function applyOnComplete() {
+  const hideComment = getValue(HIDE_COMMENT);
+  if (hideComment) {
+    const comment = document.querySelector('#comment');
+    const showCommentBtn = (
+      <button className="btn btn-arca" style={{ width: '100%', margin: '0.5rem 0' }}>
+        댓글 보이기
+      </button>
+    );
+    showCommentBtn.addEventListener('click', (e) => {
+      e.target.classList.add('hidden');
+      comment.classList.remove('hidden');
+    });
+    comment.insertAdjacentElement('beforebegin', showCommentBtn);
+    comment.classList.add('hidden');
+  }
+
   const wideCommentArea = getValue(WIDE_AREA);
   if (wideCommentArea) {
     const commentArea = document.querySelector('#comment');
@@ -294,4 +322,8 @@ function applyOnComplete() {
       element.parentNode.querySelector('.reply-link').click();
     });
   }
+}
+
+async function applyStyle() {
+  document.head.append(<style>{sheetLiveModifier}</style>);
 }

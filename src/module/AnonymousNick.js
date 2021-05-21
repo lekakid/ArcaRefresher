@@ -1,5 +1,7 @@
+import { ARTICLE_LOADED } from '../core/ArcaSelector';
 import ArticleMenu from '../core/ArticleMenu';
-import { CurrentPage, parseUserID } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
+import { parseUserID } from '../core/Parser';
 
 export default { load };
 
@@ -38,9 +40,9 @@ const DefaultSuffix = [
   '아야',
 ];
 
-function load() {
+async function load() {
   try {
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       addArticleMenu();
     }
   } catch (error) {

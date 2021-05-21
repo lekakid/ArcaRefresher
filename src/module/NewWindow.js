@@ -1,21 +1,22 @@
+import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 
 export default { load };
 
 const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
 const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
+    if (await waitForElement(BOARD_LOADED)) {
       applyOpenNewWindow();
     }
 
-    if (CurrentPage.Component.Article) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       applyBlockNewWindow();
     }
 
@@ -53,7 +54,7 @@ function setupSetting() {
         content: blockMedia,
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         setValue(OPEN_ARTICLE, openArticle.value === 'true');
         setValue(BLOCK_MEDIA, blockMedia.value === 'true');

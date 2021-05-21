@@ -1,28 +1,29 @@
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { addAREventListener } from '../core/AREventHandler';
-import { CurrentPage } from '../core/Parser';
 
 import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
+import { waitForElement } from '../core/LoadManager';
+import { BOARD_LOADED, BOARD_CATEGORIES, BOARD_ARTICLES } from '../core/ArcaSelector';
 
 export default { load };
 
 const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
 
-function load() {
+async function load() {
   try {
-    setupSetting();
+    if (await waitForElement(BOARD_LOADED)) {
+      setupSetting();
 
-    if (CurrentPage.Component.Board) {
       generateColorStyle();
       apply();
-    }
 
-    addAREventListener('ArticleChange', {
-      priority: 0,
-      callback: apply,
-    });
+      addAREventListener('ArticleChange', {
+        priority: 0,
+        callback: apply,
+      });
+    }
   } catch (error) {
     console.error(error);
   }
@@ -57,14 +58,15 @@ function renderColorPicker(disabled) {
 }
 
 function setupSetting() {
+  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
   const dataContainer = {};
   const settingWrapper = (
     <div className={styles.wrapper}>
       <style>{stylesheet}</style>
       <style>{GM_getResourceText('colorpicker')}</style>
-      {CurrentPage.Category.map((category) => {
-        let name = category;
-        if (category === '전체') name = '일반';
+      {category.map((c) => {
+        let name = c.textContent;
+        if (name === '전체') name = '일반';
 
         const badgeElement = (
           <span className="badge badge-success" style={{ margin: '0.25rem' }}>
@@ -147,7 +149,7 @@ function setupSetting() {
     </div>
   );
 
-  const channel = CurrentPage.Channel.ID;
+  const channel = window.location.pathname.split('/')[2];
 
   addSetting({
     header: '카테고리 색상 설정',
@@ -158,7 +160,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const config = getValue(CATEGORY_COLOR);
         let channelConfig = config[channel];
@@ -236,7 +238,7 @@ function setupSetting() {
 const styleTable = {};
 
 function generateColorStyle() {
-  const channel = CurrentPage.Channel.ID;
+  const channel = window.location.pathname.split('/')[2];
   const categoryConfig = getValue(CATEGORY_COLOR)[channel];
 
   if (!categoryConfig) return;
@@ -305,7 +307,7 @@ function generateColorStyle() {
 }
 
 function apply() {
-  const articles = document.querySelectorAll('a.vrow:not(.notice)');
+  const articles = document.querySelectorAll(BOARD_ARTICLES);
 
   articles.forEach((article) => {
     if (article.childElementCount < 2) return;

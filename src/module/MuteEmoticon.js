@@ -1,27 +1,25 @@
+import { BOARD_LOADED, COMMENT_LOADED } from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { CurrentPage } from '../core/Parser';
+import { waitForElement } from '../core/LoadManager';
 import { getDocument } from '../util/HttpRequest';
 
 export default { load };
 
 const BLOCK_EMOTICON = { key: 'blockEmoticon', defaultValue: {} };
 
-function load() {
+async function load() {
   try {
     setupSetting();
 
-    if (CurrentPage.Component.Board) {
-      mutePreview();
-    }
-
-    if (CurrentPage.Component.Article) {
-      muteArticle();
-    }
-
-    if (CurrentPage.Component.Comment) {
+    if (await waitForElement(COMMENT_LOADED)) {
       muteComment();
-      apply();
+      appendMuteBtn();
+    }
+
+    if (await waitForElement(BOARD_LOADED)) {
+      muteArticle();
+      mutePreview();
     }
 
     addAREventListener('ArticleChange', {
@@ -35,7 +33,7 @@ function load() {
       priority: 100,
       callback() {
         muteComment();
-        apply();
+        appendMuteBtn();
       },
     });
   } catch (error) {
@@ -75,7 +73,7 @@ function setupSetting() {
         type: 'wide',
       },
     ],
-    valueCallback: {
+    configHandler: {
       save() {
         const data = getValue(BLOCK_EMOTICON);
 
@@ -178,8 +176,10 @@ function muteComment() {
   });
 }
 
-function apply() {
+function appendMuteBtn() {
   const commentArea = document.querySelector('#comment');
+  if (!commentArea) return;
+
   const emoticons = commentArea.querySelectorAll('.emoticon');
 
   emoticons.forEach((item) => {

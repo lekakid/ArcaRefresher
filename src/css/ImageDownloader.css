@@ -1,6 +1,6 @@
 .article-image {
   margin: 1rem 0;
-  border: 1px solid #bbb;
+  border: 1px solid var(--color-border-outer);
   width: 100%;
   padding: 0.5rem;
 }
@@ -16,7 +16,7 @@
 .article-image .item {
   width: 100px;
   height: 100px;
-  border: 1px solid #bbb;
+  border: 1px solid var(--color-border-outer);
   margin: 0;
   background-size: cover;
 }
