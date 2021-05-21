@@ -364,7 +364,7 @@ const CurrentPage = {
 
 function parse() {
   const titleElement = document.querySelector('.article-head .title');
-  CurrentPage.Title = titleElement ? titleElement.textContent : '제목 없음';
+  CurrentPage.Title = titleElement ? titleElement.lastChild.textContent.trim() : '제목 없음';
   const categoryElement = document.querySelector('.article-head .badge');
   CurrentPage.Category = categoryElement ? categoryElement.textContent : '일반';
   const authorElement = document.querySelector('.article-head .user-info');
