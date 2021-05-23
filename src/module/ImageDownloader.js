@@ -4,7 +4,7 @@ import { getBlob } from '../util/HttpRequest';
 
 import stylesheet from '../css/ImageDownloader.css';
 import { waitForElement } from '../core/LoadManager';
-import { COMMENT_LOADED } from '../core/ArcaSelector';
+import { ARTICLE_LOADED } from '../core/ArcaSelector';
 import { parseChannelTitle, parseUserInfo } from '../core/Parser';
 
 export default { load };
@@ -20,7 +20,7 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(COMMENT_LOADED)) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       addContextMenu();
       apply();
     }

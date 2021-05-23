@@ -156,6 +156,15 @@ function setupSetting() {
     group: [
       {
         title: '색상 변경',
+        description: (
+          <ul>
+            <li>앞 색상 피커: 카테고리 색상을 변경합니다.</li>
+            <li>뒤 색상 피커: 게시물의 배경색을 변경합니다.</li>
+            <li>굵게: 제목의 글씨가 두껍게 표기됩니다.</li>
+            <li>취소선: 제목의 글씨 중간에 선이 그어집니다.</li>
+            <li>열람 색 제거: 게시물 열람 시 해당 게시물이 회색으로 표기되는 것을 방지합니다.</li>
+          </ul>
+        ),
         content: settingWrapper,
         type: 'wide',
       },
