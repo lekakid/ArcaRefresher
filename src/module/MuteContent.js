@@ -117,7 +117,7 @@ function setupSetting() {
           <>
             지정한 유저의 게시물과 댓글을 숨깁니다.
             <br />
-            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
+            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시(\)를 붙여야합니다.
             <br />
             사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
             <br />
@@ -136,7 +136,7 @@ function setupSetting() {
           <>
             지정한 키워드가 포함된 제목을 가진 게시물과 댓글을 숨깁니다.
             <br />
-            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시를 붙여야합니다.
+            Regex 문법을 지원하기 때문에 특수문자 사용 시 역슬래시(\)를 붙여야합니다.
             <br />
             사용 시 역슬래시를 붙여 작성해야하는 특수문자 목록
             <br />
@@ -177,7 +177,7 @@ function setupSetting() {
       validate() {
         try {
           const removeKeywordConfig = keywordMute.value.split('\n').filter((i) => i !== '');
-          RegExp(removeKeywordConfig);
+          RegExp(removeKeywordConfig.join('|'));
         } catch (error) {
           keywordMute.focus();
           throw new Error('게시물 뮤트 키워드 목록이 정규식 규칙을 위반했습니다.');
@@ -185,7 +185,7 @@ function setupSetting() {
 
         try {
           const removeUserConfig = userMute.value.split('\n').filter((i) => i !== '');
-          RegExp(removeUserConfig);
+          RegExp(removeUserConfig.join('|'));
         } catch (error) {
           userMute.focus();
           throw new Error('게시물 뮤트 유저 목록이 정규식 규칙을 위반했습니다.');
