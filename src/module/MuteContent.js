@@ -259,7 +259,7 @@ function addArticleMenu() {
 
   const userList = getValue(BLOCK_USER);
   const user = parseUserInfo(userInfo);
-  const userID = parseUserID(userInfo).replace(')', '\\)').replace('.', '\\.');
+  const userID = parseUserID(userInfo).replace('(', '\\(').replace(')', '\\)').replace('.', '\\.');
   const filter = `${user === userID ? '^' : ''}${userID}$`;
   const indexed = userList.indexOf(filter);
 
