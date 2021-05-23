@@ -3,7 +3,10 @@ const CHANNEL_TITLE = '.board-title a:not([class])';
 export function parseChannelID() {
   try {
     const pathname = window.location.pathname;
-    return pathname.match(/[0-9a-zA-Z]{4,20}/g)[0].toLowerCase();
+    return pathname
+      .match(/\/b\/[0-9a-zA-Z]{4,20}/g)[0]
+      .replace('/b/', '')
+      .toLowerCase();
   } catch (error) {
     return '';
   }

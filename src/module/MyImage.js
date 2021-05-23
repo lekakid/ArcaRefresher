@@ -1,4 +1,4 @@
-import { COMMENT_LOADED, WRITE_LOADED } from '../core/ArcaSelector';
+import { ARTICLE_LOADED, WRITE_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import * as ContextMenu from '../core/ContextMenu';
 import { waitForElement } from '../core/LoadManager';
@@ -14,7 +14,7 @@ async function load() {
   try {
     setupSetting();
 
-    if (await waitForElement(COMMENT_LOADED)) {
+    if (await waitForElement(ARTICLE_LOADED)) {
       addContextMenu();
     }
 
