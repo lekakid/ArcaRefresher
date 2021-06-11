@@ -16,6 +16,7 @@ const ZIP_COMMENT = {
   key: 'imageDownloaderZipComment',
   defaultValue: '[%channel%] %title% - %url%',
 };
+const RETRY_COUNT = { key: 'imageDownloaderRetry', defaultValue: 3 };
 
 async function load() {
   try {
@@ -35,6 +36,13 @@ function setupSetting() {
   const zipName = <input type="text" />;
   const imageName = <input type="text" />;
   const zipComment = <textarea rows="6" />;
+  const retryCount = (
+    <select>
+      <option value="1">1회</option>
+      <option value="2">2회</option>
+      <option value="3">3회</option>
+    </select>
+  );
 
   addSetting({
     header: '이미지 다운로드',
@@ -122,6 +130,10 @@ function setupSetting() {
         content: zipComment,
         type: 'wide',
       },
+      {
+        title: '다운로드 최대 시도 횟수',
+        content: retryCount,
+      },
     ],
     configHandler: {
       save() {
@@ -129,12 +141,14 @@ function setupSetting() {
         setValue(ZIPNAME, zipName.value);
         setValue(IMAGENAME, imageName.value);
         setValue(ZIP_COMMENT, zipComment.value);
+        setValue(RETRY_COUNT, Number(retryCount.value));
       },
       load() {
         fileName.value = getValue(FILENAME);
         zipName.value = getValue(ZIPNAME);
         imageName.value = getValue(IMAGENAME);
         zipComment.value = getValue(ZIP_COMMENT);
+        retryCount.value = getValue(RETRY_COUNT);
       },
     },
   });
@@ -149,34 +163,49 @@ function addContextMenu() {
       const url = ContextMenu.getContextData('url');
       const title = event.target.textContent;
 
-      const rawData = await getBlob(
-        url,
-        (e) => {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          event.target.textContent = `${progress}%`;
-        },
-        () => {
-          event.target.textContent = '클립보드에 복사 중...';
-        }
-      );
+      const retryCount = getValue(RETRY_COUNT);
+      try {
+        for (let r = 1; r < retryCount; r += 1) {
+          try {
+            const rawData = await getBlob(
+              url,
+              (e) => {
+                const progress = Math.round((e.loaded / e.total) * 100);
+                event.target.textContent = `${progress}%`;
+              },
+              () => {
+                event.target.textContent = '클립보드에 복사 중...';
+              }
+            );
 
-      const canvas = document.createElement('canvas');
-      const canvasContext = canvas.getContext('2d');
-      const convertedBlob = await new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          canvasContext.drawImage(img, 0, 0);
-          canvas.toBlob((blob) => {
-            resolve(blob);
-          });
-        };
-        img.src = URL.createObjectURL(rawData);
-      });
-      const item = new ClipboardItem({ [convertedBlob.type]: convertedBlob });
-      navigator.clipboard.write([item]);
-      event.target.textContent = title;
+            const canvas = document.createElement('canvas');
+            const canvasContext = canvas.getContext('2d');
+            const convertedBlob = await new Promise((resolve) => {
+              const img = new Image();
+              img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                canvasContext.drawImage(img, 0, 0);
+                canvas.toBlob((blob) => {
+                  resolve(blob);
+                });
+              };
+              img.src = URL.createObjectURL(rawData);
+            });
+            const item = new ClipboardItem({ [convertedBlob.type]: convertedBlob });
+            navigator.clipboard.write([item]);
+            event.target.textContent = title;
+            break;
+          } catch (error) {
+            if (r >= retryCount) {
+              throw Error('다운로드 최대 시도 횟수를 초과했습니다.');
+            }
+          }
+        }
+      } catch (error) {
+        alert(error);
+        console.error(error);
+      }
 
       ContextMenu.hide();
     },
@@ -193,22 +222,31 @@ function addContextMenu() {
       imagename = imagename.replace('%num%', '000');
       imagename = imagename.replace('%orig%', url.match(/[0-9a-f]{64}/)[0]);
 
+      const retryCount = getValue(RETRY_COUNT);
       try {
-        const file = await getBlob(
-          url,
-          (e) => {
-            const progress = Math.round((e.loaded / e.total) * 100);
-            event.target.textContent = `${progress}%`;
-          },
-          () => {
-            event.target.textContent = title;
+        for (let r = 1; r <= retryCount; r += 1) {
+          try {
+            const file = await getBlob(
+              url,
+              (e) => {
+                const progress = Math.round((e.loaded / e.total) * 100);
+                event.target.textContent = `${progress}%`;
+              },
+              () => {
+                event.target.textContent = title;
+              }
+            );
+            window.saveAs(file, `${imagename}${ext}`);
+            break;
+          } catch (error) {
+            if (r >= retryCount) {
+              throw Error('다운로드 최대 시도 횟수를 초과했습니다.');
+            }
+            console.error(error);
           }
-        );
-        window.saveAs(file, `${imagename}${ext}`);
+        }
       } catch (error) {
-        alert(
-          `개발자 도구(F12)의 콘솔창의 오류 메세지를 같이 제보 바랍니다.\n사유: ${error.message}`
-        );
+        alert(error);
         console.error(error);
       }
 
@@ -285,26 +323,44 @@ function apply() {
     const originalText = downloadBtn.textContent;
     const total = checkedElements.length;
     const configureName = getValue(IMAGENAME);
+    const retryCount = getValue(RETRY_COUNT);
     let errorCount = 0;
     for (let i = 0; i < checkedElements.length; i += 1) {
       let imagename = replaceData(configureName);
       const { url, filename: orig } = checkedElements[i].parentNode.dataset;
       const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
       try {
-        const file = await getBlob(url, (e) => {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
-        });
+        for (let r = 1; r <= retryCount; r += 1) {
+          try {
+            const file = await getBlob(url, (e) => {
+              const progress = Math.round((e.loaded / e.total) * 100);
+              downloadBtn.textContent = `다운로드 중...${progress}% (${i}/${total})`;
+            });
 
-        imagename = imagename.replace('%orig%', orig);
-        imagename = imagename.replace('%num%', `${i}`.padStart(3, '0'));
-        zip.file(`${imagename}${ext}`, file);
+            imagename = imagename.replace('%orig%', orig);
+            imagename = imagename.replace('%num%', `${i}`.padStart(3, '0'));
+            zip.file(`${imagename}${ext}`, file);
+            break;
+          } catch (error) {
+            if (r >= retryCount) {
+              throw Error('다운로드 최대 시도 횟수를 초과했습니다.');
+            }
+          }
+        }
       } catch (error) {
         errorCount += 1;
         console.error(error);
       }
     }
     downloadBtn.textContent = originalText;
+
+    if (errorCount >= checkedElements.length) {
+      alert(
+        '다운로드한 이미지가 없습니다.\n개발자 도구(F12) 콘솔창의 오류 메세지를 같이 제보바랍니다.'
+      );
+      downloadBtn.disabled = false;
+      return;
+    }
 
     let comment = getValue(ZIP_COMMENT);
     comment = replaceData(comment);
@@ -316,7 +372,7 @@ function apply() {
 
     if (errorCount) {
       alert(
-        `개발자 도구(F12)의 콘솔창의 오류 메세지를 같이 제보 바랍니다.\n사유: 일괄 다운로드 중 오류 발생`
+        '일부 이미지 다운로드 중 오류가 발생했습니다.\n개발자 도구(F12) 콘솔창의 오류 메세지를 같이 제보 바랍니다.'
       );
     }
 
