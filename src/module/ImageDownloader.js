@@ -10,6 +10,7 @@ import { parseChannelTitle, parseUserInfo } from '../core/Parser';
 export default { load };
 
 const FILENAME = { key: 'imageDownloaderFileName', defaultValue: '%title%' };
+const ZIPNAME = { key: 'imageDownloaderZipName', defaultValue: '%title%' };
 const IMAGENAME = { key: 'imageDonwloaderImageName', defaultValue: '%num%' };
 const ZIP_COMMENT = {
   key: 'imageDownloaderZipComment',
@@ -30,7 +31,8 @@ async function load() {
 }
 
 function setupSetting() {
-  const downloadName = <input type="text" />;
+  const fileName = <input type="text" />;
+  const zipName = <input type="text" />;
   const imageName = <input type="text" />;
   const zipComment = <textarea rows="6" />;
 
@@ -38,10 +40,12 @@ function setupSetting() {
     header: '이미지 다운로드',
     group: [
       {
-        title: '압축파일 이름',
+        title: '우클릭 메뉴 저장 시 이미지 이름',
         description: (
           <>
-            이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름 포맷입니다.
+            우클릭 다운로드 사용 시 저장할 파일의 이름입니다.
+            <br />
+            %orig%: 이미지 업로드명 (64자 코드)
             <br />
             %title%: 게시물 제목
             <br />
@@ -52,16 +56,34 @@ function setupSetting() {
             %channel%: 채널 이름
           </>
         ),
-        content: downloadName,
+        content: fileName,
         type: 'wide',
       },
       {
-        title: '저장할 이미지 이름',
+        title: '압축파일 이름',
         description: (
           <>
-            이미지 일괄 다운로드 사용 시 저장할 이미지의 이름 포맷입니다.
+            이미지 일괄 다운로드 사용 시 저장할 압축 파일의 이름입니다.
             <br />
-            orig 혹은 num을 사용하여 이름을 구분해야 정상 저장됩니다.
+            %title%: 게시물 제목
+            <br />
+            %category%: 게시물 카테고리
+            <br />
+            %author%: 게시물 작성자
+            <br />
+            %channel%: 채널 이름
+          </>
+        ),
+        content: zipName,
+        type: 'wide',
+      },
+      {
+        title: '압축파일 내 이미지 이름',
+        description: (
+          <>
+            저장할 압축파일 내 이미지의 이름입니다.
+            <br />
+            orig 혹은 num을 사용하여 이름을 구분해야 정상적으로 구별됩니다.
             <br />
             <br />
             %orig%: 이미지 업로드명 (64자 코드)
@@ -84,7 +106,7 @@ function setupSetting() {
         title: '압축파일 코멘트',
         description: (
           <>
-            이미지 일괄 다운로드 사용 시 저장할 압축파일에 남길 코멘트입니다.
+            저장할 압축파일에 남길 코멘트입니다.
             <br />
             %title%: 게시물 제목
             <br />
@@ -103,12 +125,14 @@ function setupSetting() {
     ],
     configHandler: {
       save() {
-        setValue(FILENAME, downloadName.value);
+        setValue(FILENAME, fileName.value);
+        setValue(ZIPNAME, zipName.value);
         setValue(IMAGENAME, imageName.value);
         setValue(ZIP_COMMENT, zipComment.value);
       },
       load() {
-        downloadName.value = getValue(FILENAME);
+        fileName.value = getValue(FILENAME);
+        zipName.value = getValue(ZIPNAME);
         imageName.value = getValue(IMAGENAME);
         zipComment.value = getValue(ZIP_COMMENT);
       },
@@ -124,21 +148,6 @@ function addContextMenu() {
 
       const url = ContextMenu.getContextData('url');
       const title = event.target.textContent;
-      /*
-      const buffer = await getArrayBuffer(
-        url,
-        (e) => {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          event.target.textContent = `${progress}%`;
-        },
-        () => {
-          event.target.textContent = title;
-        }
-      );
-      const blob = new Blob([buffer], { type: 'image/png' });
-      const item = new ClipboardItem({ [blob.type]: blob });
-      navigator.clipboard.write([item]);
-      */
 
       const rawData = await getBlob(
         url,
@@ -180,7 +189,7 @@ function addContextMenu() {
       const title = event.target.textContent;
       const url = ContextMenu.getContextData('url');
       const ext = url.substring(url.lastIndexOf('.'), url.lastIndexOf('?'));
-      let imagename = replaceData(getValue(IMAGENAME));
+      let imagename = replaceData(getValue(FILENAME));
       imagename = imagename.replace('%num%', '000');
       imagename = imagename.replace('%orig%', url.match(/[0-9a-f]{64}/)[0]);
 
@@ -300,7 +309,7 @@ function apply() {
     let comment = getValue(ZIP_COMMENT);
     comment = replaceData(comment);
 
-    let filename = getValue(FILENAME);
+    let filename = getValue(ZIPNAME);
     filename = replaceData(filename);
     const zipblob = await zip.generateAsync({ type: 'blob', comment });
     window.saveAs(zipblob, `${filename}.zip`);
