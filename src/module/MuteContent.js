@@ -1,11 +1,11 @@
 import ArticleMenu from '../core/ArticleMenu';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
+import { parseChannelCategory, parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
 import { waitForElement } from '../core/LoadManager';
-import { ARTICLE_LOADED, BOARD_LOADED, BOARD_VIEW, BOARD_CATEGORIES } from '../core/ArcaSelector';
+import { ARTICLE_LOADED, BOARD_LOADED, BOARD_VIEW } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -68,19 +68,18 @@ function setupSetting() {
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
-  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
+  const category = parseChannelCategory();
   const categoryContainer = {};
   const categoryWrapper = (
     <div className={MuteStyle.wrapper}>
       <style>{stylesheet}</style>
-      {category.map((c) => {
-        let name = c.textContent;
-        if (name === '전체') name = '일반';
+      {Object.keys(category).map((key) => {
+        const name = category[key];
 
         const previewInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
         const articleInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
 
-        categoryContainer[name] = {
+        categoryContainer[key] = {
           previewMute: previewInput,
           articleMute: articleInput,
         };
@@ -295,6 +294,7 @@ function addArticleMenu() {
 function mutePreview() {
   const channel = parseChannelID();
   const config = getValue(MUTE_CATEGORY)[channel];
+  const categoryMap = parseChannelCategory(true);
   if (!config) return;
 
   const articles = document.querySelectorAll('a.vrow:not(.notice)');
@@ -302,11 +302,11 @@ function mutePreview() {
     const badge = article.querySelector('.badge');
     if (badge === null) return;
 
-    let category = badge.textContent;
-    category = category === '' ? '일반' : category;
-    if (!config[category]) return;
+    const categoryText = badge.textContent || '일반';
+    const categoryID = categoryMap[categoryText];
+    if (!config[categoryID]) return;
 
-    const { mutePreview: filtered } = config[category];
+    const { mutePreview: filtered } = config[categoryID];
     if (!filtered) return;
 
     const preview = article.querySelector('.vrow-preview');
@@ -532,6 +532,7 @@ function mapFilter(items) {
   }
 
   const channel = parseChannelID();
+  const categoryMap = parseChannelCategory(true);
   const { users, keywords } = unsafeWindow.LiveConfig.mute || { users: [], keywords: [] };
   const userlist = Array.from(new Set([...users, ...getValue(BLOCK_USER)]));
   const keywordlist = Array.from(new Set([...keywords, ...getValue(BLOCK_KEYWORD)]));
@@ -552,7 +553,9 @@ function mapFilter(items) {
       count.all += 1;
     }
 
-    const { muteArticle: muteCategory } = categoryConfig[category] || { muteArticle: false };
+    const { muteArticle: muteCategory } = categoryConfig[categoryMap[category]] || {
+      muteArticle: false,
+    };
     if (muteCategory) {
       element.classList.add('filtered');
       element.classList.add('filtered-category');

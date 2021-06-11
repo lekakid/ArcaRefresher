@@ -1,3 +1,5 @@
+import { BOARD_CATEGORIES } from './ArcaSelector';
+
 const CHANNEL_TITLE = '.board-title a:not([class])';
 
 export function parseChannelID() {
@@ -15,6 +17,25 @@ export function parseChannelID() {
 export function parseChannelTitle() {
   const channelTitle = document.querySelector(CHANNEL_TITLE);
   return channelTitle ? channelTitle.textContent : '';
+}
+
+export function parseChannelCategory(isReverseMap) {
+  const channelCategoryList = document.querySelectorAll(BOARD_CATEGORIES);
+  const result = {};
+  channelCategoryList.forEach((e) => {
+    if (e.href.indexOf('category=') > -1) {
+      const id = decodeURI(e.href.split('category=')[1]);
+      const text = e.textContent;
+      if (isReverseMap) {
+        result[text] = id;
+      } else {
+        result[id] = text;
+      }
+    } else {
+      result['일반'] = '일반';
+    }
+  });
+  return result;
 }
 
 export function parseUserInfo(infoElement) {
