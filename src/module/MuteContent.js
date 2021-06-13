@@ -1,4 +1,4 @@
-import ArticleMenu from '../core/ArticleMenu';
+import * as ArticleMenu from '../core/ArticleMenu';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { parseChannelCategory, parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
@@ -263,7 +263,7 @@ function addArticleMenu() {
   const indexed = userList.indexOf(filter);
 
   if (indexed > -1) {
-    ArticleMenu.addHeaderBtn({
+    ArticleMenu.addButton({
       text: '뮤트 해제',
       icon: 'ion-ios-refresh-empty',
       description: '게시물 작성자의 뮤트를 해제합니다.',
@@ -276,7 +276,7 @@ function addArticleMenu() {
       },
     });
   } else {
-    ArticleMenu.addHeaderBtn({
+    ArticleMenu.addButton({
       text: '뮤트',
       icon: 'ion-ios-close',
       description: '게시물 작성자를 뮤트합니다.',
@@ -370,7 +370,7 @@ const ContentTypeString = {
   all: '전체',
 };
 
-const ArticleHeader = { element: null };
+const ArticleMuteHeader = { element: null };
 function muteArticle() {
   if (document.readyState !== 'complete') {
     window.addEventListener('load', muteArticle, { once: true });
@@ -395,10 +395,10 @@ function muteArticle() {
     })
   );
 
-  if (!ArticleHeader.element) {
-    ArticleHeader.element = container.querySelector('.frontend-header');
-    if (ArticleHeader.element) ArticleHeader.element.remove();
-    ArticleHeader.element = (
+  if (!ArticleMuteHeader.element) {
+    ArticleMuteHeader.element = container.querySelector('.frontend-header');
+    if (ArticleMuteHeader.element) ArticleMuteHeader.element.remove();
+    ArticleMuteHeader.element = (
       <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
         <span className="filter-title">필터된 게시물</span>
         <span className="filter-count-container">
@@ -411,7 +411,7 @@ function muteArticle() {
                 container.classList.add(className);
               }
             };
-            ArticleHeader[key] = (
+            ArticleMuteHeader[key] = (
               <span
                 className={`filter-count 
                   filter-count${key === 'all' ? '' : `-${key}`} 
@@ -421,32 +421,32 @@ function muteArticle() {
                 {ContentTypeString[key]} ({count[key]})
               </span>
             );
-            return ArticleHeader[key];
+            return ArticleMuteHeader[key];
           })}
         </span>
       </div>
     );
-    container.insertAdjacentElement('afterbegin', ArticleHeader.element);
+    container.insertAdjacentElement('afterbegin', ArticleMuteHeader.element);
     return;
   }
 
   if (count.all === 0) {
-    ArticleHeader.element.classList.add('hidden');
+    ArticleMuteHeader.element.classList.add('hidden');
     return;
   }
-  ArticleHeader.element.classList.remove('hidden');
+  ArticleMuteHeader.element.classList.remove('hidden');
   Object.keys(count).forEach((key) => {
     if (count[key] === 0) {
-      ArticleHeader[key].classList.add('hidden');
+      ArticleMuteHeader[key].classList.add('hidden');
       return;
     }
 
-    ArticleHeader[key].classList.remove('hidden');
-    ArticleHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+    ArticleMuteHeader[key].classList.remove('hidden');
+    ArticleMuteHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
   });
 }
 
-const CommentHeader = { element: null };
+const CommentMuteHeader = { element: null };
 function muteComment() {
   if (document.readyState !== 'complete') {
     window.addEventListener('load', muteComment, { once: true });
@@ -473,10 +473,11 @@ function muteComment() {
     })
   );
 
-  if (!CommentHeader.element) {
-    CommentHeader.element = container.previousElementSibling;
-    if (CommentHeader.element.classList.contains('frontend-header')) CommentHeader.element.remove();
-    CommentHeader.element = (
+  if (!CommentMuteHeader.element) {
+    CommentMuteHeader.element = container.previousElementSibling;
+    if (CommentMuteHeader.element.classList.contains('frontend-header'))
+      CommentMuteHeader.element.remove();
+    CommentMuteHeader.element = (
       <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
         <span className="filter-title">필터된 댓글</span>
         <span className="filter-count-container">
@@ -489,7 +490,7 @@ function muteComment() {
                 container.classList.add(className);
               }
             };
-            CommentHeader[key] = (
+            CommentMuteHeader[key] = (
               <span
                 className={`filter-count 
                 filter-count${key === 'all' ? '' : `-${key}`} 
@@ -499,29 +500,29 @@ function muteComment() {
                 {ContentTypeString[key]} ({count[key]})
               </span>
             );
-            return CommentHeader[key];
+            return CommentMuteHeader[key];
           })}
         </span>
       </div>
     );
-    container.insertAdjacentElement('beforebegin', CommentHeader.element);
+    container.insertAdjacentElement('beforebegin', CommentMuteHeader.element);
     return;
   }
 
-  container.insertAdjacentElement('beforebegin', CommentHeader.element);
+  container.insertAdjacentElement('beforebegin', CommentMuteHeader.element);
   if (count.all === 0) {
-    CommentHeader.element.classList.add('hidden');
+    CommentMuteHeader.element.classList.add('hidden');
     return;
   }
-  CommentHeader.element.classList.remove('hidden');
+  CommentMuteHeader.element.classList.remove('hidden');
   Object.keys(count).forEach((key) => {
     if (count[key] === 0) {
-      CommentHeader[key].classList.add('hidden');
+      CommentMuteHeader[key].classList.add('hidden');
       return;
     }
 
-    CommentHeader[key].classList.remove('hidden');
-    CommentHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+    CommentMuteHeader[key].classList.remove('hidden');
+    CommentMuteHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
   });
 }
 
