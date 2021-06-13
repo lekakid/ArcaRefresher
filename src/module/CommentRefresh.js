@@ -30,7 +30,7 @@ function apply() {
   );
   const clonebtn = btn.cloneNode(true);
 
-  commentArea.querySelector('.title a').insertAdjacentElement('beforebegin', btn);
+  commentArea.querySelector('.title').insertAdjacentElement('beforeend', btn);
   commentArea.querySelector('.subtitle').append(clonebtn);
 
   async function onClick(event) {

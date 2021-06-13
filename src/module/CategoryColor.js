@@ -5,7 +5,8 @@ import { getContrastYIQ } from '../util/ColorManager';
 
 import styles, { stylesheet } from '../css/CategoryColor.module.css';
 import { waitForElement } from '../core/LoadManager';
-import { BOARD_LOADED, BOARD_CATEGORIES, BOARD_ARTICLES } from '../core/ArcaSelector';
+import { BOARD_LOADED, BOARD_ARTICLES } from '../core/ArcaSelector';
+import { parseChannelCategory } from '../core/Parser';
 
 export default { load };
 
@@ -58,15 +59,14 @@ function renderColorPicker(disabled) {
 }
 
 function setupSetting() {
-  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
+  const category = parseChannelCategory();
   const dataContainer = {};
   const settingWrapper = (
     <div className={styles.wrapper}>
       <style>{stylesheet}</style>
       <style>{GM_getResourceText('colorpicker')}</style>
-      {category.map((c) => {
-        let name = c.textContent;
-        if (name === '전체') name = '일반';
+      {Object.keys(category).map((key) => {
+        const name = category[key];
 
         const badgeElement = (
           <span className="badge badge-success" style={{ margin: '0.25rem' }}>
@@ -112,7 +112,7 @@ function setupSetting() {
           bgElement.style.textDecoration = throughInput.checked ? 'line-through' : '';
         });
 
-        dataContainer[name] = {
+        dataContainer[key] = {
           test: {
             bg: bgElement,
             badge: badgeElement,
@@ -317,15 +317,17 @@ function generateColorStyle() {
 
 function apply() {
   const articles = document.querySelectorAll(BOARD_ARTICLES);
+  const categoryMap = parseChannelCategory(true);
 
   articles.forEach((article) => {
     if (article.childElementCount < 2) return;
 
     const categoryElement = article.querySelector('.badge');
     if (!categoryElement) return;
-    const category = categoryElement.textContent ? categoryElement.textContent : '일반';
-    if (!styleTable[category]) return;
+    const categoryText = categoryElement.textContent ? categoryElement.textContent : '일반';
+    const categoryID = categoryMap[categoryText];
+    if (!styleTable[categoryID]) return;
 
-    article.classList.add(`color_${styleTable[category]}`);
+    article.classList.add(`color_${styleTable[categoryID]}`);
   });
 }

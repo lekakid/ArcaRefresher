@@ -1,11 +1,11 @@
-import ArticleMenu from '../core/ArticleMenu';
+import * as ArticleMenu from '../core/ArticleMenu';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
-import { parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
+import { parseChannelCategory, parseChannelID, parseUserID, parseUserInfo } from '../core/Parser';
 
 import MuteStyle, { stylesheet } from '../css/MuteContent.module.css';
 import { waitForElement } from '../core/LoadManager';
-import { ARTICLE_LOADED, BOARD_LOADED, BOARD_VIEW, BOARD_CATEGORIES } from '../core/ArcaSelector';
+import { ARTICLE_LOADED, BOARD_LOADED, BOARD_VIEW } from '../core/ArcaSelector';
 
 export default { load };
 
@@ -68,19 +68,18 @@ function setupSetting() {
   const keywordMute = (
     <textarea rows="6" placeholder="뮤트할 키워드를 입력, 줄바꿈으로 구별합니다." />
   );
-  const category = [...document.querySelectorAll(BOARD_CATEGORIES)];
+  const category = parseChannelCategory();
   const categoryContainer = {};
   const categoryWrapper = (
     <div className={MuteStyle.wrapper}>
       <style>{stylesheet}</style>
-      {category.map((c) => {
-        let name = c.textContent;
-        if (name === '전체') name = '일반';
+      {Object.keys(category).map((key) => {
+        const name = category[key];
 
         const previewInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
         const articleInput = <input type="checkbox" style={{ margin: '0.25rem' }} />;
 
-        categoryContainer[name] = {
+        categoryContainer[key] = {
           previewMute: previewInput,
           articleMute: articleInput,
         };
@@ -264,7 +263,7 @@ function addArticleMenu() {
   const indexed = userList.indexOf(filter);
 
   if (indexed > -1) {
-    ArticleMenu.addHeaderBtn({
+    ArticleMenu.addButton({
       text: '뮤트 해제',
       icon: 'ion-ios-refresh-empty',
       description: '게시물 작성자의 뮤트를 해제합니다.',
@@ -277,7 +276,7 @@ function addArticleMenu() {
       },
     });
   } else {
-    ArticleMenu.addHeaderBtn({
+    ArticleMenu.addButton({
       text: '뮤트',
       icon: 'ion-ios-close',
       description: '게시물 작성자를 뮤트합니다.',
@@ -295,6 +294,7 @@ function addArticleMenu() {
 function mutePreview() {
   const channel = parseChannelID();
   const config = getValue(MUTE_CATEGORY)[channel];
+  const categoryMap = parseChannelCategory(true);
   if (!config) return;
 
   const articles = document.querySelectorAll('a.vrow:not(.notice)');
@@ -302,11 +302,11 @@ function mutePreview() {
     const badge = article.querySelector('.badge');
     if (badge === null) return;
 
-    let category = badge.textContent;
-    category = category === '' ? '일반' : category;
-    if (!config[category]) return;
+    const categoryText = badge.textContent || '일반';
+    const categoryID = categoryMap[categoryText];
+    if (!config[categoryID]) return;
 
-    const { mutePreview: filtered } = config[category];
+    const { mutePreview: filtered } = config[categoryID];
     if (!filtered) return;
 
     const preview = article.querySelector('.vrow-preview');
@@ -370,7 +370,7 @@ const ContentTypeString = {
   all: '전체',
 };
 
-const ArticleHeader = { element: null };
+const ArticleMuteHeader = { element: null };
 function muteArticle() {
   if (document.readyState !== 'complete') {
     window.addEventListener('load', muteArticle, { once: true });
@@ -395,10 +395,10 @@ function muteArticle() {
     })
   );
 
-  if (!ArticleHeader.element) {
-    ArticleHeader.element = container.querySelector('.frontend-header');
-    if (ArticleHeader.element) ArticleHeader.element.remove();
-    ArticleHeader.element = (
+  if (!ArticleMuteHeader.element) {
+    ArticleMuteHeader.element = container.querySelector('.frontend-header');
+    if (ArticleMuteHeader.element) ArticleMuteHeader.element.remove();
+    ArticleMuteHeader.element = (
       <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
         <span className="filter-title">필터된 게시물</span>
         <span className="filter-count-container">
@@ -411,7 +411,7 @@ function muteArticle() {
                 container.classList.add(className);
               }
             };
-            ArticleHeader[key] = (
+            ArticleMuteHeader[key] = (
               <span
                 className={`filter-count 
                   filter-count${key === 'all' ? '' : `-${key}`} 
@@ -421,32 +421,32 @@ function muteArticle() {
                 {ContentTypeString[key]} ({count[key]})
               </span>
             );
-            return ArticleHeader[key];
+            return ArticleMuteHeader[key];
           })}
         </span>
       </div>
     );
-    container.insertAdjacentElement('afterbegin', ArticleHeader.element);
+    container.insertAdjacentElement('afterbegin', ArticleMuteHeader.element);
     return;
   }
 
   if (count.all === 0) {
-    ArticleHeader.element.classList.add('hidden');
+    ArticleMuteHeader.element.classList.add('hidden');
     return;
   }
-  ArticleHeader.element.classList.remove('hidden');
+  ArticleMuteHeader.element.classList.remove('hidden');
   Object.keys(count).forEach((key) => {
     if (count[key] === 0) {
-      ArticleHeader[key].classList.add('hidden');
+      ArticleMuteHeader[key].classList.add('hidden');
       return;
     }
 
-    ArticleHeader[key].classList.remove('hidden');
-    ArticleHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+    ArticleMuteHeader[key].classList.remove('hidden');
+    ArticleMuteHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
   });
 }
 
-const CommentHeader = { element: null };
+const CommentMuteHeader = { element: null };
 function muteComment() {
   if (document.readyState !== 'complete') {
     window.addEventListener('load', muteComment, { once: true });
@@ -473,10 +473,11 @@ function muteComment() {
     })
   );
 
-  if (!CommentHeader.element) {
-    CommentHeader.element = container.previousElementSibling;
-    if (CommentHeader.element.classList.contains('frontend-header')) CommentHeader.element.remove();
-    CommentHeader.element = (
+  if (!CommentMuteHeader.element) {
+    CommentMuteHeader.element = container.previousElementSibling;
+    if (CommentMuteHeader.element.classList.contains('frontend-header'))
+      CommentMuteHeader.element.remove();
+    CommentMuteHeader.element = (
       <div className={`frontend-header ${count.all === 0 ? 'hidden' : ''}`}>
         <span className="filter-title">필터된 댓글</span>
         <span className="filter-count-container">
@@ -489,7 +490,7 @@ function muteComment() {
                 container.classList.add(className);
               }
             };
-            CommentHeader[key] = (
+            CommentMuteHeader[key] = (
               <span
                 className={`filter-count 
                 filter-count${key === 'all' ? '' : `-${key}`} 
@@ -499,29 +500,29 @@ function muteComment() {
                 {ContentTypeString[key]} ({count[key]})
               </span>
             );
-            return CommentHeader[key];
+            return CommentMuteHeader[key];
           })}
         </span>
       </div>
     );
-    container.insertAdjacentElement('beforebegin', CommentHeader.element);
+    container.insertAdjacentElement('beforebegin', CommentMuteHeader.element);
     return;
   }
 
-  container.insertAdjacentElement('beforebegin', CommentHeader.element);
+  container.insertAdjacentElement('beforebegin', CommentMuteHeader.element);
   if (count.all === 0) {
-    CommentHeader.element.classList.add('hidden');
+    CommentMuteHeader.element.classList.add('hidden');
     return;
   }
-  CommentHeader.element.classList.remove('hidden');
+  CommentMuteHeader.element.classList.remove('hidden');
   Object.keys(count).forEach((key) => {
     if (count[key] === 0) {
-      CommentHeader[key].classList.add('hidden');
+      CommentMuteHeader[key].classList.add('hidden');
       return;
     }
 
-    CommentHeader[key].classList.remove('hidden');
-    CommentHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
+    CommentMuteHeader[key].classList.remove('hidden');
+    CommentMuteHeader[key].textContent = `${ContentTypeString[key]} (${count[key]})`;
   });
 }
 
@@ -532,6 +533,7 @@ function mapFilter(items) {
   }
 
   const channel = parseChannelID();
+  const categoryMap = parseChannelCategory(true);
   const { users, keywords } = unsafeWindow.LiveConfig.mute || { users: [], keywords: [] };
   const userlist = Array.from(new Set([...users, ...getValue(BLOCK_USER)]));
   const keywordlist = Array.from(new Set([...keywords, ...getValue(BLOCK_KEYWORD)]));
@@ -552,7 +554,9 @@ function mapFilter(items) {
       count.all += 1;
     }
 
-    const { muteArticle: muteCategory } = categoryConfig[category] || { muteArticle: false };
+    const { muteArticle: muteCategory } = categoryConfig[categoryMap[category]] || {
+      muteArticle: false,
+    };
     if (muteCategory) {
       element.classList.add('filtered');
       element.classList.add('filtered-category');

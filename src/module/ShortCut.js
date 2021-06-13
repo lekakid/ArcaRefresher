@@ -137,7 +137,7 @@ function onBoard(event) {
       event.preventDefault();
       const active = document.querySelector('.pagination .active');
       if (active.previousElementSibling) {
-        active.previousElementSibling.firstChild.click();
+        active.previousElementSibling.firstElementChild.click();
       }
       break;
     }
@@ -145,7 +145,7 @@ function onBoard(event) {
       event.preventDefault();
       const active = document.querySelector('.pagination .active');
       if (active.nextElementSibling) {
-        active.nextElementSibling.firstChild.click();
+        active.nextElementSibling.firstElementChild.click();
       }
       break;
     }

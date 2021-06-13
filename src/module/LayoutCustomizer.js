@@ -1,4 +1,6 @@
-import { COMMENT_LOADED, HEADER_LOADED } from '../core/ArcaSelector';
+import * as ArticleMenu from '../core/ArticleMenu';
+
+import { ARTICLE_LOADED, COMMENT_LOADED, HEADER_LOADED } from '../core/ArcaSelector';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { waitForElement } from '../core/LoadManager';
 
@@ -30,6 +32,10 @@ async function load() {
 
     await waitForElement(HEADER_LOADED);
     onLoadSite();
+
+    if (await waitForElement(ARTICLE_LOADED)) {
+      addArticleMenu();
+    }
 
     if (await waitForElement(COMMENT_LOADED)) {
       onLoadArticle();
@@ -234,6 +240,19 @@ function setupSetting() {
         forceOpenComment.value = getValue(FORCE_OPEN_COMMENT);
         wideCommentArea.value = getValue(WIDE_AREA);
       },
+    },
+  });
+}
+
+function addArticleMenu() {
+  ArticleMenu.addButton({
+    text: '썸네일 확대',
+    icon: 'ion-search',
+    description: '가려진 썸네일을 확대합니다.',
+    onClick(event) {
+      const media = document.querySelector('.article-content img, .article-content video');
+      media.style.width = '';
+      media.style.height = '';
     },
   });
 }

@@ -1,5 +1,8 @@
 import contextSheet from '../css/ContextMenu.css';
+import { addSetting, getValue, setValue } from './Configure';
 import { waitForElement } from './LoadManager';
+
+const USE_CONTEXT_MENU = { key: 'useContextMenu', defaultValue: true };
 
 const eventList = {
   clickOnImage: [],
@@ -8,16 +11,52 @@ const eventList = {
 const contextMenuView = <div className="menu" id="context-menu" />;
 const contextMenuWrapper = (
   <div className="hidden" id="context-wrapper">
+    <style>{contextSheet}</style>
     {contextMenuView}
   </div>
 );
 let mobile = false;
 
-export async function initialize() {
-  // on/off 설정 넣어
+export async function load() {
+  try {
+    setupSetting();
 
-  await waitForElement('body');
-  document.head.append(<style>{contextSheet}</style>);
+    await waitForElement('body');
+    initialize();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function setupSetting() {
+  const useContextMenu = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  addSetting({
+    header: '컨텍스트 메뉴',
+    group: [
+      {
+        title: '컨텍스트 메뉴',
+        content: useContextMenu,
+      },
+    ],
+    configHandler: {
+      save() {
+        setValue(USE_CONTEXT_MENU, useContextMenu.value === 'true');
+      },
+      load() {
+        useContextMenu.value = getValue(USE_CONTEXT_MENU);
+      },
+    },
+  });
+}
+
+function initialize() {
+  if (!getValue(USE_CONTEXT_MENU)) return;
+
   document.body.append(contextMenuWrapper);
 
   if (window.outerWidth <= 768) {

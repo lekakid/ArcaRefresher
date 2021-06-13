@@ -1,4 +1,12 @@
-import { BOARD_LOADED } from '../core/ArcaSelector';
+import {
+  ARTICLE_LOADED,
+  ARTICLE_VIEW,
+  AUDIT_LOADED,
+  AUDIT_VIEW,
+  BOARD_LOADED,
+  BOARD_VIEW,
+  USER_INFO,
+} from '../core/ArcaSelector';
 import { addAREventListener } from '../core/AREventHandler';
 import { addSetting, getValue, setValue } from '../core/Configure';
 import { waitForElement } from '../core/LoadManager';
@@ -8,23 +16,31 @@ export default { load };
 
 const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
-let handlerApplied = false;
-
 async function load() {
   try {
     setupSetting();
 
+    if (await waitForElement(ARTICLE_LOADED)) {
+      addEvent(ARTICLE_VIEW);
+    }
+
     if (await waitForElement(BOARD_LOADED)) {
-      apply();
+      appendMemo();
+      addEvent(BOARD_VIEW);
+    }
+
+    if (await waitForElement(AUDIT_LOADED)) {
+      appendMemo();
+      addEvent(AUDIT_VIEW);
     }
 
     addAREventListener('ArticleChange', {
       priority: 100,
-      callback: apply,
+      callback: appendMemo,
     });
     addAREventListener('CommentChange', {
       priority: 100,
-      callback: apply,
+      callback: appendMemo,
     });
   } catch (error) {
     console.error(error);
@@ -77,8 +93,8 @@ function setupSetting() {
   });
 }
 
-function apply() {
-  const users = document.querySelectorAll('span.user-info');
+function appendMemo() {
+  const users = document.querySelectorAll(USER_INFO);
   const memos = getValue(USER_MEMO);
 
   users.forEach((user) => {
@@ -97,15 +113,16 @@ function apply() {
       user.title = '';
     }
   });
+}
 
-  const articleView = document.querySelector('.article-wrapper');
-  if (!articleView || handlerApplied) return;
+function addEvent(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  const memos = getValue(USER_MEMO);
 
-  handlerApplied = true;
-  articleView.addEventListener('click', (event) => {
+  container.addEventListener('click', (event) => {
     if (event.target.closest('a')) return;
 
-    const user = event.target.closest('.user-info');
+    const user = event.target.closest(USER_INFO);
     if (user == null) return;
 
     event.preventDefault();
@@ -129,6 +146,6 @@ function apply() {
     }
 
     setValue(USER_MEMO, memos);
-    apply();
+    appendMemo();
   });
 }

@@ -8,7 +8,7 @@ import { ARTICLE_LOADED, BOARD_LOADED } from '../core/ArcaSelector';
 
 export default { load };
 
-const REFRESH_TIME = { key: 'refreshTime', defaultValue: 3 };
+const REFRESH_TIME = { key: 'refreshTime', defaultValue: 5 };
 const HIDE_REFRESHER = { key: 'hideRefresher', defaultValue: false };
 
 let refreshTime = 0;

@@ -1,5 +1,3 @@
-export default { addHeaderBtn };
-
 /**
  * 게시물 상단 헤더 메뉴에 버튼을 추가합니다.
  * @param {Object} param                파라미터 오브젝트
@@ -8,7 +6,7 @@ export default { addHeaderBtn };
  * @param {string} [param.description]  버튼에 마우스를 올려두면 표시될 설명
  * @param {Function} param.onClick      버튼을 클릭 시 호출할 콜백 함수
  */
-function addHeaderBtn({ text, icon, description, onClick }) {
+export function addButton({ text, icon, description, onClick }) {
   const headerMenu = document.querySelector('.edit-menu');
   if (!headerMenu) return;
 

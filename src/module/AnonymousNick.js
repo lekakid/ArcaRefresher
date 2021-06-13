@@ -1,5 +1,5 @@
 import { ARTICLE_LOADED } from '../core/ArcaSelector';
-import ArticleMenu from '../core/ArticleMenu';
+import * as ArticleMenu from '../core/ArticleMenu';
 import { waitForElement } from '../core/LoadManager';
 import { parseUserID } from '../core/Parser';
 
@@ -51,7 +51,7 @@ async function load() {
 }
 
 function addArticleMenu() {
-  ArticleMenu.addHeaderBtn({
+  ArticleMenu.addButton({
     text: '익명화',
     icon: 'ion-wand',
     description: '게시물 작성자와 댓글 작성자를 일시적 익명으로 만듭니다.',

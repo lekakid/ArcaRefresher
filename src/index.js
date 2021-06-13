@@ -29,7 +29,7 @@ import UserMemo from './module/UserMemo';
   // UI Related Core Module
   Transition.initilaize();
   Configure.initialize();
-  ContextMenu.initialize();
+  ContextMenu.load();
 
   // Feature Module
   AutoRefresher.load();
