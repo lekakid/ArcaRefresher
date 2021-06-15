@@ -24,7 +24,7 @@ export function parseChannelCategory(isReverseMap) {
   const result = {};
   channelCategoryList.forEach((e) => {
     if (e.href.indexOf('category=') > -1) {
-      const id = decodeURI(e.href.split('category=')[1]);
+      const id = decodeURI(e.href.split('category=')[1].split('&')[0]);
       const text = e.textContent;
       if (isReverseMap) {
         result[text] = id;
