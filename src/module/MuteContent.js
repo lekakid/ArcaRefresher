@@ -17,12 +17,11 @@ const MUTE_REPLY_TYPE = { key: 'muteReplyType', defaultValue: 'target-only' };
 
 async function load() {
   try {
-    setupSetting();
-
     if (await waitForElement(ARTICLE_LOADED)) {
       addArticleMenu();
     }
     if (await waitForElement(BOARD_LOADED)) {
+      setupSetting();
       muteSidebar();
       muteComment();
       muteNotice();
