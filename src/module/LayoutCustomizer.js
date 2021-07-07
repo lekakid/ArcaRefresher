@@ -13,6 +13,7 @@ export default { load };
 const HIDE_RECENT_VISIT = { key: 'hideRecentVisit', defaultValue: false };
 const HIDE_SIDEMENU = { key: 'hideSideMenu', defaultValue: false };
 const HIDE_AVATAR = { key: 'hideAvatar', defaultValue: false };
+const USERINFO_WIDTH = { key: 'userinfoWidth', defaultValue: 10 };
 const NOTIFY_COLOR = { key: 'notificationIconColor', defaultValue: '' };
 // ----------------------------------- 본문 레이아웃 -----------------------------------
 const RESIZE_IMAGE = { key: 'resizeImage', defaultValue: '100' };
@@ -65,6 +66,7 @@ function setupSetting() {
       <option value="true">숨김</option>
     </select>
   );
+  const userinfoWidth = <input type="number" placeholder="0" min="0" max="200" />;
   const notifyColor = <input type="text" placeholder="FFC107" maxLength="6" />;
   const notificationIcon = (
     <span
@@ -119,6 +121,10 @@ function setupSetting() {
         content: hideAvatar,
       },
       {
+        title: '게시판 유저 칸 추가 너비(%)',
+        content: userinfoWidth,
+      },
+      {
         title: '알림 아이콘 점등 색상 변경',
         description: (
           <>
@@ -140,12 +146,14 @@ function setupSetting() {
         setValue(HIDE_RECENT_VISIT, hideRecentVisit.value === 'true');
         setValue(HIDE_SIDEMENU, hideSideMenu.value === 'true');
         setValue(HIDE_AVATAR, hideAvatar.value === 'true');
+        setValue(USERINFO_WIDTH, Number(userinfoWidth.value));
         setValue(NOTIFY_COLOR, notifyColor.value);
       },
       load() {
         hideRecentVisit.value = getValue(HIDE_RECENT_VISIT);
         hideSideMenu.value = getValue(HIDE_SIDEMENU);
         hideAvatar.value = getValue(HIDE_AVATAR);
+        userinfoWidth.value = getValue(USERINFO_WIDTH);
         notifyColor.value = getValue(NOTIFY_COLOR);
 
         notificationIcon.style.color = '#fff';
@@ -270,6 +278,15 @@ function onLoadSite() {
 
   const hideAvatar = getValue(HIDE_AVATAR);
   if (hideAvatar) contentWrapper.classList.add('hide-avatar');
+
+  const userinfoWidth = getValue(USERINFO_WIDTH);
+  document.head.append(
+    <style>
+      {`.vcol.col-author {
+      width: ${7 + 7 * userinfoWidth * 0.01}rem !important;
+    }`}
+    </style>
+  );
 
   const color = getValue(NOTIFY_COLOR);
   const notificationIcon = document.querySelector('.navbar-wrapper .noti-menu-link span');

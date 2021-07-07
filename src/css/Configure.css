@@ -136,7 +136,8 @@
 
 #refresherSetting select,
 #refresherSetting textarea,
-#refresherSetting input[type='text'] {
+#refresherSetting input[type='text'],
+#refresherSetting input[type='number'] {
   display: block;
   width: 100%;
   margin: 0;

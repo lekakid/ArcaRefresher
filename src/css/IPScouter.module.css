@@ -1,7 +1,3 @@
-:global .vcol.col-author {
-  width: 7.5rem !important;
-}
-
 :global(.ips) + .green {
   color: rgb(37, 141, 37);
 }

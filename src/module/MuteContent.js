@@ -12,11 +12,15 @@ export default { load };
 const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
 const BLOCK_KEYWORD = { key: 'blockKeyword', defaultValue: [] };
 const MUTE_CATEGORY = { key: 'muteCategory', defaultValue: {} };
+const HIDE_MUTE_BAR = { key: 'hideMuteBar', defaultValue: false };
 const MUTE_NOTICE = { key: 'hideNotice', defaultValue: false };
 const MUTE_REPLY_TYPE = { key: 'muteReplyType', defaultValue: 'target-only' };
 
 async function load() {
   try {
+    await waitForElement('head');
+    applyStyle();
+
     if (await waitForElement(ARTICLE_LOADED)) {
       addArticleMenu();
     }
@@ -48,8 +52,29 @@ async function load() {
   }
 }
 
+function applyStyle() {
+  const hideMuteBar = getValue(HIDE_MUTE_BAR);
+  if (hideMuteBar) {
+    document.head.append(
+      <style>
+        {`
+        .frontend-header {
+          display: none !important;
+        }
+      `}
+      </style>
+    );
+  }
+}
+
 function setupSetting() {
   const hideNotice = (
+    <select>
+      <option value="false">사용 안 함</option>
+      <option value="true">사용</option>
+    </select>
+  );
+  const hideMuteBar = (
     <select>
       <option value="false">사용 안 함</option>
       <option value="true">사용</option>
@@ -104,6 +129,10 @@ function setupSetting() {
       {
         title: '공지사항 접기',
         content: hideNotice,
+      },
+      {
+        title: '뮤트 카운트바 숨김',
+        content: hideMuteBar,
       },
       {
         title: '댓글을 숨길 때',
@@ -191,6 +220,7 @@ function setupSetting() {
       },
       save() {
         setValue(MUTE_NOTICE, hideNotice.value === 'true');
+        setValue(HIDE_MUTE_BAR, hideMuteBar.value === 'true');
         setValue(MUTE_REPLY_TYPE, muteReplyType.value);
         setValue(
           BLOCK_USER,
@@ -231,6 +261,7 @@ function setupSetting() {
       },
       load() {
         hideNotice.value = getValue(MUTE_NOTICE);
+        hideMuteBar.value = getValue(HIDE_MUTE_BAR);
         muteReplyType.value = getValue(MUTE_REPLY_TYPE);
         userMute.value = getValue(BLOCK_USER).join('\n');
         keywordMute.value = getValue(BLOCK_KEYWORD).join('\n');
