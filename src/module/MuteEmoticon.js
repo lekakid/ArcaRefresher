@@ -186,7 +186,12 @@ function appendMuteBtn() {
     const btn = (
       <span>
         {'\n | '}
-        <a href="#" className="block-emoticon" data-id={item.dataset.id}>
+        <a
+          href="#"
+          className="block-emoticon"
+          data-id={item.dataset.id}
+          data-url={item.src.replace('https:', '')}
+        >
           <span className="ion-ios-close" />
           {' 아카콘 뮤트'}
         </a>
@@ -206,11 +211,17 @@ function appendMuteBtn() {
       event.target.textContent = '뮤트 처리 중...';
       event.target.classList.remove('block-emoticon');
       const id = event.target.dataset.id;
-      const [name, bundleID] = await getEmoticonInfo(id);
-      const [bundle, url] = await getEmoticonBundle(bundleID);
+      const img = event.target.dataset.url;
 
       const blockEmoticon = getValue(BLOCK_EMOTICON);
-      blockEmoticon[bundleID] = { name, bundle, url };
+      const [name, bundleID] = await getEmoticonInfo(id);
+      if (blockEmoticon[bundleID]) {
+        blockEmoticon[bundleID].bundle.push(Number(id));
+        blockEmoticon[bundleID].url.push(img);
+      } else {
+        const [bundle, url] = await getEmoticonBundle(bundleID);
+        blockEmoticon[bundleID] = { name, bundle, url };
+      }
       setValue(BLOCK_EMOTICON, blockEmoticon);
     } catch (error) {
       alert(error);
