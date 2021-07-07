@@ -19,6 +19,7 @@ import NewWindow from './module/NewWindow';
 import RatedownGuard from './module/RatedownGuard';
 import ShortCut from './module/ShortCut';
 import TemporaryArticle from './module/TemporaryArticle';
+import * as ThemeCustomizer from './module/ThemeCustomizer';
 import UserColor from './module/UserColor';
 import UserMemo from './module/UserMemo';
 
@@ -47,6 +48,7 @@ import UserMemo from './module/UserMemo';
   NewWindow.load();
   RatedownGuard.load();
   ShortCut.load();
+  ThemeCustomizer.load();
   UserColor.load();
   UserMemo.load();
 
