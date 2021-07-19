@@ -1,32 +1,35 @@
 module.exports = {
   root: true,
-  extends: [
-    require.resolve('@gera2ld/plaid/eslint'),
-    require.resolve('@gera2ld/plaid-common-react/eslint'),
-    'prettier',
-  ],
-  settings: {
-    'import/resolver': {
-      'babel-module': {},
-    },
-    react: {
-      pragma: 'VM',
-    },
+  extends: ['react-app', 'airbnb', 'prettier'],
+  parser: '@babel/eslint-parser',
+  plugins: ['@babel'],
+  rules: {
+    'no-console': 'off',
+    'no-param-reassign': [
+      'error',
+      { props: true, ignorePropertyModificationsFor: ['state'] },
+    ],
+    'react/jsx-wrap-multilines': [
+      'error',
+      {
+        prop: 'ignore',
+      },
+    ],
+    'react/prop-types': 'off',
   },
   globals: {
-    VM: true,
     GM_info: true,
     GM_setValue: true,
     GM_getValue: true,
     GM_deleteValue: true,
     GM_listValues: true,
     GM_xmlhttpRequest: true,
-    GM_getResourceText: true,
     unsafeWindow: true,
     ClipboardItem: true,
-    JSZip: true,
   },
-  rules: {
-    'no-alert': 'off',
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
   },
 };
