@@ -7,18 +7,5 @@
   "exclude-match": ["https://st*.arca.live/*"],
   "noframes": "",
   "run-at": "document-start",
-  "grant": [
-    "GM_setValue",
-    "GM_getValue",
-    "GM_deleteValue",
-    "GM_listValues",
-    "GM_xmlhttpRequest",
-    "GM_getResourceText"
-  ],
-  "require": [
-    "https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js",
-    "https://unpkg.com/jszip@3.1.5/dist/jszip.min.js",
-    "https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"
-  ],
-  "resource": ["colorpicker https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"]
+  "grant": ["GM_setValue", "GM_getValue", "GM_deleteValue", "GM_listValues", "GM_xmlhttpRequest"]
 }
