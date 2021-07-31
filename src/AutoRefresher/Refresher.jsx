@@ -6,8 +6,7 @@ import { useSelector } from 'react-redux';
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from '../$Common/Selector';
 import useAwaitElement from '../$Common/AwaitElement';
 import { getNewArticle, swapArticle } from './article';
-
-export const EVENT_AUTOREFRESH = 'AREVENT_AUTOREFRESH';
+import { EVENT_AUTOREFRESH } from '../$Common/Event';
 
 const RUNNING_STATE = true;
 const STOP_STATE = false;
