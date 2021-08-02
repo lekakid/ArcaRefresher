@@ -6,6 +6,7 @@ import Store from './$Common/Store';
 import Config from './$Config';
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
+import ArticleRemover from './ArticleRemover';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -34,6 +35,7 @@ async function awaitDocumentBody() {
       <Config />
       <AutoRefresher />
       <CommentRefresh />
+      <ArticleRemover />
     </Provider>,
     appContainer,
   );
