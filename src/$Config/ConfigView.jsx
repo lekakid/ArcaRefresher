@@ -5,6 +5,7 @@ import { Dialog } from '@material-ui/core';
 
 import AutoRefresher from '../AutoRefresher/ConfigView';
 import ArticleRemover from '../ArticleRemover/ConfigView';
+import ImageDownloader from '../ImageDownloader/ConfigView';
 
 export default function ConfigView(props) {
   const [container, setContainer] = useState(null);
@@ -20,6 +21,7 @@ export default function ConfigView(props) {
     <Dialog fullWidth maxWidth="xs" open={props.open} onClose={props.onClose}>
       <AutoRefresher />
       <ArticleRemover />
+      <ImageDownloader />
     </Dialog>,
     container,
   );

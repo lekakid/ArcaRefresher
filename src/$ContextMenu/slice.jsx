@@ -1,23 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
 
-const USE_CONTEXT_MENU = { key: 'useContextMenu', defaultValue: true };
+const ENABLED = { key: 'useContextMenu', defaultValue: true };
 
 const initialState = {
-  useContextMenu: getValue(USE_CONTEXT_MENU),
+  enabled: getValue(ENABLED),
+  menuList: [],
 };
 
 export const contextMenuSlice = createSlice({
   name: 'ContextMenu',
   initialState,
   reducers: {
-    setUseContextMenu(state, action) {
-      state.timeLimit = action.payload;
-      setValue(USE_CONTEXT_MENU, action.payload);
+    setEnable(state, action) {
+      state.enabled = action.payload;
+      setValue(ENABLED, action.payload);
+    },
+    addContextMenu(state, action) {
+      state.menuList.push(action.payload);
     },
   },
 });
 
-export const { setUseContextMenu } = contextMenuSlice.actions;
+export const { setEnable, addContextMenu } = contextMenuSlice.actions;
 
 export default contextMenuSlice.reducer;

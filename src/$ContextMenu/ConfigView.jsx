@@ -11,7 +11,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 
 import ConfigGroup from '../$Config/ConfigGroup';
-import { setUseContextMenu } from './slice';
+import { setEnable } from './slice';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,11 +22,11 @@ const useStyles = makeStyles(() => ({
 
 export default function ConfigView() {
   const classes = useStyles();
-  const { useContextMenu } = useSelector((state) => state.contextMenuSlice);
+  const { enabled } = useSelector((state) => state.contextMenuSlice);
   const dispatch = useDispatch();
 
   const handleTestMode = (e) => {
-    dispatch(setUseContextMenu(e.target.checked));
+    dispatch(setEnable(e.target.checked));
   };
 
   return (
@@ -35,7 +35,7 @@ export default function ConfigView() {
         <ListItem>
           <ListItemText>우클릭 메뉴 사용</ListItemText>
           <ListItemSecondaryAction>
-            <Switch checked={useContextMenu} onChange={handleTestMode} />
+            <Switch checked={enabled} onChange={handleTestMode} />
           </ListItemSecondaryAction>
         </ListItem>
       </List>

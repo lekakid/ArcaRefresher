@@ -22,8 +22,15 @@ export const ARTICLE_DELETE_FORM = '.batch-delete-form';
 export const BOARD_CATEGORIES = '.board-category a';
 export const BOARD_ARTICLES = 'a.vrow:not(.notice-unfilter)';
 export const BOARD_ARTICLES_WITHOUT_NOTICE = 'a.vrow:not(.notice)';
+export const ARTICLE_TITLE = '.article-head .title';
+export const ARTICLE_CATEGORY = '.article-head .badge';
+export const ARTICLE_AUTHOR = '.article-head .user-info';
+export const ARTICLE_IMAGES =
+  '.article-body img, .article-body video:not([controls])';
+export const ARTICLE_URL = '.article-body .article-link a';
+export const ARTICLE_BODY = '.article-body';
 export const COMMENT_ITEMS = '#comment comment-item';
 export const COMMENT_TITLE = '#comment .title';
 export const COMMENT_SUBTITLE = '#comment .subtitle';
-export const CHANNEL_TITLE = '.board-title a:not([class])';
+export const CHANNEL_TITLE = '.board-title span + a:not([class])';
 export const USER_INFO = 'span.user-info';

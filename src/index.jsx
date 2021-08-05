@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from '@material-ui/styles';
 
 import Store from './$Common/Store';
+import theme from './$Common/Theme';
 import Config from './$Config';
+import ContextMenu from './$ContextMenu';
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 import ArticleRemover from './ArticleRemover';
+import ImageDownloader from './ImageDownloader';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -32,10 +36,14 @@ async function awaitDocumentBody() {
 
   ReactDOM.render(
     <Provider store={Store}>
-      <Config />
-      <AutoRefresher />
-      <CommentRefresh />
-      <ArticleRemover />
+      <ThemeProvider theme={theme}>
+        <Config />
+        <ContextMenu />
+        <AutoRefresher />
+        <CommentRefresh />
+        <ArticleRemover />
+        <ImageDownloader />
+      </ThemeProvider>
     </Provider>,
     appContainer,
   );
