@@ -1,6 +1,6 @@
 import { BOARD_CATEGORIES } from './ArcaSelector';
 
-const CHANNEL_TITLE = '.board-title a:not([class])';
+const CHANNEL_TITLE = '.board-title span + a:not([class])';
 
 export function parseChannelID() {
   try {
@@ -16,7 +16,7 @@ export function parseChannelID() {
 
 export function parseChannelTitle() {
   const channelTitle = document.querySelector(CHANNEL_TITLE);
-  return channelTitle ? channelTitle.textContent : '';
+  return channelTitle ? channelTitle.textContent.replace(' 채널', '') : '';
 }
 
 export function parseChannelCategory(isReverseMap) {
