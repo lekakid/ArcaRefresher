@@ -11,6 +11,7 @@ import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 import ArticleRemover from './ArticleRemover';
 import ImageDownloader from './ImageDownloader';
+import ImageSearch from './ImageSearch';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -43,6 +44,7 @@ async function awaitDocumentBody() {
         <CommentRefresh />
         <ArticleRemover />
         <ImageDownloader />
+        <ImageSearch />
       </ThemeProvider>
     </Provider>,
     appContainer,
