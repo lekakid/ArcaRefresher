@@ -12,6 +12,7 @@ import CommentRefresh from './CommentRefresh';
 import ArticleRemover from './ArticleRemover';
 import ImageDownloader from './ImageDownloader';
 import ImageSearch from './ImageSearch';
+import IPInfo from './IPInfo';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -45,6 +46,7 @@ async function awaitDocumentBody() {
         <ArticleRemover />
         <ImageDownloader />
         <ImageSearch />
+        <IPInfo />
       </ThemeProvider>
     </Provider>,
     appContainer,
