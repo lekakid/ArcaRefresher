@@ -6,10 +6,25 @@ import { useSelector } from 'react-redux';
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from '../$Common/Selector';
 import useAwaitElement from '../$Common/AwaitElement';
 import { getNewArticle, swapArticle } from './article';
-import { EVENT_AUTOREFRESH } from '../$Common/Event';
+import { dispatchAREvent, EVENT_AUTOREFRESH } from '../$Common/Event';
 
 const RUNNING_STATE = true;
 const STOP_STATE = false;
+
+const useStyles = makeStyles(() => ({
+  refreshed: {
+    animationName: '$light',
+    animationDuration: 500,
+  },
+  '@keyframes light': {
+    '0%': {
+      backgroundColor: 'rgba(246, 247, 239, 1)',
+    },
+    '100%': {
+      backgroundColor: 'rgba(246, 247, 239, 0)',
+    },
+  },
+}));
 
 export default function Refresher() {
   const { timeLimit, showProgress } = useSelector(
@@ -17,6 +32,8 @@ export default function Refresher() {
   );
   const [boardView, setBoardView] = useState(null);
   const [animate, setAnimation] = useState(RUNNING_STATE);
+
+  const classes = useStyles();
 
   useAwaitElement(BOARD_LOADED, () => {
     setBoardView(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
@@ -54,12 +71,12 @@ export default function Refresher() {
       if (!animate) return;
 
       const newArticle = await getNewArticle();
-      swapArticle(boardView, newArticle);
-      boardView.dispatchEvent(new Event(EVENT_AUTOREFRESH));
+      swapArticle(boardView, newArticle, classes.refreshed);
+      dispatchAREvent(EVENT_AUTOREFRESH);
     }, timeLimit * 1000);
 
     return () => clearInterval(timer);
-  }, [animate, boardView, timeLimit]);
+  }, [animate, boardView, classes.refreshed, timeLimit]);
 
   return (
     <Fade in={boardView && timeLimit !== 0 && showProgress}>
@@ -70,7 +87,7 @@ export default function Refresher() {
   );
 }
 
-const useStyles = makeStyles(() => ({
+const useProgressStyles = makeStyles(() => ({
   root: {
     position: 'fixed',
     border: '6px solid #d3d3d3',
@@ -107,7 +124,7 @@ const useStyles = makeStyles(() => ({
 
 function Progress(props) {
   const { time, animate } = props;
-  const classes = useStyles(props);
+  const classes = useProgressStyles(props);
 
   return (
     <div

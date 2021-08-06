@@ -8,7 +8,7 @@ import {
   COMMENT_LOADED,
   COMMENT_TITLE,
 } from '../$Common/Selector';
-import { EVENT_COMMENT_REFRESH } from '../$Common/Event';
+import { dispatchAREvent, EVENT_COMMENT_REFRESH } from '../$Common/Event';
 
 import getNewComment from './comment';
 
@@ -33,7 +33,7 @@ export default function RefreshButton() {
     const newComments = await getNewComment();
     if (newComments) {
       container.replaceWith(newComments);
-      document.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
+      dispatchAREvent(EVENT_COMMENT_REFRESH);
     }
   }, [container]);
 
