@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import ArticleButton from './ArticleButton';
-import { addContextMenu } from '../$ContextMenu/slice';
 import { EventContextItemPair, IMAGE_MENU } from '../$ContextMenu/ContextEvent';
+import { addContextMenu } from '../$ContextMenu/slice';
 
 import ContextMenu from './ContextMenu';
 
@@ -15,5 +14,5 @@ export default () => {
     dispatch(addContextMenu(menu));
   }, [dispatch]);
 
-  return <ArticleButton />;
+  return null;
 };

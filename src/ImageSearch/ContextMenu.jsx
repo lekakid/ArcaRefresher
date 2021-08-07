@@ -1,31 +1,35 @@
 import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
+import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
+import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
-import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
+export default function ContextMenu() {
+  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.ContextMenu);
 
-export default function ContextMenu({ data, onClose, setSnack }) {
   const handleGoogle = useCallback(() => {
     window.open(
       `https://www.google.com/searchbyimage?safe=off&image_url=${data.orig}`,
     );
-    onClose();
-  }, [data.orig, onClose]);
+    dispatch(setContextOpen(false));
+  }, [data.orig, dispatch]);
 
   const handleYandex = useCallback(() => {
     window.open(
       `https://yandex.com/images/search?rpt=imageview&url=${data.orig}`,
     );
-    onClose();
-  }, [data.orig, onClose]);
+    dispatch(setContextOpen(false));
+  }, [data.orig, dispatch]);
 
   const handleSauceNao = useCallback(() => {
     (async () => {
       try {
-        onClose();
-        setSnack('SauceNao에서 검색 중...');
+        dispatch(setContextOpen(false));
+        dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
         const { response: blob } = await fetch({
           url: data.orig,
           timeout: 10000,
@@ -33,7 +37,12 @@ export default function ContextMenu({ data, onClose, setSnack }) {
         });
 
         if (blob.size > 15728640) {
-          setSnack('업로드 용량 제한(15MB)을 초과했습니다.');
+          dispatch(
+            setContextSnack({
+              msg: '업로드 용량 제한(15MB)을 초과했습니다.',
+              time: 3000,
+            }),
+          );
           return;
         }
 
@@ -52,27 +61,35 @@ export default function ContextMenu({ data, onClose, setSnack }) {
           .querySelector('#yourimage a')
           ?.href.split('image=')[1];
         if (!resultURL) {
-          setSnack('이미지 업로드에 실패했습니다.');
+          dispatch(
+            setContextSnack({
+              msg: '이미지 업로드에 실패했습니다.',
+              time: 3000,
+            }),
+          );
           return;
         }
         window.open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
         );
-        setSnack('');
+        dispatch(setContextSnack(''));
       } catch (error) {
-        setSnack(
-          '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+        dispatch(
+          setContextSnack({
+            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+            time: 3000,
+          }),
         );
         console.error(error);
       }
     })();
-  }, [data.orig, onClose, setSnack]);
+  }, [data.orig, dispatch]);
 
   const handleTwigaten = useCallback(() => {
     (async () => {
       try {
-        onClose();
-        setSnack('TwiGaTen에서 검색 중...');
+        dispatch(setContextOpen(false));
+        dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
         const { response: blob } = await fetch({
           url: data.orig,
           timeout: 10000,
@@ -88,21 +105,24 @@ export default function ContextMenu({ data, onClose, setSnack }) {
           data: formdata,
         });
         window.open(resultURL);
-        setSnack('');
+        dispatch(setContextSnack(''));
       } catch (error) {
-        setSnack(
-          '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+        dispatch(
+          setContextSnack({
+            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+            time: 3000,
+          }),
         );
         console.error(error);
       }
     })();
-  }, [data.orig, onClose, setSnack]);
+  }, [data.orig, dispatch]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
-        onClose();
-        setSnack('Ascii2D에서 검색 중...');
+        dispatch(setContextOpen(false));
+        dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
         const { response: blob } = await fetch({
           url: data.orig,
           timeout: 10000,
@@ -117,7 +137,9 @@ export default function ContextMenu({ data, onClose, setSnack }) {
           'input[name="authenticity_token"]',
         )?.value;
         if (!token) {
-          setSnack('Ascii2d 검색 토큰 획득 실패');
+          dispatch(
+            setContextSnack({ msg: 'Ascii2d 검색 토큰 획득 실패', time: 3000 }),
+          );
           return;
         }
 
@@ -132,15 +154,18 @@ export default function ContextMenu({ data, onClose, setSnack }) {
           data: formdata,
         });
         window.open(resultURL);
-        setSnack('');
+        dispatch(setContextSnack(''));
       } catch (error) {
-        setSnack(
-          '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+        dispatch(
+          setContextSnack({
+            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+            time: 3000,
+          }),
         );
         console.error(error);
       }
     })();
-  }, [data.orig, onClose, setSnack]);
+  }, [data.orig, dispatch]);
 
   return (
     <ContextMenuGroup>

@@ -1,8 +1,10 @@
-export const IMAGE_MENU = 'IMAGE_MENU';
-export const TEMP = 'TEMP';
+import { getUserID } from '../$Common/Parser';
 
-export function EventContextItemPair(eventType, Component) {
-  return { eventType, Component };
+export const IMAGE_MENU = 'IMAGE_MENU';
+export const USER_MENU = 'USER_MENU';
+
+export function EventContextItemPair(eventType, menu) {
+  return { eventType, menu };
 }
 
 function ContextEvent(eventType, test, getData) {
@@ -25,13 +27,21 @@ function getImgData(e) {
   return { orig, thumb, ext, uploadName };
 }
 
-function testTemp() {
-  return false;
+function testOnClickUserInfo(e) {
+  return !!e.target.closest('span.user-info');
+}
+
+function getUserInfoData(e) {
+  const userInfo = e.target.closest('span.user-info');
+
+  const id = getUserID(userInfo);
+
+  return { id };
 }
 
 const EventTest = [
   ContextEvent(IMAGE_MENU, testOnClickImg, getImgData),
-  ContextEvent(TEMP, testTemp, testTemp),
+  ContextEvent(USER_MENU, testOnClickUserInfo, getUserInfoData),
 ];
 
 export default EventTest;

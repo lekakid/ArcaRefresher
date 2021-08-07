@@ -1,91 +1,59 @@
-import { Menu, MenuItem, Snackbar } from '@material-ui/core';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Menu, MenuItem } from '@material-ui/core';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ContextEvent from './ContextEvent';
-
-const initState = {
-  mouseX: null,
-  mouseY: null,
-  eventType: null,
-  data: null,
-  open: false,
-};
+import { setContextEvent, setContextOpen } from './slice';
 
 export default function ContextMenu() {
-  const { menuList } = useSelector((state) => state.ContextMenu);
-  const [contextState, setContextState] = useState(initState);
-  const [snack, setSnack] = useState('');
+  const dispatch = useDispatch();
+  const { menuList, open, mousePos, eventType } = useSelector(
+    (state) => state.ContextMenu,
+  );
 
   useEffect(() => {
     const handleContext = (e) => {
-      setContextState((prevState) => {
-        if (prevState.open) {
-          return {
-            ...prevState,
-            open: false,
+      if (open) {
+        dispatch(setContextOpen(false));
+      }
+
+      ContextEvent.some(({ eventType: type, test, getData }) => {
+        if (test(e)) {
+          e.preventDefault();
+          const event = {
+            mousePos: [e.clientX, e.clientY],
+            eventType: type,
+            data: getData(e),
           };
+          dispatch(setContextEvent(event));
+          return true;
         }
-
-        for (let i = 0; i < ContextEvent.length; i += 1) {
-          const { eventType, test, getData } = ContextEvent[i];
-
-          if (test(e)) {
-            e.preventDefault();
-            return {
-              mouseX: e.clientX,
-              mouseY: e.clientY,
-              eventType,
-              data: getData(e),
-              open: true,
-            };
-          }
-        }
-        return initState;
+        return false;
       });
     };
 
     document.addEventListener('contextmenu', handleContext);
-  }, []);
+
+    return () => document.removeEventListener('contextmenu', handleContext);
+  }, [dispatch, open]);
 
   const handleClose = useCallback(() => {
-    setContextState((prevState) => ({
-      ...prevState,
-      open: false,
-    }));
-  }, []);
-
-  const handleSnackClose = useCallback(() => {
-    setSnack('');
-  }, []);
+    dispatch(setContextOpen(false));
+  }, [dispatch]);
 
   return (
     <>
-      <Snackbar
-        open={snack}
-        autoHideDuration={3000}
-        onClose={handleSnackClose}
-        message={snack}
-      />
       <Menu
         keepMounted
-        open={contextState.open}
+        open={open}
         onClose={handleClose}
         anchorReference="anchorPosition"
-        anchorPosition={{ top: contextState.mouseY, left: contextState.mouseX }}
+        anchorPosition={{ top: mousePos[1], left: mousePos[0] }}
       >
         <MenuItem dense>Arca Refresher</MenuItem>
-        {menuList.map(({ eventType: type, Component }) => {
-          if (type === contextState.eventType)
-            return (
-              <Component
-                data={contextState.data}
-                onClose={handleClose}
-                setSnack={setSnack}
-              />
-            );
-          return null;
-        })}
+        {menuList.map(({ eventType: type, menu }) =>
+          type === eventType ? menu : null,
+        )}
       </Menu>
     </>
   );

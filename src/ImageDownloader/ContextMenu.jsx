@@ -1,15 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
+import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
 import { getArticleInfo, replaceFlag } from './FlagHandler';
 
-export default function ContextMenu({ data, onClose, setSnack }) {
+export default function ContextMenu() {
+  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.ContextMenu);
   const config = useSelector((state) => state.ImageDownloader);
   const [articleInfo, setArticleInfo] = useState(null);
 
@@ -21,8 +24,8 @@ export default function ContextMenu({ data, onClose, setSnack }) {
     (async () => {
       for (let i = 0; i < config.retryCount; i += 1) {
         try {
-          onClose();
-          setSnack('이미지를 다운로드 받는 중...');
+          dispatch(setContextOpen(false));
+          dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
           const { response: rawData } = await fetch({
             url: data.orig,
@@ -50,21 +53,24 @@ export default function ContextMenu({ data, onClose, setSnack }) {
             [convertedBlob.type]: convertedBlob,
           });
           navigator.clipboard.write([item]);
-          setSnack('클립보드에 이미지가 복사되었습니다.');
+          setContextSnack({
+            msg: '클립보드에 이미지가 복사되었습니다.',
+            time: 3000,
+          });
           break;
         } catch (error) {
           console.warn('다운로드 실패로 인한 재시도', data.orig, error);
         }
       }
     })();
-  }, [config.retryCount, data.orig, onClose, setSnack]);
+  }, [config.retryCount, data.orig, dispatch]);
 
   const handleDownload = useCallback(() => {
     (async () => {
       for (let i = 0; i < config.retryCount; i += 1) {
         try {
-          onClose();
-          setSnack('이미지를 다운로드 받는 중...');
+          dispatch(setContextOpen(false));
+          dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
           const { response: blob } = await fetch({
             url: data.orig,
@@ -79,7 +85,7 @@ export default function ContextMenu({ data, onClose, setSnack }) {
               uploadName: data.uploadName,
             })}.${data.ext}`,
           );
-          setSnack('');
+          dispatch(setContextSnack({ msg: '' }));
           break;
         } catch (error) {
           console.warn('다운로드 실패로 인한 재시도', data.orig, error);
@@ -93,14 +99,13 @@ export default function ContextMenu({ data, onClose, setSnack }) {
     data.ext,
     data.orig,
     data.uploadName,
-    onClose,
-    setSnack,
+    dispatch,
   ]);
 
   const handleCopyURL = useCallback(() => {
-    onClose();
+    dispatch(setContextOpen(false));
     navigator.clipboard.writeText(data.orig);
-  }, [data.orig, onClose]);
+  }, [data.orig, dispatch]);
 
   return (
     <ContextMenuGroup>

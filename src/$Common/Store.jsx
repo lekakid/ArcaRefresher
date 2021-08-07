@@ -3,6 +3,7 @@ import ContextMenu from '../$ContextMenu/slice';
 import AutoRefresher from '../AutoRefresher/slice';
 import ArticleRemover from '../ArticleRemover/slice';
 import ImageDownloader from '../ImageDownloader/slice';
+import AnonymousNick from '../AnonymousNick/slice';
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     AutoRefresher,
     ArticleRemover,
     ImageDownloader,
+    AnonymousNick,
   },
 });
