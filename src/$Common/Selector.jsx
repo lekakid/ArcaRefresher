@@ -29,6 +29,7 @@ export const ARTICLE_IMAGES =
   '.article-body img, .article-body video:not([controls])';
 export const ARTICLE_URL = '.article-body .article-link a';
 export const ARTICLE_BODY = '.article-body';
+export const ARTICLE_USER_INFO = '.article-wrapper .user-info';
 export const COMMENT_ITEMS = '#comment comment-item';
 export const COMMENT_TITLE = '#comment .title';
 export const COMMENT_SUBTITLE = '#comment .subtitle';

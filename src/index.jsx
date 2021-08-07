@@ -14,6 +14,7 @@ import ArticleRemover from './ArticleRemover';
 import ImageDownloader from './ImageDownloader';
 import ImageSearch from './ImageSearch';
 import IPInfo from './IPInfo';
+import AnonymousNick from './AnonymousNick';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -49,6 +50,7 @@ async function awaitDocumentBody() {
         <ImageDownloader />
         <ImageSearch />
         <IPInfo />
+        <AnonymousNick />
       </ThemeProvider>
     </Provider>,
     appContainer,
