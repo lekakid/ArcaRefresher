@@ -7,6 +7,7 @@ import Store from './$Common/Store';
 import theme from './$Common/Theme';
 import Config from './$Config';
 import ContextMenu from './$ContextMenu';
+import ArticleHeaderMenu from './$ArticleHeader';
 import AutoRefresher from './AutoRefresher';
 import CommentRefresh from './CommentRefresh';
 import ArticleRemover from './ArticleRemover';
@@ -41,6 +42,7 @@ async function awaitDocumentBody() {
       <ThemeProvider theme={theme}>
         <Config />
         <ContextMenu />
+        <ArticleHeaderMenu />
         <AutoRefresher />
         <CommentRefresh />
         <ArticleRemover />
