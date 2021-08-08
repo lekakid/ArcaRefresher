@@ -6,6 +6,7 @@ import { Dialog } from '@material-ui/core';
 import AutoRefresher from '../AutoRefresher/ConfigView';
 import ArticleRemover from '../ArticleRemover/ConfigView';
 import ImageDownloader from '../ImageDownloader/ConfigView';
+import Memo from '../Memo/ConfigView';
 
 export default function ConfigView(props) {
   const [container, setContainer] = useState(null);
@@ -22,6 +23,7 @@ export default function ConfigView(props) {
       <AutoRefresher />
       <ArticleRemover />
       <ImageDownloader />
+      <Memo />
     </Dialog>,
     container,
   );

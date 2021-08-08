@@ -42,8 +42,10 @@
   "dependencies": {
     "@babel/runtime": "^7.14.8",
     "@material-ui/core": "^4.12.2",
+    "@material-ui/data-grid": "^4.0.0-alpha.36",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/styles": "^4.11.4",
+    "@material-ui/x-license": "^4.0.0-alpha.36",
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^1.6.1",
     "file-saver": "^2.0.5",

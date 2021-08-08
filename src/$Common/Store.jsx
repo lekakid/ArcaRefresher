@@ -5,6 +5,7 @@ import AutoRefresher from '../AutoRefresher/slice';
 import ArticleRemover from '../ArticleRemover/slice';
 import ImageDownloader from '../ImageDownloader/slice';
 import AnonymousNick from '../AnonymousNick/slice';
+import Memo from '../Memo/slice';
 
 export default configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export default configureStore({
     ArticleRemover,
     ImageDownloader,
     AnonymousNick,
+    Memo,
   },
 });
