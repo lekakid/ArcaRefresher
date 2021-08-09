@@ -1,41 +1,45 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 
-import useAwaitElement from '../$Common/AwaitElement';
 import {
   COMMENT_INNER_VIEW,
   COMMENT_LOADED,
   COMMENT_TITLE,
 } from '../$Common/Selector';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from '../$Common/Event';
+import useElementQuery from '../$Common/useElementQuery';
 
 import getNewComment from './comment';
 
 export default function RefreshButton() {
-  const [container, setContainer] = useState(null);
+  const [comment, setComment] = useState(null);
+  const commentLoaded = useElementQuery(COMMENT_LOADED);
 
-  useAwaitElement(COMMENT_LOADED, () => {
-    let currentContainer = document.querySelector(COMMENT_INNER_VIEW);
-    if (!currentContainer) {
-      currentContainer = document.createElement('div');
-      currentContainer.classList.add('list-area');
-      document
-        .querySelector(COMMENT_TITLE)
-        .insertAdjacentElement('afterend', currentContainer);
+  useEffect(() => {
+    if (commentLoaded) {
+      const currentContainer =
+        document.querySelector(COMMENT_INNER_VIEW) ||
+        document.createElement('div');
+      if (!currentContainer.parentNode) {
+        currentContainer.classList.add('list-area');
+        document
+          .querySelector(COMMENT_TITLE)
+          .insertAdjacentElement('afterend', currentContainer);
+      }
+      setComment(currentContainer);
     }
-    setContainer(currentContainer);
-  });
+  }, [commentLoaded]);
 
   const onClick = useCallback(async () => {
-    if (!container) return;
+    if (!comment) return;
 
     const newComments = await getNewComment();
     if (newComments) {
-      container.replaceWith(newComments);
+      comment.replaceWith(newComments);
       dispatchAREvent(EVENT_COMMENT_REFRESH);
     }
-  }, [container]);
+  }, [comment]);
 
   return (
     <IconButton size="small" onClick={onClick}>

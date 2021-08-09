@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import uuid from 'react-uuid';
 import { makeStyles } from '@material-ui/core';
 
-import useAwaitElement from '../$Common/AwaitElement';
-import { getUserInfo } from '../$Common/Parser';
-
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from '../$Common/Selector';
+import { getUserInfo } from '../$Common/Parser';
+import useElementQuery from '../$Common/useElementQuery';
+
 import AnonymousNick from './AnonymousNick';
 
 function getInfoList({ prefixList, suffixList, extraPrefix }) {
@@ -61,12 +61,13 @@ const useStyles = makeStyles(() => ({
 export default function VirtualContainer() {
   const config = useSelector((state) => state.AnonymousNick);
   const [infoList, setInfoList] = useState([]);
+  const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
   const classes = useStyles();
 
-  useAwaitElement(ARTICLE_LOADED, () => {
-    setInfoList(getInfoList(config));
-  });
+  useEffect(() => {
+    if (articleLoaded) setInfoList(getInfoList(config));
+  }, [articleLoaded, config]);
 
   useEffect(() => {
     if (config.show) {

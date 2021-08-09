@@ -1,26 +1,29 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const opt = {
   childList: true,
   subtree: true,
 };
 
-export default function useAwaitElement(selector, callback) {
-  const hookedCallback = useCallback(callback, []);
+export default function useElementQuery(selector) {
+  const [exist, setExist] = useState(false);
+
   useEffect(() => {
     if (document.querySelector(selector)) {
-      hookedCallback();
+      setExist(true);
       return null;
     }
 
     const observer = new MutationObserver(() => {
       if (document.querySelector(selector)) {
         observer.disconnect();
-        hookedCallback();
+        setExist(true);
       }
     });
     observer.observe(document, opt);
 
     return () => observer.disconnect();
-  }, [hookedCallback, selector]);
+  }, [selector]);
+
+  return exist;
 }

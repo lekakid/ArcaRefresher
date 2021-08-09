@@ -1,6 +1,4 @@
 import React from 'react';
-import Refresher from './Refresher';
+import AutoRefresher from './AutoRefresher';
 
-export default function AutoRefresher() {
-  return <Refresher />;
-}
+export default () => <AutoRefresher />;

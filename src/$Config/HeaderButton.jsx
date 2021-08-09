@@ -1,19 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import useAwaitElement from '../$Common/AwaitElement';
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from '../$Common/Selector';
+import useElementQuery from '../$Common/useElementQuery';
 
 export default function HeaderButton(props) {
   const [isOpeningModal, setOpenModal] = useState(false);
-  const [container, setContainer] = useState(null);
+  const [nav, setNav] = useState(null);
+  const navigationLoaded = useElementQuery(NAVIGATION_LOADED);
   const { dialog: Dialog } = props;
 
-  useAwaitElement(NAVIGATION_LOADED, () => {
-    const currentContainer = document.createElement('div');
-    document.querySelector(NAVIGATION_MENU).appendChild(currentContainer);
-    setContainer(currentContainer);
-  });
+  useEffect(() => {
+    if (navigationLoaded) {
+      const container = document.createElement('div');
+      document.querySelector(NAVIGATION_MENU).appendChild(container);
+      setNav(container);
+    }
+  }, [navigationLoaded]);
 
   const onClick = useCallback((e) => {
     e.preventDefault();
@@ -24,7 +27,7 @@ export default function HeaderButton(props) {
     setOpenModal(() => false);
   }, []);
 
-  if (!container) return null;
+  if (!nav) return null;
 
   return ReactDOM.createPortal(
     <li className="nav-item dropdown">
@@ -37,6 +40,6 @@ export default function HeaderButton(props) {
       </a>
       <Dialog open={isOpeningModal} onClose={onClose} />
     </li>,
-    container,
+    nav,
   );
 }

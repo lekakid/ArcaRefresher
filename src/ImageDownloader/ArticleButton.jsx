@@ -1,20 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 
-import useAwaitElement from '../$Common/AwaitElement';
 import { ARTICLE_LOADED, ARTICLE_BODY } from '../$Common/Selector';
+import useElementQuery from '../$Common/useElementQuery';
 
 import DialogView from './DialogView';
 
 export default function ArticleButton() {
-  const [container, setContainer] = useState(null);
+  const [article, setArticle] = useState(null);
   const [open, setOpen] = useState(false);
+  const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
-  useAwaitElement(ARTICLE_LOADED, () => {
-    setContainer(document.querySelector(ARTICLE_BODY));
-  });
+  useEffect(() => {
+    if (articleLoaded) setArticle(document.querySelector(ARTICLE_BODY));
+  }, [articleLoaded]);
 
   const handleOpen = useCallback(() => {
     setOpen(true);
@@ -24,7 +25,7 @@ export default function ArticleButton() {
     setOpen(false);
   }, []);
 
-  if (!container) return null;
+  if (!article) return null;
 
   return ReactDOM.createPortal(
     <>
@@ -33,6 +34,6 @@ export default function ArticleButton() {
       </Button>
       <DialogView open={open} onClose={handleClose} />
     </>,
-    container,
+    article,
   );
 }

@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import useAwaitElement from '../$Common/AwaitElement';
 import {
   COMMENT_LOADED,
   COMMENT_SUBTITLE,
   COMMENT_TITLE,
 } from '../$Common/Selector';
+import useElementQuery from '../$Common/useElementQuery';
+
 import RefreshButton from './RefreshButton';
 
 export default function CommentRefresh() {
   const [container, setContainer] = useState(null);
+  const commentLoaded = useElementQuery(COMMENT_LOADED);
 
-  useAwaitElement(COMMENT_LOADED, () => {
-    const titleContainer = document.createElement('span');
-    const subtitleContainer = document.createElement('span');
+  useEffect(() => {
+    if (commentLoaded) {
+      const titleContainer = document.createElement('span');
+      const subtitleContainer = document.createElement('span');
 
-    setContainer({
-      title: document.querySelector(COMMENT_TITLE).appendChild(titleContainer),
-      subtitle: document
-        .querySelector(COMMENT_SUBTITLE)
-        .appendChild(subtitleContainer),
-    });
-  });
+      setContainer({
+        title: document
+          .querySelector(COMMENT_TITLE)
+          .appendChild(titleContainer),
+        subtitle: document
+          .querySelector(COMMENT_SUBTITLE)
+          .appendChild(subtitleContainer),
+      });
+    }
+  }, [commentLoaded]);
 
   if (!container) return null;
 
