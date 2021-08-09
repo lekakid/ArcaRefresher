@@ -6,6 +6,7 @@ import ArticleRemover from '../ArticleRemover/slice';
 import ImageDownloader from '../ImageDownloader/slice';
 import AnonymousNick from '../AnonymousNick/slice';
 import Memo from '../Memo/slice';
+import LayoutCustom from '../LayoutCustom/slice';
 
 export default configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
     ImageDownloader,
     AnonymousNick,
     Memo,
+    LayoutCustom,
   },
 });

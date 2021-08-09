@@ -16,6 +16,7 @@ import ImageSearch from './ImageSearch';
 import IPInfo from './IPInfo';
 import AnonymousNick from './AnonymousNick';
 import Memo from './Memo';
+import LayoutCustom from './LayoutCustom';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -53,6 +54,7 @@ async function awaitDocumentBody() {
         <IPInfo />
         <AnonymousNick />
         <Memo />
+        <LayoutCustom />
       </ThemeProvider>
     </Provider>,
     appContainer,
