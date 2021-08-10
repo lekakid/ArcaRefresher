@@ -7,6 +7,7 @@ import ImageDownloader from '../ImageDownloader/slice';
 import AnonymousNick from '../AnonymousNick/slice';
 import Memo from '../Memo/slice';
 import LayoutCustom from '../LayoutCustom/slice';
+import ExperienceCustom from '../ExperienceCustom/slice';
 
 export default configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
     AnonymousNick,
     Memo,
     LayoutCustom,
+    ExperienceCustom,
   },
 });

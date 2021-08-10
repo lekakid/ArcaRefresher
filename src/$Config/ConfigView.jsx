@@ -8,6 +8,7 @@ import ArticleRemover from '../ArticleRemover/ConfigView';
 import ImageDownloader from '../ImageDownloader/ConfigView';
 import Memo from '../Memo/ConfigView';
 import LayoutCustom from '../LayoutCustom/ConfigView';
+import ExperienceCustom from '../ExperienceCustom/ConfigView';
 
 export default function ConfigView(props) {
   const [container, setContainer] = useState(null);
@@ -26,6 +27,7 @@ export default function ConfigView(props) {
       <ImageDownloader />
       <Memo />
       <LayoutCustom />
+      <ExperienceCustom />
     </Dialog>,
     container,
   );
