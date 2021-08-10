@@ -27,7 +27,7 @@ const initialState = {
   unfoldLongComment: getValue(UNFOLD_LONG_COMMENT),
 };
 
-export const layoutCustomSlice = createSlice({
+export const slice = createSlice({
   name: 'LayoutCustom',
   initialState,
   reducers: {
@@ -80,6 +80,6 @@ export const {
   setResizeVideo,
   toggleModifiedIndicator,
   togglgLongComment,
-} = layoutCustomSlice.actions;
+} = slice.actions;
 
-export default layoutCustomSlice.reducer;
+export default slice.reducer;

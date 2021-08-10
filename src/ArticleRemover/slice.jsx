@@ -11,7 +11,7 @@ const initialState = {
   testMode: getValue(USE_AUTO_REMOVER_TEST),
 };
 
-export const articleRemoverSlice = createSlice({
+export const slice = createSlice({
   name: 'ArticleRemover',
   initialState,
   reducers: {
@@ -30,6 +30,6 @@ export const articleRemoverSlice = createSlice({
   },
 });
 
-export const { setUser, setKeyword, setTestMode } = articleRemoverSlice.actions;
+export const { setUser, setKeyword, setTestMode } = slice.actions;
 
-export default articleRemoverSlice.reducer;
+export default slice.reducer;

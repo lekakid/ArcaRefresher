@@ -18,7 +18,7 @@ const initialState = {
   wideArea: getValue(WIDE_AREA),
 };
 
-export const experienceCustomSlice = createSlice({
+export const slice = createSlice({
   name: 'ExperienceCustom',
   initialState,
   reducers: {
@@ -51,6 +51,6 @@ export const {
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,
-} = experienceCustomSlice.actions;
+} = slice.actions;
 
-export default experienceCustomSlice.reducer;
+export default slice.reducer;

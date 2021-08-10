@@ -47,7 +47,7 @@ const initialState = {
   show: false,
 };
 
-export const anonymousNickSlice = createSlice({
+export const slice = createSlice({
   name: 'AnonymousNick',
   initialState,
   reducers: {
@@ -70,6 +70,6 @@ export const anonymousNickSlice = createSlice({
 });
 
 export const { setPrefixList, setSuffixList, setExtraPrefix, toggleShow } =
-  anonymousNickSlice.actions;
+  slice.actions;
 
-export default anonymousNickSlice.reducer;
+export default slice.reducer;

@@ -9,7 +9,7 @@ const initialState = {
   showProgress: getValue(SHOW_PROGRESS),
 };
 
-export const autoRefresherSlice = createSlice({
+export const slice = createSlice({
   name: 'AutoRefresher',
   initialState,
   reducers: {
@@ -24,6 +24,6 @@ export const autoRefresherSlice = createSlice({
   },
 });
 
-export const { setTimeLimit, setAnimation } = autoRefresherSlice.actions;
+export const { setTimeLimit, setAnimation } = slice.actions;
 
-export default autoRefresherSlice.reducer;
+export default slice.reducer;

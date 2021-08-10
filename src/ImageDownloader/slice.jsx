@@ -18,7 +18,7 @@ const initialState = {
   retryCount: getValue(RETRY_COUNT),
 };
 
-export const imageDownloaderSlice = createSlice({
+export const slice = createSlice({
   name: 'ImageDownloader',
   initialState,
   reducers: {
@@ -51,6 +51,6 @@ export const {
   setZipImageName,
   setZipComment,
   setRetryCount,
-} = imageDownloaderSlice.actions;
+} = slice.actions;
 
-export default imageDownloaderSlice.reducer;
+export default slice.reducer;

@@ -8,7 +8,7 @@ const initialState = {
   open: false,
 };
 
-export const memoSlice = createSlice({
+export const slice = createSlice({
   name: 'Memo',
   initialState,
   reducers: {
@@ -31,6 +31,6 @@ export const memoSlice = createSlice({
   },
 });
 
-export const { setMemo, setMemoList, setOpenDialog } = memoSlice.actions;
+export const { setMemo, setMemoList, setOpenDialog } = slice.actions;
 
-export default memoSlice.reducer;
+export default slice.reducer;

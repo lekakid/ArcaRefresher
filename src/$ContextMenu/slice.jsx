@@ -14,7 +14,7 @@ const initialState = {
   snackTime: null,
 };
 
-export const contextMenuSlice = createSlice({
+export const slice = createSlice({
   name: 'ContextMenu',
   initialState,
   reducers: {
@@ -48,6 +48,6 @@ export const {
   setContextOpen,
   setContextEvent,
   setContextSnack,
-} = contextMenuSlice.actions;
+} = slice.actions;
 
-export default contextMenuSlice.reducer;
+export default slice.reducer;

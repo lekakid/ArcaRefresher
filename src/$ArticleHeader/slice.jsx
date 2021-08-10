@@ -4,7 +4,7 @@ const initialState = {
   menuList: [],
 };
 
-export const articleHeaderSlice = createSlice({
+export const slice = createSlice({
   name: 'ArticleHeader',
   initialState,
   reducers: {
@@ -14,6 +14,6 @@ export const articleHeaderSlice = createSlice({
   },
 });
 
-export const { addHeaderMenu } = articleHeaderSlice.actions;
+export const { addHeaderMenu } = slice.actions;
 
-export default articleHeaderSlice.reducer;
+export default slice.reducer;
