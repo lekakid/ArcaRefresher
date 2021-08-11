@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Remove, Subject, TableChart } from '@material-ui/icons';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
@@ -148,6 +148,9 @@ export default function ConfigView() {
                 disableSelectionOnClick
                 components={{
                   Toolbar: ConfigToolbar,
+                  NoRowsOverlay: () => (
+                    <GridOverlay>저장된 메모가 없습니다.</GridOverlay>
+                  ),
                 }}
                 componentsProps={{
                   toolbar: {
