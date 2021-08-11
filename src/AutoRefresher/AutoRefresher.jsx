@@ -7,6 +7,7 @@ import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from '../$Common/Selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from '../$Common/Event';
 import useElementQuery from '../$Common/useElementQuery';
 
+import { MODULE_ID } from './ModuleInfo';
 import RefreshProgress from './RefreshProgress';
 import { getNewArticle, swapArticle } from './article';
 
@@ -26,9 +27,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Refresher() {
-  const { timeLimit, showProgress } = useSelector(
-    (state) => state.AutoRefresher,
-  );
+  const { timeLimit, showProgress } = useSelector((state) => state[MODULE_ID]);
   const [board, setBoard] = useState(null);
   const [animate, setAnimation] = useState(true);
   const boardLoaded = useElementQuery(BOARD_LOADED);

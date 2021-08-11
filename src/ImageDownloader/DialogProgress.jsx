@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 
 import fetch from '../$Common/Fetch';
 
+import { MODULE_ID } from './ModuleInfo';
 import { SET_FINISH } from './DialogReducer';
 import { getArticleInfo, replaceFlag } from './FlagHandler';
 
@@ -62,7 +63,7 @@ async function download({
 }
 
 export default function DownloadProgress(props) {
-  const config = useSelector((state) => state.ImageDownloader);
+  const config = useSelector((state) => state[MODULE_ID]);
   const {
     state: { target },
     dispatch,

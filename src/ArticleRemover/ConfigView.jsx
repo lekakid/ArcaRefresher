@@ -7,27 +7,20 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  Paper,
   Snackbar,
   Switch,
   TextField,
+  Typography,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import { Close, Save } from '@material-ui/icons';
 
-import ConfigGroup from '../$Config/ConfigGroup';
+import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import { setUser, setKeyword, setTestMode } from './slice';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    maxWidth: 'md',
-  },
-}));
-
 export default function ConfigView() {
-  const classes = useStyles();
   const { users, keywords, testMode } = useSelector(
-    (state) => state.ArticleRemover,
+    (state) => state[MODULE_ID],
   );
   const dispatch = useDispatch();
   const [textUser, setTextUser] = useState(users.join('\n'));
@@ -36,19 +29,19 @@ export default function ConfigView() {
   const [errorKeyword, setErrorKeyword] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
-  const handleTestMode = (e) => {
-    dispatch(setTestMode(e.target.checked));
-  };
+  const handleTestMode = useCallback(() => {
+    dispatch(setTestMode());
+  }, [dispatch]);
 
-  const handleUser = (e) => {
+  const handleUser = useCallback((e) => {
     setErrorUser(false);
     setTextUser(e.target.value);
-  };
+  }, []);
 
-  const handleKeyword = (e) => {
+  const handleKeyword = useCallback((e) => {
     setErrorKeyword(false);
     setTextKeyword(e.target.value);
-  };
+  }, []);
 
   const onClickUser = useCallback(() => {
     try {
@@ -79,62 +72,76 @@ export default function ConfigView() {
   };
 
   return (
-    <ConfigGroup name="게시물 자동 삭제">
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemText>테스트 모드</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch checked={testMode} onChange={handleTestMode} />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>검사할 닉네임</ListItemText>
-          <ListItemSecondaryAction>
-            <IconButton onClick={onClickUser}>
-              <Save />
+    <>
+      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Paper>
+        <List>
+          <ListItem divider button onClick={handleTestMode}>
+            <ListItemText
+              primary="테스트 모드"
+              secondary="삭제를 진행하지 않고 예상 게시물을 보여줍니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch checked={testMode} onChange={handleTestMode} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem>
+            <ListItemText>검사할 닉네임</ListItemText>
+            <ListItemSecondaryAction>
+              <IconButton onClick={onClickUser}>
+                <Save />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <TextField
+              variant="outlined"
+              multiline
+              fullWidth
+              rows={6}
+              value={textUser}
+              onChange={handleUser}
+              error={errorUser}
+              helperText={
+                errorUser && '정규식 조건을 위반하는 항목이 있습니다.'
+              }
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>검사할 키워드</ListItemText>
+            <ListItemSecondaryAction>
+              <IconButton onClick={onClickKeyword}>
+                <Save />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem>
+            <TextField
+              variant="outlined"
+              multiline
+              fullWidth
+              rows={6}
+              value={textKeyword}
+              onChange={handleKeyword}
+              error={errorKeyword}
+              helperText={
+                errorKeyword && '정규식 조건을 위반하는 항목이 있습니다.'
+              }
+            />
+          </ListItem>
+        </List>
+        <Snackbar
+          open={showResult}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          message="저장했습니다."
+          action={
+            <IconButton onClick={handleClose}>
+              <Close fontSize="small" />
             </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <TextField
-          variant="outlined"
-          multiline
-          fullWidth
-          rows={6}
-          value={textUser}
-          onChange={handleUser}
-          error={errorUser}
-          helperText={errorUser && '정규식 조건을 위반하는 항목이 있습니다.'}
+          }
         />
-        <ListItem>
-          <ListItemText>검사할 키워드</ListItemText>
-          <ListItemSecondaryAction>
-            <IconButton onClick={onClickKeyword}>
-              <Save />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <TextField
-          variant="outlined"
-          multiline
-          fullWidth
-          rows={6}
-          value={textKeyword}
-          onChange={handleKeyword}
-          error={errorKeyword}
-          helperText={errorKeyword && '정규식 조건을 위반하는 항목이 있습니다.'}
-        />
-      </List>
-      <Snackbar
-        open={showResult}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        message="저장되었습니다."
-        action={
-          <IconButton onClick={handleClose}>
-            <Close fontSize="small" />
-          </IconButton>
-        }
-      />
-    </ConfigGroup>
+      </Paper>
+    </>
   );
 }

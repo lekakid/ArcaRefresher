@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { MODULE_ID } from './ModuleInfo';
 
 const initialState = {
   menuList: [],
 };
 
 export const slice = createSlice({
-  name: 'ArticleHeader',
+  name: MODULE_ID,
   initialState,
   reducers: {
     addHeaderMenu(state, action) {

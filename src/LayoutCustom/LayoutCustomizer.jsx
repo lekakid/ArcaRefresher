@@ -1,6 +1,8 @@
-import { makeStyles } from '@material-ui/core';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
+
+import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles(() => ({
   RecentVisit: {
@@ -60,7 +62,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function LayoutCustomizer() {
-  const config = useSelector((state) => state.LayoutCustom);
+  const config = useSelector((state) => state[MODULE_ID]);
   const classes = useStyles(config);
 
   useEffect(() => {

@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
 import { PeopleAltOutlined } from '@material-ui/icons';
 
+import { MODULE_ID } from './ModuleInfo';
 import { toggleShow } from './slice';
 
 export default function ArticleHeaderButton() {
   const dispatch = useDispatch();
-  const { show } = useSelector((state) => state.AnonymousNick);
+  const { show } = useSelector((state) => state[MODULE_ID]);
 
   const handleToggle = useCallback(() => {
     dispatch(toggleShow());

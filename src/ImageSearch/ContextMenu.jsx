@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
+import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
 import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
 import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.ContextMenu);
+  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
 
   const handleGoogle = useCallback(() => {
     window.open(

@@ -2,13 +2,14 @@ import { Menu, MenuItem } from '@material-ui/core';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { MODULE_ID } from './ModuleInfo';
 import ContextEvent from './ContextEvent';
 import { setContextEvent, setContextOpen } from './slice';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
   const { menuList, open, mousePos, eventType } = useSelector(
-    (state) => state.ContextMenu,
+    (state) => state[MODULE_ID],
   );
 
   useEffect(() => {

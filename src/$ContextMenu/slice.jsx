@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 const ENABLED = { key: 'useContextMenu', defaultValue: true };
 
@@ -15,12 +16,12 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'ContextMenu',
+  name: MODULE_ID,
   initialState,
   reducers: {
-    setEnable(state, action) {
-      state.enabled = action.payload;
-      setValue(ENABLED, action.payload);
+    setEnable(state) {
+      state.enabled = !state.enabled;
+      setValue(ENABLED, state.enabled);
     },
     addContextMenu(state, action) {
       state.menuList.push(action.payload);

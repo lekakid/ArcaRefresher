@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useDispatch } from 'react-redux';
 
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from '../$Common/Selector';
 import useElementQuery from '../$Common/useElementQuery';
 
-export default function HeaderButton(props) {
-  const [isOpeningModal, setOpenModal] = useState(false);
+import { setDialogOpen } from './slice';
+
+export default function HeaderButton() {
+  const dispatch = useDispatch();
   const [nav, setNav] = useState(null);
   const navigationLoaded = useElementQuery(NAVIGATION_LOADED);
-  const { dialog: Dialog } = props;
 
   useEffect(() => {
     if (navigationLoaded) {
@@ -18,14 +20,13 @@ export default function HeaderButton(props) {
     }
   }, [navigationLoaded]);
 
-  const onClick = useCallback((e) => {
-    e.preventDefault();
-    setOpenModal(() => true);
-  }, []);
-
-  const onClose = useCallback(() => {
-    setOpenModal(() => false);
-  }, []);
+  const onClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(setDialogOpen(true));
+    },
+    [dispatch],
+  );
 
   if (!nav) return null;
 
@@ -38,7 +39,6 @@ export default function HeaderButton(props) {
           <span className="ion-gear-a" />
         </span>
       </a>
-      <Dialog open={isOpeningModal} onClose={onClose} />
     </li>,
     nav,
   );

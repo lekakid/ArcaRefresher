@@ -4,16 +4,18 @@ import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
+import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
 import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
 import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
+import { MODULE_ID } from './ModuleInfo';
 import { getArticleInfo, replaceFlag } from './FlagHandler';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.ContextMenu);
-  const config = useSelector((state) => state.ImageDownloader);
+  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
+  const config = useSelector((state) => state[MODULE_ID]);
   const [articleInfo, setArticleInfo] = useState(null);
 
   useEffect(() => {

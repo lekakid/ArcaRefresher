@@ -21,9 +21,10 @@ import {
   COMMENT_LOADED,
   COMMENT_VIEW,
 } from '../$Common/Selector';
-
-import CommentButton from './CommentButton';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from '../$Common/Event';
+
+import { MODULE_ID } from './ModuleInfo';
+import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
   Comment: {
@@ -48,7 +49,7 @@ export default function ExperienceCustomizer() {
     ratedownGuard,
     foldComment,
     wideArea,
-  } = useSelector((state) => state.ExperienceCustom);
+  } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const boardLoaded = useElementQuery(BOARD_LOADED);

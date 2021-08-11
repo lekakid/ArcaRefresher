@@ -6,23 +6,16 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  Paper,
   Switch,
+  Typography,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 
-import ConfigGroup from '../$Config/ConfigGroup';
 import { setEnable } from './slice';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    maxWidth: 'md',
-  },
-}));
+import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 
 export default function ConfigView() {
-  const classes = useStyles();
-  const { enabled } = useSelector((state) => state.contextMenuSlice);
+  const { enabled } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 
   const handleTestMode = (e) => {
@@ -30,15 +23,18 @@ export default function ConfigView() {
   };
 
   return (
-    <ConfigGroup name="컨텍스트 메뉴">
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemText>우클릭 메뉴 사용</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch checked={enabled} onChange={handleTestMode} />
-          </ListItemSecondaryAction>
-        </ListItem>
-      </List>
-    </ConfigGroup>
+    <>
+      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Paper>
+        <List>
+          <ListItem button onClick={handleTestMode}>
+            <ListItemText>사용</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch checked={enabled} onChange={handleTestMode} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
+    </>
   );
 }

@@ -5,13 +5,14 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  Paper,
   Slider,
   Switch,
+  Typography,
 } from '@material-ui/core';
 import { ColorPicker, createColor } from 'material-ui-color';
-import { makeStyles } from '@material-ui/styles';
 
-import ConfigGroup from '../$Config/ConfigGroup';
+import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import {
   toggleRecentVisit,
   toggleSideMenu,
@@ -23,13 +24,6 @@ import {
   toggleModifiedIndicator,
   togglgLongComment,
 } from './slice';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    maxWidth: 'md',
-  },
-}));
 
 export default function ConfigView() {
   const dispatch = useDispatch();
@@ -43,7 +37,7 @@ export default function ConfigView() {
     resizeVideo,
     modifiedIndicator,
     unfoldLongComment,
-  } = useSelector((state) => state.LayoutCustom);
+  } = useSelector((state) => state[MODULE_ID]);
   const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
 
   const handleRecentVisit = useCallback(() => {
@@ -95,75 +89,83 @@ export default function ConfigView() {
     dispatch(togglgLongComment());
   }, [dispatch]);
 
-  const classes = useStyles();
   return (
-    <ConfigGroup name="레이아웃 커스텀">
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemText>최근 방문 채널</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch checked={recentVisit} onChange={handleRecentVisit} />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>사이드 메뉴</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch checked={sideMenu} onChange={handleSideMenu} />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>이용자 아바타</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch checked={avatar} onChange={handleAvatar} />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>알림 아이콘 색상</ListItemText>
-          <ListItemSecondaryAction>
-            <ColorPicker
-              hideTextfield
-              value={pickerColor}
-              onChange={handleNotifyColor}
+    <>
+      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Paper>
+        <List>
+          <ListItem divider button onClick={handleRecentVisit}>
+            <ListItemText primary="최근 방문 채널 보이기" />
+            <ListItemSecondaryAction>
+              <Switch checked={recentVisit} onChange={handleRecentVisit} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleSideMenu}>
+            <ListItemText primary="우측 사이드 메뉴" />
+            <ListItemSecondaryAction>
+              <Switch checked={sideMenu} onChange={handleSideMenu} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleAvatar}>
+            <ListItemText primary="이용자 아바타" />
+            <ListItemSecondaryAction>
+              <Switch checked={avatar} onChange={handleAvatar} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText
+              primary="알림 아이콘 색상"
+              secondary="상단 메뉴의 알림 아이콘 점등색을 변경합니다."
             />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>게시판 이용자 추가 넓이</ListItemText>
-        </ListItem>
-        <ListItem>
-          <Slider value={userinfoWidth} onChange={handleUserinfoWidth} />
-        </ListItem>
-        <ListItem>
-          <ListItemText>게시물 이미지 크기</ListItemText>
-        </ListItem>
-        <ListItem>
-          <Slider value={resizeImage} onChange={handleResizeImage} />
-        </ListItem>
-        <ListItem>
-          <ListItemText>게시물 동영상 크기</ListItemText>
-        </ListItem>
-        <ListItem>
-          <Slider value={resizeVideo} onChange={handleResizeVideo} />
-        </ListItem>
-        <ListItem>
-          <ListItemText>댓글 *수정됨 표기</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch
-              checked={modifiedIndicator}
-              onChange={handleModifiedIndicator}
+            <ListItemSecondaryAction>
+              <ColorPicker
+                hideTextfield
+                value={pickerColor}
+                onChange={handleNotifyColor}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>게시판 이용자 너비</ListItemText>
+            <ListItemSecondaryAction>
+              <Slider value={userinfoWidth} onChange={handleUserinfoWidth} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>게시물 이미지 크기</ListItemText>
+            <ListItemSecondaryAction>
+              <Slider value={resizeImage} onChange={handleResizeImage} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>게시물 동영상 크기</ListItemText>
+            <ListItemSecondaryAction>
+              <Slider value={resizeVideo} onChange={handleResizeVideo} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleModifiedIndicator}>
+            <ListItemText primary="댓글 *수정됨 표기" />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={modifiedIndicator}
+                onChange={handleModifiedIndicator}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleUnfoldLongComment}>
+            <ListItemText
+              primary="장문 댓글 바로보기"
+              secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
             />
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText>장문 댓글 바로보기</ListItemText>
-          <ListItemSecondaryAction>
-            <Switch
-              checked={unfoldLongComment}
-              onChange={handleUnfoldLongComment}
-            />
-          </ListItemSecondaryAction>
-        </ListItem>
-      </List>
-    </ConfigGroup>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={unfoldLongComment}
+                onChange={handleUnfoldLongComment}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
+    </>
   );
 }

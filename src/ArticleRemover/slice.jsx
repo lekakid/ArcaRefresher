@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from '../AnonymousNick/ModuleInfo';
 
 const AUTO_REMOVE_USER = { key: 'autoRemoveUser', defaultValue: [] };
 const AUTO_REMOVE_KEYWORD = { key: 'autoRemoveKeyword', defaultValue: [] };
@@ -12,7 +13,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'ArticleRemover',
+  name: MODULE_ID,
   initialState,
   reducers: {
     setUser(state, action) {
@@ -23,9 +24,9 @@ export const slice = createSlice({
       state.keywords = action.payload;
       setValue(AUTO_REMOVE_KEYWORD, action.payload);
     },
-    setTestMode(state, action) {
-      state.testMode = action.payload;
-      setValue(USE_AUTO_REMOVER_TEST, action.payload);
+    setTestMode(state) {
+      state.testMode = !state.testMode;
+      setValue(USE_AUTO_REMOVER_TEST, state.testMode);
     },
   },
 });

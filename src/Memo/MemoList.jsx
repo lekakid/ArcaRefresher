@@ -10,6 +10,8 @@ import {
 } from '../$Common/Event';
 import { getUserID } from '../$Common/Parser';
 import { USER_INFO } from '../$Common/Selector';
+
+import { MODULE_ID } from './ModuleInfo';
 import Memo from './Memo';
 
 function getUserInfo() {
@@ -30,7 +32,7 @@ function getUserInfo() {
 }
 
 export default function MemoList() {
-  const { memo } = useSelector((state) => state.Memo);
+  const { memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {

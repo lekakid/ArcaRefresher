@@ -10,6 +10,7 @@ import {
 import { EVENT_AUTOREFRESH } from '../$Common/Event';
 import useElementQuery from '../$Common/useElementQuery';
 
+import { MODULE_ID } from './ModuleInfo';
 import { remove, test } from './article';
 
 const useStyles = makeStyles(() => ({
@@ -21,7 +22,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Remover() {
   const { users, keywords, testMode } = useSelector(
-    (state) => state.ArticleRemover,
+    (state) => state[MODULE_ID],
   );
   const [boardView, setBoardView] = useState(null);
   const boardLoaded = useElementQuery(BOARD_LOADED);

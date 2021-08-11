@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 const REFRESH_TIME = { key: 'refreshTime', defaultValue: 5 };
 const SHOW_PROGRESS = { key: 'showProgress', defaultValue: true };
@@ -10,20 +11,20 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'AutoRefresher',
+  name: MODULE_ID,
   initialState,
   reducers: {
     setTimeLimit(state, action) {
       state.timeLimit = action.payload;
       setValue(REFRESH_TIME, action.payload);
     },
-    setAnimation(state, action) {
-      state.showProgress = action.payload;
-      setValue(SHOW_PROGRESS, action.payload);
+    toggleAnimation(state) {
+      state.showProgress = !state.showProgress;
+      setValue(SHOW_PROGRESS, state.showProgress);
     },
   },
 });
 
-export const { setTimeLimit, setAnimation } = slice.actions;
+export const { setTimeLimit, toggleAnimation } = slice.actions;
 
 export default slice.reducer;

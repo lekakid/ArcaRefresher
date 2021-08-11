@@ -4,28 +4,22 @@ import {
   Button,
   List,
   ListItem,
+  ListItemSecondaryAction,
   ListItemText,
+  Paper,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
-import { Remove, Subject } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
+import { Remove, Subject, TableChart } from '@material-ui/icons';
 
-import ConfigGroup from '../$Config/ConfigGroup';
-
+import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import { setMemoList } from './slice';
 
 const columns = [
   { field: 'user', headerName: '이용자', flex: 1 },
   { field: 'memo', headerName: '메모', flex: 1, editable: true },
 ];
-
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    maxWidth: 'md',
-  },
-}));
 
 function ConfigToolbar({ disabled, onRemove }) {
   return (
@@ -39,7 +33,7 @@ function ConfigToolbar({ disabled, onRemove }) {
 
 export default function ConfigView() {
   const dispatch = useDispatch();
-  const { memo } = useSelector((state) => state.Memo);
+  const { memo } = useSelector((state) => state[MODULE_ID]);
   const tableRows = Object.keys(memo).map((key, index) => ({
     id: index,
     user: key,
@@ -112,56 +106,67 @@ export default function ConfigView() {
     setTextMode(true);
   }, [dispatch, memoText, textMode]);
 
-  const classes = useStyles();
   return (
-    <ConfigGroup name="메모">
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemText>메모 편집</ListItemText>
-        </ListItem>
-        {!textMode && (
-          <DataGrid
-            rows={tableRows}
-            columns={columns}
-            loading={tableRows.length === 0}
-            autoHeight
-            rowHeight={40}
-            pagination
-            checkboxSelection
-            disableColumnMenu
-            disableSelectionOnClick
-            components={{
-              Toolbar: ConfigToolbar,
-            }}
-            componentsProps={{
-              toolbar: {
-                disabled: selection.length === 0,
-                onRemove: handleRemove,
-              },
-            }}
-            pageSize={pageSize}
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            onPageSizeChange={handlePageSize}
-            onCellEditCommit={handleCellEdit}
-            onSelectionModelChange={handleSelection}
-          />
-        )}
-        {textMode && (
-          <TextField
-            variant="outlined"
-            fullWidth
-            multiline
-            minRows={6}
-            maxRows={10}
-            value={memoText}
-            onChange={handleTextChange}
-            error={textError}
-          />
-        )}
-        <Button startIcon={<Subject />} onClick={handleTextMode}>
-          텍스트 편집 모드
-        </Button>
-      </List>
-    </ConfigGroup>
+    <>
+      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Paper>
+        <List>
+          <ListItem>
+            <ListItemText>메모 편집</ListItemText>
+            <ListItemSecondaryAction>
+              <Button
+                startIcon={textMode ? <TableChart /> : <Subject />}
+                onClick={handleTextMode}
+              >
+                {textMode
+                  ? '테이블 편집 모드로 전환'
+                  : '텍스트 편집 모드로 전환'}
+              </Button>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem>
+            {!textMode && (
+              <DataGrid
+                rows={tableRows}
+                columns={columns}
+                loading={tableRows.length === 0}
+                autoHeight
+                rowHeight={40}
+                pagination
+                checkboxSelection
+                disableColumnMenu
+                disableSelectionOnClick
+                components={{
+                  Toolbar: ConfigToolbar,
+                }}
+                componentsProps={{
+                  toolbar: {
+                    disabled: selection.length === 0,
+                    onRemove: handleRemove,
+                  },
+                }}
+                pageSize={pageSize}
+                rowsPerPageOptions={[10, 25, 50, 100]}
+                onPageSizeChange={handlePageSize}
+                onCellEditCommit={handleCellEdit}
+                onSelectionModelChange={handleSelection}
+              />
+            )}
+            {textMode && (
+              <TextField
+                variant="outlined"
+                fullWidth
+                multiline
+                minRows={6}
+                maxRows={10}
+                value={memoText}
+                onChange={handleTextChange}
+                error={textError}
+              />
+            )}
+          </ListItem>
+        </List>
+      </Paper>
+    </>
   );
 }

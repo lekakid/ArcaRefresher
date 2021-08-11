@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 // Board
 const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
@@ -19,7 +20,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'ExperienceCustom',
+  name: MODULE_ID,
   initialState,
   reducers: {
     toggleArticleNewWindow(state) {

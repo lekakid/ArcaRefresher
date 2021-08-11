@@ -1,10 +1,12 @@
-import { makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
 
 import { ARTICLE_LOADED } from '../$Common/Selector';
 import useElementQuery from '../$Common/useElementQuery';
+
+import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -14,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ArticleHeaderMenu() {
-  const { menuList } = useSelector((state) => state.ArticleHeader);
+  const { menuList } = useSelector((state) => state[MODULE_ID]);
   const [container, setContainer] = useState(null);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 

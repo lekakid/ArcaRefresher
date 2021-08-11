@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 const DefaultPrefix = [
   '웃는',
@@ -48,7 +49,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'AnonymousNick',
+  name: MODULE_ID,
   initialState,
   reducers: {
     setPrefixList(state, action) {

@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import Config from '../$Config/slice';
 import ContextMenu from '../$ContextMenu/slice';
 import ArticleHeader from '../$ArticleHeader/slice';
 import AutoRefresher from '../AutoRefresher/slice';
@@ -11,6 +12,7 @@ import ExperienceCustom from '../ExperienceCustom/slice';
 
 export default configureStore({
   reducer: {
+    Config,
     ContextMenu,
     ArticleHeader,
     AutoRefresher,

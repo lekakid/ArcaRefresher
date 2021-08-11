@@ -10,12 +10,15 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
+
+import { MODULE_ID } from './ModuleInfo';
 import { setMemo, setOpenDialog } from './slice';
 
 export default function MemoDialog() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.ContextMenu);
-  const { open } = useSelector((state) => state.Memo);
+  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
+  const { open } = useSelector((state) => state[MODULE_ID]);
   const [memoText, setMemoText] = useState('');
 
   const handleText = useCallback((e) => {

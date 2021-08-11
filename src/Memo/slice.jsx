@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
@@ -9,7 +10,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'Memo',
+  name: MODULE_ID,
   initialState,
   reducers: {
     setMemo(state, action) {

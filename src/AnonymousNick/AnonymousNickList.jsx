@@ -7,6 +7,7 @@ import { ARTICLE_LOADED, ARTICLE_USER_INFO } from '../$Common/Selector';
 import { getUserInfo } from '../$Common/Parser';
 import useElementQuery from '../$Common/useElementQuery';
 
+import { MODULE_ID } from './ModuleInfo';
 import AnonymousNick from './AnonymousNick';
 
 function getInfoList({ prefixList, suffixList, extraPrefix }) {
@@ -59,7 +60,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function VirtualContainer() {
-  const config = useSelector((state) => state.AnonymousNick);
+  const config = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { MODULE_ID } from './ModuleInfo';
 
 // Site layout
 const RECENT_VISIT = { key: 'showRecentVisit', defaultValue: true };
@@ -28,7 +29,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'LayoutCustom',
+  name: MODULE_ID,
   initialState,
   reducers: {
     toggleRecentVisit(state) {
