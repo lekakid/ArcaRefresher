@@ -76,6 +76,13 @@ export default function ConfigView() {
       ),
     );
     setSelection([]);
+    setMemoText(
+      restRows.reduce(
+        (acc, r, index) =>
+          `${acc}${index === 0 ? '' : '\n'}${r.user}::${r.memo}`,
+        '',
+      ),
+    );
   }, [dispatch, selection, tableRows]);
 
   const handleSelection = useCallback((current) => {
@@ -91,7 +98,11 @@ export default function ConfigView() {
     if (textMode) {
       try {
         const updatedMemo = memoText.split('\n').reduce((acc, r) => {
+          if (!r) return acc;
+
           const [u, m] = r.split('::');
+          if (!m) return acc;
+
           return { ...acc, [u]: m };
         }, {});
         dispatch(setMemoList(updatedMemo));
@@ -129,7 +140,6 @@ export default function ConfigView() {
               <DataGrid
                 rows={tableRows}
                 columns={columns}
-                loading={tableRows.length === 0}
                 autoHeight
                 rowHeight={40}
                 pagination
