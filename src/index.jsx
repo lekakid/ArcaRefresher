@@ -18,6 +18,7 @@ import AnonymousNick from './AnonymousNick';
 import Memo from './Memo';
 import LayoutCustom from './LayoutCustom';
 import ExperienceCustom from './ExperienceCustom';
+import TemporarySave from './TemporarySave';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -57,6 +58,7 @@ async function awaitDocumentBody() {
         <Memo />
         <LayoutCustom />
         <ExperienceCustom />
+        <TemporarySave />
       </ThemeProvider>
     </Provider>,
     appContainer,

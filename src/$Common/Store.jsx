@@ -9,6 +9,7 @@ import AnonymousNick from '../AnonymousNick/slice';
 import Memo from '../Memo/slice';
 import LayoutCustom from '../LayoutCustom/slice';
 import ExperienceCustom from '../ExperienceCustom/slice';
+import TemporarySave from '../TemporarySave/slice';
 
 export default configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export default configureStore({
     Memo,
     LayoutCustom,
     ExperienceCustom,
+    TemporarySave,
   },
 });
