@@ -37,6 +37,7 @@ export default function RefreshButton() {
     const newComments = await getNewComment();
     if (newComments) {
       comment.replaceWith(newComments);
+      setComment(newComments);
       dispatchAREvent(EVENT_COMMENT_REFRESH);
     }
   }, [comment]);
