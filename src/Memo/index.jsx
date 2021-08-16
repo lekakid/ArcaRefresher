@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Comment } from '@material-ui/icons';
 
 import ConfigBuilder from '../$Config/ConfigBuilder';
-import { EventContextItemPair, USER_MENU } from '../$ContextMenu/ContextEvent';
-import { addContextMenu } from '../$ContextMenu/slice';
+import ContextMenuBuilder from '../$ContextMenu/ContextMenuBuilder';
+import { getUserID } from '../$Common/Parser';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import ConfigView from './ConfigView';
@@ -13,13 +12,6 @@ import MemoDialog from './MemoDialog';
 import MemoList from './MemoList';
 
 export default function IPInfo() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const menu = EventContextItemPair(USER_MENU, <ContextMenu />);
-    dispatch(addContextMenu(menu));
-  }, [dispatch]);
-
   return (
     <>
       <ConfigBuilder
@@ -27,6 +19,17 @@ export default function IPInfo() {
         buttonIcon={<Comment />}
         buttonText={MODULE_NAME}
         view={<ConfigView />}
+      />
+      <ContextMenuBuilder
+        contextKey={MODULE_ID}
+        trigger={(e) => !!e.target.closest('span.user-info')}
+        dataGetter={(e) => {
+          const userInfo = e.target.closest('span.user-info');
+          const id = getUserID(userInfo);
+
+          return { id };
+        }}
+        view={<ContextMenu />}
       />
       <MemoDialog />
       <MemoList />

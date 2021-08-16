@@ -26,7 +26,7 @@ export default function MemoDialog() {
   }, []);
 
   const handleSave = useCallback(() => {
-    const { id } = data;
+    const { id } = data[MODULE_ID];
     dispatch(setMemo({ user: id, memo: memoText }));
     dispatch(setOpenDialog(false));
     setMemoText('');

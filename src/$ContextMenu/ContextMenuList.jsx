@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ContextMenuGroup({ children }) {
+export default function ContextMenuList({ children }) {
   const classes = useStyles();
   return (
     <>

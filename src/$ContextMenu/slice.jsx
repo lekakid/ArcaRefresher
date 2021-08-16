@@ -9,8 +9,7 @@ const initialState = {
   menuList: [],
   open: false,
   mousePos: [0, 0],
-  eventType: null,
-  data: null,
+  data: {},
   snack: '',
   snackTime: null,
 };
@@ -26,14 +25,13 @@ export const slice = createSlice({
     addContextMenu(state, action) {
       state.menuList.push(action.payload);
     },
-    setContextOpen(state, action) {
-      state.open = action.payload;
-    },
-    setContextEvent(state, action) {
+    openContextMenu(state, action) {
       state.mousePos = action.payload.mousePos;
-      state.eventType = action.payload.eventType;
       state.data = action.payload.data;
       state.open = true;
+    },
+    closeContextMenu(state) {
+      state.open = false;
     },
     setContextSnack(state, action) {
       const { msg, time } = action.payload;
@@ -46,8 +44,8 @@ export const slice = createSlice({
 export const {
   setEnable,
   addContextMenu,
-  setContextOpen,
-  setContextEvent,
+  openContextMenu,
+  closeContextMenu,
   setContextSnack,
 } = slice.actions;
 

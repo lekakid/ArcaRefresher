@@ -1,18 +1,23 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { ARTICLE_IMAGES } from '../$Common/Selector';
 
-import { EventContextItemPair, IMAGE_MENU } from '../$ContextMenu/ContextEvent';
-import { addContextMenu } from '../$ContextMenu/slice';
+import ContextMenuBuilder from '../$ContextMenu/ContextMenuBuilder';
 
 import ContextMenu from './ContextMenu';
+import { MODULE_ID } from './ModuleInfo';
 
-export default () => {
-  const dispatch = useDispatch();
+export default () => (
+  <ContextMenuBuilder
+    contextKey={MODULE_ID}
+    trigger={(e) => !!e.target.closest(ARTICLE_IMAGES)}
+    dataGetter={(e) => {
+      const url = e.target.src.split('?')[0];
+      const orig = `${url}${
+        e.target.tagName === 'VIDEO' ? '.gif' : ''
+      }?type=orig`;
 
-  useEffect(() => {
-    const menu = EventContextItemPair(IMAGE_MENU, <ContextMenu />);
-    dispatch(addContextMenu(menu));
-  }, [dispatch]);
-
-  return null;
-};
+      return { orig };
+    }}
+    view={<ContextMenu />}
+  />
+);

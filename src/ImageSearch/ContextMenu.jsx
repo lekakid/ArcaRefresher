@@ -4,35 +4,38 @@ import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
 import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
-import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
+import ContextMenuList from '../$ContextMenu/ContextMenuList';
+import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
+
+import { MODULE_ID } from './ModuleInfo';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
+  const imgData = data[MODULE_ID];
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://www.google.com/searchbyimage?safe=off&image_url=${data.orig}`,
+      `https://www.google.com/searchbyimage?safe=off&image_url=${imgData.orig}`,
     );
-    dispatch(setContextOpen(false));
-  }, [data.orig, dispatch]);
+    dispatch(closeContextMenu());
+  }, [imgData, dispatch]);
 
   const handleYandex = useCallback(() => {
     window.open(
-      `https://yandex.com/images/search?rpt=imageview&url=${data.orig}`,
+      `https://yandex.com/images/search?rpt=imageview&url=${imgData}`,
     );
-    dispatch(setContextOpen(false));
-  }, [data.orig, dispatch]);
+    dispatch(closeContextMenu());
+  }, [imgData, dispatch]);
 
   const handleSauceNao = useCallback(() => {
     (async () => {
       try {
-        dispatch(setContextOpen(false));
+        dispatch(closeContextMenu());
         dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
         const { response: blob } = await fetch({
-          url: data.orig,
+          url: imgData.orig,
           timeout: 10000,
           responseType: 'blob',
         });
@@ -84,15 +87,15 @@ export default function ContextMenu() {
         console.error(error);
       }
     })();
-  }, [data.orig, dispatch]);
+  }, [imgData, dispatch]);
 
   const handleTwigaten = useCallback(() => {
     (async () => {
       try {
-        dispatch(setContextOpen(false));
+        dispatch(closeContextMenu());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
         const { response: blob } = await fetch({
-          url: data.orig,
+          url: imgData.orig,
           timeout: 10000,
           responseType: 'blob',
         });
@@ -117,15 +120,15 @@ export default function ContextMenu() {
         console.error(error);
       }
     })();
-  }, [data.orig, dispatch]);
+  }, [imgData, dispatch]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
-        dispatch(setContextOpen(false));
+        dispatch(closeContextMenu());
         dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
         const { response: blob } = await fetch({
-          url: data.orig,
+          url: imgData.orig,
           timeout: 10000,
           responseType: 'blob',
         });
@@ -166,10 +169,10 @@ export default function ContextMenu() {
         console.error(error);
       }
     })();
-  }, [data.orig, dispatch]);
+  }, [imgData, dispatch]);
 
   return (
-    <ContextMenuGroup>
+    <ContextMenuList>
       <MenuItem onClick={handleGoogle}>
         <ListItemIcon>
           <ImageSearch />
@@ -200,6 +203,6 @@ export default function ContextMenu() {
         </ListItemIcon>
         <Typography>Ascii2D 검색</Typography>
       </MenuItem>
-    </ContextMenuGroup>
+    </ContextMenuList>
   );
 }

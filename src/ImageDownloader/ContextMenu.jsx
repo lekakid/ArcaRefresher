@@ -5,8 +5,8 @@ import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-import ContextMenuGroup from '../$ContextMenu/ContextMenuGroup';
-import { setContextOpen, setContextSnack } from '../$ContextMenu/slice';
+import ContextMenuList from '../$ContextMenu/ContextMenuList';
+import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
 import { MODULE_ID } from './ModuleInfo';
@@ -17,6 +17,7 @@ export default function ContextMenu() {
   const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
   const config = useSelector((state) => state[MODULE_ID]);
   const [articleInfo, setArticleInfo] = useState(null);
+  const imgData = data[MODULE_ID];
 
   useEffect(() => {
     setArticleInfo(getArticleInfo());
@@ -26,11 +27,11 @@ export default function ContextMenu() {
     (async () => {
       for (let i = 0; i < config.retryCount; i += 1) {
         try {
-          dispatch(setContextOpen(false));
+          dispatch(closeContextMenu());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
           const { response: rawData } = await fetch({
-            url: data.orig,
+            url: imgData.orig,
             timeout: 10000,
             responseType: 'blob',
           });
@@ -55,27 +56,29 @@ export default function ContextMenu() {
             [convertedBlob.type]: convertedBlob,
           });
           navigator.clipboard.write([item]);
-          setContextSnack({
-            msg: '클립보드에 이미지가 복사되었습니다.',
-            time: 3000,
-          });
+          dispatch(
+            setContextSnack({
+              msg: '클립보드에 이미지가 복사되었습니다.',
+              time: 3000,
+            }),
+          );
           break;
         } catch (error) {
-          console.warn('다운로드 실패로 인한 재시도', data.orig, error);
+          console.warn('다운로드 실패로 인한 재시도', imgData.orig, error);
         }
       }
     })();
-  }, [config.retryCount, data.orig, dispatch]);
+  }, [config.retryCount, imgData.orig, dispatch]);
 
   const handleDownload = useCallback(() => {
     (async () => {
       for (let i = 0; i < config.retryCount; i += 1) {
         try {
-          dispatch(setContextOpen(false));
+          dispatch(closeContextMenu());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
           const { response: blob } = await fetch({
-            url: data.orig,
+            url: imgData.orig,
             timeout: 10000,
             responseType: 'blob',
           });
@@ -84,13 +87,13 @@ export default function ContextMenu() {
             blob,
             `${replaceFlag(config.fileName, {
               ...articleInfo,
-              uploadName: data.uploadName,
-            })}.${data.ext}`,
+              uploadName: imgData.uploadName,
+            })}.${imgData.ext}`,
           );
           dispatch(setContextSnack({ msg: '' }));
           break;
         } catch (error) {
-          console.warn('다운로드 실패로 인한 재시도', data.orig, error);
+          console.warn('다운로드 실패로 인한 재시도', imgData.orig, error);
         }
       }
     })();
@@ -98,19 +101,19 @@ export default function ContextMenu() {
     articleInfo,
     config.fileName,
     config.retryCount,
-    data.ext,
-    data.orig,
-    data.uploadName,
+    imgData.ext,
+    imgData.orig,
+    imgData.uploadName,
     dispatch,
   ]);
 
   const handleCopyURL = useCallback(() => {
-    dispatch(setContextOpen(false));
-    navigator.clipboard.writeText(data.orig);
-  }, [data.orig, dispatch]);
+    dispatch(closeContextMenu());
+    navigator.clipboard.writeText(imgData.orig);
+  }, [imgData.orig, dispatch]);
 
   return (
-    <ContextMenuGroup>
+    <ContextMenuList>
       <MenuItem onClick={handleClipboard}>
         <ListItemIcon>
           <Assignment />
@@ -129,6 +132,6 @@ export default function ContextMenu() {
         </ListItemIcon>
         <Typography>이미지 주소 복사</Typography>
       </MenuItem>
-    </ContextMenuGroup>
+    </ContextMenuList>
   );
 }

@@ -3,43 +3,47 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { MODULE_ID } from './ModuleInfo';
-import ContextEvent from './ContextEvent';
-import { setContextEvent, setContextOpen } from './slice';
+import { openContextMenu, closeContextMenu } from './slice';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { menuList, open, mousePos, eventType } = useSelector(
+  const { menuList, open, mousePos, data } = useSelector(
     (state) => state[MODULE_ID],
   );
 
   useEffect(() => {
     const handleContext = (e) => {
       if (open) {
-        dispatch(setContextOpen(false));
+        dispatch(closeContextMenu(false));
       }
 
-      ContextEvent.some(({ eventType: type, test, getData }) => {
-        if (test(e)) {
-          e.preventDefault();
-          const event = {
+      const init = {};
+      const eventData = menuList.reduce(
+        (acc, { contextKey, trigger, dataGetter }) => {
+          if (trigger(e)) {
+            e.preventDefault();
+            return { ...acc, [contextKey]: dataGetter(e) };
+          }
+
+          return acc;
+        },
+        init,
+      );
+      if (eventData !== init)
+        dispatch(
+          openContextMenu({
             mousePos: [e.clientX, e.clientY],
-            eventType: type,
-            data: getData(e),
-          };
-          dispatch(setContextEvent(event));
-          return true;
-        }
-        return false;
-      });
+            data: eventData,
+          }),
+        );
     };
 
     document.addEventListener('contextmenu', handleContext);
-
     return () => document.removeEventListener('contextmenu', handleContext);
-  }, [dispatch, open]);
+  }, [dispatch, menuList, open]);
 
   const handleClose = useCallback(() => {
-    dispatch(setContextOpen(false));
+    dispatch(closeContextMenu(false));
   }, [dispatch]);
 
   return (
@@ -52,8 +56,8 @@ export default function ContextMenu() {
         anchorPosition={{ top: mousePos[1], left: mousePos[0] }}
       >
         <MenuItem dense>Arca Refresher</MenuItem>
-        {menuList.map(({ eventType: type, menu }) =>
-          type === eventType ? menu : null,
+        {menuList.map(({ contextKey, view }) =>
+          data[contextKey] ? view : null,
         )}
       </Menu>
     </>
