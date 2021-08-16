@@ -10,6 +10,7 @@ import Memo from '../Memo/slice';
 import LayoutCustom from '../LayoutCustom/slice';
 import ExperienceCustom from '../ExperienceCustom/slice';
 import TemporarySave from '../TemporarySave/slice';
+import Mute from '../Mute/slice';
 
 export default configureStore({
   reducer: {
@@ -24,5 +25,6 @@ export default configureStore({
     LayoutCustom,
     ExperienceCustom,
     TemporarySave,
+    Mute,
   },
 });

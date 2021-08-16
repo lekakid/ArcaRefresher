@@ -14,23 +14,23 @@ export function getChannelName() {
   return channelTitle ? channelTitle.textContent : '';
 }
 
-export function getCategory(isReverseMap) {
-  const channelCategoryList = document.querySelectorAll(BOARD_CATEGORIES);
-  const result = {};
-  channelCategoryList.forEach((e) => {
-    if (e.href.indexOf('category=') > -1) {
-      const id = decodeURI(e.href.split('category=')[1].split('&')[0]);
-      const text = e.textContent;
-      if (isReverseMap) {
-        result[text] = id;
-      } else {
-        result[id] = text;
-      }
-    } else {
-      result['일반'] = '일반';
-    }
-  });
-  return result;
+export function getCategory() {
+  try {
+    return [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
+      (acc, cur) => {
+        if (cur.href.indexOf('category=') === -1)
+          return { ...acc, 일반: '일반' };
+
+        const id = decodeURI(cur.href.split('category=')[1].split('&')[0]);
+        const text = cur.textContent;
+
+        return { ...acc, [id]: text };
+      },
+    );
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 }
 
 export function getUserInfo(infoElement) {
