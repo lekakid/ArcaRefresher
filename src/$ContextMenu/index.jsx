@@ -1,38 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Menu } from '@material-ui/icons';
 
-import ConfigListButton from '../$Config/ConfigListButton';
-import { addConfig } from '../$Config/slice';
+import ConfigBuilder from '../$Config/ConfigBuilder';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import ConfigView from './ConfigView';
 import ContextMenu from './ContextMenu';
 import ContextSnack from './ContextSnack';
 
-export default function $ContextMenu() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(
-      addConfig({
-        key: MODULE_ID,
-        listButton: (
-          <ConfigListButton
-            configKey={MODULE_ID}
-            icon={<Menu />}
-            text={MODULE_NAME}
-          />
-        ),
-        content: <ConfigView />,
-      }),
-    );
-  }, [dispatch]);
-
-  return (
-    <>
-      <ContextMenu />
-      <ContextSnack />
-    </>
-  );
-}
+export default () => (
+  <>
+    <ConfigBuilder
+      configKey={MODULE_ID}
+      buttonIcon={<Menu />}
+      buttonText={MODULE_NAME}
+      view={<ConfigView />}
+    />
+    <ContextMenu />
+    <ContextSnack />
+  </>
+);

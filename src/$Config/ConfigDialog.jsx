@@ -8,6 +8,9 @@ import {
   Drawer,
   IconButton,
   List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -16,11 +19,10 @@ import {
 import { Close, Menu } from '@material-ui/icons';
 
 import { MODULE_ID } from './ModuleInfo';
-import { setDialogOpen } from './slice';
+import { setDialogOpen, setSelection } from './slice';
 import useConfigStyles from './useConfigStyles';
-import ConfigListButton from './ConfigListButton';
 
-export default function ConfigView() {
+export default function ConfigDialog() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { menuList, dialogOpen, selection } = useSelector(
@@ -38,16 +40,25 @@ export default function ConfigView() {
     setDrawerOpen((prev) => !prev);
   }, []);
 
+  const handleClickAll = useCallback(() => {
+    dispatch(setSelection('all'));
+  }, [dispatch]);
+
   const classes = useConfigStyles();
   const drawer = (
     <>
       <div className={classes.toolbar} />
       <Divider />
       <List disablePadding>
-        <ConfigListButton configKey="all" icon={<Menu />} text="전체 설정" />
+        <ListItem button onClick={handleClickAll}>
+          <ListItemIcon>
+            <Menu />
+          </ListItemIcon>
+          <ListItemText primary="전체 설정" />
+        </ListItem>
         <Divider />
-        {Object.values(menuList).map(({ listButton }) => (
-          <Typography variant="h5">{listButton}</Typography>
+        {Object.values(menuList).map(({ button }) => (
+          <Typography variant="h5">{button}</Typography>
         ))}
       </List>
     </>
@@ -97,8 +108,8 @@ export default function ConfigView() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {selection === 'all' &&
-            Object.values(menuList).map(({ content }) => content)}
-          {selection !== 'all' && menuList[selection]?.content}
+            Object.values(menuList).map(({ view }) => view)}
+          {selection !== 'all' && menuList[selection]?.view}
         </main>
       </Container>
     </Dialog>

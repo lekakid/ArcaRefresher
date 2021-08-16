@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Comment } from '@material-ui/icons';
 
-import { addConfig } from '../$Config/slice';
-import ConfigListButton from '../$Config/ConfigListButton';
+import ConfigBuilder from '../$Config/ConfigBuilder';
 import { EventContextItemPair, USER_MENU } from '../$ContextMenu/ContextEvent';
 import { addContextMenu } from '../$ContextMenu/slice';
 
@@ -17,28 +16,18 @@ export default function IPInfo() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      addConfig({
-        key: MODULE_ID,
-        listButton: (
-          <ConfigListButton
-            configKey={MODULE_ID}
-            icon={<Comment />}
-            text={MODULE_NAME}
-          />
-        ),
-        content: <ConfigView />,
-      }),
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
     const menu = EventContextItemPair(USER_MENU, <ContextMenu />);
     dispatch(addContextMenu(menu));
   }, [dispatch]);
 
   return (
     <>
+      <ConfigBuilder
+        configKey={MODULE_ID}
+        buttonIcon={<Comment />}
+        buttonText={MODULE_NAME}
+        view={<ConfigView />}
+      />
       <MemoDialog />
       <MemoList />
     </>

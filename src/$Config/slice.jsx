@@ -11,8 +11,8 @@ export const slice = createSlice({
   initialState,
   reducers: {
     addConfig(state, action) {
-      const { key, listButton, content } = action.payload;
-      state.menuList[key] = { listButton, content };
+      const { key, button, view } = action.payload;
+      state.menuList[key] = { button, view };
     },
     setDialogOpen(state, action) {
       state.dialogOpen = action.payload;
