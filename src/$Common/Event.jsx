@@ -11,7 +11,7 @@ export function addAREvent(event, callback) {
 
 export function removeAREvent(event, callback) {
   try {
-    AREvent[event].remove(callback);
+    AREvent[event] = AREvent[event].filter((f) => f !== callback);
   } catch (error) {
     console.warn(error);
   }
