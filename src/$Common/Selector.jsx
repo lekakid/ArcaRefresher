@@ -1,5 +1,6 @@
 // CONTAINER LOAD CHECK SELECTOR
 export const NAVIGATION_LOADED = '.content-wrapper';
+export const CHANNEL_TITLE_LOADED = '.btns-board';
 export const BOARD_LOADED = 'form.search-form';
 export const ARTICLE_LOADED = 'div.included-article-list';
 export const COMMENT_LOADED = '#comment form.write-area, #comment .alert';
