@@ -12,6 +12,7 @@ import ExperienceCustom from '../ExperienceCustom/slice';
 import TemporarySave from '../TemporarySave/slice';
 import Mute from '../Mute/slice';
 import MyImage from '../MyImage/slice';
+import CategoryColor from '../CategoryColor/slice';
 
 export default configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export default configureStore({
     TemporarySave,
     Mute,
     MyImage,
+    CategoryColor,
   },
 });

@@ -21,6 +21,7 @@ import ExperienceCustom from './ExperienceCustom';
 import TemporarySave from './TemporarySave';
 import Mute from './Mute';
 import MyImage from './MyImage';
+import CategoryColor from './CategoryColor';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -63,6 +64,7 @@ async function awaitDocumentBody() {
         <TemporarySave />
         <Mute />
         <MyImage />
+        <CategoryColor />
       </ThemeProvider>
     </Provider>,
     appContainer,
