@@ -13,6 +13,8 @@ import useElementQuery from '../$Common/useElementQuery';
 
 import { MODULE_ID } from './ModuleInfo';
 
+const SHARED = '_shared_';
+
 export default function MyImageLoader() {
   const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
@@ -23,6 +25,10 @@ export default function MyImageLoader() {
   const [editor, setEditor] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
+  const sharedImgList = imgList[SHARED] || [];
+  const channelImgList = imgList[channelID] || [];
+  const targetImgList = [...channelImgList, ...sharedImgList];
+
   useEffect(() => {
     if (!enabled) return;
     if (!editorLoaded) return;
@@ -31,12 +37,7 @@ export default function MyImageLoader() {
   }, [dispatch, editorLoaded, enabled]);
 
   const handleLoad = useCallback(() => {
-    const tmpList = [
-      ...(imgList[channelID] || []),
-      // eslint-disable-next-line dot-notation
-      ...(imgList['_shared_'] || []),
-    ];
-    const img = tmpList[Math.floor(Math.random() * tmpList.length)];
+    const img = targetImgList[Math.floor(Math.random() * targetImgList.length)];
     if (!img) return;
 
     const html =
@@ -48,18 +49,19 @@ export default function MyImageLoader() {
     editor.selection.setAtEnd(editor.$el.get(0));
     setLoaded(true);
     setOpen(false);
-  }, [channelID, editor, imgList]);
+  }, [targetImgList, editor]);
 
   useEffect(() => {
     if (loaded) return;
     if (!editor) return;
+    if (targetImgList.length === 0) return;
 
     if (forceLoad || !editor.html.get(true)) {
       handleLoad();
     } else {
       setOpen(true);
     }
-  }, [editor, forceLoad, handleLoad, loaded]);
+  }, [editor, forceLoad, handleLoad, loaded, targetImgList]);
 
   const handleClose = useCallback(() => {
     setOpen(false);
