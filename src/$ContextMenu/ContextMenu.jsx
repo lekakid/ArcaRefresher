@@ -7,11 +7,13 @@ import { openContextMenu, closeContextMenu } from './slice';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { menuList, open, mousePos, data } = useSelector(
+  const { enabled, menuList, open, mousePos, data } = useSelector(
     (state) => state[MODULE_ID],
   );
 
   useEffect(() => {
+    if (!enabled) return null;
+
     const handleContext = (e) => {
       if (open) {
         dispatch(closeContextMenu(false));
@@ -40,7 +42,7 @@ export default function ContextMenu() {
 
     document.addEventListener('contextmenu', handleContext);
     return () => document.removeEventListener('contextmenu', handleContext);
-  }, [dispatch, menuList, open]);
+  }, [dispatch, enabled, menuList, open]);
 
   const handleClose = useCallback(() => {
     dispatch(closeContextMenu(false));
