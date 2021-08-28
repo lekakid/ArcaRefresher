@@ -45,9 +45,7 @@ export default function MemoDialog() {
         <TextField value={memoText} onChange={handleText} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSave}>
-          {memoText ? '메모 저장' : '메모 삭제'}
-        </Button>
+        <Button onClick={handleSave}>{memoText ? '저장' : '삭제'}</Button>
         <Button onClick={handleClose}>취소</Button>
       </DialogActions>
     </Dialog>

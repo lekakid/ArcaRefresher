@@ -8,7 +8,7 @@ import { getUserID } from '../$Common/Parser';
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import ConfigView from './ConfigView';
 import ContextMenu from './ContextMenu';
-import MemoDialog from './MemoDialog';
+import ContextDialog from './ContextDialog';
 import MemoList from './MemoList';
 
 export default function IPInfo() {
@@ -31,7 +31,7 @@ export default function IPInfo() {
         }}
         view={<ContextMenu />}
       />
-      <MemoDialog />
+      <ContextDialog />
       <MemoList />
     </>
   );

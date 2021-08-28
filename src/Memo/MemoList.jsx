@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import uuid from 'react-uuid';
@@ -35,13 +35,13 @@ export default function MemoList() {
   const { memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
 
-  useEffect(() => {
-    const refreshUserInfo = () => {
+  useLayoutEffect(() => {
+    const appendMemo = () => {
       setInfoList(getUserInfo());
     };
-    window.addEventListener('load', refreshUserInfo);
-    addAREvent(EVENT_AUTOREFRESH, refreshUserInfo);
-    addAREvent(EVENT_COMMENT_REFRESH, refreshUserInfo);
+    window.addEventListener('load', appendMemo);
+    addAREvent(EVENT_AUTOREFRESH, appendMemo);
+    addAREvent(EVENT_COMMENT_REFRESH, appendMemo);
   }, []);
 
   return (

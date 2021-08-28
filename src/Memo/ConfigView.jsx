@@ -17,7 +17,7 @@ import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import { setMemoList } from './slice';
 
 const columns = [
-  { field: 'user', headerName: '이용자', flex: 1 },
+  { field: 'id', headerName: '이용자', flex: 1 },
   { field: 'memo', headerName: '메모', flex: 1, editable: true },
 ];
 
@@ -34,20 +34,15 @@ function ConfigToolbar({ disabled, onRemove }) {
 export default function ConfigView() {
   const dispatch = useDispatch();
   const { memo } = useSelector((state) => state[MODULE_ID]);
-  const tableRows = Object.keys(memo).map((key, index) => ({
-    id: index,
-    user: key,
+  const tableRows = Object.keys(memo).map((key) => ({
+    id: key,
     memo: memo[key],
   }));
-  const defaultText = tableRows.reduce(
-    (acc, r, index) => `${acc}${index === 0 ? '' : '\n'}${r.user}::${r.memo}`,
-    '',
-  );
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [textMode, setTextMode] = useState(false);
   const [textError, setTextError] = useState(false);
-  const [memoText, setMemoText] = useState(defaultText);
+  const [memoText, setMemoText] = useState();
 
   const handleCellEdit = useCallback(
     ({ id, value }) => {
@@ -67,22 +62,12 @@ export default function ConfigView() {
   }, []);
 
   const handleRemove = useCallback(() => {
-    const restRows = tableRows.filter(
-      (m) => !selection.some((s) => s === m.id),
-    );
-    dispatch(
-      setMemoList(
-        restRows.reduce((acc, m) => ({ ...acc, [m.user]: m.memo }), {}),
-      ),
-    );
+    const updateData = tableRows.reduce((acc, row) => {
+      if (selection.includes(row.id)) return acc;
+      return { ...acc, [row.id]: row.memo };
+    }, {});
+    dispatch(setMemoList(updateData));
     setSelection([]);
-    setMemoText(
-      restRows.reduce(
-        (acc, r, index) =>
-          `${acc}${index === 0 ? '' : '\n'}${r.user}::${r.memo}`,
-        '',
-      ),
-    );
   }, [dispatch, selection, tableRows]);
 
   const handleSelection = useCallback((current) => {
@@ -97,13 +82,13 @@ export default function ConfigView() {
   const handleTextMode = useCallback(() => {
     if (textMode) {
       try {
-        const updatedMemo = memoText.split('\n').reduce((acc, r) => {
-          if (!r) return acc;
+        const updatedMemo = memoText.split('\n').reduce((acc, row) => {
+          if (!row) return acc;
 
-          const [u, m] = r.split('::');
-          if (!m) return acc;
+          const [user, memoInfo] = row.split('::');
+          if (!memoInfo) return acc;
 
-          return { ...acc, [u]: m };
+          return { ...acc, [user]: memoInfo };
         }, {});
         dispatch(setMemoList(updatedMemo));
         setTextMode(false);
@@ -114,8 +99,15 @@ export default function ConfigView() {
       return;
     }
 
+    setMemoText(
+      tableRows.reduce(
+        (acc, r, index) =>
+          `${acc}${index === 0 ? '' : '\n'}${r.user}::${r.memo}`,
+        '',
+      ),
+    );
     setTextMode(true);
-  }, [dispatch, memoText, textMode]);
+  }, [dispatch, memoText, tableRows, textMode]);
 
   return (
     <>
