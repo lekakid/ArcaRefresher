@@ -22,6 +22,7 @@ import TemporarySave from './TemporarySave';
 import Mute from './Mute';
 import MyImage from './MyImage';
 import CategoryColor from './CategoryColor';
+import UserColor from './UserColor';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -65,6 +66,7 @@ async function awaitDocumentBody() {
         <Mute />
         <MyImage />
         <CategoryColor />
+        <UserColor />
       </ThemeProvider>
     </Provider>,
     appContainer,

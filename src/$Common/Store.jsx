@@ -13,6 +13,7 @@ import TemporarySave from '../TemporarySave/slice';
 import Mute from '../Mute/slice';
 import MyImage from '../MyImage/slice';
 import CategoryColor from '../CategoryColor/slice';
+import UserColor from '../UserColor/slice';
 
 export default configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export default configureStore({
     Mute,
     MyImage,
     CategoryColor,
+    UserColor,
   },
 });
