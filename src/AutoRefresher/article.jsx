@@ -50,7 +50,8 @@ export function swapArticle(
     const exist = insertedArticles.some((o) => {
       if (o.pathname === a.pathname) {
         const userInfoOnOld = o.querySelector(USER_INFO);
-        a.querySelector(USER_INFO).replaceWith(userInfoOnOld);
+        // eslint-disable-next-line no-unused-expressions
+        a.querySelector(USER_INFO)?.replaceWith(userInfoOnOld);
         o.replaceWith(a);
         return true;
       }
