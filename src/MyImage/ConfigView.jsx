@@ -196,7 +196,7 @@ export default function ConfigView() {
                 </Grid>
               </Grid>
               <Divider />
-              {imgList[selectedChannel]?.length === 0 && (
+              {!imgList[selectedChannel]?.length && (
                 <Box
                   width="100%"
                   display="flex"
