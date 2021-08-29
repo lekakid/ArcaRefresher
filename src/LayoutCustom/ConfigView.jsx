@@ -54,7 +54,12 @@ export default function ConfigView() {
 
   const handleNotifyColor = useCallback(
     (color) => {
-      if (!color.error) dispatch(setNotifyColor(color.css.backgroundColor));
+      if (color.name === 'none') {
+        dispatch(setNotifyColor(''));
+        setPickerColor(createColor(''));
+        return;
+      }
+      dispatch(setNotifyColor(color.css.backgroundColor));
       setPickerColor(color);
     },
     [dispatch],
@@ -120,6 +125,7 @@ export default function ConfigView() {
             <ListItemSecondaryAction>
               <ColorPicker
                 hideTextfield
+                deferred
                 value={pickerColor}
                 onChange={handleNotifyColor}
               />
