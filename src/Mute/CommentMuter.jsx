@@ -102,7 +102,7 @@ export default function ArticleMuter() {
   );
 
   if (!commentLoaded || !countBar) return null;
-  if (hideCountBar || count.all === 0) return null;
+  if (hideCountBar) return null;
 
   return (
     <CountBar

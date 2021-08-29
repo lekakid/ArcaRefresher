@@ -13,6 +13,8 @@ const useStyles = makeStyles(() => ({
 export default function CountBar({ count, btnState, container, onClick }) {
   const classes = useStyles();
 
+  if (!count?.all) return null;
+
   return ReactDOM.createPortal(
     <Grid container alignItems="center">
       <Grid item sm={4} xs={12}>
