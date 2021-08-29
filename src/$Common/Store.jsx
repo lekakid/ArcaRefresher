@@ -14,6 +14,7 @@ import Mute from '../Mute/slice';
 import MyImage from '../MyImage/slice';
 import CategoryColor from '../CategoryColor/slice';
 import UserColor from '../UserColor/slice';
+import ShortCut from '../ShortCut/slice';
 
 export default configureStore({
   reducer: {
@@ -32,5 +33,6 @@ export default configureStore({
     MyImage,
     CategoryColor,
     UserColor,
+    ShortCut,
   },
 });

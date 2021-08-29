@@ -23,6 +23,7 @@ import Mute from './Mute';
 import MyImage from './MyImage';
 import CategoryColor from './CategoryColor';
 import UserColor from './UserColor';
+import ShortCut from './ShortCut';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -67,6 +68,7 @@ async function awaitDocumentBody() {
         <MyImage />
         <CategoryColor />
         <UserColor />
+        <ShortCut />
       </ThemeProvider>
     </Provider>,
     appContainer,
