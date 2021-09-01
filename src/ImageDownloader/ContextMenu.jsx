@@ -10,7 +10,7 @@ import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
 import { MODULE_ID } from './ModuleInfo';
-import { getArticleInfo, replaceFlag } from './FlagHandler';
+import { getArticleInfo, replaceFlag } from './func';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();

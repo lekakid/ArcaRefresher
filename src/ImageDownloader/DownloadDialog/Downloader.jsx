@@ -3,18 +3,16 @@ import { useSelector } from 'react-redux';
 import {
   Box,
   CircularProgress,
-  DialogContent,
   LinearProgress,
   Typography,
 } from '@material-ui/core';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-import fetch from '../$Common/Fetch';
+import fetch from '../../$Common/Fetch';
 
-import { MODULE_ID } from './ModuleInfo';
-import { SET_FINISH } from './DialogReducer';
-import { getArticleInfo, replaceFlag } from './FlagHandler';
+import { MODULE_ID } from '../ModuleInfo';
+import { getArticleInfo, replaceFlag } from '../func';
 
 async function download({
   dataList,
@@ -62,25 +60,19 @@ async function download({
   saveAs(zipblob, `${replaceFlag(zipName, articleInfo)}.zip`);
 }
 
-export default function DownloadProgress(props) {
+export default function Downloader({ data, onFinish }) {
   const config = useSelector((state) => state[MODULE_ID]);
-  const {
-    state: { target },
-    dispatch,
-  } = props;
-  const [articleInfo, setArticleInfo] = useState(null);
+  const [articleInfo] = useState(() => getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    setArticleInfo(getArticleInfo());
-  }, []);
+    if (data.length === 0) return;
 
-  useEffect(() => {
-    if (articleInfo && target.length > 0) {
+    if (articleInfo) {
       (async () => {
         await download({
-          dataList: target,
+          dataList: data,
           onTotalProgress(current) {
             setCur(current);
           },
@@ -90,30 +82,25 @@ export default function DownloadProgress(props) {
           articleInfo,
           config,
         });
-        dispatch({ type: SET_FINISH });
+        onFinish();
       })();
     }
-  }, [articleInfo, config, dispatch, target]);
+  }, [articleInfo, config, data, onFinish]);
 
-  if (cur === target.length) {
+  if (cur === data.length) {
     return (
-      <DialogContent>
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      </DialogContent>
+      <Box display="flex" justifyContent="center">
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <DialogContent>
-      <Typography>{`다운로드 중 ${cur}/${target.length}`}</Typography>
-      <LinearProgress
-        variant="determinate"
-        value={(cur / target.length) * 100}
-      />
+    <Box diaplay="flex">
+      <Typography>{`다운로드 중 ${cur}/${data.length}`}</Typography>
+      <LinearProgress variant="determinate" value={(cur / data.length) * 100} />
       <Typography>{`${Math.floor(progress)}%`}</Typography>
       <LinearProgress variant="determinate" value={progress} />
-    </DialogContent>
+    </Box>
   );
 }

@@ -1,36 +1,16 @@
-import { getChannelID, getChannelName, getUserNick } from '../$Common/Parser';
+import {
+  getChannelID,
+  getChannelName,
+  getUserNick,
+} from '../../$Common/Parser';
 import {
   ARTICLE_AUTHOR,
   ARTICLE_CATEGORY,
   ARTICLE_TITLE,
   ARTICLE_URL,
-} from '../$Common/Selector';
+} from '../../$Common/Selector';
 
-export function replaceFlag(
-  string,
-  {
-    channelID,
-    channelName,
-    articleCategory,
-    articleTitle,
-    articleAuthor,
-    articleURL,
-    uploadName = '',
-    index = 0,
-  },
-) {
-  return string
-    .replace('%channel%', channelName)
-    .replace('%channelID%', channelID)
-    .replace('%title%', articleTitle)
-    .replace('%category%', articleCategory)
-    .replace('%author%', articleAuthor)
-    .replace('%url%', articleURL)
-    .replace('%orig%', uploadName)
-    .replace('%num%', `${index}`.padStart(3, '0'));
-}
-
-export function getArticleInfo() {
+export default function getArticleInfo() {
   const channelID = getChannelID();
   const channelName = getChannelName();
   const articleCategory =

@@ -7,7 +7,7 @@ import { ARTICLE_IMAGES } from '../$Common/Selector';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import ContextMenu from './ContextMenu';
-import ArticleButton from './ArticleButton';
+import DialogButton from './DialogButton';
 import ConfigView from './ConfigView';
 
 export default () => (
@@ -36,6 +36,6 @@ export default () => (
       }}
       view={<ContextMenu />}
     />
-    <ArticleButton />
+    <DialogButton />
   </>
 );
