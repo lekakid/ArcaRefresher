@@ -15,6 +15,7 @@ import MyImage from '../MyImage/slice';
 import CategoryColor from '../CategoryColor/slice';
 import UserColor from '../UserColor/slice';
 import ShortCut from '../ShortCut/slice';
+import ThemeCustomizer from '../ThemeCustomizer/slice';
 
 export default configureStore({
   reducer: {
@@ -34,5 +35,6 @@ export default configureStore({
     CategoryColor,
     UserColor,
     ShortCut,
+    ThemeCustomizer,
   },
 });

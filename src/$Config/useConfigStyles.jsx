@@ -14,8 +14,7 @@ export default makeStyles((theme) => ({
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(1),
     },
-    '& .MuiListItemSecondaryAction-root .MuiInputBase-root': {
-      marginRight: theme.spacing(1),
+    '& .MuiListItemSecondaryAction-root > .MuiInputBase-root': {
       minWidth: secondaryActionWidth,
     },
     '& .MuiListItemSecondaryAction-root .MuiSelect-root': {
@@ -23,11 +22,7 @@ export default makeStyles((theme) => ({
       paddingBottom: theme.spacing(1),
     },
     '& .MuiListItemSecondaryAction-root .MuiSlider-root': {
-      right: theme.spacing(1),
       minWidth: secondaryActionWidth,
-    },
-    '& .MuiListItemSecondaryAction-root .muicc-colorpicker-button': {
-      marginRight: theme.spacing(1),
     },
   },
   bg: {

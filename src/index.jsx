@@ -24,6 +24,7 @@ import MyImage from './MyImage';
 import CategoryColor from './CategoryColor';
 import UserColor from './UserColor';
 import ShortCut from './ShortCut';
+import ThemeCustomizer from './ThemeCustomizer';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -69,6 +70,7 @@ async function awaitDocumentBody() {
         <CategoryColor />
         <UserColor />
         <ShortCut />
+        <ThemeCustomizer />
       </ThemeProvider>
     </Provider>,
     appContainer,
