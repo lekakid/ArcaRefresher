@@ -267,6 +267,7 @@ export default function ConfigView() {
       />
       <RemoveConfirm
         open={confirmOpen}
+        target={selectPreset}
         onSubmit={handleRemovePreset}
         onClose={handleRemoveClose}
       />
