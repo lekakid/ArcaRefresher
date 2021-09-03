@@ -45,24 +45,6 @@ export default function ConfigDialog() {
   }, [dispatch]);
 
   const classes = useConfigStyles();
-  const drawer = (
-    <>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List disablePadding>
-        <ListItem button onClick={handleClickAll}>
-          <ListItemIcon>
-            <Menu />
-          </ListItemIcon>
-          <ListItemText primary="전체 설정" />
-        </ListItem>
-        <Divider />
-        {Object.values(menuList).map(({ button }) => (
-          <Typography variant="h5">{button}</Typography>
-        ))}
-      </List>
-    </>
-  );
 
   return (
     <Dialog
@@ -70,6 +52,9 @@ export default function ConfigDialog() {
       className={classes.root}
       PaperProps={{
         className: classes.bg,
+      }}
+      TransitionProps={{
+        mountOnEnter: true,
       }}
       open={dialogOpen}
       onClose={handleConfigClose}
@@ -102,7 +87,18 @@ export default function ConfigDialog() {
             open={drawerOpen}
             onClose={handleDrawerToggle}
           >
-            {drawer}
+            <div className={classes.toolbar} />
+            <Divider />
+            <List disablePadding>
+              <ListItem button onClick={handleClickAll}>
+                <ListItemIcon>
+                  <Menu />
+                </ListItemIcon>
+                <ListItemText primary="전체 설정" />
+              </ListItem>
+              <Divider />
+              {Object.values(menuList).map(({ button }) => button)}
+            </List>
           </Drawer>
         </nav>
         <main className={classes.content}>
