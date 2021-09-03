@@ -12,7 +12,7 @@ import ExperienceCustom from '../ExperienceCustom/slice';
 import TemporarySave from '../TemporarySave/slice';
 import Mute from '../Mute/slice';
 import MyImage from '../MyImage/slice';
-import CategoryColor from '../CategoryColor/slice';
+import CategoryStyler from '../CategoryStyler/slice';
 import UserColor from '../UserColor/slice';
 import ShortCut from '../ShortCut/slice';
 import ThemeCustomizer from '../ThemeCustomizer/slice';
@@ -32,7 +32,7 @@ export default configureStore({
     TemporarySave,
     Mute,
     MyImage,
-    CategoryColor,
+    CategoryStyler,
     UserColor,
     ShortCut,
     ThemeCustomizer,

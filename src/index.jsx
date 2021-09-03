@@ -21,7 +21,7 @@ import ExperienceCustom from './ExperienceCustom';
 import TemporarySave from './TemporarySave';
 import Mute from './Mute';
 import MyImage from './MyImage';
-import CategoryColor from './CategoryColor';
+import CategoryStyler from './CategoryStyler';
 import UserColor from './UserColor';
 import ShortCut from './ShortCut';
 import ThemeCustomizer from './ThemeCustomizer';
@@ -67,7 +67,7 @@ async function awaitDocumentBody() {
         <TemporarySave />
         <Mute />
         <MyImage />
-        <CategoryColor />
+        <CategoryStyler />
         <UserColor />
         <ShortCut />
         <ThemeCustomizer />

@@ -5,7 +5,7 @@ import ConfigBuilder from '../$Config/ConfigBuilder';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import StyleGenerator from './StyleGenerator';
-import ConfigView from './ContextView';
+import ConfigView from './ConfigView';
 
 export default () => (
   <>

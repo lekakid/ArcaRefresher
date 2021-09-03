@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
@@ -21,13 +21,13 @@ export default function StyleGenerator() {
   const [categoryMap, setCategoryMap] = useState({});
   const [styleMap, setStyleMap] = useState({});
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!boardLoaded) return;
     setBoard(document.querySelector(BOARD_VIEW));
     setCategoryMap(getCategory());
   }, [boardLoaded]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (color[channelID]) {
       setStyleMap(
         Object.keys(color[channelID])?.reduce(
@@ -41,8 +41,8 @@ export default function StyleGenerator() {
     }
   }, [categoryMap, channelID, color]);
 
-  useEffect(() => {
-    if (!board) return null;
+  useLayoutEffect(() => {
+    if (!board) return () => {};
 
     board.classList.add('ARColor');
 
@@ -66,9 +66,8 @@ export default function StyleGenerator() {
   if (!boardLoaded) return null;
   if (!color[channelID]) return null;
 
-  const stylesheet = Object.keys(color[channelID]).map((key) => {
-    const { badge, bgcolor, bold, through, disableVisited } =
-      color[channelID][key];
+  const stylesheet = Object.entries(color[channelID]).map(([key, value]) => {
+    const { badge, bgcolor, bold, through, disableVisited } = value;
 
     const colorKey = styleMap[categoryMap[key]];
     return `.ARColor .color-${colorKey} {

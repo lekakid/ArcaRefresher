@@ -14,7 +14,7 @@ export const slice = createSlice({
   name: MODULE_ID,
   initialState,
   reducers: {
-    setColorList(state, action) {
+    setStyle(state, action) {
       const { channel, color } = action.payload;
       state.color[channel] = color;
       setValue(CATEGORY_COLOR, state.color);
@@ -22,6 +22,6 @@ export const slice = createSlice({
   },
 });
 
-export const { setColorList } = slice.actions;
+export const { setStyle } = slice.actions;
 
 export default slice.reducer;
