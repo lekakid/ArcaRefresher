@@ -172,7 +172,7 @@ export default function ConfigView() {
       <Typography variant="subtitle1">{MODULE_NAME}</Typography>
       <Paper>
         <List>
-          <ListItem divider>
+          <ListItem divider button onClick={handleCountBar}>
             <ListItemText
               primary="뮤트 카운터 숨김"
               secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
@@ -181,7 +181,7 @@ export default function ConfigView() {
               <Switch checked={hideCountBar} onChange={handleCountBar} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider>
+          <ListItem divider button onClick={handleIncludeReply}>
             <ListItemText>댓글 뮤트 시 답글도 같이 뮤트</ListItemText>
             <ListItemSecondaryAction>
               <Switch
