@@ -58,15 +58,17 @@ export default function DownloadDialog({ open, onClose }) {
   }, [data, selection]);
 
   const handleDownload = useCallback(() => {
-    const downloadData = data.map(({ orig, ext, uploadName }) => ({
-      orig,
-      ext,
-      uploadName,
-    }));
+    const downloadData = data
+      .filter((d, index) => selection.includes(index))
+      .map(({ orig, ext, uploadName }) => ({
+        orig,
+        ext,
+        uploadName,
+      }));
     setDownloadList(downloadData);
     setSelection([]);
     setDownloader(true);
-  }, [data]);
+  }, [data, selection]);
 
   const handleFinish = useCallback(() => {
     setDownloadList([]);
