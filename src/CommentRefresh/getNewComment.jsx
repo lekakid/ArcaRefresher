@@ -1,4 +1,3 @@
-import { getDateStr } from '../$Common/DateHandler';
 import { COMMENT_INNER_VIEW } from '../$Common/Selector';
 
 export default function getNewComment() {
@@ -12,14 +11,6 @@ export default function getNewComment() {
       try {
         const { response } = req;
         const newComments = response.querySelector(COMMENT_INNER_VIEW);
-        newComments.querySelectorAll('time').forEach((time) => {
-          // eslint-disable-next-line no-param-reassign
-          time.textContent = getDateStr(
-            time.dateTime,
-            'year-month-day hh:mm:ss',
-          );
-        });
-
         resolve(newComments);
       } catch (error) {
         reject(error);
