@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
@@ -9,17 +9,24 @@ import {
 } from '../$Common/Selector';
 import useElementQuery from '../$Common/useElementQuery';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from '../$Common/Event';
-import { getCategory, getChannelID, getUserInfo } from '../$Common/Parser';
+import { getCategory, getUserInfo } from '../$Common/Parser';
 
 import { MODULE_ID } from './ModuleInfo';
-import { setChannelID } from './slice';
 import CountBar from './CountBar';
 import filterContent from './filterContent';
 
 const useStyles = makeStyles(() => ({
   '@global': {
-    '.body .article-list .frontend-header': {
-      display: 'none',
+    '.body .article-list': {
+      '& .frontend-header': {
+        display: 'none',
+      },
+      '& .list-table.show-filtered-category .filtered-category': {
+        display: 'flex !important',
+      },
+      '& .block-preview .vrow-preview': {
+        display: 'none !important',
+      },
     },
   },
   root: {
@@ -33,25 +40,30 @@ const useStyles = makeStyles(() => ({
 export default function ArticleMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { user, keyword, channelID, categoryConfig, hideCountBar } =
-    useSelector((state) => state[MODULE_ID]);
+  const { user, keyword, channelID, category, hideCountBar } = useSelector(
+    (state) => state[MODULE_ID],
+  );
   const [board, setBoard] = useState(null);
-  const [categoryPair, setCategoryPair] = useState(null);
+  const [nameToIDMap, setNameToIDMap] = useState(null);
   const [countBar, setCountBar] = useState(null);
   const [count, setCount] = useState({});
   const [btnState, setBtnState] = useState({});
 
+  const channelCategoryConfig = category[channelID] || {};
+
   const classes = useStyles();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!boardLoaded) return;
 
     const tmpBoard = document.querySelector(BOARD_VIEW);
     if (!tmpBoard) return;
 
     setBoard(tmpBoard);
-    dispatch(setChannelID(getChannelID()));
-    setCategoryPair(getCategory());
+    const name2id = Object.fromEntries(
+      Object.entries(getCategory()).map(([key, value]) => [value, key]),
+    );
+    setNameToIDMap(name2id);
 
     const countHeader = document.createElement('div');
     countHeader.classList.add(classes.root);
@@ -59,8 +71,8 @@ export default function ArticleMuter() {
     setCountBar(countHeader);
   }, [classes, dispatch, boardLoaded]);
 
-  useEffect(() => {
-    if (!board) return null;
+  useLayoutEffect(() => {
+    if (!board) return () => {};
 
     const muteArticle = () => {
       const articleList = [
@@ -77,8 +89,8 @@ export default function ArticleMuter() {
         articleInfo,
         user,
         keyword,
-        categoryConfig[channelID],
-        categoryPair,
+        channelCategoryConfig,
+        nameToIDMap,
       );
       setCount(result);
       setBtnState(
@@ -94,7 +106,7 @@ export default function ArticleMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [board, categoryConfig, categoryPair, channelID, keyword, user]);
+  }, [board, nameToIDMap, channelCategoryConfig, keyword, user]);
 
   const handleClick = useCallback(
     (key) => () => {

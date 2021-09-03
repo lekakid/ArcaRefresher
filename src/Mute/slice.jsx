@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from '../$Common/GMValue';
+import { getChannelID } from '../$Common/Parser';
 import { MODULE_ID } from './ModuleInfo';
 
 const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
@@ -13,8 +14,8 @@ const initialState = {
   user: getValue(BLOCK_USER),
   keyword: getValue(BLOCK_KEYWORD),
   emoticon: getValue(BLOCK_EMOTICON),
-  channelID: '',
-  categoryConfig: getValue(MUTE_CATEGORY),
+  channelID: getChannelID(),
+  category: getValue(MUTE_CATEGORY),
   hideCountBar: getValue(HIDE_COUNT_BAR),
   muteIncludeReply: getValue(MUTE_INCLUDE_REPLY),
 };
@@ -69,13 +70,10 @@ export const slice = createSlice({
       });
       setValue(BLOCK_EMOTICON, state.emoticon);
     },
-    setChannelID(state, action) {
-      state.channelID = action.payload;
-    },
     setCategoryConfig(state, action) {
-      const { id, categoryConfig } = action.payload;
-      state.categoryConfig[id] = categoryConfig;
-      setValue(MUTE_CATEGORY, state.categoryConfig);
+      const { channel, category, config } = action.payload;
+      state.category[channel][category] = config;
+      setValue(MUTE_CATEGORY, state.category);
     },
     toggleCountBar(state) {
       state.hideCountBar = !state.hideCountBar;
@@ -97,7 +95,6 @@ export const {
   setKeyword,
   addEmoticon,
   removeEmoticonList,
-  setChannelID,
   setCategoryConfig,
   toggleCountBar,
   toggleIncludeReply,

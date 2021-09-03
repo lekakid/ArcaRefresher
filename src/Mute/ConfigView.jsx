@@ -1,7 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Box,
   Button,
+  Divider,
+  Grid,
   IconButton,
   List,
   ListItem,
@@ -11,42 +14,67 @@ import {
   Snackbar,
   Switch,
   TextField,
+  Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
-import { Close, Remove, Save } from '@material-ui/icons';
+import {
+  BrokenImage,
+  Close,
+  Image,
+  Remove,
+  Save,
+  VolumeOff,
+  VolumeUp,
+} from '@material-ui/icons';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
 import {
   removeEmoticonList,
+  setCategoryConfig,
   setKeyword,
   setUser,
   toggleCountBar,
   toggleIncludeReply,
 } from './slice';
+import useElementQuery from '../$Common/useElementQuery';
+import { BOARD_LOADED } from '../$Common/Selector';
+import { getCategory } from '../$Common/Parser';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
 function ConfigToolbar({ disabled, onRemove }) {
   return (
-    <div style={{ textAlign: 'right' }}>
+    <Box display="flex" justifyContent="flex-end">
       <Button startIcon={<Remove />} disabled={disabled} onClick={onRemove}>
         삭제
       </Button>
-    </div>
+    </Box>
   );
 }
 
 export default function ConfigView() {
   const dispatch = useDispatch();
-  const { hideCountBar, muteIncludeReply, user, keyword, emoticon } =
-    useSelector((state) => state[MODULE_ID]);
+  const theme = useTheme();
+  const {
+    hideCountBar,
+    muteIncludeReply,
+    user,
+    keyword,
+    emoticon,
+    channelID,
+    category,
+  } = useSelector((state) => state[MODULE_ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
     id: key,
     name: emoticon[key].name,
     bundle: emoticon[key].bundle,
     url: emoticon[key].url,
   }));
+  const boardLoaded = useElementQuery(BOARD_LOADED);
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [textUser, setTextUser] = useState(user.join('\n'));
   const [textKeyword, setTextKeyword] = useState(keyword.join('\n'));
   const [errorUser, setErrorUser] = useState(false);
@@ -54,6 +82,14 @@ export default function ConfigView() {
   const [showResult, setShowResult] = useState(false);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+  const [categoryMap, setCategoryMap] = useState({});
+
+  const channelCategoryConfig = category[channelID] || {};
+
+  useLayoutEffect(() => {
+    if (!boardLoaded) return;
+    setCategoryMap(getCategory());
+  }, [boardLoaded]);
 
   const handleCountBar = useCallback(() => {
     dispatch(toggleCountBar());
@@ -114,12 +150,29 @@ export default function ConfigView() {
     setSelection(current);
   }, []);
 
+  const handleCategory = useCallback(
+    (categoryID, type) => () => {
+      const newConfig = {
+        ...channelCategoryConfig[categoryID],
+        [type]: !(channelCategoryConfig[categoryID] || {})[type],
+      };
+      dispatch(
+        setCategoryConfig({
+          channel: channelID,
+          category: categoryID,
+          config: newConfig,
+        }),
+      );
+    },
+    [channelCategoryConfig, channelID, dispatch],
+  );
+
   return (
     <>
       <Typography variant="subtitle1">{MODULE_NAME}</Typography>
       <Paper>
         <List>
-          <ListItem>
+          <ListItem divider>
             <ListItemText
               primary="뮤트 카운터 숨김"
               secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
@@ -128,7 +181,7 @@ export default function ConfigView() {
               <Switch checked={hideCountBar} onChange={handleCountBar} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem>
+          <ListItem divider>
             <ListItemText>댓글 뮤트 시 답글도 같이 뮤트</ListItemText>
             <ListItemSecondaryAction>
               <Switch
@@ -184,7 +237,7 @@ export default function ConfigView() {
           <ListItem>
             <ListItemText>뮤트된 아카콘 목록</ListItemText>
           </ListItem>
-          <ListItem>
+          <ListItem divider>
             <DataGrid
               rows={tableRows}
               columns={columns}
@@ -211,6 +264,66 @@ export default function ConfigView() {
               onPageSizeChange={handlePageSize}
               onSelectionModelChange={handleSelection}
             />
+          </ListItem>
+          <ListItem>
+            <ListItemText>카테고리 설정</ListItemText>
+          </ListItem>
+          <ListItem>
+            <Paper variant="outlined">
+              <Grid container>
+                {Object.keys(categoryMap).map((id, index) => {
+                  const { mutePreview, muteArticle } =
+                    channelCategoryConfig[id] || {};
+
+                  return (
+                    <>
+                      {index !== 0 && (
+                        <Grid item xs={12}>
+                          <Divider />
+                        </Grid>
+                      )}
+                      <Grid item sm={6} xs={12}>
+                        <Box
+                          display="flex"
+                          height="100%"
+                          minHeight="48px"
+                          width="100%"
+                          alignItems="center"
+                        >
+                          <span
+                            className="badge badge-success"
+                            style={{ margin: '0.25rem' }}
+                          >
+                            {categoryMap[id]}
+                          </span>
+                        </Box>
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <Box
+                          display="flex"
+                          justifyContent={mobile ? null : 'flex-end'}
+                        >
+                          <Tooltip title="미리보기 뮤트">
+                            <IconButton
+                              onClick={handleCategory(id, 'mutePreview')}
+                            >
+                              {mutePreview ? <BrokenImage /> : <Image />}
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="게시물 뮤트">
+                            <IconButton
+                              onClick={handleCategory(id, 'muteArticle')}
+                            >
+                              {muteArticle ? <VolumeOff /> : <VolumeUp />}
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </Grid>
+                    </>
+                  );
+                })}
+              </Grid>
+            </Paper>
           </ListItem>
         </List>
         <Snackbar

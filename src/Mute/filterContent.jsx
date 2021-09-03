@@ -23,7 +23,7 @@ export default function filterContent(
   const config = {
     user: [...new Set([...arcaUser, ...userList])],
     keyword: [...new Set([...arcaKeyword, ...keywordList])],
-    category: categoryList || {},
+    category: categoryList,
   };
 
   contents.forEach(({ element, user, content, category }) => {
@@ -46,15 +46,18 @@ export default function filterContent(
       element.classList.remove('filtered', 'filtered-keyword');
     }
 
-    if (
-      categoryPair[category] &&
-      config.category[categoryPair[category]]?.muteArticle
-    ) {
+    if (config.category[categoryPair[category]]?.muteArticle) {
       element.classList.add('filtered', 'filtered-category');
       count.category += 1;
       count.all += 1;
     } else {
       element.classList.remove('filtered', 'filtered-category');
+    }
+
+    if (config.category[categoryPair[category]]?.mutePreview) {
+      element.classList.add('block-preview');
+    } else {
+      element.classList.remove('block-preview');
     }
 
     if (element.classList.contains('deleted')) {
