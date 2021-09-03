@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import uuid from 'react-uuid';
 
 import {
@@ -28,7 +27,7 @@ function getUserInfo() {
   });
 }
 
-export default function VirtualContainer() {
+export default function InfoList() {
   const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {
@@ -42,9 +41,9 @@ export default function VirtualContainer() {
 
   return (
     <>
-      {infoList.map(({ key, ip, container }) =>
-        ReactDOM.createPortal(<Info key={key} ip={ip} />, container),
-      )}
+      {infoList.map(({ key, ip, container }) => (
+        <Info key={key} ip={ip} container={container} />
+      ))}
     </>
   );
 }

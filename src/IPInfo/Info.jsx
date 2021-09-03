@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { makeStyles } from '@material-ui/core';
 
 import DB from './DB';
@@ -15,10 +16,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function Info({ ip }) {
+function Info({ ip, container }) {
   const [ipType, setIPType] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!ip) return;
 
     const isExist = Object.keys(DB).some((type) => {
@@ -33,9 +34,12 @@ function Info({ ip }) {
   }, [ip]);
 
   const classes = useStyles();
-  if (!ipType) return null;
 
-  return <span className={classes[ipType.color]}>{`-${ipType.label}`}</span>;
+  if (!ipType) return null;
+  return ReactDOM.createPortal(
+    <span className={classes[ipType.color]}>{`-${ipType.label}`}</span>,
+    container,
+  );
 }
 
 export default React.memo(Info);
