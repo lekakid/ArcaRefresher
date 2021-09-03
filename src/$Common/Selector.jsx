@@ -3,7 +3,7 @@ export const NAVIGATION_LOADED = '.content-wrapper';
 export const CHANNEL_TITLE_LOADED = '.btns-board';
 export const BOARD_LOADED = 'form.search-form';
 export const ARTICLE_LOADED = 'div.included-article-list';
-export const COMMENT_LOADED = '#comment form.write-area, #comment .alert';
+export const COMMENT_LOADED = 'div.included-article-list';
 export const WRITE_LOADED = '.fr-box';
 export const AUDIT_LOADED = '.board-audit-list + a.btn';
 
