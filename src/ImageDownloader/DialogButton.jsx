@@ -4,7 +4,11 @@ import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { GetApp } from '@material-ui/icons';
 
-import { ARTICLE_LOADED, ARTICLE_MENU } from '../$Common/Selector';
+import {
+  ARTICLE_BODY,
+  ARTICLE_LOADED,
+  ARTICLE_MENU,
+} from '../$Common/Selector';
 import useElementQuery from '../$Common/useElementQuery';
 
 import DownloadDialog from './DownloadDialog';
@@ -27,11 +31,19 @@ export default function DialogButton() {
     if (!articleLoaded) return;
 
     const menu = document.querySelector(ARTICLE_MENU);
-    menu.classList.add(classes.root);
-    const tmp = document.createElement('span');
-    tmp.classList.add('float-left');
-    menu.insertAdjacentElement('afterbegin', tmp);
-    setContainer(tmp);
+    if (menu) {
+      menu.classList.add(classes.root);
+      const tmp = document.createElement('span');
+      tmp.classList.add('float-left');
+      menu.insertAdjacentElement('afterbegin', tmp);
+      setContainer(tmp);
+    } else {
+      setContainer(
+        document
+          .querySelector(ARTICLE_BODY)
+          .insertAdjacentElement('afterend', document.createElement('div')),
+      );
+    }
   }, [articleLoaded, classes]);
 
   const handleOpen = useCallback(() => {
