@@ -28,7 +28,7 @@ export function getCategory() {
       },
     );
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     return {};
   }
 }
