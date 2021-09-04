@@ -29,9 +29,10 @@ export default function ArticleHeaderMenu() {
 
   useEffect(() => {
     if (articleLoaded) {
+      const editMenu = document.querySelector(ARTICLE_HEADER_MENU);
+      if (!editMenu) return;
       const menuContainer = document.createElement('div');
       menuContainer.classList.add(classes.root);
-      const editMenu = document.querySelector(ARTICLE_HEADER_MENU);
       editMenu.innerHTML = editMenu.innerHTML.trim();
       editMenu.insertAdjacentElement('afterend', menuContainer);
       setContainer(menuContainer);
