@@ -13,6 +13,9 @@ module.exports = {
     filename: `${FILENAME}.user.js`,
   },
   resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+    },
     extensions: ['.js', '.jsx'],
   },
   module: {

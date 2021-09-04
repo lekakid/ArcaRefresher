@@ -17,6 +17,14 @@ module.exports = {
     ],
     'react/prop-types': 'off',
   },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [['~', './src']],
+        extensions: ['.js', '.jsx'],
+      },
+    },
+  },
   globals: {
     GM_info: true,
     GM_setValue: true,
