@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
@@ -70,8 +70,8 @@ export default function ArticleMuter() {
     setCountBar(countHeader);
   }, [classes, dispatch, boardLoaded]);
 
-  useLayoutEffect(() => {
-    if (!board) return () => {};
+  useEffect(() => {
+    if (!board) return null;
 
     const muteArticle = () => {
       const articleList = [
