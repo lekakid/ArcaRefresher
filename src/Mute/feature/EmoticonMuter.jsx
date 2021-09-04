@@ -1,11 +1,12 @@
 import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   addAREvent,
   EVENT_COMMENT_REFRESH,
   removeAREvent,
-} from '../$Common/Event';
+} from '~/$Common/Event';
 import {
   ARTICLE_IMAGES,
   ARTICLE_LOADED,
@@ -13,10 +14,10 @@ import {
   BOARD_LOADED,
   BOARD_VIEW,
   COMMENT_EMOTICON,
-} from '../$Common/Selector';
-import useElementQuery from '../$Common/useElementQuery';
+} from '~/$Common/Selector';
+import useElementQuery from '~/$Common/useElementQuery';
 
-import { MODULE_ID } from './ModuleInfo';
+import { MODULE_ID } from '../ModuleInfo';
 
 const useStyles = makeStyles(() => ({
   '@global': {

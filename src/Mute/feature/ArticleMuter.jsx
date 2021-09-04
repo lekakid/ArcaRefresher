@@ -6,14 +6,14 @@ import {
   BOARD_ARTICLES_WITHOUT_NOTICE,
   BOARD_LOADED,
   BOARD_VIEW,
-} from '../$Common/Selector';
-import useElementQuery from '../$Common/useElementQuery';
-import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from '../$Common/Event';
-import { getCategory, getUserInfo } from '../$Common/Parser';
+} from '~/$Common/Selector';
+import useElementQuery from '~/$Common/useElementQuery';
+import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from '~/$Common/Event';
+import { getCategory, getUserInfo } from '~/$Common/Parser';
 
-import { MODULE_ID } from './ModuleInfo';
+import { filterContent } from '../func';
+import { MODULE_ID } from '../ModuleInfo';
 import CountBar from './CountBar';
-import filterContent from './filterContent';
 
 const useStyles = makeStyles(() => ({
   '@global': {

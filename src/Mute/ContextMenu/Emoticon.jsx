@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-import ContextMenuList from '../$ContextMenu/ContextMenuList';
-import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
+import { MODULE_ID as CONTEXT_MODULE_ID } from '~/$ContextMenu/ModuleInfo';
+import ContextMenuList from '~/$ContextMenu/ContextMenuList';
+import { closeContextMenu, setContextSnack } from '~/$ContextMenu/slice';
 
-import { CONTEXT_EMOTICON_MUTE } from './ModuleInfo';
-import getEmoticonInfo from './getEmoticonInfo';
-import { addEmoticon } from './slice';
+import { CONTEXT_EMOTICON_MUTE } from '../ModuleInfo';
+import { getEmoticonInfo } from '../func';
+import { addEmoticon } from '../slice';
 
-export default function EmoticonContextMenu() {
+export default function Emoticon() {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
 

@@ -1,4 +1,4 @@
-import fetch from '../$Common/Fetch';
+import fetch from '../../$Common/Fetch';
 
 export default async function getEmoticonInfo(id) {
   const { finalUrl: bundleURL, response: bundleDocument } = await fetch({

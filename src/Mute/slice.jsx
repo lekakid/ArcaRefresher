@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from '../$Common/GMValue';
-import { getChannelID } from '../$Common/Parser';
+import { getValue, setValue } from '~/$Common/GMValue';
+import { getChannelID } from '~/$Common/Parser';
 import { MODULE_ID } from './ModuleInfo';
 
 const BLOCK_USER = { key: 'blockUser', defaultValue: [] };

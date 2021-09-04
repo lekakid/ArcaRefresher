@@ -6,18 +6,18 @@ import {
   COMMENT_INNER_VIEW,
   COMMENT_ITEMS,
   COMMENT_LOADED,
-} from '../$Common/Selector';
-import useElementQuery from '../$Common/useElementQuery';
+} from '~/$Common/Selector';
+import useElementQuery from '~/$Common/useElementQuery';
 import {
   addAREvent,
   EVENT_COMMENT_REFRESH,
   removeAREvent,
-} from '../$Common/Event';
-import { getUserInfo } from '../$Common/Parser';
+} from '~/$Common/Event';
+import { getUserInfo } from '~/$Common/Parser';
 
-import { MODULE_ID } from './ModuleInfo';
+import { MODULE_ID } from '../ModuleInfo';
+import { filterContent } from '../func';
 import CountBar from './CountBar';
-import filterContent from './filterContent';
 
 const useStyles = makeStyles(() => ({
   '@global': {
