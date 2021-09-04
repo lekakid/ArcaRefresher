@@ -168,7 +168,9 @@ export default function ConfigView() {
                     onChange={handleChannel}
                   >
                     {Object.keys(imgList).map((key) => (
-                      <ListItem value={key}>{key}</ListItem>
+                      <ListItem value={key}>
+                        {key === '_shared_' ? '공유 자짤' : key}
+                      </ListItem>
                     ))}
                     {!imgList[channelID] && (
                       <ListItem value={channelID}>{channelID}</ListItem>
