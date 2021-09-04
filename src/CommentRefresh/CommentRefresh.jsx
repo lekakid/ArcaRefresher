@@ -34,13 +34,16 @@ export default function CommentRefresh() {
 
   useEffect(() => {
     if (commentLoaded) {
-      const titleContainer = document.createElement('span');
-      document.querySelector(COMMENT_TITLE).appendChild(titleContainer);
-      setTitle(titleContainer);
-
-      const subtitleContainer = document.createElement('span');
-      document.querySelector(COMMENT_SUBTITLE).appendChild(subtitleContainer);
-      setSubtitle(subtitleContainer);
+      setTitle(
+        document
+          .querySelector(COMMENT_TITLE)
+          ?.appendChild(document.createElement('span')) || null,
+      );
+      setSubtitle(
+        document
+          .querySelector(COMMENT_SUBTITLE)
+          ?.appendChild(document.createElement('span')) || null,
+      );
 
       const commentContainer =
         document.querySelector(COMMENT_INNER_VIEW) ||

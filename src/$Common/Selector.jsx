@@ -2,8 +2,8 @@
 export const NAVIGATION_LOADED = '.content-wrapper';
 export const CHANNEL_TITLE_LOADED = '.btns-board';
 export const BOARD_LOADED = 'form.search-form';
-export const ARTICLE_LOADED = 'div.included-article-list';
-export const COMMENT_LOADED = 'div.included-article-list';
+export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';
+export const COMMENT_LOADED = '.article-wrapper + div.btns-board';
 export const WRITE_LOADED = '.fr-box';
 export const AUDIT_LOADED = '.board-audit-list + a.btn';
 
