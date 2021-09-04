@@ -3,12 +3,17 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
-import { ARTICLE_LOADED } from '../$Common/Selector';
+import { ARTICLE_HEADER_MENU, ARTICLE_LOADED } from '../$Common/Selector';
 import useElementQuery from '../$Common/useElementQuery';
 
 import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles(() => ({
+  '@global': {
+    '.edit-menu:empty': {
+      display: 'none',
+    },
+  },
   root: {
     borderTop: '1px solid var(--color-border-outer)',
     textAlign: 'end',
@@ -26,9 +31,9 @@ export default function ArticleHeaderMenu() {
     if (articleLoaded) {
       const menuContainer = document.createElement('div');
       menuContainer.classList.add(classes.root);
-      document
-        .querySelector('.edit-menu')
-        .insertAdjacentElement('afterend', menuContainer);
+      const editMenu = document.querySelector(ARTICLE_HEADER_MENU);
+      editMenu.innerHTML = editMenu.innerHTML.trim();
+      editMenu.insertAdjacentElement('afterend', menuContainer);
       setContainer(menuContainer);
     }
   }, [articleLoaded, classes.root]);
