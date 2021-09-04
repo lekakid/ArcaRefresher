@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
@@ -41,12 +41,11 @@ export default function ArticleMuter() {
   );
   const [comment, setComment] = useState(null);
   const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState({});
-  const [btnState, setBtnState] = useState({});
+  const [count, setCount] = useState(null);
 
   const classes = useStyles();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!commentLoaded) return;
 
     const tmpComment = document.querySelector(COMMENT_INNER_VIEW);
@@ -60,8 +59,8 @@ export default function ArticleMuter() {
     setCountBar(countHeader);
   }, [classes, dispatch, commentLoaded]);
 
-  useEffect(() => {
-    if (!comment) return null;
+  useLayoutEffect(() => {
+    if (!comment) return () => {};
 
     const muteComment = () => {
       const commentList = [...comment.querySelectorAll(COMMENT_ITEMS)];
@@ -74,9 +73,6 @@ export default function ArticleMuter() {
 
       const result = filterContent(commentInfo, user, keyword, {}, {});
       setCount(result);
-      setBtnState(
-        Object.keys(result).reduce((acc, cur) => ({ ...acc, [cur]: false })),
-      );
     };
 
     window.addEventListener('load', muteComment);
@@ -88,28 +84,12 @@ export default function ArticleMuter() {
     };
   }, [comment, keyword, user]);
 
-  const handleClick = useCallback(
-    (key) => () => {
-      const suffix = key === 'all' ? '' : `-${key}`;
-      const className = `show-filtered${suffix}`;
-      comment.classList.toggle(className);
-      setBtnState((prev) => ({
-        ...prev,
-        [key]: !prev[key],
-      }));
-    },
-    [comment],
-  );
-
-  if (!commentLoaded || !countBar) return null;
-  if (hideCountBar) return null;
-
+  if (!countBar || hideCountBar) return null;
   return (
     <CountBar
-      container={countBar}
+      renderContainer={countBar}
+      classContainer={comment}
       count={count}
-      btnState={btnState}
-      onClick={handleClick}
     />
   );
 }

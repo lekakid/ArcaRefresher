@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
@@ -46,8 +46,7 @@ export default function ArticleMuter() {
   const [board, setBoard] = useState(null);
   const [nameToIDMap, setNameToIDMap] = useState(null);
   const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState({});
-  const [btnState, setBtnState] = useState({});
+  const [count, setCount] = useState(null);
 
   const channelCategoryConfig = category[channelID] || {};
 
@@ -93,9 +92,6 @@ export default function ArticleMuter() {
         nameToIDMap,
       );
       setCount(result);
-      setBtnState(
-        Object.keys(result).reduce((acc, cur) => ({ ...acc, [cur]: false })),
-      );
     };
 
     if (document.readyState === 'complete') muteArticle();
@@ -108,28 +104,8 @@ export default function ArticleMuter() {
     };
   }, [board, nameToIDMap, channelCategoryConfig, keyword, user]);
 
-  const handleClick = useCallback(
-    (key) => () => {
-      const suffix = key === 'all' ? '' : `-${key}`;
-      const className = `show-filtered${suffix}`;
-      board.classList.toggle(className);
-      setBtnState((prev) => ({
-        ...prev,
-        [key]: !prev[key],
-      }));
-    },
-    [board],
-  );
-
-  if (!boardLoaded || !countBar) return null;
-  if (hideCountBar) return null;
-
+  if (!countBar || hideCountBar) return null;
   return (
-    <CountBar
-      container={countBar}
-      count={count}
-      btnState={btnState}
-      onClick={handleClick}
-    />
+    <CountBar renderContainer={countBar} classContainer={board} count={count} />
   );
 }
