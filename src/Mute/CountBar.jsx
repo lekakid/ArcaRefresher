@@ -2,7 +2,13 @@ import React, { useCallback, useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Chip, Grid, makeStyles, Typography } from '@material-ui/core';
 
-import { TypeString } from './filterContent';
+const TypeString = {
+  keyword: '키워드',
+  user: '사용자',
+  category: '카테고리',
+  deleted: '삭제됨',
+  all: '전체',
+};
 
 const useStyles = makeStyles(() => ({
   root: {

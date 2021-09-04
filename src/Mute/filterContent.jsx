@@ -1,11 +1,3 @@
-export const TypeString = {
-  keyword: '키워드',
-  user: '사용자',
-  category: '카테고리',
-  deleted: '삭제됨',
-  all: '전체',
-};
-
 export default function filterContent(
   contents,
   userList,
@@ -13,10 +5,13 @@ export default function filterContent(
   categoryList,
   categoryPair,
 ) {
-  const count = Object.keys(TypeString).reduce(
-    (acc, cur) => ({ ...acc, [cur]: 0 }),
-    {},
-  );
+  const count = {
+    keyword: 0,
+    user: 0,
+    category: 0,
+    deleted: 0,
+    all: 0,
+  };
 
   const { mute: { users: arcaUser = [], keywords: arcaKeyword = [] } = {} } =
     unsafeWindow.LiveConfig || {};
