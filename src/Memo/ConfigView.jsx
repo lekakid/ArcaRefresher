@@ -46,9 +46,9 @@ export default function ConfigView() {
 
   const handleCellEdit = useCallback(
     ({ id, value }) => {
-      tableRows.some((r) => {
-        if (r.id === id) {
-          dispatch(setMemoList({ ...memo, [r.user]: value }));
+      tableRows.some((row) => {
+        if (row.id === id) {
+          dispatch(setMemoList({ ...memo, [row.id]: value }));
           return true;
         }
         return false;
@@ -101,8 +101,8 @@ export default function ConfigView() {
 
     setMemoText(
       tableRows.reduce(
-        (acc, r, index) =>
-          `${acc}${index === 0 ? '' : '\n'}${r.user}::${r.memo}`,
+        (acc, row, index) =>
+          `${acc}${index === 0 ? '' : '\n'}${row.id}::${row.memo}`,
         '',
       ),
     );
