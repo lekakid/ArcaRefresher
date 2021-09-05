@@ -22,9 +22,8 @@ function Info({ ip, container }) {
   useLayoutEffect(() => {
     if (!ip) return;
 
-    const isExist = Object.keys(DB).some((type) => {
-      if (DB[type].list.indexOf(ip) > -1) {
-        const { label, color } = DB[type];
+    const isExist = Object.values(DB).some(({ list, label, color }) => {
+      if (list.includes(ip)) {
         setIPType({ label, color });
         return true;
       }
