@@ -1,19 +1,17 @@
 import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-import ContextMenuList from '../$ContextMenu/ContextMenuList';
-import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
+import { useContextMenuData, ContextMenuList } from '~/$ContextMenu';
+import { closeContextMenu, setContextSnack } from '~/$ContextMenu/slice';
 import fetch from '../$Common/Fetch';
 
 import { MODULE_ID } from './ModuleInfo';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
-  const imgData = data[MODULE_ID];
+  const imgData = useContextMenuData(MODULE_ID);
 
   const handleGoogle = useCallback(() => {
     window.open(

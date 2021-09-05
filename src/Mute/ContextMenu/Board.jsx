@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '~/$ContextMenu/ModuleInfo';
-import ContextMenuList from '~/$ContextMenu/ContextMenuList';
+import { ContextMenuList, useContextMenuData } from '~/$ContextMenu';
 import { closeContextMenu } from '~/$ContextMenu/slice';
 
-import { CONTEXT_USER_MUTE, MODULE_ID } from '../ModuleInfo';
+import { MODULE_ID } from '../ModuleInfo';
 import { addUser, removeUser } from '../slice';
+
+import { USER_MUTE } from './id';
 
 function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
@@ -16,16 +17,16 @@ function makeRegex(id) {
 
 export default function Board() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
-  const { user: userList } = useSelector((state) => state[MODULE_ID]);
+  const data = useContextMenuData(USER_MUTE);
+  const { user } = useSelector((state) => state[MODULE_ID]);
 
-  const user = makeRegex(data[CONTEXT_USER_MUTE]?.id || '');
-  const exist = userList.indexOf(user) > -1;
+  const regex = makeRegex(data?.id || '');
+  const exist = user.indexOf(regex) > -1;
 
   const handleMute = useCallback(() => {
-    dispatch(exist ? removeUser(user) : addUser(user));
+    dispatch(exist ? removeUser(regex) : addUser(regex));
     dispatch(closeContextMenu());
-  }, [dispatch, exist, user]);
+  }, [dispatch, exist, regex]);
 
   return (
     <ContextMenuList>

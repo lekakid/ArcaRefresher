@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Colorize } from '@material-ui/icons';
 
-import ContextMenuList from '../$ContextMenu/ContextMenuList';
+import { ContextMenuList } from '../$ContextMenu';
 import { closeContextMenu } from '../$ContextMenu/slice';
 import { setOpenDialog } from './slice';
 

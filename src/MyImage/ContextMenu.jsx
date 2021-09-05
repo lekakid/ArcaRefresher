@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-import ContextMenuList from '../$ContextMenu/ContextMenuList';
+import { ContextMenuList, useContextMenuData } from '~/$ContextMenu';
 import { closeContextMenu, setContextSnack } from '../$ContextMenu/slice';
 
 import { MODULE_ID } from './ModuleInfo';
@@ -12,9 +11,8 @@ import { addImage } from './slice';
 
 export default function ContextMenu() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
+  const { url } = useContextMenuData(MODULE_ID);
   const { channelID } = useSelector((state) => state[MODULE_ID]);
-  const { url } = data[MODULE_ID];
 
   const handleChannelImage = useCallback(() => {
     dispatch(addImage({ channel: channelID, url }));

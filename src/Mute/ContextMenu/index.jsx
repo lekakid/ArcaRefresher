@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { getUserInfo } from '~/$Common/Parser';
 import ContextMenuBuilder from '~/$ContextMenu/ContextMenuBuilder';
 
-import { CONTEXT_EMOTICON_MUTE, CONTEXT_USER_MUTE } from '../ModuleInfo';
+import { EMOTICON_MUTE, USER_MUTE } from './id';
 import Board from './Board';
 import Emoticon from './Emoticon';
 
@@ -34,13 +34,13 @@ export default () => {
   return (
     <>
       <ContextMenuBuilder
-        contextKey={CONTEXT_USER_MUTE}
+        contextKey={USER_MUTE}
         trigger={boardtrigger}
         dataGetter={boardDataGetter}
         view={<Board />}
       />
       <ContextMenuBuilder
-        contextKey={CONTEXT_EMOTICON_MUTE}
+        contextKey={EMOTICON_MUTE}
         trigger={emoticonTrigger}
         dataGetter={emoticonDataGetter}
         view={<Emoticon />}

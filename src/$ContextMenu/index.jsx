@@ -8,6 +8,10 @@ import ConfigView from './ConfigView';
 import ContextMenu from './ContextMenu';
 import ContextSnack from './ContextSnack';
 
+export { default as useContextMenuData } from './useContextMenuData';
+export { default as ContextMenuList } from './ContextMenuList';
+export { default as ContextMenuBuilder } from './ContextMenuBuilder';
+
 export default () => (
   <>
     <ConfigBuilder

@@ -10,15 +10,13 @@ import {
 } from '@material-ui/core';
 import { ColorPicker, createColor } from 'material-ui-color';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '../$ContextMenu/ModuleInfo';
-
 import { MODULE_ID } from './ModuleInfo';
 import { setColor, setOpenDialog } from './slice';
+import { useContextMenuData } from '../$ContextMenu';
 
 export default function ContextInputDialog() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
-  const { id } = data[MODULE_ID] || {};
+  const { id } = useContextMenuData(MODULE_ID);
   const { color, open } = useSelector((state) => state[MODULE_ID]);
   const [input, setInput] = useState(createColor(''));
 

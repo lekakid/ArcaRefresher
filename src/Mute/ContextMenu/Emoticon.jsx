@@ -1,23 +1,23 @@
 import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { MODULE_ID as CONTEXT_MODULE_ID } from '~/$ContextMenu/ModuleInfo';
-import ContextMenuList from '~/$ContextMenu/ContextMenuList';
+import { ContextMenuList, useContextMenuData } from '~/$ContextMenu';
 import { closeContextMenu, setContextSnack } from '~/$ContextMenu/slice';
 
-import { CONTEXT_EMOTICON_MUTE } from '../ModuleInfo';
 import { getEmoticonInfo } from '../func';
 import { addEmoticon } from '../slice';
 
+import { EMOTICON_MUTE } from './id';
+
 export default function Emoticon() {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state[CONTEXT_MODULE_ID]);
+  const data = useContextMenuData(EMOTICON_MUTE);
 
   const handleMute = useCallback(() => {
     (async () => {
-      const { id, url } = data[CONTEXT_EMOTICON_MUTE];
+      const { id, url } = data;
       const {
         bundleID,
         name,
