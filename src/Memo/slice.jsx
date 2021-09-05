@@ -6,7 +6,6 @@ const USER_MEMO = { key: 'userMemo', defaultValue: {} };
 
 const initialState = {
   memo: getValue(USER_MEMO),
-  open: false,
 };
 
 export const slice = createSlice({
@@ -26,12 +25,9 @@ export const slice = createSlice({
       state.memo = action.payload;
       setValue(USER_MEMO, action.payload);
     },
-    setOpenDialog(state, action) {
-      state.open = action.payload;
-    },
   },
 });
 
-export const { setMemo, setMemoList, setOpenDialog } = slice.actions;
+export const { setMemo, setMemoList } = slice.actions;
 
 export default slice.reducer;
