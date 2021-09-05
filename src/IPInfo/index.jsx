@@ -1,6 +1,4 @@
 import React from 'react';
-import InfoList from './InfoList';
+import IPInfo from './IPInfo';
 
-export default function IPInfo() {
-  return <InfoList />;
-}
+export default () => <IPInfo />;
