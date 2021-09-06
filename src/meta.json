@@ -1,0 +1,11 @@
+{
+  "name": "Arca Refresher",
+  "namespace": "LeKAKiD",
+  "author": "LeKAKiD",
+  "description": "Arca Live Extension",
+  "match": ["https://*.arca.live/*", "https://arca.live/*"],
+  "exclude-match": ["https://st*.arca.live/*"],
+  "noframes": "",
+  "run-at": "document-start",
+  "grant": ["GM_setValue", "GM_getValue", "GM_deleteValue", "GM_listValues", "GM_xmlhttpRequest"]
+}
