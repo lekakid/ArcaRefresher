@@ -22,7 +22,8 @@ import {
   setResizeImage,
   setResizeVideo,
   toggleModifiedIndicator,
-  togglgLongComment,
+  toggleLongComment,
+  toggleHumorCheckbox,
 } from './slice';
 
 export default function ConfigView() {
@@ -37,6 +38,7 @@ export default function ConfigView() {
     resizeVideo,
     modifiedIndicator,
     unfoldLongComment,
+    hideHumorCheckbox,
   } = useSelector((state) => state[MODULE_ID]);
   const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
 
@@ -91,7 +93,11 @@ export default function ConfigView() {
   }, [dispatch]);
 
   const handleUnfoldLongComment = useCallback(() => {
-    dispatch(togglgLongComment());
+    dispatch(toggleLongComment());
+  }, [dispatch]);
+
+  const handleHideHumorCheckbox = useCallback(() => {
+    dispatch(toggleHumorCheckbox());
   }, [dispatch]);
 
   return (
@@ -158,7 +164,7 @@ export default function ConfigView() {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleUnfoldLongComment}>
+          <ListItem divider button onClick={handleUnfoldLongComment}>
             <ListItemText
               primary="장문 댓글 바로보기"
               secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
@@ -167,6 +173,15 @@ export default function ConfigView() {
               <Switch
                 checked={unfoldLongComment}
                 onChange={handleUnfoldLongComment}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleHideHumorCheckbox}>
+            <ListItemText primary="유머 채널 동시 등록 체크박스 숨김" />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideHumorCheckbox}
+                onChange={handleHideHumorCheckbox}
               />
             </ListItemSecondaryAction>
           </ListItem>

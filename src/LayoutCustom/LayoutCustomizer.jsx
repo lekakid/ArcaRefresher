@@ -59,6 +59,11 @@ const useStyles = makeStyles(() => ({
       display: 'none',
     },
   },
+  HideHumorCheckbox: {
+    '& .write-body + div': {
+      display: 'none',
+    },
+  },
 }));
 
 export default function LayoutCustomizer() {
@@ -72,6 +77,7 @@ export default function LayoutCustomizer() {
       avatar,
       modifiedIndicator,
       unfoldLongComment,
+      hideHumorCheckbox,
     } = config;
     const classList = [
       ...(recentVisit ? [] : classes.RecentVisit.split(' ')),
@@ -83,6 +89,7 @@ export default function LayoutCustomizer() {
       ...classes.ResizeVideo.split(' '),
       ...(modifiedIndicator ? [] : classes.ModifiedIndicator.split(' ')),
       ...(unfoldLongComment ? [] : classes.UnfoldLongComment.split(' ')),
+      ...(!hideHumorCheckbox ? [] : classes.HideHumorCheckbox.split(' ')),
     ];
     document.documentElement.classList.add(...classList);
 

@@ -15,6 +15,8 @@ const RESIZE_VIDEO = { key: 'resizeArticleVideo', defaultValue: 100 };
 // Comment layout
 const MODIFIED_INDICATOR = { key: 'showModified', defaultValue: false };
 const UNFOLD_LONG_COMMENT = { key: 'unfoldLongComment', defaultValue: false };
+// Write lyaout
+const HIDE_HUMOR_CHECKBOX = { key: 'hideHumorCheckbox', defaultValue: false };
 
 const initialState = {
   recentVisit: getValue(RECENT_VISIT),
@@ -26,6 +28,7 @@ const initialState = {
   resizeVideo: getValue(RESIZE_VIDEO),
   modifiedIndicator: getValue(MODIFIED_INDICATOR),
   unfoldLongComment: getValue(UNFOLD_LONG_COMMENT),
+  hideHumorCheckbox: getValue(HIDE_HUMOR_CHECKBOX),
 };
 
 export const slice = createSlice({
@@ -64,9 +67,13 @@ export const slice = createSlice({
       state.modifiedIndicator = !state.modifiedIndicator;
       setValue(MODIFIED_INDICATOR, state.modifiedIndicator);
     },
-    togglgLongComment(state) {
+    toggleLongComment(state) {
       state.unfoldLongComment = !state.unfoldLongComment;
       setValue(UNFOLD_LONG_COMMENT, state.unfoldLongComment);
+    },
+    toggleHumorCheckbox(state) {
+      state.hideHumorCheckbox = !state.hideHumorCheckbox;
+      setValue(HIDE_HUMOR_CHECKBOX, state.hideHumorCheckbox);
     },
   },
 });
@@ -80,7 +87,8 @@ export const {
   setResizeImage,
   setResizeVideo,
   toggleModifiedIndicator,
-  togglgLongComment,
+  toggleLongComment,
+  toggleHumorCheckbox,
 } = slice.actions;
 
 export default slice.reducer;
