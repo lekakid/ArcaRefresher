@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { MODULE_ID } from './ModuleInfo';
-import { saveArticle } from './slice';
+import { MODULE_ID } from '../ModuleInfo';
+import { saveArticle } from '../slice';
 
 export default function AutoSaver() {
   const dispatch = useDispatch();

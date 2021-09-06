@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -13,13 +14,8 @@ import {
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
-import { MODULE_ID } from './ModuleInfo';
-import {
-  setArticleList,
-  setCurrentSlot,
-  toggleImportTitle,
-  toggleLoadDialog,
-} from './slice';
+import { MODULE_ID } from '../ModuleInfo';
+import { setArticleList, setCurrentSlot, toggleImportTitle } from '../slice';
 
 const columns = [
   { field: 'title', headerName: '제목', flex: 3 },
@@ -42,9 +38,9 @@ function CustomToolbar({
   selection,
   editMode,
   importTitle,
-  onToggle,
-  onRemove,
-  onDone,
+  onClickEdit,
+  onClickRemove,
+  onClickDone,
   onClickImportTitle,
 }) {
   const classes = useStyles();
@@ -52,40 +48,41 @@ function CustomToolbar({
 
   if (!editMode) {
     toolButton = (
-      <Button startIcon={<Edit />} onClick={onToggle}>
+      <Button startIcon={<Edit />} onClick={onClickEdit}>
         편집
       </Button>
     );
   } else if (selection.length > 0) {
     toolButton = (
-      <Button startIcon={<Delete />} onClick={onRemove}>
+      <Button startIcon={<Delete />} onClick={onClickRemove}>
         삭제
       </Button>
     );
   } else {
     toolButton = (
-      <Button startIcon={<Done />} onClick={onDone}>
+      <Button startIcon={<Done />} onClick={onClickDone}>
         완료
       </Button>
     );
   }
 
   return (
-    <div style={{ textAlign: 'right' }}>
+    <Box display="flex" justifyContent="flex-end">
       <FormControlLabel
         control={<Switch checked={importTitle} onChange={onClickImportTitle} />}
         label="제목 포함"
         className={classes.label}
       />
       {toolButton}
-    </div>
+    </Box>
   );
 }
 
-export default function ArticleTable() {
+export default function LoadTable({ open, onClose }) {
   const dispatch = useDispatch();
-  const { titleInput, editor, tempArticleList, importTitle, loadDialogOpen } =
-    useSelector((state) => state[MODULE_ID]);
+  const { titleInput, editor, tempArticleList, importTitle } = useSelector(
+    (state) => state[MODULE_ID],
+  );
   const rows = Object.keys(tempArticleList).map((key, index) => ({
     id: index,
     title: tempArticleList[key].title,
@@ -111,9 +108,9 @@ export default function ArticleTable() {
 
       setSelection([]);
       dispatch(setCurrentSlot(date));
-      dispatch(toggleLoadDialog());
+      onClose();
     },
-    [dispatch, editor, importTitle, titleInput],
+    [dispatch, editor, importTitle, onClose, titleInput],
   );
 
   const handlePageSize = useCallback((currentSize) => {
@@ -123,14 +120,14 @@ export default function ArticleTable() {
   const handleClose = useCallback(() => {
     setSelection([]);
     setEditMode(false);
-    dispatch(toggleLoadDialog());
-  }, [dispatch]);
+    onClose();
+  }, [onClose]);
 
   const handleImportTitle = useCallback(() => {
     dispatch(toggleImportTitle());
   }, [dispatch]);
 
-  const handleToggle = useCallback(() => {
+  const handleEdit = useCallback(() => {
     setEditMode(true);
   }, []);
 
@@ -152,7 +149,7 @@ export default function ArticleTable() {
   }, []);
 
   return (
-    <Dialog fullWidth maxWidth="md" open={loadDialogOpen} onClose={handleClose}>
+    <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
       <DialogTitle>불러오기</DialogTitle>
       <DialogContent>
         <DataGrid
@@ -174,9 +171,9 @@ export default function ArticleTable() {
               selection,
               editMode,
               importTitle,
-              onToggle: handleToggle,
-              onRemove: handleRemove,
-              onDone: handleDone,
+              onClickEdit: handleEdit,
+              onClickRemove: handleRemove,
+              onClickDone: handleDone,
               onClickImportTitle: handleImportTitle,
             },
           }}

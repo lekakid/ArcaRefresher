@@ -2,7 +2,7 @@ import React from 'react';
 import { Book } from '@material-ui/icons';
 
 import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
-import ButtonContainer from './ButtonContainer';
+import TemporarySave from './TemporarySave';
 import ConfigView from './ConfigView';
 import ConfigBuilder from '../$Config/ConfigBuilder';
 
@@ -14,6 +14,6 @@ export default () => (
       buttonText={MODULE_NAME}
       view={<ConfigView />}
     />
-    <ButtonContainer />
+    <TemporarySave />
   </>
 );

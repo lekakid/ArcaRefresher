@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { ButtonGroup } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import useElementQuery from '../$Common/useElementQuery';
 import { WRITE_LOADED } from '../$Common/Selector';
 
 import { setEditor } from './slice';
-import SaveButton from './SaveButton';
-import LoadButton from './LoadButton';
-import AutoSaver from './AutoSaver';
+import { AutoSaver, SaveButton, LoadButton } from './feature';
 
 const useStyles = makeStyles({
   root: {
@@ -31,7 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ButtonContainer() {
+export default function TemporarySave() {
   const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
   const [container, setContainer] = useState(null);
@@ -52,14 +51,14 @@ export default function ButtonContainer() {
     setContainer(tempButton);
   }, [classes, dispatch, editorLoaded]);
 
-  if (!editorLoaded || !container) return null;
+  if (!container) return null;
   return ReactDOM.createPortal(
-    <>
+    <ButtonGroup variant="outlined">
       <AutoSaver />
       <SaveButton saveAs />
       <SaveButton />
       <LoadButton />
-    </>,
+    </ButtonGroup>,
     container,
   );
 }

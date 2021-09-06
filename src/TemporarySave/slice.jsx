@@ -13,7 +13,6 @@ const initialState = {
   currentSlot: null,
   titleInput: null,
   editor: null,
-  loadDialogOpen: false,
 };
 
 export const slice = createSlice({
@@ -53,9 +52,6 @@ export const slice = createSlice({
       const { title, editor } = action.payload;
       state.titleInput = title;
       state.editor = editor;
-    },
-    toggleLoadDialog(state) {
-      state.loadDialogOpen = !state.loadDialogOpen;
     },
   },
 });
