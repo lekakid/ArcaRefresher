@@ -8,7 +8,7 @@ const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
 // Article
 const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
 // Comment
-const FOLD_COMMENT = { key: 'foldComment', defaultValue: true };
+const FOLD_COMMENT = { key: 'foldComment', defaultValue: false };
 const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
 
 const initialState = {
