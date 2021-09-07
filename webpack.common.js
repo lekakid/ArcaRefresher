@@ -7,7 +7,6 @@ const dev = process.env.NODE_ENV === 'development';
 const FILENAME = 'ArcaRefresher';
 
 module.exports = {
-  mode: 'production',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `${FILENAME}.user.js`,
