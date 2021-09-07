@@ -107,7 +107,7 @@ export default function DownloadDialog({ open, onClose }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSelectAll}>
-          {selection.length !== data.length ? '선택 해제' : '전체 선택'}
+          {selection.length !== data.length ? '전체 선택' : '선택 해제'}
         </Button>
         <Button disabled={selection.length === 0} onClick={handleDownload}>
           다운로드
