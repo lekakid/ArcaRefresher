@@ -48,8 +48,6 @@ export default function ArticleMuter() {
   const [countBar, setCountBar] = useState(null);
   const [count, setCount] = useState(null);
 
-  const channelCategoryConfig = category[channelID] || {};
-
   const classes = useStyles();
 
   useLayoutEffect(() => {
@@ -83,12 +81,13 @@ export default function ArticleMuter() {
         content: a.querySelector('.title')?.textContent || '',
         category: a.querySelector('.badge')?.textContent || '',
       }));
+      const categoryConfig = category[channelID] || {};
 
       const result = filterContent(
         articleInfo,
         user,
         keyword,
-        channelCategoryConfig,
+        categoryConfig,
         nameToIDMap,
       );
       setCount(result);
@@ -102,7 +101,7 @@ export default function ArticleMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [board, nameToIDMap, channelCategoryConfig, keyword, user]);
+  }, [board, nameToIDMap, keyword, user, category, channelID]);
 
   if (!countBar || hideCountBar) return null;
   return (
