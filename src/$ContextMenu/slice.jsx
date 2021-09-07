@@ -10,7 +10,7 @@ const initialState = {
   open: false,
   mousePos: [0, 0],
   data: {},
-  snack: '',
+  snack: false,
   snackTime: null,
 };
 
