@@ -13,9 +13,12 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'),
+      core: path.resolve(__dirname, 'src/core'),
+      menu: path.resolve(__dirname, 'src/menu'),
+      feature: path.resolve(__dirname, 'src/feature'),
+      util: path.resolve(__dirname, 'src/util'),
     },
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.json'],
   },
   module: {
     rules: [
