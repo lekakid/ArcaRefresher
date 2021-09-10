@@ -23,7 +23,7 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_module/,
         use: {
-          loader: 'babel-loader',
+          loader: 'swc-loader',
         },
       },
     ],
