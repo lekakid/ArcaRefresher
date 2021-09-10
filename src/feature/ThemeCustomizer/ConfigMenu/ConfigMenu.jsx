@@ -13,7 +13,6 @@ import {
   Box,
   ButtonGroup,
   Button,
-  IconButton,
   Tooltip,
 } from '@material-ui/core';
 import { Add, Delete, Label } from '@material-ui/icons';
@@ -23,6 +22,7 @@ import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { toggleEnable, setCurrent, setPreset, renamePreset } from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
+import EditPresetSelector from './EditPresetSelector';
 
 const createRow = (key, primary, secondary = '') => ({
   key,
@@ -177,7 +177,9 @@ function ConfigMenu() {
               >
                 <MenuItem value="">없음</MenuItem>
                 {Object.keys(theme).map((key) => (
-                  <MenuItem value={key}>{key}</MenuItem>
+                  <MenuItem key={key} value={key}>
+                    {key}
+                  </MenuItem>
                 ))}
               </Select>
             </ListItemSecondaryAction>
@@ -186,7 +188,7 @@ function ConfigMenu() {
             <ListItemText primary="프리셋 설정" />
             <ListItemSecondaryAction>
               <ButtonGroup>
-                <Select
+                <EditPresetSelector
                   variant="outlined"
                   displayEmpty
                   value={selectPreset}
@@ -194,38 +196,31 @@ function ConfigMenu() {
                 >
                   <MenuItem value="">프리셋 선택</MenuItem>
                   {Object.keys(theme).map((key) => (
-                    <MenuItem value={key}>{key}</MenuItem>
+                    <MenuItem key={key} value={key}>
+                      {key}
+                    </MenuItem>
                   ))}
-                </Select>
+                </EditPresetSelector>
                 <Tooltip title="추가">
-                  <span>
-                    <Button
-                      disabled={selectPreset === ''}
-                      onClick={handleAddOpen}
-                    >
-                      <Add />
-                    </Button>
-                  </span>
+                  <Button onClick={handleAddOpen}>
+                    <Add />
+                  </Button>
                 </Tooltip>
                 <Tooltip title="이름 수정">
-                  <span>
-                    <Button
-                      disabled={selectPreset === ''}
-                      onClick={handleRenameOpen}
-                    >
-                      <Label />
-                    </Button>
-                  </span>
+                  <Button
+                    disabled={selectPreset === ''}
+                    onClick={handleRenameOpen}
+                  >
+                    <Label />
+                  </Button>
                 </Tooltip>
                 <Tooltip title="제거">
-                  <span>
-                    <Button
-                      disabled={selectPreset === ''}
-                      onClick={handleRemoveOpen}
-                    >
-                      <Delete />
-                    </Button>
-                  </span>
+                  <Button
+                    disabled={selectPreset === ''}
+                    onClick={handleRemoveOpen}
+                  >
+                    <Delete />
+                  </Button>
                 </Tooltip>
               </ButtonGroup>
             </ListItemSecondaryAction>
@@ -235,24 +230,20 @@ function ConfigMenu() {
               <List disablePadding>
                 {rows.map(({ key, primary, secondary }, index) => (
                   <ListItem
+                    key={key}
                     divider={index !== rows.length - 1}
                     disabled={!selectPreset}
                   >
                     <ListItemText primary={primary} secondary={secondary} />
                     <ListItemSecondaryAction>
-                      <IconButton
-                        size="small"
-                        disableFocusRipple
-                        disableRipple
-                        disabled={!selectPreset}
-                      >
+                      <span>
                         <ColorPicker
                           hideTextfield
                           deferred
                           value={createColor(editingPreset[key])}
                           onChange={handleColor(key)}
                         />
-                      </IconButton>
+                      </span>
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}
