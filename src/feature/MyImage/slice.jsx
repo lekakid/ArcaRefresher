@@ -30,7 +30,7 @@ export const slice = createSlice({
     },
     removeImage(state, action) {
       const { channel, url } = action.payload;
-      state.imgList[channel].filter((u) => u !== url);
+      state.imgList[channel] = state.imgList[channel].filter((u) => u !== url);
       setValue(MY_IMAGES, state.imgList);
     },
     setImageList(state, action) {
