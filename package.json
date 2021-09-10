@@ -45,6 +45,7 @@
     "@material-ui/x-license": "^4.0.0-alpha.36",
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^1.6.1",
+    "browserslist": "^4.17.0",
     "file-saver": "^2.0.5",
     "jszip": "^3.7.0",
     "material-ui-color": "^1.2.0",
