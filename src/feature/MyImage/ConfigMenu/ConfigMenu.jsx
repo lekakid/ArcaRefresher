@@ -2,58 +2,37 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
   List,
   ListItem,
   ListItemText,
-  makeStyles,
   Paper,
   Select,
   Switch,
   Typography,
-  useMediaQuery,
-  useTheme,
   Divider,
   Grid,
-  Box,
   ListItemSecondaryAction,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setImageList, toggleEnabled, toggleForceLoad } from '../slice';
+import ImageSelector from './ImageSelector';
+import MoveInput from './MoveInput';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     width: '100%',
   },
-  imgList: {
-    minHeight: 200,
-    maxHeight: 400,
-  },
   channelSelect: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-  },
-  itemBar: {
-    background: 'none',
-  },
-  checkbox: {
-    background: 'rgba(255, 255, 255, 0.5) !important',
   },
 }));
 
 export default function ConfigMenu() {
   const dispatch = useDispatch();
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enabled, channelID, imgList, forceLoad } = useSelector(
     (state) => state[MODULE_ID],
   );
@@ -62,7 +41,6 @@ export default function ConfigMenu() {
   );
   const [selection, setSelection] = useState([]);
   const [open, setOpen] = useState(false);
-  const [moveChannel, setMoveChannel] = useState('_shared_');
   const classes = useStyles();
 
   const handleEnabled = useCallback(() => {
@@ -78,11 +56,8 @@ export default function ConfigMenu() {
     setSelection([]);
   }, []);
 
-  const handleCheckbox = useCallback((index) => {
-    setSelection((prev) => {
-      if (prev.some((i) => i === index)) return prev.filter((i) => i !== index);
-      return [...prev, index];
-    });
+  const handleSelect = useCallback((update) => {
+    setSelection(update);
   }, []);
 
   const handleSelectAll = useCallback(() => {
@@ -97,39 +72,36 @@ export default function ConfigMenu() {
     setOpen(true);
   }, []);
 
-  const handleMoveChannel = useCallback((e) => {
-    setMoveChannel(e.target.value);
-  }, []);
-
   const handleMoveClose = useCallback(() => {
     setOpen(false);
   }, []);
 
-  const handleMove = useCallback(() => {
-    const moveChannelList = imgList[moveChannel];
-    const rest = imgList[selectedChannel].filter(
-      (img, index) => !selection.includes(index),
-    );
-    const move = imgList[selectedChannel].filter((img, index) =>
-      selection.includes(index),
-    );
-    dispatch(setImageList({ channel: selectedChannel, list: rest }));
-    dispatch(
-      setImageList({
-        channel: moveChannel,
-        list: [...moveChannelList, ...move],
-      }),
-    );
-    setOpen(false);
-  }, [dispatch, imgList, moveChannel, selectedChannel, selection]);
+  const handleMove = useCallback(
+    (targetChannel) => {
+      const targetList = imgList[targetChannel];
+      const rest = imgList[selectedChannel].filter(
+        (_img, index) => !selection.includes(index),
+      );
+      const move = imgList[selectedChannel].filter((img, index) =>
+        selection.includes(index),
+      );
+      const update = [...targetList, ...move];
+      dispatch(setImageList({ channel: selectedChannel, list: rest }));
+      dispatch(setImageList({ channel: targetChannel, list: update }));
+      setOpen(false);
+    },
+    [dispatch, imgList, selectedChannel, selection],
+  );
 
   const handleDelete = useCallback(() => {
-    const list = imgList[selectedChannel].filter(
-      (img, index) => !selection.includes(index),
+    const update = imgList[selectedChannel].filter(
+      (_img, index) => !selection.includes(index),
     );
-    dispatch(setImageList({ channel: selectedChannel, list }));
+    dispatch(setImageList({ channel: selectedChannel, list: update }));
     setSelection([]);
   }, [dispatch, imgList, selectedChannel, selection]);
+
+  const channelList = [...new Set([...Object.keys(imgList), channelID])];
 
   return (
     <>
@@ -167,16 +139,11 @@ export default function ConfigMenu() {
                     value={selectedChannel}
                     onChange={handleChannel}
                   >
-                    {Object.keys(imgList).map((key) => (
+                    {channelList.map((key) => (
                       <ListItem key={key} value={key}>
                         {key === '_shared_' ? '공유 자짤' : key}
                       </ListItem>
                     ))}
-                    {!imgList[channelID] && (
-                      <ListItem key={channelID} value={channelID}>
-                        {channelID}
-                      </ListItem>
-                    )}
                   </Select>
                 </Grid>
                 <Grid item xs={8} style={{ textAlign: 'right' }}>
@@ -200,75 +167,21 @@ export default function ConfigMenu() {
                 </Grid>
               </Grid>
               <Divider />
-              {!imgList[selectedChannel]?.length && (
-                <Box
-                  width="100%"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  className={classes.imgList}
-                >
-                  <Typography>저장된 자짤이 없습니다.</Typography>
-                </Box>
-              )}
-              {imgList[selectedChannel]?.length > 0 && (
-                <ImageList
-                  cols={mobile ? 3 : 5}
-                  rowHeight={100}
-                  className={classes.imgList}
-                >
-                  {imgList[selectedChannel].map((img, index) => (
-                    <ImageListItem onClick={() => handleCheckbox(index)}>
-                      {img?.indexOf('.mp4') > -1 ? (
-                        <video
-                          src={img}
-                          alt={img}
-                          autoPlay
-                          loop
-                          muted
-                          playsinline
-                        />
-                      ) : (
-                        <img src={img} alt={img} />
-                      )}
-
-                      <ImageListItemBar
-                        className={classes.itemBar}
-                        position="top"
-                        actionPosition="left"
-                        actionIcon={
-                          <Checkbox
-                            size="small"
-                            className={classes.checkbox}
-                            checked={selection.includes(index)}
-                          />
-                        }
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-              )}
+              <ImageSelector
+                list={imgList[selectedChannel]}
+                selection={selection}
+                onChange={handleSelect}
+              />
             </Paper>
           </ListItem>
         </List>
       </Paper>
-      <Dialog open={open}>
-        <DialogTitle>이동할 채널 선택</DialogTitle>
-        <DialogContent>
-          <Select value={moveChannel} onChange={handleMoveChannel}>
-            {Object.keys(imgList).map((key) => (
-              <ListItem value={key}>{key}</ListItem>
-            ))}
-            {!imgList[channelID] && (
-              <ListItem value={channelID}>{channelID}</ListItem>
-            )}
-          </Select>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleMoveClose}>취소</Button>
-          <Button onClick={handleMove}>확인</Button>
-        </DialogActions>
-      </Dialog>
+      <MoveInput
+        open={open}
+        channelList={channelList}
+        onClose={handleMoveClose}
+        onSubmit={handleMove}
+      />
     </>
   );
 }
