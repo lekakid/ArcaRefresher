@@ -1,20 +1,4 @@
-import React from 'react';
-import { Colorize } from '@material-ui/icons';
+import ConfigMenu from './ConfigMenu';
+import CategoryStyler from './CategoryStyler';
 
-import ConfigBuilder from 'menu/Config/ConfigBuilder';
-
-import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
-import StyleGenerator from './StyleGenerator';
-import ConfigView from './ConfigView';
-
-export default () => (
-  <>
-    <ConfigBuilder
-      configKey={MODULE_ID}
-      buttonIcon={<Colorize />}
-      buttonText={MODULE_NAME}
-      view={<ConfigView />}
-    />
-    <StyleGenerator />
-  </>
-);
+export { ConfigMenu, CategoryStyler as default };

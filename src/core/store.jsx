@@ -1,8 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import Config from 'menu/Config/slice';
+import Config from 'menu/ConfigMenu/slice';
 import ContextMenu from 'menu/ContextMenu/slice';
-import ArticleMenu from 'menu/ArticleMenu/slice';
 
 import AutoRefresher from 'feature/AutoRefresher/slice';
 import ArticleRemover from 'feature/ArticleRemover/slice';
@@ -24,7 +23,6 @@ export default configureStore({
     // menu
     Config,
     ContextMenu,
-    ArticleMenu,
 
     // feature
     AutoRefresher,

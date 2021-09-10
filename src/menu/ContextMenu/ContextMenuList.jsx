@@ -8,12 +8,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ContextMenuList({ children }) {
-  const classes = useStyles();
-  return (
-    <>
-      <Divider className={classes.root} />
-      {children}
-    </>
-  );
-}
+const ContextMenuList = React.forwardRef(
+  // eslint-disable-next-line prefer-arrow-callback
+  function ContextMenuList({ children }, ref) {
+    const classes = useStyles();
+    return (
+      <>
+        <Divider className={classes.root} />
+        {React.Children.map(children, (child) =>
+          React.cloneElement(child, { ref }),
+        )}
+      </>
+    );
+  },
+);
+
+export default ContextMenuList;

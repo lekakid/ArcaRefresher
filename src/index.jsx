@@ -3,30 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/styles';
 
-import Store from 'core/store';
+import store from 'core/store';
 import theme from 'core/theme';
 
-import Config from 'menu/Config';
-import ContextMenu from 'menu/ContextMenu';
-import ArticleMenu from 'menu/ArticleMenu';
-
-import AutoRefresher from 'feature/AutoRefresher';
-import CommentRefresh from 'feature/CommentRefresh';
-import ArticleRemover from 'feature/ArticleRemover';
-import ImageDownloader from 'feature/ImageDownloader';
-import ImageSearch from 'feature/ImageSearch';
-import IPInfo from 'feature/IPInfo';
-import AnonymousNick from 'feature/AnonymousNick';
-import Memo from 'feature/Memo';
-import LayoutCustom from 'feature/LayoutCustom';
-import ExperienceCustom from 'feature/ExperienceCustom';
-import TemporarySave from 'feature/TemporarySave';
-import Mute from 'feature/Mute';
-import MyImage from 'feature/MyImage';
-import CategoryStyler from 'feature/CategoryStyler';
-import UserColor from 'feature/UserColor';
-import ShortCut from 'feature/ShortCut';
-import ThemeCustomizer from 'feature/ThemeCustomizer';
+import Menu from 'menu';
+import Feature from 'feature';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -51,28 +32,10 @@ async function awaitDocumentBody() {
   document.body.append(appContainer);
 
   ReactDOM.render(
-    <Provider store={Store}>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Config />
-        <ContextMenu />
-        <ArticleMenu />
-        <AutoRefresher />
-        <CommentRefresh />
-        <ArticleRemover />
-        <ImageDownloader />
-        <ImageSearch />
-        <IPInfo />
-        <AnonymousNick />
-        <Memo />
-        <LayoutCustom />
-        <ExperienceCustom />
-        <TemporarySave />
-        <Mute />
-        <MyImage />
-        <CategoryStyler />
-        <UserColor />
-        <ShortCut />
-        <ThemeCustomizer />
+        <Menu />
+        <Feature />
       </ThemeProvider>
     </Provider>,
     appContainer,

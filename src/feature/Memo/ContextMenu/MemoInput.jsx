@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -10,29 +9,27 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { useContextMenuData } from 'menu/ContextMenu';
-import { MODULE_ID } from '../ModuleInfo';
-import { setMemo } from '../slice';
-
-export default function MemoDialog({ open, onClose }) {
-  const dispatch = useDispatch();
-  const { id = '' } = useContextMenuData(MODULE_ID);
-  const { memo } = useSelector((state) => state[MODULE_ID]);
+export default function MemoDialog({
+  open,
+  onClose,
+  onSubmit,
+  defaultValue = '',
+}) {
   const [input, setInput] = useState('');
 
   useEffect(() => {
     if (!open) return;
-    setInput(memo[id] || '');
-  }, [id, memo, open]);
+    setInput(defaultValue);
+  }, [defaultValue, open]);
 
   const handleChange = useCallback((e) => {
     setInput(e.target.value);
   }, []);
 
-  const handleSave = useCallback(() => {
-    dispatch(setMemo({ user: id, memo: input }));
+  const handleSubmit = useCallback(() => {
+    onSubmit(input);
     onClose();
-  }, [dispatch, id, input, onClose]);
+  }, [input, onClose, onSubmit]);
 
   return (
     <Dialog open={open}>
@@ -42,7 +39,7 @@ export default function MemoDialog({ open, onClose }) {
         <TextField value={input} onChange={handleChange} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSave}>{input ? '저장' : '삭제'}</Button>
+        <Button onClick={handleSubmit}>{input ? '저장' : '삭제'}</Button>
         <Button onClick={onClose}>취소</Button>
       </DialogActions>
     </Dialog>

@@ -1,20 +1,4 @@
-import React from 'react';
-import { Delete } from '@material-ui/icons';
+import ConfigMenu from './ConfigMenu';
+import ArticleRemover from './ArticleRemover';
 
-import ConfigBuilder from 'menu/Config/ConfigBuilder';
-
-import { MODULE_ID, MODULE_NAME } from './ModuleInfo';
-import ConfigView from './ConfigView';
-import Remover from './Remover';
-
-export default () => (
-  <>
-    <ConfigBuilder
-      configKey={MODULE_ID}
-      buttonIcon={<Delete />}
-      buttonText={MODULE_NAME}
-      view={<ConfigView />}
-    />
-    <Remover />
-  </>
-);
+export { ConfigMenu, ArticleRemover as default };

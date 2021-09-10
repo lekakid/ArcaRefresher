@@ -15,7 +15,7 @@ export default function ContextSnack() {
 
   return (
     <Snackbar
-      open={snack}
+      open={!!snack}
       autoHideDuration={snackTime}
       onClose={handleSnackClose}
       message={snack}

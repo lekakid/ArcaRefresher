@@ -6,7 +6,6 @@ const USER_COLOR = { key: 'userColor', defaultValue: {} };
 
 const initialState = {
   color: getValue(USER_COLOR),
-  open: false,
 };
 
 export const slice = createSlice({
@@ -26,12 +25,9 @@ export const slice = createSlice({
       state.color = action.payload;
       setValue(USER_COLOR, action.payload);
     },
-    setOpenDialog(state, action) {
-      state.open = action.payload;
-    },
   },
 });
 
-export const { setColor, setColorList, setOpenDialog } = slice.actions;
+export const { setColor, setColorList } = slice.actions;
 
 export default slice.reducer;

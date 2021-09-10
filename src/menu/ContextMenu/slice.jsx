@@ -6,10 +6,7 @@ const ENABLED = { key: 'useContextMenu', defaultValue: true };
 
 const initialState = {
   enabled: getValue(ENABLED),
-  menuList: [],
   open: false,
-  mousePos: [0, 0],
-  data: {},
   snack: false,
   snackTime: null,
 };
@@ -22,15 +19,10 @@ export const slice = createSlice({
       state.enabled = !state.enabled;
       setValue(ENABLED, state.enabled);
     },
-    addContextMenu(state, action) {
-      state.menuList.push(action.payload);
-    },
-    openContextMenu(state, action) {
-      state.mousePos = action.payload.mousePos;
-      state.data = action.payload.data;
+    setOpen(state) {
       state.open = true;
     },
-    closeContextMenu(state) {
+    setClose(state) {
       state.open = false;
     },
     setContextSnack(state, action) {
@@ -41,12 +33,6 @@ export const slice = createSlice({
   },
 });
 
-export const {
-  setEnable,
-  addContextMenu,
-  openContextMenu,
-  closeContextMenu,
-  setContextSnack,
-} = slice.actions;
+export const { setEnable, setOpen, setClose, setContextSnack } = slice.actions;
 
 export default slice.reducer;

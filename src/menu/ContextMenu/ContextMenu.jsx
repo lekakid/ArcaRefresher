@@ -1,52 +1,33 @@
-import { Menu, MenuItem } from '@material-ui/core';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Menu, MenuItem } from '@material-ui/core';
 
 import { MODULE_ID } from './ModuleInfo';
-import { openContextMenu, closeContextMenu } from './slice';
+import ContextSnack from './ContextSnack';
+import { setClose } from './slice';
 
-export default function ContextMenu() {
+export default function ContextMenu({ children }) {
   const dispatch = useDispatch();
-  const { enabled, menuList, open, mousePos, data } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const { enabled, open } = useSelector((state) => state[MODULE_ID]);
+  const [mousePos, setMousePos] = useState([]);
 
   useEffect(() => {
     if (!enabled) return null;
 
-    const handleContext = (e) => {
-      if (open) {
-        dispatch(closeContextMenu(false));
-      }
-
-      const init = {};
-      const eventData = menuList.reduce(
-        (acc, { contextKey, trigger, dataGetter }) => {
-          if (trigger(e)) {
-            e.preventDefault();
-            return { ...acc, [contextKey]: dataGetter(e) };
-          }
-
-          return acc;
-        },
-        init,
-      );
-      if (eventData !== init)
-        dispatch(
-          openContextMenu({
-            mousePos: [e.clientX, e.clientY],
-            data: eventData,
-          }),
-        );
+    const handleContext = ({ clientX, clientY }) => {
+      dispatch(setClose());
+      setMousePos([clientX, clientY]);
     };
 
     document.addEventListener('contextmenu', handleContext);
     return () => document.removeEventListener('contextmenu', handleContext);
-  }, [dispatch, enabled, menuList, open]);
+  }, [dispatch, enabled]);
 
   const handleClose = useCallback(() => {
-    dispatch(closeContextMenu(false));
+    dispatch(setClose());
   }, [dispatch]);
+
+  const [left = 0, top = 0] = mousePos || [];
 
   return (
     <>
@@ -55,13 +36,14 @@ export default function ContextMenu() {
         open={open}
         onClose={handleClose}
         anchorReference="anchorPosition"
-        anchorPosition={{ top: mousePos[1], left: mousePos[0] }}
+        anchorPosition={{ top, left }}
       >
-        <MenuItem dense>Arca Refresher</MenuItem>
-        {menuList.map(({ contextKey, view }) =>
-          data[contextKey] ? view : null,
-        )}
+        <MenuItem dense disabled>
+          Arca Refresher
+        </MenuItem>
+        {children}
       </Menu>
+      <ContextSnack />
     </>
   );
 }

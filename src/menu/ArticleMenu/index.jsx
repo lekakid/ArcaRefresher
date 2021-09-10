@@ -1,4 +1,1 @@
-import React from 'react';
-import ArticleHeaderMenu from './ArticleMenu';
-
-export default () => <ArticleHeaderMenu />;
+export { default } from './ArticleMenu';
