@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const { enabled, channelID, imgList, forceLoad } = useSelector(
     (state) => state[MODULE_ID],
@@ -185,3 +185,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

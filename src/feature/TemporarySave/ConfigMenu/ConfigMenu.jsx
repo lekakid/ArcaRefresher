@@ -14,7 +14,7 @@ import {
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setAutoTime } from '../slice';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const { autoSaveTime } = useSelector((state) => state[MODULE_ID]);
 
@@ -51,3 +51,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

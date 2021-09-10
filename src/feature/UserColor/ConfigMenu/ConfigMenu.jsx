@@ -31,7 +31,7 @@ function ConfigToolbar({ disabled, onRemove }) {
   );
 }
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const { color } = useSelector((state) => state[MODULE_ID]);
   const tableRows =
@@ -177,3 +177,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

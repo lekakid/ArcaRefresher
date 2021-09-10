@@ -56,7 +56,7 @@ function ConfigToolbar({ disabled, onRemove }) {
   );
 }
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const {
@@ -342,3 +342,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

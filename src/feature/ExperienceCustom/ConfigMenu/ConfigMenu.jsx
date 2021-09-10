@@ -19,7 +19,7 @@ import {
   toggleWideArea,
 } from '../slice';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const {
     openArticleNewWindow,
@@ -110,3 +110,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

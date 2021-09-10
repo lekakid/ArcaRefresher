@@ -14,7 +14,7 @@ import {
 import { setEnable } from '../slice';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const { enabled } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 
@@ -38,3 +38,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

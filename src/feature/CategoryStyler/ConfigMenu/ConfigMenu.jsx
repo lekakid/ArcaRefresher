@@ -31,7 +31,7 @@ import { setStyle } from '../slice';
 
 import getContrastYIQ from '../getContrastYIQ';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const { channelID, color } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -200,3 +200,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

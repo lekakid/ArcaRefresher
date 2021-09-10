@@ -15,7 +15,7 @@ import {
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { toggleAnimation, setTimeLimit } from '../slice';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const { timeLimit, showProgress } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 
@@ -63,3 +63,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

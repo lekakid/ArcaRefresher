@@ -28,7 +28,7 @@ function createMark(value) {
 
 const retryMarks = [createMark(1), createMark(2), createMark(3)];
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const { fileName, zipName, zipImageName, zipComment, retryCount } =
     useSelector((state) => state[MODULE_ID]);
@@ -147,3 +147,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;

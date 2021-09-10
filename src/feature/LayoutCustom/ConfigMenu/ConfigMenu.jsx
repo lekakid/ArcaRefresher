@@ -26,7 +26,7 @@ import {
   toggleHumorCheckbox,
 } from '../slice';
 
-export default function ConfigMenu() {
+function ConfigMenu() {
   const dispatch = useDispatch();
   const {
     recentVisit,
@@ -190,3 +190,6 @@ export default function ConfigMenu() {
     </>
   );
 }
+
+ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
+export default ConfigMenu;
