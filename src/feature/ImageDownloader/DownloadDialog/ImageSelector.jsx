@@ -9,17 +9,19 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/styles';
+import { CheckCircle, CheckCircleOutline } from '@material-ui/icons';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   itemBar: {
-    background: 'none',
+    background:
+      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
   },
   checkbox: {
-    background: 'rgba(255, 255, 255, 0.5) !important',
+    color: theme.palette.grey.A100,
   },
 }));
 
-export default function CheckboxList({ imgList, selection, onChange }) {
+export default function ImageSelector({ imgList, selection, onChange }) {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const handleSelect = useCallback(
@@ -57,7 +59,10 @@ export default function CheckboxList({ imgList, selection, onChange }) {
             actionIcon={
               <Checkbox
                 size="small"
+                color="inherit"
                 className={classes.checkbox}
+                icon={<CheckCircleOutline />}
+                checkedIcon={<CheckCircle />}
                 checked={selection.includes(index)}
                 onClick={handleSelect(index)}
               />

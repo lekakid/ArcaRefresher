@@ -12,7 +12,7 @@ import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import CheckboxList from './CheckboxList';
+import ImageSelector from './ImageSelector';
 import Downloader from './Downloader';
 
 const useStyles = makeStyles((theme) => ({
@@ -99,7 +99,7 @@ export default function DownloadDialog({ open, onClose }) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <CheckboxList
+        <ImageSelector
           imgList={imgList}
           selection={selection}
           onChange={handleSelection}

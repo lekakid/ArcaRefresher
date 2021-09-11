@@ -6,7 +6,8 @@ const secondaryActionWidth = 160;
 export default makeStyles((theme) => ({
   '@global': {
     '.body .nav-control': {
-      zIndex: 1050,
+      // z-index 문제 수정
+      zIndex: theme.zIndex.speedDial,
     },
   },
   root: {
@@ -14,25 +15,24 @@ export default makeStyles((theme) => ({
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(1),
     },
-    '& .MuiListItemSecondaryAction-root > .MuiInputBase-root': {
-      minWidth: secondaryActionWidth,
+    '& .MuiListItemSecondaryAction-root': {
+      '& > .MuiInputBase-root': {
+        minWidth: secondaryActionWidth,
+      },
+      '& .MuiSelect-root': {
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+      },
+      '& .MuiSlider-root': {
+        minWidth: secondaryActionWidth,
+      },
     },
-    '& .MuiListItemSecondaryAction-root .MuiSelect-root': {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    '& .MuiListItemSecondaryAction-root .MuiSlider-root': {
-      minWidth: secondaryActionWidth,
+    '& .MuiDataGrid-overlay': {
+      backgroundColor: `${theme.palette.background.paper} !important`,
     },
   },
   bg: {
-    backgroundColor: theme.palette.grey[100],
-  },
-  appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
+    backgroundColor: theme.palette.background.default,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -45,15 +45,18 @@ export default makeStyles((theme) => ({
     flex: 1,
   },
   drawer: {
+    width: drawerWidth,
     [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
+      zIndex: theme.zIndex.appBar - 1,
     },
   },
-  drawerPaper: {
-    width: drawerWidth,
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
   },
-  toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     paddingBottom: theme.spacing(3),

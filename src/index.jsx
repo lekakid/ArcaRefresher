@@ -1,13 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from '@material-ui/styles';
-
-import store from 'core/store';
-import theme from 'core/theme';
-
-import Menu from 'menu';
-import Feature from 'feature';
+import App from './App';
 
 async function awaitDocumentBody() {
   return new Promise((resolve) => {
@@ -26,18 +19,10 @@ async function awaitDocumentBody() {
   });
 }
 
-(async function App() {
+(async () => {
   const appContainer = document.createElement('div');
   await awaitDocumentBody();
   document.body.append(appContainer);
 
-  ReactDOM.render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Menu />
-        <Feature />
-      </ThemeProvider>
-    </Provider>,
-    appContainer,
-  );
+  ReactDOM.render(<App />, appContainer);
 })();

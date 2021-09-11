@@ -13,7 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
-import { Close, Menu } from '@material-ui/icons';
+import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 
 import { MODULE_ID } from './ModuleInfo';
 import { setOpen } from './slice';
@@ -26,7 +26,7 @@ export default function ConfigMenu({ menuList }) {
   const dispatch = useDispatch();
   const { open, selection } = useSelector((state) => state[MODULE_ID]);
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [drawerOpen, setDrawerOpen] = useState(!mobile);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const classes = useStyles();
 
   const handleConfigClose = useCallback(() => {
@@ -62,11 +62,12 @@ export default function ConfigMenu({ menuList }) {
         onClose={handleConfigClose}
       >
         <Container maxWidth="md">
-          <AppBar position="fixed" className={classes.appBar}>
+          <AppBar position="fixed">
             <Toolbar>
               {mobile && (
                 <IconButton
                   edge="start"
+                  color="inherit"
                   className={classes.menuButton}
                   onClick={handleDrawerToggle}
                 >
@@ -76,20 +77,26 @@ export default function ConfigMenu({ menuList }) {
               <Typography variant="h5" noWrap className={classes.title}>
                 Arca Refresher
               </Typography>
-              <IconButton onClick={handleConfigClose}>
+              <IconButton color="inherit" onClick={handleConfigClose}>
                 <Close />
               </IconButton>
             </Toolbar>
           </AppBar>
-          <nav className={classes.drawer}>
+          <nav>
             <Drawer
               variant={mobile ? 'temporary' : 'permanent'}
-              classes={{ paper: classes.drawerPaper }}
+              classes={{ paper: classes.drawer }}
               ModalProps={{ keepMounted: true }}
-              open={drawerOpen}
+              open={!mobile || drawerOpen}
               onClose={handleDrawerToggle}
             >
-              <div className={classes.toolbar} />
+              <div className={classes.toolbar}>
+                {mobile && (
+                  <IconButton onClick={handleDrawerToggle}>
+                    <ChevronLeft />
+                  </IconButton>
+                )}
+              </div>
               <Divider />
               <List disablePadding>
                 <ConfigListButton key="all" configKey="all" icon={<Menu />}>
