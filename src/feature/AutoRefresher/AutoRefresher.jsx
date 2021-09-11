@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Refresher() {
+export default function AutoRefresher() {
   const { timeLimit, showProgress } = useSelector((state) => state[MODULE_ID]);
   const [board, setBoard] = useState(null);
   const [animate, setAnimation] = useState(true);
