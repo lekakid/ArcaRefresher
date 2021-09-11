@@ -71,8 +71,8 @@ export const slice = createSlice({
       setValue(BLOCK_EMOTICON, state.emoticon);
     },
     setCategoryConfig(state, action) {
-      const { channel, category, config } = action.payload;
-      state.category[channel][category] = config;
+      const { channel, config } = action.payload;
+      state.category[channel] = config;
       setValue(MUTE_CATEGORY, state.category);
     },
     toggleCountBar(state) {

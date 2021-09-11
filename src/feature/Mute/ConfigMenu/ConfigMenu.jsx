@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Button,
-  Divider,
   Grid,
   IconButton,
   List,
@@ -14,21 +13,10 @@ import {
   Snackbar,
   Switch,
   TextField,
-  Tooltip,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
-import {
-  BrokenImage,
-  Close,
-  Image,
-  Remove,
-  Save,
-  VolumeOff,
-  VolumeUp,
-} from '@material-ui/icons';
+import { Close, Remove, Save } from '@material-ui/icons';
 
 import { useElementQuery } from 'core/hooks';
 import { BOARD_LOADED } from 'core/selector';
@@ -37,12 +25,12 @@ import { getCategory } from 'util/parser';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   removeEmoticonList,
-  setCategoryConfig,
   setKeyword,
   setUser,
   toggleCountBar,
   toggleIncludeReply,
 } from '../slice';
+import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
@@ -58,16 +46,8 @@ function ConfigToolbar({ disabled, onRemove }) {
 
 function ConfigMenu() {
   const dispatch = useDispatch();
-  const theme = useTheme();
-  const {
-    hideCountBar,
-    muteIncludeReply,
-    user,
-    keyword,
-    emoticon,
-    channelID,
-    category,
-  } = useSelector((state) => state[MODULE_ID]);
+  const { hideCountBar, muteIncludeReply, user, keyword, emoticon } =
+    useSelector((state) => state[MODULE_ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
     id: key,
     name: emoticon[key].name,
@@ -75,7 +55,6 @@ function ConfigMenu() {
     url: emoticon[key].url,
   }));
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [textUser, setTextUser] = useState(user.join('\n'));
   const [textKeyword, setTextKeyword] = useState(keyword.join('\n'));
   const [errorUser, setErrorUser] = useState(false);
@@ -83,13 +62,11 @@ function ConfigMenu() {
   const [showResult, setShowResult] = useState(false);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [categoryMap, setCategoryMap] = useState({});
-
-  const channelCategoryConfig = category[channelID] || {};
+  const [nameMap, setNameMap] = useState({});
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    setCategoryMap(getCategory());
+    setNameMap(getCategory());
   }, [boardLoaded]);
 
   const handleCountBar = useCallback(() => {
@@ -150,23 +127,6 @@ function ConfigMenu() {
   const handleSelection = useCallback((current) => {
     setSelection(current);
   }, []);
-
-  const handleCategory = useCallback(
-    (categoryID, type) => () => {
-      const newConfig = {
-        ...channelCategoryConfig[categoryID],
-        [type]: !(channelCategoryConfig[categoryID] || {})[type],
-      };
-      dispatch(
-        setCategoryConfig({
-          channel: channelID,
-          category: categoryID,
-          config: newConfig,
-        }),
-      );
-    },
-    [channelCategoryConfig, channelID, dispatch],
-  );
 
   return (
     <>
@@ -272,57 +232,14 @@ function ConfigMenu() {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {Object.keys(categoryMap).map((id, index) => {
-                  const { mutePreview, muteArticle } =
-                    channelCategoryConfig[id] || {};
-
-                  return (
-                    <>
-                      {index !== 0 && (
-                        <Grid item xs={12}>
-                          <Divider />
-                        </Grid>
-                      )}
-                      <Grid item sm={6} xs={12}>
-                        <Box
-                          display="flex"
-                          height="100%"
-                          minHeight="48px"
-                          width="100%"
-                          alignItems="center"
-                        >
-                          <span
-                            className="badge badge-success"
-                            style={{ margin: '0.25rem' }}
-                          >
-                            {categoryMap[id]}
-                          </span>
-                        </Box>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Box
-                          display="flex"
-                          justifyContent={mobile ? null : 'flex-end'}
-                        >
-                          <Tooltip title="미리보기 뮤트">
-                            <IconButton
-                              onClick={handleCategory(id, 'mutePreview')}
-                            >
-                              {mutePreview ? <BrokenImage /> : <Image />}
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="게시물 뮤트">
-                            <IconButton
-                              onClick={handleCategory(id, 'muteArticle')}
-                            >
-                              {muteArticle ? <VolumeOff /> : <VolumeUp />}
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </Grid>
-                    </>
-                  );
-                })}
+                {Object.keys(nameMap).map((id, index) => (
+                  <CategoryRow
+                    key={id}
+                    divider={index !== 0}
+                    category={id}
+                    nameMap={nameMap}
+                  />
+                ))}
               </Grid>
             </Paper>
           </ListItem>
