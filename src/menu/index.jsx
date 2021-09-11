@@ -21,7 +21,6 @@ import ArticleMenu from './ArticleMenu';
 import ConfigMenu from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
 
-// ConfigMenu 덜 고침
 export default () => (
   <>
     <ArticleMenu>
