@@ -19,6 +19,7 @@ import { MODULE_ID } from './ModuleInfo';
 import { setOpen } from './slice';
 import useStyles from './useStyles';
 import ConfigListButton from './ConfigListButton';
+import HeaderButton from './HeaderButton';
 
 export default function ConfigMenu({ menuList }) {
   const theme = useTheme();
@@ -47,62 +48,65 @@ export default function ConfigMenu({ menuList }) {
   );
 
   return (
-    <Dialog
-      fullScreen
-      className={classes.root}
-      PaperProps={{
-        className: classes.bg,
-      }}
-      TransitionProps={{
-        mountOnEnter: true,
-      }}
-      open={open}
-      onClose={handleConfigClose}
-    >
-      <Container maxWidth="md">
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            {mobile && (
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                onClick={handleDrawerToggle}
-              >
-                <Menu />
+    <>
+      <Dialog
+        fullScreen
+        className={classes.root}
+        PaperProps={{
+          className: classes.bg,
+        }}
+        TransitionProps={{
+          mountOnEnter: true,
+        }}
+        open={open}
+        onClose={handleConfigClose}
+      >
+        <Container maxWidth="md">
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+              {mobile && (
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  onClick={handleDrawerToggle}
+                >
+                  <Menu />
+                </IconButton>
+              )}
+              <Typography variant="h5" noWrap className={classes.title}>
+                Arca Refresher
+              </Typography>
+              <IconButton onClick={handleConfigClose}>
+                <Close />
               </IconButton>
-            )}
-            <Typography variant="h5" noWrap className={classes.title}>
-              Arca Refresher
-            </Typography>
-            <IconButton onClick={handleConfigClose}>
-              <Close />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <nav className={classes.drawer}>
-          <Drawer
-            variant={mobile ? 'temporary' : 'permanent'}
-            classes={{ paper: classes.drawerPaper }}
-            ModalProps={{ keepMounted: true }}
-            open={drawerOpen}
-            onClose={handleDrawerToggle}
-          >
-            <div className={classes.toolbar} />
-            <Divider />
-            <List disablePadding>
-              <ConfigListButton key="all" configKey="all" icon={<Menu />}>
-                전체 설정
-              </ConfigListButton>
+            </Toolbar>
+          </AppBar>
+          <nav className={classes.drawer}>
+            <Drawer
+              variant={mobile ? 'temporary' : 'permanent'}
+              classes={{ paper: classes.drawerPaper }}
+              ModalProps={{ keepMounted: true }}
+              open={drawerOpen}
+              onClose={handleDrawerToggle}
+            >
+              <div className={classes.toolbar} />
               <Divider />
-              {list}
-            </List>
-          </Drawer>
-        </nav>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          {content}
-        </main>
-      </Container>
-    </Dialog>
+              <List disablePadding>
+                <ConfigListButton key="all" configKey="all" icon={<Menu />}>
+                  전체 설정
+                </ConfigListButton>
+                <Divider />
+                {list}
+              </List>
+            </Drawer>
+          </nav>
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
+            {content}
+          </main>
+        </Container>
+      </Dialog>
+      <HeaderButton />
+    </>
   );
 }
