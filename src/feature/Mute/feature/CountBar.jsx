@@ -58,6 +58,7 @@ export default function CountBar({ renderContainer, classContainer, count }) {
           return (
             count[key] > 0 && (
               <Chip
+                key={key}
                 variant={showFilter[key] ? 'outlined' : 'default'}
                 size="small"
                 className={className}
