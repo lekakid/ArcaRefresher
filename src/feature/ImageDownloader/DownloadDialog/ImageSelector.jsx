@@ -50,7 +50,7 @@ export default function ImageSelector({ imgList, selection, onChange }) {
   return (
     <ImageList cols={mobile ? 3 : 6}>
       {imgList.map((img, index) => (
-        <ImageListItem key={img}>
+        <ImageListItem key={img} onClick={handleSelect(index)}>
           <img src={img} alt={img} />
           <ImageListItemBar
             className={classes.itemBar}
