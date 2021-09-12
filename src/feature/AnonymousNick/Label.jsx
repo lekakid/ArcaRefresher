@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function AnonymousNick({ show, nick, container }) {
-  if (!show) return null;
-
+function AnonymousNick({ nick, container }) {
   return ReactDOM.createPortal(<span>{nick}</span>, container);
 }
 

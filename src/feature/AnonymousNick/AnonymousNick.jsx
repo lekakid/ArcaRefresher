@@ -49,40 +49,48 @@ function getInfoList({ prefixList, suffixList, extraPrefix }) {
   });
 }
 
-const useStyles = makeStyles(() => ({
-  'anonymous-nick': {
-    '& .article-wrapper': {
-      '& .user-info, & .avatar': {
-        display: 'none !important',
+const useStyles = makeStyles(
+  {
+    AnonymousNick: {
+      '& .article-wrapper': {
+        '& .user-info, & .avatar': {
+          display: 'none !important',
+        },
       },
     },
   },
-}));
+  { name: MODULE_ID },
+);
 
 export default function AnonymousNick() {
-  const config = useSelector((state) => state[MODULE_ID]);
+  const { show, prefixList, suffixList, extraPrefix } = useSelector(
+    (state) => state[MODULE_ID],
+  );
   const [infoList, setInfoList] = useState([]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
   const classes = useStyles();
 
   useEffect(() => {
-    if (articleLoaded) setInfoList(getInfoList(config));
-  }, [articleLoaded, config]);
+    if (!articleLoaded) return;
+    const updateInfoList = getInfoList({ prefixList, suffixList, extraPrefix });
+    setInfoList(updateInfoList);
+  }, [articleLoaded, extraPrefix, prefixList, suffixList]);
 
   useEffect(() => {
-    if (config.show) {
-      document.documentElement.classList.add(classes['anonymous-nick']);
-    }
+    if (!show) return null;
+
+    document.documentElement.classList.add(classes.AnonymousNick);
 
     return () =>
-      document.documentElement.classList.remove(classes['anonymous-nick']);
-  }, [classes, config.show]);
+      document.documentElement.classList.remove(classes.AnonymousNick);
+  }, [classes, show]);
 
+  if (!show) return null;
   return (
     <>
       {infoList.map(({ key, nick, container }) => (
-        <Label key={key} show={config.show} nick={nick} container={container} />
+        <Label key={key} nick={nick} container={container} />
       ))}
     </>
   );
