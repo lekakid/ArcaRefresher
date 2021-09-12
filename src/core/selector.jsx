@@ -33,6 +33,7 @@ export const ARTICLE_BODY = '.article-body';
 export const ARTICLE_HEADER_MENU = '.edit-menu';
 export const ARTICLE_MENU = '.article-menu';
 export const ARTICLE_USER_INFO = '.article-wrapper .user-info';
+export const COMMENT_WRAPPERS = '#comment .comment-wrapper';
 export const COMMENT_ITEMS = '#comment .comment-item';
 export const COMMENT_TITLE = '#comment .title';
 export const COMMENT_SUBTITLE = '#comment .subtitle';

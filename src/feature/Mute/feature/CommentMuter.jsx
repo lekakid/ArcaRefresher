@@ -6,6 +6,7 @@ import {
   COMMENT_INNER_VIEW,
   COMMENT_ITEMS,
   COMMENT_LOADED,
+  COMMENT_WRAPPERS,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
@@ -17,8 +18,27 @@ import CountBar from './CountBar';
 
 const useStyles = makeStyles(() => ({
   '@global': {
-    '.body #comment .frontend-header': {
-      display: 'none',
+    '.body #comment': {
+      '& .frontend-header': {
+        display: 'none',
+      },
+      '& .list-area': {
+        '& .comment-wrapper.filtered': {
+          display: 'none',
+        },
+        '&.show-filtered .comment-wrapper.filtered': {
+          display: 'block',
+        },
+        '&.show-filtered-deleted .comment-wrapper.filtered-deleted': {
+          display: 'block',
+        },
+        '&.show-filtered-keyword .comment-wrapper.filtered-keyword': {
+          display: 'block',
+        },
+        '&.show-filtered-user .comment-wrapper.filtered-user': {
+          display: 'block',
+        },
+      },
     },
   },
   root: {
@@ -32,7 +52,7 @@ const useStyles = makeStyles(() => ({
 export default function ArticleMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
-  const { user, keyword, hideCountBar } = useSelector(
+  const { user, keyword, hideCountBar, muteIncludeReply } = useSelector(
     (state) => state[MODULE_ID],
   );
   const [comment, setComment] = useState(null);
@@ -59,7 +79,11 @@ export default function ArticleMuter() {
     if (!comment) return () => {};
 
     const muteComment = () => {
-      const commentList = [...comment.querySelectorAll(COMMENT_ITEMS)];
+      const commentList = [
+        ...comment.querySelectorAll(
+          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+        ),
+      ];
       const commentInfo = commentList.map((c) => ({
         element: c,
         user: getUserInfo(c.querySelector('.user-info')),
@@ -78,7 +102,7 @@ export default function ArticleMuter() {
       window.removeEventListener('load', muteComment);
       removeAREvent(EVENT_COMMENT_REFRESH, muteComment);
     };
-  }, [comment, keyword, user]);
+  }, [comment, keyword, user, muteIncludeReply]);
 
   if (!countBar || hideCountBar) return null;
   return (
