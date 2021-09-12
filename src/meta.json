@@ -7,5 +7,5 @@
   "exclude-match": ["https://st*.arca.live/*"],
   "noframes": "",
   "run-at": "document-start",
-  "grant": ["GM_setValue", "GM_getValue", "GM_deleteValue", "GM_listValues", "GM_xmlhttpRequest"]
+  "grant": ["GM_setValue", "GM_getValue", "GM_deleteValue", "GM_listValues", "GM_xmlhttpRequest", "unsafeWindow"]
 }
