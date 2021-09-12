@@ -19,15 +19,8 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
-      alias: {
-        map: [
-          ['~', './src'],
-          ['core', './src/core'],
-          ['menu', './src/menu'],
-          ['feature', './src/feature'],
-          ['util', './src/util'],
-        ],
-        extensions: ['.js', '.jsx'],
+      webpack: {
+        config: 'webpack.common.js',
       },
     },
   },

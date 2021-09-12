@@ -12,12 +12,7 @@ module.exports = {
     filename: `${FILENAME}.user.js`,
   },
   resolve: {
-    alias: {
-      core: path.resolve(__dirname, 'src/core'),
-      menu: path.resolve(__dirname, 'src/menu'),
-      feature: path.resolve(__dirname, 'src/feature'),
-      util: path.resolve(__dirname, 'src/util'),
-    },
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.js', '.jsx', '.json'],
   },
   module: {
