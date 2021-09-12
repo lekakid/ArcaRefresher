@@ -27,10 +27,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function AutoRefresher() {
-  const { timeLimit, showProgress } = useSelector((state) => state[MODULE_ID]);
-  const [board, setBoard] = useState(null);
-  const [animate, setAnimation] = useState(true);
   const boardLoaded = useElementQuery(BOARD_LOADED);
+  const { countdown, showProgress } = useSelector((state) => state[MODULE_ID]);
+  const [board, setBoard] = useState(null);
+  const [pause, setPause] = useState(false);
 
   const classes = useStyles();
 
@@ -42,46 +42,47 @@ export default function AutoRefresher() {
   useEffect(() => {
     if (!board) return null;
 
-    const handlePause = (event) => {
-      if (event.target.tagName !== 'INPUT') return;
+    const onManageArticle = ({ target }) => {
+      if (target.tagName !== 'INPUT') return;
 
-      if (event.target.classList.contains('batch-check-all')) {
-        if (event.target.checked) setAnimation(false);
-        else setAnimation(true);
-      } else {
-        const btns = [...board.querySelectorAll('.batch-check')];
-        if (btns.some((btn) => btn.checked)) {
-          setAnimation(false);
-          return;
-        }
-
-        setAnimation(true);
+      if (target.classList.contains('batch-check-all')) {
+        setPause(target.checked);
+        return;
       }
-    };
-    board.addEventListener('click', handlePause);
 
-    return () => board.removeEventListener('click', handlePause);
+      setPause(!!board.querySelector('.batch-check:checked'));
+    };
+    const onFocusOut = () => {
+      setPause(document.hidden);
+    };
+    board.addEventListener('click', onManageArticle);
+    document.addEventListener('visibilitychange', onFocusOut);
+
+    return () => {
+      board.removeEventListener('click', onManageArticle);
+      document.removeEventListener('visibilitychange', onFocusOut);
+    };
   }, [board]);
 
   useEffect(() => {
     if (!board) return null;
-    if (timeLimit === 0) return null;
+    if (countdown === 0) return null;
+    if (pause) return null;
 
     const timer = setInterval(async () => {
-      if (!animate) return;
-
       const newArticle = await getNewArticle();
       swapArticle(board, newArticle, classes.refreshed);
       dispatchAREvent(EVENT_AUTOREFRESH);
-    }, timeLimit * 1000);
+    }, countdown * 1000);
 
     return () => clearInterval(timer);
-  }, [animate, board, classes.refreshed, timeLimit]);
+  }, [board, countdown, pause, classes]);
 
+  if (!board) return null;
   return (
-    <Fade in={board && timeLimit !== 0 && showProgress}>
+    <Fade in={countdown !== 0 && showProgress}>
       <div>
-        <RefreshProgress time={timeLimit} animate={animate} />
+        <RefreshProgress count={countdown} animate={!pause} />
       </div>
     </Fade>
   );

@@ -6,7 +6,7 @@ const REFRESH_TIME = { key: 'refreshTime', defaultValue: 5 };
 const SHOW_PROGRESS = { key: 'showProgress', defaultValue: true };
 
 const initialState = {
-  timeLimit: getValue(REFRESH_TIME),
+  countdown: getValue(REFRESH_TIME),
   showProgress: getValue(SHOW_PROGRESS),
 };
 
@@ -15,7 +15,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setTimeLimit(state, action) {
-      state.timeLimit = action.payload;
+      state.countdown = action.payload;
       setValue(REFRESH_TIME, action.payload);
     },
     toggleAnimation(state) {
