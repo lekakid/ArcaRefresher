@@ -16,7 +16,7 @@ import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { toggleAnimation, setTimeLimit } from '../slice';
 
 function ConfigMenu() {
-  const { timeLimit, showProgress } = useSelector((state) => state[MODULE_ID]);
+  const { countdown, showProgress } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 
   const handleRefreshTime = useCallback(
@@ -40,7 +40,7 @@ function ConfigMenu() {
             <ListItemSecondaryAction>
               <Select
                 variant="outlined"
-                value={timeLimit}
+                value={countdown}
                 onChange={handleRefreshTime}
               >
                 <MenuItem value={0}>사용 안 함</MenuItem>
