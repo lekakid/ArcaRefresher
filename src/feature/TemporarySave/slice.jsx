@@ -11,8 +11,7 @@ const initialState = {
   importTitle: getValue(IMPORT_TITLE),
   autoSaveTime: getValue(AUTO_SAVE_TIME),
   currentSlot: null,
-  titleInput: null,
-  editor: null,
+  loadOpen: false,
 };
 
 export const slice = createSlice({
@@ -48,10 +47,8 @@ export const slice = createSlice({
       state.autoSaveTime = action.payload;
       setValue(AUTO_SAVE_TIME, state.autoSaveTime);
     },
-    setEditor(state, action) {
-      const { title, editor } = action.payload;
-      state.titleInput = title;
-      state.editor = editor;
+    setLoadOpen(state, action) {
+      state.loadOpen = action.payload;
     },
   },
 });
@@ -63,8 +60,7 @@ export const {
   setCurrentSlot,
   toggleImportTitle,
   setAutoTime,
-  setEditor,
-  toggleLoadDialog,
+  setLoadOpen,
 } = slice.actions;
 
 export default slice.reducer;

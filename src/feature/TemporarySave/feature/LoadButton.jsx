@@ -1,19 +1,23 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { setLoadOpen } from '../slice';
+import { MODULE_ID } from '../ModuleInfo';
 import LoadTable from './LoadTable';
 
-export default function LoadButton(btnProps) {
-  const [open, setOpen] = useState(false);
+export default function LoadButton({ editor, ...btnProps }) {
+  const dispatch = useDispatch();
+  const { loadOpen } = useSelector((state) => state[MODULE_ID]);
 
   const handleClick = useCallback(() => {
-    setOpen(true);
-  }, []);
+    dispatch(setLoadOpen(true));
+  }, [dispatch]);
 
   const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+    dispatch(setLoadOpen(false));
+  }, [dispatch]);
 
   return (
     <>
@@ -23,7 +27,7 @@ export default function LoadButton(btnProps) {
         </Button>,
         btnProps,
       )}
-      <LoadTable open={open} onClose={handleClose} />
+      <LoadTable editor={editor} open={loadOpen} onClose={handleClose} />
     </>
   );
 }

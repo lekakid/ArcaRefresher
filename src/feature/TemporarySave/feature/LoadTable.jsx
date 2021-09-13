@@ -78,9 +78,9 @@ function CustomToolbar({
   );
 }
 
-export default function LoadTable({ open, onClose }) {
+export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
-  const { titleInput, editor, tempArticleList, importTitle } = useSelector(
+  const { tempArticleList, importTitle } = useSelector(
     (state) => state[MODULE_ID],
   );
   const rows = Object.keys(tempArticleList).map((key, index) => ({
@@ -103,14 +103,15 @@ export default function LoadTable({ open, onClose }) {
       const title = params.getValue(params.id, 'title');
       const content = params.getValue(params.id, 'content');
 
-      editor.html.set(content);
-      if (importTitle) titleInput.value = title;
+      editor.content.html.set(content);
+      // eslint-disable-next-line no-param-reassign
+      if (importTitle) editor.title.value = title;
 
       setSelection([]);
       dispatch(setCurrentSlot(date));
       onClose();
     },
-    [dispatch, editor, importTitle, onClose, titleInput],
+    [dispatch, editor, importTitle, onClose],
   );
 
   const handlePageSize = useCallback((currentSize) => {

@@ -1,28 +1,26 @@
 import React, { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button, Snackbar } from '@material-ui/core';
 import { Add, Save } from '@material-ui/icons';
 
-import { MODULE_ID } from '../ModuleInfo';
 import { saveArticle, saveAsArticle } from '../slice';
 
-export default function SaveButton({ saveAs = false, ...btnProps }) {
+export default function SaveButton({ editor, saveAs = false, ...btnProps }) {
   const dispatch = useDispatch();
-  const { titleInput, editor } = useSelector((state) => state[MODULE_ID]);
   const [snack, setSnack] = useState(false);
 
   const handleClick = useCallback(() => {
-    if (!titleInput || !editor) return;
+    if (!editor) return;
 
     const date = new Date();
     const timestamp = date.getTime();
-    const title = titleInput.value || `${date.toLocaleString()}에 저장됨`;
-    const content = editor.html.get(true);
+    const title = editor.title.value || `${date.toLocaleString()}에 저장됨`;
+    const content = editor.content.html.get(true);
 
     const action = saveAs ? saveAsArticle : saveArticle;
     dispatch(action({ timestamp, title, content }));
     setSnack(true);
-  }, [dispatch, editor, titleInput, saveAs]);
+  }, [dispatch, editor, saveAs]);
 
   const handleSnackClose = useCallback(() => {
     setSnack(false);

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { useDispatch } from 'react-redux';
 import { ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { useElementQuery } from 'core/hooks';
 import { WRITE_LOADED } from 'core/selector';
 
-import { setEditor } from './slice';
 import { AutoSaver, SaveButton, LoadButton } from './feature';
 
 const useStyles = makeStyles({
@@ -31,17 +29,17 @@ const useStyles = makeStyles({
 });
 
 export default function TemporarySave() {
-  const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
   const [container, setContainer] = useState(null);
+  const [editor, setEditor] = useState(null);
   const classes = useStyles();
 
   useEffect(() => {
     if (!editorLoaded) return;
 
     const title = document.querySelector('#inputTitle');
-    const editor = unsafeWindow.FroalaEditor('#content');
-    dispatch(setEditor({ title, editor }));
+    const content = unsafeWindow.FroalaEditor('#content');
+    setEditor({ title, content });
 
     const tempButton = document.createElement('div');
     tempButton.classList.add('tmpBtn');
@@ -49,15 +47,15 @@ export default function TemporarySave() {
     btns.classList.add(classes.root);
     btns.append(tempButton);
     setContainer(tempButton);
-  }, [classes, dispatch, editorLoaded]);
+  }, [classes, editorLoaded]);
 
   if (!container) return null;
   return ReactDOM.createPortal(
     <ButtonGroup variant="outlined">
-      <AutoSaver />
-      <SaveButton saveAs />
-      <SaveButton />
-      <LoadButton />
+      <AutoSaver editor={editor} />
+      <SaveButton editor={editor} saveAs />
+      <SaveButton editor={editor} />
+      <LoadButton editor={editor} />
     </ButtonGroup>,
     container,
   );
