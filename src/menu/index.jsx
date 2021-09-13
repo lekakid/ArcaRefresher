@@ -20,6 +20,7 @@ import * as UserColor from 'feature/UserColor';
 import ArticleMenu from './ArticleMenu';
 import ConfigMenu from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
+import DataManagement from './DataManagement';
 
 export default () => (
   <>
@@ -42,6 +43,7 @@ export default () => (
         TemporarySave.ConfigMenu,
         ThemeCustomizer.ConfigMenu,
         UserColor.ConfigMenu,
+        DataManagement,
       ]}
     />
     <ContextMenuContainer>

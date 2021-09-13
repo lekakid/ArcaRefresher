@@ -25,3 +25,28 @@ export function getValue({ key, defaultValue }) {
 export function setValue({ key }, value) {
   GM_setValue(key, value);
 }
+
+/**
+ * 설정 값을 string으로 반환합니다.
+ */
+export function exportValues() {
+  const keys = GM_listValues();
+
+  const data = keys.reduce(
+    (acc, key) => ({ ...acc, [key]: GM_getValue(key) }),
+    {},
+  );
+
+  return JSON.stringify(data);
+}
+
+/**
+ * string으로 된 설정 값을 받아서 저장 합니다.
+ */
+export function importValues(JSONString) {
+  const data = JSON.parse(JSONString);
+
+  Object.entries(data).forEach(([key, value]) => {
+    GM_setValue(key, value);
+  });
+}
