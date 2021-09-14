@@ -11,15 +11,16 @@ export default function Parser() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
 
   useLayoutEffect(() => {
-    if (!boardLoaded) return;
-
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
     const { pathname } = window.location;
-    const channelID = pathname.match(idRegex)?.[1]?.toLowerCase();
+    const channelID = pathname.match(idRegex)?.[1]?.toLowerCase() || null;
     dispatch(setChannelID(channelID));
 
-    const channelName = document.querySelector(CHANNEL_TITLE)?.textContent;
+    const channelName =
+      document.querySelector(CHANNEL_TITLE)?.textContent || null;
     dispatch(setChannelName(channelName));
+
+    if (!boardLoaded) return;
 
     const category = [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
       (acc, cur) => {
