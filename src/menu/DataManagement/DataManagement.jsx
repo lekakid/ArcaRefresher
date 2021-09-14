@@ -31,7 +31,7 @@ function DataManagement() {
           reader.readAsText(path);
         });
         importValues(data);
-        // TODO: 설정 데이터 구성 변경 이후 즉시 반응 되도록 수정
+        // TODO: 설정 데이터 구성 변경 이후 즉시 반영하도록 수정
       } catch (error) {
         console.error(error);
       }
