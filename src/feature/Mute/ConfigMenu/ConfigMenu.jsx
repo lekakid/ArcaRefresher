@@ -10,13 +10,12 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Paper,
-  Snackbar,
   Switch,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
-import { Close, Remove, Save } from '@material-ui/icons';
+import { Check, Remove, Save } from '@material-ui/icons';
 
 import { useElementQuery } from 'core/hooks';
 import { BOARD_LOADED } from 'core/selector';
@@ -44,6 +43,10 @@ function ConfigToolbar({ disabled, onRemove }) {
   );
 }
 
+const ERROR = 'ERROR';
+const CHANGED = 'CHANGED';
+const INIT = 'INIT';
+
 function ConfigMenu() {
   const dispatch = useDispatch();
   const { hideCountBar, muteIncludeReply, user, keyword, emoticon } =
@@ -57,9 +60,8 @@ function ConfigMenu() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const [textUser, setTextUser] = useState(user.join('\n'));
   const [textKeyword, setTextKeyword] = useState(keyword.join('\n'));
-  const [errorUser, setErrorUser] = useState(false);
-  const [errorKeyword, setErrorKeyword] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const [stateUser, setStateUser] = useState(INIT);
+  const [stateKeyword, setStateKeyword] = useState(INIT);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [nameMap, setNameMap] = useState({});
@@ -78,12 +80,12 @@ function ConfigMenu() {
   }, [dispatch]);
 
   const handleUser = useCallback((e) => {
-    setErrorUser(false);
+    setStateUser(CHANGED);
     setTextUser(e.target.value);
   }, []);
 
   const handleKeyword = useCallback((e) => {
-    setErrorKeyword(false);
+    setStateKeyword(CHANGED);
     setTextKeyword(e.target.value);
   }, []);
 
@@ -92,10 +94,10 @@ function ConfigMenu() {
       const test = textUser.split('\n').filter((i) => i !== '');
       RegExp(test);
       dispatch(setUser(test));
-      setShowResult(true);
+      setStateUser(INIT);
     } catch (error) {
       console.error(error);
-      setErrorUser(true);
+      setStateUser(ERROR);
     }
   }, [dispatch, textUser]);
 
@@ -104,16 +106,12 @@ function ConfigMenu() {
       const test = textKeyword.split('\n').filter((i) => i !== '');
       RegExp(test);
       dispatch(setKeyword(test));
-      setShowResult(true);
+      setStateKeyword(INIT);
     } catch (error) {
       console.error(error);
-      setErrorKeyword(true);
+      setStateKeyword(ERROR);
     }
   }, [dispatch, textKeyword]);
-
-  const handleClose = () => {
-    setShowResult(false);
-  };
 
   const handlePageSize = useCallback((currentSize) => {
     setPageSize(currentSize);
@@ -154,8 +152,12 @@ function ConfigMenu() {
           <ListItem>
             <ListItemText>검사할 닉네임</ListItemText>
             <ListItemSecondaryAction>
-              <IconButton onClick={onClickUser}>
-                <Save />
+              <IconButton
+                color="primary"
+                disabled={stateUser === INIT}
+                onClick={onClickUser}
+              >
+                {stateUser === CHANGED ? <Save /> : <Check />}
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
@@ -165,19 +167,23 @@ function ConfigMenu() {
               multiline
               fullWidth
               rows={6}
+              error={stateUser === ERROR}
               value={textUser}
               onChange={handleUser}
-              error={errorUser}
               helperText={
-                errorUser && '정규식 조건을 위반하는 항목이 있습니다.'
+                stateUser === ERROR && '정규식 조건을 위반하는 항목이 있습니다.'
               }
             />
           </ListItem>
           <ListItem>
             <ListItemText>검사할 키워드</ListItemText>
             <ListItemSecondaryAction>
-              <IconButton onClick={onClickKeyword}>
-                <Save />
+              <IconButton
+                color="primary"
+                disabled={stateKeyword === INIT}
+                onClick={onClickKeyword}
+              >
+                {stateKeyword === CHANGED ? <Save /> : <Check />}
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
@@ -187,11 +193,12 @@ function ConfigMenu() {
               multiline
               fullWidth
               rows={6}
+              error={stateKeyword === ERROR}
               value={textKeyword}
               onChange={handleKeyword}
-              error={errorKeyword}
               helperText={
-                errorKeyword && '정규식 조건을 위반하는 항목이 있습니다.'
+                stateKeyword === ERROR &&
+                '정규식 조건을 위반하는 항목이 있습니다.'
               }
             />
           </ListItem>
@@ -244,17 +251,6 @@ function ConfigMenu() {
             </Paper>
           </ListItem>
         </List>
-        <Snackbar
-          open={showResult}
-          autoHideDuration={3000}
-          onClose={handleClose}
-          message="저장했습니다."
-          action={
-            <IconButton onClick={handleClose}>
-              <Close fontSize="small" />
-            </IconButton>
-          }
-        />
       </Paper>
     </>
   );
