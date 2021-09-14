@@ -103,7 +103,9 @@ function ConfigMenu() {
     setSelection([]);
   }, [dispatch, imgList, selectedChannel, selection]);
 
-  const channelList = [...new Set([...Object.keys(imgList), channelID])];
+  const channelList = [...Object.keys(imgList), channelID].filter(
+    (c, index, arr) => c !== null && arr.indexOf(c) === index,
+  );
 
   return (
     <>
