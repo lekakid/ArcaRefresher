@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from 'core/gm';
-import { getChannelID } from 'util/parser';
 import { MODULE_ID } from './ModuleInfo';
 
 const BLOCK_USER = { key: 'blockUser', defaultValue: [] };
@@ -14,7 +13,6 @@ const initialState = {
   user: getValue(BLOCK_USER),
   keyword: getValue(BLOCK_KEYWORD),
   emoticon: getValue(BLOCK_EMOTICON),
-  channelID: getChannelID(),
   category: getValue(MUTE_CATEGORY),
   hideCountBar: getValue(HIDE_COUNT_BAR),
   muteIncludeReply: getValue(MUTE_INCLUDE_REPLY),

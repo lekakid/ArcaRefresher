@@ -7,7 +7,7 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { USER_INFO } from 'core/selector';
-import { getUserIP } from 'util/parser';
+import { getUserIP } from 'util/user';
 import Info from './Info';
 
 function getUserInfo() {

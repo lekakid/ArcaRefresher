@@ -51,7 +51,6 @@ export default function ImageDownloader() {
   }, []);
 
   if (!container) return null;
-
   return (
     <>
       {ReactDOM.createPortal(

@@ -6,7 +6,7 @@ import { Comment } from '@material-ui/icons';
 import { USER_INFO } from 'core/selector';
 import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
-import { getUserID } from 'util/parser';
+import { getUserID } from 'util/user';
 import { setMemo } from '../slice';
 import { MODULE_ID } from '../ModuleInfo';
 import MemoInput from './MemoInput';

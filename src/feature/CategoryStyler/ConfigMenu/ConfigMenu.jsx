@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React from 'react';
 import {
   Grid,
   List,
@@ -8,21 +8,13 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { useElementQuery } from 'core/hooks';
-import { BOARD_LOADED } from 'core/selector';
-import { getCategory } from 'util/parser';
+import { useParser } from 'util/Parser';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import CategoryRow from './CategoryRow';
 
 function ConfigMenu() {
-  const boardLoaded = useElementQuery(BOARD_LOADED);
-  const [nameMap, setNameMap] = useState({});
-
-  useLayoutEffect(() => {
-    if (!boardLoaded) return;
-    setNameMap(getCategory());
-  }, [boardLoaded]);
+  const { category } = useParser();
 
   return (
     <>
@@ -35,14 +27,15 @@ function ConfigMenu() {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {Object.keys(nameMap).map((id, index) => (
-                  <CategoryRow
-                    key={id}
-                    divider={index !== 0}
-                    category={id}
-                    nameMap={nameMap}
-                  />
-                ))}
+                {category &&
+                  Object.keys(category).map((id, index) => (
+                    <CategoryRow
+                      key={id}
+                      divider={index !== 0}
+                      category={id}
+                      nameMap={category}
+                    />
+                  ))}
               </Grid>
             </Paper>
           </ListItem>

@@ -9,7 +9,7 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { USER_INFO } from 'core/selector';
-import { getUserID } from 'util/parser';
+import { getUserID } from 'util/user';
 
 import { MODULE_ID } from './ModuleInfo';
 import Label from './Label';

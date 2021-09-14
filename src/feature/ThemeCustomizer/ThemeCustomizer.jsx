@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
+import { useParser } from 'util/Parser';
 import { MODULE_ID } from './ModuleInfo';
 
 export default function ThemeCustomizer() {
-  const { enabled, current, channelID, theme } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const { channelID } = useParser();
+  const { enabled, current, theme } = useSelector((state) => state[MODULE_ID]);
 
   const currentTheme = theme[channelID] || theme[current];
   useEffect(() => {

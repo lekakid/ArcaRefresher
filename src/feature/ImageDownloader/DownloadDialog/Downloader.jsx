@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -9,6 +9,7 @@ import {
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
+import { useParser } from 'util/Parser';
 import fetch from 'util/fetch';
 
 import { MODULE_ID } from '../ModuleInfo';
@@ -18,7 +19,7 @@ async function download({
   dataList,
   onTotalProgress,
   onFileProgress,
-  articleInfo,
+  flags,
   config: { zipName, zipImageName, zipComment, retryCount },
 }) {
   const zip = new JSZip();
@@ -38,7 +39,7 @@ async function download({
           onprogress: onFileProgress,
         });
         const saveName = replaceFlag(zipImageName, {
-          ...articleInfo,
+          ...flags,
           uploadName,
           index: i,
         });
@@ -55,14 +56,15 @@ async function download({
 
   const zipblob = await zip.generateAsync({
     type: 'blob',
-    comment: replaceFlag(zipComment, articleInfo),
+    comment: replaceFlag(zipComment, flags),
   });
-  saveAs(zipblob, `${replaceFlag(zipName, articleInfo)}.zip`);
+  saveAs(zipblob, `${replaceFlag(zipName, flags)}.zip`);
 }
 
 export default function Downloader({ data, onFinish }) {
+  const { channelID, channelName } = useParser();
   const config = useSelector((state) => state[MODULE_ID]);
-  const [articleInfo] = useState(() => getArticleInfo());
+  const articleInfo = useRef(() => getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -70,7 +72,11 @@ export default function Downloader({ data, onFinish }) {
     if (data.length === 0) return;
 
     if (articleInfo) {
-      (async () => {
+      const flags = {
+        channelID,
+        channelName,
+        ...articleInfo,
+      }(async () => {
         await download({
           dataList: data,
           onTotalProgress(current) {
@@ -79,13 +85,13 @@ export default function Downloader({ data, onFinish }) {
           onFileProgress({ loaded, total }) {
             setProgress((loaded / total) * 100);
           },
-          articleInfo,
+          flags,
           config,
         });
         onFinish();
       })();
     }
-  }, [articleInfo, config, data, onFinish]);
+  }, [articleInfo, channelID, channelName, config, data, onFinish]);
 
   if (cur === data.length) {
     return (

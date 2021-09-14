@@ -1,6 +1,5 @@
-export default function replaceFlag(
-  string,
-  {
+export default function replaceFlag(string, flagMap) {
+  const {
     channelID,
     channelName,
     articleCategory,
@@ -9,8 +8,8 @@ export default function replaceFlag(
     articleURL,
     uploadName = '',
     index = 0,
-  },
-) {
+  } = flagMap;
+
   return string
     .replace('%channel%', channelName)
     .replace('%channelID%', channelID)

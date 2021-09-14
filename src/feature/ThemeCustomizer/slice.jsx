@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from 'core/gm';
-import { getChannelID } from 'util/parser';
 import { MODULE_ID } from './ModuleInfo';
 
 const ENABLED = { key: 'enabledTheme', defaultValue: false };
@@ -10,7 +9,6 @@ const THEME_PRESET = { key: 'themePreset', defaultValue: {} };
 const initialState = {
   enabled: getValue(ENABLED),
   current: getValue(CURRENT_PRESET),
-  channelID: getChannelID(),
   theme: getValue(THEME_PRESET),
 };
 

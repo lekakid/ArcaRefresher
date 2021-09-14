@@ -9,22 +9,21 @@ import {
   BOARD_VIEW,
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { getCategory } from 'util/parser';
+import { useParser } from 'util/Parser';
 
 import { MODULE_ID } from './ModuleInfo';
 import getContrastYIQ from './getContrastYIQ';
 
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channelID, color } = useSelector((state) => state[MODULE_ID]);
+  const { channelID, category } = useParser();
+  const { color } = useSelector((state) => state[MODULE_ID]);
   const [board, setBoard] = useState(null);
-  const [categoryMap, setCategoryMap] = useState({});
   const [styleMap, setStyleMap] = useState({});
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
     setBoard(document.querySelector(BOARD_VIEW));
-    setCategoryMap(getCategory());
   }, [boardLoaded]);
 
   useLayoutEffect(() => {
@@ -33,13 +32,13 @@ export default function CategoryStyler() {
         Object.keys(color[channelID])?.reduce(
           (acc, id) => ({
             ...acc,
-            [categoryMap[id]]: Math.random().toString(36).substr(2),
+            [category[id]]: Math.random().toString(36).substr(2),
           }),
           {},
         ),
       );
     }
-  }, [categoryMap, channelID, color]);
+  }, [category, channelID, color]);
 
   useLayoutEffect(() => {
     if (!board) return () => {};
@@ -69,7 +68,7 @@ export default function CategoryStyler() {
   const stylesheet = Object.entries(color[channelID]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
-    const colorKey = styleMap[categoryMap[key]];
+    const colorKey = styleMap[category[key]];
     return `.ARColor .color-${colorKey} {
         ${bgcolor ? `background-color: ${bgcolor} !important;` : ''}
         ${bgcolor ? `color: ${getContrastYIQ(bgcolor)};` : ''}

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from 'core/gm';
-import { getChannelID } from 'util/parser';
 import { MODULE_ID } from './ModuleInfo';
 
 const ENABLED = { key: 'myImagesEnabled', defaultValue: true };
@@ -9,7 +8,6 @@ const FORCE_LOAD = { key: 'myImageForceLoad', defaultValue: false };
 
 const initialState = {
   enabled: getValue(ENABLED),
-  channelID: getChannelID(),
   imgList: getValue(MY_IMAGES),
   forceLoad: getValue(FORCE_LOAD),
 };

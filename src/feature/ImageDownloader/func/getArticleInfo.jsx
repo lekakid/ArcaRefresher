@@ -4,11 +4,9 @@ import {
   ARTICLE_TITLE,
   ARTICLE_URL,
 } from 'core/selector';
-import { getChannelID, getChannelName, getUserNick } from 'util/parser';
+import { getUserNick } from 'util/user';
 
 export default function getArticleInfo() {
-  const channelID = getChannelID();
-  const channelName = getChannelName();
   const articleCategory =
     document.querySelector(ARTICLE_CATEGORY)?.textContent || '일반';
   const articleTitle =
@@ -20,8 +18,6 @@ export default function getArticleInfo() {
     document.querySelector(ARTICLE_URL)?.href || window.location.href;
 
   return {
-    channelID,
-    channelName,
     articleCategory,
     articleTitle,
     articleAuthor,

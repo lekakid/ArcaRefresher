@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -17,10 +17,7 @@ import {
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Check, Remove, Save } from '@material-ui/icons';
 
-import { useElementQuery } from 'core/hooks';
-import { BOARD_LOADED } from 'core/selector';
-import { getCategory } from 'util/parser';
-
+import { useParser } from 'util/Parser';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   removeEmoticonList,
@@ -49,6 +46,7 @@ const INIT = 'INIT';
 
 function ConfigMenu() {
   const dispatch = useDispatch();
+  const { category } = useParser();
   const { hideCountBar, muteIncludeReply, user, keyword, emoticon } =
     useSelector((state) => state[MODULE_ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
@@ -57,19 +55,12 @@ function ConfigMenu() {
     bundle: emoticon[key].bundle,
     url: emoticon[key].url,
   }));
-  const boardLoaded = useElementQuery(BOARD_LOADED);
   const [textUser, setTextUser] = useState(user.join('\n'));
   const [textKeyword, setTextKeyword] = useState(keyword.join('\n'));
   const [stateUser, setStateUser] = useState(INIT);
   const [stateKeyword, setStateKeyword] = useState(INIT);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [nameMap, setNameMap] = useState({});
-
-  useLayoutEffect(() => {
-    if (!boardLoaded) return;
-    setNameMap(getCategory());
-  }, [boardLoaded]);
 
   const handleCountBar = useCallback(() => {
     dispatch(toggleCountBar());
@@ -239,14 +230,15 @@ function ConfigMenu() {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {Object.keys(nameMap).map((id, index) => (
-                  <CategoryRow
-                    key={id}
-                    divider={index !== 0}
-                    category={id}
-                    nameMap={nameMap}
-                  />
-                ))}
+                {category &&
+                  Object.keys(category).map((id, index) => (
+                    <CategoryRow
+                      key={id}
+                      divider={index !== 0}
+                      category={id}
+                      nameMap={category}
+                    />
+                  ))}
               </Grid>
             </Paper>
           </ListItem>

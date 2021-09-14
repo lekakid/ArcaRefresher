@@ -16,6 +16,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
 
+import { useParser } from 'util/Parser';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setImageList, toggleEnabled, toggleForceLoad } from '../slice';
 import ImageSelector from './ImageSelector';
@@ -33,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 function ConfigMenu() {
   const dispatch = useDispatch();
-  const { enabled, channelID, imgList, forceLoad } = useSelector(
+  const { channelID } = useParser();
+  const { enabled, imgList, forceLoad } = useSelector(
     (state) => state[MODULE_ID],
   );
   const [selectedChannel, setSelectedChannel] = useState(

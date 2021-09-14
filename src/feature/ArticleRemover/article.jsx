@@ -1,5 +1,5 @@
 import { BOARD_ARTICLES_WITHOUT_NOTICE } from 'core/selector';
-import { getUserInfo } from 'util/parser';
+import { getUserInfo } from 'util/user';
 
 function getTarget(container, users, keywords) {
   const articles = [
