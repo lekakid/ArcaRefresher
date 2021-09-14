@@ -16,6 +16,7 @@ import {
 import { ColorPicker } from 'material-ui-color';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useParser } from 'util/Parser';
 import getContrastYIQ from '../getContrastYIQ';
 import { MODULE_ID } from '../ModuleInfo';
 import { setStyle } from '../slice';
@@ -23,7 +24,8 @@ import { setStyle } from '../slice';
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { channelID, color } = useSelector((state) => state[MODULE_ID]);
+  const { channelID } = useParser();
+  const { color } = useSelector((state) => state[MODULE_ID]);
   const channelColor = { ...color?.[channelID] };
   const { badge, bgcolor, bold, through, disableVisited } = {
     ...channelColor?.[category],
