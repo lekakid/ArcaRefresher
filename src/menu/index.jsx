@@ -1,4 +1,5 @@
 import React from 'react';
+import { Description, List, Style, Web } from '@material-ui/icons';
 
 import * as ContextMenu from 'menu/ContextMenu';
 import * as AnonymousNick from 'feature/AnonymousNick';
@@ -28,21 +29,27 @@ export default () => (
       <AnonymousNick.ArticleMenu />
     </ArticleMenu>
     <ConfigMenu
+      groupList={[
+        { key: 'global', icon: <Web />, label: '전역 도구' },
+        { key: 'board', icon: <List />, label: '게시판 도구' },
+        { key: 'article', icon: <Description />, label: '게시물 도구' },
+        { key: 'uiux', icon: <Style />, label: 'UI/UX' },
+      ]}
       menuList={[
-        ContextMenu.ConfigMenu,
-        ArticleRemover.ConfigMenu,
-        AutoRefresher.ConfigMenu,
-        CategoryStyler.ConfigMenu,
-        ExperienceCustom.ConfigMenu,
-        ImageDownloader.ConfigMenu,
-        LayoutCustom.ConfigMenu,
-        Memo.ConfigMenu,
-        Mute.ConfigMenu,
-        MyImage.ConfigMenu,
-        ShortCut.ConfigMenu,
-        TemporarySave.ConfigMenu,
-        ThemeCustomizer.ConfigMenu,
-        UserColor.ConfigMenu,
+        { ...Mute.ConfigMenu, group: 'global' },
+        { ...Memo.ConfigMenu, group: 'global' },
+        { ...UserColor.ConfigMenu, group: 'global' },
+        { ...AutoRefresher.ConfigMenu, group: 'board' },
+        { ...ArticleRemover.ConfigMenu, group: 'board' },
+        { ...CategoryStyler.ConfigMenu, group: 'board' },
+        { ...ThemeCustomizer.ConfigMenu, group: 'board' },
+        { ...ImageDownloader.ConfigMenu, group: 'article' },
+        { ...MyImage.ConfigMenu, group: 'article' },
+        { ...TemporarySave.ConfigMenu, group: 'article' },
+        { ...LayoutCustom.ConfigMenu, group: 'uiux' },
+        { ...ExperienceCustom.ConfigMenu, group: 'uiux' },
+        { ...ContextMenu.ConfigMenu, group: 'uiux' },
+        { ...ShortCut.ConfigMenu, group: 'uiux' },
         DataManagement,
       ]}
     />

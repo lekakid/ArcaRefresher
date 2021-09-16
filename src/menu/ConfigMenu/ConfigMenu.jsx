@@ -18,10 +18,11 @@ import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 import { MODULE_ID } from './ModuleInfo';
 import { setOpen } from './slice';
 import useStyles from './useStyles';
-import ConfigListButton from './ConfigListButton';
 import HeaderButton from './HeaderButton';
+import ConfigListGroup from './ConfigListGroup';
+import ConfigListButton from './ConfigListButton';
 
-export default function ConfigMenu({ menuList }) {
+export default function ConfigMenu({ groupList, menuList }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { open, selection } = useSelector((state) => state[MODULE_ID]);
@@ -38,9 +39,31 @@ export default function ConfigMenu({ menuList }) {
     setDrawerOpen((prev) => !prev);
   }, []);
 
-  const list = menuList.map(({ key, ListButton }) => (
-    <ListButton key={`ListButton.${key}`} />
-  ));
+  const navi = [
+    ...groupList.map(({ key, icon, label }) => (
+      <ConfigListGroup
+        key={key}
+        groupKey={key}
+        groupIcon={icon}
+        groupText={label}
+      >
+        {menuList
+          .filter(({ group }) => group === key)
+          .map(({ key: menuKey, ListButton }) => (
+            <ListButton
+              key={`ListButton.${menuKey}`}
+              className={classes.nested}
+            />
+          ))}
+      </ConfigListGroup>
+    )),
+    <Divider key="d1" />,
+    menuList
+      .filter(({ group }) => !group)
+      .map(({ key: menuKey, ListButton }) => (
+        <ListButton key={`ListButton.${menuKey}`} />
+      )),
+  ];
 
   const content = menuList.map(
     ({ key, View }) =>
@@ -103,7 +126,7 @@ export default function ConfigMenu({ menuList }) {
                   전체 설정
                 </ConfigListButton>
                 <Divider />
-                {list}
+                {navi}
               </List>
             </Drawer>
           </nav>

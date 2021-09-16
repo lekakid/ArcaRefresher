@@ -6,11 +6,12 @@ import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 const ListButton = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ListButton(_props, ref) {
-    return (
+  function ListButton(props, ref) {
+    return React.cloneElement(
       <ConfigListButton ref={ref} configKey={MODULE_ID} icon={<Book />}>
         {MODULE_NAME}
-      </ConfigListButton>
+      </ConfigListButton>,
+      props,
     );
   },
 );

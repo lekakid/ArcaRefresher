@@ -40,6 +40,9 @@ export default makeStyles((theme) => ({
       display: 'none',
     },
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
