@@ -10,9 +10,9 @@ import {
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
+import getContrastYIQ from 'util/color';
 
 import { MODULE_ID } from './ModuleInfo';
-import getContrastYIQ from './getContrastYIQ';
 
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
