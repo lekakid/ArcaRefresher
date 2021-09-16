@@ -19,6 +19,10 @@ const light = createTheme(
       secondary: {
         main: '#3d414d',
       },
+      label: {
+        background: '#212121',
+        text: '#fafafa',
+      },
     },
     overrides,
   },
@@ -37,6 +41,10 @@ const dark = createTheme({
     background: {
       default: '#111',
       paper: '#222',
+    },
+    label: {
+      background: '#fafafa',
+      text: '#212121',
     },
   },
   overrides,
