@@ -48,7 +48,7 @@ export default function ImageSelector({ imgList, selection, onChange }) {
     );
   }
   return (
-    <ImageList cols={mobile ? 3 : 6}>
+    <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
       {imgList.map((img, index) => (
         <ImageListItem key={img} onClick={handleSelect(index)}>
           <img src={img} alt={img} />
@@ -59,8 +59,11 @@ export default function ImageSelector({ imgList, selection, onChange }) {
             actionIcon={
               <Checkbox
                 size="small"
-                color="inherit"
-                className={classes.checkbox}
+                color="default"
+                classes={{
+                  root: classes.checkbox,
+                  checked: classes.checkbox,
+                }}
                 icon={<CheckCircleOutline />}
                 checkedIcon={<CheckCircle />}
                 checked={selection.includes(index)}
