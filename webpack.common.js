@@ -4,12 +4,10 @@ const WebpackUsersript = require('webpack-userscript');
 
 const dev = process.env.NODE_ENV === 'development';
 
-const FILENAME = 'ArcaRefresher';
-
 module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: `${FILENAME}.user.js`,
+    filename: `ArcaRefresher.user.js`,
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
