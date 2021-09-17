@@ -89,7 +89,7 @@ export default function ShortCut() {
       }${key.toUpperCase()}`;
 
       switch (combine) {
-        case '': {
+        case 'W': {
           e.preventDefault();
           const path = window.location.pathname.split('/');
           let writePath = '';
