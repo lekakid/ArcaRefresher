@@ -22,21 +22,26 @@ export default function ShortCut() {
     if (!articleLoaded) return null;
 
     const onArticle = (e) => {
-      const { nodeName } = e.target;
-      if (nodeName === 'INPUT' || nodeName === 'TEXTAREA') return;
+      const { target, key, shiftKey, ctrlKey } = e;
+      if (target.nodeName === 'INPUT' || target.nodeName === 'TEXTAREA') return;
+      if (!/^[A-Za-z]$/.test(key)) return;
 
-      switch (e.code) {
-        case 'KeyA': {
+      const combine = `${ctrlKey ? 'ctrl+' : ''}${
+        shiftKey ? 'shift+' : ''
+      }${key.toUpperCase()}`;
+
+      switch (combine) {
+        case 'A': {
           e.preventDefault();
           const boardURL = window.location.pathname.replace(/\/[0-9]+/, '');
           window.location.pathname = boardURL;
           break;
         }
-        case 'KeyE':
+        case 'E':
           e.preventDefault();
           document.querySelector('#rateUp').click();
           break;
-        case 'KeyR': {
+        case 'R': {
           escape.preventDefault();
           const commentForm = document.querySelector(COMMENT_TITLE);
           window.scrollTo({
@@ -45,7 +50,7 @@ export default function ShortCut() {
           });
           break;
         }
-        case 'KeyW': {
+        case 'W': {
           e.preventDefault();
           const inputForm = document.querySelector(COMMENT_SUBTITLE);
           const input = document.querySelector(
@@ -75,11 +80,16 @@ export default function ShortCut() {
     if (!boardLoaded) return null;
 
     const onBoard = (e) => {
-      const { nodeName } = e.target;
-      if (nodeName === 'INPUT' || nodeName === 'TEXTAREA') return;
+      const { target, key, shiftKey, ctrlKey } = e;
+      if (target.nodeName === 'INPUT' || target.nodeName === 'TEXTAREA') return;
+      if (!/^[A-Za-z]$/.test(key)) return;
 
-      switch (e.code) {
-        case 'KeyW': {
+      const combine = `${ctrlKey ? 'ctrl+' : ''}${
+        shiftKey ? 'shift+' : ''
+      }${key.toUpperCase()}`;
+
+      switch (combine) {
+        case '': {
           e.preventDefault();
           const path = window.location.pathname.split('/');
           let writePath = '';
@@ -92,7 +102,7 @@ export default function ShortCut() {
           window.location.pathname = writePath;
           break;
         }
-        case 'KeyE': {
+        case 'E': {
           e.preventDefault();
           if (window.location.search.indexOf('mode=best') > -1) {
             window.location.search = '';
@@ -101,7 +111,7 @@ export default function ShortCut() {
           }
           break;
         }
-        case 'KeyD': {
+        case 'D': {
           e.preventDefault();
           const active = document.querySelector('.pagination .active');
           if (active.previousElementSibling) {
@@ -109,7 +119,7 @@ export default function ShortCut() {
           }
           break;
         }
-        case 'KeyF': {
+        case 'F': {
           e.preventDefault();
           const active = document.querySelector('.pagination .active');
           if (active.nextElementSibling) {
