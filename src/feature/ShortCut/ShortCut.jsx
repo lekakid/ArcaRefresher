@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import queryString from 'query-string';
 
 import {
   ARTICLE_LOADED,
@@ -33,8 +34,9 @@ export default function ShortCut() {
       switch (combine) {
         case 'A': {
           e.preventDefault();
-          const boardURL = window.location.pathname.replace(/\/[0-9]+/, '');
-          window.location.pathname = boardURL;
+          const channelID = window.location.pathname.split('/')[2];
+          const boardPath = ['', 'b', channelID];
+          window.location.pathname = boardPath.join('/');
           break;
         }
         case 'E':
@@ -91,40 +93,41 @@ export default function ShortCut() {
       switch (combine) {
         case 'W': {
           e.preventDefault();
-          const path = window.location.pathname.split('/');
-          let writePath = '';
-          if (path[path.length - 1] === '') {
-            path[path.length - 1] = 'write';
-          } else {
-            path.push('write');
-          }
-          writePath = path.join('/');
-          window.location.pathname = writePath;
+          const channelID = window.location.pathname.split('/')[2];
+          const writePath = ['', 'b', channelID, 'write'];
+          window.location.pathname = writePath.join('/');
           break;
         }
         case 'E': {
           e.preventDefault();
-          if (window.location.search.indexOf('mode=best') > -1) {
-            window.location.search = '';
-          } else {
-            window.location.search = '?mode=best';
-          }
+          const search = queryString.parse(window.location.search);
+          search.mode = search.mode ? '' : 'best';
+          window.location.search = queryString.stringify(search, {
+            skipEmptyString: true,
+          });
           break;
         }
         case 'D': {
           e.preventDefault();
-          const active = document.querySelector('.pagination .active');
-          if (active.previousElementSibling) {
-            active.previousElementSibling.firstElementChild.click();
-          }
+          const search = queryString.parse(window.location.search, {
+            parseNumbers: true,
+          });
+          if (!search.p || search.p < 2) break;
+          search.p -= 1;
+          window.location.search = queryString.stringify(search, {
+            skipEmptyString: true,
+          });
           break;
         }
         case 'F': {
           e.preventDefault();
-          const active = document.querySelector('.pagination .active');
-          if (active.nextElementSibling) {
-            active.nextElementSibling.firstElementChild.click();
-          }
+          const search = queryString.parse(window.location.search, {
+            parseNumbers: true,
+          });
+          search.p = search.p + 1 || 2;
+          window.location.search = queryString.stringify(search, {
+            skipEmptyString: true,
+          });
           break;
         }
         default:
