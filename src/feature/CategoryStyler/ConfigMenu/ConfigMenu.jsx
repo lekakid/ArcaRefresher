@@ -7,14 +7,22 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { useParser } from 'util/Parser';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import CategoryRow from './CategoryRow';
 
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+  },
+});
+
 function ConfigMenu() {
   const { category } = useParser();
+  const classes = useStyles();
 
   return (
     <>
@@ -25,7 +33,7 @@ function ConfigMenu() {
             <ListItemText>색상 설정</ListItemText>
           </ListItem>
           <ListItem>
-            <Paper variant="outlined">
+            <Paper className={classes.root} variant="outlined">
               <Grid container>
                 {category &&
                   Object.keys(category).map((id, index) => (
