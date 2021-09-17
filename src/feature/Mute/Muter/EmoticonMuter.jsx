@@ -39,11 +39,11 @@ export default function EmoticonMuter() {
   const [board, setBoard] = useState(null);
   const [article, setArticle] = useState(null);
   const bundleList = Object.values(emoticon).reduce(
-    (acc, { bundle }) => [...acc, ...bundle],
+    (acc, { bundle }) => acc.concat(bundle),
     [],
   );
   const urlList = Object.values(emoticon).reduce(
-    (acc, { url }) => [...acc, ...url],
+    (acc, { url }) => acc.concat(url),
     [],
   );
   useStyles();

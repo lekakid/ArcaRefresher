@@ -16,8 +16,8 @@ export default function filterContent(
   const { mute: { users: arcaUser = [], keywords: arcaKeyword = [] } = {} } =
     unsafeWindow.LiveConfig || {};
   const config = {
-    user: [...new Set([...arcaUser, ...userList])],
-    keyword: [...new Set([...arcaKeyword, ...keywordList])],
+    user: [...arcaUser, ...userList],
+    keyword: [...arcaKeyword, ...keywordList],
     category: categoryList,
   };
 
