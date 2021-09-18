@@ -64,33 +64,34 @@ async function download({
 export default function Downloader({ data, onFinish }) {
   const { channelID, channelName } = useParser();
   const config = useSelector((state) => state[MODULE_ID]);
-  const articleInfo = useRef(() => getArticleInfo());
+  const articleInfo = useRef(getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (data.length === 0) return;
+    if (!articleInfo.current) return;
 
-    if (articleInfo) {
-      const flags = {
-        channelID,
-        channelName,
-        ...articleInfo,
-      }(async () => {
-        await download({
-          dataList: data,
-          onTotalProgress(current) {
-            setCur(current);
-          },
-          onFileProgress({ loaded, total }) {
-            setProgress((loaded / total) * 100);
-          },
-          flags,
-          config,
-        });
-        onFinish();
-      })();
-    }
+    const flags = {
+      ...articleInfo.current,
+      channelID,
+      channelName,
+    };
+    console.log(flags);
+    (async () => {
+      await download({
+        dataList: data,
+        onTotalProgress(current) {
+          setCur(current);
+        },
+        onFileProgress({ loaded, total }) {
+          setProgress((loaded / total) * 100);
+        },
+        flags,
+        config,
+      });
+      onFinish();
+    })();
   }, [articleInfo, channelID, channelName, config, data, onFinish]);
 
   if (cur === data.length) {
