@@ -28,6 +28,15 @@ export default () => (
     <ArticleMenu>
       <AnonymousNick.ArticleMenu />
     </ArticleMenu>
+    <ContextMenuContainer>
+      <ImageDownloader.ContextMenu />
+      <ImageSearch.ContextMenu />
+      <Memo.ContextMenu />
+      <Mute.ContextMenu.Board />
+      <Mute.ContextMenu.Emoticon />
+      <MyImage.ContextMenu />
+      <UserColor.ContextMenu />
+    </ContextMenuContainer>
     <ConfigMenu
       groupList={[
         { key: 'global', icon: <Web />, label: '전역 도구' },
@@ -53,14 +62,5 @@ export default () => (
         DataManagement,
       ]}
     />
-    <ContextMenuContainer>
-      <ImageDownloader.ContextMenu />
-      <ImageSearch.ContextMenu />
-      <Memo.ContextMenu />
-      <Mute.ContextMenu.Board />
-      <Mute.ContextMenu.Emoticon />
-      <MyImage.ContextMenu />
-      <UserColor.ContextMenu />
-    </ContextMenuContainer>
   </>
 );

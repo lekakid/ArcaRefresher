@@ -21,8 +21,8 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={browserDarkMode || darkModeClass ? dark : light}>
         <Parser />
-        <Menu />
         <Feature />
+        <Menu />
       </ThemeProvider>
     </Provider>
   );
