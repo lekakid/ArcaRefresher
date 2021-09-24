@@ -26,17 +26,26 @@ export default function MemoDialog({
     setInput(e.target.value);
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    onSubmit(input);
-    onClose();
-  }, [input, onClose, onSubmit]);
+  const handleSubmit = useCallback(
+    (e) => {
+      if (e.key && e.key !== 'Enter') return;
+
+      onSubmit(input);
+      onClose();
+    },
+    [input, onClose, onSubmit],
+  );
 
   return (
     <Dialog open={open}>
       <DialogTitle>이용자 메모</DialogTitle>
       <DialogContent>
         <Typography>저장할 메모를 작성해주세요</Typography>
-        <TextField value={input} onChange={handleChange} />
+        <TextField
+          value={input}
+          onChange={handleChange}
+          onKeyPress={handleSubmit}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit}>{input ? '저장' : '삭제'}</Button>
