@@ -27,7 +27,7 @@ import { MODULE_ID } from './ModuleInfo';
 import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
-  Comment: {
+  comment: {
     '& #comment:not(.temp-show)': {
       display: 'none',
     },
@@ -133,9 +133,9 @@ export default function ExperienceCustomizer() {
       return null;
     }
 
-    document.documentElement.classList.add(classes.Comment);
-    return () => document.documentElement.classList.remove(classes.Comment);
-  }, [classes.Comment, comment, foldComment, unfoldContainer]);
+    document.documentElement.classList.add(classes.comment);
+    return () => document.documentElement.classList.remove(classes.comment);
+  }, [classes, comment, foldComment, unfoldContainer]);
 
   useEffect(() => {
     if (!comment || !wideArea) return null;
@@ -144,11 +144,11 @@ export default function ExperienceCustomizer() {
       if (e.target.closest('form')) return;
 
       const target = e.target.closest('a, .emoticon, .btn-more, .message');
-      if (!target || !target.classList.contains('message')) return;
+      if (!target?.classList.contains('message')) return;
 
       e.preventDefault();
 
-      e.target.parentNode.querySelector('.reply-link').click();
+      target.parentNode.querySelector('.reply-link').click();
     };
 
     comment.addEventListener('click', handleClick);
