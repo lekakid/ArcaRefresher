@@ -27,6 +27,7 @@ export default () => (
   <>
     <ArticleMenu>
       <AnonymousNick.ArticleMenu />
+      <ExperienceCustom.ArticleMenu />
     </ArticleMenu>
     <ContextMenuContainer>
       <ImageDownloader.ContextMenu />
