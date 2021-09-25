@@ -50,6 +50,17 @@ export default function ImageDownloader() {
     setOpen(false);
   }, []);
 
+  useEffect(() => {
+    if (!open) return null;
+
+    const confirm = (e) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', confirm);
+
+    return () => window.removeEventListener('beforeunload', confirm);
+  }, [open]);
+
   if (!container) return null;
   return (
     <>
@@ -58,6 +69,7 @@ export default function ImageDownloader() {
           variant="outlined"
           size="small"
           startIcon={<GetApp />}
+          disabled={open}
           onClick={handleOpen}
         >
           이미지 다운로더

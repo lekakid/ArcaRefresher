@@ -79,12 +79,7 @@ export default function DownloadDialog({ open, onClose }) {
 
   if (downloader) {
     return (
-      <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>이미지 다운로드 중</DialogTitle>
-        <DialogContent>
-          <Downloader data={downloadList} onFinish={handleFinish} />
-        </DialogContent>
-      </Dialog>
+      <Downloader open={open} data={downloadList} onFinish={handleFinish} />
     );
   }
 

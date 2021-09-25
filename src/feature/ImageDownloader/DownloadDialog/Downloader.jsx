@@ -2,10 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
+  Card,
+  CardContent,
   CircularProgress,
   LinearProgress,
+  Slide,
   Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -14,6 +18,16 @@ import fetch from 'util/fetch';
 
 import { MODULE_ID } from '../ModuleInfo';
 import { getArticleInfo, replaceFlag } from '../func';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    position: 'fixed',
+    bottom: theme.spacing(4),
+    left: 'calc(50% - 250px)',
+    minWidth: 500,
+    zIndex: theme.zIndex.snackbar,
+  },
+}));
 
 async function download({
   dataList,
@@ -38,12 +52,12 @@ async function download({
           responseType: 'blob',
           onprogress: onFileProgress,
         });
-        const saveName = replaceFlag(zipImageName, {
+        const saveFilename = replaceFlag(zipImageName, {
           ...flags,
           uploadName,
           index: i,
         });
-        zip.file(`${saveName}.${ext}`, blob);
+        zip.file(`${saveFilename}.${ext}`, blob);
         break;
       } catch (error) {
         console.warn('다운로드 실패로 인한 재시도', orig, error);
@@ -61,12 +75,13 @@ async function download({
   saveAs(zipblob, `${replaceFlag(zipName, flags)}.zip`);
 }
 
-export default function Downloader({ data, onFinish }) {
+export default function Downloader({ open, data, onFinish }) {
   const { channelID, channelName } = useParser();
   const config = useSelector((state) => state[MODULE_ID]);
   const articleInfo = useRef(getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
+  const { root } = useStyles();
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -77,7 +92,6 @@ export default function Downloader({ data, onFinish }) {
       channelID,
       channelName,
     };
-    console.log(flags);
     (async () => {
       await download({
         dataList: data,
@@ -94,20 +108,29 @@ export default function Downloader({ data, onFinish }) {
     })();
   }, [articleInfo, channelID, channelName, config, data, onFinish]);
 
-  if (cur === data.length) {
-    return (
-      <Box display="flex" justifyContent="center">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
-    <Box diaplay="flex">
-      <Typography>{`다운로드 중 ${cur}/${data.length}`}</Typography>
-      <LinearProgress variant="determinate" value={(cur / data.length) * 100} />
-      <Typography>{`${Math.floor(progress)}%`}</Typography>
-      <LinearProgress variant="determinate" value={progress} />
-    </Box>
+    <Slide direction="up" in={open} mountOnEnter unmountOnExit>
+      <Card classes={{ root }}>
+        <CardContent>
+          {cur !== data.length && (
+            <>
+              <Typography>{`다운로드 중 ${cur}/${data.length}`}</Typography>
+              <LinearProgress
+                variant="determinate"
+                value={(cur / data.length) * 100}
+              />
+              <Typography>{`${Math.floor(progress)}%`}</Typography>
+              <LinearProgress variant="determinate" value={progress} />
+            </>
+          )}
+          {cur === data.length && (
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Typography>압축 파일 생성 중...</Typography>
+              <CircularProgress />
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </Slide>
   );
 }
