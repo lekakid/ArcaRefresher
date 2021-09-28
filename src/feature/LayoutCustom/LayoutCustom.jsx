@@ -62,7 +62,7 @@ const useStyles = makeStyles(
       },
     },
     HideHumorCheckbox: {
-      '& .write-body + div': {
+      '& .copyHumor': {
         display: 'none',
       },
     },
