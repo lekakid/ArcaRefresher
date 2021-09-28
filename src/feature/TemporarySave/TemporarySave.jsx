@@ -9,6 +9,11 @@ import { WRITE_LOADED } from 'core/selector';
 import { AutoSaver, SaveButton, LoadButton } from './feature';
 
 const useStyles = makeStyles({
+  '@global': {
+    '.copyHumor': {
+      float: 'none !important',
+    },
+  },
   root: {
     display: 'grid',
     gridTemplateColumns: '1fr 7rem',
