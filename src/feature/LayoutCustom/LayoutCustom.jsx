@@ -95,7 +95,7 @@ export default function LayoutCustom() {
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
         [classes.ModifiedIndicator]: !modifiedIndicator,
-        [classes.UnfoldLongComment]: !unfoldLongComment,
+        [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.HideHumorCheckbox]: hideHumorCheckbox,
       },
     ).split(' ');
