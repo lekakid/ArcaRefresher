@@ -41,8 +41,8 @@ const useStyles = makeStyles(() => ({
 export default function ArticleMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channelID, category } = useParser();
-  const { user, keyword, hideCountBar } = useSelector(
+  const { channelID, category: categoryInfo } = useParser();
+  const { user, keyword, category, hideCountBar } = useSelector(
     (state) => state[MODULE_ID],
   );
   const [board, setBoard] = useState(null);
@@ -54,14 +54,14 @@ export default function ArticleMuter() {
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    if (!category) return;
+    if (!categoryInfo) return;
 
     const tmpBoard = document.querySelector(BOARD_VIEW);
     if (!tmpBoard) return;
 
     setBoard(tmpBoard);
     const name2id = Object.fromEntries(
-      Object.entries(category).map(([key, value]) => [value, key]),
+      Object.entries(categoryInfo).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
@@ -69,7 +69,7 @@ export default function ArticleMuter() {
     countHeader.classList.add(classes.root);
     tmpBoard.insertAdjacentElement('afterbegin', countHeader);
     setCountBar(countHeader);
-  }, [classes, dispatch, boardLoaded, category]);
+  }, [classes, dispatch, boardLoaded, categoryInfo]);
 
   useEffect(() => {
     if (!board) return null;
@@ -85,6 +85,7 @@ export default function ArticleMuter() {
         category: a.querySelector('.badge')?.textContent || '',
       }));
       const categoryConfig = category[channelID] || {};
+      console.log(category);
 
       const result = filterContent(
         articleInfo,
@@ -104,7 +105,7 @@ export default function ArticleMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [board, nameToIDMap, keyword, user, category, channelID]);
+  }, [board, nameToIDMap, keyword, user, categoryInfo, channelID, category]);
 
   if (!countBar || hideCountBar) return null;
   return (

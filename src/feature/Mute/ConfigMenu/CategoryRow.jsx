@@ -10,15 +10,15 @@ import {
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useParser } from 'util/Parser';
 import { MODULE_ID } from '../ModuleInfo';
 import { setCategoryConfig } from '../slice';
 
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { channelID, category: categoryConfig } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const { channelID } = useParser();
+  const { category: categoryConfig } = useSelector((state) => state[MODULE_ID]);
   const channelConfig = { ...categoryConfig?.[channelID] };
   const { mutePreview = false, muteArticle = false } = {
     ...channelConfig?.[category],
