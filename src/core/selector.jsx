@@ -17,7 +17,6 @@ export const COMMENT_VIEW = '#comment';
 export const COMMENT_INNER_VIEW = '#comment .list-area';
 export const WRITE_VIEW = '.article-write';
 export const AUDIT_VIEW = '.board-audit-list';
-export const ARTICLE_DELETE_FORM = '.batch-delete-form';
 
 // CONTAINER ITEM SELECTOR
 export const BOARD_CATEGORIES = '.board-category a';
