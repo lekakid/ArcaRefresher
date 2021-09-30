@@ -68,7 +68,6 @@ export function swapArticle(
         BOARD_ARTICLES_WITHOUT_NOTICE,
     );
     newArticles.forEach((a) => {
-      console.log(a);
       a.classList.add(animationClass);
       articleContainer.insertBefore(a, insertPos);
       articleContainer.removeChild(articleContainer.lastChild);
