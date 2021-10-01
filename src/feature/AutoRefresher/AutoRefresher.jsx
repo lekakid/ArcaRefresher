@@ -69,9 +69,11 @@ export default function AutoRefresher() {
     if (countdown === 0) return null;
     if (pause) return null;
 
+    const param = new URL(window.location).searchParams.get("p");
+
     const timer = setInterval(async () => {
       const newArticle = await getNewArticle();
-      swapArticle(board, newArticle, classes.refreshed);
+      swapArticle(board, newArticle, classes.refreshed, param === null || param === "1");
       dispatchAREvent(EVENT_AUTOREFRESH);
     }, countdown * 1000);
 
