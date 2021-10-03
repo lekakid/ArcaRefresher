@@ -85,7 +85,6 @@ export default function ArticleMuter() {
         category: a.querySelector('.badge')?.textContent || '',
       }));
       const categoryConfig = category[channelID] || {};
-      console.log(category);
 
       const result = filterContent(
         articleInfo,

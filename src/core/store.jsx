@@ -4,7 +4,6 @@ import Config from 'menu/ConfigMenu/slice';
 import ContextMenu from 'menu/ContextMenu/slice';
 
 import AutoRefresher from 'feature/AutoRefresher/slice';
-import ArticleRemover from 'feature/ArticleRemover/slice';
 import ImageDownloader from 'feature/ImageDownloader/slice';
 import AnonymousNick from 'feature/AnonymousNick/slice';
 import Memo from 'feature/Memo/slice';
@@ -28,7 +27,6 @@ export default configureStore({
 
     // feature
     AutoRefresher,
-    ArticleRemover,
     ImageDownloader,
     AnonymousNick,
     Memo,

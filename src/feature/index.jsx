@@ -1,7 +1,6 @@
 import React from 'react';
 
 import AnonymousNick from 'feature/AnonymousNick';
-import ArticleRemover from 'feature/ArticleRemover';
 import AutoRefresher from 'feature/AutoRefresher';
 import CategoryStyler from 'feature/CategoryStyler';
 import CommentRefresh from 'feature/CommentRefresh';
@@ -21,7 +20,6 @@ export default () => (
   <>
     <AutoRefresher />
     <CommentRefresh />
-    <ArticleRemover />
     <ImageDownloader />
     <IPInfo />
     <AnonymousNick />

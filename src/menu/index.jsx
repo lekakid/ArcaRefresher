@@ -3,7 +3,6 @@ import { Description, List, Style, Web } from '@material-ui/icons';
 
 import * as ContextMenu from 'menu/ContextMenu';
 import * as AnonymousNick from 'feature/AnonymousNick';
-import * as ArticleRemover from 'feature/ArticleRemover';
 import * as AutoRefresher from 'feature/AutoRefresher';
 import * as CategoryStyler from 'feature/CategoryStyler';
 import * as ExperienceCustom from 'feature/ExperienceCustom';
@@ -50,7 +49,6 @@ export default () => (
         { ...Memo.ConfigMenu, group: 'global' },
         { ...UserColor.ConfigMenu, group: 'global' },
         { ...AutoRefresher.ConfigMenu, group: 'board' },
-        { ...ArticleRemover.ConfigMenu, group: 'board' },
         { ...CategoryStyler.ConfigMenu, group: 'board' },
         { ...ThemeCustomizer.ConfigMenu, group: 'board' },
         { ...ImageDownloader.ConfigMenu, group: 'article' },
