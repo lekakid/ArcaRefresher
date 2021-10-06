@@ -17,7 +17,7 @@ import { useParser } from 'util/Parser';
 import fetch from 'util/fetch';
 
 import { MODULE_ID } from '../ModuleInfo';
-import { getArticleInfo, replaceFlag } from '../func';
+import { getArticleInfo, replaceFormat } from '../func';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +52,7 @@ async function download({
           responseType: 'blob',
           onprogress: onFileProgress,
         });
-        const saveFilename = replaceFlag(zipImageName, {
+        const saveFilename = replaceFormat(zipImageName, {
           ...flags,
           uploadName,
           index: i,
@@ -70,9 +70,9 @@ async function download({
 
   const zipblob = await zip.generateAsync({
     type: 'blob',
-    comment: replaceFlag(zipComment, flags),
+    comment: replaceFormat(zipComment, flags),
   });
-  saveAs(zipblob, `${replaceFlag(zipName, flags)}.zip`);
+  saveAs(zipblob, `${replaceFormat(zipName, flags)}.zip`);
 }
 
 export default function Downloader({ open, data, onFinish }) {

@@ -11,8 +11,6 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { useReduxDebounce } from 'core/hooks';
-
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   setFileName,
@@ -21,6 +19,8 @@ import {
   setZipComment,
   setRetryCount,
 } from '../slice';
+import { FORMAT, LABEL } from '../format';
+import FormatSelector from './FormatSelector';
 
 function createMark(value) {
   return { value, label: `${value}회` };
@@ -33,45 +33,56 @@ function ConfigMenu() {
   const { fileName, zipName, zipImageName, zipComment, retryCount } =
     useSelector((state) => state[MODULE_ID]);
 
-  const dispatchFileName = useReduxDebounce((payload) => {
-    dispatch(setFileName(payload));
-  });
-  const dispatchZipName = useReduxDebounce((payload) => {
-    dispatch(setZipName(payload));
-  });
-  const dispatchZipImageName = useReduxDebounce((payload) => {
-    dispatch(setZipImageName(payload));
-  });
-  const dispatchZipComment = useReduxDebounce((payload) => {
-    dispatch(setZipComment(payload));
-  });
-
   const handleFileName = useCallback(
     (e) => {
-      dispatchFileName(e.target.value);
+      dispatch(setFileName(e.target.value));
     },
-    [dispatchFileName],
+    [dispatch],
+  );
+  const handleAddFormatFileName = useCallback(
+    (value) => {
+      dispatch(setFileName(`${fileName}${value}`));
+    },
+    [dispatch, fileName],
   );
 
   const handleZipName = useCallback(
     (e) => {
-      dispatchZipName(e.target.value);
+      dispatch(setZipName(e.target.value));
     },
-    [dispatchZipName],
+    [dispatch],
+  );
+  const handleAddFormatZipName = useCallback(
+    (value) => {
+      dispatch(setZipName(`${zipName}${value}`));
+    },
+    [dispatch, zipName],
   );
 
   const handleZipImageName = useCallback(
     (e) => {
-      dispatchZipImageName(e.target.value);
+      dispatch(setZipImageName(e.target.value));
     },
-    [dispatchZipImageName],
+    [dispatch],
+  );
+  const handleAddFormatZipImageName = useCallback(
+    (value) => {
+      dispatch(setZipImageName(`${zipImageName}${value}`));
+    },
+    [dispatch, zipImageName],
   );
 
   const handleZipComment = useCallback(
     (e) => {
-      dispatchZipComment(e.target.value);
+      dispatch(setZipComment(e.target.value));
     },
-    [dispatchZipComment],
+    [dispatch],
+  );
+  const handleAddFormatZipComment = useCallback(
+    (value) => {
+      dispatch(setZipComment(`${zipComment}${value}`));
+    },
+    [dispatch, zipComment],
   );
 
   const handleRetryCount = useCallback(
@@ -90,21 +101,40 @@ function ConfigMenu() {
             <ListItemText primary="우클릭 저장 시 이미지 이름" />
           </ListItem>
           <ListItem divider>
-            <TextField
-              fullWidth
-              defaultValue={fileName}
-              onChange={handleFileName}
-            />
+            <TextField fullWidth value={fileName} onChange={handleFileName} />
+            <ListItemSecondaryAction>
+              <FormatSelector
+                formatList={[
+                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL },
+                  { value: FORMAT.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT.URL, label: LABEL.URL },
+                  { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
+                ]}
+                onSelect={handleAddFormatFileName}
+              />
+            </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
             <ListItemText primary="일괄 다운로드 시 압축파일 이름" />
           </ListItem>
           <ListItem divider>
-            <TextField
-              fullWidth
-              defaultValue={zipName}
-              onChange={handleZipName}
-            />
+            <TextField fullWidth value={zipName} onChange={handleZipName} />
+            <ListItemSecondaryAction>
+              <FormatSelector
+                formatList={[
+                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT.URL, label: LABEL.URL },
+                ]}
+                onSelect={handleAddFormatZipName}
+              />
+            </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
             <ListItemText primary="일괄 다운로드 시 압축파일 내 이미지 이름" />
@@ -112,9 +142,24 @@ function ConfigMenu() {
           <ListItem divider>
             <TextField
               fullWidth
-              defaultValue={zipImageName}
+              value={zipImageName}
               onChange={handleZipImageName}
             />
+            <ListItemSecondaryAction>
+              <FormatSelector
+                formatList={[
+                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT.URL, label: LABEL.URL },
+                  { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
+                  { value: FORMAT.NUMBER, label: LABEL.NUMBER },
+                ]}
+                onSelect={handleAddFormatZipImageName}
+              />
+            </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
             <ListItemText primary="일괄 다운로드 시 압축파일 코멘트" />
@@ -125,9 +170,22 @@ function ConfigMenu() {
               variant="outlined"
               multiline
               rows={5}
-              defaultValue={zipComment}
+              value={zipComment}
               onChange={handleZipComment}
             />
+            <ListItemSecondaryAction>
+              <FormatSelector
+                formatList={[
+                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT.URL, label: LABEL.URL },
+                ]}
+                onSelect={handleAddFormatZipComment}
+              />
+            </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
             <ListItemText>재시도 횟수</ListItemText>
