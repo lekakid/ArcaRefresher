@@ -10,7 +10,7 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
 
 import { MODULE_ID } from './ModuleInfo';
-import { getArticleInfo, replaceFlag } from './func';
+import { getArticleInfo, replaceFormat } from './func';
 
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -105,7 +105,7 @@ const ContextMenu = React.forwardRef(
 
             saveAs(
               blob,
-              `${replaceFlag(fileName, {
+              `${replaceFormat(fileName, {
                 ...articleInfo.current,
                 uploadName,
               })}.${ext}`,
