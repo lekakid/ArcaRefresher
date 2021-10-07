@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import queryString from 'query-string';
 
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
@@ -35,7 +36,10 @@ export default function AutoRefresher() {
   const classes = useStyles();
 
   useEffect(() => {
-    if (boardLoaded)
+    const search = queryString.parse(window.location.search, {
+      parseNumbers: true,
+    });
+    if (boardLoaded && (!search.p || search.p === 1))
       setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
   }, [boardLoaded]);
 
@@ -69,11 +73,9 @@ export default function AutoRefresher() {
     if (countdown === 0) return null;
     if (pause) return null;
 
-    const param = new URL(window.location).searchParams.get("p");
-
     const timer = setInterval(async () => {
       const newArticle = await getNewArticle();
-      swapArticle(board, newArticle, classes.refreshed, param === null || param === "1");
+      swapArticle(board, newArticle, classes.refreshed);
       dispatchAREvent(EVENT_AUTOREFRESH);
     }, countdown * 1000);
 
