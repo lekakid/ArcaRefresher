@@ -40,7 +40,6 @@ export function swapArticle(
   articleContainer,
   refreshedArticles,
   animationClass,
-  firstPage
 ) {
   const insertedArticles = [
     ...articleContainer.querySelectorAll(BOARD_ARTICLES),
@@ -62,17 +61,14 @@ export function swapArticle(
     return !exist;
   });
 
-  if (firstPage) {
-    // Insert new articles
-    const insertPos = articleContainer.querySelector(
-        BOARD_ARTICLES_WITHOUT_NOTICE,
-    );
-    newArticles.forEach((a) => {
-      a.classList.add(animationClass);
-      articleContainer.insertBefore(a, insertPos);
-      articleContainer.removeChild(articleContainer.lastChild);
-    });
-  }
+  const insertPos = articleContainer.querySelector(
+    BOARD_ARTICLES_WITHOUT_NOTICE,
+  );
+  newArticles.forEach((a) => {
+    a.classList.add(animationClass);
+    articleContainer.insertBefore(a, insertPos);
+    articleContainer.removeChild(articleContainer.lastChild);
+  });
 
   // calibrate preview image, time zone
   const calibrateArticles = [
