@@ -64,6 +64,23 @@ function EmoticonMuter() {
     if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
   }, [articleLoaded]);
 
+  useEffect(() => {
+    const toastbox = document.querySelector('#toastbox');
+    const observer = new MutationObserver(() => {
+      toastbox.querySelectorAll('img').forEach((img) => {
+        const url = img.src.replace('https:', '');
+        if (filter.url.indexOf(url) > -1) {
+          img.parentNode.classList.add('filtered-emoticon');
+        }
+      });
+    });
+    observer.observe(toastbox, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, [filter]);
 
   useEffect(() => {
     if (!article) return null;
