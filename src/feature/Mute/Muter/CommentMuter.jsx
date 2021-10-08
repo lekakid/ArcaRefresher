@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ArticleMuter() {
+export default function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const { user, keyword, hideCountBar, muteIncludeReply } = useSelector(
