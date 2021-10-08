@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
 
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
 import {
@@ -15,7 +15,7 @@ import { useElementQuery } from 'core/hooks';
 
 import { MODULE_ID } from '../ModuleInfo';
 
-const useStyles = makeStyles(() => ({
+const style = {
   '@global': {
     '.filtered-emoticon': {
       width: 'auto !important',
@@ -33,16 +33,15 @@ const useStyles = makeStyles(() => ({
       display: 'none !important',
     },
   },
-}));
+};
 
-export default function EmoticonMuter() {
+function EmoticonMuter() {
   const { emoticon } = useSelector((state) => state[MODULE_ID]);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const [board, setBoard] = useState(null);
   const [article, setArticle] = useState(null);
   const [filter, setFilter] = useState({});
-  useStyles();
 
   useEffect(() => {
     setFilter(
@@ -127,3 +126,5 @@ export default function EmoticonMuter() {
 
   return null;
 }
+
+export default withStyles(style)(EmoticonMuter);
