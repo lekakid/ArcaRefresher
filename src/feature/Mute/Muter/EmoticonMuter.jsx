@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
 
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
 import {
@@ -15,7 +15,7 @@ import { useElementQuery } from 'core/hooks';
 
 import { MODULE_ID } from '../ModuleInfo';
 
-const useStyles = makeStyles(() => ({
+const style = {
   '@global': {
     '.filtered-emoticon': {
       width: 'auto !important',
@@ -29,24 +29,32 @@ const useStyles = makeStyles(() => ({
     '.filtered-emoticon > img, .filtered-emoticon > video': {
       display: 'none !important',
     },
+    '.filtered-preview': {
+      display: 'none !important',
+    },
   },
-}));
+};
 
-export default function EmoticonMuter() {
+function EmoticonMuter() {
   const { emoticon } = useSelector((state) => state[MODULE_ID]);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const [board, setBoard] = useState(null);
   const [article, setArticle] = useState(null);
-  const bundleList = Object.values(emoticon).reduce(
-    (acc, { bundle }) => acc.concat(bundle),
-    [],
-  );
-  const urlList = Object.values(emoticon).reduce(
-    (acc, { url }) => acc.concat(url),
-    [],
-  );
-  useStyles();
+  const [filter, setFilter] = useState({});
+
+  useEffect(() => {
+    setFilter(
+      Object.values(emoticon).reduce(
+        (acc, { bundle, url }) => {
+          acc.bundle.push(...bundle);
+          acc.url.push(...url);
+          return acc;
+        },
+        { bundle: [], url: [] },
+      ),
+    );
+  }, [emoticon]);
 
   useEffect(() => {
     if (boardLoaded) setBoard(document.querySelector(BOARD_VIEW));
@@ -55,6 +63,24 @@ export default function EmoticonMuter() {
   useEffect(() => {
     if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
   }, [articleLoaded]);
+
+  useEffect(() => {
+    const toastbox = document.querySelector('#toastbox');
+    const observer = new MutationObserver(() => {
+      toastbox.querySelectorAll('img').forEach((img) => {
+        const url = img.src.replace('https:', '');
+        if (filter.url.indexOf(url) > -1) {
+          img.parentNode.classList.add('filtered-emoticon');
+        }
+      });
+    });
+    observer.observe(toastbox, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, [filter]);
 
   useEffect(() => {
     if (!article) return null;
@@ -70,7 +96,7 @@ export default function EmoticonMuter() {
         // eslint-disable-next-line no-unused-expressions
         i.closest('a')?.classList.toggle(
           'filtered-emoticon',
-          urlList.indexOf(src.replace('https:', '')) > -1,
+          filter.url.indexOf(src.replace('https:', '')) > -1,
         );
       });
     };
@@ -81,7 +107,7 @@ export default function EmoticonMuter() {
         const id = Number(c.dataset.id);
         c.parentNode.classList.toggle(
           'filtered-emoticon',
-          bundleList.indexOf(id) > -1,
+          filter.bundle.indexOf(id) > -1,
         );
       });
     };
@@ -94,7 +120,7 @@ export default function EmoticonMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_COMMENT_REFRESH, muteComment);
     };
-  }, [article, bundleList, urlList]);
+  }, [article, filter]);
 
   useEffect(() => {
     if (!board) return;
@@ -105,13 +131,17 @@ export default function EmoticonMuter() {
     images.forEach((e) => {
       const url = e.matches('img')
         ? e.src.replace('https:', '').replace('?type=list', '')
-        : e.textContent.match(/\/\/.+\?/g)[0].replace('?', '');
+        : e.textContent
+            .match(/(\/\/.+)?type=list/g)[0]
+            .replace('?type=list', '');
 
-      if (urlList.indexOf(url) > -1) {
-        e.parentNode.remove();
+      if (filter.url.indexOf(url) > -1) {
+        e.parentNode.classList.add('filtered-preview');
       }
     });
-  }, [board, urlList]);
+  }, [board, filter]);
 
   return null;
 }
+
+export default withStyles(style)(EmoticonMuter);

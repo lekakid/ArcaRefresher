@@ -4,7 +4,7 @@ import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
 import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { setClose } from 'menu/ContextMenu/slice';
 
 import { getEmoticonInfo } from '../func';
 import { addEmoticon } from '../slice';
@@ -53,7 +53,6 @@ const Emoticon = React.forwardRef(
           );
         }
 
-        dispatch(setContextSnack({ msg: '뮤트되었습니다.', time: 3000 }));
         dispatch(setClose());
       })();
     }, [data, dispatch]);
