@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -32,6 +32,7 @@ export default function AutoRefresher() {
   const { countdown, showProgress } = useSelector((state) => state[MODULE_ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState(false);
+  const sockCount = useRef(0);
 
   const classes = useStyles();
 
@@ -42,6 +43,25 @@ export default function AutoRefresher() {
     if (boardLoaded && (!search.p || search.p === 1))
       setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
   }, [boardLoaded]);
+
+  // 웹 소켓으로 새로고침 트래픽 감소
+  useEffect(() => {
+    if (!board) return;
+
+    const { protocol, host, pathname, search } = window.location;
+
+    const sock = new WebSocket(
+      `ws${protocol === 'https:' ? 's' : ''}://${host}/arcalive`,
+      'arcalive',
+    );
+    sock.onopen = () => {
+      sock.send('hello');
+      sock.send(`c|${pathname}${search}`);
+    };
+    sock.onmessage = (e) => {
+      if (e.data === 'na') sockCount.current += 1;
+    };
+  }, [board]);
 
   useEffect(() => {
     if (!board) return null;
@@ -74,9 +94,12 @@ export default function AutoRefresher() {
     if (pause) return null;
 
     const timer = setInterval(async () => {
+      if (sockCount.current === 0) return;
+
       const newArticle = await getNewArticle();
       swapArticle(board, newArticle, classes.refreshed);
       dispatchAREvent(EVENT_AUTOREFRESH);
+      sockCount.current = 0;
     }, countdown * 1000);
 
     return () => clearInterval(timer);
