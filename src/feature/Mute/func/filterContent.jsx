@@ -55,7 +55,10 @@ export default function filterContent(
       element.classList.remove('block-preview');
     }
 
-    if (element.classList.contains('deleted')) {
+    const commentTarget = element.matches('.comment-wrapper')
+      ? element.firstElementChild
+      : element;
+    if (commentTarget.classList.contains('deleted')) {
       element.classList.add('filtered', 'filtered-deleted');
       count.deleted += 1;
       count.all += 1;

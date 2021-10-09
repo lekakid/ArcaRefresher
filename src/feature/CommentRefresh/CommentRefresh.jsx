@@ -63,12 +63,11 @@ export default function CommentRefresh() {
 
     const newComments = await getNewComment();
     if (newComments) {
-      comment.replaceWith(newComments);
+      comment.innerHTML = newComments.innerHTML;
       newComments.querySelectorAll('time').forEach((time) => {
         // eslint-disable-next-line no-param-reassign
         time.textContent = getDateStr(time.dateTime, 'year-month-day hh:mm:ss');
       });
-      setComment(newComments);
       dispatchAREvent(EVENT_COMMENT_REFRESH);
     }
   }, [comment]);
