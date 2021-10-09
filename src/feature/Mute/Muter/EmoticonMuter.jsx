@@ -10,6 +10,7 @@ import {
   BOARD_LOADED,
   BOARD_VIEW,
   COMMENT_EMOTICON,
+  TOASTBOX,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
@@ -39,6 +40,7 @@ function EmoticonMuter() {
   const { emoticon } = useSelector((state) => state[MODULE_ID]);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const toastboxLoaded = useElementQuery();
   const [board, setBoard] = useState(null);
   const [article, setArticle] = useState(null);
   const [filter, setFilter] = useState({});
@@ -65,7 +67,9 @@ function EmoticonMuter() {
   }, [articleLoaded]);
 
   useEffect(() => {
-    const toastbox = document.querySelector('#toastbox');
+    if (!toastboxLoaded) return null;
+
+    const toastbox = document.querySelector(TOASTBOX);
     const observer = new MutationObserver(() => {
       toastbox.querySelectorAll('img').forEach((img) => {
         const url = img.src.replace('https:', '');
@@ -80,7 +84,7 @@ function EmoticonMuter() {
     });
 
     return () => observer.disconnect();
-  }, [filter]);
+  }, [filter, toastboxLoaded]);
 
   useEffect(() => {
     if (!article) return null;
