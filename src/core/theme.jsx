@@ -9,6 +9,12 @@ const overrides = {
   },
 };
 
+const props = {
+  MuiSwitch: {
+    color: 'primary',
+  },
+};
+
 const light = createTheme(
   {
     palette: {
@@ -25,30 +31,34 @@ const light = createTheme(
       },
     },
     overrides,
+    props,
   },
   koKR,
 );
 
-const dark = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#242424',
+const dark = createTheme(
+  {
+    palette: {
+      type: 'dark',
+      primary: {
+        main: '#f8f9fa',
+      },
+      secondary: {
+        main: '#242424',
+      },
+      background: {
+        default: '#111',
+        paper: '#222',
+      },
+      label: {
+        background: '#fafafa',
+        text: '#212121',
+      },
     },
-    secondary: {
-      main: '#f8f9fa',
-    },
-    background: {
-      default: '#111',
-      paper: '#222',
-    },
-    label: {
-      background: '#fafafa',
-      text: '#212121',
-    },
+    overrides,
+    props,
   },
-  overrides,
   koKR,
-});
+);
 
 export { light, dark };
