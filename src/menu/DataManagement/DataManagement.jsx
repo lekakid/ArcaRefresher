@@ -40,8 +40,8 @@ function DataManagement() {
 
   const handleExport = useCallback(() => {
     const data = exportValues();
-    const file = new Blob([data], { type: 'text/plain' });
-    saveAs(file, 'settings.txt');
+    const file = new Blob([data], { type: 'application/json' });
+    saveAs(file, 'settings.json');
   }, []);
 
   return (
@@ -53,7 +53,7 @@ function DataManagement() {
             <input
               ref={inputRef}
               type="file"
-              accept="text/plain"
+              accept="application/json"
               onChange={handleFileSelect}
               style={{ display: 'none' }}
             />
