@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import uuid from 'react-uuid';
 
 import {
   addAREvent,
@@ -11,21 +10,33 @@ import {
 } from 'core/event';
 import { AuthorLabel } from 'component';
 import { USER_INFO } from 'core/selector';
+import { useElementQuery } from 'core/hooks';
 import { getUserID } from 'util/user';
 
 import { MODULE_ID } from './ModuleInfo';
 
+function getKey(element, index) {
+  const comment = element.closest('div.comment-wrapper');
+  if (comment) return comment.id;
+
+  const article = element.closest('a.vrow');
+  if (article) return `a_${article.pathname.split('/')[3]}`;
+
+  return `$.${index}`;
+}
+
 function MemoList() {
   const { memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
+  const existUserInfo = useElementQuery(USER_INFO);
 
   useLayoutEffect(() => {
+    if (!existUserInfo) return () => {};
+
     const appendMemo = () => {
-      const list = [...document.querySelectorAll(USER_INFO)].map((e) => {
-        const key = e.dataset.key || uuid();
-        // eslint-disable-next-line no-param-reassign
-        if (!e.dataset.key) e.dataset.key = key;
-        const id = getUserID(e);
+      const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
+        const key = getKey(e, index);
+        const id = getUserID(e, index);
         const container =
           e.querySelector('.memo') || document.createElement('span');
         if (!container.parentNode) {
@@ -38,16 +49,15 @@ function MemoList() {
 
       setInfoList(list);
     };
-    window.addEventListener('load', appendMemo);
+    appendMemo();
     addAREvent(EVENT_AUTOREFRESH, appendMemo);
     addAREvent(EVENT_COMMENT_REFRESH, appendMemo);
 
     return () => {
-      window.removeEventListener('load', appendMemo);
       removeAREvent(EVENT_AUTOREFRESH, appendMemo);
       removeAREvent(EVENT_COMMENT_REFRESH, appendMemo);
     };
-  }, []);
+  }, [existUserInfo]);
 
   return (
     <>
