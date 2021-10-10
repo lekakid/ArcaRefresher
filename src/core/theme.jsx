@@ -29,26 +29,28 @@ const light = createTheme(
   koKR,
 );
 
-const dark = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#242424',
+const dark = createTheme(
+  {
+    palette: {
+      type: 'dark',
+      primary: {
+        main: '#242424',
+      },
+      secondary: {
+        main: '#f8f9fa',
+      },
+      background: {
+        default: '#111',
+        paper: '#222',
+      },
+      label: {
+        background: '#fafafa',
+        text: '#212121',
+      },
     },
-    secondary: {
-      main: '#f8f9fa',
-    },
-    background: {
-      default: '#111',
-      paper: '#222',
-    },
-    label: {
-      background: '#fafafa',
-      text: '#212121',
-    },
+    overrides,
   },
-  overrides,
   koKR,
-});
+);
 
 export { light, dark };
