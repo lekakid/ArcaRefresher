@@ -18,13 +18,13 @@ import UserColor from 'feature/UserColor';
 
 export default () => (
   <>
+    <LayoutCustom />
     <AutoRefresher />
     <CommentRefresh />
     <ImageDownloader />
     <IPInfo />
     <AnonymousNick />
     <Memo />
-    <LayoutCustom />
     <ExperienceCustom />
     <TemporarySave />
     <Mute />
