@@ -9,6 +9,12 @@ const overrides = {
   },
 };
 
+const props = {
+  MuiSwitch: {
+    color: 'primary',
+  },
+};
+
 const light = createTheme(
   {
     palette: {
@@ -25,6 +31,7 @@ const light = createTheme(
       },
     },
     overrides,
+    props,
   },
   koKR,
 );
@@ -34,10 +41,10 @@ const dark = createTheme(
     palette: {
       type: 'dark',
       primary: {
-        main: '#242424',
+        main: '#f8f9fa',
       },
       secondary: {
-        main: '#f8f9fa',
+        main: '#242424',
       },
       background: {
         default: '#111',
@@ -49,6 +56,7 @@ const dark = createTheme(
       },
     },
     overrides,
+    props,
   },
   koKR,
 );
