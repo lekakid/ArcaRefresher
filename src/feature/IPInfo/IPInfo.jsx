@@ -10,20 +10,10 @@ import {
 import { AuthorLabel } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserIP } from 'util/user';
+import { getUserIP, getKey } from 'util/user';
 
 import DB from './ip';
 import { MODULE_ID } from './ModuleInfo';
-
-function getKey(element, index) {
-  const comment = element.closest('div.comment-wrapper');
-  if (comment) return comment.id;
-
-  const article = element.closest('a.vrow');
-  if (article) return `a_${article.pathname.split('/')[3]}`;
-
-  return `$.${index}`;
-}
 
 const useStyles = makeStyles(
   {
