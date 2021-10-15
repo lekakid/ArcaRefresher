@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import uuid from 'react-uuid';
 import { makeStyles } from '@material-ui/styles';
 
 import {
@@ -9,11 +8,22 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { AuthorLabel } from 'component';
-import { USER_INFO } from 'core/selector';
+import { USER_INFO, FULL_LOADED } from 'core/selector';
+import { useElementQuery } from 'core/hooks';
 import { getUserIP } from 'util/user';
 
 import DB from './ip';
 import { MODULE_ID } from './ModuleInfo';
+
+function getKey(element, index) {
+  const comment = element.closest('div.comment-wrapper');
+  if (comment) return comment.id;
+
+  const article = element.closest('a.vrow');
+  if (article) return `a_${article.pathname.split('/')[3]}`;
+
+  return `$.${index}`;
+}
 
 const useStyles = makeStyles(
   {
@@ -35,15 +45,14 @@ const useStyles = makeStyles(
 
 export default function IPInfo() {
   const [infoList, setInfoList] = useState([]);
+  const loaded = useElementQuery(FULL_LOADED);
   const classes = useStyles();
 
   useEffect(() => {
     const refreshUserInfo = () => {
       const list = [...document.querySelectorAll(USER_INFO)]
-        .map((e) => {
-          const key = e.dataset.key || uuid();
-          // eslint-disable-next-line no-param-reassign
-          if (!e.dataset.key) e.dataset.key = key;
+        .map((e, index) => {
+          const key = getKey(e, index);
           const ip = getUserIP(e);
           if (!ip) return null;
 
@@ -64,10 +73,10 @@ export default function IPInfo() {
 
       setInfoList(list);
     };
-    window.addEventListener('load', refreshUserInfo);
+    if (loaded) refreshUserInfo();
     addAREvent(EVENT_AUTOREFRESH, refreshUserInfo);
     addAREvent(EVENT_COMMENT_REFRESH, refreshUserInfo);
-  }, []);
+  }, [loaded]);
 
   return (
     <>
