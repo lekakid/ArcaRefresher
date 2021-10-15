@@ -85,7 +85,7 @@ export default function ConfigMenu({ groupList, menuList }) {
         onClose={handleConfigClose}
       >
         <Container maxWidth="md">
-          <AppBar position="fixed">
+          <AppBar color="secondary" position="fixed">
             <Toolbar>
               {mobile && (
                 <IconButton
