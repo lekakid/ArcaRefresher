@@ -51,3 +51,13 @@ export function getUserIP(infoElement) {
     return '';
   }
 }
+
+export function getKey(element, index) {
+  const comment = element.closest('div.comment-wrapper');
+  if (comment) return comment.id;
+
+  const article = element.closest('a.vrow');
+  if (article) return `a_${article.pathname.split('/')[3]}`;
+
+  return `$.${index}`;
+}
