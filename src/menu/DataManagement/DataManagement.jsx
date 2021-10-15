@@ -1,5 +1,11 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   List,
   ListItem,
   ListItemSecondaryAction,
@@ -10,11 +16,13 @@ import {
 import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
-import { importValues, exportValues } from 'core/gm';
+import { importValues, exportValues, resetValues } from 'core/gm';
 import { ID, NAME } from './meta';
 
 function DataManagement() {
   const inputRef = useRef();
+  const [open, setOpen] = useState(false);
+
   const handleImport = useCallback(() => {
     inputRef.current.click();
   }, []);
@@ -44,6 +52,19 @@ function DataManagement() {
     saveAs(file, 'settings.txt');
   }, []);
 
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    resetValues();
+    window.location.reload();
+  }, []);
+
+  const handleCancle = useCallback(() => {
+    setOpen(false);
+  }, []);
+
   return (
     <>
       <Typography variant="subtitle1">{NAME}</Typography>
@@ -62,14 +83,34 @@ function DataManagement() {
               <Launch />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleExport}>
+          <ListItem divider button onClick={handleExport}>
             <ListItemText primary="설정 내보내기" />
+            <ListItemSecondaryAction>
+              <Launch />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleOpen}>
+            <ListItemText primary="설정 초기화" />
             <ListItemSecondaryAction>
               <Launch />
             </ListItemSecondaryAction>
           </ListItem>
         </List>
       </Paper>
+      <Dialog open={open}>
+        <DialogTitle>초기화 재확인</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            확인을 누르면 모든 설정이 초기화됩니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={handleReset}>
+            확인
+          </Button>
+          <Button onClick={handleCancle}>취소</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
