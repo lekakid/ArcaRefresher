@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import uuid from 'react-uuid';
 import { makeStyles } from '@material-ui/core';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserInfo } from 'util/user';
+import { getUserInfo, getKey } from 'util/user';
 
 import { MODULE_ID } from './ModuleInfo';
 import Label from './Label';
@@ -32,10 +31,8 @@ function getInfoList({ prefixList, suffixList, extraPrefix }) {
     return nickTable[id];
   };
 
-  return [...document.querySelectorAll(ARTICLE_USER_INFO)].map((e) => {
-    const key = e.dataset.key || uuid();
-    // eslint-disable-next-line no-param-reassign
-    if (!e.dataset.key) e.dataset.key = key;
+  return [...document.querySelectorAll(ARTICLE_USER_INFO)].map((e, index) => {
+    const key = getKey(e, index);
     const id = getUserInfo(e);
     const nick = getAnonymousNick(id);
     const container =
