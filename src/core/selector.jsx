@@ -6,6 +6,7 @@ export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';
 export const COMMENT_LOADED = '.article-wrapper + div.btns-board';
 export const WRITE_LOADED = '.fr-box';
 export const AUDIT_LOADED = '.board-audit-list + a.btn';
+export const FULL_LOADED = 'footer';
 
 // CONTAINER SELECTOR
 export const NAVIGATION_MENU = 'ul.navbar-nav';
