@@ -9,10 +9,12 @@ import {
   Slider,
   TextField,
   Typography,
+  Switch,
 } from '@material-ui/core';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
+  toggleEnable,
   setFileName,
   setZipName,
   setZipImageName,
@@ -30,8 +32,12 @@ const retryMarks = [createMark(1), createMark(2), createMark(3)];
 
 function ConfigMenu() {
   const dispatch = useDispatch();
-  const { fileName, zipName, zipImageName, zipComment, retryCount } =
+  const { enabled, fileName, zipName, zipImageName, zipComment, retryCount } =
     useSelector((state) => state[MODULE_ID]);
+
+  const handleEnable = useCallback(() => {
+    dispatch(toggleEnable());
+  }, [dispatch]);
 
   const handleFileName = useCallback(
     (e) => {
@@ -97,6 +103,12 @@ function ConfigMenu() {
       <Typography variant="subtitle1">{MODULE_NAME}</Typography>
       <Paper>
         <List>
+          <ListItem divider button onClick={handleEnable}>
+            <ListItemText primary="사용" />
+            <ListItemSecondaryAction>
+              <Switch checked={enabled} onClick={handleEnable} />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem>
             <ListItemText primary="우클릭 저장 시 이미지 이름" />
           </ListItem>
