@@ -9,7 +9,7 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { AuthorLabel } from 'component';
-import { USER_INFO } from 'core/selector';
+import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserID } from 'util/user';
 
@@ -28,15 +28,13 @@ function getKey(element, index) {
 function MemoList() {
   const { memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
-  const existUserInfo = useElementQuery(USER_INFO);
+  const loaded = useElementQuery(FULL_LOADED);
 
   useLayoutEffect(() => {
-    if (!existUserInfo) return () => {};
-
     const appendMemo = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getKey(e, index);
-        const id = getUserID(e, index);
+        const id = getUserID(e);
         const container =
           e.querySelector('.memo') || document.createElement('span');
         if (!container.parentNode) {
@@ -49,7 +47,7 @@ function MemoList() {
 
       setInfoList(list);
     };
-    appendMemo();
+    if (loaded) appendMemo();
     addAREvent(EVENT_AUTOREFRESH, appendMemo);
     addAREvent(EVENT_COMMENT_REFRESH, appendMemo);
 
@@ -57,7 +55,7 @@ function MemoList() {
       removeAREvent(EVENT_AUTOREFRESH, appendMemo);
       removeAREvent(EVENT_COMMENT_REFRESH, appendMemo);
     };
-  }, [existUserInfo]);
+  }, [loaded]);
 
   return (
     <>
