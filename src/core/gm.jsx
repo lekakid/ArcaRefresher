@@ -50,3 +50,12 @@ export function importValues(JSONString) {
     GM_setValue(key, value);
   });
 }
+
+/**
+ * 모든 설정 값을 초기화합니다.
+ */
+export function resetValues() {
+  const values = GM_listValues();
+
+  values.forEach((v) => GM_deleteValue(v));
+}
