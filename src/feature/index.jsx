@@ -19,6 +19,7 @@ import UserColor from 'feature/UserColor';
 export default () => (
   <>
     <LayoutCustom />
+    <ThemeCustomizer />
     <AutoRefresher />
     <CommentRefresh />
     <ImageDownloader />
@@ -32,6 +33,5 @@ export default () => (
     <CategoryStyler />
     <UserColor />
     <ShortCut />
-    <ThemeCustomizer />
   </>
 );
