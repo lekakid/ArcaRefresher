@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
@@ -8,9 +8,12 @@ import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
 
+import { MODULE_ID } from './ModuleInfo';
+
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ContextMenu(_props, ref) {
+    const { saucenaoBypass } = useSelector((state) => state[MODULE_ID]);
     const dispatch = useDispatch();
 
     const trigger = useCallback(
@@ -42,6 +45,12 @@ const ContextMenu = React.forwardRef(
     }, [data, dispatch]);
 
     const handleSauceNao = useCallback(() => {
+      if (!saucenaoBypass) {
+        window.open(`https://saucenao.com/search.php?db=999&url=${data.orig}`);
+        dispatch(setClose());
+        return;
+      }
+
       (async () => {
         try {
           dispatch(setClose());
@@ -99,7 +108,7 @@ const ContextMenu = React.forwardRef(
           console.error(error);
         }
       })();
-    }, [dispatch, data]);
+    }, [saucenaoBypass, data, dispatch]);
 
     const handleTwigaten = useCallback(() => {
       (async () => {
