@@ -52,6 +52,7 @@ export default () => (
         { ...CategoryStyler.ConfigMenu, group: 'board' },
         { ...ThemeCustomizer.ConfigMenu, group: 'board' },
         { ...ImageDownloader.ConfigMenu, group: 'article' },
+        { ...ImageSearch.ConfigMenu, group: 'article' },
         { ...MyImage.ConfigMenu, group: 'article' },
         { ...TemporarySave.ConfigMenu, group: 'article' },
         { ...LayoutCustom.ConfigMenu, group: 'uiux' },
