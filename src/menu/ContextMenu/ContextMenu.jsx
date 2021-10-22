@@ -8,7 +8,10 @@ import { setClose } from './slice';
 
 export default function ContextMenu({ children }) {
   const dispatch = useDispatch();
-  const { enabled, open } = useSelector((state) => state[MODULE_ID]);
+  const {
+    config: { enabled },
+    open,
+  } = useSelector((state) => state[MODULE_ID]);
   const [mousePos, setMousePos] = useState([]);
 
   useEffect(() => {

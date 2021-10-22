@@ -48,7 +48,7 @@ export default function ExperienceCustomizer() {
     blockMediaNewWindow,
     ratedownGuard,
     foldComment,
-    wideArea,
+    wideClickArea,
   } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
@@ -138,7 +138,7 @@ export default function ExperienceCustomizer() {
   }, [classes, comment, foldComment, unfoldContainer]);
 
   useEffect(() => {
-    if (!comment || !wideArea) return null;
+    if (!comment || !wideClickArea) return null;
 
     const handleClick = (e) => {
       if (e.target.closest('form')) return;
@@ -153,7 +153,7 @@ export default function ExperienceCustomizer() {
 
     comment.addEventListener('click', handleClick);
     return () => comment.removeEventListener('click', handleClick);
-  }, [comment, wideArea]);
+  }, [comment, wideClickArea]);
 
   const handleConfirm = useCallback(() => {
     setConfirm(IGNORE);

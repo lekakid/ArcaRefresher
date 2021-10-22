@@ -16,7 +16,9 @@ import { setAutoTime } from '../slice';
 
 function ConfigMenu() {
   const dispatch = useDispatch();
-  const { autoSaveTime } = useSelector((state) => state[MODULE_ID]);
+  const {
+    config: { autoSaveTime },
+  } = useSelector((state) => state[MODULE_ID]);
 
   const handleSaveTime = useCallback(
     (e) => {

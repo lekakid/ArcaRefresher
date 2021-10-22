@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -11,26 +11,28 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { setEnable } from '../slice';
+import { toggleEnable } from '../slice';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 function ConfigMenu() {
-  const { enabled } = useSelector((state) => state[MODULE_ID]);
+  const {
+    config: { enabled },
+  } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 
-  const handleTestMode = (e) => {
-    dispatch(setEnable(e.target.checked));
-  };
+  const handleEnable = useCallback(() => {
+    dispatch(toggleEnable());
+  }, [dispatch]);
 
   return (
     <>
       <Typography variant="subtitle1">{MODULE_NAME}</Typography>
       <Paper>
         <List>
-          <ListItem button onClick={handleTestMode}>
+          <ListItem button onClick={handleEnable}>
             <ListItemText>사용</ListItemText>
             <ListItemSecondaryAction>
-              <Switch checked={enabled} onChange={handleTestMode} />
+              <Switch checked={enabled} onClick={handleEnable} />
             </ListItemSecondaryAction>
           </ListItem>
         </List>

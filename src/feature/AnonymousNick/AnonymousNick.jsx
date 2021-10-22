@@ -60,9 +60,10 @@ const useStyles = makeStyles(
 );
 
 export default function AnonymousNick() {
-  const { show, prefixList, suffixList, extraPrefix } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const {
+    config: { prefixList, suffixList, extraPrefix },
+    show,
+  } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 

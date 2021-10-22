@@ -80,9 +80,9 @@ function CustomToolbar({
 
 export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
-  const { tempArticleList, importTitle } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const {
+    config: { tempArticleList, importTitle },
+  } = useSelector((state) => state[MODULE_ID]);
   const rows = Object.keys(tempArticleList).map((key, index) => ({
     id: index,
     title: tempArticleList[key].title,

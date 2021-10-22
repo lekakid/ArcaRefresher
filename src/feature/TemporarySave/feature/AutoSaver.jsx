@@ -6,7 +6,10 @@ import { saveArticle } from '../slice';
 
 export default function AutoSaver({ editor }) {
   const dispatch = useDispatch();
-  const { loadOpen, autoSaveTime } = useSelector((state) => state[MODULE_ID]);
+  const {
+    config: { autoSaveTime },
+    loadOpen,
+  } = useSelector((state) => state[MODULE_ID]);
 
   useEffect(() => {
     if (autoSaveTime === 0 || loadOpen) return null;

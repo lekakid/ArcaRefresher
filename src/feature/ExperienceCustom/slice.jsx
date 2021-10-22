@@ -1,22 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-// Board
-const OPEN_ARTICLE = { key: 'openNewWindow', defaultValue: false };
-const BLOCK_MEDIA = { key: 'blockImageNewWindow', defaultValue: false };
-// Article
-const RATEDOWN_GUARD = { key: 'blockRatedown', defaultValue: false };
-// Comment
-const FOLD_COMMENT = { key: 'foldComment', defaultValue: false };
-const WIDE_AREA = { key: 'wideCommentArea', defaultValue: true };
+const defaultConfigState = {
+  openArticleNewWindow: false,
+  blockMediaNewWindow: false,
+  ratedownGuard: false,
+  foldComment: false,
+  wideClickArea: true,
+};
 
 const initialState = {
-  openArticleNewWindow: getValue(OPEN_ARTICLE),
-  blockMediaNewWindow: getValue(BLOCK_MEDIA),
-  ratedownGuard: getValue(RATEDOWN_GUARD),
-  foldComment: getValue(FOLD_COMMENT),
-  wideArea: getValue(WIDE_AREA),
+  ...defaultConfigState,
+  ...GM_getValue(MODULE_ID),
 };
 
 export const slice = createSlice({
@@ -25,23 +20,23 @@ export const slice = createSlice({
   reducers: {
     toggleArticleNewWindow(state) {
       state.openArticleNewWindow = !state.openArticleNewWindow;
-      setValue(OPEN_ARTICLE, state.openArticleNewWindow);
+      GM_setValue(MODULE_ID, state);
     },
     toggleMediaNewWindow(state) {
       state.blockMediaNewWindow = !state.blockMediaNewWindow;
-      setValue(BLOCK_MEDIA, state.blockMediaNewWindow);
+      GM_setValue(MODULE_ID, state);
     },
     toggleRateDownGuard(state) {
       state.ratedownGuard = !state.ratedownGuard;
-      setValue(RATEDOWN_GUARD, state.ratedownGuard);
+      GM_setValue(MODULE_ID, state);
     },
     toggleComment(state) {
       state.foldComment = !state.foldComment;
-      setValue(FOLD_COMMENT, state.foldComment);
+      GM_setValue(MODULE_ID, state);
     },
     toggleWideArea(state) {
-      state.wideArea = !state.wideArea;
-      setValue(WIDE_AREA, state.wideArea);
+      state.wideClickArea = !state.wideClickArea;
+      GM_setValue(MODULE_ID, state);
     },
   },
 });

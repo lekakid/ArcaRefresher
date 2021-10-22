@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-const ENABLED = { key: 'useShortcut', defaultValue: false };
+const defaultConfigState = {
+  enabled: false,
+};
 
 const initialState = {
-  enabled: getValue(ENABLED),
+  ...defaultConfigState,
+  ...GM_getValue(MODULE_ID),
 };
 
 export const slice = createSlice({
@@ -14,7 +16,7 @@ export const slice = createSlice({
   reducers: {
     toggleEnabled(state) {
       state.enabled = !state.enabled;
-      setValue(ENABLED, state.enabled);
+      GM_setValue(MODULE_ID, state);
     },
   },
 });
