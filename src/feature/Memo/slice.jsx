@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-const USER_MEMO = { key: 'userMemo', defaultValue: {} };
+const defaultConfigState = {
+  memo: {},
+};
 
 const initialState = {
-  memo: getValue(USER_MEMO),
+  ...defaultConfigState,
+  ...GM_getValue(MODULE_ID),
 };
 
 export const slice = createSlice({
@@ -19,11 +21,11 @@ export const slice = createSlice({
       } else {
         delete state.memo[user];
       }
-      setValue(USER_MEMO, state.memo);
+      GM_setValue(MODULE_ID, state);
     },
     setMemoList(state, action) {
       state.memo = action.payload;
-      setValue(USER_MEMO, action.payload);
+      GM_setValue(MODULE_ID, state);
     },
   },
 });

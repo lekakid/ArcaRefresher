@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-const USER_COLOR = { key: 'userColor', defaultValue: {} };
+const defaultConfigState = {
+  color: {},
+};
 
 const initialState = {
-  color: getValue(USER_COLOR),
+  ...defaultConfigState,
+  ...GM_getValue(MODULE_ID),
 };
 
 export const slice = createSlice({
@@ -19,11 +21,11 @@ export const slice = createSlice({
       } else {
         delete state.color[user];
       }
-      setValue(USER_COLOR, state.color);
+      GM_setValue(MODULE_ID, state);
     },
     setColorList(state, action) {
       state.color = action.payload;
-      setValue(USER_COLOR, action.payload);
+      GM_setValue(MODULE_ID, state);
     },
   },
 });

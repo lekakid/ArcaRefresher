@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-const CATEGORY_COLOR = { key: 'categoryColor', defaultValue: {} };
+const defaultConfigState = {
+  color: {},
+};
 
 const initialState = {
-  color: getValue(CATEGORY_COLOR),
+  ...defaultConfigState,
+  ...GM_getValue(MODULE_ID),
 };
 
 export const slice = createSlice({
@@ -15,7 +17,7 @@ export const slice = createSlice({
     setStyle(state, action) {
       const { channel, color } = action.payload;
       state.color[channel] = color;
-      setValue(CATEGORY_COLOR, state.color);
+      GM_setValue(MODULE_ID, state);
     },
   },
 });

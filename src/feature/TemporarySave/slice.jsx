@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/gm';
 import { MODULE_ID } from './ModuleInfo';
 
-const ARTICLES = { key: 'tempArticles', defaultValue: {} };
-const IMPORT_TITLE = { key: 'importTitle', defaultValue: true };
-const AUTO_SAVE_TIME = { key: 'autoSaveTempArticleTime', defaultValue: 60 };
+const defaultConfigState = {
+  tempArticleList: {},
+  importTitle: true,
+  autoSaveTime: 60,
+};
 
 const initialState = {
-  tempArticleList: getValue(ARTICLES),
-  importTitle: getValue(IMPORT_TITLE),
-  autoSaveTime: getValue(AUTO_SAVE_TIME),
+  config: {
+    ...defaultConfigState,
+    ...GM_getValue(MODULE_ID),
+  },
   currentSlot: null,
   loadOpen: false,
 };
@@ -22,30 +24,30 @@ export const slice = createSlice({
       const { timestamp, title, content } = action.payload;
 
       state.currentSlot = state.currentSlot || timestamp;
-      state.tempArticleList[state.currentSlot] = { title, content };
-      setValue(ARTICLES, state.tempArticleList);
+      state.config.tempArticleList[state.currentSlot] = { title, content };
+      GM_setValue(MODULE_ID, state.config);
     },
     saveAsArticle(state, action) {
       const { timestamp, title, content } = action.payload;
 
       state.currentSlot = timestamp;
-      state.tempArticleList[state.currentSlot] = { title, content };
-      setValue(ARTICLES, state.tempArticleList);
+      state.config.tempArticleList[state.currentSlot] = { title, content };
+      GM_setValue(MODULE_ID, state.config);
     },
     setArticleList(state, action) {
-      state.tempArticleList = action.payload;
-      setValue(ARTICLES, state.tempArticleList);
+      state.config.tempArticleList = action.payload;
+      GM_setValue(MODULE_ID, state.config);
     },
     setCurrentSlot(state, action) {
       state.currentSlot = action.payload;
     },
     toggleImportTitle(state) {
-      state.importTitle = !state.importTitle;
-      setValue(IMPORT_TITLE, state.importTitle);
+      state.config.importTitle = !state.config.importTitle;
+      GM_setValue(MODULE_ID, state.config);
     },
     setAutoTime(state, action) {
-      state.autoSaveTime = action.payload;
-      setValue(AUTO_SAVE_TIME, state.autoSaveTime);
+      state.config.autoSaveTime = action.payload;
+      GM_setValue(MODULE_ID, state.config);
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;

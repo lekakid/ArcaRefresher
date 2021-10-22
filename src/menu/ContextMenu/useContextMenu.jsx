@@ -5,7 +5,9 @@ import { MODULE_ID } from './ModuleInfo';
 
 export default function useContextMenu({ trigger, dataGetter }) {
   const dispatch = useDispatch();
-  const { enabled } = useSelector((state) => state[MODULE_ID]);
+  const {
+    config: { enabled },
+  } = useSelector((state) => state[MODULE_ID]);
   const [data, setData] = useState(null);
 
   useEffect(() => {

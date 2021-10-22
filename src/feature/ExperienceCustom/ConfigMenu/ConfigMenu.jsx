@@ -26,7 +26,7 @@ function ConfigMenu() {
     blockMediaNewWindow,
     ratedownGuard,
     foldComment,
-    wideArea,
+    wideClickArea,
   } = useSelector((state) => state[MODULE_ID]);
 
   const handleArticleNewWindow = useCallback(() => {
@@ -102,7 +102,7 @@ function ConfigMenu() {
               secondary="댓글 어디를 클릭하든 답글창이 열립니다."
             />
             <ListItemSecondaryAction>
-              <Switch checked={wideArea} onChange={handleWideArea} />
+              <Switch checked={wideClickArea} onChange={handleWideArea} />
             </ListItemSecondaryAction>
           </ListItem>
         </List>
