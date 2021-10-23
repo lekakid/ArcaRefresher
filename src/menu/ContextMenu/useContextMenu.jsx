@@ -14,6 +14,8 @@ export default function useContextMenu({ trigger, dataGetter }) {
     if (!enabled) return null;
 
     const handleContext = (e) => {
+      if (e.shiftKey) return;
+
       if (!trigger(e)) {
         setData(null);
         return;
