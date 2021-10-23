@@ -12,9 +12,10 @@ import {
   Divider,
 } from '@material-ui/core';
 
+import { KeyIcon } from 'component';
+
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { toggleEnabled } from '../slice';
-import KeyIcon from './KeyIcon';
 
 function ConfigMenu() {
   const dispatch = useDispatch();

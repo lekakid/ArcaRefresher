@@ -1,2 +1,4 @@
-// eslint-disable-next-line import/prefer-default-export
-export { default as AuthorLabel } from './AuthorLabel';
+import AuthorLabel from './AuthorLabel';
+import KeyIcon from './KeyIcon';
+
+export { AuthorLabel, KeyIcon };
