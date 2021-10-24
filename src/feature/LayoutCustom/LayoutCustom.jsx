@@ -12,6 +12,11 @@ const useStyles = makeStyles(
         display: 'none',
       },
     },
+    SideHumor: {
+      '& #recentHumor': {
+        display: 'none !important',
+      },
+    },
     SideMenu: {
       '& .right-sidebar': {
         display: 'none',
@@ -79,6 +84,7 @@ export default function LayoutCustom() {
   useLayoutEffect(() => {
     const {
       recentVisit,
+      sideHumor,
       sideMenu,
       avatar,
       modifiedIndicator,
@@ -92,6 +98,7 @@ export default function LayoutCustom() {
       classes.ResizeVideo,
       {
         [classes.RecentVisit]: !recentVisit,
+        [classes.SideHumor]: !sideHumor,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
         [classes.ModifiedIndicator]: !modifiedIndicator,

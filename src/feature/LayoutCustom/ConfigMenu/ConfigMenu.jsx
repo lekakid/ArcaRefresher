@@ -15,6 +15,7 @@ import { ColorPicker, createColor } from 'material-ui-color';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   toggleRecentVisit,
+  toggleSideHumor,
   toggleSideMenu,
   toggleAvatar,
   setNotifyColor,
@@ -30,6 +31,7 @@ function ConfigMenu() {
   const dispatch = useDispatch();
   const {
     recentVisit,
+    sideHumor,
     sideMenu,
     avatar,
     notifyColor,
@@ -44,6 +46,10 @@ function ConfigMenu() {
 
   const handleRecentVisit = useCallback(() => {
     dispatch(toggleRecentVisit());
+  }, [dispatch]);
+
+  const handleSideHumor = useCallback(() => {
+    dispatch(toggleSideHumor());
   }, [dispatch]);
 
   const handleSideMenu = useCallback(() => {
@@ -109,6 +115,12 @@ function ConfigMenu() {
             <ListItemText primary="최근 방문 채널 보이기" />
             <ListItemSecondaryAction>
               <Switch checked={recentVisit} onChange={handleRecentVisit} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleSideHumor}>
+            <ListItemText primary="우측 사이드 메뉴 유머채널 패널 표시" />
+            <ListItemSecondaryAction>
+              <Switch checked={sideHumor} onChange={handleSideHumor} />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleSideMenu}>
