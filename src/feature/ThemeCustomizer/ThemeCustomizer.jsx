@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
@@ -10,9 +10,8 @@ export default function ThemeCustomizer() {
   const { enabled, current, theme } = useSelector((state) => state[MODULE_ID]);
 
   const currentTheme = theme[channelID] || theme[current];
-  useEffect(() => {
-    if (!enabled) return null;
-    if (!currentTheme) return null;
+  useLayoutEffect(() => {
+    if (!enabled || !currentTheme) return undefined;
 
     document.documentElement.classList.add('theme-custom');
 
