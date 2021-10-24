@@ -15,6 +15,7 @@ import { ColorPicker, createColor } from 'material-ui-color';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   toggleRecentVisit,
+  toggleSideHumor,
   toggleSideMenu,
   toggleAvatar,
   setNotifyColor,
@@ -30,6 +31,7 @@ function ConfigMenu() {
   const dispatch = useDispatch();
   const {
     recentVisit,
+    sideHumor,
     sideMenu,
     avatar,
     notifyColor,
@@ -44,6 +46,10 @@ function ConfigMenu() {
 
   const handleRecentVisit = useCallback(() => {
     dispatch(toggleRecentVisit());
+  }, [dispatch]);
+
+  const handleSideHumor = useCallback(() => {
+    dispatch(toggleSideHumor());
   }, [dispatch]);
 
   const handleSideMenu = useCallback(() => {
@@ -106,19 +112,25 @@ function ConfigMenu() {
       <Paper>
         <List>
           <ListItem divider button onClick={handleRecentVisit}>
-            <ListItemText primary="최근 방문 채널 보이기" />
+            <ListItemText primary="최근 방문 채널 표시" />
             <ListItemSecondaryAction>
               <Switch checked={recentVisit} onChange={handleRecentVisit} />
             </ListItemSecondaryAction>
           </ListItem>
+          <ListItem divider button onClick={handleSideHumor}>
+            <ListItemText primary="우측 사이드 메뉴 유머채널 패널 표시" />
+            <ListItemSecondaryAction>
+              <Switch checked={sideHumor} onChange={handleSideHumor} />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleSideMenu}>
-            <ListItemText primary="우측 사이드 메뉴" />
+            <ListItemText primary="우측 사이드 메뉴 표시" />
             <ListItemSecondaryAction>
               <Switch checked={sideMenu} onChange={handleSideMenu} />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleAvatar}>
-            <ListItemText primary="이용자 아바타" />
+            <ListItemText primary="이용자 아바타 표시" />
             <ListItemSecondaryAction>
               <Switch checked={avatar} onChange={handleAvatar} />
             </ListItemSecondaryAction>
@@ -156,7 +168,7 @@ function ConfigMenu() {
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleModifiedIndicator}>
-            <ListItemText primary="댓글 *수정됨 표기" />
+            <ListItemText primary="댓글 *수정됨 표시" />
             <ListItemSecondaryAction>
               <Switch
                 checked={modifiedIndicator}
@@ -177,7 +189,7 @@ function ConfigMenu() {
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem button onClick={handleHideHumorCheckbox}>
-            <ListItemText primary="유머 채널 동시 등록 체크박스 숨김" />
+            <ListItemText primary="유머 채널 동시 등록 체크박스 숨기기" />
             <ListItemSecondaryAction>
               <Switch
                 checked={hideHumorCheckbox}
