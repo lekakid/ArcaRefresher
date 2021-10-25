@@ -11,7 +11,7 @@ export default makeStyles((theme) => ({
     },
   },
   root: {
-    '& main > .MuiTypography-root': {
+    '& main > .MuiBox-root > .MuiTypography-root': {
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(1),
     },

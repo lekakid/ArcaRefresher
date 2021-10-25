@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   Grid,
   List,
   ListItem,
@@ -20,38 +21,41 @@ const useStyles = makeStyles({
   },
 });
 
-function ConfigMenu() {
-  const { category } = useParser();
-  const classes = useStyles();
+const ConfigMenu = React.forwardRef(
+  // eslint-disable-next-line prefer-arrow-callback
+  function ConfigMenu(_props, ref) {
+    const { category } = useParser();
+    const classes = useStyles();
 
-  return (
-    <>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
-      <Paper>
-        <List>
-          <ListItem>
-            <ListItemText>색상 설정</ListItemText>
-          </ListItem>
-          <ListItem>
-            <Paper className={classes.root} variant="outlined">
-              <Grid container>
-                {category &&
-                  Object.keys(category).map((id, index) => (
-                    <CategoryRow
-                      key={id}
-                      divider={index !== 0}
-                      category={id}
-                      nameMap={category}
-                    />
-                  ))}
-              </Grid>
-            </Paper>
-          </ListItem>
-        </List>
-      </Paper>
-    </>
-  );
-}
+    return (
+      <Box ref={ref}>
+        <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+        <Paper>
+          <List>
+            <ListItem>
+              <ListItemText>색상 설정</ListItemText>
+            </ListItem>
+            <ListItem>
+              <Paper className={classes.root} variant="outlined">
+                <Grid container>
+                  {category &&
+                    Object.keys(category).map((id, index) => (
+                      <CategoryRow
+                        key={id}
+                        divider={index !== 0}
+                        category={id}
+                        nameMap={category}
+                      />
+                    ))}
+                </Grid>
+              </Paper>
+            </ListItem>
+          </List>
+        </Paper>
+      </Box>
+    );
+  },
+);
 
 ConfigMenu.displayName = `ConfigMenu(${MODULE_ID})`;
 export default ConfigMenu;

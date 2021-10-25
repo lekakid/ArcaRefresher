@@ -11,7 +11,6 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
-  useTheme,
 } from '@material-ui/core';
 import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 
@@ -23,15 +22,43 @@ import ConfigListGroup from './ConfigListGroup';
 import ConfigListButton from './ConfigListButton';
 
 export default function ConfigMenu({ groupList, menuList }) {
-  const theme = useTheme();
   const dispatch = useDispatch();
   const { open, selection } = useSelector((state) => state[MODULE_ID]);
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [loadIndex, setLoadIndex] = useState(0);
+  const [intersectionTarget, setIntersectionTarget] = useState(null);
   const classes = useStyles();
+
+  const handleIntersection = useCallback(
+    (element) => {
+      if (!intersectionTarget) return undefined;
+
+      const intersectionObserver = new IntersectionObserver(
+        ([entry], observer) => {
+          if (entry.isIntersecting) {
+            setLoadIndex((prev) => prev + 1);
+            observer.unobserve(intersectionTarget);
+          }
+        },
+        {
+          root: element,
+        },
+      );
+
+      intersectionObserver.observe(intersectionTarget);
+      return () => intersectionObserver.unobserve(intersectionTarget);
+    },
+    [intersectionTarget],
+  );
+
+  const handleTarget = useCallback((element) => {
+    setIntersectionTarget(element);
+  }, []);
 
   const handleConfigClose = useCallback(() => {
     setDrawerOpen(false);
+    setLoadIndex(0);
     dispatch(setOpen(false));
   }, [dispatch]);
 
@@ -66,13 +93,16 @@ export default function ConfigMenu({ groupList, menuList }) {
   ];
 
   const content = menuList.map(
-    ({ key, View }) =>
-      (selection === 'all' || selection === key) && <View key={key} />,
+    ({ key, View }, index) =>
+      ((selection === 'all' && index <= loadIndex) || selection === key) && (
+        <View ref={index === loadIndex ? handleTarget : null} key={key} />
+      ),
   );
 
   return (
     <>
       <Dialog
+        ref={handleIntersection}
         fullScreen
         className={classes.root}
         PaperProps={{
