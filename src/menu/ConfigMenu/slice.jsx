@@ -3,6 +3,7 @@ import { MODULE_ID } from './ModuleInfo';
 
 const initialState = {
   open: false,
+  drawer: true,
   selection: 'all',
   group: 'global',
 };
@@ -14,6 +15,9 @@ export const slice = createSlice({
     setOpen(state, action) {
       state.open = action.payload;
     },
+    setDrawer(state, action) {
+      state.drawer = action.payload;
+    },
     setSelection(state, action) {
       state.selection = action.payload;
     },
@@ -23,6 +27,6 @@ export const slice = createSlice({
   },
 });
 
-export const { setOpen, setSelection, setGroup } = slice.actions;
+export const { setOpen, setDrawer, setSelection, setGroup } = slice.actions;
 
 export default slice.reducer;

@@ -15,7 +15,7 @@ import {
 import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 
 import { MODULE_ID } from './ModuleInfo';
-import { setOpen } from './slice';
+import { setOpen, setDrawer } from './slice';
 import useStyles from './useStyles';
 import HeaderButton from './HeaderButton';
 import ConfigListGroup from './ConfigListGroup';
@@ -23,9 +23,8 @@ import ConfigListButton from './ConfigListButton';
 
 export default function ConfigMenu({ groupList, menuList }) {
   const dispatch = useDispatch();
-  const { open, selection } = useSelector((state) => state[MODULE_ID]);
+  const { open, drawer, selection } = useSelector((state) => state[MODULE_ID]);
   const intersectionObserver = useRef(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [loadCount, setLoadCount] = useState(1);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();
@@ -38,19 +37,23 @@ export default function ConfigMenu({ groupList, menuList }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (mobile) dispatch(setDrawer(false));
+  }, [dispatch, mobile]);
+
   const handleTarget = useCallback((element) => {
     if (element) intersectionObserver.current.observe(element);
   }, []);
 
   const handleConfigClose = useCallback(() => {
-    setDrawerOpen(false);
+    if (mobile) dispatch(setDrawer(false));
     setLoadCount(1);
     dispatch(setOpen(false));
-  }, [dispatch]);
+  }, [dispatch, mobile]);
 
   const handleDrawerToggle = useCallback(() => {
-    setDrawerOpen((prev) => !prev);
-  }, []);
+    dispatch(setDrawer(!drawer));
+  }, [dispatch, drawer]);
 
   const navi = [
     ...groupList.map(({ key, icon, label }) => (
@@ -129,7 +132,7 @@ export default function ConfigMenu({ groupList, menuList }) {
               variant={mobile ? 'temporary' : 'permanent'}
               classes={{ paper: classes.drawer }}
               ModalProps={{ keepMounted: true }}
-              open={!mobile || drawerOpen}
+              open={!mobile || drawer}
               onClose={handleDrawerToggle}
             >
               <div className={classes.toolbar}>
