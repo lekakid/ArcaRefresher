@@ -3,6 +3,7 @@ import { Description, List, Style, Web } from '@material-ui/icons';
 
 import * as ContextMenu from 'menu/ContextMenu';
 import * as AnonymousNick from 'feature/AnonymousNick';
+import * as AssistMenu from 'feature/AssistMenu';
 import * as AutoRefresher from 'feature/AutoRefresher';
 import * as CategoryStyler from 'feature/CategoryStyler';
 import * as ExperienceCustom from 'feature/ExperienceCustom';
@@ -29,6 +30,7 @@ export default () => (
       <ExperienceCustom.ArticleMenu />
     </ArticleMenu>
     <ContextMenuContainer>
+      <AssistMenu.ContextMenu />
       <ImageDownloader.ContextMenu />
       <ImageSearch.ContextMenu />
       <Memo.ContextMenu />
