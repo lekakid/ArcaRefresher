@@ -170,7 +170,7 @@ const ConfigMenu = React.forwardRef(
             <ListItem divider>
               <ListItemText
                 primary="전체 적용 테마"
-                secondary="지정한 프리셋을 모든 채널에서 사용합니다."
+                secondary="모든 채널에서 사용할 프리셋입니다."
               />
               <ListItemSecondaryAction>
                 <Select
