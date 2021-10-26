@@ -22,9 +22,14 @@ import { getArticleInfo, replaceFormat } from '../func';
 const useStyles = makeStyles((theme) => ({
   root: {
     position: 'fixed',
-    bottom: theme.spacing(4),
-    left: 'calc(50% - 250px)',
-    minWidth: 500,
+    bottom: theme.spacing(8),
+    width: '100%',
+    padding: theme.spacing(0, 2),
+  },
+  card: {
+    margin: theme.spacing(0, 'auto'),
+    width: '100%',
+    maxWidth: theme.breakpoints.values.sm,
     zIndex: theme.zIndex.snackbar,
   },
 }));
@@ -81,7 +86,7 @@ export default function Downloader({ open, data, onFinish }) {
   const articleInfo = useRef(getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
-  const { root } = useStyles();
+  const { root, card } = useStyles();
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -110,27 +115,29 @@ export default function Downloader({ open, data, onFinish }) {
 
   return (
     <Slide direction="up" in={open} mountOnEnter unmountOnExit>
-      <Card classes={{ root }}>
-        <CardContent>
-          {cur !== data.length && (
-            <>
-              <Typography>{`다운로드 중 ${cur}/${data.length}`}</Typography>
-              <LinearProgress
-                variant="determinate"
-                value={(cur / data.length) * 100}
-              />
-              <Typography>{`${Math.floor(progress)}%`}</Typography>
-              <LinearProgress variant="determinate" value={progress} />
-            </>
-          )}
-          {cur === data.length && (
-            <Box display="flex" flexDirection="column" alignItems="center">
-              <Typography>압축 파일 생성 중...</Typography>
-              <CircularProgress />
-            </Box>
-          )}
-        </CardContent>
-      </Card>
+      <Box className={root}>
+        <Card classes={{ root: card }}>
+          <CardContent>
+            {cur !== data.length && (
+              <>
+                <Typography>{`다운로드 중 ${cur}/${data.length}`}</Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={(cur / data.length) * 100}
+                />
+                <Typography>{`${Math.floor(progress)}%`}</Typography>
+                <LinearProgress variant="determinate" value={progress} />
+              </>
+            )}
+            {cur === data.length && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography>압축 파일 생성 중...</Typography>
+                <CircularProgress />
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Box>
     </Slide>
   );
 }
