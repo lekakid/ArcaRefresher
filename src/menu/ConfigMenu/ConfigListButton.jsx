@@ -1,8 +1,13 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+} from '@material-ui/core';
 
-import { setSelection } from './slice';
+import { setSelection, setDrawer } from './slice';
 
 export default function ConfigListButton({
   className,
@@ -11,10 +16,12 @@ export default function ConfigListButton({
   children,
 }) {
   const dispatch = useDispatch();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const handleClick = useCallback(() => {
     dispatch(setSelection(configKey));
-  }, [configKey, dispatch]);
+    if (mobile) dispatch(setDrawer(false));
+  }, [configKey, dispatch, mobile]);
 
   return (
     <ListItem className={className} button onClick={handleClick}>
