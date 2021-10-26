@@ -1,12 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  Box,
-  Divider,
-  Grid,
-  IconButton,
-  Tooltip,
-  useMediaQuery,
-} from '@material-ui/core';
+import { Box, Divider, Grid, IconButton, Tooltip } from '@material-ui/core';
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,7 +9,6 @@ import { setCategoryConfig } from '../slice';
 
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { channelID } = useParser();
   const { category: categoryConfig } = useSelector((state) => state[MODULE_ID]);
   const channelConfig = { ...categoryConfig?.[channelID] };
@@ -50,7 +42,7 @@ function CategoryRow({ divider, category, nameMap }) {
           <Divider />
         </Grid>
       )}
-      <Grid item sm={6} xs={12}>
+      <Grid item xs={6}>
         <Box
           display="flex"
           height="100%"
@@ -63,12 +55,8 @@ function CategoryRow({ divider, category, nameMap }) {
           </span>
         </Box>
       </Grid>
-      <Grid item sm={6} xs={12}>
-        <Box
-          display="flex"
-          justifyContent={mobile ? null : 'flex-end'}
-          alignItems="center"
-        >
+      <Grid item xs={6}>
+        <Box display="flex" justifyContent="flex-end" alignItems="center">
           <Tooltip title="미리보기 뮤트">
             <IconButton onClick={handleCategory(category, 'mutePreview')}>
               {mutePreview ? <BrokenImage /> : <Image />}

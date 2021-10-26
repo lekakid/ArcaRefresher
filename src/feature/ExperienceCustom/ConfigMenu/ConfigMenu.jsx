@@ -72,7 +72,7 @@ const ConfigMenu = React.forwardRef(
             <ListItem divider button onClick={handleMediaNewWindow}>
               <ListItemText
                 primary="이미지, 동영상 새 창 열기 방지"
-                secondary="게시물에서 이미지, 동영상 클릭을 막습니다. (새로고침 필요)"
+                secondary="새로고침 후에 적용됩니다."
               />
               <ListItemSecondaryAction>
                 <Switch
@@ -96,7 +96,7 @@ const ConfigMenu = React.forwardRef(
             <ListItem divider button onClick={handleComment}>
               <ListItemText
                 primary="댓글 접기"
-                secondary="게시물 댓글을 접습니다. 접어놓은 댓글 보기 버튼이 추가됩니다."
+                secondary="게시물 댓글을 접고 댓글 보기 버튼을 추가합니다."
               />
               <ListItemSecondaryAction>
                 <Switch checked={foldComment} onChange={handleComment} />
