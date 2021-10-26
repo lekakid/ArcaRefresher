@@ -143,6 +143,8 @@ export default function LoadTable({ editor, open, onClose }) {
     }, {});
 
     dispatch(setArticleList(newArticleList));
+    setSelection([]);
+    setEditMode(false);
   }, [dispatch, rows, selection]);
 
   const handleDone = useCallback(() => {
