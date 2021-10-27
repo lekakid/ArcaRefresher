@@ -6,7 +6,7 @@ import {
   ARTICLE_LOADED,
   BOARD_LOADED,
   COMMENT_SUBTITLE,
-  COMMENT_TITLE,
+  COMMENT_VIEW,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
@@ -35,8 +35,19 @@ export default function ShortCut() {
         case 'A': {
           e.preventDefault();
           const channelID = window.location.pathname.split('/')[2];
-          const boardPath = ['', 'b', channelID];
-          window.location.pathname = boardPath.join('/');
+          const prevSearch = queryString.parse(window.location.search);
+          const search = queryString.stringify(
+            {
+              mode: prevSearch.mode || '',
+              p: prevSearch.p || '',
+            },
+            {
+              skipEmptyString: true,
+            },
+          );
+          let path = ['', 'b', channelID].join('/');
+          path += search ? `?${search}` : '';
+          window.location.href = path;
           break;
         }
         case 'E':
@@ -44,8 +55,8 @@ export default function ShortCut() {
           document.querySelector('#rateUp').click();
           break;
         case 'R': {
-          escape.preventDefault();
-          const commentForm = document.querySelector(COMMENT_TITLE);
+          e.preventDefault();
+          const commentForm = document.querySelector(COMMENT_VIEW);
           window.scrollTo({
             top: commentForm.offsetTop - 50,
             behavior: 'smooth',
