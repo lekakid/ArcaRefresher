@@ -6,7 +6,7 @@ import {
   ARTICLE_LOADED,
   BOARD_LOADED,
   COMMENT_SUBTITLE,
-  COMMENT_TITLE,
+  COMMENT_VIEW,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
@@ -44,8 +44,8 @@ export default function ShortCut() {
           document.querySelector('#rateUp').click();
           break;
         case 'R': {
-          escape.preventDefault();
-          const commentForm = document.querySelector(COMMENT_TITLE);
+          e.preventDefault();
+          const commentForm = document.querySelector(COMMENT_VIEW);
           window.scrollTo({
             top: commentForm.offsetTop - 50,
             behavior: 'smooth',
