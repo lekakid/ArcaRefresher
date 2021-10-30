@@ -22,8 +22,16 @@ export default function ContextMenu({ children }) {
       setMousePos([clientX, clientY]);
     };
 
+    const handleScroll = () => {
+      dispatch(setClose());
+    };
+
+    document.addEventListener('scroll', handleScroll);
     document.addEventListener('contextmenu', handleContext);
-    return () => document.removeEventListener('contextmenu', handleContext);
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('contextmenu', handleContext);
+    };
   }, [dispatch, enabled]);
 
   const handleClose = useCallback(() => {
@@ -38,6 +46,7 @@ export default function ContextMenu({ children }) {
         keepMounted
         open={open}
         onClose={handleClose}
+        disableScrollLock
         anchorReference="anchorPosition"
         anchorPosition={{ top, left }}
       >
