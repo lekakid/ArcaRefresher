@@ -4,6 +4,7 @@ import { MODULE_ID } from './ModuleInfo';
 const defaultConfigState = {
   recentVisit: true,
   sideHumor: true,
+  sideNews: true,
   sideMenu: true,
   avatar: true,
   notifyColor: '',
@@ -30,6 +31,10 @@ export const slice = createSlice({
     },
     toggleSideHumor(state) {
       state.sideHumor = !state.sideHumor;
+      GM_setValue(MODULE_ID, state);
+    },
+    toggleSideNews(state) {
+      state.sideNews = !state.sideNews;
       GM_setValue(MODULE_ID, state);
     },
     toggleSideMenu(state) {
@@ -74,6 +79,7 @@ export const slice = createSlice({
 export const {
   toggleRecentVisit,
   toggleSideHumor,
+  toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
   setNotifyColor,
