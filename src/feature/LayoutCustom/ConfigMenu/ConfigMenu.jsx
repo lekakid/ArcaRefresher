@@ -17,6 +17,7 @@ import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   toggleRecentVisit,
   toggleSideHumor,
+  toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
   setNotifyColor,
@@ -35,6 +36,7 @@ const ConfigMenu = React.forwardRef(
     const {
       recentVisit,
       sideHumor,
+      sideNews,
       sideMenu,
       avatar,
       notifyColor,
@@ -53,6 +55,10 @@ const ConfigMenu = React.forwardRef(
 
     const handleSideHumor = useCallback(() => {
       dispatch(toggleSideHumor());
+    }, [dispatch]);
+
+    const handleSideNews = useCallback(() => {
+      dispatch(toggleSideNews());
     }, [dispatch]);
 
     const handleSideMenu = useCallback(() => {
@@ -124,6 +130,12 @@ const ConfigMenu = React.forwardRef(
               <ListItemText primary="우측 사이드 메뉴 유머채널 패널 표시" />
               <ListItemSecondaryAction>
                 <Switch checked={sideHumor} onChange={handleSideHumor} />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider button onClick={handleSideNews}>
+              <ListItemText primary="우측 사이드 메뉴 뉴스 패널 표시" />
+              <ListItemSecondaryAction>
+                <Switch checked={sideNews} onChange={handleSideNews} />
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem divider button onClick={handleSideMenu}>

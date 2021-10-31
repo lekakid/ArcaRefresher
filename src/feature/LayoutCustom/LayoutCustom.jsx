@@ -17,6 +17,11 @@ const useStyles = makeStyles(
         display: 'none !important',
       },
     },
+    SideNews: {
+      '& #newsRank': {
+        display: 'none !important',
+      },
+    },
     SideMenu: {
       '& .right-sidebar': {
         display: 'none',
@@ -85,6 +90,7 @@ export default function LayoutCustom() {
     const {
       recentVisit,
       sideHumor,
+      sideNews,
       sideMenu,
       avatar,
       modifiedIndicator,
@@ -99,6 +105,7 @@ export default function LayoutCustom() {
       {
         [classes.RecentVisit]: !recentVisit,
         [classes.SideHumor]: !sideHumor,
+        [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
         [classes.ModifiedIndicator]: !modifiedIndicator,
