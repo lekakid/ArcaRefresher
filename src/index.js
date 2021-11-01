@@ -54,4 +54,11 @@ import UserMemo from './module/UserMemo';
 
   MyImage.load();
   TemporaryArticle.load();
+
+  if (!GM_getValue('version3update', false)) {
+    alert(
+      '곧 아카 리프레셔의 3.0.0 업데이트가 진행됩니다.\n기존 설정 저장데이터가 구조 변경으로 인해 호환되지 않으니 주의바랍니다.\n자세한 내용은 채널 업데이트 내역을 참고바랍니다.'
+    );
+    GM_setValue('version3update', true);
+  }
 })();
