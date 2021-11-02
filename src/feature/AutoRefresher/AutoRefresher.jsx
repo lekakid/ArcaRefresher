@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -35,6 +35,15 @@ export default function AutoRefresher() {
   const sockCount = useRef(0);
 
   const classes = useStyles();
+
+  const handleRefresh = useCallback(async () => {
+    if (sockCount.current === 0) return;
+
+    const newArticle = await getNewArticle();
+    swapArticle(board, newArticle, classes.refreshed);
+    dispatchAREvent(EVENT_AUTOREFRESH);
+    sockCount.current = 0;
+  }, [board, classes]);
 
   useEffect(() => {
     const search = queryString.parse(window.location.search, {
@@ -83,7 +92,12 @@ export default function AutoRefresher() {
       setPause(!!board.querySelector('.batch-check:checked'));
     };
     const onFocusOut = () => {
-      setPause(document.hidden);
+      if (document.hidden) {
+        setPause(true);
+      } else {
+        setPause(false);
+        handleRefresh();
+      }
     };
     board.addEventListener('click', onManageArticle);
     document.addEventListener('visibilitychange', onFocusOut);
@@ -92,24 +106,17 @@ export default function AutoRefresher() {
       board.removeEventListener('click', onManageArticle);
       document.removeEventListener('visibilitychange', onFocusOut);
     };
-  }, [board]);
+  }, [board, handleRefresh]);
 
   useEffect(() => {
     if (!board) return null;
     if (countdown === 0) return null;
     if (pause) return null;
 
-    const timer = setInterval(async () => {
-      if (sockCount.current === 0) return;
-
-      const newArticle = await getNewArticle();
-      swapArticle(board, newArticle, classes.refreshed);
-      dispatchAREvent(EVENT_AUTOREFRESH);
-      sockCount.current = 0;
-    }, countdown * 1000);
+    const timer = setInterval(handleRefresh, countdown * 1000);
 
     return () => clearInterval(timer);
-  }, [board, countdown, pause, classes]);
+  }, [board, countdown, pause, classes, handleRefresh]);
 
   if (!board) return null;
   return (
