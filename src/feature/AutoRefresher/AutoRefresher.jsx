@@ -50,17 +50,23 @@ export default function AutoRefresher() {
 
     const { protocol, host, pathname, search } = window.location;
 
-    const sock = new WebSocket(
-      `ws${protocol === 'https:' ? 's' : ''}://${host}/arcalive`,
-      'arcalive',
-    );
-    sock.onopen = () => {
-      sock.send('hello');
-      sock.send(`c|${pathname}${search}`);
+    const connect = () => {
+      const sock = new WebSocket(
+        `ws${protocol === 'https:' ? 's' : ''}://${host}/arcalive`,
+        'arcalive',
+      );
+      sock.onopen = () => {
+        sock.send('hello');
+        sock.send(`c|${pathname}${search}`);
+      };
+      sock.onmessage = (e) => {
+        if (e.data === 'na') sockCount.current += 1;
+      };
+      sock.onclose = () => {
+        setTimeout(connect, 1000);
+      };
     };
-    sock.onmessage = (e) => {
-      if (e.data === 'na') sockCount.current += 1;
-    };
+    connect();
   }, [board]);
 
   useEffect(() => {
