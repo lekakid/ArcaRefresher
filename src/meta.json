@@ -3,9 +3,19 @@
   "namespace": "LeKAKiD",
   "author": "LeKAKiD",
   "description": "Arca Live Extension",
+  "downloadURL": "https://github.com/lekakid/ArcaRefresher/releases/latest/download/ArcaRefresher.user.js",
+  "homepageURL": "https://github.com/lekakid/ArcaRefresher",
+  "supportURL": "https://arca.live/b/namurefresher",
   "match": ["https://*.arca.live/*", "https://arca.live/*"],
   "exclude-match": ["https://st*.arca.live/*"],
   "noframes": "",
   "run-at": "document-start",
-  "grant": ["GM_setValue", "GM_getValue", "GM_deleteValue", "GM_listValues", "GM_xmlhttpRequest", "unsafeWindow"]
+  "grant": [
+    "GM_setValue",
+    "GM_getValue",
+    "GM_deleteValue",
+    "GM_listValues",
+    "GM_xmlhttpRequest",
+    "unsafeWindow"
+  ]
 }
