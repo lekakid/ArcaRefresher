@@ -66,6 +66,7 @@ export default function MyImage() {
   }, [editor, forceLoad, handleLoad, loaded, targetImgList]);
 
   const handleClose = useCallback(() => {
+    setLoaded(true);
     setOpen(false);
   }, []);
 
