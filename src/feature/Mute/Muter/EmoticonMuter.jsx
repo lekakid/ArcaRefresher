@@ -48,7 +48,7 @@ function EmoticonMuter() {
   useEffect(() => {
     setFilter(
       Object.values(emoticon).reduce(
-        (acc, { bundle, url }) => {
+        (acc, { bundle = [], url = [] }) => {
           acc.bundle.push(...bundle);
           acc.url.push(...url);
           return acc;
