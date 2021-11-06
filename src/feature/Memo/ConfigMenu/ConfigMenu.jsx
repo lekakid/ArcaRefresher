@@ -8,6 +8,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Paper,
+  Select,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -15,7 +16,7 @@ import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Remove, Subject, TableChart } from '@material-ui/icons';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
-import { setMemoList } from '../slice';
+import { setMemoList, setVariant } from '../slice';
 
 const columns = [
   { field: 'id', headerName: '이용자', flex: 1 },
@@ -36,7 +37,7 @@ const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
-    const { memo } = useSelector((state) => state[MODULE_ID]);
+    const { variant, memo } = useSelector((state) => state[MODULE_ID]);
     const tableRows = Object.keys(memo).map((key) => ({
       id: key,
       memo: memo[key],
@@ -46,6 +47,13 @@ const ConfigMenu = React.forwardRef(
     const [textMode, setTextMode] = useState(false);
     const [textError, setTextError] = useState(false);
     const [memoText, setMemoText] = useState();
+
+    const handleVariant = useCallback(
+      (e) => {
+        dispatch(setVariant(e.target.value));
+      },
+      [dispatch],
+    );
 
     const handleCellEdit = useCallback(
       ({ id, value }) => {
@@ -117,6 +125,19 @@ const ConfigMenu = React.forwardRef(
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
+            <ListItem divider>
+              <ListItemText>모양 선택</ListItemText>
+              <ListItemSecondaryAction>
+                <Select
+                  variant="outlined"
+                  value={variant}
+                  onChange={handleVariant}
+                >
+                  <ListItem value="badge">둥근 뱃지</ListItem>
+                  <ListItem value="text">텍스트</ListItem>
+                </Select>
+              </ListItemSecondaryAction>
+            </ListItem>
             <ListItem>
               <ListItemText>메모 편집</ListItemText>
               <ListItemSecondaryAction>
