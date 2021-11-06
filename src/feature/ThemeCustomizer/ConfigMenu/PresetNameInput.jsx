@@ -33,7 +33,7 @@ export default function PresetNameInput({
       <DialogTitle>프리셋 이름 입력</DialogTitle>
       <DialogContent>
         채널 slug로 설정 시 해당 채널에서 항상 사용되는 테마가 됩니다.
-        <TextField fullWidth value={input} onChange={handleChange} />
+        <TextField fullWidth autoFocus value={input} onChange={handleChange} />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit}>확인</Button>
