@@ -16,7 +16,7 @@ import { getUserID, getKey } from 'util/user';
 import { MODULE_ID } from './ModuleInfo';
 
 function MemoList() {
-  const { memo } = useSelector((state) => state[MODULE_ID]);
+  const { variant, memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
   const loaded = useElementQuery(FULL_LOADED);
 
@@ -51,7 +51,9 @@ function MemoList() {
     <>
       {infoList.map(({ key, id, container }) =>
         ReactDOM.createPortal(
-          <AuthorTag key={key}>{memo[id]}</AuthorTag>,
+          <AuthorTag variant={variant} key={key}>
+            {memo[id]}
+          </AuthorTag>,
           container,
         ),
       )}
