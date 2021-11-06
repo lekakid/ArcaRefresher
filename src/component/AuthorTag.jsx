@@ -4,7 +4,7 @@ import React from 'react';
 
 const useStyles = makeStyles(
   (theme) => ({
-    root: {
+    badge: {
       '&:empty': {
         display: 'none',
       },
@@ -15,15 +15,35 @@ const useStyles = makeStyles(
       color: theme.palette.label.text,
       fontSize: '0.85em',
     },
+    text: {
+      '&:empty': {
+        display: 'none',
+      },
+      '&::before': {
+        content: '"["',
+      },
+      '&::after': {
+        content: '"]"',
+      },
+      padding: '1px 5px',
+      color: theme.palette.text.primary,
+    },
   }),
   { name: 'Label' },
 );
 
-function AuthorTag({ className, children }) {
-  const { root } = useStyles();
-  const styles = clsx(root, className);
+function AuthorTag({ variant, className, children }) {
+  const { badge, text } = useStyles();
+  const styles = clsx(className, {
+    [badge]: variant === 'badge',
+    [text]: variant === 'text',
+  });
 
   return <span className={styles}>{children}</span>;
 }
+
+AuthorTag.defaultProps = {
+  variant: 'badge',
+};
 
 export default React.memo(AuthorTag);
