@@ -121,7 +121,7 @@ const ConfigMenu = React.forwardRef(
                 <FormatSelector
                   formatList={[
                     { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                    { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL },
+                    { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
                     { value: FORMAT.TITLE, label: LABEL.TITLE },
                     { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
                     { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
