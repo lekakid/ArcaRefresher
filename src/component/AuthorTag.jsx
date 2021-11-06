@@ -19,11 +19,11 @@ const useStyles = makeStyles(
   { name: 'Label' },
 );
 
-function Label({ className, children }) {
+function AuthorTag({ className, children }) {
   const { root } = useStyles();
   const styles = clsx(root, className);
 
   return <span className={styles}>{children}</span>;
 }
 
-export default React.memo(Label);
+export default React.memo(AuthorTag);

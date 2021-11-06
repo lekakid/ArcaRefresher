@@ -8,7 +8,7 @@ import {
   EVENT_AUTOREFRESH,
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
-import { AuthorLabel } from 'component';
+import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserID, getKey } from 'util/user';
@@ -51,7 +51,7 @@ function MemoList() {
     <>
       {infoList.map(({ key, id, container }) =>
         ReactDOM.createPortal(
-          <AuthorLabel key={key}>{memo[id]}</AuthorLabel>,
+          <AuthorTag key={key}>{memo[id]}</AuthorTag>,
           container,
         ),
       )}
