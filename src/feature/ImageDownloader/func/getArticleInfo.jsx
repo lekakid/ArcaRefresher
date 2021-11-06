@@ -16,11 +16,13 @@ export default function getArticleInfo() {
     getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
   const articleURL =
     document.querySelector(ARTICLE_URL)?.href || window.location.href;
+  const articleID = articleURL.split('/b/')[1].split('/')[1].split('?')[0];
 
   return {
     articleCategory,
     articleTitle,
     articleAuthor,
+    articleID,
     articleURL,
   };
 }

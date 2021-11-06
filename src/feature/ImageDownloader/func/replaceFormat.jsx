@@ -7,6 +7,7 @@ export default function replaceFormat(string, flagMap) {
     articleCategory,
     articleTitle,
     articleAuthor,
+    articleID,
     articleURL,
     uploadName = '',
     index = 0,
@@ -18,6 +19,7 @@ export default function replaceFormat(string, flagMap) {
     .replace(REGEX.TITLE, articleTitle)
     .replace(REGEX.CATEGORY, articleCategory)
     .replace(REGEX.AUTHOR, articleAuthor)
+    .replace(REGEX.ARTICLE_ID, articleID)
     .replace(REGEX.URL, articleURL)
     .replace(REGEX.UPLOAD_NAME, uploadName)
     .replace(REGEX.NUMBER, `${index}`.padStart(3, '0'));
