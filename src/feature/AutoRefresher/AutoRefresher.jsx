@@ -56,6 +56,7 @@ export default function AutoRefresher() {
   // 웹 소켓으로 새로고침 트래픽 감소
   useEffect(() => {
     if (!board) return;
+    if (countdown === 0) return;
 
     const { protocol, host, pathname, search } = window.location;
 
@@ -76,10 +77,11 @@ export default function AutoRefresher() {
       };
     };
     connect();
-  }, [board]);
+  }, [board, countdown]);
 
   useEffect(() => {
-    if (!board) return null;
+    if (!board) return undefined;
+    if (countdown === 0) return undefined;
 
     const onManageArticle = ({ target }) => {
       if (target.tagName !== 'INPUT') return;
@@ -106,7 +108,7 @@ export default function AutoRefresher() {
       board.removeEventListener('click', onManageArticle);
       document.removeEventListener('visibilitychange', onFocusOut);
     };
-  }, [board, handleRefresh]);
+  }, [board, countdown, handleRefresh]);
 
   useEffect(() => {
     if (!board) return null;
