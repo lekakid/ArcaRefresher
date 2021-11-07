@@ -1,4 +1,4 @@
-import AuthorLabel from './AuthorLabel';
+import AuthorTag from './AuthorTag';
 import KeyIcon from './KeyIcon';
 
-export { AuthorLabel, KeyIcon };
+export { AuthorTag, KeyIcon };

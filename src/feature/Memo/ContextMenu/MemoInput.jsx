@@ -45,6 +45,7 @@ export default function MemoDialog({
           value={input}
           onChange={handleChange}
           onKeyPress={handleSubmit}
+          autoFocus
         />
       </DialogContent>
       <DialogActions>

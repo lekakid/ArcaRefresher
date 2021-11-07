@@ -121,10 +121,11 @@ const ConfigMenu = React.forwardRef(
                 <FormatSelector
                   formatList={[
                     { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                    { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL },
+                    { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
                     { value: FORMAT.TITLE, label: LABEL.TITLE },
                     { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
                     { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                    { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
                     { value: FORMAT.URL, label: LABEL.URL },
                     { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
                   ]}
@@ -145,6 +146,7 @@ const ConfigMenu = React.forwardRef(
                     { value: FORMAT.TITLE, label: LABEL.TITLE },
                     { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
                     { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                    { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
                     { value: FORMAT.URL, label: LABEL.URL },
                   ]}
                   onSelect={handleAddFormatZipName}
@@ -168,6 +170,7 @@ const ConfigMenu = React.forwardRef(
                     { value: FORMAT.TITLE, label: LABEL.TITLE },
                     { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
                     { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                    { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
                     { value: FORMAT.URL, label: LABEL.URL },
                     { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
                     { value: FORMAT.NUMBER, label: LABEL.NUMBER },
@@ -196,6 +199,7 @@ const ConfigMenu = React.forwardRef(
                     { value: FORMAT.TITLE, label: LABEL.TITLE },
                     { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
                     { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
+                    { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
                     { value: FORMAT.URL, label: LABEL.URL },
                   ]}
                   onSelect={handleAddFormatZipComment}
