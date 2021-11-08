@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
+  fontSize: 15,
   recentVisit: true,
   sideHumor: true,
   sideNews: true,
@@ -25,6 +26,10 @@ export const slice = createSlice({
   name: MODULE_ID,
   initialState,
   reducers: {
+    setFontSize(state, action) {
+      state.fontSize = action.payload;
+      GM_setValue(MODULE_ID, state);
+    },
     toggleRecentVisit(state) {
       state.recentVisit = !state.recentVisit;
       GM_setValue(MODULE_ID, state);
@@ -77,6 +82,7 @@ export const slice = createSlice({
 });
 
 export const {
+  setFontSize,
   toggleRecentVisit,
   toggleSideHumor,
   toggleSideNews,
