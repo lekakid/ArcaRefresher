@@ -7,13 +7,15 @@ import {
   EVENT_COMMENT_REFRESH,
   removeAREvent,
 } from 'core/event';
-import { USER_INFO } from 'core/selector';
+import { USER_INFO, FULL_LOADED } from 'core/selector';
+import { useElementQuery } from 'core/hooks';
 import { getUserID } from 'util/user';
 
 import { MODULE_ID } from './ModuleInfo';
 
 export default function Colorize() {
   const { color } = useSelector((state) => state[MODULE_ID]);
+  const loaded = useElementQuery(FULL_LOADED);
 
   useLayoutEffect(() => {
     const colorizeUser = () => {
@@ -38,7 +40,7 @@ export default function Colorize() {
         }
       });
     };
-    colorizeUser();
+    if (loaded) colorizeUser();
     addAREvent(EVENT_AUTOREFRESH, colorizeUser);
     addAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
 
@@ -46,7 +48,7 @@ export default function Colorize() {
       removeAREvent(EVENT_AUTOREFRESH, colorizeUser);
       removeAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
     };
-  }, [color]);
+  }, [color, loaded]);
 
   return null;
 }
