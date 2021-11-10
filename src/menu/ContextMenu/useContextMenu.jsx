@@ -22,50 +22,32 @@ export default function useContextMenu({ trigger, dataGetter }) {
       if (mouseInfo.current.right) mouseInfo.current.count += 1;
     };
 
-    const handleMenu = {
-      r(e) {
-        if (mouseInfo.current.count > 20) {
-          mouseInfo.current.count = 0;
-          return;
-        }
-        if (e.shiftKey) return;
+    const handleMenu = (e) => {
+      if (mouseInfo.current.count > 20) {
+        mouseInfo.current.count = 0;
+        return;
+      }
+      if (e.shiftKey === (interactionType === 'r')) return;
 
-        if (!trigger(e)) {
-          setData(null);
-          return;
-        }
+      if (!trigger(e)) {
+        setData(null);
+        return;
+      }
 
-        e.preventDefault();
-        setData(dataGetter(e));
-        dispatch(setOpen());
-      },
-      sr(e) {
-        if (mouseInfo.current.count > 20) {
-          mouseInfo.current.count = 0;
-          return;
-        }
-        if (!e.shiftKey) return;
-
-        if (!trigger(e)) {
-          setData(null);
-          return;
-        }
-
-        e.preventDefault();
-        setData(dataGetter(e));
-        dispatch(setOpen());
-      },
+      e.preventDefault();
+      setData(dataGetter(e));
+      dispatch(setOpen());
     };
 
     document.addEventListener('mousedown', handleDown);
     document.addEventListener('mouseup', handleUp);
     document.addEventListener('mousemove', handleMove);
-    document.addEventListener('contextmenu', handleMenu[interactionType]);
+    document.addEventListener('contextmenu', handleMenu);
     return () => {
       document.removeEventListener('mousedown', handleDown);
       document.removeEventListener('mouseup', handleUp);
       document.removeEventListener('mousemove', handleMove);
-      document.removeEventListener('contextmenu', handleMenu[interactionType]);
+      document.removeEventListener('contextmenu', handleMenu);
     };
   }, [dataGetter, dispatch, interactionType, trigger]);
 
