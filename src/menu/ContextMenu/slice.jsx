@@ -2,7 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
-  enabled: true,
+  // l: left click
+  // r: right click
+  // sr: shift + right click
+  interactionType: 'r',
 };
 
 const initialState = {
@@ -19,8 +22,8 @@ export const slice = createSlice({
   name: MODULE_ID,
   initialState,
   reducers: {
-    toggleEnable(state) {
-      state.config.enabled = !state.config.enabled;
+    setInteraction(state, action) {
+      state.config.interactionType = action.payload;
       GM_setValue(MODULE_ID, state.config);
     },
     setOpen(state) {
@@ -37,7 +40,7 @@ export const slice = createSlice({
   },
 });
 
-export const { toggleEnable, setOpen, setClose, setContextSnack } =
+export const { setInteraction, setOpen, setClose, setContextSnack } =
   slice.actions;
 
 export default slice.reducer;
