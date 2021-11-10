@@ -6,14 +6,12 @@ import { MODULE_ID } from './ModuleInfo';
 export default function useContextMenu({ trigger, dataGetter }) {
   const dispatch = useDispatch();
   const {
-    config: { enabled },
+    config: { interactionType },
   } = useSelector((state) => state[MODULE_ID]);
   const [data, setData] = useState(null);
   const mouseInfo = useRef({ right: false, count: 0 });
 
   useEffect(() => {
-    if (!enabled) return null;
-
     const handleDown = ({ button }) => {
       if (button === 2) mouseInfo.current.right = true;
     };
@@ -24,12 +22,12 @@ export default function useContextMenu({ trigger, dataGetter }) {
       if (mouseInfo.current.right) mouseInfo.current.count += 1;
     };
 
-    const handleContext = (e) => {
-      if (e.shiftKey) return;
+    const handleMenu = (e) => {
       if (mouseInfo.current.count > 20) {
         mouseInfo.current.count = 0;
         return;
       }
+      if (e.shiftKey === (interactionType === 'r')) return;
 
       if (!trigger(e)) {
         setData(null);
@@ -44,14 +42,14 @@ export default function useContextMenu({ trigger, dataGetter }) {
     document.addEventListener('mousedown', handleDown);
     document.addEventListener('mouseup', handleUp);
     document.addEventListener('mousemove', handleMove);
-    document.addEventListener('contextmenu', handleContext);
+    document.addEventListener('contextmenu', handleMenu);
     return () => {
       document.removeEventListener('mousedown', handleDown);
       document.removeEventListener('mouseup', handleUp);
       document.removeEventListener('mousemove', handleMove);
-      document.removeEventListener('contextmenu', handleContext);
+      document.removeEventListener('contextmenu', handleMenu);
     };
-  }, [dataGetter, dispatch, enabled, trigger]);
+  }, [dataGetter, dispatch, interactionType, trigger]);
 
   return data;
 }
