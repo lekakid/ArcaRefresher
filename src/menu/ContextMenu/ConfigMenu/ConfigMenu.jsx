@@ -6,52 +6,80 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
-  Switch,
+  Select,
   Typography,
 } from '@material-ui/core';
 
 import { KeyIcon } from 'component';
 
-import { toggleEnable } from '../slice';
+import { setInteraction } from '../slice';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
     const {
-      config: { enabled },
+      config: { interactionType },
     } = useSelector((state) => state[MODULE_ID]);
     const dispatch = useDispatch();
 
-    const handleEnable = useCallback(() => {
-      dispatch(toggleEnable());
-    }, [dispatch]);
+    const handleInteraction = useCallback(
+      (e) => {
+        dispatch(setInteraction(e.target.value));
+      },
+      [dispatch],
+    );
 
     return (
       <Box ref={ref}>
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
-            <ListItem divider button onClick={handleEnable}>
-              <ListItemText>사용</ListItemText>
-              <ListItemSecondaryAction>
-                <Switch checked={enabled} onClick={handleEnable} />
-              </ListItemSecondaryAction>
-            </ListItem>
             <ListItem>
-              <ListItemText primary="컨텍스트 메뉴 특수키" />
+              <ListItemText>메뉴 호출 방식</ListItemText>
+              <ListItemSecondaryAction>
+                <Select
+                  variant="outlined"
+                  value={interactionType}
+                  onChange={handleInteraction}
+                >
+                  <MenuItem value="r">R Click</MenuItem>
+                  <MenuItem value="sr">Shift + R Click</MenuItem>
+                </Select>
+              </ListItemSecondaryAction>
             </ListItem>
             <Box clone mx={2} mb={2}>
               <Paper variant="outlined">
                 <List disablePadding>
-                  <ListItem>
-                    <ListItemText primary="브라우저 메뉴 표시" />
+                  <ListItem divider>
+                    <ListItemText primary="리프레셔 메뉴" />
                     <ListItemSecondaryAction>
                       <Box display="flex" alignItems="center">
-                        <KeyIcon title="Shift" />
-                        +
-                        <KeyIcon title="Click" />
+                        {interactionType !== 'r' && (
+                          <>
+                            <KeyIcon title="Shift" />
+                            +
+                            <KeyIcon title="R Click" />
+                          </>
+                        )}
+                        {interactionType === 'r' && <KeyIcon title="R Click" />}
+                      </Box>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="브라우저 메뉴" />
+                    <ListItemSecondaryAction>
+                      <Box display="flex" alignItems="center">
+                        {interactionType === 'r' && (
+                          <>
+                            <KeyIcon title="Shift" />
+                            +
+                            <KeyIcon title="R Click" />
+                          </>
+                        )}
+                        {interactionType !== 'r' && <KeyIcon title="R Click" />}
                       </Box>
                     </ListItemSecondaryAction>
                   </ListItem>

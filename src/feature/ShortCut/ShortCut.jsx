@@ -58,7 +58,7 @@ export default function ShortCut() {
           e.preventDefault();
           const commentForm = document.querySelector(COMMENT_VIEW);
           window.scrollTo({
-            top: commentForm.offsetTop - 50,
+            top: commentForm.offsetTop - window.innerHeight * 0.3,
             behavior: 'smooth',
           });
           break;
@@ -69,9 +69,14 @@ export default function ShortCut() {
           const input = document.querySelector(
             '.article-comment .input textarea',
           );
+          if (!input) break;
+
           const top =
             window.pageYOffset + inputForm.getBoundingClientRect().top;
-          window.scrollTo({ top: top - 50, behavior: 'smooth' });
+          window.scrollTo({
+            top: top - window.innerHeight * 0.7,
+            behavior: 'smooth',
+          });
           input.focus({ preventScroll: true });
           break;
         }
