@@ -82,7 +82,7 @@ export default function ArticleMuter() {
         element: a,
         user: getUserInfo(a.querySelector('.user-info')),
         content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge')?.textContent || '',
+        category: a.querySelector('.badge')?.textContent || '일반',
       }));
       const categoryConfig = category[channelID] || {};
 
