@@ -16,7 +16,8 @@ export default function getArticleInfo() {
     getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
   const articleURL =
     document.querySelector(ARTICLE_URL)?.href || window.location.href;
-  const articleID = articleURL.match(/\/b|e\/([0-9]+)/)[1] || 0;
+  const articleID =
+    articleURL.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
 
   return {
     articleCategory,
