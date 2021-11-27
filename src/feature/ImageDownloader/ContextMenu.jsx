@@ -4,7 +4,8 @@ import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
-import { ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
+import { useElementQuery } from 'core/hooks';
 import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
@@ -17,6 +18,7 @@ const ContextMenu = React.forwardRef(
   function ContextMenu(_props, ref) {
     const dispatch = useDispatch();
     const { fileName, retryCount } = useSelector((state) => state[MODULE_ID]);
+    const articleLoaded = useElementQuery(ARTICLE_LOADED);
     const articleInfo = useRef(null);
 
     const trigger = useCallback(
@@ -38,9 +40,10 @@ const ContextMenu = React.forwardRef(
     const data = useContextMenu({ trigger, dataGetter });
 
     useEffect(() => {
+      if (!articleLoaded) return;
       if (articleInfo.current) return;
       articleInfo.current = getArticleInfo();
-    }, []);
+    }, [articleLoaded]);
 
     const handleClipboard = useCallback(() => {
       (async () => {

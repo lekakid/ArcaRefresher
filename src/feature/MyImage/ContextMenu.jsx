@@ -6,6 +6,7 @@ import { BrokenImage, PhotoLibrary } from '@material-ui/icons';
 import { ARTICLE_IMAGES } from 'core/selector';
 import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { useParser } from 'util/Parser';
 
 import { MODULE_ID } from './ModuleInfo';
 import { addImage, removeImage } from './slice';
@@ -14,7 +15,8 @@ const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ContextMenu(_props, ref) {
     const dispatch = useDispatch();
-    const { imgList, channelID } = useSelector((state) => state[MODULE_ID]);
+    const { channelID } = useParser();
+    const { imgList } = useSelector((state) => state[MODULE_ID]);
 
     const trigger = useCallback(
       ({ target }) => !!target.closest(ARTICLE_IMAGES),

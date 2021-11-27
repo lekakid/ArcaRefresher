@@ -17,6 +17,10 @@ const useStyles = makeStyles({
       display: 'none',
     },
   },
+  btn: {
+    borderColor: 'var(--color-border-outer)',
+    color: 'var(--color-text-color)',
+  },
 });
 
 export default function ImageDownloader() {
@@ -82,6 +86,7 @@ export default function ImageDownloader() {
       {ReactDOM.createPortal(
         <Button
           variant="outlined"
+          classes={{ root: classes.btn }}
           size="small"
           startIcon={<GetApp />}
           disabled={open}

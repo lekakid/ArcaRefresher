@@ -8,15 +8,10 @@ import { setClose } from './slice';
 
 export default function ContextMenu({ children }) {
   const dispatch = useDispatch();
-  const {
-    config: { enabled },
-    open,
-  } = useSelector((state) => state[MODULE_ID]);
+  const { open } = useSelector((state) => state[MODULE_ID]);
   const [mousePos, setMousePos] = useState([]);
 
   useEffect(() => {
-    if (!enabled) return null;
-
     const handleContext = ({ clientX, clientY }) => {
       dispatch(setClose());
       setMousePos([clientX, clientY]);
@@ -32,13 +27,13 @@ export default function ContextMenu({ children }) {
       document.removeEventListener('scroll', handleScroll);
       document.removeEventListener('contextmenu', handleContext);
     };
-  }, [dispatch, enabled]);
+  }, [dispatch]);
 
   const handleClose = useCallback(() => {
     dispatch(setClose());
   }, [dispatch]);
 
-  const [left = 0, top = 0] = mousePos || [];
+  const [left = 0, top = 0] = mousePos;
 
   return (
     <>

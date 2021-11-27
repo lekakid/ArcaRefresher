@@ -15,6 +15,7 @@ import { ColorPicker, createColor } from 'material-ui-color';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
+  setFontSize,
   toggleRecentVisit,
   toggleSideHumor,
   toggleSideNews,
@@ -29,11 +30,16 @@ import {
   toggleHumorCheckbox,
 } from '../slice';
 
+function labelFormat(x) {
+  return `${x}px`;
+}
+
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
     const {
+      fontSize,
       recentVisit,
       sideHumor,
       sideNews,
@@ -48,6 +54,13 @@ const ConfigMenu = React.forwardRef(
       hideHumorCheckbox,
     } = useSelector((state) => state[MODULE_ID]);
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
+
+    const handleFontSize = useCallback(
+      (_e, value) => {
+        dispatch(setFontSize(value));
+      },
+      [dispatch],
+    );
 
     const handleRecentVisit = useCallback(() => {
       dispatch(toggleRecentVisit());
@@ -120,6 +133,22 @@ const ConfigMenu = React.forwardRef(
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
+            <ListItem divider>
+              <ListItemText
+                primary="사이트 전체 폰트 크기 설정"
+                secondary="표시 설정에서 글자 크기 브라우저 기본 설정 필요"
+              />
+              <ListItemSecondaryAction>
+                <Slider
+                  min={8}
+                  max={30}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={labelFormat}
+                  defaultValue={fontSize}
+                  onChangeCommitted={handleFontSize}
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
             <ListItem divider button onClick={handleRecentVisit}>
               <ListItemText primary="최근 방문 채널 표시" />
               <ListItemSecondaryAction>

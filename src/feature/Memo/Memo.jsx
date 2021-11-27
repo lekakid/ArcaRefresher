@@ -8,7 +8,7 @@ import {
   EVENT_AUTOREFRESH,
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
-import { AuthorLabel } from 'component';
+import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserID, getKey } from 'util/user';
@@ -16,7 +16,7 @@ import { getUserID, getKey } from 'util/user';
 import { MODULE_ID } from './ModuleInfo';
 
 function MemoList() {
-  const { memo } = useSelector((state) => state[MODULE_ID]);
+  const { variant, memo } = useSelector((state) => state[MODULE_ID]);
   const [infoList, setInfoList] = useState([]);
   const loaded = useElementQuery(FULL_LOADED);
 
@@ -51,7 +51,9 @@ function MemoList() {
     <>
       {infoList.map(({ key, id, container }) =>
         ReactDOM.createPortal(
-          <AuthorLabel key={key}>{memo[id]}</AuthorLabel>,
+          <AuthorTag variant={variant} key={key}>
+            {memo[id]}
+          </AuthorTag>,
           container,
         ),
       )}

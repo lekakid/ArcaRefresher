@@ -6,7 +6,10 @@ import clsx from 'clsx';
 import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles(
-  () => ({
+  {
+    FontSize: ({ fontSize }) => ({
+      fontSize,
+    }),
     RecentVisit: {
       '& .visited-channel-wrap': {
         display: 'none',
@@ -76,7 +79,7 @@ const useStyles = makeStyles(
         display: 'none',
       },
     },
-  }),
+  },
   {
     name: MODULE_ID,
   },
@@ -98,6 +101,7 @@ export default function LayoutCustom() {
       hideHumorCheckbox,
     } = config;
     const styles = clsx(
+      classes.FontSize,
       classes.NotifyColor,
       classes.UserinfoWidth,
       classes.ResizeImage,

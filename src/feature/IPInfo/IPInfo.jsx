@@ -7,7 +7,7 @@ import {
   EVENT_AUTOREFRESH,
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
-import { AuthorLabel } from 'component';
+import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserIP, getKey } from 'util/user';
@@ -72,9 +72,9 @@ export default function IPInfo() {
     <>
       {infoList.map(({ key, label, color, container }) =>
         ReactDOM.createPortal(
-          <AuthorLabel key={key} className={classes[color]}>
+          <AuthorTag key={key} className={classes[color]}>
             {label}
-          </AuthorLabel>,
+          </AuthorTag>,
           container,
         ),
       )}

@@ -17,6 +17,9 @@ const useStyles = makeStyles(() => ({
     '&:empty': {
       display: 'none',
     },
+    '& .MuiButton-root': {
+      color: 'var(--color-text-color)',
+    },
   },
 }));
 
