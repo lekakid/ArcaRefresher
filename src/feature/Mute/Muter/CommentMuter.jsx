@@ -7,6 +7,7 @@ import {
   COMMENT_ITEMS,
   COMMENT_LOADED,
   COMMENT_WRAPPERS,
+  COMMENT_EMOTICON,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
@@ -15,6 +16,7 @@ import { getUserInfo } from 'util/user';
 import { MODULE_ID } from '../ModuleInfo';
 import { filterContent } from '../func';
 import CountBar from './CountBar';
+import useEmoticon from './useEmoticon';
 
 const useStyles = makeStyles(() => ({
   '@global': {
@@ -38,26 +40,31 @@ const useStyles = makeStyles(() => ({
         '&.show-filtered-user .comment-wrapper.filtered-user': {
           display: 'block',
         },
+        '& .filtered-emoticon': {
+          width: 'auto !important',
+          height: 'auto !important',
+          textDecoration: 'none !important',
+        },
+        '& .filtered-emoticon::after': {
+          content: '"[아카콘 뮤트됨]"',
+        },
+        '& .filtered-emoticon > img, .filtered-emoticon > video': {
+          display: 'none !important',
+        },
       },
     },
-  },
-  root: {
-    '&:empty': {
-      display: 'none',
-    },
-    borderBottom: '1px solid var(--color-border-outer)',
   },
 }));
 
 export default function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
-  const { user, keyword, hideCountBar, muteIncludeReply } = useSelector(
-    (state) => state[MODULE_ID],
-  );
+  const { user, keyword, emoticon, hideCountBar, muteIncludeReply } =
+    useSelector((state) => state[MODULE_ID]);
   const [comment, setComment] = useState(null);
   const [countBar, setCountBar] = useState(null);
   const [count, setCount] = useState(null);
+  const emoticonFilter = useEmoticon(emoticon);
 
   const classes = useStyles();
 
@@ -74,6 +81,26 @@ export default function CommentMuter() {
     tmpComment.insertAdjacentElement('beforebegin', countHeader);
     setCountBar(countHeader);
   }, [classes, dispatch, commentLoaded]);
+
+  useLayoutEffect(() => {
+    const muteEmoticon = () => {
+      const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
+      commentEmot.forEach((c) => {
+        const id = Number(c.dataset.id);
+        c.parentNode.classList.toggle(
+          'filtered-emoticon',
+          emoticonFilter.bundle?.indexOf(id) > -1,
+        );
+      });
+    };
+
+    addAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
+    muteEmoticon();
+
+    return () => {
+      removeAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
+    };
+  }, [emoticonFilter]);
 
   useLayoutEffect(() => {
     if (!comment) return () => {};
