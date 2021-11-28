@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 
 import {
   COMMENT_INNER_VIEW,
@@ -18,7 +18,7 @@ import { filterContent } from '../func';
 import CountBar from './CountBar';
 import useEmoticon from './useEmoticon';
 
-const useStyles = makeStyles(() => ({
+const style = {
   '@global': {
     '.body #comment': {
       '& .frontend-header': {
@@ -54,9 +54,9 @@ const useStyles = makeStyles(() => ({
       },
     },
   },
-}));
+};
 
-export default function CommentMuter() {
+function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const { user, keyword, emoticon, hideCountBar, muteIncludeReply } =
@@ -65,8 +65,6 @@ export default function CommentMuter() {
   const [countBar, setCountBar] = useState(null);
   const [count, setCount] = useState(null);
   const emoticonFilter = useEmoticon(emoticon);
-
-  const classes = useStyles();
 
   useLayoutEffect(() => {
     if (!commentLoaded) return;
@@ -77,10 +75,9 @@ export default function CommentMuter() {
     setComment(tmpComment);
 
     const countHeader = document.createElement('div');
-    countHeader.classList.add(classes.root);
     tmpComment.insertAdjacentElement('beforebegin', countHeader);
     setCountBar(countHeader);
-  }, [classes, dispatch, commentLoaded]);
+  }, [dispatch, commentLoaded]);
 
   useLayoutEffect(() => {
     const muteEmoticon = () => {
@@ -140,3 +137,5 @@ export default function CommentMuter() {
     />
   );
 }
+
+export default withStyles(style)(CommentMuter);

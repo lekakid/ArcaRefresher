@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 
 import {
   BOARD_ARTICLES_WITHOUT_NOTICE,
@@ -17,7 +17,7 @@ import { MODULE_ID } from '../ModuleInfo';
 import CountBar from './CountBar';
 import useEmoticon from './useEmoticon';
 
-const useStyles = makeStyles(() => ({
+const style = {
   '@global': {
     '.body .article-list': {
       '& .frontend-header': {
@@ -34,9 +34,9 @@ const useStyles = makeStyles(() => ({
       display: 'none !important',
     },
   },
-}));
+};
 
-export default function BoardMuter() {
+function BoardMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channelID, category: categoryInfo } = useParser();
@@ -48,8 +48,6 @@ export default function BoardMuter() {
   const [countBar, setCountBar] = useState(null);
   const [count, setCount] = useState(null);
   const emoticionFilter = useEmoticon(emoticon);
-
-  const classes = useStyles();
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
@@ -66,10 +64,9 @@ export default function BoardMuter() {
     setNameToIDMap(name2id);
 
     const countHeader = document.createElement('div');
-    countHeader.classList.add(classes.root);
     tmpBoard.insertAdjacentElement('afterbegin', countHeader);
     setCountBar(countHeader);
-  }, [classes, dispatch, boardLoaded, categoryInfo]);
+  }, [dispatch, boardLoaded, categoryInfo]);
 
   // 유저, 키워드, 카테고리 뮤트처리
   useLayoutEffect(() => {
@@ -131,3 +128,5 @@ export default function BoardMuter() {
     <CountBar renderContainer={countBar} classContainer={board} count={count} />
   );
 }
+
+export default withStyles(style)(BoardMuter);
