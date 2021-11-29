@@ -29,9 +29,9 @@ const style = {
       '& .block-preview .vrow-preview': {
         display: 'none !important',
       },
-    },
-    '.filtered-preview': {
-      display: 'none !important',
+      '& .filtered-emoticon': {
+        display: 'none !important',
+      },
     },
   },
 };
@@ -118,7 +118,7 @@ function BoardMuter() {
             .replace('?type=list', '');
 
       if (emoticionFilter.url.indexOf(url) > -1) {
-        e.parentNode.classList.add('filtered-preview');
+        e.parentNode.classList.add('filtered-emoticon');
       }
     });
   }, [board, emoticionFilter]);

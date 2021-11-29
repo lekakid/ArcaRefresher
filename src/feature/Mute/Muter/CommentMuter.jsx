@@ -44,12 +44,12 @@ const style = {
           width: 'auto !important',
           height: 'auto !important',
           textDecoration: 'none !important',
-        },
-        '& .filtered-emoticon::after': {
-          content: '"[아카콘 뮤트됨]"',
-        },
-        '& .filtered-emoticon > img, .filtered-emoticon > video': {
-          display: 'none !important',
+          '&::after': {
+            content: '"[아카콘 뮤트됨]"',
+          },
+          '& > img, & > video': {
+            display: 'none !important',
+          },
         },
       },
     },
