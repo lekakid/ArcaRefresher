@@ -22,12 +22,20 @@ const style = {
           display: 'none !important',
         },
       },
+      '& .filtered-toast .toast-body': {
+        '&::after': {
+          content: '"[뮤트된 이용자의 알림]"',
+        },
+        '& > a': {
+          display: 'none',
+        },
+      },
     },
   },
 };
 
 function ToastMuter() {
-  const { emoticon } = useSelector((state) => state[MODULE_ID]);
+  const { user, emoticon } = useSelector((state) => state[MODULE_ID]);
   const toastboxLoaded = useElementQuery(TOASTBOX);
   const filter = useEmoticon(emoticon);
 
@@ -42,6 +50,21 @@ function ToastMuter() {
           img.parentNode.classList.add('filtered-emoticon');
         }
       });
+
+      toastbox.querySelectorAll('.toast').forEach((toast) => {
+        const header = toast
+          .querySelector('.toast-header > strong')
+          .textContent.split('님의')[0];
+        const content = toast
+          .querySelector('.toast-body')
+          .textContent.split('님의')[0];
+
+        const regex = new RegExp(user.join('|'));
+        console.log(header, content);
+        if (regex.test(header) || regex.test(content)) {
+          toast.classList.add('filtered-toast');
+        }
+      });
     });
     observer.observe(toastbox, {
       childList: true,
@@ -49,7 +72,7 @@ function ToastMuter() {
     });
 
     return () => observer.disconnect();
-  }, [filter, toastboxLoaded]);
+  }, [filter, toastboxLoaded, user]);
 
   return null;
 }
