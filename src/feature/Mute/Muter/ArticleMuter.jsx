@@ -1,113 +1,74 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
 
-import {
-  BOARD_ARTICLES_WITHOUT_NOTICE,
-  BOARD_LOADED,
-  BOARD_VIEW,
-} from 'core/selector';
+import { ARTICLE_IMAGES, ARTICLE_LOADED, ARTICLE_VIEW } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useParser } from 'util/Parser';
-import { getUserInfo } from 'util/user';
 
-import { filterContent } from '../func';
 import { MODULE_ID } from '../ModuleInfo';
-import CountBar from './CountBar';
+import useEmoticon from './useEmoticon';
 
-const useStyles = makeStyles(() => ({
+const style = {
   '@global': {
-    '.body .article-list': {
-      '& .frontend-header': {
-        display: 'none',
-      },
-      '& .list-table.show-filtered-category .filtered-category': {
-        display: 'flex !important',
-      },
-      '& .block-preview .vrow-preview': {
-        display: 'none !important',
+    '.article-content': {
+      '& .filtered-emoticon': {
+        '& img, & video': {
+          display: 'none !important',
+        },
+        '&::after': {
+          position: 'inherit !important',
+          bottom: 'unset !important',
+          right: 'unset !important',
+          content: '"[아카콘 뮤트됨]" !important',
+          fontSize: 'inherit !important',
+          background: 'unset !important',
+          color: 'inherit !important',
+          fontWeight: 'inherit !important',
+          padding: 'unset !important',
+        },
       },
     },
   },
-  root: {
-    '&:empty': {
-      display: 'none',
-    },
-    borderBottom: '1px solid var(--color-border-outer)',
-  },
-}));
+};
 
-export default function ArticleMuter() {
-  const dispatch = useDispatch();
-  const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channelID, category: categoryInfo } = useParser();
-  const { user, keyword, category, hideCountBar } = useSelector(
-    (state) => state[MODULE_ID],
-  );
-  const [board, setBoard] = useState(null);
-  const [nameToIDMap, setNameToIDMap] = useState(null);
-  const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState(null);
-
-  const classes = useStyles();
-
-  useLayoutEffect(() => {
-    if (!boardLoaded) return;
-    if (!categoryInfo) return;
-
-    const tmpBoard = document.querySelector(BOARD_VIEW);
-    if (!tmpBoard) return;
-
-    setBoard(tmpBoard);
-    const name2id = Object.fromEntries(
-      Object.entries(categoryInfo).map(([key, value]) => [value, key]),
-    );
-    setNameToIDMap(name2id);
-
-    const countHeader = document.createElement('div');
-    countHeader.classList.add(classes.root);
-    tmpBoard.insertAdjacentElement('afterbegin', countHeader);
-    setCountBar(countHeader);
-  }, [classes, dispatch, boardLoaded, categoryInfo]);
+function ArticleMuter() {
+  const { emoticon } = useSelector((state) => state[MODULE_ID]);
+  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const [article, setArticle] = useState(null);
+  const emoticonFilter = useEmoticon(emoticon);
 
   useEffect(() => {
-    if (!board) return null;
+    if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
+  }, [articleLoaded]);
+
+  useEffect(() => {
+    if (!article) return;
 
     const muteArticle = () => {
-      const articleList = [
-        ...board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE),
-      ];
-      const articleInfo = articleList.map((a) => ({
-        element: a,
-        user: getUserInfo(a.querySelector('.user-info')),
-        content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge')?.textContent || '일반',
-      }));
-      const categoryConfig = category[channelID] || {};
+      const articleImage = [...document.querySelectorAll(ARTICLE_IMAGES)];
+      articleImage.forEach((i) => {
+        const { clientWidth: width, clientHeight: height, src } = i;
 
-      const result = filterContent(
-        articleInfo,
-        user,
-        keyword,
-        categoryConfig,
-        nameToIDMap,
-      );
-      setCount(result);
+        // Normal Image
+        if (width > 100 || height > 100) return;
+
+        const filterFormat = src
+          .replace('https:', '')
+          .replace('-p', '')
+          .replace('.mp4', '.mp4.gif');
+
+        // eslint-disable-next-line no-unused-expressions
+        i.closest('a')?.classList.toggle(
+          'filtered-emoticon',
+          emoticonFilter.url.indexOf(filterFormat) > -1,
+        );
+      });
     };
 
-    if (document.readyState === 'complete') muteArticle();
     window.addEventListener('load', muteArticle);
-    addAREvent(EVENT_AUTOREFRESH, muteArticle);
+  }, [article, emoticonFilter]);
 
-    return () => {
-      window.removeEventListener('load', muteArticle);
-      removeAREvent(EVENT_AUTOREFRESH, muteArticle);
-    };
-  }, [board, nameToIDMap, keyword, user, categoryInfo, channelID, category]);
-
-  if (!countBar || hideCountBar) return null;
-  return (
-    <CountBar renderContainer={countBar} classContainer={board} count={count} />
-  );
+  return null;
 }
+
+export default withStyles(style)(ArticleMuter);

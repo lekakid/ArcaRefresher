@@ -10,11 +10,14 @@ const TypeString = {
   all: '전체',
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
+    borderBottom: '1px solid var(--color-border-outer)',
+  },
+  right: {
     textAlign: 'right',
   },
-}));
+});
 
 export default function CountBar({ renderContainer, classContainer, count }) {
   const [showFilter, setShowFilter] = useState(null);
@@ -47,11 +50,11 @@ export default function CountBar({ renderContainer, classContainer, count }) {
   if (!showFilter) return null;
 
   return ReactDOM.createPortal(
-    <Grid container alignItems="center">
+    <Grid container alignItems="center" className={classes.root}>
       <Grid item sm={4} xs={12}>
         <Typography variant="subtitle1">필터된 게시물</Typography>
       </Grid>
-      <Grid item sm={8} xs={12} className={classes.root}>
+      <Grid item sm={8} xs={12} className={classes.right}>
         {Object.entries(count).map(([key, value]) => {
           const suffix = key === 'all' ? '' : `-${key}`;
           const className = `show-filtered${suffix}`;
