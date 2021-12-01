@@ -51,6 +51,7 @@ function ToastMuter() {
         }
       });
 
+      if (!user.length) return;
       toastbox.querySelectorAll('.toast').forEach((toast) => {
         const header = toast
           .querySelector('.toast-header > strong')
