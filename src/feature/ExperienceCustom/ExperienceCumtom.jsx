@@ -69,6 +69,8 @@ export default function ExperienceCustomizer() {
     const replyCount = document.querySelector(
       '.article-info > span:nth-child(7)',
     );
+    if (!replyCount) return;
+
     replyCount.addEventListener('click', () => {
       const commentForm = document.querySelector(COMMENT_VIEW);
       window.scrollTo({
