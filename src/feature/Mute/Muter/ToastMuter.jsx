@@ -61,7 +61,6 @@ function ToastMuter() {
           .textContent.split('님의')[0];
 
         const regex = new RegExp(user.join('|'));
-        console.log(header, content);
         if (regex.test(header) || regex.test(content)) {
           toast.classList.add('filtered-toast');
         }
