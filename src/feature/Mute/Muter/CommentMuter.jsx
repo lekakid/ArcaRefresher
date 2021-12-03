@@ -115,7 +115,11 @@ function CommentMuter() {
         category: '',
       }));
 
-      const result = filterContent(commentInfo, user, keyword, {}, {});
+      const result = filterContent({
+        contents: commentInfo,
+        userList: user,
+        keywordList: keyword,
+      });
       setCount(result);
     };
 
