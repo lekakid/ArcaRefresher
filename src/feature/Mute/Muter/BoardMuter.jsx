@@ -43,10 +43,10 @@ function BoardMuter() {
   const { user, keyword, emoticon, category, hideCountBar } = useSelector(
     (state) => state[MODULE_ID],
   );
-  const [board, setBoard] = useState(null);
-  const [nameToIDMap, setNameToIDMap] = useState(null);
-  const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState(null);
+  const [board, setBoard] = useState(undefined);
+  const [nameToIDMap, setNameToIDMap] = useState(undefined);
+  const [countBar, setCountBar] = useState(undefined);
+  const [count, setCount] = useState(undefined);
   const emoticionFilter = useEmoticon(emoticon);
 
   // 카테고리 매핑 테이블
@@ -102,16 +102,7 @@ function BoardMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [
-    board,
-    nameToIDMap,
-    keyword,
-    user,
-    categoryInfo,
-    channelID,
-    category,
-    hideCountBar,
-  ]);
+  }, [board, nameToIDMap, keyword, user, categoryInfo, channelID, category]);
 
   useLayoutEffect(() => {
     if (!board) return;
@@ -134,7 +125,12 @@ function BoardMuter() {
 
   if (!countBar) return null;
   return (
-    <CountBar renderContainer={countBar} classContainer={board} count={count} />
+    <CountBar
+      renderContainer={countBar}
+      classContainer={board}
+      count={count}
+      hide={hideCountBar}
+    />
   );
 }
 

@@ -61,9 +61,9 @@ function CommentMuter() {
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const { user, keyword, emoticon, hideCountBar, muteIncludeReply } =
     useSelector((state) => state[MODULE_ID]);
-  const [comment, setComment] = useState(null);
-  const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState(null);
+  const [comment, setComment] = useState(undefined);
+  const [countBar, setCountBar] = useState(undefined);
+  const [count, setCount] = useState(undefined);
   const emoticonFilter = useEmoticon(emoticon);
 
   useLayoutEffect(() => {
@@ -100,7 +100,7 @@ function CommentMuter() {
   }, [emoticonFilter]);
 
   useLayoutEffect(() => {
-    if (!comment) return () => {};
+    if (!comment) return undefined;
 
     const muteComment = () => {
       const commentList = [
@@ -132,12 +132,13 @@ function CommentMuter() {
     };
   }, [comment, keyword, user, muteIncludeReply]);
 
-  if (!countBar || hideCountBar) return null;
+  if (!countBar) return null;
   return (
     <CountBar
       renderContainer={countBar}
       classContainer={comment}
       count={count}
+      hide={hideCountBar}
     />
   );
 }
