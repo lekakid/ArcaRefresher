@@ -2,8 +2,8 @@ export default function filterContent({
   contents,
   userList,
   keywordList,
-  categoryList,
-  categoryMap,
+  categoryList = {},
+  categoryMap = {},
 }) {
   const count = {
     keyword: 0,
