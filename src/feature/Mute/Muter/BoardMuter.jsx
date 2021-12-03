@@ -84,13 +84,13 @@ function BoardMuter() {
       }));
       const categoryConfig = category[channelID] || {};
 
-      const result = filterContent(
-        articleInfo,
-        user,
-        keyword,
-        categoryConfig,
-        nameToIDMap,
-      );
+      const result = filterContent({
+        contents: articleInfo,
+        userList: user,
+        keywordList: keyword,
+        categoryList: categoryConfig,
+        categoryMap: nameToIDMap,
+      });
       setCount(result);
     };
 
@@ -102,7 +102,16 @@ function BoardMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [board, nameToIDMap, keyword, user, categoryInfo, channelID, category]);
+  }, [
+    board,
+    nameToIDMap,
+    keyword,
+    user,
+    categoryInfo,
+    channelID,
+    category,
+    hideCountBar,
+  ]);
 
   useLayoutEffect(() => {
     if (!board) return;
@@ -123,7 +132,7 @@ function BoardMuter() {
     });
   }, [board, emoticionFilter]);
 
-  if (!countBar || hideCountBar) return null;
+  if (!countBar) return null;
   return (
     <CountBar renderContainer={countBar} classContainer={board} count={count} />
   );
