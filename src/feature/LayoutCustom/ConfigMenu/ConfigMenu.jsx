@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
+  Collapse,
   List,
   ListItem,
   ListItemSecondaryAction,
@@ -11,6 +12,7 @@ import {
   Switch,
   Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { ColorPicker, createColor } from 'material-ui-color';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
@@ -34,6 +36,12 @@ function labelFormat(x) {
   return `${x}px`;
 }
 
+const useStyles = makeStyles((theme) => ({
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
+}));
+
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
@@ -54,6 +62,7 @@ const ConfigMenu = React.forwardRef(
       hideHumorCheckbox,
     } = useSelector((state) => state[MODULE_ID]);
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
+    const classes = useStyles();
 
     const handleFontSize = useCallback(
       (_e, value) => {
@@ -155,24 +164,38 @@ const ConfigMenu = React.forwardRef(
                 <Switch checked={recentVisit} onChange={handleRecentVisit} />
               </ListItemSecondaryAction>
             </ListItem>
-            <ListItem divider button onClick={handleSideHumor}>
-              <ListItemText primary="우측 사이드 메뉴 유머채널 패널 표시" />
-              <ListItemSecondaryAction>
-                <Switch checked={sideHumor} onChange={handleSideHumor} />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem divider button onClick={handleSideNews}>
-              <ListItemText primary="우측 사이드 메뉴 뉴스 패널 표시" />
-              <ListItemSecondaryAction>
-                <Switch checked={sideNews} onChange={handleSideNews} />
-              </ListItemSecondaryAction>
-            </ListItem>
             <ListItem divider button onClick={handleSideMenu}>
               <ListItemText primary="우측 사이드 메뉴 표시" />
               <ListItemSecondaryAction>
                 <Switch checked={sideMenu} onChange={handleSideMenu} />
               </ListItemSecondaryAction>
             </ListItem>
+            <Collapse in={sideMenu}>
+              <List disablePadding>
+                <ListItem
+                  className={classes.nested}
+                  divider
+                  button
+                  onClick={handleSideHumor}
+                >
+                  <ListItemText primary="유머채널 패널 표시" />
+                  <ListItemSecondaryAction>
+                    <Switch checked={sideHumor} onChange={handleSideHumor} />
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem
+                  className={classes.nested}
+                  divider
+                  button
+                  onClick={handleSideNews}
+                >
+                  <ListItemText primary="뉴스 패널 표시" />
+                  <ListItemSecondaryAction>
+                    <Switch checked={sideNews} onChange={handleSideNews} />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </Collapse>
             <ListItem divider button onClick={handleAvatar}>
               <ListItemText primary="이용자 아바타 표시" />
               <ListItemSecondaryAction>
