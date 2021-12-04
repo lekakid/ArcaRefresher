@@ -3,6 +3,7 @@ import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
   fontSize: 15,
+  topNews: true,
   recentVisit: true,
   sideHumor: true,
   sideNews: true,
@@ -28,6 +29,10 @@ export const slice = createSlice({
   reducers: {
     setFontSize(state, action) {
       state.fontSize = action.payload;
+      GM_setValue(MODULE_ID, state);
+    },
+    toggleTopNews(state) {
+      state.topNews = !state.topNews;
       GM_setValue(MODULE_ID, state);
     },
     toggleRecentVisit(state) {
@@ -83,6 +88,7 @@ export const slice = createSlice({
 
 export const {
   setFontSize,
+  toggleTopNews,
   toggleRecentVisit,
   toggleSideHumor,
   toggleSideNews,

@@ -11,6 +11,7 @@ import {
   Slider,
   Switch,
   Typography,
+  useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { ColorPicker, createColor } from 'material-ui-color';
@@ -18,6 +19,7 @@ import { ColorPicker, createColor } from 'material-ui-color';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   setFontSize,
+  toggleTopNews,
   toggleRecentVisit,
   toggleSideHumor,
   toggleSideNews,
@@ -48,6 +50,7 @@ const ConfigMenu = React.forwardRef(
     const dispatch = useDispatch();
     const {
       fontSize,
+      topNews,
       recentVisit,
       sideHumor,
       sideNews,
@@ -62,6 +65,7 @@ const ConfigMenu = React.forwardRef(
       hideHumorCheckbox,
     } = useSelector((state) => state[MODULE_ID]);
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
+    const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
     const classes = useStyles();
 
     const handleFontSize = useCallback(
@@ -73,6 +77,10 @@ const ConfigMenu = React.forwardRef(
 
     const handleRecentVisit = useCallback(() => {
       dispatch(toggleRecentVisit());
+    }, [dispatch]);
+
+    const handleTopNews = useCallback(() => {
+      dispatch(toggleTopNews());
     }, [dispatch]);
 
     const handleSideHumor = useCallback(() => {
@@ -158,44 +166,58 @@ const ConfigMenu = React.forwardRef(
                 />
               </ListItemSecondaryAction>
             </ListItem>
+            {mobile && (
+              <ListItem divider button onClick={handleTopNews}>
+                <ListItemText primary="상단 뉴스 헤더 표시" />
+                <ListItemSecondaryAction>
+                  <Switch checked={topNews} onChange={handleTopNews} />
+                </ListItemSecondaryAction>
+              </ListItem>
+            )}
             <ListItem divider button onClick={handleRecentVisit}>
               <ListItemText primary="최근 방문 채널 표시" />
               <ListItemSecondaryAction>
                 <Switch checked={recentVisit} onChange={handleRecentVisit} />
               </ListItemSecondaryAction>
             </ListItem>
-            <ListItem divider button onClick={handleSideMenu}>
-              <ListItemText primary="우측 사이드 메뉴 표시" />
-              <ListItemSecondaryAction>
-                <Switch checked={sideMenu} onChange={handleSideMenu} />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Collapse in={sideMenu}>
-              <List disablePadding>
-                <ListItem
-                  className={classes.nested}
-                  divider
-                  button
-                  onClick={handleSideHumor}
-                >
-                  <ListItemText primary="유머채널 패널 표시" />
+            {!mobile && (
+              <>
+                <ListItem divider button onClick={handleSideMenu}>
+                  <ListItemText primary="우측 사이드 메뉴 표시" />
                   <ListItemSecondaryAction>
-                    <Switch checked={sideHumor} onChange={handleSideHumor} />
+                    <Switch checked={sideMenu} onChange={handleSideMenu} />
                   </ListItemSecondaryAction>
                 </ListItem>
-                <ListItem
-                  className={classes.nested}
-                  divider
-                  button
-                  onClick={handleSideNews}
-                >
-                  <ListItemText primary="뉴스 패널 표시" />
-                  <ListItemSecondaryAction>
-                    <Switch checked={sideNews} onChange={handleSideNews} />
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </Collapse>
+                <Collapse in={sideMenu}>
+                  <List disablePadding>
+                    <ListItem
+                      className={classes.nested}
+                      button
+                      onClick={handleSideHumor}
+                    >
+                      <ListItemText primary="유머채널 패널 표시" />
+                      <ListItemSecondaryAction>
+                        <Switch
+                          checked={sideHumor}
+                          onChange={handleSideHumor}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <ListItem
+                      className={classes.nested}
+                      divider
+                      button
+                      onClick={handleSideNews}
+                    >
+                      <ListItemText primary="뉴스 패널 표시" />
+                      <ListItemSecondaryAction>
+                        <Switch checked={sideNews} onChange={handleSideNews} />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </List>
+                </Collapse>
+              </>
+            )}
             <ListItem divider button onClick={handleAvatar}>
               <ListItemText primary="이용자 아바타 표시" />
               <ListItemSecondaryAction>
