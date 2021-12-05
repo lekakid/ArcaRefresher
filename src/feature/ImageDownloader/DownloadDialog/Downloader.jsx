@@ -53,7 +53,6 @@ async function download({
         // eslint-disable-next-line no-await-in-loop
         const { response: blob } = await fetch({
           url: orig,
-          timeout: 20000,
           responseType: 'blob',
           onprogress: onFileProgress,
         });
