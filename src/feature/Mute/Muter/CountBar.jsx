@@ -19,23 +19,22 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CountBar({ renderContainer, classContainer, count }) {
-  const [showFilter, setShowFilter] = useState(null);
+function CountBar({ renderContainer, classContainer, count, hide }) {
+  const [showStates, setShowStates] = useState(undefined);
   const classes = useStyles();
 
   useLayoutEffect(() => {
-    if (showFilter || !count) return;
-
-    setShowFilter(
-      Object.fromEntries(Object.entries(count).map(([key]) => [key, false])),
+    const updated = Object.fromEntries(
+      Object.keys(count).map((key) => [key, false]),
     );
-  }, [count, showFilter]);
+    setShowStates(updated);
+  }, [count]);
 
   const handleClick = useCallback(
     (key) => () => {
       const suffix = key === 'all' ? '' : `-${key}`;
       const className = `show-filtered${suffix}`;
-      setShowFilter((prev) => {
+      setShowStates((prev) => {
         classContainer.classList.toggle(className, !prev[key]);
         return {
           ...prev,
@@ -46,8 +45,8 @@ export default function CountBar({ renderContainer, classContainer, count }) {
     [classContainer],
   );
 
-  if (!count?.all) return null;
-  if (!showFilter) return null;
+  if (count.all === 0 || (hide && count.deleted === 0)) return null;
+  if (!showStates) return null;
 
   return ReactDOM.createPortal(
     <Grid container alignItems="center" className={classes.root}>
@@ -56,13 +55,14 @@ export default function CountBar({ renderContainer, classContainer, count }) {
       </Grid>
       <Grid item sm={8} xs={12} className={classes.right}>
         {Object.entries(count).map(([key, value]) => {
+          if (hide && key !== 'deleted') return null;
           const suffix = key === 'all' ? '' : `-${key}`;
           const className = `show-filtered${suffix}`;
           return (
             count[key] > 0 && (
               <Chip
                 key={key}
-                variant={showFilter[key] ? 'outlined' : 'default'}
+                variant={showStates[key] ? 'outlined' : 'default'}
                 size="small"
                 className={className}
                 data-key={key}
@@ -77,3 +77,16 @@ export default function CountBar({ renderContainer, classContainer, count }) {
     renderContainer,
   );
 }
+
+CountBar.defaultProps = {
+  count: {
+    keyword: 0,
+    user: 0,
+    category: 0,
+    deleted: 0,
+    all: 0,
+  },
+  hide: false,
+};
+
+export default CountBar;

@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
+  enabled: true,
   fontSize: 15,
+  topNews: true,
   recentVisit: true,
   sideHumor: true,
   sideNews: true,
@@ -26,8 +28,16 @@ export const slice = createSlice({
   name: MODULE_ID,
   initialState,
   reducers: {
+    toggleEnable(state) {
+      state.enabled = !state.enabled;
+      GM_setValue(MODULE_ID, state);
+    },
     setFontSize(state, action) {
       state.fontSize = action.payload;
+      GM_setValue(MODULE_ID, state);
+    },
+    toggleTopNews(state) {
+      state.topNews = !state.topNews;
       GM_setValue(MODULE_ID, state);
     },
     toggleRecentVisit(state) {
@@ -82,7 +92,9 @@ export const slice = createSlice({
 });
 
 export const {
+  toggleEnable,
   setFontSize,
+  toggleTopNews,
   toggleRecentVisit,
   toggleSideHumor,
   toggleSideNews,

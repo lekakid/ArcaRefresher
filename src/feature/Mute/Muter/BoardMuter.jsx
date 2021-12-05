@@ -11,6 +11,7 @@ import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
 import { getUserInfo } from 'util/user';
+import getBadgeText from 'util/badge';
 
 import { filterContent } from '../func';
 import { MODULE_ID } from '../ModuleInfo';
@@ -43,10 +44,10 @@ function BoardMuter() {
   const { user, keyword, emoticon, category, hideCountBar } = useSelector(
     (state) => state[MODULE_ID],
   );
-  const [board, setBoard] = useState(null);
-  const [nameToIDMap, setNameToIDMap] = useState(null);
-  const [countBar, setCountBar] = useState(null);
-  const [count, setCount] = useState(null);
+  const [board, setBoard] = useState(undefined);
+  const [nameToIDMap, setNameToIDMap] = useState(undefined);
+  const [countBar, setCountBar] = useState(undefined);
+  const [count, setCount] = useState(undefined);
   const emoticionFilter = useEmoticon(emoticon);
 
   // 카테고리 매핑 테이블
@@ -80,17 +81,17 @@ function BoardMuter() {
         element: a,
         user: getUserInfo(a.querySelector('.user-info')),
         content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge')?.textContent || '일반',
+        category: getBadgeText(a.querySelector('.badge')) || '일반',
       }));
       const categoryConfig = category[channelID] || {};
 
-      const result = filterContent(
-        articleInfo,
-        user,
-        keyword,
-        categoryConfig,
-        nameToIDMap,
-      );
+      const result = filterContent({
+        contents: articleInfo,
+        userList: user,
+        keywordList: keyword,
+        categoryList: categoryConfig,
+        categoryMap: nameToIDMap,
+      });
       setCount(result);
     };
 
@@ -123,9 +124,14 @@ function BoardMuter() {
     });
   }, [board, emoticionFilter]);
 
-  if (!countBar || hideCountBar) return null;
+  if (!countBar) return null;
   return (
-    <CountBar renderContainer={countBar} classContainer={board} count={count} />
+    <CountBar
+      renderContainer={countBar}
+      classContainer={board}
+      count={count}
+      hide={hideCountBar}
+    />
   );
 }
 

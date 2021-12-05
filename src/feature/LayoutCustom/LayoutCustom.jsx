@@ -10,6 +10,11 @@ const useStyles = makeStyles(
     FontSize: ({ fontSize }) => ({
       fontSize,
     }),
+    TopNews: {
+      '& .topbar-area': {
+        display: 'none !important',
+      },
+    },
     RecentVisit: {
       '& .visited-channel-wrap': {
         display: 'none',
@@ -90,8 +95,11 @@ export default function LayoutCustom() {
   const classes = useStyles(config);
 
   useLayoutEffect(() => {
+    if (!config.enabled) return undefined;
+
     const {
       recentVisit,
+      topNews,
       sideHumor,
       sideNews,
       sideMenu,
@@ -108,6 +116,7 @@ export default function LayoutCustom() {
       classes.ResizeVideo,
       {
         [classes.RecentVisit]: !recentVisit,
+        [classes.TopNews]: !topNews,
         [classes.SideHumor]: !sideHumor,
         [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
