@@ -54,7 +54,6 @@ const ContextMenu = React.forwardRef(
             // eslint-disable-next-line no-await-in-loop
             const { response: rawData } = await fetch({
               url: data.orig,
-              timeout: 10000,
               responseType: 'blob',
             });
 
@@ -102,7 +101,6 @@ const ContextMenu = React.forwardRef(
             // eslint-disable-next-line no-await-in-loop
             const { response: blob } = await fetch({
               url: orig,
-              timeout: 10000,
               responseType: 'blob',
             });
 
