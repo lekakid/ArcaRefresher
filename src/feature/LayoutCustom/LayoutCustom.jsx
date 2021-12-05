@@ -95,6 +95,8 @@ export default function LayoutCustom() {
   const classes = useStyles(config);
 
   useLayoutEffect(() => {
+    if (!config.enabled) return undefined;
+
     const {
       recentVisit,
       topNews,

@@ -18,6 +18,7 @@ import { ColorPicker, createColor } from 'material-ui-color';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
+  toggleEnable,
   setFontSize,
   toggleTopNews,
   toggleRecentVisit,
@@ -49,6 +50,7 @@ const ConfigMenu = React.forwardRef(
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
     const {
+      enabled,
       fontSize,
       topNews,
       recentVisit,
@@ -67,6 +69,10 @@ const ConfigMenu = React.forwardRef(
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
     const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
     const classes = useStyles();
+
+    const handleEnable = useCallback(() => {
+      dispatch(toggleEnable());
+    }, [dispatch]);
 
     const handleFontSize = useCallback(
       (_e, value) => {
@@ -150,6 +156,12 @@ const ConfigMenu = React.forwardRef(
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
+            <ListItem divider button onClick={handleEnable}>
+              <ListItemText primary="사용" />
+              <ListItemSecondaryAction>
+                <Switch checked={enabled} onChange={handleEnable} />
+              </ListItemSecondaryAction>
+            </ListItem>
             <ListItem divider>
               <ListItemText
                 primary="사이트 전체 폰트 크기 설정"
