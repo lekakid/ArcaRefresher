@@ -64,23 +64,6 @@ export default function ExperienceCustomizer() {
   }, [articleLoaded]);
 
   useEffect(() => {
-    if (!article) return;
-
-    const replyCount = document.querySelector(
-      '.article-info > span:nth-child(7)',
-    );
-    if (!replyCount) return;
-
-    replyCount.addEventListener('click', () => {
-      const commentForm = document.querySelector(COMMENT_VIEW);
-      window.scrollTo({
-        top: commentForm.offsetTop - window.innerHeight * 0.3,
-        behavior: 'smooth',
-      });
-    });
-  }, [article]);
-
-  useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
 
     article.querySelectorAll(ARTICLE_IMAGES).forEach((i) => {
