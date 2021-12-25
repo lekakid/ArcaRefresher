@@ -24,19 +24,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DownloadDialog({ open, onClose }) {
-  const [data] = useState(() =>
-    [...document.querySelectorAll(ARTICLE_IMAGES)].map((e) => {
-      const url = e.src.split('?')[0];
+  const [data] = useState(() => {
+    const imageList = [...document.querySelectorAll(ARTICLE_IMAGES)];
+    const dataResult = imageList.reduce((acc, image) => {
+      try {
+        const url = image.src.split('?')[0];
 
-      const orig = `${url}${e.tagName === 'VIDEO' ? '.gif' : ''}?type=orig`;
-      const thumb = `${url}${e.tagName === 'VIDEO' ? '.gif' : ''}`;
-      const [, ext] =
-        e.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
-      const [uploadName] = url.match(/[0-9a-f]{64}/g);
+        const orig = `${url}${
+          image.tagName === 'VIDEO' ? '.gif' : ''
+        }?type=orig`;
+        const thumb = `${url}${image.tagName === 'VIDEO' ? '.gif' : ''}`;
+        const [, ext] =
+          image.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
+        const [uploadName] = url.match(/[0-9a-f]{64}/g);
 
-      return { orig, thumb, ext, uploadName };
-    }),
-  );
+        acc.push({ orig, thumb, ext, uploadName });
+      } catch (error) {
+        console.warn('[ImageDownloader]', error);
+      }
+      return acc;
+    }, []);
+
+    return dataResult;
+  });
   const [selection, setSelection] = useState([]);
   const [downloadList, setDownloadList] = useState([]);
   const [downloader, setDownloader] = useState(false);
