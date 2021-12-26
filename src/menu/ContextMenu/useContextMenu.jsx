@@ -3,6 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setOpen } from './slice';
 import { MODULE_ID } from './ModuleInfo';
 
+function getKeyCombine(event) {
+  let combine = '';
+
+  if (event.ctrlKey) combine += 'c';
+  if (event.shiftKey) combine += 's';
+  combine += 'r';
+
+  return combine;
+}
+
 export default function useContextMenu({ trigger, dataGetter }) {
   const dispatch = useDispatch();
   const {
@@ -27,7 +37,8 @@ export default function useContextMenu({ trigger, dataGetter }) {
         mouseInfo.current.count = 0;
         return;
       }
-      if (e.shiftKey === (interactionType === 'r')) return;
+
+      if (getKeyCombine(e) !== interactionType) return;
 
       if (!trigger(e)) {
         setData(null);
