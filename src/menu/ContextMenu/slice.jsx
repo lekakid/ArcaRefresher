@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
-  // l: left click
   // r: right click
   // sr: shift + right click
+  // cr: ctrl + right click
   interactionType: 'r',
 };
 
