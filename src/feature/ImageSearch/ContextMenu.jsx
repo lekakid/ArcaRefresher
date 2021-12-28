@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
 
@@ -12,41 +11,51 @@ import { MODULE_ID } from './ModuleInfo';
 
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ContextMenu(_props, ref) {
+  function ContextMenu({ triggerList }, ref) {
     const { saucenaoBypass } = useSelector((state) => state[MODULE_ID]);
     const dispatch = useDispatch();
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.closest(ARTICLE_IMAGES),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const url = target.src.split('?')[0];
-      const orig = `${url}${
-        target.tagName === 'VIDEO' ? '.gif' : ''
-      }?type=orig`;
+    useEffect(() => {
+      const trigger = (target) => {
+        if (!target.closest(ARTICLE_IMAGES)) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      return { orig };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+        const url = target.src.split('?')[0];
+        const orig = `${url}${
+          target.tagName === 'VIDEO' ? '.gif' : ''
+        }?type=orig`;
+        data.current = orig;
+        setValid(true);
+        return true;
+      };
+
+      triggerList.current.push(trigger);
+    }, [triggerList]);
 
     const handleGoogle = useCallback(() => {
       window.open(
-        `https://www.google.com/searchbyimage?safe=off&image_url=${data.orig}`,
+        `https://www.google.com/searchbyimage?safe=off&image_url=${data.current}`,
       );
       dispatch(setClose());
-    }, [data, dispatch]);
+    }, [dispatch]);
 
     const handleYandex = useCallback(() => {
       window.open(
-        `https://yandex.com/images/search?rpt=imageview&url=${data.orig}`,
+        `https://yandex.com/images/search?rpt=imageview&url=${data.current}`,
       );
       dispatch(setClose());
-    }, [data, dispatch]);
+    }, [dispatch]);
 
     const handleSauceNao = useCallback(() => {
       if (!saucenaoBypass) {
-        window.open(`https://saucenao.com/search.php?db=999&url=${data.orig}`);
+        window.open(
+          `https://saucenao.com/search.php?db=999&url=${data.current}`,
+        );
         dispatch(setClose());
         return;
       }
@@ -56,7 +65,7 @@ const ContextMenu = React.forwardRef(
           dispatch(setClose());
           dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
           const { response: blob } = await fetch({
-            url: data.orig,
+            url: data.current,
             timeout: 10000,
             responseType: 'blob',
           });
@@ -108,7 +117,7 @@ const ContextMenu = React.forwardRef(
           console.error(error);
         }
       })();
-    }, [saucenaoBypass, data, dispatch]);
+    }, [saucenaoBypass, dispatch]);
 
     const handleTwigaten = useCallback(() => {
       (async () => {
@@ -116,7 +125,7 @@ const ContextMenu = React.forwardRef(
           dispatch(setClose());
           dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
           const { response: blob } = await fetch({
-            url: data.orig,
+            url: data.current,
             timeout: 10000,
             responseType: 'blob',
           });
@@ -141,7 +150,7 @@ const ContextMenu = React.forwardRef(
           console.error(error);
         }
       })();
-    }, [dispatch, data]);
+    }, [dispatch]);
 
     const handleAscii2D = useCallback(() => {
       (async () => {
@@ -149,7 +158,7 @@ const ContextMenu = React.forwardRef(
           dispatch(setClose());
           dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
           const { response: blob } = await fetch({
-            url: data.orig,
+            url: data.current,
             timeout: 10000,
             responseType: 'blob',
           });
@@ -193,11 +202,11 @@ const ContextMenu = React.forwardRef(
           console.error(error);
         }
       })();
-    }, [data, dispatch]);
+    }, [dispatch]);
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
+      <List>
         <MenuItem ref={ref} onClick={handleGoogle}>
           <ListItemIcon>
             <ImageSearch />
@@ -228,7 +237,7 @@ const ContextMenu = React.forwardRef(
           </ListItemIcon>
           <Typography>Ascii2D 검색</Typography>
         </MenuItem>
-      </ContextMenuList>
+      </List>
     );
   },
 );

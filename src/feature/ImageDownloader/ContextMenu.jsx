@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
 
@@ -15,29 +14,37 @@ import { getArticleInfo, replaceFormat } from './func';
 
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ContextMenu(_props, ref) {
+  function ContextMenu({ triggerList }, ref) {
     const dispatch = useDispatch();
     const { fileName, retryCount } = useSelector((state) => state[MODULE_ID]);
     const articleLoaded = useElementQuery(ARTICLE_LOADED);
     const articleInfo = useRef(null);
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.closest(ARTICLE_IMAGES),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const url = target.src.split('?')[0];
+    useEffect(() => {
+      const trigger = (target) => {
+        if (!target.closest(ARTICLE_IMAGES)) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      const orig = `${url}${
-        target.tagName === 'VIDEO' ? '.gif' : ''
-      }?type=orig`;
-      const [, ext] =
-        target.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
-      const [uploadName] = url.match(/[0-9a-f]{64}/g);
+        const url = target.src.split('?')[0];
+        const orig = `${url}${
+          target.tagName === 'VIDEO' ? '.gif' : ''
+        }?type=orig`;
+        const [, ext] =
+          target.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
+        const [uploadName] = url.match(/[0-9a-f]{64}/g);
 
-      return { orig, ext, uploadName };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+        data.current = { orig, ext, uploadName };
+        setValid(true);
+        return true;
+      };
+
+      triggerList.current.push(trigger);
+    }, [triggerList]);
 
     useEffect(() => {
       if (!articleLoaded) return;
@@ -47,13 +54,15 @@ const ContextMenu = React.forwardRef(
 
     const handleClipboard = useCallback(() => {
       (async () => {
+        const { orig } = data.current;
+
         for (let i = 0; i < retryCount; i += 1) {
           try {
             dispatch(setClose());
             dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
             // eslint-disable-next-line no-await-in-loop
             const { response: rawData } = await fetch({
-              url: data.orig,
+              url: orig,
               responseType: 'blob',
             });
 
@@ -85,15 +94,15 @@ const ContextMenu = React.forwardRef(
             );
             break;
           } catch (error) {
-            console.warn('다운로드 실패로 인한 재시도', data.orig, error);
+            console.warn('다운로드 실패로 인한 재시도', orig, error);
           }
         }
       })();
-    }, [retryCount, data, dispatch]);
+    }, [retryCount, dispatch]);
 
     const handleDownload = useCallback(() => {
       (async () => {
-        const { orig, ext, uploadName } = data;
+        const { orig, ext, uploadName } = data.current;
         for (let i = 0; i < retryCount; i += 1) {
           try {
             dispatch(setClose());
@@ -118,16 +127,16 @@ const ContextMenu = React.forwardRef(
           }
         }
       })();
-    }, [data, fileName, retryCount, dispatch]);
+    }, [fileName, retryCount, dispatch]);
 
     const handleCopyURL = useCallback(() => {
       dispatch(setClose());
-      navigator.clipboard.writeText(data.orig);
-    }, [data, dispatch]);
+      navigator.clipboard.writeText(data.current.orig);
+    }, [dispatch]);
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
+      <List>
         <MenuItem ref={ref} onClick={handleClipboard}>
           <ListItemIcon>
             <Assignment />
@@ -146,7 +155,7 @@ const ContextMenu = React.forwardRef(
           </ListItemIcon>
           <Typography>이미지 주소 복사</Typography>
         </MenuItem>
-      </ContextMenuList>
+      </List>
     );
   },
 );

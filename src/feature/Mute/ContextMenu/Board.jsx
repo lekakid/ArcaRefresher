@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserInfo } from 'util/user';
 
@@ -17,22 +16,29 @@ function makeRegex(id = '') {
 
 const Board = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function Board(_props, ref) {
+  function Board({ triggerList }, ref) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state[MODULE_ID]);
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.closest(USER_INFO),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const id = getUserInfo(target.closest(USER_INFO));
+    useEffect(() => {
+      const trigger = (target) => {
+        if (!target.closest(USER_INFO)) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      return { id };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+        data.current = getUserInfo(target.closest(USER_INFO));
+        setValid(true);
+        return true;
+      };
 
-    const regex = makeRegex(data?.id);
+      triggerList.current.push(trigger);
+    }, [triggerList]);
+
+    const regex = makeRegex(data.current || '');
     const exist = user.indexOf(regex) > -1;
 
     const handleMute = useCallback(() => {
@@ -40,14 +46,14 @@ const Board = React.forwardRef(
       dispatch(setClose());
     }, [dispatch, exist, regex]);
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
+      <List>
         <MenuItem ref={ref} onClick={handleMute}>
           <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
           <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
         </MenuItem>
-      </ContextMenuList>
+      </List>
     );
   },
 );

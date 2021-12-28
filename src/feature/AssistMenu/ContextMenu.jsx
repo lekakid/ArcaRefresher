@@ -1,49 +1,52 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
 
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ContextMenu(_props, ref) {
+  function ContextMenu({ triggerList }, ref) {
     const dispatch = useDispatch();
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(({ target }) => {
-      const id = target.closest(USER_INFO)?.querySelector('[data-filter]')
-        ?.dataset.filter;
-      if (!id) return false;
+    useEffect(() => {
+      const trigger = (target) => {
+        const userInfo = target.closest(USER_INFO);
+        if (!userInfo) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      return /^[^,]*$/.test(id);
-    }, []);
-    const dataGetter = useCallback(({ target }) => {
-      const id = target
-        .closest(USER_INFO)
-        .querySelector('[data-filter]')
-        .dataset.filter.replace('#', '/');
+        const id =
+          userInfo?.querySelector('[data-filter]')?.dataset.filter || '';
+        data.current = id.replace('#', '/');
+        setValid(/^[^,]+$/.test(id));
+        return true;
+      };
 
-      return { id };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+      triggerList.current.push(trigger);
+    }, [triggerList]);
 
-    const handleGoogle = useCallback(() => {
-      window.open(`https://arca.live/u/@${data.id}`);
+    const handleInfo = useCallback(() => {
+      window.open(`https://arca.live/u/@${data.current}`);
       dispatch(setClose());
-    }, [data, dispatch]);
+    }, [dispatch]);
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
-        <MenuItem ref={ref} onClick={handleGoogle}>
+      <List>
+        <MenuItem ref={ref} onClick={handleInfo}>
           <ListItemIcon>
             <Person />
           </ListItemIcon>
           <Typography>사용자 정보</Typography>
         </MenuItem>
-      </ContextMenuList>
+      </List>
     );
   },
 );

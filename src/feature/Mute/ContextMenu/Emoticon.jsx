@@ -1,9 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
 
 import { getEmoticonInfo } from '../func';
@@ -11,25 +10,33 @@ import { addEmoticon } from '../slice';
 
 const Emoticon = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function Emoticon(_props, ref) {
+  function Emoticon({ triggerList }, ref) {
     const dispatch = useDispatch();
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.matches('.emoticon'),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const { id } = target.dataset;
-      const url = target.src.replace('https:', '');
+    useEffect(() => {
+      const trigger = (target) => {
+        if (!target.matches('.emoticon')) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      return { id, url };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+        data.current = {
+          id: target.dataset.id,
+          url: target.src.replace('https:', ''),
+        };
+        setValid(true);
+        return true;
+      };
+
+      triggerList.current.push(trigger);
+    }, [triggerList]);
 
     const handleMute = useCallback(() => {
-      if (!data) return;
       (async () => {
-        const { id, url } = data;
+        const { id, url } = data.current;
         const {
           bundleID,
           name,
@@ -55,18 +62,18 @@ const Emoticon = React.forwardRef(
 
         dispatch(setClose());
       })();
-    }, [data, dispatch]);
+    }, [dispatch]);
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
+      <List>
         <MenuItem ref={ref} onClick={handleMute}>
           <ListItemIcon>
             <Block />
           </ListItemIcon>
           <Typography>아카콘 뮤트</Typography>
         </MenuItem>
-      </ContextMenuList>
+      </List>
     );
   },
 );

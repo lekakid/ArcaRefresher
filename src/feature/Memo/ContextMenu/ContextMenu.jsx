@@ -1,34 +1,42 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserID } from 'util/user';
+
 import { setMemo } from '../slice';
 import { MODULE_ID } from '../ModuleInfo';
 import MemoInput from './MemoInput';
 
 const ContextMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ContextMenu(_props, ref) {
+  function ContextMenu({ triggerList }, ref) {
     const dispatch = useDispatch();
     const { memo } = useSelector((state) => state[MODULE_ID]);
     const [open, setOpen] = useState(false);
+    const data = useRef(null);
+    const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.closest(USER_INFO),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const userInfo = target.closest(USER_INFO);
-      const id = getUserID(userInfo);
+    useEffect(() => {
+      const trigger = (target) => {
+        if (!target.closest(USER_INFO)) {
+          data.current = null;
+          setValid(false);
+          return false;
+        }
 
-      return { id };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+        const userInfo = target.closest(USER_INFO);
+        const id = getUserID(userInfo);
+        data.current = id;
+        setValid(true);
+        return true;
+      };
+
+      triggerList.current.push(trigger);
+    }, [triggerList]);
 
     const handleClick = useCallback(() => {
       dispatch(setClose());
@@ -41,15 +49,14 @@ const ContextMenu = React.forwardRef(
 
     const handleInputSubmit = useCallback(
       (value) => {
-        const { id } = data;
-        dispatch(setMemo({ user: id, memo: value }));
+        dispatch(setMemo({ user: data.current, memo: value }));
       },
       [data, dispatch],
     );
 
-    if (!data) return null;
+    if (!valid) return null;
     return (
-      <ContextMenuList>
+      <List>
         <MenuItem ref={ref} onClick={handleClick}>
           <ListItemIcon>
             <Comment />
@@ -58,11 +65,11 @@ const ContextMenu = React.forwardRef(
         </MenuItem>
         <MemoInput
           open={open}
-          defaultValue={memo[data.id]}
+          defaultValue={memo[data.current]}
           onClose={handleInputClose}
           onSubmit={handleInputSubmit}
         />
-      </ContextMenuList>
+      </List>
     );
   },
 );
