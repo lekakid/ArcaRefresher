@@ -24,6 +24,7 @@ import {
   setKeyword,
   setUser,
   toggleCountBar,
+  toggleMutedMark,
   toggleIncludeReply,
 } from '../slice';
 import CategoryRow from './CategoryRow';
@@ -49,8 +50,14 @@ const ConfigMenu = React.forwardRef(
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
     const { category } = useParser();
-    const { hideCountBar, muteIncludeReply, user, keyword, emoticon } =
-      useSelector((state) => state[MODULE_ID]);
+    const {
+      hideCountBar,
+      hideMutedMark,
+      muteIncludeReply,
+      user,
+      keyword,
+      emoticon,
+    } = useSelector((state) => state[MODULE_ID]);
     const tableRows = Object.keys(emoticon).map((key) => ({
       id: key,
       name: emoticon[key].name,
@@ -66,6 +73,10 @@ const ConfigMenu = React.forwardRef(
 
     const handleCountBar = useCallback(() => {
       dispatch(toggleCountBar());
+    }, [dispatch]);
+
+    const handleMutedMark = useCallback(() => {
+      dispatch(toggleMutedMark());
     }, [dispatch]);
 
     const handleIncludeReply = useCallback(() => {
@@ -131,6 +142,15 @@ const ConfigMenu = React.forwardRef(
               />
               <ListItemSecondaryAction>
                 <Switch checked={hideCountBar} onChange={handleCountBar} />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider button onClick={handleMutedMark}>
+              <ListItemText
+                primary="[뮤트됨] 표시 숨김"
+                secondary="변경 후 새로고침 필요"
+              />
+              <ListItemSecondaryAction>
+                <Switch checked={hideMutedMark} onChange={handleMutedMark} />
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem divider button onClick={handleIncludeReply}>

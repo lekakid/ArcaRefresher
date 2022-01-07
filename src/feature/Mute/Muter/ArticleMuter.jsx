@@ -27,12 +27,20 @@ const style = {
           padding: 'unset !important',
         },
       },
+      '& .hide-filtered-emoticon': {
+        '& img, & video': {
+          display: 'none !important',
+        },
+        '&::after': {
+          content: 'none !important',
+        },
+      },
     },
   },
 };
 
 function ArticleMuter() {
-  const { emoticon } = useSelector((state) => state[MODULE_ID]);
+  const { emoticon, hideMutedMark } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const [article, setArticle] = useState(null);
   const emoticonFilter = useEmoticon(emoticon);
@@ -59,14 +67,14 @@ function ArticleMuter() {
 
         // eslint-disable-next-line no-unused-expressions
         i.closest('a')?.classList.toggle(
-          'filtered-emoticon',
+          hideMutedMark ? 'hide-filtered-emoticon' : 'filtered-emoticon',
           emoticonFilter.url.indexOf(filterFormat) > -1,
         );
       });
     };
 
     window.addEventListener('load', muteArticle);
-  }, [article, emoticonFilter]);
+  }, [article, emoticonFilter, hideMutedMark]);
 
   return null;
 }

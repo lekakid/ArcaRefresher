@@ -7,6 +7,7 @@ const defaultConfigState = {
   emoticon: {},
   category: {},
   hideCountBar: false,
+  hideMutedMark: false,
   muteIncludeReply: false,
 };
 
@@ -74,6 +75,10 @@ export const slice = createSlice({
       state.hideCountBar = !state.hideCountBar;
       GM_setValue(MODULE_ID, state);
     },
+    toggleMutedMark(state) {
+      state.hideMutedMark = !state.hideMutedMark;
+      GM_setValue(MODULE_ID, state);
+    },
     toggleIncludeReply(state) {
       state.muteIncludeReply = !state.muteIncludeReply;
       GM_setValue(MODULE_ID, state);
@@ -92,6 +97,7 @@ export const {
   removeEmoticonList,
   setCategoryConfig,
   toggleCountBar,
+  toggleMutedMark,
   toggleIncludeReply,
 } = slice.actions;
 
