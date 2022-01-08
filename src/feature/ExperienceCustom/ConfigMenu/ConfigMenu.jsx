@@ -14,6 +14,7 @@ import {
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   toggleArticleNewWindow,
+  toggleHideFirstImage,
   toggleMediaNewWindow,
   toggleRateDownGuard,
   toggleComment,
@@ -26,6 +27,7 @@ const ConfigMenu = React.forwardRef(
     const dispatch = useDispatch();
     const {
       openArticleNewWindow,
+      hideFirstImage,
       blockMediaNewWindow,
       ratedownGuard,
       foldComment,
@@ -34,6 +36,10 @@ const ConfigMenu = React.forwardRef(
 
     const handleArticleNewWindow = useCallback(() => {
       dispatch(toggleArticleNewWindow());
+    }, [dispatch]);
+
+    const handleHideFirstImage = useCallback(() => {
+      dispatch(toggleHideFirstImage());
     }, [dispatch]);
 
     const handleMediaNewWindow = useCallback(() => {
@@ -66,6 +72,18 @@ const ConfigMenu = React.forwardRef(
                 <Switch
                   checked={openArticleNewWindow}
                   onChange={handleArticleNewWindow}
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider button onClick={handleHideFirstImage}>
+              <ListItemText
+                primary="게시물 첫 이미지 접기"
+                secondary="첫 이미지(대문 제외)를 숨기고 다시 보일 수 있는 버튼을 제공합니다."
+              />
+              <ListItemSecondaryAction>
+                <Switch
+                  checked={hideFirstImage}
+                  onChange={handleHideFirstImage}
                 />
               </ListItemSecondaryAction>
             </ListItem>

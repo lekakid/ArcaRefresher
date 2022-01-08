@@ -3,6 +3,7 @@ import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
   openArticleNewWindow: false,
+  hideFirstImage: false,
   blockMediaNewWindow: false,
   ratedownGuard: false,
   foldComment: false,
@@ -20,6 +21,10 @@ export const slice = createSlice({
   reducers: {
     toggleArticleNewWindow(state) {
       state.openArticleNewWindow = !state.openArticleNewWindow;
+      GM_setValue(MODULE_ID, state);
+    },
+    toggleHideFirstImage(state) {
+      state.hideFirstImage = !state.hideFirstImage;
       GM_setValue(MODULE_ID, state);
     },
     toggleMediaNewWindow(state) {
@@ -43,6 +48,7 @@ export const slice = createSlice({
 
 export const {
   toggleArticleNewWindow,
+  toggleHideFirstImage,
   toggleMediaNewWindow,
   toggleRateDownGuard,
   toggleComment,
