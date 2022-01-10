@@ -1,4 +1,4 @@
-export default function getBadgeText(badgeElement) {
+export default function convertImgToAlt(badgeElement) {
   try {
     const convertedNodeList = [...badgeElement.childNodes].map((node) =>
       node.alt ? node.alt : node.textContent,
