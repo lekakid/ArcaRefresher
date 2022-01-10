@@ -17,6 +17,21 @@ import { KeyIcon } from 'component';
 import { setInteraction } from '../slice';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
+const label = {
+  r: {
+    refresher: ['R Click'],
+    browser: ['Shift', 'R Click'],
+  },
+  sr: {
+    refresher: ['Shift', 'R Click'],
+    browser: ['R Click'],
+  },
+  cr: {
+    refresher: ['Ctrl', 'R Click'],
+    browser: ['R Click'],
+  },
+};
+
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
@@ -47,6 +62,7 @@ const ConfigMenu = React.forwardRef(
                 >
                   <MenuItem value="r">R Click</MenuItem>
                   <MenuItem value="sr">Shift + R Click</MenuItem>
+                  <MenuItem value="cr">Ctrl + R Click</MenuItem>
                 </Select>
               </ListItemSecondaryAction>
             </ListItem>
@@ -57,14 +73,15 @@ const ConfigMenu = React.forwardRef(
                     <ListItemText primary="리프레셔 메뉴" />
                     <ListItemSecondaryAction>
                       <Box display="flex" alignItems="center">
-                        {interactionType !== 'r' && (
-                          <>
-                            <KeyIcon title="Shift" />
-                            +
-                            <KeyIcon title="R Click" />
-                          </>
+                        {label[interactionType].refresher.map(
+                          (value, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <React.Fragment key={index}>
+                              {index !== 0 && '+'}
+                              <KeyIcon title={value} />
+                            </React.Fragment>
+                          ),
                         )}
-                        {interactionType === 'r' && <KeyIcon title="R Click" />}
                       </Box>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -72,14 +89,13 @@ const ConfigMenu = React.forwardRef(
                     <ListItemText primary="브라우저 메뉴" />
                     <ListItemSecondaryAction>
                       <Box display="flex" alignItems="center">
-                        {interactionType === 'r' && (
-                          <>
-                            <KeyIcon title="Shift" />
-                            +
-                            <KeyIcon title="R Click" />
-                          </>
-                        )}
-                        {interactionType !== 'r' && <KeyIcon title="R Click" />}
+                        {label[interactionType].browser.map((value, index) => (
+                          // eslint-disable-next-line react/no-array-index-key
+                          <React.Fragment key={index}>
+                            {index !== 0 && '+'}
+                            <KeyIcon title={value} />
+                          </React.Fragment>
+                        ))}
                       </Box>
                     </ListItemSecondaryAction>
                   </ListItem>

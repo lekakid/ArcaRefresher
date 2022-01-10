@@ -40,16 +40,21 @@ const style = {
         '&.show-filtered-user .comment-wrapper.filtered-user': {
           display: 'block',
         },
-        '& .filtered-emoticon': {
-          width: 'auto !important',
-          height: 'auto !important',
-          textDecoration: 'none !important',
-          '&::after': {
-            content: '"[아카콘 뮤트됨]"',
+        '& .muted-emoticon': {
+          '& .emoticon-wrapper': {
+            width: 'auto !important',
+            height: 'auto !important',
+            textDecoration: 'none !important',
+            '&::after': {
+              content: '"[아카콘 뮤트됨]"',
+            },
+            '& > img, & > video': {
+              display: 'none !important',
+            },
           },
-          '& > img, & > video': {
-            display: 'none !important',
-          },
+        },
+        '& .hide-muted-emoticon': {
+          display: 'none !important',
         },
       },
     },
@@ -59,8 +64,14 @@ const style = {
 function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
-  const { user, keyword, emoticon, hideCountBar, muteIncludeReply } =
-    useSelector((state) => state[MODULE_ID]);
+  const {
+    user,
+    keyword,
+    emoticon,
+    hideCountBar,
+    hideMutedMark,
+    muteIncludeReply,
+  } = useSelector((state) => state[MODULE_ID]);
   const [comment, setComment] = useState(undefined);
   const [countBar, setCountBar] = useState(undefined);
   const [count, setCount] = useState(undefined);
@@ -84,8 +95,10 @@ function CommentMuter() {
       const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
       commentEmot.forEach((c) => {
         const id = Number(c.dataset.id);
-        c.parentNode.classList.toggle(
-          'filtered-emoticon',
+        c.closest(
+          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+        ).classList.toggle(
+          hideMutedMark ? 'hide-muted-emoticon' : 'muted-emoticon',
           emoticonFilter.bundle?.indexOf(id) > -1,
         );
       });
@@ -97,7 +110,7 @@ function CommentMuter() {
     return () => {
       removeAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
-  }, [emoticonFilter]);
+  }, [emoticonFilter, hideMutedMark, muteIncludeReply]);
 
   useLayoutEffect(() => {
     if (!comment) return undefined;

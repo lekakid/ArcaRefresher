@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { ContextMenuList, useContextMenu } from 'menu/ContextMenu';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserInfo } from 'util/user';
 
@@ -15,41 +14,45 @@ function makeRegex(id = '') {
   return `${id.replace('.', '\\.')}$`;
 }
 
-const Board = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function Board(_props, ref) {
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state[MODULE_ID]);
+function Board({ triggerList }) {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state[MODULE_ID]);
+  const data = useRef(null);
+  const [valid, setValid] = useState(false);
 
-    const trigger = useCallback(
-      ({ target }) => !!target.closest(USER_INFO),
-      [],
-    );
-    const dataGetter = useCallback(({ target }) => {
-      const id = getUserInfo(target.closest(USER_INFO));
+  useEffect(() => {
+    const trigger = (target) => {
+      if (!target.closest(USER_INFO)) {
+        data.current = null;
+        setValid(false);
+        return false;
+      }
 
-      return { id };
-    }, []);
-    const data = useContextMenu({ trigger, dataGetter });
+      data.current = getUserInfo(target.closest(USER_INFO));
+      setValid(true);
+      return true;
+    };
 
-    const regex = makeRegex(data?.id);
-    const exist = user.indexOf(regex) > -1;
+    triggerList.current.push(trigger);
+  }, [triggerList]);
 
-    const handleMute = useCallback(() => {
-      dispatch(exist ? removeUser(regex) : addUser(regex));
-      dispatch(setClose());
-    }, [dispatch, exist, regex]);
+  const regex = makeRegex(data.current || '');
+  const exist = user.indexOf(regex) > -1;
 
-    if (!data) return null;
-    return (
-      <ContextMenuList>
-        <MenuItem ref={ref} onClick={handleMute}>
-          <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
-          <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
-        </MenuItem>
-      </ContextMenuList>
-    );
-  },
-);
+  const handleMute = useCallback(() => {
+    dispatch(exist ? removeUser(regex) : addUser(regex));
+    dispatch(setClose());
+  }, [dispatch, exist, regex]);
+
+  if (!valid) return null;
+  return (
+    <List>
+      <MenuItem onClick={handleMute}>
+        <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
+        <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
+      </MenuItem>
+    </List>
+  );
+}
 
 export default Board;

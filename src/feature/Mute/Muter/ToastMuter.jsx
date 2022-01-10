@@ -35,7 +35,9 @@ const style = {
 };
 
 function ToastMuter() {
-  const { user, emoticon } = useSelector((state) => state[MODULE_ID]);
+  const { user, emoticon, hideMutedMark } = useSelector(
+    (state) => state[MODULE_ID],
+  );
   const toastboxLoaded = useElementQuery(TOASTBOX);
   const filter = useEmoticon(emoticon);
 
@@ -62,9 +64,17 @@ function ToastMuter() {
 
         const regex = new RegExp(user.join('|'));
         if (regex.test(header) || regex.test(content)) {
+          if (hideMutedMark) {
+            toast.remove();
+            return;
+          }
           toast.classList.add('filtered-toast');
         }
       });
+
+      if (toastbox.childElementCount === 0) {
+        toastbox.style.dispaly = 'none';
+      }
     });
     observer.observe(toastbox, {
       childList: true,
@@ -72,7 +82,7 @@ function ToastMuter() {
     });
 
     return () => observer.disconnect();
-  }, [filter, toastboxLoaded, user]);
+  }, [filter, hideMutedMark, toastboxLoaded, user]);
 
   return null;
 }

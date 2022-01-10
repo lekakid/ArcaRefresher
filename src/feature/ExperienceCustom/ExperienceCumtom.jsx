@@ -7,7 +7,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  Tooltip,
 } from '@material-ui/core';
+import { ImageSearch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
 import { useElementQuery } from 'core/hooks';
@@ -45,6 +48,7 @@ const IGNORE = 'IGNORE';
 export default function ExperienceCustomizer() {
   const {
     openArticleNewWindow,
+    hideFirstImage,
     blockMediaNewWindow,
     ratedownGuard,
     foldComment,
@@ -56,29 +60,18 @@ export default function ExperienceCustomizer() {
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
+  const [hiddenFirstImage, setHiddenFirstImage] = useState(null);
+  const [hiddenFirstImageContainer, setHiddenFirstImageContainer] =
+    useState(null);
   const [confirm, setConfirm] = useState(WAITING);
   const classes = useStyles();
 
   useEffect(() => {
-    if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
+    if (articleLoaded) {
+      setArticle(document.querySelector(ARTICLE_VIEW));
+      setHiddenFirstImageContainer(document.createElement('div'));
+    }
   }, [articleLoaded]);
-
-  useEffect(() => {
-    if (!article) return;
-
-    const replyCount = document.querySelector(
-      '.article-info > span:nth-child(7)',
-    );
-    if (!replyCount) return;
-
-    replyCount.addEventListener('click', () => {
-      const commentForm = document.querySelector(COMMENT_VIEW);
-      window.scrollTo({
-        top: commentForm.offsetTop - window.innerHeight * 0.3,
-        behavior: 'smooth',
-      });
-    });
-  }, [article]);
 
   useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
@@ -89,6 +82,33 @@ export default function ExperienceCustomizer() {
       a.append(i);
     });
   }, [article, blockMediaNewWindow]);
+
+  useEffect(() => {
+    if (!article || !hideFirstImage) return undefined;
+
+    const firstImage = article.querySelector(
+      '.article-content > p:first-child img, .article-content > p:first-child video:not([controls])',
+    )?.parentNode;
+    if (!firstImage) return undefined;
+
+    firstImage.style.display = 'none';
+
+    setHiddenFirstImage(firstImage);
+    firstImage.insertAdjacentElement('afterend', hiddenFirstImageContainer);
+
+    return () => {
+      firstImage.style.display = '';
+      setHiddenFirstImage(null);
+      hiddenFirstImageContainer.remove();
+    };
+  }, [article, hiddenFirstImageContainer, hideFirstImage]);
+
+  const handleUnhide = useCallback(() => {
+    if (hiddenFirstImage) {
+      hiddenFirstImage.style.display = '';
+      setHiddenFirstImage(null);
+    }
+  }, [hiddenFirstImage]);
 
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
@@ -194,6 +214,15 @@ export default function ExperienceCustomizer() {
           <Button onClick={handleClose}>아니오</Button>
         </DialogActions>
       </Dialog>
+      {hiddenFirstImage &&
+        ReactDOM.createPortal(
+          <Tooltip title="첫 이미지 보이기">
+            <IconButton size="small" onClick={handleUnhide}>
+              <ImageSearch />
+            </IconButton>
+          </Tooltip>,
+          hiddenFirstImageContainer,
+        )}
       {unfoldContainer &&
         ReactDOM.createPortal(
           foldComment && <CommentButton className="unfold-comment" />,

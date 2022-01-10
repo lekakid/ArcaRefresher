@@ -8,7 +8,7 @@
   "supportURL": "https://arca.live/b/namurefresher",
   "match": ["https://*.arca.live/*", "https://arca.live/*"],
   "exclude-match": ["https://st*.arca.live/*"],
-  "noframes": "",
+  "noframes": true,
   "run-at": "document-start",
   "grant": [
     "GM_setValue",
