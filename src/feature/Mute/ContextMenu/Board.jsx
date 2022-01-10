@@ -14,48 +14,45 @@ function makeRegex(id = '') {
   return `${id.replace('.', '\\.')}$`;
 }
 
-const Board = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function Board({ triggerList }, ref) {
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state[MODULE_ID]);
-    const data = useRef(null);
-    const [valid, setValid] = useState(false);
+function Board({ triggerList }) {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state[MODULE_ID]);
+  const data = useRef(null);
+  const [valid, setValid] = useState(false);
 
-    useEffect(() => {
-      const trigger = (target) => {
-        if (!target.closest(USER_INFO)) {
-          data.current = null;
-          setValid(false);
-          return false;
-        }
+  useEffect(() => {
+    const trigger = (target) => {
+      if (!target.closest(USER_INFO)) {
+        data.current = null;
+        setValid(false);
+        return false;
+      }
 
-        data.current = getUserInfo(target.closest(USER_INFO));
-        setValid(true);
-        return true;
-      };
+      data.current = getUserInfo(target.closest(USER_INFO));
+      setValid(true);
+      return true;
+    };
 
-      triggerList.current.push(trigger);
-    }, [triggerList]);
+    triggerList.current.push(trigger);
+  }, [triggerList]);
 
-    const regex = makeRegex(data.current || '');
-    const exist = user.indexOf(regex) > -1;
+  const regex = makeRegex(data.current || '');
+  const exist = user.indexOf(regex) > -1;
 
-    const handleMute = useCallback(() => {
-      dispatch(exist ? removeUser(regex) : addUser(regex));
-      dispatch(setClose());
-    }, [dispatch, exist, regex]);
+  const handleMute = useCallback(() => {
+    dispatch(exist ? removeUser(regex) : addUser(regex));
+    dispatch(setClose());
+  }, [dispatch, exist, regex]);
 
-    if (!valid) return null;
-    return (
-      <List>
-        <MenuItem ref={ref} onClick={handleMute}>
-          <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
-          <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
-        </MenuItem>
-      </List>
-    );
-  },
-);
+  if (!valid) return null;
+  return (
+    <List>
+      <MenuItem onClick={handleMute}>
+        <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
+        <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
+      </MenuItem>
+    </List>
+  );
+}
 
 export default Board;
