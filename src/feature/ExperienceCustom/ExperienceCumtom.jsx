@@ -89,7 +89,6 @@ export default function ExperienceCustomizer() {
     const firstImage = article.querySelector(
       '.article-content > p:first-child img, .article-content > p:first-child video:not([controls])',
     )?.parentNode;
-    console.log(firstImage);
     if (!firstImage) return undefined;
 
     firstImage.style.display = 'none';
