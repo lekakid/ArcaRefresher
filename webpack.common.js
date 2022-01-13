@@ -30,7 +30,6 @@ module.exports = {
     }),
     new WebpackUsersript({
       headers: path.join(__dirname, './src/meta.json'),
-      metajs: false,
     }),
   ],
 };
