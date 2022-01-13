@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParser } from 'util/Parser';
 import getContrastYIQ from 'util/color';
 import { MODULE_ID } from '../ModuleInfo';
-import { setStyle, resetStyle } from '../slice';
+import { setStyle } from '../slice';
 
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
@@ -60,13 +60,16 @@ function CategoryRow({ divider, category, nameMap }) {
     [channelColor, channelID, dispatch],
   );
 
-  const handleResetStyle = useCallback((id) => () => {
-    const updatedData = {
-      ...channelColor,
-      [id]: {},
-    };
-    dispatch(setStyle({ channel: channelID, color: updatedData }));
-  });
+  const handleResetStyle = useCallback(
+    (id) => () => {
+      const updatedData = {
+        ...channelColor,
+        [id]: {},
+      };
+      dispatch(setStyle({ channel: channelID, color: updatedData }));
+    },
+    [channelColor, channelID, dispatch],
+  );
 
   const badgeStyle = {
     margin: '0.25rem',
