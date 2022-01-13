@@ -71,12 +71,6 @@ function Emoticon({ triggerList }) {
         </ListItemIcon>
         <Typography>아카콘 뮤트</Typography>
       </MenuItem>
-      <MenuItem onClick={handleMute}>
-        <ListItemIcon>
-          <Block />
-        </ListItemIcon>
-        <Typography>아카콘 뮤트</Typography>
-      </MenuItem>
     </List>
   );
 }
