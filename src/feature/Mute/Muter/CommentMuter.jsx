@@ -91,6 +91,8 @@ function CommentMuter() {
   }, [dispatch, commentLoaded]);
 
   useLayoutEffect(() => {
+    if (!commentLoaded) return undefined;
+
     const muteEmoticon = () => {
       const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
       commentEmot.forEach((c) => {
@@ -110,7 +112,7 @@ function CommentMuter() {
     return () => {
       removeAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
-  }, [emoticonFilter, hideMutedMark, muteIncludeReply]);
+  }, [commentLoaded, emoticonFilter, hideMutedMark, muteIncludeReply]);
 
   useLayoutEffect(() => {
     if (!comment) return undefined;
