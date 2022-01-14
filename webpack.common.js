@@ -1,8 +1,6 @@
 const path = require('path');
-const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
-const WebpackUsersript = require('webpack-userscript');
 
-const dev = process.env.NODE_ENV === 'development';
+const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
 
 module.exports = {
   output: {
@@ -27,9 +25,6 @@ module.exports = {
   plugins: [
     new CleanTerminalPlugin({
       beforeCompile: true,
-    }),
-    new WebpackUsersript({
-      headers: path.join(__dirname, './src/meta.json'),
     }),
   ],
 };
