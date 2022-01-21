@@ -1,7 +1,7 @@
 // CONTAINER LOAD CHECK SELECTOR
 export const NAVIGATION_LOADED = '.content-wrapper';
 export const CHANNEL_TITLE_LOADED = '.btns-board';
-export const BOARD_LOADED = 'form.search-form';
+export const BOARD_LOADED = '.article-list + .btns-board';
 export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';
 export const COMMENT_LOADED = '.article-wrapper ~ div.btns-board';
 export const WRITE_LOADED = '.fr-box';
