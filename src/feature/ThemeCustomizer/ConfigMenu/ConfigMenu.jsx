@@ -152,7 +152,6 @@ const ConfigMenu = React.forwardRef(
           ...theme[selectPreset],
           [key]: color?.name !== 'none' ? color.css.backgroundColor : '',
         };
-        console.log(updatePreset);
         dispatch(setPreset({ key: selectPreset, preset: updatePreset }));
       },
       [dispatch, selectPreset, theme],
