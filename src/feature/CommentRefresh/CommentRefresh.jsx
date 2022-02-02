@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 
 import {
-  COMMENT_INNER_VIEW,
+  COMMENT_VIEW,
   COMMENT_LOADED,
   COMMENT_SUBTITLE,
   COMMENT_TITLE,
@@ -14,7 +14,7 @@ import { getDateStr } from 'util/time';
 import getNewComment from './getNewComment';
 import RefreshButton from './RefreshButton';
 
-const useStyles = makeStyles({
+const style = {
   '@global': {
     '#comment .list-area:empty': {
       display: 'none',
@@ -22,60 +22,80 @@ const useStyles = makeStyles({
     '#comment .list-area:empty + .write-area': {
       borderTop: 'inherit',
     },
+    '.refresh-container': {
+      display: 'relative',
+    },
   },
-});
+};
 
-export default function CommentRefresh() {
-  const [title, setTitle] = useState(null);
-  const [subtitle, setSubtitle] = useState(null);
-  const [comment, setComment] = useState(null);
+function CommentRefresh() {
+  const [title, setTitle] = useState({
+    top: undefined,
+    bottom: undefined,
+  });
+  const [comment, setComment] = useState(undefined);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
-  useStyles();
 
+  // 초기화
   useEffect(() => {
     if (commentLoaded) {
-      setTitle(
-        document
-          .querySelector(COMMENT_TITLE)
-          ?.appendChild(document.createElement('span')) || null,
-      );
-      setSubtitle(
-        document
-          .querySelector(COMMENT_SUBTITLE)
-          ?.appendChild(document.createElement('span')) || null,
-      );
-
-      const commentContainer =
-        document.querySelector(COMMENT_INNER_VIEW) ||
-        document.createElement('div');
-      if (!commentContainer.parentNode) {
-        commentContainer.classList.add('list-area');
-        document
-          .querySelector(COMMENT_TITLE)
-          .insertAdjacentElement('afterend', commentContainer);
-      }
-      setComment(commentContainer);
+      const commentView = document.querySelector(COMMENT_VIEW);
+      setComment(commentView);
+      setTitle({
+        top:
+          document
+            .querySelector(COMMENT_TITLE)
+            ?.appendChild(document.createElement('span')) || null,
+        bottom:
+          document
+            .querySelector(COMMENT_SUBTITLE)
+            ?.appendChild(document.createElement('span')) || null,
+      });
     }
   }, [commentLoaded]);
+
+  useEffect(() => {
+    if (!comment) return undefined;
+
+    const observer = new MutationObserver(() => {
+      if (!comment.parentNode) {
+        const commentView = document.querySelector(COMMENT_VIEW);
+        setComment(commentView);
+
+        document.querySelector(COMMENT_TITLE).appendChild(title.top);
+        document.querySelector(COMMENT_SUBTITLE).appendChild(title.bottom);
+        dispatchAREvent(EVENT_COMMENT_REFRESH);
+      }
+    });
+    observer.observe(comment.parentNode, {
+      childList: true,
+      subtree: true,
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [comment, title]);
 
   const handleClick = useCallback(async () => {
     if (!comment) return;
 
     const newComments = await getNewComment();
     if (newComments) {
-      comment.innerHTML = newComments.innerHTML;
-      comment.querySelectorAll('time').forEach((time) => {
+      comment.replaceWith(newComments);
+      newComments.querySelectorAll('time').forEach((time) => {
         // eslint-disable-next-line no-param-reassign
         time.textContent = getDateStr(time.dateTime, 'year-month-day hh:mm:ss');
       });
-      dispatchAREvent(EVENT_COMMENT_REFRESH);
+      unsafeWindow.articleLoad({});
     }
   }, [comment]);
 
   return (
     <>
-      <RefreshButton container={title} onClick={handleClick} />
-      <RefreshButton container={subtitle} onClick={handleClick} />
+      <RefreshButton container={title.top} onClick={handleClick} />
+      <RefreshButton container={title.bottom} onClick={handleClick} />
     </>
   );
 }
+
+export default withStyles(style)(CommentRefresh);
