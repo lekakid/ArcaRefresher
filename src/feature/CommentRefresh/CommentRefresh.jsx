@@ -82,11 +82,14 @@ function CommentRefresh() {
     const newComments = await getNewComment();
     if (newComments) {
       comment.replaceWith(newComments);
+      // 기존 이벤트 입력창 가져오기
+      newComments
+        .querySelector('form.write-area')
+        .replaceWith(comment.querySelector('form.write-area'));
       newComments.querySelectorAll('time').forEach((time) => {
         // eslint-disable-next-line no-param-reassign
         time.textContent = getDateStr(time.dateTime, 'year-month-day hh:mm:ss');
       });
-      unsafeWindow.articleLoad({});
     }
   }, [comment]);
 
