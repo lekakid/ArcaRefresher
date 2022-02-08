@@ -24,7 +24,12 @@ import {
   COMMENT_LOADED,
   COMMENT_VIEW,
 } from 'core/selector';
-import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
+import {
+  addAREvent,
+  removeAREvent,
+  EVENT_AUTOREFRESH,
+  EVENT_COMMENT_REFRESH,
+} from 'core/event';
 
 import { MODULE_ID } from './ModuleInfo';
 import CommentButton from './CommentButton';
@@ -134,6 +139,9 @@ export default function ExperienceCustomizer() {
     if (!commentLoaded) return;
 
     setComment(document.querySelector(COMMENT_VIEW));
+    addAREvent(EVENT_COMMENT_REFRESH, () => {
+      setComment(document.querySelector(COMMENT_VIEW));
+    });
   }, [commentLoaded]);
 
   useEffect(() => {
