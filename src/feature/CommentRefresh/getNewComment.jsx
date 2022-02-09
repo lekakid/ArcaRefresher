@@ -1,4 +1,4 @@
-import { COMMENT_INNER_VIEW } from 'core/selector';
+import { COMMENT_VIEW } from 'core/selector';
 
 export default function getNewComment() {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ export default function getNewComment() {
     req.addEventListener('load', () => {
       try {
         const { response } = req;
-        const newComments = response.querySelector(COMMENT_INNER_VIEW);
+        const newComments = response.querySelector(COMMENT_VIEW);
         resolve(newComments);
       } catch (error) {
         reject(error);

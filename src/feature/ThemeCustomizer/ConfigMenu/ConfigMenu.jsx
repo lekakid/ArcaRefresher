@@ -42,6 +42,7 @@ const rows = [
   createRow('bg-footer', '푸터 색상'),
   createRow('text-color', '텍스트 색상'),
   createRow('text-muted', '뮤트 색상'),
+  createRow('text-highlight', '댓글 강조 색상'),
   createRow('link-color', '링크 색상'),
   createRow('visited-article', '방문한 게시물 색상'),
   createRow('border-outer', '경계선 외곽선 색상'),
@@ -60,6 +61,7 @@ const defaultTheme = {
   'bg-footer': '#fff',
   'text-color': '#373a3c',
   'text-muted': '#9ba0a4',
+  'text-highlight': 'yellow',
   'link-color': '#5b91bf',
   'visited-article': '#bbb',
   'border-outer': '#bbb',
@@ -150,7 +152,6 @@ const ConfigMenu = React.forwardRef(
           ...theme[selectPreset],
           [key]: color?.name !== 'none' ? color.css.backgroundColor : '',
         };
-        console.log(updatePreset);
         dispatch(setPreset({ key: selectPreset, preset: updatePreset }));
       },
       [dispatch, selectPreset, theme],

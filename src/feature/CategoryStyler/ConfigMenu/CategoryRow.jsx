@@ -12,6 +12,7 @@ import {
   FormatStrikethrough,
   MeetingRoom,
   NoMeetingRoom,
+  Replay,
 } from '@material-ui/icons';
 import { ColorPicker } from 'material-ui-color';
 import { useDispatch, useSelector } from 'react-redux';
@@ -53,6 +54,17 @@ function CategoryRow({ divider, category, nameMap }) {
           ...channelColor[id],
           [type]: !(channelColor[id] || {})[type],
         },
+      };
+      dispatch(setStyle({ channel: channelID, color: updatedData }));
+    },
+    [channelColor, channelID, dispatch],
+  );
+
+  const handleResetStyle = useCallback(
+    (id) => () => {
+      const updatedData = {
+        ...channelColor,
+        [id]: {},
       };
       dispatch(setStyle({ channel: channelID, color: updatedData }));
     },
@@ -137,6 +149,11 @@ function CategoryRow({ divider, category, nameMap }) {
           <Tooltip title={disableVisited ? '방문 표시 안함' : '방문 표시'}>
             <IconButton onClick={handleStyle(category, 'disableVisited')}>
               {disableVisited ? <NoMeetingRoom /> : <MeetingRoom />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="리셋">
+            <IconButton onClick={handleResetStyle(category)}>
+              <Replay />
             </IconButton>
           </Tooltip>
         </Box>
