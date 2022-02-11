@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import queryString from 'query-string';
 
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
@@ -46,10 +45,7 @@ export default function AutoRefresher() {
   }, [board, classes]);
 
   useEffect(() => {
-    const search = queryString.parse(window.location.search, {
-      parseNumbers: true,
-    });
-    if (boardLoaded && (!search.p || search.p === 1))
+    if (boardLoaded)
       setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
   }, [boardLoaded]);
 
