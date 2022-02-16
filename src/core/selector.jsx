@@ -28,7 +28,7 @@ export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_CATEGORY = '.article-head .badge';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
-  '.article-body img, .article-body video:not([controls])';
+  '.article-body img, .article-body video[data-orig="gif"]';
 export const ARTICLE_URL = '.article-body .article-link a';
 export const ARTICLE_BODY = '.article-body';
 export const ARTICLE_HEADER_MENU = '.edit-menu';

@@ -10,7 +10,7 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import fetch from 'util/fetch';
 
 import { MODULE_ID } from './ModuleInfo';
-import { getArticleInfo, replaceFormat } from './func';
+import { getArticleInfo, getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -28,15 +28,7 @@ function ContextMenu({ triggerList }) {
         return false;
       }
 
-      const url = target.src.split('?')[0];
-      const orig = `${url}${
-        target.tagName === 'VIDEO' ? '.gif' : ''
-      }?type=orig`;
-      const [, ext] =
-        target.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
-      const [uploadName] = url.match(/[0-9a-f]{64}/g);
-
-      data.current = { orig, ext, uploadName };
+      data.current = getImageInfo(target);
       setValid(true);
       return true;
     };

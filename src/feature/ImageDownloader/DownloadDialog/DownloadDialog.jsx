@@ -12,6 +12,7 @@ import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
 import { ARTICLE_IMAGES } from 'core/selector';
+import { getImageInfo } from '../func';
 import ImageSelector from './ImageSelector';
 import Downloader from './Downloader';
 
@@ -28,17 +29,7 @@ export default function DownloadDialog({ open, onClose }) {
     const imageList = [...document.querySelectorAll(ARTICLE_IMAGES)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
-        const url = image.src.split('?')[0];
-
-        const orig = `${url}${
-          image.tagName === 'VIDEO' ? '.gif' : ''
-        }?type=orig`;
-        const thumb = `${url}${image.tagName === 'VIDEO' ? '.gif' : ''}`;
-        const [, ext] =
-          image.tagName === 'VIDEO' ? [0, 'gif'] : url.match(/\.(.{3,4})$/);
-        const [uploadName] = url.match(/[0-9a-f]{64}/g);
-
-        acc.push({ orig, thumb, ext, uploadName });
+        acc.push(getImageInfo(image));
       } catch (error) {
         console.warn('[ImageDownloader]', error);
       }
