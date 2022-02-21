@@ -14,7 +14,7 @@ function makeRegex(id = '') {
   return `${id.replace('.', '\\.')}$`;
 }
 
-function Board({ triggerList }) {
+function User({ triggerList }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state[MODULE_ID]);
   const data = useRef(null);
@@ -55,4 +55,4 @@ function Board({ triggerList }) {
   );
 }
 
-export default Board;
+export default User;

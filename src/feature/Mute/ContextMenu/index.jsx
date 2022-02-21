@@ -1,4 +1,4 @@
-import Board from './Board';
+import User from './User';
 import Emoticon from './Emoticon';
 
-export { Board, Emoticon };
+export { User, Emoticon };

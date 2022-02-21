@@ -34,7 +34,7 @@ export default () => (
       <ImageDownloader.ContextMenu />
       <ImageSearch.ContextMenu />
       <Memo.ContextMenu />
-      <Mute.ContextMenu.Board />
+      <Mute.ContextMenu.User />
       <Mute.ContextMenu.Emoticon />
       <MyImage.ContextMenu />
       <UserColor.ContextMenu />
