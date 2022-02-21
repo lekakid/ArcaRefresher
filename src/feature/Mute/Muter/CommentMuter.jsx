@@ -85,9 +85,15 @@ function CommentMuter() {
 
     setComment(tmpComment);
 
-    const countHeader = document.createElement('div');
-    tmpComment.insertAdjacentElement('beforebegin', countHeader);
-    setCountBar(countHeader);
+    const countBarContainer = document.createElement('div');
+    tmpComment.insertAdjacentElement('beforebegin', countBarContainer);
+    setCountBar(countBarContainer);
+
+    addAREvent(EVENT_COMMENT_REFRESH, () => {
+      const refreshedComment = document.querySelector(COMMENT_INNER_VIEW);
+      setComment(refreshedComment);
+      refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
+    });
   }, [dispatch, commentLoaded]);
 
   useLayoutEffect(() => {
@@ -119,7 +125,7 @@ function CommentMuter() {
 
     const muteComment = () => {
       const commentList = [
-        ...comment.querySelectorAll(
+        ...document.querySelectorAll(
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ),
       ];
