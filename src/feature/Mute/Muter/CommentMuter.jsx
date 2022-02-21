@@ -144,6 +144,7 @@ function CommentMuter() {
       setCount(result);
     };
 
+    if (document.readyState === 'complete') muteComment();
     window.addEventListener('load', muteComment);
     addAREvent(EVENT_COMMENT_REFRESH, muteComment);
 
