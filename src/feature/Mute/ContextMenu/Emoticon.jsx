@@ -5,7 +5,7 @@ import { Block } from '@material-ui/icons';
 
 import { setClose } from 'menu/ContextMenu/slice';
 
-import { getEmoticonInfo } from '../func';
+import { getBundleData, getBundleInfo } from '../func';
 import { addEmoticon } from '../slice';
 
 function Emoticon({ triggerList }) {
@@ -22,7 +22,7 @@ function Emoticon({ triggerList }) {
       }
 
       data.current = {
-        id: target.dataset.id,
+        emotID: target.dataset.id,
         url: target.src.replace('https:', ''),
       };
       setValid(true);
@@ -32,28 +32,28 @@ function Emoticon({ triggerList }) {
     triggerList.current.push(trigger);
   }, [triggerList]);
 
-  const handleMute = useCallback(() => {
+  const handleBundleMute = useCallback(() => {
     (async () => {
-      const { id, url } = data.current;
-      const {
-        bundleID,
-        name,
-        bundle,
-        url: urlList,
-      } = await getEmoticonInfo(id);
+      const { emotID, url } = data.current;
+      const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
+      const { emotList, urlList } = await getBundleData(bundleID);
 
-      if (bundle.length === 0) {
+      if (emotList.length === 0) {
         dispatch(
           addEmoticon({
             id: bundleID,
-            emoticon: { name, bundle: [id], url: [url] },
+            emoticon: {
+              name: bundleName,
+              bundle: [parseInt(emotID, 10)],
+              url: [url],
+            },
           }),
         );
       } else {
         dispatch(
           addEmoticon({
             id: bundleID,
-            emoticon: { name, bundle, url: urlList },
+            emoticon: { name: bundleName, bundle: emotList, url: urlList },
           }),
         );
       }
@@ -62,14 +62,40 @@ function Emoticon({ triggerList }) {
     })();
   }, [dispatch]);
 
+  const handleSingleMute = useCallback(() => {
+    (async () => {
+      const { emotID, url } = data.current;
+      const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
+
+      dispatch(
+        addEmoticon({
+          id: bundleID,
+          emoticon: {
+            name: bundleName,
+            bundle: [parseInt(emotID, 10)],
+            url: [url],
+          },
+        }),
+      );
+
+      dispatch(setClose());
+    })();
+  }, [dispatch]);
+
   if (!valid) return null;
   return (
     <List>
-      <MenuItem onClick={handleMute}>
+      <MenuItem onClick={handleBundleMute}>
         <ListItemIcon>
           <Block />
         </ListItemIcon>
-        <Typography>아카콘 뮤트</Typography>
+        <Typography>아카콘 묶음 뮤트</Typography>
+      </MenuItem>
+      <MenuItem onClick={handleSingleMute}>
+        <ListItemIcon>
+          <Block />
+        </ListItemIcon>
+        <Typography>이 아카콘만 뮤트</Typography>
       </MenuItem>
     </List>
   );
