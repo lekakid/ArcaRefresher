@@ -77,6 +77,9 @@ export default function AutoRefresher() {
       sock.onclose = () => {
         setTimeout(connect, 1000);
       };
+      sock.onerror = () => {
+        setTimeout(connect, 1000);
+      };
     };
     connect();
   }, [board, countdown]);
