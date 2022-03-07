@@ -53,6 +53,7 @@ export default () => (
         { ...AutoRefresher.ConfigMenu, group: 'board' },
         { ...CategoryStyler.ConfigMenu, group: 'board' },
         { ...ThemeCustomizer.ConfigMenu, group: 'board' },
+        { ...AnonymousNick.ConfigMenu, group: 'article' },
         { ...ImageDownloader.ConfigMenu, group: 'article' },
         { ...ImageSearch.ConfigMenu, group: 'article' },
         { ...MyImage.ConfigMenu, group: 'article' },
