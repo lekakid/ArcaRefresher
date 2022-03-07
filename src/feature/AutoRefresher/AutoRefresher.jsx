@@ -40,6 +40,8 @@ export default function AutoRefresher() {
     if (sockCount.current === 0) return;
 
     const newArticle = await getNewArticle();
+    if (newArticle.length === 0) return;
+
     swapArticle(board, newArticle, classes.refreshed);
     dispatchAREvent(EVENT_AUTOREFRESH);
     sockCount.current = 0;
