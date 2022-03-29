@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/styles';
 
-import {
-  COMMENT_VIEW,
-  COMMENT_LOADED,
-  COMMENT_SUBTITLE,
-  COMMENT_TITLE,
-} from 'core/selector';
+import { COMMENT_VIEW, COMMENT_LOADED, COMMENT_TITLE } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { getDateStr } from 'util/time';
@@ -29,10 +24,7 @@ const style = {
 };
 
 function CommentRefresh() {
-  const [title, setTitle] = useState({
-    top: undefined,
-    bottom: undefined,
-  });
+  const [title, setTitle] = useState(undefined);
   const [comment, setComment] = useState(undefined);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
 
@@ -41,16 +33,11 @@ function CommentRefresh() {
     if (commentLoaded) {
       const commentView = document.querySelector(COMMENT_VIEW);
       setComment(commentView);
-      setTitle({
-        top:
-          document
-            .querySelector(COMMENT_TITLE)
-            ?.appendChild(document.createElement('span')) || null,
-        bottom:
-          document
-            .querySelector(COMMENT_SUBTITLE)
-            ?.appendChild(document.createElement('span')) || null,
-      });
+      setTitle(
+        document
+          .querySelector(COMMENT_TITLE)
+          ?.appendChild(document.createElement('span')) || null,
+      );
     }
   }, [commentLoaded]);
 
@@ -62,8 +49,7 @@ function CommentRefresh() {
         const commentView = document.querySelector(COMMENT_VIEW);
         setComment(commentView);
 
-        document.querySelector(COMMENT_TITLE).appendChild(title.top);
-        document.querySelector(COMMENT_SUBTITLE).appendChild(title.bottom);
+        document.querySelector(COMMENT_TITLE).appendChild(title);
         dispatchAREvent(EVENT_COMMENT_REFRESH);
       }
     });
@@ -93,12 +79,7 @@ function CommentRefresh() {
     }
   }, [comment]);
 
-  return (
-    <>
-      <RefreshButton container={title.top} onClick={handleClick} />
-      <RefreshButton container={title.bottom} onClick={handleClick} />
-    </>
-  );
+  return <RefreshButton container={title} onClick={handleClick} />;
 }
 
 export default withStyles(style)(CommentRefresh);
