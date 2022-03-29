@@ -40,6 +40,8 @@ export default function AutoRefresher() {
     if (sockCount.current === 0) return;
 
     const newArticle = await getNewArticle();
+    if (newArticle.length === 0) return;
+
     swapArticle(board, newArticle, classes.refreshed);
     dispatchAREvent(EVENT_AUTOREFRESH);
     sockCount.current = 0;
@@ -73,6 +75,9 @@ export default function AutoRefresher() {
         if (e.data === 'na') sockCount.current += 1;
       };
       sock.onclose = () => {
+        setTimeout(connect, 1000);
+      };
+      sock.onerror = () => {
         setTimeout(connect, 1000);
       };
     };

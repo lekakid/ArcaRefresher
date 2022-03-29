@@ -85,14 +85,5 @@ export function swapArticle(
         in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
       );
     }
-
-    if (unsafeWindow.twemoji) {
-      unsafeWindow.twemoji.parse(a, {
-        base: '/node_modules/twemoji/dist/',
-        folder: 'svg',
-        ext: '.svg',
-        className: 'twemoji',
-      });
-    }
   });
 }

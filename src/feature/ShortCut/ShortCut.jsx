@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import {
   ARTICLE_LOADED,
   BOARD_LOADED,
-  COMMENT_SUBTITLE,
+  COMMENT_INPUT,
   COMMENT_VIEW,
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
@@ -65,14 +65,10 @@ export default function ShortCut() {
         }
         case 'W': {
           e.preventDefault();
-          const inputForm = document.querySelector(COMMENT_SUBTITLE);
-          const input = document.querySelector(
-            '.article-comment .input textarea',
-          );
+          const input = document.querySelector(COMMENT_INPUT);
           if (!input) break;
 
-          const top =
-            window.pageYOffset + inputForm.getBoundingClientRect().top;
+          const top = window.pageYOffset + input.getBoundingClientRect().top;
           window.scrollTo({
             top: top - window.innerHeight * 0.7,
             behavior: 'smooth',

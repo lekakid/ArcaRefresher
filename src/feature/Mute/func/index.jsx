@@ -1,2 +1,3 @@
 export { default as filterContent } from './filterContent';
-export { default as getEmoticonInfo } from './getEmoticonInfo';
+export { default as getBundleInfo } from './getBundleInfo';
+export { default as getBundleData } from './getBundleData';

@@ -30,6 +30,7 @@ import {
   setUserInfoWith,
   setResizeImage,
   setResizeVideo,
+  toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
   toggleHumorCheckbox,
@@ -62,6 +63,7 @@ const ConfigMenu = React.forwardRef(
       userinfoWidth,
       resizeImage,
       resizeVideo,
+      hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
       hideHumorCheckbox,
@@ -138,6 +140,10 @@ const ConfigMenu = React.forwardRef(
       },
       [dispatch],
     );
+
+    const handleUnvote = useCallback(() => {
+      dispatch(toggleUnvote());
+    }, [dispatch]);
 
     const handleModifiedIndicator = useCallback(() => {
       dispatch(toggleModifiedIndicator());
@@ -266,6 +272,12 @@ const ConfigMenu = React.forwardRef(
               <ListItemText>게시물 동영상 크기</ListItemText>
               <ListItemSecondaryAction>
                 <Slider value={resizeVideo} onChange={handleResizeVideo} />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider button onClick={handleUnvote}>
+              <ListItemText primary="비추천 버튼 숨김" />
+              <ListItemSecondaryAction>
+                <Switch checked={hideUnvote} onChange={handleUnvote} />
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem divider button onClick={handleModifiedIndicator}>
