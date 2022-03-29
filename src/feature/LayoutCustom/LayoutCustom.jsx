@@ -66,6 +66,11 @@ const useStyles = makeStyles(
         maxWidth: `${resizeVideo}% !important`,
       },
     }),
+    Unvote: {
+      '& #rateDownForm': {
+        display: 'none',
+      },
+    },
     ModifiedIndicator: {
       '& b.modified': {
         display: 'none',
@@ -104,6 +109,7 @@ export default function LayoutCustom() {
       sideNews,
       sideMenu,
       avatar,
+      hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
       hideHumorCheckbox,
@@ -121,6 +127,7 @@ export default function LayoutCustom() {
         [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
+        [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
         [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.HideHumorCheckbox]: hideHumorCheckbox,

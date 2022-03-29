@@ -14,6 +14,7 @@ const defaultConfigState = {
   userinfoWidth: 10,
   resizeImage: 100,
   resizeVideo: 100,
+  hideUnvote: false,
   modifiedIndicator: false,
   unfoldLongComment: false,
   hideHumorCheckbox: false,
@@ -76,6 +77,10 @@ export const slice = createSlice({
       state.resizeVideo = action.payload;
       GM_setValue(MODULE_ID, state);
     },
+    toggleUnvote(state) {
+      state.hideUnvote = !state.hideUnvote;
+      GM_setValue(MODULE_ID, state);
+    },
     toggleModifiedIndicator(state) {
       state.modifiedIndicator = !state.modifiedIndicator;
       GM_setValue(MODULE_ID, state);
@@ -104,6 +109,7 @@ export const {
   setUserInfoWith,
   setResizeImage,
   setResizeVideo,
+  toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
   toggleHumorCheckbox,
