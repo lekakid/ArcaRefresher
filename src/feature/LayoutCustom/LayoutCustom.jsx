@@ -16,7 +16,7 @@ const useStyles = makeStyles(
       },
     },
     RecentVisit: {
-      '& .visited-channel-wrap': {
+      '& .channel-visit-history': {
         display: 'none',
       },
     },
