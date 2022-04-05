@@ -11,7 +11,7 @@ import {
 import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
-import { ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
 import { getImageInfo } from '../func';
 import ImageSelector from './ImageSelector';
 import Downloader from './Downloader';
@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DownloadDialog({ open, onClose }) {
   const [data] = useState(() => {
-    const imageList = [...document.querySelectorAll(ARTICLE_IMAGES)];
+    const emoticon = window.location.pathname.indexOf('/e/') !== -1;
+    const query = emoticon ? ARTICLE_EMOTICON : ARTICLE_IMAGES;
+    const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
         acc.push(getImageInfo(image));
