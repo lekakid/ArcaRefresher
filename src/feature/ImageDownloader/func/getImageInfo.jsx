@@ -5,7 +5,7 @@ function getGifInfo(gif) {
   const ext = 'gif';
   const uploadName = url.match(/[0-9a-f]{64}/g)[0];
 
-  if (version !== 'v2') {
+  if (version !== 'v2' && !gif.poster) {
     const orig = `${url}.gif?type=orig`;
     const thumb = `${url}.gif?type=list`;
 
