@@ -57,8 +57,12 @@ const useStyles = makeStyles(
       },
     }),
     ResizeImage: ({ resizeImage }) => ({
-      '& .article-body img, & .article-body video:not([controls])': {
-        maxWidth: `${resizeImage}% !important`,
+      '& .article-body': {
+        '& img, & video:not([controls])': {
+          '&:not([class$="emoticon"])': {
+            maxWidth: `${resizeImage}% !important`,
+          },
+        },
       },
     }),
     ResizeVideo: ({ resizeVideo }) => ({
