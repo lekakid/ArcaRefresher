@@ -1,15 +1,16 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {List, ListItemIcon, MenuItem, Typography} from "@material-ui/core";
-import {Assignment, GetApp, Image as ImageIcon} from "@material-ui/icons";
-import {saveAs} from "file-saver";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
+import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
+import { saveAs } from 'file-saver';
 
-import {ARTICLE_IMAGES, ARTICLE_LOADED} from "core/selector";
-import {useElementQuery} from "core/hooks";
-import {setClose, setContextSnack} from "menu/ContextMenu/slice";
+import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
+import { useElementQuery } from 'core/hooks';
+import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import fetch from 'util/fetch';
 
-import {MODULE_ID} from "./ModuleInfo";
-import {getArticleInfo, getImageInfo, replaceFormat} from "./func";
+import { MODULE_ID } from './ModuleInfo';
+import { getArticleInfo, getImageInfo, replaceFormat } from './func';
 
 async function download(url) {
   return (await fetch(url)).blob();
