@@ -12,6 +12,10 @@ import fetch from 'util/fetch';
 import { MODULE_ID } from './ModuleInfo';
 import { getArticleInfo, getImageInfo, replaceFormat } from './func';
 
+async function download(url) {
+  return (await fetch(url)).blob();
+}
+
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { fileName, retryCount } = useSelector((state) => state[MODULE_ID]);
@@ -51,10 +55,7 @@ function ContextMenu({ triggerList }) {
           dispatch(setClose());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
-          const { response: rawData } = await fetch({
-            url: orig,
-            responseType: 'blob',
-          });
+          const rawData = await download(orig);
 
           const canvas = document.createElement('canvas');
           const canvasContext = canvas.getContext('2d');
@@ -98,10 +99,7 @@ function ContextMenu({ triggerList }) {
           dispatch(setClose());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
-          const { response: blob } = await fetch({
-            url: orig,
-            responseType: 'blob',
-          });
+          const blob = await download(orig);
 
           saveAs(
             blob,
