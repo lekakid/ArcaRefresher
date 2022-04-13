@@ -35,6 +35,13 @@ import { MODULE_ID } from './ModuleInfo';
 import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
+  deletedArticle: {
+    '& .article-body': {
+      '& img, video': {
+        display: 'none',
+      },
+    },
+  },
   comment: {
     '& #comment:not(.temp-show)': {
       display: 'none',
@@ -52,14 +59,19 @@ const IGNORE = 'IGNORE';
 // TODO: 설정값 반영
 export default function ExperienceCustomizer() {
   const {
-    openArticleNewWindow,
-    hideFirstImage,
-    blockMediaNewWindow,
-    ratedownGuard,
-    foldComment,
-    wideClickArea,
+    config: {
+      openArticleNewWindow,
+      hideFirstImage,
+      blockMediaNewWindow,
+      blockDeletedArticleMedia,
+      ratedownGuard,
+      foldComment,
+      wideClickArea,
+    },
+    hideDeletedArticleMedia,
   } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const alertLoaded = useElementQuery('.config-alert');
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const [article, setArticle] = useState(null);
@@ -107,6 +119,23 @@ export default function ExperienceCustomizer() {
       hiddenFirstImageContainer.remove();
     };
   }, [article, hiddenFirstImageContainer, hideFirstImage]);
+
+  useEffect(() => {
+    if (!article || !blockDeletedArticleMedia) return undefined;
+    if (!alertLoaded) return undefined;
+
+    if (blockDeletedArticleMedia && hideDeletedArticleMedia) {
+      article.classList.add(classes.deletedArticle);
+    }
+
+    return () => article.classList.remove(classes.deletedArticle);
+  }, [
+    article,
+    alertLoaded,
+    blockDeletedArticleMedia,
+    hideDeletedArticleMedia,
+    classes,
+  ]);
 
   const handleUnhide = useCallback(() => {
     if (hiddenFirstImage) {
