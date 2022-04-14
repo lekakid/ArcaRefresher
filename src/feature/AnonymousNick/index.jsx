@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import ArticleMenu from './ArticleMenu';
-import AnonymousNick from './AnonymousNick';
+import Feature from './AnonymousNick';
 
-export { ConfigMenu, ArticleMenu, AnonymousNick as default };
+export { ConfigMenu, ArticleMenu, Feature };

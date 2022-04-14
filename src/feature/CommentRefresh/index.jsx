@@ -1,3 +1,4 @@
-import CommentRefresh from './CommentRefresh';
+import Feature from './CommentRefresh';
 
-export { CommentRefresh as default };
+// eslint-disable-next-line import/prefer-default-export
+export { Feature };

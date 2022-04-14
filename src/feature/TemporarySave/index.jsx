@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import TemporarySave from './TemporarySave';
+import Feature from './TemporarySave';
 
-export { ConfigMenu, TemporarySave as default };
+export { ConfigMenu, Feature };

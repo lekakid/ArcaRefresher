@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import ContextMenu from './ContextMenu';
-import UserColor from './UserColor';
+import Feature from './UserColor';
 
-export { ConfigMenu, ContextMenu, UserColor as default };
+export { ConfigMenu, ContextMenu, Feature };

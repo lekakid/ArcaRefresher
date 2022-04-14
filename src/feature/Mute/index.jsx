@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import * as ContextMenu from './ContextMenu';
-import Mute from './Mute';
+import Feature from './Mute';
 
-export { ConfigMenu, ContextMenu, Mute as default };
+export { ConfigMenu, ContextMenu, Feature };

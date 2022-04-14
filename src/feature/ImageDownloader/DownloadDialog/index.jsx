@@ -1,1 +1,3 @@
-export { default } from './DownloadDialog';
+import DownloadDialog from './DownloadDialog';
+
+export default DownloadDialog;

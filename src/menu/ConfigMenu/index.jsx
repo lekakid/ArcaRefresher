@@ -1,3 +1,6 @@
-export { default as ConfigListButton } from './ConfigListButton';
-export { default as ConfigListGroup } from './ConfigListGroup';
-export { default } from './ConfigMenu';
+import ConfigListButton from './ConfigListButton';
+import ConfigListGroup from './ConfigListGroup';
+import ConfigMenu from './ConfigMenu';
+
+export default ConfigMenu;
+export { ConfigListButton, ConfigListGroup };

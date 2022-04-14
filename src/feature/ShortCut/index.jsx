@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import ShortCut from './ShortCut';
+import Feature from './ShortCut';
 
-export { ConfigMenu, ShortCut as default };
+export { ConfigMenu, Feature };

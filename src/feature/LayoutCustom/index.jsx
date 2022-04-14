@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import LayoutCustom from './LayoutCustom';
+import Feature from './LayoutCustom';
 
-export { ConfigMenu, LayoutCustom as default };
+export { ConfigMenu, Feature };

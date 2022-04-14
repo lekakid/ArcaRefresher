@@ -1,2 +1,5 @@
-export { default } from './Parser';
-export { default as useParser } from './useParser';
+import Parser from './Parser';
+import useParser from './useParser';
+
+export default Parser;
+export { useParser };
