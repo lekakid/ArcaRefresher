@@ -179,7 +179,7 @@ const ConfigMenu = React.forwardRef(
                 variant="outlined"
                 multiline
                 fullWidth
-                rows={6}
+                minRows={6}
                 error={stateUser === ERROR}
                 value={textUser}
                 onChange={handleUser}
@@ -206,7 +206,7 @@ const ConfigMenu = React.forwardRef(
                 variant="outlined"
                 multiline
                 fullWidth
-                rows={6}
+                minRows={6}
                 error={stateKeyword === ERROR}
                 value={textKeyword}
                 onChange={handleKeyword}
