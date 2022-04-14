@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AnonymousNick from 'feature/AnonymousNick';
+import { Feature as AnonymousNick } from 'feature/AnonymousNick';
 import AutoRefresher from 'feature/AutoRefresher';
 import CategoryStyler from 'feature/CategoryStyler';
 import CommentRefresh from 'feature/CommentRefresh';
@@ -16,22 +16,26 @@ import TemporarySave from 'feature/TemporarySave';
 import ThemeCustomizer from 'feature/ThemeCustomizer';
 import UserColor from 'feature/UserColor';
 
-export default () => (
-  <>
-    <LayoutCustom />
-    <ThemeCustomizer />
-    <AutoRefresher />
-    <CommentRefresh />
-    <ImageDownloader />
-    <IPInfo />
-    <AnonymousNick />
-    <Memo />
-    <ExperienceCustom />
-    <TemporarySave />
-    <Mute />
-    <MyImage />
-    <CategoryStyler />
-    <UserColor />
-    <ShortCut />
-  </>
-);
+function FeatureWrapper() {
+  return (
+    <>
+      <LayoutCustom />
+      <ThemeCustomizer />
+      <AutoRefresher />
+      <CommentRefresh />
+      <ImageDownloader />
+      <IPInfo />
+      <AnonymousNick />
+      <Memo />
+      <ExperienceCustom />
+      <TemporarySave />
+      <Mute />
+      <MyImage />
+      <CategoryStyler />
+      <UserColor />
+      <ShortCut />
+    </>
+  );
+}
+
+export default FeatureWrapper;
