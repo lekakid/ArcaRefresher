@@ -23,6 +23,10 @@ const columns = [
   { field: 'memo', headerName: '메모', flex: 1, editable: true },
 ];
 
+function CustomNoRowsOverlay() {
+  return <GridOverlay>저장된 메모가 없습니다.</GridOverlay>;
+}
+
 function ConfigToolbar({ disabled, onRemove }) {
   return (
     <div style={{ textAlign: 'right' }}>
@@ -164,9 +168,7 @@ const ConfigMenu = React.forwardRef(
                   disableSelectionOnClick
                   components={{
                     Toolbar: ConfigToolbar,
-                    NoRowsOverlay: () => (
-                      <GridOverlay>저장된 메모가 없습니다.</GridOverlay>
-                    ),
+                    NoRowsOverlay: CustomNoRowsOverlay,
                   }}
                   componentsProps={{
                     toolbar: {
