@@ -41,6 +41,10 @@ function ConfigToolbar({ disabled, onRemove }) {
   );
 }
 
+function CustomOverRay() {
+  return <GridOverlay>뮤트된 아카콘이 없습니다.</GridOverlay>;
+}
+
 const ERROR = 'ERROR';
 const CHANGED = 'CHANGED';
 const INIT = 'INIT';
@@ -231,9 +235,7 @@ const ConfigMenu = React.forwardRef(
                 disableSelectionOnClick
                 components={{
                   Toolbar: ConfigToolbar,
-                  NoRowsOverlay: () => (
-                    <GridOverlay>뮤트된 아카콘이 없습니다.</GridOverlay>
-                  ),
+                  NoRowsOverlay: CustomOverRay,
                 }}
                 componentsProps={{
                   toolbar: {
