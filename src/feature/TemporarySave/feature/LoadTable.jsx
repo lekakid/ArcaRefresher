@@ -34,6 +34,10 @@ const useStyles = makeStyles({
   },
 });
 
+function CustomNoRowsOverlay() {
+  return <GridOverlay>임시 저장된 게시물이 없습니다.</GridOverlay>;
+}
+
 function CustomToolbar({
   selection,
   editMode,
@@ -165,9 +169,7 @@ export default function LoadTable({ editor, open, onClose }) {
           disableColumnMenu
           components={{
             Toolbar: CustomToolbar,
-            NoRowsOverlay: () => (
-              <GridOverlay>임시 저장된 게시물이 없습니다.</GridOverlay>
-            ),
+            NoRowsOverlay: CustomNoRowsOverlay,
           }}
           componentsProps={{
             toolbar: {
