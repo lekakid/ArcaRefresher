@@ -5,7 +5,7 @@ import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import fetch from 'util/fetch';
+import httpRequest from 'util/httpRequest';
 
 import { MODULE_ID } from './ModuleInfo';
 
@@ -60,7 +60,7 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
-        const { response: blob } = await fetch({
+        const { response: blob } = await httpRequest({
           url: data.current,
           timeout: 10000,
           responseType: 'blob',
@@ -81,7 +81,7 @@ function ContextMenu({ triggerList }) {
         formdata.append('frame', 1);
         formdata.append('database', 999);
 
-        const { response } = await fetch({
+        const { response } = await httpRequest({
           url: 'https://saucenao.com/search.php',
           method: 'POST',
           data: formdata,
@@ -120,7 +120,7 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const { response: blob } = await fetch({
+        const { response: blob } = await httpRequest({
           url: data.current,
           timeout: 10000,
           responseType: 'blob',
@@ -129,7 +129,7 @@ function ContextMenu({ triggerList }) {
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
 
-        const { finalUrl: resultURL } = await fetch({
+        const { finalUrl: resultURL } = await httpRequest({
           url: 'https://twigaten.204504byse.info/search/media',
           method: 'POST',
           data: formdata,
@@ -153,13 +153,13 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
-        const { response: blob } = await fetch({
+        const { response: blob } = await httpRequest({
           url: data.current,
           timeout: 10000,
           responseType: 'blob',
         });
 
-        const { response: tokenDocument } = await fetch({
+        const { response: tokenDocument } = await httpRequest({
           url: 'https://ascii2d.net',
           responseType: 'document',
         });
@@ -181,7 +181,7 @@ function ContextMenu({ triggerList }) {
         formdata.append('utf8', '✓');
         formdata.append('authenticity_token', token);
 
-        const { finalUrl: resultURL } = await fetch({
+        const { finalUrl: resultURL } = await httpRequest({
           url: 'https://ascii2d.net/search/file',
           method: 'POST',
           data: formdata,

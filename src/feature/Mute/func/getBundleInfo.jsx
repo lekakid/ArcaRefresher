@@ -1,7 +1,7 @@
-import fetch from 'util/fetch';
+import httpRequest from 'util/httpRequest';
 
 export default async function getBundleInfo(emotID) {
-  const { finalUrl: bundleURL, response: bundleDocument } = await fetch({
+  const { finalUrl: bundleURL, response: bundleDocument } = await httpRequest({
     url: `/api/emoticon/shop/${emotID}`,
     method: 'GET',
     timeout: 10000,

@@ -1,8 +1,8 @@
-import fetch from 'util/fetch';
+import httpRequest from 'util/httpRequest';
 
 export default async function getBundleData(id) {
   try {
-    const { response } = await fetch({
+    const { response } = await httpRequest({
       url: `/api/emoticon/${id}`,
       method: 'GET',
       responseType: 'json',
