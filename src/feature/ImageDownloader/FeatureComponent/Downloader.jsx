@@ -57,6 +57,8 @@ export default function Downloader({ open, data, onFinish }) {
         try {
           // eslint-disable-next-line no-await-in-loop
           const response = await fetch(orig);
+          if (!response.ok) throw new Error('네트워크 오류로 중단');
+
           const total = response.headers.get('Content-Length');
           const reader = response.body.getReader();
           let loaded = 0;

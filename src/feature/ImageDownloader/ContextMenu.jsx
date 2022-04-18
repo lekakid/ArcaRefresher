@@ -50,6 +50,8 @@ function ContextMenu({ triggerList }) {
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
         // eslint-disable-next-line no-await-in-loop
         const response = await fetch(orig);
+        if (!response.ok) throw new Error('네트워크 오류로 중단');
+
         // eslint-disable-next-line no-await-in-loop
         const rawData = await response.blob();
 
@@ -81,6 +83,12 @@ function ContextMenu({ triggerList }) {
         );
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
+        dispatch(
+          setContextSnack({
+            msg: '이미지 다운로드에 실패했습니다.',
+            time: 3000,
+          }),
+        );
       }
     })();
   }, [dispatch]);
@@ -93,6 +101,8 @@ function ContextMenu({ triggerList }) {
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
         // eslint-disable-next-line no-await-in-loop
         const response = await fetch(orig);
+        if (!response.ok) throw new Error('네트워크 오류로 중단');
+
         // eslint-disable-next-line no-await-in-loop
         const blob = await response.blob();
 
@@ -106,6 +116,12 @@ function ContextMenu({ triggerList }) {
         dispatch(setContextSnack({ msg: '' }));
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
+        dispatch(
+          setContextSnack({
+            msg: '이미지 다운로드에 실패했습니다.',
+            time: 3000,
+          }),
+        );
       }
     })();
   }, [fileName, dispatch]);
