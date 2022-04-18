@@ -8,7 +8,7 @@ import { GetApp } from '@material-ui/icons';
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
-import DownloadDialog from './DownloadDialog';
+import SelectionDialog from './FeatureComponent';
 import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles({
@@ -96,7 +96,7 @@ export default function ImageDownloader() {
         </Button>,
         container,
       )}
-      <DownloadDialog open={open} onClose={handleClose} />
+      <SelectionDialog open={open} onClose={handleClose} />
     </>
   );
 }

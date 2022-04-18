@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
 import { getImageInfo } from '../func';
-import ImageSelector from './ImageSelector';
+import SelectableImageList from './SelectableImageList';
 import Downloader from './Downloader';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DownloadDialog({ open, onClose }) {
+export default function SelectionDialog({ open, onClose }) {
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
     const query = emoticon ? ARTICLE_EMOTICON : ARTICLE_IMAGES;
@@ -97,7 +97,7 @@ export default function DownloadDialog({ open, onClose }) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <ImageSelector
+        <SelectableImageList
           imgList={imgList}
           selection={selection}
           onChange={handleSelection}

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ImageSelector({ imgList, selection, onChange }) {
+export default function SelectableImageList({ imgList, selection, onChange }) {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const handleSelect = useCallback(
