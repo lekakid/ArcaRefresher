@@ -1,19 +1,19 @@
 function getGifInfo(gif) {
   // 드물게 search가 남은 경우 제거
-  const url = gif.src.split('?')[0];
-  const { version } = gif.dataset;
+  const url = (gif.src || gif.dataset.src).split('?')[0];
   const ext = 'gif';
   const uploadName = url.match(/[0-9a-f]{64}/g)[0];
 
-  if (version !== 'v2' && !gif.poster) {
-    const orig = `${url}.gif?type=orig`;
-    const thumb = `${url}.gif?type=list`;
+  let orig;
+  let thumb;
 
-    return { orig, thumb, ext, uploadName };
+  if (!gif.poster) {
+    orig = `${url}.gif?type=orig`;
+    thumb = `${url}.gif?type=list`;
+  } else {
+    orig = `${url.replace('mp4', 'gif')}?type=orig`;
+    thumb = `${url.replace('mp4', 'gif')}?type=list`;
   }
-
-  const orig = `${url.replace('mp4', 'gif')}?type=orig`;
-  const thumb = `${url.replace('mp4', 'gif')}?type=list`;
 
   return { orig, thumb, ext, uploadName };
 }
