@@ -50,47 +50,42 @@ export default function Downloader({ open, data, onFinish }) {
     (async () => {
       const zip = new JSZip();
 
-      const failedIndex = [];
       for (let i = 0; i < data.length; i += 1) {
         const { orig, ext, uploadName } = data[i];
         setCur(i);
 
-        for (let j = 0; j < retryCount; j += 1) {
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            const response = await fetch(orig);
-            const total = response.headers.get('Content-Length');
-            const reader = response.body.getReader();
-            let loaded = 0;
-            const chunks = [];
-            // eslint-disable-next-line no-await-in-loop
-            await reader.read().then(function process({ done, value }) {
-              if (done) {
-                return undefined;
-              }
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const response = await fetch(orig);
+          const total = response.headers.get('Content-Length');
+          const reader = response.body.getReader();
+          let loaded = 0;
+          const chunks = [];
+          // eslint-disable-next-line no-await-in-loop
+          await reader.read().then(function process({ done, value }) {
+            if (done) {
+              return undefined;
+            }
 
-              chunks.push(value);
-              loaded += value.length;
-              setProgress((loaded / total) * 100);
-              return reader.read().then(process);
-            });
-            const blob = new Blob(chunks);
-            console.log(blob);
+            chunks.push(value);
+            loaded += value.length;
+            setProgress((loaded / total) * 100);
+            return reader.read().then(process);
+          });
+          const blob = new Blob(chunks);
+          console.log(blob);
 
-            const saveFilename = replaceFormat(zipImageName, {
-              ...articleInfo.current,
-              channelID,
-              channelName,
-              uploadName,
-              index: i,
-            });
-            zip.file(`${saveFilename}.${ext}`, blob);
-            break;
-          } catch (error) {
-            console.warn('다운로드 실패', orig, error);
-          }
-
-          if (j === retryCount - 1) failedIndex.push(i);
+          const saveFilename = replaceFormat(zipImageName, {
+            ...articleInfo.current,
+            channelID,
+            channelName,
+            uploadName,
+            index: i,
+          });
+          zip.file(`${saveFilename}.${ext}`, blob);
+          break;
+        } catch (error) {
+          console.warn('다운로드 실패', orig, error);
         }
       }
       setCur(data.length);

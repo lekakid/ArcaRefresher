@@ -6,7 +6,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Paper,
-  Slider,
   TextField,
   Typography,
   Switch,
@@ -20,22 +19,15 @@ import {
   setZipName,
   setZipImageName,
   setZipComment,
-  setRetryCount,
 } from '../slice';
 import { FORMAT, LABEL } from '../format';
 import FormatSelector from './FormatSelector';
-
-function createMark(value) {
-  return { value, label: `${value}회` };
-}
-
-const retryMarks = [createMark(1), createMark(2), createMark(3)];
 
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
-    const { enabled, fileName, zipName, zipImageName, zipComment, retryCount } =
+    const { enabled, fileName, zipName, zipImageName, zipComment } =
       useSelector((state) => state[MODULE_ID]);
 
     const handleEnable = useCallback(() => {
@@ -92,13 +84,6 @@ const ConfigMenu = React.forwardRef(
         dispatch(setZipComment(`${zipComment}${value}`));
       },
       [dispatch, zipComment],
-    );
-
-    const handleRetryCount = useCallback(
-      (e, value) => {
-        dispatch(setRetryCount(value));
-      },
-      [dispatch],
     );
 
     return (
@@ -203,19 +188,6 @@ const ConfigMenu = React.forwardRef(
                     { value: FORMAT.URL, label: LABEL.URL },
                   ]}
                   onSelect={handleAddFormatZipComment}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem>
-              <ListItemText>재시도 횟수</ListItemText>
-              <ListItemSecondaryAction>
-                <Slider
-                  marks={retryMarks}
-                  step={null}
-                  min={1}
-                  max={3}
-                  value={retryCount}
-                  onChange={handleRetryCount}
                 />
               </ListItemSecondaryAction>
             </ListItem>

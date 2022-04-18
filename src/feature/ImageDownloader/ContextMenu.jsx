@@ -13,7 +13,7 @@ import { getArticleInfo, getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { fileName, retryCount } = useSelector((state) => state[MODULE_ID]);
+  const { fileName } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const articleInfo = useRef(null);
   const data = useRef(null);
@@ -45,76 +45,70 @@ function ContextMenu({ triggerList }) {
     (async () => {
       const { orig } = data.current;
 
-      for (let i = 0; i < retryCount; i += 1) {
-        try {
-          dispatch(setClose());
-          dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-          // eslint-disable-next-line no-await-in-loop
-          const response = await fetch(orig);
-          // eslint-disable-next-line no-await-in-loop
-          const rawData = await response.blob();
+      try {
+        dispatch(setClose());
+        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
+        // eslint-disable-next-line no-await-in-loop
+        const response = await fetch(orig);
+        // eslint-disable-next-line no-await-in-loop
+        const rawData = await response.blob();
 
-          const canvas = document.createElement('canvas');
-          const canvasContext = canvas.getContext('2d');
-          // eslint-disable-next-line no-await-in-loop
-          const convertedBlob = await new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-              canvas.width = img.width;
-              canvas.height = img.height;
-              canvasContext.drawImage(img, 0, 0);
-              canvas.toBlob((blob) => {
-                resolve(blob);
-              });
-            };
-            img.src = URL.createObjectURL(rawData);
-          });
-          canvas.remove();
-          const item = new ClipboardItem({
-            [convertedBlob.type]: convertedBlob,
-          });
-          navigator.clipboard.write([item]);
-          dispatch(
-            setContextSnack({
-              msg: '클립보드에 이미지가 복사되었습니다.',
-              time: 3000,
-            }),
-          );
-          break;
-        } catch (error) {
-          console.warn('다운로드 실패로 인한 재시도', orig, error);
-        }
+        const canvas = document.createElement('canvas');
+        const canvasContext = canvas.getContext('2d');
+        // eslint-disable-next-line no-await-in-loop
+        const convertedBlob = await new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            canvasContext.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+              resolve(blob);
+            });
+          };
+          img.src = URL.createObjectURL(rawData);
+        });
+        canvas.remove();
+        const item = new ClipboardItem({
+          [convertedBlob.type]: convertedBlob,
+        });
+        navigator.clipboard.write([item]);
+        dispatch(
+          setContextSnack({
+            msg: '클립보드에 이미지가 복사되었습니다.',
+            time: 3000,
+          }),
+        );
+      } catch (error) {
+        console.warn('다운로드 실패', orig, error);
       }
     })();
-  }, [retryCount, dispatch]);
+  }, [dispatch]);
 
   const handleDownload = useCallback(() => {
     (async () => {
       const { orig, ext, uploadName } = data.current;
-      for (let i = 0; i < retryCount; i += 1) {
-        try {
-          dispatch(setClose());
-          dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-          // eslint-disable-next-line no-await-in-loop
-          const response = await fetch(orig);
-          // eslint-disable-next-line no-await-in-loop
-          const blob = await response.blob();
+      try {
+        dispatch(setClose());
+        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
+        // eslint-disable-next-line no-await-in-loop
+        const response = await fetch(orig);
+        // eslint-disable-next-line no-await-in-loop
+        const blob = await response.blob();
 
-          saveAs(
-            blob,
-            `${replaceFormat(fileName, {
-              ...articleInfo.current,
-              uploadName,
-            })}.${ext}`,
-          );
-          dispatch(setContextSnack({ msg: '' }));
-          break;
-        } catch (error) {
-          console.warn('다운로드 실패로 인한 재시도', orig, error);
-        }
+        saveAs(
+          blob,
+          `${replaceFormat(fileName, {
+            ...articleInfo.current,
+            uploadName,
+          })}.${ext}`,
+        );
+        dispatch(setContextSnack({ msg: '' }));
+      } catch (error) {
+        console.warn('다운로드 실패', orig, error);
       }
     })();
-  }, [fileName, retryCount, dispatch]);
+  }, [fileName, dispatch]);
 
   const handleCopyURL = useCallback(() => {
     dispatch(setClose());
