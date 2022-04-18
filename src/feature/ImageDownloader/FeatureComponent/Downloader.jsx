@@ -14,7 +14,6 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 import { useParser } from 'util/Parser';
-import fetch from 'util/fetch';
 
 import { MODULE_ID } from '../ModuleInfo';
 import { getArticleInfo, replaceFormat } from '../func';
@@ -34,54 +33,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function download({
-  dataList,
-  onTotalProgress,
-  onFileProgress,
-  flags,
-  config: { zipName, zipImageName, zipComment, retryCount },
-}) {
-  const zip = new JSZip();
-
-  const failedIndex = [];
-  for (let i = 0; i < dataList.length; i += 1) {
-    const { orig, ext, uploadName } = dataList[i];
-    onTotalProgress(i);
-
-    for (let j = 0; j < retryCount; j += 1) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const { response: blob } = await fetch({
-          url: orig,
-          responseType: 'blob',
-          onprogress: onFileProgress,
-        });
-        const saveFilename = replaceFormat(zipImageName, {
-          ...flags,
-          uploadName,
-          index: i,
-        });
-        zip.file(`${saveFilename}.${ext}`, blob);
-        break;
-      } catch (error) {
-        console.warn('다운로드 실패로 인한 재시도', orig, error);
-      }
-
-      if (j === retryCount - 1) failedIndex.push(i);
-    }
-  }
-  onTotalProgress(dataList.length);
-
-  const zipblob = await zip.generateAsync({
-    type: 'blob',
-    comment: replaceFormat(zipComment, flags),
-  });
-  saveAs(zipblob, `${replaceFormat(zipName, flags)}.zip`);
-}
-
 export default function Downloader({ open, data, onFinish }) {
   const { channelID, channelName } = useParser();
-  const config = useSelector((state) => state[MODULE_ID]);
+  const { zipImageName, zipName, zipComment, retryCount } = useSelector(
+    (state) => state[MODULE_ID],
+  );
   const articleInfo = useRef(getArticleInfo());
   const [cur, setCur] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -91,26 +47,82 @@ export default function Downloader({ open, data, onFinish }) {
     if (data.length === 0) return;
     if (!articleInfo.current) return;
 
-    const flags = {
-      ...articleInfo.current,
-      channelID,
-      channelName,
-    };
     (async () => {
-      await download({
-        dataList: data,
-        onTotalProgress(current) {
-          setCur(current);
-        },
-        onFileProgress({ loaded, total }) {
-          setProgress((loaded / total) * 100);
-        },
-        flags,
-        config,
+      const zip = new JSZip();
+
+      const failedIndex = [];
+      for (let i = 0; i < data.length; i += 1) {
+        const { orig, ext, uploadName } = data[i];
+        setCur(i);
+
+        for (let j = 0; j < retryCount; j += 1) {
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            const response = await fetch(orig);
+            const total = response.headers.get('Content-Length');
+            const reader = response.body.getReader();
+            let loaded = 0;
+            const chunks = [];
+            // eslint-disable-next-line no-await-in-loop
+            await reader.read().then(function process({ done, value }) {
+              if (done) {
+                return undefined;
+              }
+
+              chunks.push(value);
+              loaded += value.length;
+              setProgress((loaded / total) * 100);
+              return reader.read().then(process);
+            });
+            const blob = new Blob(chunks);
+            console.log(blob);
+
+            const saveFilename = replaceFormat(zipImageName, {
+              ...articleInfo.current,
+              channelID,
+              channelName,
+              uploadName,
+              index: i,
+            });
+            zip.file(`${saveFilename}.${ext}`, blob);
+            break;
+          } catch (error) {
+            console.warn('다운로드 실패', orig, error);
+          }
+
+          if (j === retryCount - 1) failedIndex.push(i);
+        }
+      }
+      setCur(data.length);
+
+      const replacedComment = replaceFormat(zipComment, {
+        ...articleInfo.current,
+        channelID,
+        channelName,
       });
+      const zipFileName = replaceFormat(zipName, {
+        ...articleInfo.current,
+        channelID,
+        channelName,
+      });
+
+      const zipblob = await zip.generateAsync({
+        type: 'blob',
+        comment: replacedComment,
+      });
+      saveAs(zipblob, `${zipFileName}.zip`);
       onFinish();
     })();
-  }, [articleInfo, channelID, channelName, config, data, onFinish]);
+  }, [
+    channelID,
+    channelName,
+    data,
+    onFinish,
+    retryCount,
+    zipComment,
+    zipImageName,
+    zipName,
+  ]);
 
   return (
     <Slide direction="up" in={open} mountOnEnter unmountOnExit>

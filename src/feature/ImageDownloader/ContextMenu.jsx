@@ -7,14 +7,9 @@ import { saveAs } from 'file-saver';
 import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import fetch from 'util/fetch';
 
 import { MODULE_ID } from './ModuleInfo';
 import { getArticleInfo, getImageInfo, replaceFormat } from './func';
-
-async function download(url) {
-  return (await fetch(url)).blob();
-}
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -55,7 +50,9 @@ function ContextMenu({ triggerList }) {
           dispatch(setClose());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
-          const rawData = await download(orig);
+          const response = await fetch(orig);
+          // eslint-disable-next-line no-await-in-loop
+          const rawData = await response.blob();
 
           const canvas = document.createElement('canvas');
           const canvasContext = canvas.getContext('2d');
@@ -99,7 +96,9 @@ function ContextMenu({ triggerList }) {
           dispatch(setClose());
           dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
           // eslint-disable-next-line no-await-in-loop
-          const blob = await download(orig);
+          const response = await fetch(orig);
+          // eslint-disable-next-line no-await-in-loop
+          const blob = await response.blob();
 
           saveAs(
             blob,
