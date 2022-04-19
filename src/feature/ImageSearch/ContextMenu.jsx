@@ -60,11 +60,9 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
-        const { response: blob } = await httpRequest({
-          url: data.current,
-          timeout: 10000,
-          responseType: 'blob',
-        });
+        const blob = await fetch(data.current).then((response) =>
+          response.blob(),
+        );
 
         if (blob.size > 15728640) {
           dispatch(
@@ -120,11 +118,9 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const { response: blob } = await httpRequest({
-          url: data.current,
-          timeout: 10000,
-          responseType: 'blob',
-        });
+        const blob = await fetch(data.current).then((response) =>
+          response.blob(),
+        );
 
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
@@ -153,11 +149,9 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
-        const { response: blob } = await httpRequest({
-          url: data.current,
-          timeout: 10000,
-          responseType: 'blob',
-        });
+        const blob = await fetch(data.current).then((response) =>
+          response.blob(),
+        );
 
         const { response: tokenDocument } = await httpRequest({
           url: 'https://ascii2d.net',
