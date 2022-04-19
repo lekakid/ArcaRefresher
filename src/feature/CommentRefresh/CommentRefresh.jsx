@@ -3,7 +3,12 @@ import { IconButton, Portal } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { Refresh } from '@material-ui/icons';
 
-import { COMMENT_VIEW, COMMENT_LOADED, COMMENT_TITLE } from 'core/selector';
+import {
+  COMMENT_VIEW,
+  COMMENT_LOADED,
+  COMMENT_TITLE,
+  COMMENT_SUBTITLE,
+} from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { getDateStr } from 'util/time';
@@ -28,7 +33,10 @@ const style = {
 };
 
 function CommentRefresh({ classes }) {
-  const [title, setTitle] = useState(undefined);
+  const [title, setTitle] = useState({
+    top: undefined,
+    bottom: undefined,
+  });
   const [comment, setComment] = useState(undefined);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
 
@@ -37,11 +45,12 @@ function CommentRefresh({ classes }) {
     if (commentLoaded) {
       const commentView = document.querySelector(COMMENT_VIEW);
       setComment(commentView);
-      setTitle(
-        document
-          .querySelector(COMMENT_TITLE)
-          ?.appendChild(document.createElement('span')) || null,
-      );
+      const top = document.createElement('span');
+      const bottom = document.createElement('span');
+      document.querySelector(COMMENT_TITLE)?.append(top);
+      document.querySelector(COMMENT_SUBTITLE)?.prepend(bottom);
+
+      setTitle({ top, bottom });
     }
   }, [commentLoaded]);
 
@@ -53,7 +62,8 @@ function CommentRefresh({ classes }) {
         const commentView = document.querySelector(COMMENT_VIEW);
         setComment(commentView);
 
-        document.querySelector(COMMENT_TITLE).appendChild(title);
+        document.querySelector(COMMENT_TITLE).append(title.top);
+        document.querySelector(COMMENT_SUBTITLE).prepend(title.bottom);
         dispatchAREvent(EVENT_COMMENT_REFRESH);
       }
     });
@@ -85,11 +95,18 @@ function CommentRefresh({ classes }) {
   }, [comment]);
 
   return (
-    <Portal container={title}>
-      <IconButton classes={classes} size="small" onClick={handleClick}>
-        <Refresh />
-      </IconButton>
-    </Portal>
+    <>
+      <Portal container={title.top}>
+        <IconButton classes={classes} size="small" onClick={handleClick}>
+          <Refresh />
+        </IconButton>
+      </Portal>
+      <Portal container={title.bottom}>
+        <IconButton classes={classes} size="small" onClick={handleClick}>
+          <Refresh />
+        </IconButton>
+      </Portal>
+    </>
   );
 }
 
