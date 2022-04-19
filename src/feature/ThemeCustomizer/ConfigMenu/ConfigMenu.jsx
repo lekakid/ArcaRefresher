@@ -79,7 +79,10 @@ const ConfigMenu = React.forwardRef(
     const [createOpen, setCreateOpen] = useState(false);
     const [renameOpen, setRenameOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const editingPreset = theme[selectPreset] || { ...defaultTheme };
+    const editingPreset = {
+      ...defaultTheme,
+      ...theme[selectPreset],
+    };
 
     const handleEnabled = useCallback(() => {
       dispatch(toggleEnable());
