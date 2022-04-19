@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { IconButton, Portal } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
+import { Refresh } from '@material-ui/icons';
 
 import { COMMENT_VIEW, COMMENT_LOADED, COMMENT_TITLE } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
@@ -7,7 +9,6 @@ import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { getDateStr } from 'util/time';
 
 import getNewComment from './getNewComment';
-import RefreshButton from './RefreshButton';
 
 const style = {
   '@global': {
@@ -21,9 +22,12 @@ const style = {
       display: 'relative',
     },
   },
+  root: {
+    color: 'var(--color-text-muted)',
+  },
 };
 
-function CommentRefresh() {
+function CommentRefresh({ classes }) {
   const [title, setTitle] = useState(undefined);
   const [comment, setComment] = useState(undefined);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
@@ -80,7 +84,13 @@ function CommentRefresh() {
     }
   }, [comment]);
 
-  return <RefreshButton container={title} onClick={handleClick} />;
+  return (
+    <Portal container={title}>
+      <IconButton classes={classes} size="small" onClick={handleClick}>
+        <Refresh />
+      </IconButton>
+    </Portal>
+  );
 }
 
 export default withStyles(style)(CommentRefresh);
