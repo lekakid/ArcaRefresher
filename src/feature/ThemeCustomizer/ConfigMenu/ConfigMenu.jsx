@@ -40,13 +40,18 @@ const rows = [
   createRow('bg-input', '입력칸 색상'),
   createRow('bg-badge', '글머리 색상'),
   createRow('bg-footer', '푸터 색상'),
+  createRow('bg-table', '테이블 색상'),
   createRow('text-color', '텍스트 색상'),
+  createRow('text-color-reverse', '반전 텍스트 색상'),
   createRow('text-muted', '뮤트 색상'),
   createRow('text-highlight', '댓글 강조 색상'),
   createRow('link-color', '링크 색상'),
   createRow('visited-article', '방문한 게시물 색상'),
   createRow('border-outer', '경계선 외곽선 색상'),
   createRow('border-inner', '경계선 내부선 색상'),
+  createRow('btn-hover', '버튼 오버 색상'),
+  createRow('highlight-color', '댓글 강조 색상'),
+  createRow('user-highlight', '작성자 강조 색상'),
 ];
 
 const defaultTheme = {
@@ -59,13 +64,18 @@ const defaultTheme = {
   'bg-input': '#fff',
   'bg-badge': '#3d414d',
   'bg-footer': '#fff',
+  'bg-table': '#f5f5f5',
   'text-color': '#373a3c',
+  'text-color-reverse': '#d3d3d3',
   'text-muted': '#9ba0a4',
   'text-highlight': 'yellow',
   'link-color': '#5b91bf',
   'visited-article': '#bbb',
   'border-outer': '#bbb',
   'border-inner': '#ddd',
+  'btn-hover': '#007bff',
+  'highlight-color': '#fff4cc',
+  'user-highlight': '#efdf25cf',
 };
 
 const ConfigMenu = React.forwardRef(
