@@ -1,16 +1,20 @@
-import httpRequest from 'util/httpRequest';
-
 export default async function getBundleInfo(emotID) {
-  const { finalUrl: bundleURL, response: bundleDocument } = await httpRequest({
-    url: `/api/emoticon/shop/${emotID}`,
-    method: 'GET',
-    timeout: 10000,
-    responseType: 'document',
-  });
-  const id = bundleURL.match(/[0-9]+$/)[0];
-  const name =
-    bundleDocument.querySelector('.article-head .title')?.textContent.trim() ||
-    `삭제된 이모티콘 - ${id}`;
+  try {
+    const response = await fetch(`/api/emoticon/shop/${emotID}`);
+    if (!response.ok) throw new Error('네트워크 오류');
 
-  return { id, name };
+    const text = await response.text();
+    const parser = new DOMParser();
+    const bundleDocument = parser.parseFromString(text, 'text/html');
+
+    const id = response.url.match(/[0-9]+$/)[0];
+    const name =
+      bundleDocument
+        .querySelector('.article-head .title')
+        ?.textContent.trim() || `삭제된 이모티콘 - ${id}`;
+    return { id, name };
+  } catch (error) {
+    console.warn('[Mute/getBundleInfo] 번들 정보 받기 실패', error);
+    return { id: 0, name: '번들 정보 없음' };
+  }
 }
