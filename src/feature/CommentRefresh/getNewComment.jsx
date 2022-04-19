@@ -1,27 +1,18 @@
 import { COMMENT_VIEW } from 'core/selector';
 
-export default function getNewComment() {
-  return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
+export default async function getNewComment() {
+  try {
+    const response = await fetch(window.location.href);
+    if (!response.ok) throw new Error('네트워크 오류');
 
-    req.open('GET', window.location.href);
-    req.responseType = 'document';
-    req.timeout = 2000;
-    req.addEventListener('load', () => {
-      try {
-        const { response } = req;
-        const newComments = response.querySelector(COMMENT_VIEW);
-        resolve(newComments);
-      } catch (error) {
-        reject(error);
-      }
-    });
-    req.timeout = () => {
-      reject(new Error('[CommentRefresh] 연결 시간 초과'));
-    };
-    req.onerror = () => {
-      reject(new Error('[CommentRefresh] 연결 거부'));
-    };
-    req.send();
-  });
+    const text = await response.text();
+    const parser = new DOMParser();
+    const resultDocument = parser.parseFromString(text, 'text/html');
+    const newComments = resultDocument.querySelector(COMMENT_VIEW);
+
+    return newComments;
+  } catch (error) {
+    console.warn('[CommentRefresh/getNewCommment]', error);
+    return null;
+  }
 }
