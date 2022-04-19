@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
+import { Button, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { GetApp } from '@material-ui/icons';
 
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
-import DownloadDialog from './DownloadDialog';
+import SelectionDialog from './FeatureComponent';
 import { MODULE_ID } from './ModuleInfo';
 
 const useStyles = makeStyles({
@@ -83,7 +82,7 @@ export default function ImageDownloader() {
 
   return (
     <>
-      {ReactDOM.createPortal(
+      <Portal container={container}>
         <Button
           variant="outlined"
           classes={{ root: classes.btn }}
@@ -93,10 +92,9 @@ export default function ImageDownloader() {
           onClick={handleOpen}
         >
           이미지 다운로더
-        </Button>,
-        container,
-      )}
-      <DownloadDialog open={open} onClose={handleClose} />
+        </Button>
+      </Portal>
+      <SelectionDialog open={open} onClose={handleClose} />
     </>
   );
 }

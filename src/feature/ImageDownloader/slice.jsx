@@ -7,7 +7,6 @@ const defaultConfigState = {
   zipName: '%title%',
   zipImageName: '%num%',
   zipComment: '[%channel%] %title% - %url%',
-  retryCount: 3,
 };
 
 const initialState = {
@@ -39,10 +38,6 @@ export const slice = createSlice({
       state.zipComment = action.payload;
       GM_setValue(MODULE_ID, state);
     },
-    setRetryCount(state, action) {
-      state.retryCount = action.payload;
-      GM_setValue(MODULE_ID, state);
-    },
   },
 });
 
@@ -52,7 +47,6 @@ export const {
   setZipName,
   setZipImageName,
   setZipComment,
-  setRetryCount,
 } = slice.actions;
 
 export default slice.reducer;

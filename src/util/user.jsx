@@ -53,7 +53,7 @@ export function getUserIP(infoElement) {
 }
 
 export function getKey(element, index) {
-  const comment = element.closest('div.comment-wrapper');
+  const comment = element.closest('div.comment-item');
   if (comment) return comment.id;
 
   const article = element.closest('a.vrow');

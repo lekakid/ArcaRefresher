@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -9,6 +8,7 @@ import {
   DialogTitle,
   IconButton,
   Tooltip,
+  Portal,
 } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
@@ -35,6 +35,13 @@ import { MODULE_ID } from './ModuleInfo';
 import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
+  deletedArticle: {
+    '& .article-body': {
+      '& img, video': {
+        display: 'none',
+      },
+    },
+  },
   comment: {
     '& #comment:not(.temp-show)': {
       display: 'none',
@@ -52,14 +59,19 @@ const IGNORE = 'IGNORE';
 // TODO: 설정값 반영
 export default function ExperienceCustomizer() {
   const {
-    openArticleNewWindow,
-    hideFirstImage,
-    blockMediaNewWindow,
-    ratedownGuard,
-    foldComment,
-    wideClickArea,
+    config: {
+      openArticleNewWindow,
+      hideFirstImage,
+      blockMediaNewWindow,
+      blockDeletedArticleMedia,
+      ratedownGuard,
+      foldComment,
+      wideClickArea,
+    },
+    hideDeletedArticleMedia,
   } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const alertLoaded = useElementQuery('.config-alert');
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const [article, setArticle] = useState(null);
@@ -107,6 +119,23 @@ export default function ExperienceCustomizer() {
       hiddenFirstImageContainer.remove();
     };
   }, [article, hiddenFirstImageContainer, hideFirstImage]);
+
+  useEffect(() => {
+    if (!article || !blockDeletedArticleMedia) return undefined;
+    if (!alertLoaded) return undefined;
+
+    if (blockDeletedArticleMedia && hideDeletedArticleMedia) {
+      article.classList.add(classes.deletedArticle);
+    }
+
+    return () => article.classList.remove(classes.deletedArticle);
+  }, [
+    article,
+    alertLoaded,
+    blockDeletedArticleMedia,
+    hideDeletedArticleMedia,
+    classes,
+  ]);
 
   const handleUnhide = useCallback(() => {
     if (hiddenFirstImage) {
@@ -222,20 +251,20 @@ export default function ExperienceCustomizer() {
           <Button onClick={handleClose}>아니오</Button>
         </DialogActions>
       </Dialog>
-      {hiddenFirstImage &&
-        ReactDOM.createPortal(
+      {hiddenFirstImage && (
+        <Portal conatiner={hiddenFirstImageContainer}>
           <Tooltip title="첫 이미지 보이기">
             <IconButton size="small" onClick={handleUnhide}>
               <ImageSearch />
             </IconButton>
-          </Tooltip>,
-          hiddenFirstImageContainer,
-        )}
-      {unfoldContainer &&
-        ReactDOM.createPortal(
-          foldComment && <CommentButton className="unfold-comment" />,
-          unfoldContainer,
-        )}
+          </Tooltip>
+        </Portal>
+      )}
+      {unfoldContainer && foldComment && (
+        <Portal container={unfoldContainer}>
+          <CommentButton className="unfold-comment" />
+        </Portal>
+      )}
     </>
   );
 }

@@ -28,7 +28,7 @@ export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_CATEGORY = '.article-head .badge';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
-  '.article-body img:not([class$="emoticon"]), .article-body video[data-orig="gif"]:not([class$="emoticon"])';
+  '.article-body img:not([class$="emoticon"]):not(.twemoji), .article-body video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
 export const ARTICLE_EMOTICON = '.article-body *[class$="emoticon"]';
 export const ARTICLE_URL = '.article-body .article-link a';
 export const ARTICLE_BODY = '.article-body';
@@ -38,6 +38,7 @@ export const ARTICLE_USER_INFO = '.article-wrapper .user-info';
 export const COMMENT_WRAPPERS = '#comment .comment-wrapper';
 export const COMMENT_ITEMS = '#comment .comment-item';
 export const COMMENT_TITLE = '#comment .title';
+export const COMMENT_SUBTITLE = '#comment .reply-form__user-info';
 export const COMMENT_INPUT = '#comment .reply-form-textarea';
 export const COMMENT_EMOTICON = '#comment .emoticon';
 export const CHANNEL_TITLE = '.board-title span + a:not([class])';

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { Portal } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import {
@@ -49,14 +49,11 @@ function MemoList() {
 
   return (
     <>
-      {infoList.map(({ key, id, container }) =>
-        ReactDOM.createPortal(
-          <AuthorTag variant={variant} key={key}>
-            {memo[id]}
-          </AuthorTag>,
-          container,
-        ),
-      )}
+      {infoList.map(({ key, id, container }) => (
+        <Portal key={key} container={container}>
+          <AuthorTag variant={variant}>{memo[id]}</AuthorTag>
+        </Portal>
+      ))}
     </>
   );
 }

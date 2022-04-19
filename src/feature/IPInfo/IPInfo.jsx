@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import {
@@ -70,14 +70,11 @@ export default function IPInfo() {
 
   return (
     <>
-      {infoList.map(({ key, label, color, container }) =>
-        ReactDOM.createPortal(
-          <AuthorTag key={key} className={classes[color]}>
-            {label}
-          </AuthorTag>,
-          container,
-        ),
-      )}
+      {infoList.map(({ key, label, color, container }) => (
+        <Portal key={key} container={container}>
+          <AuthorTag className={classes[color]}>{label}</AuthorTag>
+        </Portal>
+      ))}
     </>
   );
 }

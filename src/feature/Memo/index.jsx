@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import ContextMenu from './ContextMenu';
-import Memo from './Memo';
+import Feature from './Memo';
 
-export { ConfigMenu, ContextMenu, Memo as default };
+export { ConfigMenu, ContextMenu, Feature };

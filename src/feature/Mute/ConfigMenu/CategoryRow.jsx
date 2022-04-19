@@ -7,22 +7,24 @@ import { useParser } from 'util/Parser';
 import { MODULE_ID } from '../ModuleInfo';
 import { setCategoryConfig } from '../slice';
 
+const DEFAULT_CHANNEL_CONFIG = {};
+const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
+
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const { channelID } = useParser();
   const { category: categoryConfig } = useSelector((state) => state[MODULE_ID]);
-  const channelConfig = { ...categoryConfig?.[channelID] };
-  const { mutePreview = false, muteArticle = false } = {
-    ...channelConfig?.[category],
-  };
+  const channelConfig = categoryConfig?.[channelID] || DEFAULT_CHANNEL_CONFIG;
+  const { mutePreview, muteArticle } =
+    channelConfig?.[category] || DEFAULT_CATEGORY_CONFIG;
 
   const handleCategory = useCallback(
     (categoryID, type) => () => {
       const newConfig = {
         ...channelConfig,
         [categoryID]: {
-          ...channelConfig[categoryID],
-          [type]: !channelConfig[categoryID]?.[type],
+          ...channelConfig?.[categoryID],
+          [type]: !channelConfig?.[categoryID]?.[type],
         },
       };
       dispatch(

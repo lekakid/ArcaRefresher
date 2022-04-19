@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import ThemeCustomizer from './ThemeCustomizer';
+import Feature from './ThemeCustomizer';
 
-export { ConfigMenu, ThemeCustomizer as default };
+export { ConfigMenu, Feature };

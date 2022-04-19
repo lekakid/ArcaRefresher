@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import ContextMenu from './ContextMenu';
-import ImageDownloader from './ImageDownloader';
+import Feature from './ImageDownloader';
 
-export { ConfigMenu, ContextMenu, ImageDownloader as default };
+export { ConfigMenu, ContextMenu, Feature };

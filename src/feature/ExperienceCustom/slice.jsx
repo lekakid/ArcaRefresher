@@ -5,14 +5,18 @@ const defaultConfigState = {
   openArticleNewWindow: false,
   hideFirstImage: false,
   blockMediaNewWindow: false,
+  blockDeletedArticleMedia: true,
   ratedownGuard: false,
   foldComment: false,
   wideClickArea: true,
 };
 
 const initialState = {
-  ...defaultConfigState,
-  ...GM_getValue(MODULE_ID),
+  config: {
+    ...defaultConfigState,
+    ...GM_getValue(MODULE_ID),
+  },
+  hideDeletedArticleMedia: true,
 };
 
 export const slice = createSlice({
@@ -20,28 +24,36 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleArticleNewWindow(state) {
-      state.openArticleNewWindow = !state.openArticleNewWindow;
-      GM_setValue(MODULE_ID, state);
+      state.config.openArticleNewWindow = !state.config.openArticleNewWindow;
+      GM_setValue(MODULE_ID, state.config);
     },
     toggleHideFirstImage(state) {
-      state.hideFirstImage = !state.hideFirstImage;
-      GM_setValue(MODULE_ID, state);
+      state.config.hideFirstImage = !state.config.hideFirstImage;
+      GM_setValue(MODULE_ID, state.config);
     },
-    toggleMediaNewWindow(state) {
-      state.blockMediaNewWindow = !state.blockMediaNewWindow;
-      GM_setValue(MODULE_ID, state);
+    toggleBlockMediaNewWindow(state) {
+      state.config.blockMediaNewWindow = !state.config.blockMediaNewWindow;
+      GM_setValue(MODULE_ID, state.config);
+    },
+    toggleBlockDeletedArticleMedia(state) {
+      state.config.blockDeletedArticleMedia =
+        !state.config.blockDeletedArticleMedia;
+      GM_setValue(MODULE_ID, state.config);
+    },
+    toggleHideDeletedArticleMedia(state) {
+      state.hideDeletedArticleMedia = !state.hideDeletedArticleMedia;
     },
     toggleRateDownGuard(state) {
-      state.ratedownGuard = !state.ratedownGuard;
-      GM_setValue(MODULE_ID, state);
+      state.config.ratedownGuard = !state.config.ratedownGuard;
+      GM_setValue(MODULE_ID, state.config);
     },
     toggleComment(state) {
-      state.foldComment = !state.foldComment;
-      GM_setValue(MODULE_ID, state);
+      state.config.foldComment = !state.config.foldComment;
+      GM_setValue(MODULE_ID, state.config);
     },
     toggleWideArea(state) {
-      state.wideClickArea = !state.wideClickArea;
-      GM_setValue(MODULE_ID, state);
+      state.config.wideClickArea = !state.config.wideClickArea;
+      GM_setValue(MODULE_ID, state.config);
     },
   },
 });
@@ -50,6 +62,8 @@ export const {
   toggleArticleNewWindow,
   toggleHideFirstImage,
   toggleMediaNewWindow,
+  toggleBlockDeletedArticleMedia,
+  toggleHideDeletedArticleMedia,
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,

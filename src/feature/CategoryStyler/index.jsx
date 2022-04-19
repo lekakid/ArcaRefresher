@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import CategoryStyler from './CategoryStyler';
+import Feature from './CategoryStyler';
 
-export { ConfigMenu, CategoryStyler as default };
+export { ConfigMenu, Feature };

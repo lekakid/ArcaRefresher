@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { useElementQuery } from 'core/hooks';
@@ -55,13 +54,14 @@ export default function TemporarySave() {
   }, [classes, editorLoaded]);
 
   if (!container) return null;
-  return ReactDOM.createPortal(
-    <ButtonGroup variant="outlined">
-      <AutoSaver editor={editor} />
-      <SaveButton editor={editor} saveAs />
-      <SaveButton editor={editor} />
-      <LoadButton editor={editor} />
-    </ButtonGroup>,
-    container,
+  return (
+    <Portal container={container}>
+      <ButtonGroup variant="outlined">
+        <AutoSaver editor={editor} />
+        <SaveButton editor={editor} saveAs />
+        <SaveButton editor={editor} />
+        <LoadButton editor={editor} />
+      </ButtonGroup>
+    </Portal>
   );
 }

@@ -22,15 +22,23 @@ import getContrastYIQ from 'util/color';
 import { MODULE_ID } from '../ModuleInfo';
 import { setStyle } from '../slice';
 
+const DEFAULT_CHANNEL_CONFIG = {};
+const DEFAULT_CATEGORY_CONFIG = {
+  badge: '',
+  bgcolor: '',
+  bold: false,
+  through: false,
+  disableVisited: false,
+};
+
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { channelID } = useParser();
   const { color } = useSelector((state) => state[MODULE_ID]);
-  const channelColor = { ...color?.[channelID] };
-  const { badge, bgcolor, bold, through, disableVisited } = {
-    ...channelColor?.[category],
-  };
+  const channelColor = color?.[channelID] || DEFAULT_CHANNEL_CONFIG;
+  const { badge, bgcolor, bold, through, disableVisited } =
+    channelColor?.[category] || DEFAULT_CATEGORY_CONFIG;
 
   const handleColor = useCallback(
     (id, type) => (colorData) => {
@@ -52,7 +60,7 @@ function CategoryRow({ divider, category, nameMap }) {
         ...channelColor,
         [id]: {
           ...channelColor[id],
-          [type]: !(channelColor[id] || {})[type],
+          [type]: !channelColor?.[id]?.[type],
         },
       };
       dispatch(setStyle({ channel: channelID, color: updatedData }));

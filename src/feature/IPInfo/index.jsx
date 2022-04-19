@@ -1,3 +1,4 @@
-import IPInfo from './IPInfo';
+import Feature from './IPInfo';
 
-export { IPInfo as default };
+// eslint-disable-next-line import/prefer-default-export
+export { Feature };

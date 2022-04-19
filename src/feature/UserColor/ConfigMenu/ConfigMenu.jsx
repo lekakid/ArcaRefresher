@@ -22,6 +22,10 @@ const columns = [
   { field: 'color', headerName: '색상', flex: 1, editable: true },
 ];
 
+function CustomNoRowsOverlay() {
+  return <GridOverlay>저장된 이용자가 없습니다.</GridOverlay>;
+}
+
 function ConfigToolbar({ disabled, onRemove }) {
   return (
     <div style={{ textAlign: 'right' }}>
@@ -37,11 +41,10 @@ const ConfigMenu = React.forwardRef(
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
     const { color } = useSelector((state) => state[MODULE_ID]);
-    const tableRows =
-      Object.entries(color)?.map(([key, value]) => ({
-        id: key,
-        color: value,
-      })) || {};
+    const tableRows = Object.entries(color).map(([key, value]) => ({
+      id: key,
+      color: value,
+    }));
     const [selection, setSelection] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const [textMode, setTextMode] = useState(false);
@@ -145,9 +148,7 @@ const ConfigMenu = React.forwardRef(
                   disableSelectionOnClick
                   components={{
                     Toolbar: ConfigToolbar,
-                    NoRowsOverlay: () => (
-                      <GridOverlay>저장된 이용자가 없습니다.</GridOverlay>
-                    ),
+                    NoRowsOverlay: CustomNoRowsOverlay,
                   }}
                   componentsProps={{
                     toolbar: {

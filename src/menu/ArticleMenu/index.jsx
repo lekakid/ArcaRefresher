@@ -1,1 +1,3 @@
-export { default } from './ArticleMenu';
+import ArticleMenu from './ArticleMenu';
+
+export default ArticleMenu;

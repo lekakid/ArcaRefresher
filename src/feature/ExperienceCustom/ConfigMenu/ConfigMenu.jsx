@@ -19,6 +19,7 @@ import {
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,
+  toggleBlockDeletedArticleMedia,
 } from '../slice';
 
 const ConfigMenu = React.forwardRef(
@@ -26,12 +27,15 @@ const ConfigMenu = React.forwardRef(
   function ConfigMenu(_props, ref) {
     const dispatch = useDispatch();
     const {
-      openArticleNewWindow,
-      hideFirstImage,
-      blockMediaNewWindow,
-      ratedownGuard,
-      foldComment,
-      wideClickArea,
+      config: {
+        openArticleNewWindow,
+        hideFirstImage,
+        blockMediaNewWindow,
+        blockDeletedArticleMedia,
+        ratedownGuard,
+        foldComment,
+        wideClickArea,
+      },
     } = useSelector((state) => state[MODULE_ID]);
 
     const handleArticleNewWindow = useCallback(() => {
@@ -44,6 +48,10 @@ const ConfigMenu = React.forwardRef(
 
     const handleMediaNewWindow = useCallback(() => {
       dispatch(toggleMediaNewWindow());
+    }, [dispatch]);
+
+    const handleBlockDeletedArticleMedia = useCallback(() => {
+      dispatch(toggleBlockDeletedArticleMedia());
     }, [dispatch]);
 
     const handleRateDownGuard = useCallback(() => {
@@ -96,6 +104,18 @@ const ConfigMenu = React.forwardRef(
                 <Switch
                   checked={blockMediaNewWindow}
                   onChange={handleMediaNewWindow}
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider button onClick={handleBlockDeletedArticleMedia}>
+              <ListItemText
+                primary="삭제된 게시물의 미디어 컨텐츠 숨김"
+                secondary="(채널 관리자 전용) 삭제된 게시물 조회 시 눈을 보호해줍니다."
+              />
+              <ListItemSecondaryAction>
+                <Switch
+                  checked={blockDeletedArticleMedia}
+                  onChange={handleBlockDeletedArticleMedia}
                 />
               </ListItemSecondaryAction>
             </ListItem>

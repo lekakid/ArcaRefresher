@@ -1,4 +1,4 @@
 import ConfigMenu from './ConfigMenu';
-import AutoRefresher from './AutoRefresher';
+import Feature from './AutoRefresher';
 
-export { ConfigMenu, AutoRefresher as default };
+export { ConfigMenu, Feature };

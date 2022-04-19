@@ -1,5 +1,5 @@
 import ConfigMenu from './ConfigMenu';
 import ContextMenu from './ContextMenu';
-import MyImage from './MyImage';
+import Feature from './MyImage';
 
-export { ConfigMenu, ContextMenu, MyImage as default };
+export { ConfigMenu, ContextMenu, Feature };
