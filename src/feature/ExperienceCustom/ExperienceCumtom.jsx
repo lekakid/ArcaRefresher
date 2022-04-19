@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -9,6 +8,7 @@ import {
   DialogTitle,
   IconButton,
   Tooltip,
+  Portal,
 } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
@@ -251,20 +251,20 @@ export default function ExperienceCustomizer() {
           <Button onClick={handleClose}>아니오</Button>
         </DialogActions>
       </Dialog>
-      {hiddenFirstImage &&
-        ReactDOM.createPortal(
+      {hiddenFirstImage && (
+        <Portal conatiner={hiddenFirstImageContainer}>
           <Tooltip title="첫 이미지 보이기">
             <IconButton size="small" onClick={handleUnhide}>
               <ImageSearch />
             </IconButton>
-          </Tooltip>,
-          hiddenFirstImageContainer,
-        )}
-      {unfoldContainer &&
-        ReactDOM.createPortal(
-          foldComment && <CommentButton className="unfold-comment" />,
-          unfoldContainer,
-        )}
+          </Tooltip>
+        </Portal>
+      )}
+      {unfoldContainer && foldComment && (
+        <Portal container={unfoldContainer}>
+          <CommentButton className="unfold-comment" />
+        </Portal>
+      )}
     </>
   );
 }
