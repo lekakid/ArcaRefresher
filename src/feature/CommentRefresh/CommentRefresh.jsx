@@ -96,16 +96,20 @@ function CommentRefresh({ classes }) {
 
   return (
     <>
-      <Portal container={title.top}>
-        <IconButton classes={classes} size="small" onClick={handleClick}>
-          <Refresh />
-        </IconButton>
-      </Portal>
-      <Portal container={title.bottom}>
-        <IconButton classes={classes} size="small" onClick={handleClick}>
-          <Refresh />
-        </IconButton>
-      </Portal>
+      {title.top && (
+        <Portal container={title.top}>
+          <IconButton classes={classes} size="small" onClick={handleClick}>
+            <Refresh />
+          </IconButton>
+        </Portal>
+      )}
+      {title.bottom && (
+        <Portal container={title.bottom}>
+          <IconButton classes={classes} size="small" onClick={handleClick}>
+            <Refresh />
+          </IconButton>
+        </Portal>
+      )}
     </>
   );
 }
