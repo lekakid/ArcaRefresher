@@ -75,7 +75,6 @@ export default function Downloader({ open, data, onFinish }) {
             return reader.read().then(process);
           });
           const blob = new Blob(chunks);
-          console.log(blob);
 
           const saveFilename = replaceFormat(zipImageName, {
             ...articleInfo.current,
