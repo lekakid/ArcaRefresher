@@ -85,7 +85,6 @@ export default function Downloader({ open, data, onFinish }) {
             index: i,
           });
           zip.file(`${saveFilename}.${ext}`, blob);
-          break;
         } catch (error) {
           console.warn('다운로드 실패', orig, error);
         }
