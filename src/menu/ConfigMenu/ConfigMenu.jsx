@@ -120,7 +120,7 @@ export default function ConfigMenu({ groupList, menuList }) {
                 </IconButton>
               )}
               <Typography variant="h5" noWrap className={classes.title}>
-                Arca Refresher
+                {`Arca Refresher ${GM_info.script.version}`}
               </Typography>
               <IconButton color="inherit" onClick={handleConfigClose}>
                 <Close />
