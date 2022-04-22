@@ -14,7 +14,7 @@ export default function ArticleMenu() {
     hideDeletedArticleMedia,
   } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
-  const alertLoaded = useElementQuery('.config-alert');
+  const alertLoaded = useElementQuery('.board-title + .alert-danger');
 
   const handleBlockDeletedArticleMedia = useCallback(() => {
     dispatch(toggleHideDeletedArticleMedia());
