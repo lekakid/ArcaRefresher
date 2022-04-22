@@ -71,7 +71,7 @@ export default function ExperienceCustomizer() {
     hideDeletedArticleMedia,
   } = useSelector((state) => state[MODULE_ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const alertLoaded = useElementQuery('.config-alert');
+  const alertLoaded = useElementQuery('.board-title + .alert-danger');
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const [article, setArticle] = useState(null);
