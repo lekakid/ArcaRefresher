@@ -18,7 +18,7 @@ import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { importValues, exportValues, resetValues } from 'core/gm';
-import { ID, NAME } from './meta';
+import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 const DataManagement = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -70,7 +70,7 @@ const DataManagement = React.forwardRef(
 
     return (
       <Box ref={ref}>
-        <Typography variant="subtitle1">{NAME}</Typography>
+        <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
             <ListItem divider button onClick={handleImport}>
@@ -119,5 +119,5 @@ const DataManagement = React.forwardRef(
   },
 );
 
-DataManagement.displayName = `ConfigMenu(${ID})`;
+DataManagement.displayName = `ConfigMenu(${MODULE_ID})`;
 export default DataManagement;

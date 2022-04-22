@@ -17,11 +17,11 @@ import * as ShortCut from 'feature/ShortCut';
 import * as TemporarySave from 'feature/TemporarySave';
 import * as ThemeCustomizer from 'feature/ThemeCustomizer';
 import * as UserColor from 'feature/UserColor';
+import * as DataManagement from 'feature/DataManagement';
 
 import ArticleMenu from './ArticleMenu';
 import ConfigMenu from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
-import DataManagement from './DataManagement';
 
 function MenuWrapper() {
   return (
@@ -63,7 +63,7 @@ function MenuWrapper() {
           { ...ExperienceCustom.ConfigMenu, group: 'uiux' },
           { ...ContextMenu.ConfigMenu, group: 'uiux' },
           { ...ShortCut.ConfigMenu, group: 'uiux' },
-          DataManagement,
+          DataManagement.ConfigMenu,
         ]}
       />
     </>
