@@ -5,6 +5,12 @@ module.exports = {
   plugins: ['@babel'],
   rules: {
     'no-console': 'off',
+    camelcase: [
+      'error',
+      {
+        ignoreGlobals: true,
+      },
+    ],
     'no-param-reassign': [
       'error',
       { props: true, ignorePropertyModificationsFor: ['state'] },
