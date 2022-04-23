@@ -60,8 +60,8 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
-        const blob = await fetch(data.current).then((response) =>
-          response.blob(),
+        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
+          (response) => response.blob(),
         );
 
         if (blob.size > 15728640) {
@@ -118,8 +118,8 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const blob = await fetch(data.current).then((response) =>
-          response.blob(),
+        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
+          (response) => response.blob(),
         );
 
         const formdata = new FormData();
@@ -149,8 +149,8 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
-        const blob = await fetch(data.current).then((response) =>
-          response.blob(),
+        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
+          (response) => response.blob(),
         );
 
         const { response: tokenDocument } = await httpRequest({
