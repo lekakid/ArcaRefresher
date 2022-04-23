@@ -49,7 +49,7 @@ function ContextMenu({ triggerList }) {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
         // eslint-disable-next-line no-await-in-loop
-        const response = await fetch(orig);
+        const response = await fetch(orig, { mode: 'no-cors' });
         if (!response.ok) throw new Error('네트워크 오류로 중단');
 
         // eslint-disable-next-line no-await-in-loop
