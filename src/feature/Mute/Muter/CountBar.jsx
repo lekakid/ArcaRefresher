@@ -10,14 +10,21 @@ const TypeString = {
   all: '전체',
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     borderBottom: '1px solid var(--color-border-outer)',
   },
-  right: {
-    textAlign: 'right',
+  label: {
+    paddingLeft: theme.spacing(1),
   },
-});
+  buttons: {
+    paddingRight: theme.spacing(1),
+    textAlign: 'end',
+    '& *': {
+      marginLeft: theme.spacing(0.5),
+    },
+  },
+}));
 
 function CountBar({ renderContainer, classContainer, count, hide }) {
   const [showStates, setShowStates] = useState(undefined);
@@ -49,11 +56,11 @@ function CountBar({ renderContainer, classContainer, count, hide }) {
   if (!showStates) return null;
 
   return ReactDOM.createPortal(
-    <Grid container alignItems="center" className={classes.root}>
-      <Grid item sm={4} xs={12}>
-        <Typography variant="subtitle1">필터된 게시물</Typography>
+    <Grid container alignItems="center" classes={{ root: classes.root }}>
+      <Grid item sm={4} xs={12} classes={{ root: classes.label }}>
+        <Typography variant="subtitle1">뮤트(리프레셔)</Typography>
       </Grid>
-      <Grid item sm={8} xs={12} className={classes.right}>
+      <Grid item sm={8} xs={12} classes={{ root: classes.buttons }}>
         {Object.entries(count).map(([key, value]) => {
           if (hide && key !== 'deleted') return null;
           const suffix = key === 'all' ? '' : `-${key}`;
