@@ -9,7 +9,7 @@ import { useElementQuery } from 'core/hooks';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 
 import { MODULE_ID } from './ModuleInfo';
-import { getArticleInfo, getImageInfo, replaceFormat } from './func';
+import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -48,16 +48,10 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        // eslint-disable-next-line no-await-in-loop
-        const response = await fetch(orig, { mode: 'no-cors' });
-        if (!response.ok) throw new Error('네트워크 오류로 중단');
-
-        // eslint-disable-next-line no-await-in-loop
-        const rawData = await response.blob();
+        const rawData = await getBlob({ url: orig });
 
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
-        // eslint-disable-next-line no-await-in-loop
         const convertedBlob = await new Promise((resolve) => {
           const img = new Image();
           img.onload = () => {
@@ -99,12 +93,7 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        // eslint-disable-next-line no-await-in-loop
-        const response = await fetch(orig);
-        if (!response.ok) throw new Error('네트워크 오류로 중단');
-
-        // eslint-disable-next-line no-await-in-loop
-        const blob = await response.blob();
+        const blob = await getBlob({ url: orig });
 
         saveAs(
           blob,
