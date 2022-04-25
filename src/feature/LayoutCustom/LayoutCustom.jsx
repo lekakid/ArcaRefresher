@@ -88,11 +88,6 @@ const useStyles = makeStyles(
         display: 'none',
       },
     },
-    HideHumorCheckbox: {
-      '& .copyHumor': {
-        display: 'none',
-      },
-    },
   },
   {
     name: MODULE_ID,
@@ -116,7 +111,6 @@ export default function LayoutCustom() {
       hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
-      hideHumorCheckbox,
     } = config;
     const styles = clsx(
       classes.FontSize,
@@ -134,7 +128,6 @@ export default function LayoutCustom() {
         [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
         [classes.UnfoldLongComment]: unfoldLongComment,
-        [classes.HideHumorCheckbox]: hideHumorCheckbox,
       },
     ).split(' ');
     document.documentElement.classList.add(...styles);

@@ -17,7 +17,6 @@ const defaultConfigState = {
   hideUnvote: false,
   modifiedIndicator: false,
   unfoldLongComment: false,
-  hideHumorCheckbox: false,
 };
 
 const initialState = {
@@ -89,10 +88,6 @@ export const slice = createSlice({
       state.unfoldLongComment = !state.unfoldLongComment;
       GM_setValue(MODULE_ID, state);
     },
-    toggleHumorCheckbox(state) {
-      state.hideHumorCheckbox = !state.hideHumorCheckbox;
-      GM_setValue(MODULE_ID, state);
-    },
   },
 });
 
@@ -112,7 +107,6 @@ export const {
   toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
-  toggleHumorCheckbox,
 } = slice.actions;
 
 export default slice.reducer;
