@@ -16,7 +16,7 @@ import { saveAs } from 'file-saver';
 import { useParser } from 'util/Parser';
 
 import { MODULE_ID } from '../ModuleInfo';
-import { getArticleInfo, replaceFormat } from '../func';
+import { getArticleInfo, getBlob, replaceFormat } from '../func';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,25 +56,12 @@ export default function Downloader({ open, data, onFinish }) {
 
         try {
           // eslint-disable-next-line no-await-in-loop
-          const response = await fetch(orig, { mode: 'no-cors' });
-          if (!response.ok) throw new Error('네트워크 오류로 중단');
-
-          const total = response.headers.get('Content-Length');
-          const reader = response.body.getReader();
-          let loaded = 0;
-          const chunks = [];
-          // eslint-disable-next-line no-await-in-loop
-          await reader.read().then(function process({ done, value }) {
-            if (done) {
-              return undefined;
-            }
-
-            chunks.push(value);
-            loaded += value.length;
-            setProgress((loaded / total) * 100);
-            return reader.read().then(process);
+          const blob = await getBlob({
+            url: orig,
+            onprogress({ loaded, total }) {
+              setProgress((loaded / total) * 100);
+            },
           });
-          const blob = new Blob(chunks);
 
           const saveFilename = replaceFormat(zipImageName, {
             ...articleInfo.current,
