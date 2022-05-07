@@ -23,7 +23,7 @@ async function getBlob({ url, onprogress }) {
       return new Blob(chunks);
     }
   } catch (error) {
-    console.warn('[getBlob] fetch 실패', error);
+    console.info(`[ImageDownloader/getBlob] fetch 실패 (${url})`);
   }
 
   const httpRequestResponse = await httpRequest({
@@ -31,7 +31,7 @@ async function getBlob({ url, onprogress }) {
     responseType: 'blob',
     onprogress,
   });
-  return httpRequestResponse.blob;
+  return httpRequestResponse.response;
 }
 
 export default getBlob;
