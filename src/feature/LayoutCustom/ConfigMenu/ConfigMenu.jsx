@@ -33,7 +33,6 @@ import {
   toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
-  toggleHumorCheckbox,
 } from '../slice';
 
 function labelFormat(x) {
@@ -66,7 +65,6 @@ const ConfigMenu = React.forwardRef(
       hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
-      hideHumorCheckbox,
     } = useSelector((state) => state[MODULE_ID]);
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
     const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -151,10 +149,6 @@ const ConfigMenu = React.forwardRef(
 
     const handleUnfoldLongComment = useCallback(() => {
       dispatch(toggleLongComment());
-    }, [dispatch]);
-
-    const handleHideHumorCheckbox = useCallback(() => {
-      dispatch(toggleHumorCheckbox());
     }, [dispatch]);
 
     return (
@@ -298,15 +292,6 @@ const ConfigMenu = React.forwardRef(
                 <Switch
                   checked={unfoldLongComment}
                   onChange={handleUnfoldLongComment}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem button onClick={handleHideHumorCheckbox}>
-              <ListItemText primary="유머 채널 동시 등록 체크박스 숨기기" />
-              <ListItemSecondaryAction>
-                <Switch
-                  checked={hideHumorCheckbox}
-                  onChange={handleHideHumorCheckbox}
                 />
               </ListItemSecondaryAction>
             </ListItem>
