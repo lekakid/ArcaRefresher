@@ -25,7 +25,6 @@ export const BOARD_CATEGORIES = '.board-category a';
 export const BOARD_ARTICLES = 'a.vrow:not(.notice-unfilter)';
 export const BOARD_ARTICLES_WITHOUT_NOTICE = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
-export const ARTICLE_CATEGORY = '.article-head .badge';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
   '.article-body img:not([class$="emoticon"]):not(.twemoji), .article-body video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
