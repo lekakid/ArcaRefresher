@@ -11,7 +11,6 @@ import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
 import { getUserInfo } from 'util/user';
-import convertImgToAlt from 'util/emoji';
 
 import { filterContent } from '../func';
 import { MODULE_ID } from '../ModuleInfo';
@@ -81,7 +80,7 @@ function BoardMuter() {
         element: a,
         user: getUserInfo(a.querySelector('.user-info')),
         content: a.querySelector('.title')?.textContent || '',
-        category: convertImgToAlt(a.querySelector('.badge')) || '일반',
+        category: a.querySelector('.badge').textContent || '일반',
       }));
       const categoryConfig = category[channelID] || {};
 
