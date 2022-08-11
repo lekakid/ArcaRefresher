@@ -24,9 +24,7 @@ function ContextMenu({ triggerList }) {
       }
 
       const url = target.src.split('?')[0];
-      const orig = `${url}${
-        target.tagName === 'VIDEO' ? '.gif' : ''
-      }?type=orig`;
+      const orig = `${url}${target.tagName === 'VIDEO' ? '.gif' : ''}`;
       data.current = orig;
       setValid(true);
       return true;
