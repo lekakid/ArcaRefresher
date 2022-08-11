@@ -283,7 +283,7 @@ const ConfigMenu = React.forwardRef(
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <ListItem divider button onClick={handleUnfoldLongComment}>
+            <ListItem button onClick={handleUnfoldLongComment}>
               <ListItemText
                 primary="장문 댓글 바로보기"
                 secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
