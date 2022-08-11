@@ -22,7 +22,6 @@ import {
   setFontSize,
   toggleTopNews,
   toggleRecentVisit,
-  toggleSideHumor,
   toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
@@ -54,7 +53,6 @@ const ConfigMenu = React.forwardRef(
       fontSize,
       topNews,
       recentVisit,
-      sideHumor,
       sideNews,
       sideMenu,
       avatar,
@@ -87,10 +85,6 @@ const ConfigMenu = React.forwardRef(
 
     const handleTopNews = useCallback(() => {
       dispatch(toggleTopNews());
-    }, [dispatch]);
-
-    const handleSideHumor = useCallback(() => {
-      dispatch(toggleSideHumor());
     }, [dispatch]);
 
     const handleSideNews = useCallback(() => {
@@ -202,19 +196,6 @@ const ConfigMenu = React.forwardRef(
                 </ListItem>
                 <Collapse in={sideMenu}>
                   <List disablePadding>
-                    <ListItem
-                      className={classes.nested}
-                      button
-                      onClick={handleSideHumor}
-                    >
-                      <ListItemText primary="유머채널 패널 표시" />
-                      <ListItemSecondaryAction>
-                        <Switch
-                          checked={sideHumor}
-                          onChange={handleSideHumor}
-                        />
-                      </ListItemSecondaryAction>
-                    </ListItem>
                     <ListItem
                       className={classes.nested}
                       divider

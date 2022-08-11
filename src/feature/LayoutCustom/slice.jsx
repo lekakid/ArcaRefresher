@@ -6,7 +6,6 @@ const defaultConfigState = {
   fontSize: 15,
   topNews: true,
   recentVisit: true,
-  sideHumor: true,
   sideNews: true,
   sideMenu: true,
   avatar: true,
@@ -42,10 +41,6 @@ export const slice = createSlice({
     },
     toggleRecentVisit(state) {
       state.recentVisit = !state.recentVisit;
-      GM_setValue(MODULE_ID, state);
-    },
-    toggleSideHumor(state) {
-      state.sideHumor = !state.sideHumor;
       GM_setValue(MODULE_ID, state);
     },
     toggleSideNews(state) {
@@ -96,7 +91,6 @@ export const {
   setFontSize,
   toggleTopNews,
   toggleRecentVisit,
-  toggleSideHumor,
   toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
