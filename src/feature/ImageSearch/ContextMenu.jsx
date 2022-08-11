@@ -116,9 +116,10 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
-          (response) => response.blob(),
-        );
+        const { response: blob } = await httpRequest({
+          url: data.current,
+          responseType: 'blob',
+        });
 
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
