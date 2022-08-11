@@ -12,7 +12,6 @@ import * as LayoutCustom from 'feature/LayoutCustom';
 import * as Memo from 'feature/Memo';
 import * as Mute from 'feature/Mute';
 import * as MyImage from 'feature/MyImage';
-import * as ShortCut from 'feature/ShortCut';
 import * as TemporarySave from 'feature/TemporarySave';
 import * as ThemeCustomizer from 'feature/ThemeCustomizer';
 import * as UserColor from 'feature/UserColor';
@@ -35,7 +34,6 @@ function FeatureWrapper() {
       <MyImage.Feature />
       <CategoryStyler.Feature />
       <UserColor.Feature />
-      <ShortCut.Feature />
     </>
   );
 }

@@ -16,7 +16,6 @@ import Mute from 'feature/Mute/slice';
 import MyImage from 'feature/MyImage/slice';
 import CategoryStyler from 'feature/CategoryStyler/slice';
 import UserColor from 'feature/UserColor/slice';
-import ShortCut from 'feature/ShortCut/slice';
 import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
 
 import Parser from 'util/Parser/slice';
@@ -41,7 +40,6 @@ export default configureStore({
     MyImage,
     CategoryStyler,
     UserColor,
-    ShortCut,
     ThemeCustomizer,
 
     // util
