@@ -80,7 +80,7 @@ const useStyles = makeStyles(
         maxHeight: 'none !important',
       },
       '& #comment .btn-more': {
-        display: 'none',
+        display: 'none !important',
       },
     },
   },
