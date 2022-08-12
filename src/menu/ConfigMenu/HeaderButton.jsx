@@ -17,8 +17,19 @@ export default function HeaderButton() {
       const container = document.createElement('div');
       document.querySelector(NAVIGATION_MENU).appendChild(container);
       setNav(container);
+      return undefined;
     }
-  }, [navigationLoaded]);
+
+    const onKeyDown = (e) => {
+      console.log(e);
+      if (e.key === '!') {
+        if (e.target.matches('input, textarea, [contenteditable]')) return;
+        dispatch(setOpen(true));
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [dispatch, navigationLoaded]);
 
   const onClick = useCallback(
     (e) => {
