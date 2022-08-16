@@ -48,7 +48,7 @@ export default function CategoryStyler() {
 
     const colorize = () => {
       board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE).forEach((a) => {
-        const badge = a.querySelector('.badge').textContent || '일반';
+        const badge = a.querySelector('.badge').textContent || '글머리없음';
         if (styleMap[badge]) a.classList.add(`color-${styleMap[badge]}`);
       });
     };
