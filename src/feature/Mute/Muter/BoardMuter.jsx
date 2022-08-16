@@ -80,7 +80,7 @@ function BoardMuter() {
         element: a,
         user: getUserInfo(a.querySelector('.user-info')),
         content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge').textContent || '일반',
+        category: a.querySelector('.badge').textContent || '글머리없음',
       }));
       const categoryConfig = category[channelID] || {};
 
