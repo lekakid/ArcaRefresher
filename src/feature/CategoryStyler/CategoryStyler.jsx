@@ -11,7 +11,6 @@ import {
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
 import getContrastYIQ from 'util/color';
-import convertImgToAlt from 'util/emoji';
 
 import { MODULE_ID } from './ModuleInfo';
 
@@ -49,7 +48,7 @@ export default function CategoryStyler() {
 
     const colorize = () => {
       board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE).forEach((a) => {
-        const badge = convertImgToAlt(a.querySelector('.badge')) || '일반';
+        const badge = a.querySelector('.badge').textContent || '글머리없음';
         if (styleMap[badge]) a.classList.add(`color-${styleMap[badge]}`);
       });
     };

@@ -22,7 +22,6 @@ import {
   setFontSize,
   toggleTopNews,
   toggleRecentVisit,
-  toggleSideHumor,
   toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
@@ -33,7 +32,6 @@ import {
   toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
-  toggleHumorCheckbox,
 } from '../slice';
 
 function labelFormat(x) {
@@ -55,7 +53,6 @@ const ConfigMenu = React.forwardRef(
       fontSize,
       topNews,
       recentVisit,
-      sideHumor,
       sideNews,
       sideMenu,
       avatar,
@@ -66,7 +63,6 @@ const ConfigMenu = React.forwardRef(
       hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
-      hideHumorCheckbox,
     } = useSelector((state) => state[MODULE_ID]);
     const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
     const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -89,10 +85,6 @@ const ConfigMenu = React.forwardRef(
 
     const handleTopNews = useCallback(() => {
       dispatch(toggleTopNews());
-    }, [dispatch]);
-
-    const handleSideHumor = useCallback(() => {
-      dispatch(toggleSideHumor());
     }, [dispatch]);
 
     const handleSideNews = useCallback(() => {
@@ -153,10 +145,6 @@ const ConfigMenu = React.forwardRef(
       dispatch(toggleLongComment());
     }, [dispatch]);
 
-    const handleHideHumorCheckbox = useCallback(() => {
-      dispatch(toggleHumorCheckbox());
-    }, [dispatch]);
-
     return (
       <Box ref={ref}>
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
@@ -208,19 +196,6 @@ const ConfigMenu = React.forwardRef(
                 </ListItem>
                 <Collapse in={sideMenu}>
                   <List disablePadding>
-                    <ListItem
-                      className={classes.nested}
-                      button
-                      onClick={handleSideHumor}
-                    >
-                      <ListItemText primary="유머채널 패널 표시" />
-                      <ListItemSecondaryAction>
-                        <Switch
-                          checked={sideHumor}
-                          onChange={handleSideHumor}
-                        />
-                      </ListItemSecondaryAction>
-                    </ListItem>
                     <ListItem
                       className={classes.nested}
                       divider
@@ -289,7 +264,7 @@ const ConfigMenu = React.forwardRef(
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <ListItem divider button onClick={handleUnfoldLongComment}>
+            <ListItem button onClick={handleUnfoldLongComment}>
               <ListItemText
                 primary="장문 댓글 바로보기"
                 secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
@@ -298,15 +273,6 @@ const ConfigMenu = React.forwardRef(
                 <Switch
                   checked={unfoldLongComment}
                   onChange={handleUnfoldLongComment}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem button onClick={handleHideHumorCheckbox}>
-              <ListItemText primary="유머 채널 동시 등록 체크박스 숨기기" />
-              <ListItemSecondaryAction>
-                <Switch
-                  checked={hideHumorCheckbox}
-                  onChange={handleHideHumorCheckbox}
                 />
               </ListItemSecondaryAction>
             </ListItem>

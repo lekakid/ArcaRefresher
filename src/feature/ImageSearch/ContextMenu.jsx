@@ -24,9 +24,7 @@ function ContextMenu({ triggerList }) {
       }
 
       const url = target.src.split('?')[0];
-      const orig = `${url}${
-        target.tagName === 'VIDEO' ? '.gif' : ''
-      }?type=orig`;
+      const orig = `${url}${target.tagName === 'VIDEO' ? '.gif' : ''}`;
       data.current = orig;
       setValid(true);
       return true;
@@ -118,9 +116,10 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
-          (response) => response.blob(),
-        );
+        const { response: blob } = await httpRequest({
+          url: data.current,
+          responseType: 'blob',
+        });
 
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
@@ -149,9 +148,6 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
-        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
-          (response) => response.blob(),
-        );
 
         const { response: tokenDocument } = await httpRequest({
           url: 'https://ascii2d.net',
@@ -160,23 +156,15 @@ function ContextMenu({ triggerList }) {
         const token = tokenDocument.querySelector(
           'input[name="authenticity_token"]',
         )?.value;
-        if (!token) {
-          dispatch(
-            setContextSnack({
-              msg: 'Ascii2d 검색 토큰 획득 실패',
-              time: 3000,
-            }),
-          );
-          return;
-        }
+        if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
 
         const formdata = new FormData();
-        formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
         formdata.append('utf8', '✓');
         formdata.append('authenticity_token', token);
+        formdata.append('uri', data.current);
 
         const { finalUrl: resultURL } = await httpRequest({
-          url: 'https://ascii2d.net/search/file',
+          url: 'https://ascii2d.net/search/uri',
           method: 'POST',
           data: formdata,
         });

@@ -1,17 +1,13 @@
-import {
-  ARTICLE_AUTHOR,
-  ARTICLE_CATEGORY,
-  ARTICLE_TITLE,
-  ARTICLE_URL,
-} from 'core/selector';
+import { ARTICLE_AUTHOR, ARTICLE_TITLE, ARTICLE_URL } from 'core/selector';
+import convertImgToAlt from 'util/emoji';
 import { getUserNick } from 'util/user';
 
 export default function getArticleInfo() {
+  const titleElement = document.querySelector(ARTICLE_TITLE);
   const articleCategory =
-    document.querySelector(ARTICLE_CATEGORY)?.textContent || '일반';
+    titleElement.querySelector('.badge')?.textContent || '일반';
   const articleTitle =
-    document.querySelector(ARTICLE_TITLE)?.lastChild.textContent.trim() ||
-    '제목 없음';
+    convertImgToAlt([...titleElement.childNodes].slice(2)) || '제목 없음';
   const articleAuthor =
     getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
   const articleURL =

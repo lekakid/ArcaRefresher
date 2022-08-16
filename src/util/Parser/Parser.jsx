@@ -25,7 +25,7 @@ export default function Parser() {
     const category = [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
       (acc, cur) => {
         if (cur.href.indexOf('category=') === -1)
-          return { ...acc, 일반: '일반' };
+          return { ...acc, 글머리없음: '글머리없음' };
 
         const id = decodeURI(cur.href.split('category=')[1].split('&')[0]);
         const text = cur.textContent;

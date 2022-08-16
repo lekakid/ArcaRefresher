@@ -1,7 +1,7 @@
-export default function convertImgToAlt(badgeElement) {
+export default function convertImgToAlt(Nodes) {
   try {
-    const convertedNodeList = [...badgeElement.childNodes].map((node) =>
-      node.alt ? node.alt : node.textContent,
+    const convertedNodeList = Nodes.map((node) =>
+      node.alt ? node.alt : node.textContent.trim(),
     );
     return convertedNodeList.join('');
   } catch (e) {
