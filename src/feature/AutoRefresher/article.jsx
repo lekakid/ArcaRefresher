@@ -74,7 +74,6 @@ export function swapArticle(
   const calibrateArticles = [
     ...articleContainer.querySelectorAll(BOARD_ARTICLES),
   ];
-  console.log(calibrateArticles);
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
     if (lazyWrapper) lazyWrapper.replaceWith(lazyWrapper.firstElementChild);
