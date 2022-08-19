@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { ColorPicker, createColor } from 'material-ui-color';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
@@ -25,7 +24,6 @@ import {
   toggleSideNews,
   toggleSideMenu,
   toggleAvatar,
-  setNotifyColor,
   setUserInfoWith,
   setResizeImage,
   setResizeVideo,
@@ -56,7 +54,6 @@ const ConfigMenu = React.forwardRef(
       sideNews,
       sideMenu,
       avatar,
-      notifyColor,
       userinfoWidth,
       resizeImage,
       resizeVideo,
@@ -64,7 +61,6 @@ const ConfigMenu = React.forwardRef(
       modifiedIndicator,
       unfoldLongComment,
     } = useSelector((state) => state[MODULE_ID]);
-    const [pickerColor, setPickerColor] = useState(createColor(notifyColor));
     const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
     const classes = useStyles();
 
@@ -98,19 +94,6 @@ const ConfigMenu = React.forwardRef(
     const handleAvatar = useCallback(() => {
       dispatch(toggleAvatar());
     }, [dispatch]);
-
-    const handleNotifyColor = useCallback(
-      (color) => {
-        if (color.name === 'none') {
-          dispatch(setNotifyColor(''));
-          setPickerColor(createColor(''));
-          return;
-        }
-        dispatch(setNotifyColor(color.css.backgroundColor));
-        setPickerColor(color);
-      },
-      [dispatch],
-    );
 
     const handleUserinfoWidth = useCallback(
       (e, value) => {
@@ -215,20 +198,6 @@ const ConfigMenu = React.forwardRef(
               <ListItemText primary="이용자 아바타 표시" />
               <ListItemSecondaryAction>
                 <Switch checked={avatar} onChange={handleAvatar} />
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem divider>
-              <ListItemText
-                primary="알림 아이콘 색상"
-                secondary="상단 메뉴의 알림 아이콘 점등색을 변경합니다."
-              />
-              <ListItemSecondaryAction>
-                <ColorPicker
-                  hideTextfield
-                  deferred
-                  value={pickerColor}
-                  onChange={handleNotifyColor}
-                />
               </ListItemSecondaryAction>
             </ListItem>
             <ListItem divider>
