@@ -21,7 +21,6 @@ export default function HeaderButton() {
     }
 
     const onKeyDown = (e) => {
-      console.log(e);
       if (e.key === '!') {
         if (e.target.matches('input, textarea, [contenteditable]')) return;
         dispatch(setOpen(true));
