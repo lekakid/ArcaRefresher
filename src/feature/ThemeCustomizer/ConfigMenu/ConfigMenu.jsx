@@ -16,13 +16,13 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { Add, Delete, Label } from '@material-ui/icons';
-import { ColorPicker, createColor } from 'material-ui-color';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { toggleEnable, setCurrent, setPreset, renamePreset } from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
 import EditPresetSelector from './EditPresetSelector';
+import ThemeColorList from './ThemeColorList';
 
 const createRow = (key, primary, secondary = '') => ({
   key,
@@ -30,50 +30,80 @@ const createRow = (key, primary, secondary = '') => ({
   secondary,
 });
 
-const rows = [
-  createRow('bg-navbar', '네비게이션 색상'),
-  createRow('bg-body', '배경 색상'),
-  createRow('bg-main', '메인 색상'),
-  createRow('bg-focus', '포커스 색상'),
-  createRow('bg-dropdown', '드롭다운 색상'),
-  createRow('bg-dialog', '다이얼로그 색상'),
-  createRow('bg-input', '입력칸 색상'),
-  createRow('bg-badge', '글머리 색상'),
-  createRow('bg-footer', '푸터 색상'),
-  createRow('bg-table', '테이블 색상'),
-  createRow('text-color', '텍스트 색상'),
-  createRow('text-color-reverse', '반전 텍스트 색상'),
-  createRow('text-muted', '뮤트 색상'),
-  createRow('link-color', '링크 색상'),
-  createRow('visited-article', '방문한 게시물 색상'),
-  createRow('border-outer', '경계선 외곽선 색상'),
-  createRow('border-inner', '경계선 내부선 색상'),
-  createRow('btn-hover', '버튼 오버 색상'),
-  createRow('highlight-color', '댓글 강조 색상'),
-  createRow('user-highlight', '작성자 강조 색상'),
+const groups = [
+  {
+    key: 'layout',
+    text: '배경 및 외곽선',
+    rows: [
+      createRow('bg-navbar', '상단 네비게이션 바'),
+      createRow('bg-body', '사이트 배경'),
+      createRow('bg-main', '컨텐츠 영역 배경'),
+      createRow('bg-footer', '최하단 푸터'),
+      createRow('border-outer', '외부 경계선'),
+      createRow('border-inner', '내부 경계선'),
+      createRow('bg-focus', '게시물 포커스'),
+    ],
+  },
+  {
+    key: 'detail',
+    text: '세부 요소',
+    rows: [
+      createRow('bg-dropdown', '드롭다운 메뉴'),
+      createRow('bg-input', '입력칸'),
+      createRow('text-color', '텍스트(기본)'),
+      createRow('visited-article', '조회한 게시물'),
+      createRow('text-muted', '비활성화'),
+      createRow('link-color', '링크'),
+      createRow('board-category', '글머리 배경'),
+      createRow('board-category-text', '글머리 텍스트'),
+      createRow('user-icon-fixed', '고정닉'),
+      createRow('user-icon-public', '반고정닉'),
+      createRow('btn-hover', '버튼 포커스'),
+      createRow('highlight-color', '새 댓글 강조'),
+      createRow('user-highlight', '게시물 작성자 강조'),
+      createRow('bg-link-card', '댓글 링크 카드'),
+      createRow('bg-link-card-thumbnail', '댓글 링크 카드 빈 섬네일'),
+      createRow('link-card-focus', '댓글 링크 카드 포커스'),
+    ],
+  },
+  {
+    key: 'wiki',
+    text: '채널위키',
+    rows: [
+      createRow('broken-link-color', '문서가 없는 링크'),
+      createRow('text-highlight', '검색 결과'),
+      createRow('text-color-reverse', '텍스트(반전)'),
+    ],
+  },
 ];
 
 const defaultTheme = {
   'bg-navbar': '#3d414d',
   'bg-body': '#eee',
   'bg-main': '#fff',
-  'bg-focus': '#eee',
-  'bg-dropdown': '#fff',
-  'bg-dialog': '#fff',
-  'bg-input': '#fff',
-  'bg-badge': '#3d414d',
   'bg-footer': '#fff',
-  'bg-table': '#f5f5f5',
-  'text-color': '#373a3c',
-  'text-color-reverse': '#d3d3d3',
-  'text-muted': '#9ba0a4',
-  'link-color': '#5b91bf',
-  'visited-article': '#bbb',
   'border-outer': '#bbb',
   'border-inner': '#ddd',
+  'bg-focus': '#eee',
+  'bg-dropdown': '#fff',
+  'bg-input': '#fff',
+  'text-color': '#000000',
+  'visited-article': '#bbb',
+  'text-muted': '#666666',
+  'link-color': '#0275d8',
+  'board-category': '#42464f',
+  'board-category-text': '#ffffff',
+  'user-icon-fixed': '#777',
+  'user-icon-public': '#777',
   'btn-hover': '#007bff',
   'highlight-color': '#fff4cc',
   'user-highlight': '#efdf25cf',
+  'bg-link-card': '#F9F9F9',
+  'bg-link-card-thumbnail': '#EFEFEF',
+  'link-card-focus': '#eee',
+  'broken-link-color': 'red',
+  'text-highlight': 'yellow',
+  'text-color-reverse': '#d3d3d3',
 };
 
 const ConfigMenu = React.forwardRef(
@@ -87,7 +117,7 @@ const ConfigMenu = React.forwardRef(
     const [createOpen, setCreateOpen] = useState(false);
     const [renameOpen, setRenameOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const editingPreset = {
+    const presetData = {
       ...defaultTheme,
       ...theme[selectPreset],
     };
@@ -243,27 +273,12 @@ const ConfigMenu = React.forwardRef(
             </ListItem>
             <Box clone mx={2}>
               <Paper variant="outlined">
-                <List disablePadding>
-                  {rows.map(({ key, primary, secondary }, index) => (
-                    <ListItem
-                      key={key}
-                      divider={index !== rows.length - 1}
-                      disabled={!selectPreset}
-                    >
-                      <ListItemText primary={primary} secondary={secondary} />
-                      <ListItemSecondaryAction>
-                        <span>
-                          <ColorPicker
-                            hideTextfield
-                            deferred
-                            value={createColor(editingPreset[key])}
-                            onChange={handleColor(key)}
-                          />
-                        </span>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-                </List>
+                <ThemeColorList
+                  groupData={groups}
+                  presetData={presetData}
+                  disabled={!selectPreset}
+                  onColorChange={handleColor}
+                />
               </Paper>
             </Box>
           </List>

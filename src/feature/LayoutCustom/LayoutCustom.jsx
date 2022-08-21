@@ -41,11 +41,6 @@ const useStyles = makeStyles(
         width: 'calc(100% - 5rem) !important',
       },
     },
-    NotifyColor: ({ notifyColor }) => ({
-      '& .noti-menu-link span[style]': {
-        color: `${notifyColor} !important`,
-      },
-    }),
     UserinfoWidth: ({ userinfoWidth }) => ({
       '& .vcol.col-author': {
         width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
@@ -108,7 +103,6 @@ export default function LayoutCustom() {
     } = config;
     const styles = clsx(
       classes.FontSize,
-      classes.NotifyColor,
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
