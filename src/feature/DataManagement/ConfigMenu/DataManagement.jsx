@@ -18,9 +18,9 @@ import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { importValues, exportValues, resetValues } from 'core/gm';
-import {useDispatch} from "react-redux";
+import {useDispatch} from 'react-redux';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
-import {setContextSnack} from "../../../menu/ContextMenu/slice";
+import {setContextSnack} from './../../menu/ContextMenu/slice'
 
 const DataManagement = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
