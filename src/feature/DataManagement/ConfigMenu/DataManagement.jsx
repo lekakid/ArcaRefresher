@@ -18,11 +18,14 @@ import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { importValues, exportValues, resetValues } from 'core/gm';
+import {useDispatch} from "react-redux";
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import {setContextSnack} from "../../../menu/ContextMenu/slice";
 
 const DataManagement = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function DataManagement(_props, ref) {
+    const dispatch = useDispatch();
     const inputRef = useRef();
     const [open, setOpen] = useState(false);
 
@@ -42,6 +45,12 @@ const DataManagement = React.forwardRef(
             reader.readAsText(path);
           });
           importValues(data);
+          dispatch(
+              setContextSnack({
+                  msg: '설정을 가져왔습니다.',
+                  time: 3000,
+              }),
+          );
           // TODO: 설정 데이터 구성 변경 이후 즉시 반영하도록 수정
         } catch (error) {
           console.error(error);
@@ -53,6 +62,12 @@ const DataManagement = React.forwardRef(
       const data = exportValues();
       const file = new Blob([data], { type: 'text/plain' });
       saveAs(file, 'settings.txt');
+      dispatch(
+          setContextSnack({
+              msg: '설정을 내보냈습니다, 새로고침 후 적용됩니다.',
+              time: 3000,
+          }),
+      );
     }, []);
 
     const handleOpen = useCallback(() => {
