@@ -15,7 +15,7 @@ import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
   toggleArticleNewWindow,
   toggleHideFirstImage,
-  toggleMediaNewWindow,
+  toggleBlockMediaNewWindow,
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,
@@ -47,7 +47,7 @@ const ConfigMenu = React.forwardRef(
     }, [dispatch]);
 
     const handleMediaNewWindow = useCallback(() => {
-      dispatch(toggleMediaNewWindow());
+      dispatch(toggleBlockMediaNewWindow());
     }, [dispatch]);
 
     const handleBlockDeletedArticleMedia = useCallback(() => {

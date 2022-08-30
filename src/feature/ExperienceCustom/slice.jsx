@@ -61,7 +61,7 @@ export const slice = createSlice({
 export const {
   toggleArticleNewWindow,
   toggleHideFirstImage,
-  toggleMediaNewWindow,
+  toggleBlockMediaNewWindow,
   toggleBlockDeletedArticleMedia,
   toggleHideDeletedArticleMedia,
   toggleRateDownGuard,
