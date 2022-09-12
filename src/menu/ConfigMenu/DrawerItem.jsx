@@ -9,12 +9,7 @@ import {
 
 import { setSelection, setDrawer } from './slice';
 
-export default function ConfigListButton({
-  className,
-  configKey,
-  icon,
-  children,
-}) {
+export default function DrawerItem({ className, configKey, icon, children }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 

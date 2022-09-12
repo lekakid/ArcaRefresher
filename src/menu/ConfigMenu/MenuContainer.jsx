@@ -19,7 +19,7 @@ import { setOpen, setDrawer } from './slice';
 import useStyles from './useStyles';
 import HeaderButton from './HeaderButton';
 import DrawerGroup from './DrawerGroup';
-import ConfigListButton from './ConfigListButton';
+import DrawerItem from './DrawerItem';
 
 function MenuContainer({ groupList, menuList }) {
   const dispatch = useDispatch();
@@ -139,9 +139,9 @@ function MenuContainer({ groupList, menuList }) {
               </div>
               <Divider />
               <List disablePadding>
-                <ConfigListButton key="all" configKey="all" icon={<Menu />}>
+                <DrawerItem key="all" configKey="all" icon={<Menu />}>
                   전체 설정
-                </ConfigListButton>
+                </DrawerItem>
                 <Divider />
                 {navi}
               </List>

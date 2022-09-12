@@ -1,18 +1,14 @@
 import React from 'react';
 import { Settings } from '@material-ui/icons';
 
-import { ConfigListButton } from 'menu/ConfigMenu';
+import { DrawerItem } from 'menu/ConfigMenu';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
-const ListButton = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function ListButton(_props, ref) {
-    return (
-      <ConfigListButton ref={ref} configKey={MODULE_ID} icon={<Settings />}>
-        {MODULE_NAME}
-      </ConfigListButton>
-    );
-  },
+export default React.forwardRef((props, ref) =>
+  React.cloneElement(
+    <DrawerItem ref={ref} configKey={MODULE_ID} icon={<Settings />}>
+      {MODULE_NAME}
+    </DrawerItem>,
+    props,
+  ),
 );
-
-export default ListButton;
