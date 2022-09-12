@@ -4,19 +4,18 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
   Paper,
   Switch,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
-import { Check, Remove, Save } from '@material-ui/icons';
+import { Remove } from '@material-ui/icons';
 
+import { TextEditor } from 'component/config';
 import { useParser } from 'util/Parser';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import {
@@ -45,10 +44,6 @@ function CustomOverRay() {
   return <GridOverlay>뮤트된 아카콘이 없습니다.</GridOverlay>;
 }
 
-const ERROR = 'ERROR';
-const CHANGED = 'CHANGED';
-const INIT = 'INIT';
-
 const ConfigMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function ConfigMenu(_props, ref) {
@@ -68,10 +63,6 @@ const ConfigMenu = React.forwardRef(
       bundle: emoticon[key].bundle,
       url: emoticon[key].url,
     }));
-    const [textUser, setTextUser] = useState(user.join('\n'));
-    const [textKeyword, setTextKeyword] = useState(keyword.join('\n'));
-    const [stateUser, setStateUser] = useState(INIT);
-    const [stateKeyword, setStateKeyword] = useState(INIT);
     const [selection, setSelection] = useState([]);
     const [pageSize, setPageSize] = useState(10);
 
@@ -87,39 +78,23 @@ const ConfigMenu = React.forwardRef(
       dispatch(toggleIncludeReply());
     }, [dispatch]);
 
-    const handleUser = useCallback((e) => {
-      setStateUser(CHANGED);
-      setTextUser(e.target.value);
-    }, []);
-
-    const handleKeyword = useCallback((e) => {
-      setStateKeyword(CHANGED);
-      setTextKeyword(e.target.value);
-    }, []);
-
-    const onClickUser = useCallback(() => {
-      try {
-        const test = textUser.split('\n').filter((i) => i !== '');
-        RegExp(test);
+    const onSaveUser = useCallback(
+      (text) => {
+        const test = text.split('\n').filter((i) => i !== '');
+        RegExp(test.join('|'));
         dispatch(setUser(test));
-        setStateUser(INIT);
-      } catch (error) {
-        console.error(error);
-        setStateUser(ERROR);
-      }
-    }, [dispatch, textUser]);
+      },
+      [dispatch],
+    );
 
-    const onClickKeyword = useCallback(() => {
-      try {
-        const test = textKeyword.split('\n').filter((i) => i !== '');
-        RegExp(test);
+    const onSaveKeyword = useCallback(
+      (text) => {
+        const test = text.split('\n').filter((i) => i !== '');
+        RegExp(test.join('|'));
         dispatch(setKeyword(test));
-        setStateKeyword(INIT);
-      } catch (error) {
-        console.error(error);
-        setStateKeyword(ERROR);
-      }
-    }, [dispatch, textKeyword]);
+      },
+      [dispatch],
+    );
 
     const handlePageSize = useCallback((currentSize) => {
       setPageSize(currentSize);
@@ -166,60 +141,20 @@ const ConfigMenu = React.forwardRef(
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <ListItem>
-              <ListItemText>검사할 닉네임</ListItemText>
-              <ListItemSecondaryAction>
-                <IconButton
-                  color="primary"
-                  disabled={stateUser === INIT}
-                  onClick={onClickUser}
-                >
-                  {stateUser === CHANGED ? <Save /> : <Check />}
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem divider>
-              <TextField
-                variant="outlined"
-                multiline
-                fullWidth
-                minRows={6}
-                error={stateUser === ERROR}
-                value={textUser}
-                onChange={handleUser}
-                helperText={
-                  stateUser === ERROR &&
-                  '정규식 조건을 위반하는 항목이 있습니다.'
-                }
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText>검사할 키워드</ListItemText>
-              <ListItemSecondaryAction>
-                <IconButton
-                  color="primary"
-                  disabled={stateKeyword === INIT}
-                  onClick={onClickKeyword}
-                >
-                  {stateKeyword === CHANGED ? <Save /> : <Check />}
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem divider>
-              <TextField
-                variant="outlined"
-                multiline
-                fullWidth
-                minRows={6}
-                error={stateKeyword === ERROR}
-                value={textKeyword}
-                onChange={handleKeyword}
-                helperText={
-                  stateKeyword === ERROR &&
-                  '정규식 조건을 위반하는 항목이 있습니다.'
-                }
-              />
-            </ListItem>
+            <TextEditor
+              divider
+              headerText="검사할 닉네임"
+              initialValue={user.join('\n')}
+              errorText="정규식 조건을 위반하는 항목이 있습니다."
+              onSave={onSaveUser}
+            />
+            <TextEditor
+              divider
+              headerText="검사할 키워드"
+              initialValue={keyword.join('\n')}
+              errorText="정규식 조건을 위반하는 항목이 있습니다."
+              onSave={onSaveKeyword}
+            />
             <ListItem>
               <ListItemText>뮤트된 아카콘 목록</ListItemText>
             </ListItem>
