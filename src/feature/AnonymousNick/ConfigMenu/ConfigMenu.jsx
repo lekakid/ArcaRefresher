@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import ConfigTextFieldItem from 'component/ConfigTextFieldItem';
+import { TextEditor } from 'component/config';
 
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setExtraPrefix, setPrefixList, setSuffixList } from '../slice';
@@ -27,7 +27,6 @@ const ConfigMenu = React.forwardRef(
       (value) => {
         const updatedList = value.split('\n').filter((v) => v !== '');
         dispatch(setPrefixList(updatedList));
-        return false;
       },
       [dispatch],
     );
@@ -36,7 +35,6 @@ const ConfigMenu = React.forwardRef(
       (value) => {
         const updatedList = value.split('\n').filter((v) => v !== '');
         dispatch(setSuffixList(updatedList));
-        return false;
       },
       [dispatch],
     );
@@ -53,13 +51,13 @@ const ConfigMenu = React.forwardRef(
         <Typography variant="subtitle1">{MODULE_NAME}</Typography>
         <Paper>
           <List>
-            <ConfigTextFieldItem
+            <TextEditor
               divider
               headerText="익명화 앞단어"
               initialValue={prefixList.join('\n')}
               onSave={onSavePrefixList}
             />
-            <ConfigTextFieldItem
+            <TextEditor
               divider
               headerText="익명화 뒷단어"
               initialValue={suffixList.join('\n')}

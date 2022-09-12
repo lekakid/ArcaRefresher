@@ -8,9 +8,9 @@ import {
 } from '@material-ui/core';
 import { Check, Save } from '@material-ui/icons';
 
-const ConfigTextFieldItem = React.forwardRef(
+const TextEditor = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ConfigTextFieldItem(
+  function TextEditor(
     { divider, headerText, initialValue, errorText, onSave },
     ref,
   ) {
@@ -25,9 +25,10 @@ const ConfigTextFieldItem = React.forwardRef(
     }, []);
 
     const handleSave = useCallback(() => {
-      setTextChanged(false);
-
-      if (onSave && onSave(text)) {
+      try {
+        onSave?.(text);
+        setTextChanged(false);
+      } catch (e) {
         setError(true);
       }
     }, [onSave, text]);
@@ -63,10 +64,10 @@ const ConfigTextFieldItem = React.forwardRef(
   },
 );
 
-ConfigTextFieldItem.defaultProps = {
+TextEditor.defaultProps = {
   headerText: '설정 이름',
   initialValue: '',
   errorText: '',
 };
 
-export default ConfigTextFieldItem;
+export default TextEditor;
