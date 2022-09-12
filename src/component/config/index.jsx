@@ -1,4 +1,4 @@
 import TextEditor from './TextEditor';
+import TableEditor from './TableEditor';
 
-// eslint-disable-next-line import/prefer-default-export
-export { TextEditor };
+export { TextEditor, TableEditor };
