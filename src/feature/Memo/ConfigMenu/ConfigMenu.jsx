@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import TableEditor from 'component/config';
+import { TableEditor } from 'component/config';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setMemoList, setVariant } from '../slice';
 

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, Paper, Typography } from '@material-ui/core';
 
-import TableEditor from 'component/config';
+import { TableEditor } from 'component/config';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 import { setColorList } from '../slice';
 
