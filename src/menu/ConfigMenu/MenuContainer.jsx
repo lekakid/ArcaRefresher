@@ -21,7 +21,7 @@ import HeaderButton from './HeaderButton';
 import ConfigListGroup from './ConfigListGroup';
 import ConfigListButton from './ConfigListButton';
 
-export default function ConfigMenu({ groupList, menuList }) {
+function MenuContainer({ groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, drawer, selection } = useSelector((state) => state[MODULE_ID]);
   const intersectionObserver = useRef(null);
@@ -162,3 +162,7 @@ export default function ConfigMenu({ groupList, menuList }) {
     </>
   );
 }
+
+MenuContainer.displayName = 'ConfigMenuContainer';
+
+export default MenuContainer;

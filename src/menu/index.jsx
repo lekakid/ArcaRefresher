@@ -20,7 +20,7 @@ import * as DataManagement from 'feature/DataManagement';
 import * as Info from 'feature/Info';
 
 import ArticleMenu from './ArticleMenu';
-import ConfigMenu from './ConfigMenu';
+import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
 
 function MenuWrapper() {
@@ -40,7 +40,7 @@ function MenuWrapper() {
         <MyImage.ContextMenu />
         <UserColor.ContextMenu />
       </ContextMenuContainer>
-      <ConfigMenu
+      <ConfigMenuContainer
         groupList={[
           { key: 'global', icon: <Web />, label: '전역 도구' },
           { key: 'board', icon: <List />, label: '게시판 도구' },
