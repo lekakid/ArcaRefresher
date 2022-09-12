@@ -1,6 +1,6 @@
 import ConfigListButton from './ConfigListButton';
-import ConfigListGroup from './ConfigListGroup';
+import DrawerGroup from './DrawerGroup';
 import MenuContainer from './MenuContainer';
 
 export default MenuContainer;
-export { ConfigListButton, ConfigListGroup };
+export { ConfigListButton, DrawerGroup };

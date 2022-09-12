@@ -18,7 +18,7 @@ import { MODULE_ID } from './ModuleInfo';
 import { setOpen, setDrawer } from './slice';
 import useStyles from './useStyles';
 import HeaderButton from './HeaderButton';
-import ConfigListGroup from './ConfigListGroup';
+import DrawerGroup from './DrawerGroup';
 import ConfigListButton from './ConfigListButton';
 
 function MenuContainer({ groupList, menuList }) {
@@ -57,12 +57,7 @@ function MenuContainer({ groupList, menuList }) {
 
   const navi = [
     ...groupList.map(({ key, icon, label }) => (
-      <ConfigListGroup
-        key={key}
-        groupKey={key}
-        groupIcon={icon}
-        groupText={label}
-      >
+      <DrawerGroup key={key} groupKey={key} groupIcon={icon} groupText={label}>
         {menuList
           .filter(({ group }) => group === key)
           .map(({ key: menuKey, ListButton }) => (
@@ -71,7 +66,7 @@ function MenuContainer({ groupList, menuList }) {
               className={classes.nested}
             />
           ))}
-      </ConfigListGroup>
+      </DrawerGroup>
     )),
     <Divider key="d1" />,
     menuList

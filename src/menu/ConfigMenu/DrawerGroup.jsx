@@ -10,7 +10,7 @@ import {
 import { MODULE_ID } from './ModuleInfo';
 import { setGroup } from './slice';
 
-export default function ConfigListGroup({
+export default function DrawerGroup({
   groupKey,
   groupIcon,
   groupText,
