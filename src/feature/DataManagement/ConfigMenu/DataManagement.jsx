@@ -24,7 +24,7 @@ const DataManagement = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function DataManagement(_props, ref) {
     const inputRef = useRef();
-    const [open, setOpen] = useState(false);
+    const [resetConfirm, setResetConfirm] = useState(false);
 
     const handleImport = useCallback(() => {
       inputRef.current.click();
@@ -42,7 +42,8 @@ const DataManagement = React.forwardRef(
             reader.readAsText(path);
           });
           importValues(data);
-          // TODO: 설정 데이터 구성 변경 이후 즉시 반영하도록 수정
+
+          window.location.reload();
         } catch (error) {
           console.error(error);
         }
@@ -56,7 +57,7 @@ const DataManagement = React.forwardRef(
     }, []);
 
     const handleOpen = useCallback(() => {
-      setOpen(true);
+      setResetConfirm(true);
     }, []);
 
     const handleReset = useCallback(() => {
@@ -65,7 +66,7 @@ const DataManagement = React.forwardRef(
     }, []);
 
     const handleCancle = useCallback(() => {
-      setOpen(false);
+      setResetConfirm(false);
     }, []);
 
     return (
@@ -81,7 +82,10 @@ const DataManagement = React.forwardRef(
                 onChange={handleFileSelect}
                 style={{ display: 'none' }}
               />
-              <ListItemText primary="설정 가져오기" />
+              <ListItemText
+                primary="설정 가져오기"
+                secondary="⚠ 페이지가 새로고침됩니다."
+              />
               <ListItemSecondaryAction>
                 <Launch />
               </ListItemSecondaryAction>
@@ -100,7 +104,7 @@ const DataManagement = React.forwardRef(
             </ListItem>
           </List>
         </Paper>
-        <Dialog open={open}>
+        <Dialog open={resetConfirm}>
           <DialogTitle>초기화 재확인</DialogTitle>
           <DialogContent>
             <DialogContentText>
