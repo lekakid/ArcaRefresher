@@ -1,9 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-
 const drawerWidth = 240;
 const secondaryActionWidth = 160;
 
-export default makeStyles((theme) => ({
+export default (theme) => ({
   '@global': {
     '.body .nav-control': {
       // z-index 문제 수정
@@ -67,4 +65,4 @@ export default makeStyles((theme) => ({
       marginLeft: drawerWidth,
     },
   },
-}));
+});

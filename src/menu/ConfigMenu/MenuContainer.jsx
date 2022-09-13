@@ -11,23 +11,23 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
+  withStyles,
 } from '@material-ui/core';
 import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 
 import { MODULE_ID } from './ModuleInfo';
 import { setOpen, setDrawer } from './slice';
-import useStyles from './useStyles';
+import Styles from './Styles';
 import HeaderButton from './HeaderButton';
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
 
-function MenuContainer({ groupList, menuList }) {
+function MenuContainer({ classes, groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, drawer, selection } = useSelector((state) => state[MODULE_ID]);
   const intersectionObserver = useRef(null);
   const [loadCount, setLoadCount] = useState(1);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const classes = useStyles();
 
   useEffect(() => {
     intersectionObserver.current = new IntersectionObserver(([entry]) => {
@@ -166,4 +166,4 @@ function MenuContainer({ groupList, menuList }) {
 
 MenuContainer.displayName = 'ConfigMenuContainer';
 
-export default MenuContainer;
+export default withStyles(Styles)(MenuContainer);
