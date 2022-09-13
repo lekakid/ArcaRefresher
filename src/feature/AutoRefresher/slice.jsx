@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+
+import { getValue, setValue } from 'core/storage';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
@@ -6,10 +8,7 @@ const defaultConfigState = {
   showProgress: true,
 };
 
-const initialState = {
-  ...defaultConfigState,
-  ...GM_getValue(MODULE_ID),
-};
+const initialState = getValue(MODULE_ID, defaultConfigState);
 
 export const slice = createSlice({
   name: MODULE_ID,
@@ -17,11 +16,11 @@ export const slice = createSlice({
   reducers: {
     setTimeLimit(state, action) {
       state.countdown = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(MODULE_ID, state);
     },
     toggleAnimation(state) {
       state.showProgress = !state.showProgress;
-      GM_setValue(MODULE_ID, state);
+      setValue(MODULE_ID, state);
     },
   },
 });

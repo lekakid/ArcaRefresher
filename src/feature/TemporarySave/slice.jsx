@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getValue, setValue } from 'core/storage';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
@@ -8,10 +9,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: {
-    ...defaultConfigState,
-    ...GM_getValue(MODULE_ID),
-  },
+  config: getValue(MODULE_ID, defaultConfigState),
   currentSlot: null,
   loadOpen: false,
 };
@@ -25,29 +23,29 @@ export const slice = createSlice({
 
       state.currentSlot = state.currentSlot || timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      GM_setValue(MODULE_ID, state.config);
+      setValue(MODULE_ID, state.config);
     },
     saveAsArticle(state, action) {
       const { timestamp, title, content } = action.payload;
 
       state.currentSlot = timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      GM_setValue(MODULE_ID, state.config);
+      setValue(MODULE_ID, state.config);
     },
     setArticleList(state, action) {
       state.config.tempArticleList = action.payload;
-      GM_setValue(MODULE_ID, state.config);
+      setValue(MODULE_ID, state.config);
     },
     setCurrentSlot(state, action) {
       state.currentSlot = action.payload;
     },
     toggleImportTitle(state) {
       state.config.importTitle = !state.config.importTitle;
-      GM_setValue(MODULE_ID, state.config);
+      setValue(MODULE_ID, state.config);
     },
     setAutoTime(state, action) {
       state.config.autoSaveTime = action.payload;
-      GM_setValue(MODULE_ID, state.config);
+      setValue(MODULE_ID, state.config);
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;

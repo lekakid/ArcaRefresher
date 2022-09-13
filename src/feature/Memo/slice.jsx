@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getValue, setValue } from 'core/storage';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
@@ -6,10 +7,7 @@ const defaultConfigState = {
   memo: {},
 };
 
-const initialState = {
-  ...defaultConfigState,
-  ...GM_getValue(MODULE_ID),
-};
+const initialState = getValue(MODULE_ID, defaultConfigState);
 
 export const slice = createSlice({
   name: MODULE_ID,
@@ -17,7 +15,7 @@ export const slice = createSlice({
   reducers: {
     setVariant(state, action) {
       state.variant = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(MODULE_ID, state);
     },
     setMemo(state, action) {
       const { user, memo } = action.payload;
@@ -26,11 +24,11 @@ export const slice = createSlice({
       } else {
         delete state.memo[user];
       }
-      GM_setValue(MODULE_ID, state);
+      setValue(MODULE_ID, state);
     },
     setMemoList(state, action) {
       state.memo = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(MODULE_ID, state);
     },
   },
 });
