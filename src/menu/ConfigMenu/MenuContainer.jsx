@@ -60,19 +60,25 @@ function MenuContainer({ groupList, menuList }) {
       <DrawerGroup key={key} groupKey={key} groupIcon={icon} groupText={label}>
         {menuList
           .filter(({ group }) => group === key)
-          .map(({ key: menuKey, ListButton }) => (
-            <ListButton
-              key={`ListButton.${menuKey}`}
+          .map(({ key: menuKey, label: menuLabel, Icon }) => (
+            <DrawerItem
+              key={menuKey}
               className={classes.nested}
-            />
+              configKey={menuKey}
+              icon={<Icon />}
+            >
+              {menuLabel}
+            </DrawerItem>
           ))}
       </DrawerGroup>
     )),
     <Divider key="d1" />,
     menuList
       .filter(({ group }) => !group)
-      .map(({ key: menuKey, ListButton }) => (
-        <ListButton key={`ListButton.${menuKey}`} />
+      .map(({ key: menuKey, label: menuLabel, Icon }) => (
+        <DrawerItem key={menuKey} configKey={menuKey} icon={<Icon />}>
+          {menuLabel}
+        </DrawerItem>
       )),
   ];
 

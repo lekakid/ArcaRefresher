@@ -1,5 +1,11 @@
-import ConfigMenu from './ConfigMenu';
-import ListButton from './ListButton';
-import { MODULE_ID } from '../ModuleInfo';
+import { Block } from '@material-ui/icons';
 
-export default { key: MODULE_ID, View: ConfigMenu, ListButton };
+import View from './View';
+import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+
+export default {
+  key: MODULE_ID,
+  Icon: Block,
+  label: MODULE_NAME,
+  View,
+};

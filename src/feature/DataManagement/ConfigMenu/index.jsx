@@ -1,5 +1,11 @@
-import DataManagement from './DataManagement';
-import ListButton from './ListButton';
-import { MODULE_ID } from '../ModuleInfo';
+import { Settings } from '@material-ui/icons';
 
-export default { key: MODULE_ID, View: DataManagement, ListButton };
+import View from './View';
+import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+
+export default {
+  key: MODULE_ID,
+  Icon: Settings,
+  label: MODULE_NAME,
+  View,
+};
