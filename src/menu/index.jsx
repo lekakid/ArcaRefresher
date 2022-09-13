@@ -17,7 +17,7 @@ import * as TemporarySave from 'feature/TemporarySave';
 import * as ThemeCustomizer from 'feature/ThemeCustomizer';
 import * as UserColor from 'feature/UserColor';
 import * as DataManagement from 'feature/DataManagement';
-import * as Info from 'feature/Info';
+import * as VersionInfo from 'feature/VersionInfo';
 
 import ArticleMenu from './ArticleMenu';
 import ConfigMenuContainer from './ConfigMenu';
@@ -63,7 +63,7 @@ function MenuWrapper() {
           { ...ExperienceCustom.ConfigMenu, group: 'uiux' },
           { ...ContextMenu.ConfigMenu, group: 'uiux' },
           DataManagement.ConfigMenu,
-          Info.ConfigMenu,
+          VersionInfo.ConfigMenu,
         ]}
       />
     </>

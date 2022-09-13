@@ -6,7 +6,7 @@ import ContextMenu from 'menu/ContextMenu/slice';
 import AutoRefresher from 'feature/AutoRefresher/slice';
 import ImageDownloader from 'feature/ImageDownloader/slice';
 import ImageSearch from 'feature/ImageSearch/slice';
-import Info from 'feature/Info/slice';
+import VersionInfo from 'feature/VersionInfo/slice';
 import AnonymousNick from 'feature/AnonymousNick/slice';
 import Memo from 'feature/Memo/slice';
 import LayoutCustom from 'feature/LayoutCustom/slice';
@@ -30,7 +30,7 @@ export default configureStore({
     AutoRefresher,
     ImageDownloader,
     ImageSearch,
-    Info,
+    VersionInfo,
     AnonymousNick,
     Memo,
     LayoutCustom,

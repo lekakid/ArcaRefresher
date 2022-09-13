@@ -6,7 +6,7 @@ import { Close } from '@material-ui/icons';
 import { MODULE_ID } from './ModuleInfo';
 import { updateCheckedVersion } from './slice';
 
-export default function Info() {
+export default function VersionInfo() {
   const dispatch = useDispatch();
   const { checkedVersion } = useSelector((state) => state[MODULE_ID]);
   const [open, setOpen] = useState(false);
