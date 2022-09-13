@@ -52,7 +52,7 @@ const TextEditor = React.forwardRef(
             variant="outlined"
             multiline
             fullWidth
-            rows={6}
+            minRows={6}
             error={error}
             value={text}
             onChange={handleChange}
