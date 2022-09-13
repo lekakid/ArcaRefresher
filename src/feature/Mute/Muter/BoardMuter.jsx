@@ -10,7 +10,7 @@ import {
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
-import { getUserInfo } from 'util/user';
+import { getUserInfo } from 'func/user';
 
 import { filterContent } from '../func';
 import { MODULE_ID } from '../ModuleInfo';

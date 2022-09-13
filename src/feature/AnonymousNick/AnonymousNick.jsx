@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserInfo, getKey } from 'util/user';
+import { getUserInfo, getKey } from 'func/user';
 
 import { MODULE_ID } from './ModuleInfo';
 import Label from './Label';

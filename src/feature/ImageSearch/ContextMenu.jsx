@@ -5,7 +5,7 @@ import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import httpRequest from 'util/httpRequest';
+import { httpRequest } from 'func/httpRequest';
 
 import { MODULE_ID } from './ModuleInfo';
 

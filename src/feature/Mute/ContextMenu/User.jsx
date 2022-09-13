@@ -5,7 +5,7 @@ import { Block, Redo } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
-import { getUserInfo } from 'util/user';
+import { getUserInfo } from 'func/user';
 
 import { MODULE_ID } from '../ModuleInfo';
 import { addUser, removeUser } from '../slice';

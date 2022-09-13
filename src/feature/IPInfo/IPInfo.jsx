@@ -10,7 +10,7 @@ import {
 import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserIP, getKey } from 'util/user';
+import { getUserIP, getKey } from 'func/user';
 
 import DB from './ip';
 import { MODULE_ID } from './ModuleInfo';

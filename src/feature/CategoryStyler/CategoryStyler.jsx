@@ -10,7 +10,7 @@ import {
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
-import getContrastYIQ from 'util/color';
+import { getContrastYIQ } from 'func/color';
 
 import { MODULE_ID } from './ModuleInfo';
 

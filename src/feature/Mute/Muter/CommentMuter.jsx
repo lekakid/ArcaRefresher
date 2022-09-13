@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
-import { getUserInfo } from 'util/user';
+import { getUserInfo } from 'func/user';
 
 import { MODULE_ID } from '../ModuleInfo';
 import { filterContent } from '../func';

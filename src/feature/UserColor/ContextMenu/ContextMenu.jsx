@@ -5,7 +5,7 @@ import { Colorize } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
-import { getUserID } from 'util/user';
+import { getUserID } from 'func/user';
 
 import { setColor } from '../slice';
 import { MODULE_ID } from '../ModuleInfo';

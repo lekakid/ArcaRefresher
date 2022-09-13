@@ -11,7 +11,7 @@ import {
 import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserID, getKey } from 'util/user';
+import { getUserID, getKey } from 'func/user';
 
 import { MODULE_ID } from './ModuleInfo';
 

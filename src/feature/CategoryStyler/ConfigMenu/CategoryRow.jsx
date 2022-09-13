@@ -18,7 +18,7 @@ import { ColorPicker } from 'material-ui-color';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useParser } from 'util/Parser';
-import getContrastYIQ from 'util/color';
+import { getContrastYIQ } from 'func/color';
 import { MODULE_ID } from '../ModuleInfo';
 import { setStyle } from '../slice';
 

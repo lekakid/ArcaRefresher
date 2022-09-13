@@ -9,7 +9,7 @@ import {
 } from 'core/event';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserID } from 'util/user';
+import { getUserID } from 'func/user';
 
 import { MODULE_ID } from './ModuleInfo';
 

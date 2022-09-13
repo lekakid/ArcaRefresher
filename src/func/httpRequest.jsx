@@ -1,7 +1,7 @@
 /**
  * CORS 우회 용도 외엔 최소한으로 사용할 것
  */
-export default function httpRequest({
+export function httpRequest({
   url,
   method = 'GET',
   timeout = 0,
