@@ -17,7 +17,7 @@ import {
 import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
-import { importValues, exportValues, resetValues } from 'core/gm';
+import { importValues, exportValues, resetValues } from 'core/storage';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 const View = React.forwardRef((_props, ref) => {
