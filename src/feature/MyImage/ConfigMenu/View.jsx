@@ -18,7 +18,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
 
 import { useParser } from 'util/Parser';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { setImageList, toggleEnabled, toggleForceLoad } from '../slice';
 import ImageSelector from './ImageSelector';
 import MoveInput from './MoveInput';
@@ -37,7 +37,7 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channelID } = useParser();
   const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[MODULE_ID],
+    (state) => state[Info.ID],
   );
   const [selectedChannel, setSelectedChannel] = useState(
     channelID || '_shared_',
@@ -110,7 +110,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleEnabled}>
@@ -191,5 +191,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

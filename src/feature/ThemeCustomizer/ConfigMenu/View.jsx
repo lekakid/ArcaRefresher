@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { Add, Delete, Label } from '@material-ui/icons';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { toggleEnable, setCurrent, setPreset, renamePreset } from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
@@ -108,7 +108,7 @@ const defaultTheme = {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, current, theme } = useSelector((state) => state[MODULE_ID]);
+  const { enabled, current, theme } = useSelector((state) => state[Info.ID]);
   const [selectPreset, setSelectPreset] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
@@ -196,7 +196,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleEnabled}>
@@ -300,5 +300,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

@@ -18,7 +18,7 @@ import { Launch } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
   const inputRef = useRef();
@@ -69,7 +69,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleImport}>
@@ -120,5 +120,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

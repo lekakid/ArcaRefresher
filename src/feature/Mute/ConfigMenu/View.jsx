@@ -17,7 +17,7 @@ import { Remove } from '@material-ui/icons';
 
 import { TextEditor } from 'component/config';
 import { useParser } from 'util/Parser';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import {
   removeEmoticonList,
   setKeyword,
@@ -54,7 +54,7 @@ const View = React.forwardRef((_props, ref) => {
     user,
     keyword,
     emoticon,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
     id: key,
     name: emoticon[key].name,
@@ -109,7 +109,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleCountBar}>
@@ -206,5 +206,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

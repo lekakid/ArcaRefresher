@@ -13,10 +13,10 @@ import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserID, getKey } from 'func/user';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 function MemoList() {
-  const { variant, memo } = useSelector((state) => state[MODULE_ID]);
+  const { variant, memo } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
   const loaded = useElementQuery(FULL_LOADED);
 

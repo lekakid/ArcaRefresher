@@ -1,11 +1,11 @@
-import { Info } from '@material-ui/icons';
+import { Info as InfoIcon } from '@material-ui/icons';
 
 import View from './View';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 
 export default {
-  key: MODULE_ID,
-  Icon: Info,
-  label: MODULE_NAME,
+  key: Info.ID,
+  Icon: InfoIcon,
+  label: Info.name,
   View,
 };

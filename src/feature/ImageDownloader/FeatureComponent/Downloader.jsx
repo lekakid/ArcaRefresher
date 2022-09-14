@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 
 import { useParser } from 'util/Parser';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { getArticleInfo, getBlob, replaceFormat } from '../func';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Downloader({ open, data, onFinish }) {
   const { channelID, channelName } = useParser();
   const { zipImageName, zipName, zipComment, retryCount } = useSelector(
-    (state) => state[MODULE_ID],
+    (state) => state[Info.ID],
   );
   const articleInfo = useRef(getArticleInfo());
   const [cur, setCur] = useState(0);

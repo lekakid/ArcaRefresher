@@ -1,11 +1,11 @@
 import { Brush } from '@material-ui/icons';
 
 import View from './View';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 
 export default {
-  key: MODULE_ID,
+  key: Info.ID,
   Icon: Brush,
-  label: MODULE_NAME,
+  label: Info.name,
   View,
 };

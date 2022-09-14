@@ -1,22 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   checkedVersion: '',
 };
 
-const initialState = getValue(MODULE_ID, defaultConfigState);
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     updateCheckedVersion(state) {
       // eslint-disable-next-line camelcase
       state.checkedVersion = GM_info.script.version;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

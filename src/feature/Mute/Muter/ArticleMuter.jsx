@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import { ARTICLE_IMAGES, ARTICLE_LOADED, ARTICLE_VIEW } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import useEmoticon from './useEmoticon';
 
 const style = {
@@ -40,7 +40,7 @@ const style = {
 };
 
 function ArticleMuter() {
-  const { emoticon, hideMutedMark } = useSelector((state) => state[MODULE_ID]);
+  const { emoticon, hideMutedMark } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const [article, setArticle] = useState(null);
   const emoticonFilter = useEmoticon(emoticon);

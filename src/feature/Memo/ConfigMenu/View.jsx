@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 
 import { TableEditor } from 'component/config';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { setMemoList, setVariant } from '../slice';
 
 const columns = [
@@ -22,7 +22,7 @@ const columns = [
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { variant, memo } = useSelector((state) => state[MODULE_ID]);
+  const { variant, memo } = useSelector((state) => state[Info.ID]);
   const rows = Object.keys(memo).map((key) => ({
     id: key,
     memo: memo[key],
@@ -48,7 +48,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider>
@@ -78,5 +78,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

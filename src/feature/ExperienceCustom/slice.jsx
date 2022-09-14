@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   openArticleNewWindow: false,
@@ -14,45 +14,45 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(MODULE_ID, defaultConfigState),
+  config: getValue(Info.ID, defaultConfigState),
   hideDeletedArticleMedia: true,
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     toggleArticleNewWindow(state) {
       state.config.openArticleNewWindow = !state.config.openArticleNewWindow;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleHideFirstImage(state) {
       state.config.hideFirstImage = !state.config.hideFirstImage;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleBlockMediaNewWindow(state) {
       state.config.blockMediaNewWindow = !state.config.blockMediaNewWindow;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleBlockDeletedArticleMedia(state) {
       state.config.blockDeletedArticleMedia =
         !state.config.blockDeletedArticleMedia;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleHideDeletedArticleMedia(state) {
       state.hideDeletedArticleMedia = !state.hideDeletedArticleMedia;
     },
     toggleRateDownGuard(state) {
       state.config.ratedownGuard = !state.config.ratedownGuard;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleComment(state) {
       state.config.foldComment = !state.config.foldComment;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleWideArea(state) {
       state.config.wideClickArea = !state.config.wideClickArea;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
   },
 });

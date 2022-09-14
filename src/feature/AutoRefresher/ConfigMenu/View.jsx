@@ -13,11 +13,11 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { toggleAnimation, setTimeLimit } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { countdown, showProgress } = useSelector((state) => state[MODULE_ID]);
+  const { countdown, showProgress } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleRefreshTime = useCallback(
@@ -33,7 +33,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider>
@@ -65,5 +65,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

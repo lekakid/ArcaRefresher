@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import { updateCheckedVersion } from './slice';
 
 export default function VersionInfo() {
   const dispatch = useDispatch();
-  const { checkedVersion } = useSelector((state) => state[MODULE_ID]);
+  const { checkedVersion } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

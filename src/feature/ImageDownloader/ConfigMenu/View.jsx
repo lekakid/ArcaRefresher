@@ -12,7 +12,7 @@ import {
   Box,
 } from '@material-ui/core';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import {
   toggleEnable,
   setFileName,
@@ -26,7 +26,7 @@ import FormatSelector from './FormatSelector';
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { enabled, fileName, zipName, zipImageName, zipComment } = useSelector(
-    (state) => state[MODULE_ID],
+    (state) => state[Info.ID],
   );
 
   const handleEnable = useCallback(() => {
@@ -87,7 +87,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleEnable}>
@@ -196,5 +196,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

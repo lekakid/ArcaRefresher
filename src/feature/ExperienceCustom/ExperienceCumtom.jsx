@@ -31,7 +31,7 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
@@ -69,7 +69,7 @@ export default function ExperienceCustomizer() {
       wideClickArea,
     },
     hideDeletedArticleMedia,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const alertLoaded = useElementQuery('.board-title + .alert-danger');
   const commentLoaded = useElementQuery(COMMENT_LOADED);

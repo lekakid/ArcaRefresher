@@ -1,26 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   countdown: 5,
   showProgress: true,
 };
 
-const initialState = getValue(MODULE_ID, defaultConfigState);
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     setTimeLimit(state, action) {
       state.countdown = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleAnimation(state) {
       state.showProgress = !state.showProgress;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

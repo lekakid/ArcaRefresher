@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   enabled: true,
@@ -20,67 +20,67 @@ const defaultConfigState = {
   unfoldLongComment: false,
 };
 
-const initialState = getValue(MODULE_ID, defaultConfigState);
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     toggleEnable(state) {
       state.enabled = !state.enabled;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setFontSize(state, action) {
       state.fontSize = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleTopNews(state) {
       state.topNews = !state.topNews;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleRecentVisit(state) {
       state.recentVisit = !state.recentVisit;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleSideNews(state) {
       state.sideNews = !state.sideNews;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleSideMenu(state) {
       state.sideMenu = !state.sideMenu;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleAvatar(state) {
       state.avatar = !state.avatar;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setNotifyColor(state, action) {
       state.notifyColor = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setUserInfoWith(state, action) {
       state.userinfoWidth = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setResizeImage(state, action) {
       state.resizeImage = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setResizeVideo(state, action) {
       state.resizeVideo = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleUnvote(state) {
       state.hideUnvote = !state.hideUnvote;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleModifiedIndicator(state) {
       state.modifiedIndicator = !state.modifiedIndicator;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleLongComment(state) {
       state.unfoldLongComment = !state.unfoldLongComment;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

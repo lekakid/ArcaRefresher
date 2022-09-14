@@ -6,13 +6,13 @@ import { Visibility, VisibilityOff, ZoomIn } from '@material-ui/icons';
 import { useElementQuery } from 'core/hooks';
 
 import { toggleHideDeletedArticleMedia } from './slice';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function ArticleMenu() {
   const {
     config: { blockDeletedArticleMedia },
     hideDeletedArticleMedia,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
   const alertLoaded = useElementQuery('.board-title + .alert-danger');
 

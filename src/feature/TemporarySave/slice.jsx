@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   tempArticleList: {},
@@ -9,13 +9,13 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(MODULE_ID, defaultConfigState),
+  config: getValue(Info.ID, defaultConfigState),
   currentSlot: null,
   loadOpen: false,
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     saveArticle(state, action) {
@@ -23,29 +23,29 @@ export const slice = createSlice({
 
       state.currentSlot = state.currentSlot || timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     saveAsArticle(state, action) {
       const { timestamp, title, content } = action.payload;
 
       state.currentSlot = timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setArticleList(state, action) {
       state.config.tempArticleList = action.payload;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setCurrentSlot(state, action) {
       state.currentSlot = action.payload;
     },
     toggleImportTitle(state) {
       state.config.importTitle = !state.config.importTitle;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setAutoTime(state, action) {
       state.config.autoSaveTime = action.payload;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;

@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import {
   toggleArticleNewWindow,
   toggleHideFirstImage,
@@ -34,7 +34,7 @@ const View = React.forwardRef((_props, ref) => {
       foldComment,
       wideClickArea,
     },
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
 
   const handleArticleNewWindow = useCallback(() => {
     dispatch(toggleArticleNewWindow());
@@ -66,7 +66,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleArticleNewWindow}>
@@ -150,5 +150,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

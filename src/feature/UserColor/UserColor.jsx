@@ -11,10 +11,10 @@ import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { getUserID } from 'func/user';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function Colorize() {
-  const { color } = useSelector((state) => state[MODULE_ID]);
+  const { color } = useSelector((state) => state[Info.ID]);
   const loaded = useElementQuery(FULL_LOADED);
 
   useLayoutEffect(() => {

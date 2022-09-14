@@ -7,7 +7,7 @@ import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserInfo } from 'func/user';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { addUser, removeUser } from '../slice';
 
 function makeRegex(id = '') {
@@ -16,7 +16,7 @@ function makeRegex(id = '') {
 
 function User({ triggerList }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state[MODULE_ID]);
+  const { user } = useSelector((state) => state[Info.ID]);
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 

@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import {
   toggleEnable,
   setFontSize,
@@ -58,7 +58,7 @@ const View = React.forwardRef((_props, ref) => {
     hideUnvote,
     modifiedIndicator,
     unfoldLongComment,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();
 
@@ -128,7 +128,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem divider button onClick={handleEnable}>
@@ -249,5 +249,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   prefixList: [
@@ -42,25 +42,25 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(MODULE_ID, defaultConfigState),
+  config: getValue(Info.ID, defaultConfigState),
   show: false,
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     setPrefixList(state, action) {
       state.config.prefixList = action.payload;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setSuffixList(state, action) {
       state.config.suffixList = action.payload;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     setExtraPrefix(state, action) {
       state.config.extraPrefix = action.payload;
-      setValue(MODULE_ID, state.config);
+      setValue(Info.ID, state.config);
     },
     toggleShow(state) {
       state.show = !state.show;

@@ -14,7 +14,7 @@ import {
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { setArticleList, setCurrentSlot, toggleImportTitle } from '../slice';
 
 const columns = [
@@ -86,7 +86,7 @@ export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
   const {
     config: { tempArticleList, importTitle },
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const rows = Object.keys(tempArticleList).map((key, index) => ({
     id: index,
     title: tempArticleList[key].title,

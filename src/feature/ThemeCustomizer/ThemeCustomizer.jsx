@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
 import { useParser } from 'util/Parser';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function ThemeCustomizer() {
   const { channelID } = useParser();
-  const { enabled, current, theme } = useSelector((state) => state[MODULE_ID]);
+  const { enabled, current, theme } = useSelector((state) => state[Info.ID]);
 
   const currentTheme = theme[channelID] || theme[current];
   useLayoutEffect(() => {

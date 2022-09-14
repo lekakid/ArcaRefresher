@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue, setValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   user: [],
@@ -12,36 +12,36 @@ const defaultConfigState = {
   muteIncludeReply: false,
 };
 
-const initialState = getValue(MODULE_ID, defaultConfigState);
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     addUser(state, action) {
       state.user.push(action.payload);
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     removeUser(state, action) {
       const index = state.user.indexOf(action.payload);
       state.user.splice(index, 1);
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setUser(state, action) {
       state.user = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     addKeyword(state, action) {
       state.keyword.push(action.payload);
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     removeKeyword(state, action) {
       state.keyword.push(action.payload);
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setKeyword(state, action) {
       state.keyword = action.payload;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
@@ -56,30 +56,30 @@ export const slice = createSlice({
       } else {
         state.emoticon[id] = emoticon;
       }
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     removeEmoticonList(state, action) {
       action.payload.forEach((id) => {
         delete state.emoticon[id];
       });
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setCategoryConfig(state, action) {
       const { channel, config } = action.payload;
       state.category[channel] = config;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleCountBar(state) {
       state.hideCountBar = !state.hideCountBar;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleMutedMark(state) {
       state.hideMutedMark = !state.hideMutedMark;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleIncludeReply(state) {
       state.muteIncludeReply = !state.muteIncludeReply;
-      setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

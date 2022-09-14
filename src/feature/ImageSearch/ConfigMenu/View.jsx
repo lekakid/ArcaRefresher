@@ -11,11 +11,11 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { toggleSauceNaoBypass } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { saucenaoBypass } = useSelector((state) => state[MODULE_ID]);
+  const { saucenaoBypass } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleSauceNaoBypass = useCallback(() => {
@@ -24,7 +24,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem button onClick={handleSauceNaoBypass}>
@@ -42,5 +42,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

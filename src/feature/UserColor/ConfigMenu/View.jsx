@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, Paper, Typography } from '@material-ui/core';
 
 import { TableEditor } from 'component/config';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { setColorList } from '../slice';
 
 const columns = [
@@ -13,7 +13,7 @@ const columns = [
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { color } = useSelector((state) => state[MODULE_ID]);
+  const { color } = useSelector((state) => state[Info.ID]);
   const rows = Object.entries(color).map(([key, value]) => ({
     id: key,
     color: value,
@@ -32,7 +32,7 @@ const View = React.forwardRef((_props, ref) => {
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <TableEditor
@@ -49,5 +49,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;

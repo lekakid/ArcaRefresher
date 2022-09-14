@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { saveArticle } from '../slice';
 
 export default function AutoSaver({ editor }) {
@@ -9,7 +9,7 @@ export default function AutoSaver({ editor }) {
   const {
     config: { autoSaveTime },
     loadOpen,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
 
   useEffect(() => {
     if (autoSaveTime === 0 || loadOpen) return null;

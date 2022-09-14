@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const useStyles = makeStyles(
   {
@@ -38,7 +38,7 @@ const useStyles = makeStyles(
       },
     },
   },
-  { name: `${MODULE_ID}(Progress)` },
+  { name: `${Info.ID}(Progress)` },
 );
 
 export default function RefreshProgress({ count, animate }) {

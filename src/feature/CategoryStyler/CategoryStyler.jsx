@@ -12,12 +12,12 @@ import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
 import { getContrastYIQ } from 'func/color';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channelID, category } = useParser();
-  const { color } = useSelector((state) => state[MODULE_ID]);
+  const { color } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [styleMap, setStyleMap] = useState(null);
 

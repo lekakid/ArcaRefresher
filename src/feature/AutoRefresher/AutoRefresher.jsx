@@ -8,7 +8,7 @@ import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
 import { useElementQuery } from 'core/hooks';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
 import { getNewArticle, swapArticle } from './article';
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 
 export default function AutoRefresher() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { countdown, showProgress } = useSelector((state) => state[MODULE_ID]);
+  const { countdown, showProgress } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState(false);
   const sockCount = useRef(0);
