@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "formulahendry.auto-rename-tag",
+    "exodiusstudios.comment-anchors",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
