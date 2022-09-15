@@ -1,4 +1,4 @@
-import 'feature/types';
+import 'core/types';
 
 /** @type {FeatureInfo} */
 export default {
