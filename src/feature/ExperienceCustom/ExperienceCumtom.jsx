@@ -56,7 +56,6 @@ const WAITING = 'WAITING';
 const CONFIRM = 'CONFIRM';
 const IGNORE = 'IGNORE';
 
-// TODO: 설정값 반영
 export default function ExperienceCustomizer() {
   const {
     config: {
