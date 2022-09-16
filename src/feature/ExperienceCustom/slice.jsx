@@ -5,9 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultConfigState = {
   openArticleNewWindow: false,
-  hideFirstImage: false,
   blockMediaNewWindow: false,
-  blockDeletedArticleMedia: true,
   ratedownGuard: false,
   foldComment: false,
   wideClickArea: true,
@@ -15,7 +13,6 @@ const defaultConfigState = {
 
 const initialState = {
   config: getValue(Info.ID, defaultConfigState),
-  hideDeletedArticleMedia: true,
 };
 
 export const slice = createSlice({
@@ -39,9 +36,6 @@ export const slice = createSlice({
         !state.config.blockDeletedArticleMedia;
       setValue(Info.ID, state.config);
     },
-    toggleHideDeletedArticleMedia(state) {
-      state.hideDeletedArticleMedia = !state.hideDeletedArticleMedia;
-    },
     toggleRateDownGuard(state) {
       state.config.ratedownGuard = !state.config.ratedownGuard;
       setValue(Info.ID, state.config);
@@ -59,9 +53,7 @@ export const slice = createSlice({
 
 export const {
   toggleArticleNewWindow,
-  toggleHideFirstImage,
   toggleBlockMediaNewWindow,
-  toggleBlockDeletedArticleMedia,
   toggleHideDeletedArticleMedia,
   toggleRateDownGuard,
   toggleComment,

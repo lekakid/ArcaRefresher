@@ -5,6 +5,7 @@ import * as AutoRefresher from 'feature/AutoRefresher';
 import * as CategoryStyler from 'feature/CategoryStyler';
 import * as CommentRefresh from 'feature/CommentRefresh';
 import * as ExperienceCustom from 'feature/ExperienceCustom';
+import * as MediaBlocker from 'feature/MediaBlocker';
 import * as ImageDownloader from 'feature/ImageDownloader';
 import * as VersionInfo from 'feature/VersionInfo';
 import * as IPInfo from 'feature/IPInfo';
@@ -23,6 +24,7 @@ function FeatureWrapper() {
       <ThemeCustomizer.Feature />
       <AutoRefresher.Feature />
       <CommentRefresh.Feature />
+      <MediaBlocker.Feature />
       <ImageDownloader.Feature />
       <VersionInfo.Feature />
       <IPInfo.Feature />

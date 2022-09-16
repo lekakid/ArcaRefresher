@@ -7,6 +7,7 @@ import * as AssistMenu from 'feature/AssistMenu';
 import * as AutoRefresher from 'feature/AutoRefresher';
 import * as CategoryStyler from 'feature/CategoryStyler';
 import * as ExperienceCustom from 'feature/ExperienceCustom';
+import * as MediaBlocker from 'feature/MediaBlocker';
 import * as ImageDownloader from 'feature/ImageDownloader';
 import * as ImageSearch from 'feature/ImageSearch';
 import * as LayoutCustom from 'feature/LayoutCustom';
@@ -28,6 +29,7 @@ function MenuWrapper() {
     <>
       <ArticleMenu>
         <AnonymousNick.ArticleMenu />
+        <MediaBlocker.ArticleMenu />
         <ExperienceCustom.ArticleMenu />
       </ArticleMenu>
       <ContextMenuContainer>
@@ -55,6 +57,7 @@ function MenuWrapper() {
           { ...CategoryStyler.ConfigMenu, group: 'board' },
           { ...ThemeCustomizer.ConfigMenu, group: 'board' },
           { ...AnonymousNick.ConfigMenu, group: 'article' },
+          { ...MediaBlocker.ConfigMenu, group: 'article' },
           { ...ImageDownloader.ConfigMenu, group: 'article' },
           { ...ImageSearch.ConfigMenu, group: 'article' },
           { ...MyImage.ConfigMenu, group: 'article' },

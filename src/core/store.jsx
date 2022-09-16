@@ -17,6 +17,7 @@ import MyImage from 'feature/MyImage/slice';
 import CategoryStyler from 'feature/CategoryStyler/slice';
 import UserColor from 'feature/UserColor/slice';
 import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
+import MediaBlocker from 'feature/MediaBlocker/slice';
 
 import Parser from 'util/Parser/slice';
 
@@ -41,6 +42,7 @@ export default configureStore({
     CategoryStyler,
     UserColor,
     ThemeCustomizer,
+    MediaBlocker,
 
     // util
     Parser,

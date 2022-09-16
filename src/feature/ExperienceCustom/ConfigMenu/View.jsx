@@ -14,12 +14,10 @@ import {
 import Info from '../FeatureInfo';
 import {
   toggleArticleNewWindow,
-  toggleHideFirstImage,
   toggleBlockMediaNewWindow,
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,
-  toggleBlockDeletedArticleMedia,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
@@ -27,9 +25,7 @@ const View = React.forwardRef((_props, ref) => {
   const {
     config: {
       openArticleNewWindow,
-      hideFirstImage,
       blockMediaNewWindow,
-      blockDeletedArticleMedia,
       ratedownGuard,
       foldComment,
       wideClickArea,
@@ -40,16 +36,8 @@ const View = React.forwardRef((_props, ref) => {
     dispatch(toggleArticleNewWindow());
   }, [dispatch]);
 
-  const handleHideFirstImage = useCallback(() => {
-    dispatch(toggleHideFirstImage());
-  }, [dispatch]);
-
   const handleMediaNewWindow = useCallback(() => {
     dispatch(toggleBlockMediaNewWindow());
-  }, [dispatch]);
-
-  const handleBlockDeletedArticleMedia = useCallback(() => {
-    dispatch(toggleBlockDeletedArticleMedia());
   }, [dispatch]);
 
   const handleRateDownGuard = useCallback(() => {
@@ -81,18 +69,6 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleHideFirstImage}>
-            <ListItemText
-              primary="게시물 첫 이미지 접기"
-              secondary="첫 이미지(대문 제외)를 숨기고 다시 보일 수 있는 버튼을 제공합니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideFirstImage}
-                onChange={handleHideFirstImage}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
           <ListItem divider button onClick={handleMediaNewWindow}>
             <ListItemText
               primary="이미지, 동영상 새 창 열기 방지"
@@ -102,18 +78,6 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={blockMediaNewWindow}
                 onChange={handleMediaNewWindow}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleBlockDeletedArticleMedia}>
-            <ListItemText
-              primary="삭제된 게시물의 미디어 컨텐츠 숨김"
-              secondary="(채널 관리자 전용) 삭제된 게시물 조회 시 눈을 보호해줍니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={blockDeletedArticleMedia}
-                onChange={handleBlockDeletedArticleMedia}
               />
             </ListItemSecondaryAction>
           </ListItem>

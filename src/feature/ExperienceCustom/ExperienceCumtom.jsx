@@ -6,11 +6,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
-  Tooltip,
   Portal,
 } from '@material-ui/core';
-import { ImageSearch } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
 import { useElementQuery } from 'core/hooks';
@@ -35,13 +32,6 @@ import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
 
 const useStyles = makeStyles(() => ({
-  deletedArticle: {
-    '& .article-body': {
-      '& img, video': {
-        display: 'none',
-      },
-    },
-  },
   comment: {
     '& #comment:not(.temp-show)': {
       display: 'none',
@@ -60,32 +50,24 @@ export default function ExperienceCustomizer() {
   const {
     config: {
       openArticleNewWindow,
-      hideFirstImage,
       blockMediaNewWindow,
-      blockDeletedArticleMedia,
       ratedownGuard,
       foldComment,
       wideClickArea,
     },
-    hideDeletedArticleMedia,
   } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const alertLoaded = useElementQuery('.board-title + .alert-danger');
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
-  const [hiddenFirstImage, setHiddenFirstImage] = useState(null);
-  const [hiddenFirstImageContainer, setHiddenFirstImageContainer] =
-    useState(null);
   const [confirm, setConfirm] = useState(WAITING);
   const classes = useStyles();
 
   useEffect(() => {
     if (articleLoaded) {
       setArticle(document.querySelector(ARTICLE_VIEW));
-      setHiddenFirstImageContainer(document.createElement('div'));
     }
   }, [articleLoaded]);
 
@@ -98,50 +80,6 @@ export default function ExperienceCustomizer() {
       a.append(i);
     });
   }, [article, blockMediaNewWindow]);
-
-  useEffect(() => {
-    if (!article || !hideFirstImage) return undefined;
-
-    const firstImage = article.querySelector(
-      '.article-content > p:first-child img, .article-content > p:first-child video:not([controls])',
-    )?.parentNode;
-    if (!firstImage) return undefined;
-
-    firstImage.style.display = 'none';
-
-    setHiddenFirstImage(firstImage);
-    firstImage.insertAdjacentElement('afterend', hiddenFirstImageContainer);
-
-    return () => {
-      firstImage.style.display = '';
-      setHiddenFirstImage(null);
-      hiddenFirstImageContainer.remove();
-    };
-  }, [article, hiddenFirstImageContainer, hideFirstImage]);
-
-  useEffect(() => {
-    if (!article || !blockDeletedArticleMedia) return undefined;
-    if (!alertLoaded) return undefined;
-
-    if (blockDeletedArticleMedia && hideDeletedArticleMedia) {
-      article.classList.add(classes.deletedArticle);
-    }
-
-    return () => article.classList.remove(classes.deletedArticle);
-  }, [
-    article,
-    alertLoaded,
-    blockDeletedArticleMedia,
-    hideDeletedArticleMedia,
-    classes,
-  ]);
-
-  const handleUnhide = useCallback(() => {
-    if (hiddenFirstImage) {
-      hiddenFirstImage.style.display = '';
-      setHiddenFirstImage(null);
-    }
-  }, [hiddenFirstImage]);
 
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
@@ -250,15 +188,6 @@ export default function ExperienceCustomizer() {
           <Button onClick={handleClose}>아니오</Button>
         </DialogActions>
       </Dialog>
-      {hiddenFirstImage && (
-        <Portal conatiner={hiddenFirstImageContainer}>
-          <Tooltip title="첫 이미지 보이기">
-            <IconButton size="small" onClick={handleUnhide}>
-              <ImageSearch />
-            </IconButton>
-          </Tooltip>
-        </Portal>
-      )}
       {unfoldContainer && foldComment && (
         <Portal container={unfoldContainer}>
           <CommentButton className="unfold-comment" />
