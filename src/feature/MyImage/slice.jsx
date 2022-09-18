@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { MODULE_ID } from './ModuleInfo';
+
+import { getValue, setValue } from 'core/storage';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   enabled: true,
@@ -7,38 +9,35 @@ const defaultConfigState = {
   forceLoad: false,
 };
 
-const initialState = {
-  ...defaultConfigState,
-  ...GM_getValue(MODULE_ID),
-};
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     toggleEnabled(state) {
       state.enabled = !state.enabled;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     addImage(state, action) {
       const { channel, url } = action.payload;
       if (!state.imgList[channel]) state.imgList[channel] = [];
       state.imgList[channel].push(url);
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     removeImage(state, action) {
       const { channel, url } = action.payload;
       state.imgList[channel] = state.imgList[channel].filter((u) => u !== url);
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setImageList(state, action) {
       const { channel, list } = action.payload;
       state.imgList[channel] = list;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     toggleForceLoad(state) {
       state.forceLoad = !state.forceLoad;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

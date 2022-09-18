@@ -1,6 +1,6 @@
 import { ARTICLE_AUTHOR, ARTICLE_TITLE, ARTICLE_URL } from 'core/selector';
-import convertImgToAlt from 'util/emoji';
-import { getUserNick } from 'util/user';
+import { convertImgToAlt } from 'func/emoji';
+import { getUserNick } from 'func/user';
 
 export default function getArticleInfo() {
   const titleElement = document.querySelector(ARTICLE_TITLE);

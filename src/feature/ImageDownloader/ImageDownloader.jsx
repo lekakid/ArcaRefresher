@@ -8,7 +8,7 @@ import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
 import SelectionDialog from './FeatureComponent';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const useStyles = makeStyles({
   root: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 export default function ImageDownloader() {
-  const { enabled } = useSelector((state) => state[MODULE_ID]);
+  const { enabled } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
   const [open, setOpen] = useState(false);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);

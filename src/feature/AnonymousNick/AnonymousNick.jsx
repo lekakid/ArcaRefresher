@@ -4,9 +4,9 @@ import { makeStyles } from '@material-ui/core';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserInfo, getKey } from 'util/user';
+import { getUserInfo, getKey } from 'func/user';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import Label from './Label';
 
 function getInfoList({ prefixList, suffixList, extraPrefix }) {
@@ -56,14 +56,11 @@ const useStyles = makeStyles(
       },
     },
   },
-  { name: MODULE_ID },
+  { name: Info.ID },
 );
 
 export default function AnonymousNick() {
-  const {
-    config: { prefixList, suffixList, extraPrefix },
-    show,
-  } = useSelector((state) => state[MODULE_ID]);
+  const { config, show } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
@@ -71,9 +68,9 @@ export default function AnonymousNick() {
 
   useEffect(() => {
     if (!articleLoaded) return;
-    const updateInfoList = getInfoList({ prefixList, suffixList, extraPrefix });
+    const updateInfoList = getInfoList(config);
     setInfoList(updateInfoList);
-  }, [articleLoaded, extraPrefix, prefixList, suffixList]);
+  }, [articleLoaded, config]);
 
   useEffect(() => {
     if (!show) return null;

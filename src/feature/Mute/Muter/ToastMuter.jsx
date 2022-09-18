@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import { TOASTBOX } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import useEmoticon from './useEmoticon';
 
 const style = {
@@ -36,7 +36,7 @@ const style = {
 
 function ToastMuter() {
   const { user, emoticon, hideMutedMark } = useSelector(
-    (state) => state[MODULE_ID],
+    (state) => state[Info.ID],
   );
   const toastboxLoaded = useElementQuery(TOASTBOX);
   const filter = useEmoticon(emoticon);

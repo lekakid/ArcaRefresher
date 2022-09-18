@@ -6,7 +6,7 @@ import ContextMenu from 'menu/ContextMenu/slice';
 import AutoRefresher from 'feature/AutoRefresher/slice';
 import ImageDownloader from 'feature/ImageDownloader/slice';
 import ImageSearch from 'feature/ImageSearch/slice';
-import Info from 'feature/Info/slice';
+import VersionInfo from 'feature/VersionInfo/slice';
 import AnonymousNick from 'feature/AnonymousNick/slice';
 import Memo from 'feature/Memo/slice';
 import LayoutCustom from 'feature/LayoutCustom/slice';
@@ -17,6 +17,7 @@ import MyImage from 'feature/MyImage/slice';
 import CategoryStyler from 'feature/CategoryStyler/slice';
 import UserColor from 'feature/UserColor/slice';
 import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
+import MediaBlocker from 'feature/MediaBlocker/slice';
 
 import Parser from 'util/Parser/slice';
 
@@ -30,7 +31,7 @@ export default configureStore({
     AutoRefresher,
     ImageDownloader,
     ImageSearch,
-    Info,
+    VersionInfo,
     AnonymousNick,
     Memo,
     LayoutCustom,
@@ -41,6 +42,7 @@ export default configureStore({
     CategoryStyler,
     UserColor,
     ThemeCustomizer,
+    MediaBlocker,
 
     // util
     Parser,

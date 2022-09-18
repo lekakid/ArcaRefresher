@@ -10,10 +10,10 @@ import {
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useParser } from 'util/Parser';
-import { getUserInfo } from 'util/user';
+import { getUserInfo } from 'func/user';
 
 import { filterContent } from '../func';
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import CountBar from './CountBar';
 import useEmoticon from './useEmoticon';
 
@@ -41,7 +41,7 @@ function BoardMuter() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channelID, category: categoryInfo } = useParser();
   const { user, keyword, emoticon, category, hideCountBar } = useSelector(
-    (state) => state[MODULE_ID],
+    (state) => state[Info.ID],
   );
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);

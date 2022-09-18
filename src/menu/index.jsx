@@ -7,6 +7,7 @@ import * as AssistMenu from 'feature/AssistMenu';
 import * as AutoRefresher from 'feature/AutoRefresher';
 import * as CategoryStyler from 'feature/CategoryStyler';
 import * as ExperienceCustom from 'feature/ExperienceCustom';
+import * as MediaBlocker from 'feature/MediaBlocker';
 import * as ImageDownloader from 'feature/ImageDownloader';
 import * as ImageSearch from 'feature/ImageSearch';
 import * as LayoutCustom from 'feature/LayoutCustom';
@@ -17,10 +18,10 @@ import * as TemporarySave from 'feature/TemporarySave';
 import * as ThemeCustomizer from 'feature/ThemeCustomizer';
 import * as UserColor from 'feature/UserColor';
 import * as DataManagement from 'feature/DataManagement';
-import * as Info from 'feature/Info';
+import * as VersionInfo from 'feature/VersionInfo';
 
 import ArticleMenu from './ArticleMenu';
-import ConfigMenu from './ConfigMenu';
+import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
 
 function MenuWrapper() {
@@ -28,6 +29,7 @@ function MenuWrapper() {
     <>
       <ArticleMenu>
         <AnonymousNick.ArticleMenu />
+        <MediaBlocker.ArticleMenu />
         <ExperienceCustom.ArticleMenu />
       </ArticleMenu>
       <ContextMenuContainer>
@@ -40,7 +42,7 @@ function MenuWrapper() {
         <MyImage.ContextMenu />
         <UserColor.ContextMenu />
       </ContextMenuContainer>
-      <ConfigMenu
+      <ConfigMenuContainer
         groupList={[
           { key: 'global', icon: <Web />, label: '전역 도구' },
           { key: 'board', icon: <List />, label: '게시판 도구' },
@@ -55,6 +57,7 @@ function MenuWrapper() {
           { ...CategoryStyler.ConfigMenu, group: 'board' },
           { ...ThemeCustomizer.ConfigMenu, group: 'board' },
           { ...AnonymousNick.ConfigMenu, group: 'article' },
+          { ...MediaBlocker.ConfigMenu, group: 'article' },
           { ...ImageDownloader.ConfigMenu, group: 'article' },
           { ...ImageSearch.ConfigMenu, group: 'article' },
           { ...MyImage.ConfigMenu, group: 'article' },
@@ -63,7 +66,7 @@ function MenuWrapper() {
           { ...ExperienceCustom.ConfigMenu, group: 'uiux' },
           { ...ContextMenu.ConfigMenu, group: 'uiux' },
           DataManagement.ConfigMenu,
-          Info.ConfigMenu,
+          VersionInfo.ConfigMenu,
         ]}
       />
     </>

@@ -5,15 +5,15 @@ import { Comment } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
-import { getUserID } from 'util/user';
+import { getUserID } from 'func/user';
 
 import { setMemo } from '../slice';
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { memo } = useSelector((state) => state[MODULE_ID]);
+  const { memo } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);

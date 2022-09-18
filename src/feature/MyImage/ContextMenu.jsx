@@ -7,13 +7,13 @@ import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import { addImage, removeImage } from './slice';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { channelID } = useParser();
-  const { imgList } = useSelector((state) => state[MODULE_ID]);
+  const { imgList } = useSelector((state) => state[Info.ID]);
   const [exist, setExist] = useState({ channel: false, share: false });
   const data = useRef(null);
   const [valid, setValid] = useState(false);

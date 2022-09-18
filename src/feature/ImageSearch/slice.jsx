@@ -1,22 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { MODULE_ID } from './ModuleInfo';
+
+import { getValue, setValue } from 'core/storage';
+import Info from './FeatureInfo';
 
 const defaultState = {
   saucenaoBypass: false,
 };
 
-const initialState = {
-  ...defaultState,
-  ...GM_getValue(MODULE_ID),
-};
+const initialState = getValue(Info.ID, defaultState);
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     toggleSauceNaoBypass(state) {
       state.saucenaoBypass = !state.saucenaoBypass;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

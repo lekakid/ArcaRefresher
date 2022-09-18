@@ -2,6 +2,7 @@
 export const NAVIGATION_LOADED = '.content-wrapper';
 export const CHANNEL_TITLE_LOADED = '.btns-board';
 export const BOARD_LOADED = '.article-list + .btns-board';
+export const DELETED_ALERT_LOADED = '.board-title + .alert-danger';
 export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';
 export const COMMENT_LOADED = '.article-wrapper ~ div.btns-board';
 export const WRITE_LOADED = '.fr-box';
@@ -28,9 +29,12 @@ export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
   '.article-body img:not([class$="emoticon"]):not(.twemoji), .article-body video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
+export const ARTICLE_MEDIA =
+  '.article-content img:not(.twemoji), .article-content video';
 export const ARTICLE_EMOTICON = '.article-body *[class$="emoticon"]';
 export const ARTICLE_URL = '.article-body .article-link a';
 export const ARTICLE_BODY = '.article-body';
+export const ARTICLE_CONTENT = '.article-content';
 export const ARTICLE_HEADER_MENU = '.edit-menu';
 export const ARTICLE_MENU = '.article-menu';
 export const ARTICLE_USER_INFO = '.article-wrapper .user-info';

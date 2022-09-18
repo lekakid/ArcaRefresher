@@ -12,7 +12,7 @@ import {
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
-import { getDateStr } from 'util/time';
+import { getDateStr } from 'func/time';
 
 const style = {
   '@global': {

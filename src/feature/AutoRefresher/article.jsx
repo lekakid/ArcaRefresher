@@ -1,10 +1,10 @@
-import { getDateStr, in24Hours } from 'util/time';
 import {
   BOARD_ARTICLES,
   BOARD_ARTICLES_WITHOUT_NOTICE,
   BOARD_VIEW_WITHOUT_ARTICLE,
   USER_INFO,
 } from 'core/selector';
+import { getDateStr, in24Hours } from 'func/time';
 
 export async function getNewArticle() {
   try {

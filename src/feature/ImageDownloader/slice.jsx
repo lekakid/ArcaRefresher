@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { MODULE_ID } from './ModuleInfo';
+
+import { getValue, setValue } from 'core/storage';
+import Info from './FeatureInfo';
 
 const defaultConfigState = {
   enabled: true,
@@ -9,10 +11,7 @@ const defaultConfigState = {
   zipComment: '[%channel%] %title% - %url%',
 };
 
-const initialState = {
-  ...defaultConfigState,
-  ...GM_getValue(MODULE_ID),
-};
+const initialState = getValue(Info.ID, defaultConfigState);
 
 export const slice = createSlice({
   name: 'ImageDownloader',
@@ -20,23 +19,23 @@ export const slice = createSlice({
   reducers: {
     toggleEnable(state) {
       state.enabled = !state.enabled;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setFileName(state, action) {
       state.fileName = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setZipName(state, action) {
       state.zipName = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setZipImageName(state, action) {
       state.zipImageName = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
     setZipComment(state, action) {
       state.zipComment = action.payload;
-      GM_setValue(MODULE_ID, state);
+      setValue(Info.ID, state);
     },
   },
 });

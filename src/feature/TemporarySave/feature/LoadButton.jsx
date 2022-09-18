@@ -4,12 +4,12 @@ import { Publish } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoadOpen } from '../slice';
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import LoadTable from './LoadTable';
 
 export default function LoadButton({ editor, ...btnProps }) {
   const dispatch = useDispatch();
-  const { loadOpen } = useSelector((state) => state[MODULE_ID]);
+  const { loadOpen } = useSelector((state) => state[Info.ID]);
 
   const handleClick = useCallback(() => {
     dispatch(setLoadOpen(true));

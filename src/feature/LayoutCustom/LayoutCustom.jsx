@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const useStyles = makeStyles(
   {
@@ -80,12 +80,12 @@ const useStyles = makeStyles(
     },
   },
   {
-    name: MODULE_ID,
+    name: Info.ID,
   },
 );
 
 export default function LayoutCustom() {
-  const config = useSelector((state) => state[MODULE_ID]);
+  const config = useSelector((state) => state[Info.ID]);
   const classes = useStyles(config);
 
   useLayoutEffect(() => {

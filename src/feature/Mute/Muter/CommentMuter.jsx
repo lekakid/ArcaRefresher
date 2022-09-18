@@ -11,9 +11,9 @@ import {
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
-import { getUserInfo } from 'util/user';
+import { getUserInfo } from 'func/user';
 
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { filterContent } from '../func';
 import CountBar from './CountBar';
 import useEmoticon from './useEmoticon';
@@ -71,7 +71,7 @@ function CommentMuter() {
     hideCountBar,
     hideMutedMark,
     muteIncludeReply,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const [comment, setComment] = useState(undefined);
   const [countBar, setCountBar] = useState(undefined);
   const [count, setCount] = useState(undefined);

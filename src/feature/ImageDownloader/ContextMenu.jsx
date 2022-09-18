@@ -8,12 +8,12 @@ import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { fileName } = useSelector((state) => state[MODULE_ID]);
+  const { fileName } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const articleInfo = useRef(null);
   const data = useRef(null);

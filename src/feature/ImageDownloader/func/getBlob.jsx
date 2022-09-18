@@ -1,4 +1,4 @@
-import httpRequest from 'util/httpRequest';
+import { httpRequest } from 'func/httpRequest';
 
 async function getBlob({ url, onprogress }) {
   try {

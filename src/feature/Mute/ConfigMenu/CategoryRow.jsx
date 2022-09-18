@@ -4,7 +4,7 @@ import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useParser } from 'util/Parser';
-import { MODULE_ID } from '../ModuleInfo';
+import Info from '../FeatureInfo';
 import { setCategoryConfig } from '../slice';
 
 const DEFAULT_CHANNEL_CONFIG = {};
@@ -13,7 +13,7 @@ const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const { channelID } = useParser();
-  const { category: categoryConfig } = useSelector((state) => state[MODULE_ID]);
+  const { category: categoryConfig } = useSelector((state) => state[Info.ID]);
   const channelConfig = categoryConfig?.[channelID] || DEFAULT_CHANNEL_CONFIG;
   const { mutePreview, muteArticle } =
     channelConfig?.[category] || DEFAULT_CATEGORY_CONFIG;
