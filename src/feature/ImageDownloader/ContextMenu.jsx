@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
-import { saveAs } from 'file-saver';
+import streamSaver from 'streamsaver';
 
 import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
@@ -94,14 +94,15 @@ function ContextMenu({ triggerList }) {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
         const blob = await getBlob({ url: orig });
+        const name = replaceFormat(fileName, {
+          ...articleInfo.current,
+          uploadName,
+        });
 
-        saveAs(
-          blob,
-          `${replaceFormat(fileName, {
-            ...articleInfo.current,
-            uploadName,
-          })}.${ext}`,
-        );
+        const rs = blob.stream();
+        const filestream = streamSaver.createWriteStream(`${name}.${ext}`);
+        rs.pipeTo(filestream);
+
         dispatch(setContextSnack({ msg: '' }));
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
