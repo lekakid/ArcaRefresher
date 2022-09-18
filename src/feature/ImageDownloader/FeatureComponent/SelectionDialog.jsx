@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -10,11 +11,15 @@ import {
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import { Writer } from '@transcend-io/conflux';
+import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
-import { getImageInfo } from '../func';
+import { useParser } from 'util/Parser';
+
+import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from '../func';
+import Info from '../FeatureInfo';
 import SelectableImageList from './SelectableImageList';
-import Downloader from './Downloader';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -25,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SelectionDialog({ open, onClose }) {
+  const { channelID, channelName } = useParser();
+  const { zipImageName, zipName } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
     const query = emoticon ? ARTICLE_EMOTICON : ARTICLE_IMAGES;
@@ -40,13 +47,8 @@ export default function SelectionDialog({ open, onClose }) {
 
     return dataResult;
   });
+  const articleInfo = useRef(getArticleInfo());
   const [selection, setSelection] = useState([]);
-  const [downloadList, setDownloadList] = useState([]);
-  const [downloader, setDownloader] = useState(false);
-
-  useEffect(() => {
-    if (open) setDownloader(false);
-  }, [open]);
 
   const handleSelection = useCallback((sel) => {
     setSelection(sel);
@@ -61,30 +63,51 @@ export default function SelectionDialog({ open, onClose }) {
   }, [data, selection]);
 
   const handleDownload = useCallback(() => {
-    const downloadData = data
-      .filter((d, index) => selection.includes(index))
-      .map(({ orig, ext, uploadName }) => ({
-        orig,
-        ext,
-        uploadName,
-      }));
-    setDownloadList(downloadData);
-    setSelection([]);
-    setDownloader(true);
-  }, [data, selection]);
+    const selectedData = data.filter((_data, index) =>
+      selection.includes(index),
+    );
+    const iterator = selectedData.values();
+    let count = 1;
 
-  const handleFinish = useCallback(() => {
-    setDownloadList([]);
+    const myReadable = new ReadableStream({
+      async pull(controller) {
+        const { done, value } = iterator.next();
+        if (done) return controller.close();
+        const { orig, ext, uploadName } = value;
+
+        const blob = await getBlob({
+          url: orig,
+        });
+        const name = replaceFormat(zipImageName, {
+          ...articleInfo.current,
+          channelID,
+          channelName,
+          uploadName,
+          index: count,
+        });
+
+        count += 1;
+        return controller.enqueue({
+          name: `/${name}.${ext}`,
+          stream: () => new Response(blob).body,
+        });
+      },
+    });
+
+    const zipFileName = replaceFormat(zipName, {
+      ...articleInfo.current,
+      channelID,
+      channelName,
+    });
+
+    myReadable
+      .pipeThrough(new Writer())
+      .pipeTo(streamSaver.createWriteStream(`${zipFileName}.zip`));
+    setSelection([]);
     onClose();
-  }, [onClose]);
+  }, [channelID, channelName, data, onClose, selection, zipImageName, zipName]);
 
   const classes = useStyles();
-
-  if (downloader) {
-    return (
-      <Downloader open={open} data={downloadList} onFinish={handleFinish} />
-    );
-  }
 
   const imgList = data.map(({ thumb }) => thumb);
 
