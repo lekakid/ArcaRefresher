@@ -7,7 +7,7 @@ import { GetApp } from '@material-ui/icons';
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
-import SelectionDialog from './FeatureComponent';
+import SelectionDialog from './SelectionDialog';
 import Info from './FeatureInfo';
 
 const useStyles = makeStyles({
@@ -65,17 +65,6 @@ export default function ImageDownloader() {
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
-
-  useEffect(() => {
-    if (!open) return null;
-
-    const confirm = (e) => {
-      e.preventDefault();
-    };
-    window.addEventListener('beforeunload', confirm);
-
-    return () => window.removeEventListener('beforeunload', confirm);
-  }, [open]);
 
   if (!container) return null;
   if (!enabled) return null;
