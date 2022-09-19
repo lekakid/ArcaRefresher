@@ -18,7 +18,7 @@ import streamSaver from 'streamsaver';
 import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
 import { useParser } from 'util/Parser';
 
-import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from './func';
+import { getArticleInfo, getImageInfo, replaceFormat } from './func';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
 
@@ -64,10 +64,24 @@ function SelectionDialog({ classes, open, onClose }) {
     setSelection([]);
   }, [data, selection]);
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
+    onClose();
+    setSelection([]);
+    setAlertOpen(true);
+
     const selectedData = data.filter((_data, index) =>
       selection.includes(index),
     );
+
+    const totalSize = await selectedData.reduce(
+      async (acc, { orig }) =>
+        (await acc) +
+        (await fetch(orig, { method: 'HEAD' }).then(
+          (response) => Number(response.headers.get('Content-Length')) || 0,
+        )),
+      0,
+    );
+
     const iterator = selectedData.values();
     let count = 1;
 
@@ -89,9 +103,6 @@ function SelectionDialog({ classes, open, onClose }) {
         }
         const { orig, ext, uploadName } = value;
 
-        const blob = await getBlob({
-          url: orig,
-        });
         const name = replaceFormat(zipImageName, {
           ...articleInfo.current,
           channelID,
@@ -100,10 +111,11 @@ function SelectionDialog({ classes, open, onClose }) {
           index: count,
         });
 
+        const stream = await fetch(orig).then((response) => response.body);
         count += 1;
         return controller.enqueue({
           name: `/${name}.${ext}`,
-          stream: () => new Response(blob).body,
+          stream: () => stream,
         });
       },
       cancel() {
@@ -117,12 +129,11 @@ function SelectionDialog({ classes, open, onClose }) {
       channelName,
     });
 
-    myReadable
-      .pipeThrough(new Writer())
-      .pipeTo(streamSaver.createWriteStream(`${zipFileName}.zip`));
-    setSelection([]);
-    setAlertOpen(true);
-    onClose();
+    myReadable.pipeThrough(new Writer()).pipeTo(
+      streamSaver.createWriteStream(`${zipFileName}.zip`, {
+        size: totalSize,
+      }),
+    );
   }, [channelID, channelName, data, onClose, selection, zipImageName, zipName]);
 
   const handleClose = useCallback(() => {

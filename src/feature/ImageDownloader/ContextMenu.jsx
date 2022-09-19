@@ -93,15 +93,18 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        const blob = await getBlob({ url: orig });
+        const response = await fetch(orig);
+        const size = Number(response.headers.get('Content-Length'));
+        const stream = response.body;
         const name = replaceFormat(fileName, {
           ...articleInfo.current,
           uploadName,
         });
 
-        const rs = blob.stream();
-        const filestream = streamSaver.createWriteStream(`${name}.${ext}`);
-        rs.pipeTo(filestream);
+        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+          size,
+        });
+        stream.pipeTo(filestream);
 
         dispatch(setContextSnack({ msg: '' }));
       } catch (error) {
