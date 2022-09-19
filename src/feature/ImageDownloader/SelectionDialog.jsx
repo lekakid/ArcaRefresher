@@ -2,12 +2,12 @@ import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  Snackbar,
   Typography,
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
@@ -27,6 +27,9 @@ const styles = (theme) => ({
     position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
+  },
+  progressContainer: {
+    textAlign: 'center',
   },
 });
 
@@ -50,7 +53,7 @@ function SelectionDialog({ classes, open, onClose }) {
   });
   const articleInfo = useRef(getArticleInfo());
   const [selection, setSelection] = useState([]);
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
 
   const handleSelection = useCallback((sel) => {
     setSelection(sel);
@@ -67,7 +70,7 @@ function SelectionDialog({ classes, open, onClose }) {
   const handleDownload = useCallback(async () => {
     onClose();
     setSelection([]);
-    setAlertOpen(true);
+    setShowProgress(true);
 
     const selectedData = data.filter((_data, index) =>
       selection.includes(index),
@@ -93,6 +96,7 @@ function SelectionDialog({ classes, open, onClose }) {
 
     const myReadable = new ReadableStream({
       start() {
+        setShowProgress(false);
         window.addEventListener('beforeunload', confirm);
       },
       async pull(controller) {
@@ -136,52 +140,46 @@ function SelectionDialog({ classes, open, onClose }) {
     );
   }, [channelID, channelName, data, onClose, selection, zipImageName, zipName]);
 
-  const handleClose = useCallback(() => {
-    setAlertOpen(false);
-  }, []);
-
   const imgList = data.map(({ thumb }) => thumb);
 
-  return (
-    <>
-      <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
+  if (showProgress) {
+    return (
+      <Dialog maxWidth="lg" open>
         <DialogTitle>
           <Typography>이미지 다운로더</Typography>
-          <IconButton className={classes.closeButton} onClick={onClose}>
-            <Close />
-          </IconButton>
         </DialogTitle>
-        <DialogContent>
-          <SelectableImageList
-            imgList={imgList}
-            selection={selection}
-            onChange={handleSelection}
-          />
+        <DialogContent classes={{ root: classes.progressContainer }}>
+          <Typography>다운로드를 준비 중입니다...</Typography>
+          <CircularProgress color="primary" />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSelectAll}>
-            {selection.length !== data.length ? '전체 선택' : '선택 해제'}
-          </Button>
-          <Button disabled={selection.length === 0} onClick={handleDownload}>
-            다운로드
-          </Button>
-        </DialogActions>
       </Dialog>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        message={
-          <>
-            <div>다운로드를 시작하는데 약간의 시간이 걸릴 수 있습니다.</div>
-            <div>
-              다운로드를 진행하는 동안 다른 페이지로 이동하거나 창을 닫지
-              마십시오.
-            </div>
-          </>
-        }
-      />
-    </>
+    );
+  }
+
+  return (
+    <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
+      <DialogTitle>
+        <Typography>이미지 다운로더</Typography>
+        <IconButton className={classes.closeButton} onClick={onClose}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <SelectableImageList
+          imgList={imgList}
+          selection={selection}
+          onChange={handleSelection}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleSelectAll}>
+          {selection.length !== data.length ? '전체 선택' : '선택 해제'}
+        </Button>
+        <Button disabled={selection.length === 0} onClick={handleDownload}>
+          다운로드
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
