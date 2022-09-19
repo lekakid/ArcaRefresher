@@ -35,12 +35,12 @@ const useStyles = makeStyles((theme) => ({
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channelID } = useParser();
+  const { channel } = useParser();
   const { enabled, imgList, forceLoad } = useSelector(
     (state) => state[Info.ID],
   );
   const [selectedChannel, setSelectedChannel] = useState(
-    channelID || '_shared_',
+    channel.ID || '_shared_',
   );
   const [selection, setSelection] = useState([]);
   const [open, setOpen] = useState(false);
@@ -104,7 +104,7 @@ const View = React.forwardRef((_props, ref) => {
     setSelection([]);
   }, [dispatch, imgList, selectedChannel, selection]);
 
-  const channelList = [...Object.keys(imgList), channelID].filter(
+  const channelList = [...Object.keys(imgList), channel.ID].filter(
     (c, index, arr) => c !== null && arr.indexOf(c) === index,
   );
 

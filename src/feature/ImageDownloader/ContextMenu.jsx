@@ -4,18 +4,17 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from './func';
+import { getBlob, getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { fileName } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const articleInfo = useRef(null);
+  const infoString = useParser();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -34,12 +33,6 @@ function ContextMenu({ triggerList }) {
 
     triggerList.current.push(trigger);
   }, [triggerList]);
-
-  useEffect(() => {
-    if (!articleLoaded) return;
-    if (articleInfo.current) return;
-    articleInfo.current = getArticleInfo();
-  }, [articleLoaded]);
 
   const handleClipboard = useCallback(() => {
     (async () => {
@@ -97,8 +90,8 @@ function ContextMenu({ triggerList }) {
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
         const name = replaceFormat(fileName, {
-          ...articleInfo.current,
-          uploadName,
+          strings: infoString,
+          fileName: uploadName,
         });
 
         const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
@@ -117,7 +110,7 @@ function ContextMenu({ triggerList }) {
         );
       }
     })();
-  }, [fileName, dispatch]);
+  }, [dispatch, fileName, infoString]);
 
   const handleCopyURL = useCallback(() => {
     dispatch(setClose());

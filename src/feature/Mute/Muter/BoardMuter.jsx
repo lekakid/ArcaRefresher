@@ -39,7 +39,7 @@ const style = {
 function BoardMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channelID, category: categoryInfo } = useParser();
+  const { channel } = useParser();
   const { user, keyword, emoticon, category, hideCountBar } = useSelector(
     (state) => state[Info.ID],
   );
@@ -52,21 +52,21 @@ function BoardMuter() {
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    if (!categoryInfo) return;
+    if (!channel.category) return;
 
     const tmpBoard = document.querySelector(BOARD_VIEW);
     if (!tmpBoard) return;
 
     setBoard(tmpBoard);
     const name2id = Object.fromEntries(
-      Object.entries(categoryInfo).map(([key, value]) => [value, key]),
+      Object.entries(channel.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
     const countHeader = document.createElement('div');
     tmpBoard.insertAdjacentElement('afterbegin', countHeader);
     setCountBar(countHeader);
-  }, [dispatch, boardLoaded, categoryInfo]);
+  }, [dispatch, boardLoaded, channel]);
 
   // 유저, 키워드, 카테고리 뮤트처리
   useLayoutEffect(() => {
@@ -82,13 +82,13 @@ function BoardMuter() {
         content: a.querySelector('.title')?.textContent || '',
         category: a.querySelector('.badge')?.textContent || '글머리없음',
       }));
-      const categoryConfig = category[channelID] || {};
+      const channelCategory = category[channel.ID] || {};
 
       const result = filterContent({
         contents: articleInfo,
         userList: user,
         keywordList: keyword,
-        categoryList: categoryConfig,
+        categoryList: channelCategory,
         categoryMap: nameToIDMap,
       });
       setCount(result);
@@ -102,7 +102,7 @@ function BoardMuter() {
       window.removeEventListener('load', muteArticle);
       removeAREvent(EVENT_AUTOREFRESH, muteArticle);
     };
-  }, [board, nameToIDMap, keyword, user, categoryInfo, channelID, category]);
+  }, [board, nameToIDMap, keyword, user, channel, category]);
 
   useLayoutEffect(() => {
     if (!board) return;

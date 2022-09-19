@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function useParser() {
-  return useSelector((state) => state[MODULE_ID]);
+  return useSelector((state) => state[Info.ID]);
 }

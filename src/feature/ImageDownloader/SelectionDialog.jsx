@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -18,7 +18,7 @@ import streamSaver from 'streamsaver';
 import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
 import { useParser } from 'util/Parser';
 
-import { getArticleInfo, getImageInfo, replaceFormat } from './func';
+import { getImageInfo, replaceFormat } from './func';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
 
@@ -34,7 +34,7 @@ const styles = (theme) => ({
 });
 
 function SelectionDialog({ classes, open, onClose }) {
-  const { channelID, channelName } = useParser();
+  const infoString = useParser();
   const { zipImageName, zipName } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
@@ -51,7 +51,6 @@ function SelectionDialog({ classes, open, onClose }) {
 
     return dataResult;
   });
-  const articleInfo = useRef(getArticleInfo());
   const [selection, setSelection] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
 
@@ -108,11 +107,9 @@ function SelectionDialog({ classes, open, onClose }) {
         const { orig, ext, uploadName } = value;
 
         const name = replaceFormat(zipImageName, {
-          ...articleInfo.current,
-          channelID,
-          channelName,
-          uploadName,
+          strings: infoString,
           index: count,
+          fileName: uploadName,
         });
 
         const stream = await fetch(orig).then((response) => response.body);
@@ -127,18 +124,14 @@ function SelectionDialog({ classes, open, onClose }) {
       },
     });
 
-    const zipFileName = replaceFormat(zipName, {
-      ...articleInfo.current,
-      channelID,
-      channelName,
-    });
+    const zipFileName = replaceFormat(zipName, { strings: infoString });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.zip`, {
         size: totalSize,
       }),
     );
-  }, [channelID, channelName, data, onClose, selection, zipImageName, zipName]);
+  }, [data, infoString, onClose, selection, zipImageName, zipName]);
 
   const imgList = data.map(({ thumb }) => thumb);
 
