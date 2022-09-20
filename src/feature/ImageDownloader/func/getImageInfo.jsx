@@ -1,3 +1,5 @@
+import { getArcaMediaURL } from 'func/url';
+
 function getGifInfo(gif) {
   // 드물게 search가 남은 경우 제거
   const url = (gif.src || gif.dataset.src).split('?')[0];
@@ -8,11 +10,11 @@ function getGifInfo(gif) {
   let thumb;
 
   if (!gif.poster) {
-    orig = `${url}.gif?type=orig`;
-    thumb = `${url}.gif?type=list`;
+    orig = getArcaMediaURL(`${url}.gif`, 'orig');
+    thumb = getArcaMediaURL(`${url}.gif`, 'list');
   } else {
-    orig = `${url.replace('mp4', 'gif')}?type=orig`;
-    thumb = `${url.replace('mp4', 'gif')}?type=list`;
+    orig = getArcaMediaURL(url.replace('mp4', 'gif'), 'orig');
+    thumb = getArcaMediaURL(url.replace('mp4', 'gif'), 'list');
   }
 
   return { orig, thumb, ext, uploadName };
@@ -24,7 +26,7 @@ function getImageInfo(image) {
   // 드물게 search가 남은 경우 제거
   const url = image.src.split('?')[0];
 
-  const orig = `${url}?type=orig`;
+  const orig = getArcaMediaURL(url, 'orig');
   const thumb = url;
   const ext = url.match(/\.(.{3,4})$/)[1];
   const uploadName = url.match(/[0-9a-f]{64}/g)[0];
