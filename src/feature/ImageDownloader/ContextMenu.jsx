@@ -9,7 +9,7 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getBlob, getImageInfo, replaceFormat } from './func';
+import { getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        const rawData = await getBlob({ url: orig });
+        const rawData = await fetch(orig).then((response) => response.blob());
 
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
