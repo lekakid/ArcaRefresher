@@ -8,7 +8,6 @@ const defaultConfigState = {
   fileName: '%title%',
   zipName: '%title%',
   zipImageName: '%num%',
-  zipComment: '[%channel%] %title% - %url%',
 };
 
 const initialState = getValue(Info.ID, defaultConfigState);
@@ -33,19 +32,10 @@ export const slice = createSlice({
       state.zipImageName = action.payload;
       setValue(Info.ID, state);
     },
-    setZipComment(state, action) {
-      state.zipComment = action.payload;
-      setValue(Info.ID, state);
-    },
   },
 });
 
-export const {
-  toggleEnable,
-  setFileName,
-  setZipName,
-  setZipImageName,
-  setZipComment,
-} = slice.actions;
+export const { toggleEnable, setFileName, setZipName, setZipImageName } =
+  slice.actions;
 
 export default slice.reducer;

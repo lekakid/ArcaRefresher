@@ -12,7 +12,7 @@ import { addImage, removeImage } from './slice';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { channelID } = useParser();
+  const { channel } = useParser();
   const { imgList } = useSelector((state) => state[Info.ID]);
   const [exist, setExist] = useState({ channel: false, share: false });
   const data = useRef(null);
@@ -37,15 +37,15 @@ function ContextMenu({ triggerList }) {
 
   useEffect(() => {
     setExist({
-      channel: imgList[channelID]?.includes(data.current) || false,
+      channel: imgList[channel.ID]?.includes(data.current) || false,
       // eslint-disable-next-line no-underscore-dangle
       share: imgList._shared_?.includes(data.current) || false,
     });
-  }, [valid, channelID, imgList]);
+  }, [valid, channel, imgList]);
 
   const handleChannelImage = useCallback(() => {
     const action = exist.channel ? removeImage : addImage;
-    dispatch(action({ channel: channelID, url: data.current }));
+    dispatch(action({ channel: channel.ID, url: data.current }));
     dispatch(setClose());
     dispatch(
       setContextSnack({
@@ -53,7 +53,7 @@ function ContextMenu({ triggerList }) {
         time: 3000,
       }),
     );
-  }, [exist, dispatch, channelID]);
+  }, [exist, dispatch, channel]);
 
   const handleShareImage = useCallback(() => {
     const action = exist.share ? removeImage : addImage;

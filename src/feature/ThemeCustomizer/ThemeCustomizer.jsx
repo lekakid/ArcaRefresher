@@ -6,10 +6,10 @@ import { useParser } from 'util/Parser';
 import Info from './FeatureInfo';
 
 export default function ThemeCustomizer() {
-  const { channelID } = useParser();
+  const { channel } = useParser();
   const { enabled, current, theme } = useSelector((state) => state[Info.ID]);
 
-  const currentTheme = theme[channelID] || theme[current];
+  const currentTheme = theme[channel.ID] || theme[current];
   useLayoutEffect(() => {
     if (!enabled || !currentTheme) return undefined;
 

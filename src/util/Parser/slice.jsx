@@ -1,28 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const initialState = {
-  channelID: null,
-  channelName: null,
-  category: null,
+  channel: {
+    ID: null,
+    name: null,
+    category: null,
+  },
+  article: {
+    ID: null,
+    category: null,
+    title: null,
+    author: null,
+    url: null,
+  },
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
-    setChannelID(state, action) {
-      state.channelID = action.payload;
+    setChannelInfo(state, action) {
+      state.channel = action.payload;
     },
-    setChannelName(state, action) {
-      state.channelName = action.payload;
-    },
-    setCategory(state, action) {
-      state.category = action.payload;
+    setArticleInfo(state, action) {
+      state.article = action.payload;
     },
   },
 });
 
-export const { setChannelID, setChannelName, setCategory } = slice.actions;
+export const { setChannelInfo, setArticleInfo } = slice.actions;
 
 export default slice.reducer;

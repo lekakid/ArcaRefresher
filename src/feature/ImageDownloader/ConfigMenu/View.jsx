@@ -18,14 +18,13 @@ import {
   setFileName,
   setZipName,
   setZipImageName,
-  setZipComment,
 } from '../slice';
 import { FORMAT, LABEL } from '../format';
 import FormatSelector from './FormatSelector';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, fileName, zipName, zipImageName, zipComment } = useSelector(
+  const { enabled, fileName, zipName, zipImageName } = useSelector(
     (state) => state[Info.ID],
   );
 
@@ -70,19 +69,6 @@ const View = React.forwardRef((_props, ref) => {
       dispatch(setZipImageName(`${zipImageName}${value}`));
     },
     [dispatch, zipImageName],
-  );
-
-  const handleZipComment = useCallback(
-    (e) => {
-      dispatch(setZipComment(e.target.value));
-    },
-    [dispatch],
-  );
-  const handleAddFormatZipComment = useCallback(
-    (value) => {
-      dispatch(setZipComment(`${zipComment}${value}`));
-    },
-    [dispatch, zipComment],
   );
 
   return (
@@ -140,7 +126,7 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem>
             <ListItemText primary="일괄 다운로드 시 압축파일 내 이미지 이름" />
           </ListItem>
-          <ListItem divider>
+          <ListItem>
             <TextField
               fullWidth
               value={zipImageName}
@@ -160,33 +146,6 @@ const View = React.forwardRef((_props, ref) => {
                   { value: FORMAT.NUMBER, label: LABEL.NUMBER },
                 ]}
                 onSelect={handleAddFormatZipImageName}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="일괄 다운로드 시 압축파일 코멘트" />
-          </ListItem>
-          <ListItem divider>
-            <TextField
-              fullWidth
-              variant="outlined"
-              multiline
-              rows={5}
-              value={zipComment}
-              onChange={handleZipComment}
-            />
-            <ListItemSecondaryAction>
-              <FormatSelector
-                formatList={[
-                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
-                  { value: FORMAT.TITLE, label: LABEL.TITLE },
-                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
-                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
-                  { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
-                  { value: FORMAT.URL, label: LABEL.URL },
-                ]}
-                onSelect={handleAddFormatZipComment}
               />
             </ListItemSecondaryAction>
           </ListItem>

@@ -2,20 +2,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
-import { saveAs } from 'file-saver';
+import streamSaver from 'streamsaver';
 
-import { ARTICLE_IMAGES, ARTICLE_LOADED } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getArticleInfo, getBlob, getImageInfo, replaceFormat } from './func';
+import { getImageInfo, replaceFormat } from './func';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { fileName } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const articleInfo = useRef(null);
+  const infoString = useParser();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -35,12 +34,6 @@ function ContextMenu({ triggerList }) {
     triggerList.current.push(trigger);
   }, [triggerList]);
 
-  useEffect(() => {
-    if (!articleLoaded) return;
-    if (articleInfo.current) return;
-    articleInfo.current = getArticleInfo();
-  }, [articleLoaded]);
-
   const handleClipboard = useCallback(() => {
     (async () => {
       const { orig } = data.current;
@@ -48,7 +41,7 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        const rawData = await getBlob({ url: orig });
+        const rawData = await fetch(orig).then((response) => response.blob());
 
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
@@ -92,17 +85,18 @@ function ContextMenu({ triggerList }) {
       const { orig, ext, uploadName } = data.current;
       try {
         dispatch(setClose());
-        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
-        const blob = await getBlob({ url: orig });
+        const response = await fetch(orig);
+        const size = Number(response.headers.get('Content-Length'));
+        const stream = response.body;
+        const name = replaceFormat(fileName, {
+          strings: infoString,
+          fileName: uploadName,
+        });
 
-        saveAs(
-          blob,
-          `${replaceFormat(fileName, {
-            ...articleInfo.current,
-            uploadName,
-          })}.${ext}`,
-        );
-        dispatch(setContextSnack({ msg: '' }));
+        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+          size,
+        });
+        stream.pipeTo(filestream);
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
         dispatch(
@@ -113,7 +107,7 @@ function ContextMenu({ triggerList }) {
         );
       }
     })();
-  }, [fileName, dispatch]);
+  }, [dispatch, fileName, infoString]);
 
   const handleCopyURL = useCallback(() => {
     dispatch(setClose());

@@ -19,7 +19,7 @@ const SHARED = '_shared_';
 export default function MyImage() {
   const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
-  const { channelID } = useParser();
+  const { channel } = useParser();
   const { enabled, imgList, forceLoad } = useSelector(
     (state) => state[Info.ID],
   );
@@ -28,7 +28,7 @@ export default function MyImage() {
   const [loaded, setLoaded] = useState(false);
 
   const sharedImgList = imgList[SHARED] || [];
-  const channelImgList = imgList[channelID] || [];
+  const channelImgList = imgList[channel.ID] || [];
   const targetImgList = [...channelImgList, ...sharedImgList];
 
   useEffect(() => {

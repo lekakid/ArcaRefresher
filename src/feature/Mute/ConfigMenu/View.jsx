@@ -46,7 +46,9 @@ function CustomOverRay() {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { category } = useParser();
+  const {
+    channel: { category },
+  } = useParser();
   const {
     hideCountBar,
     hideMutedMark,

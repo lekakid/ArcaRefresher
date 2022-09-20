@@ -16,7 +16,7 @@ import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channelID, category } = useParser();
+  const { channel } = useParser();
   const { color } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [styleMap, setStyleMap] = useState(null);
@@ -27,19 +27,19 @@ export default function CategoryStyler() {
   }, [boardLoaded]);
 
   useLayoutEffect(() => {
-    if (!category) return;
-    if (!color[channelID]) return;
+    if (!channel.category) return;
+    if (!color[channel.ID]) return;
 
     setStyleMap(
-      Object.keys(color[channelID]).reduce(
+      Object.keys(color[channel.ID]).reduce(
         (acc, id) => ({
           ...acc,
-          [category[id]]: Math.random().toString(36).substr(2),
+          [channel.category[id]]: Math.random().toString(36).substr(2),
         }),
         {},
       ),
     );
-  }, [category, channelID, color]);
+  }, [channel, color]);
 
   useLayoutEffect(() => {
     if (!board || !styleMap) return () => {};
@@ -62,10 +62,10 @@ export default function CategoryStyler() {
   }, [board, styleMap]);
 
   if (!styleMap) return null;
-  const stylesheet = Object.entries(color[channelID]).map(([key, value]) => {
+  const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
-    const colorKey = styleMap[category[key]];
+    const colorKey = styleMap[channel.category[key]];
     return `.ARColor .color-${colorKey} {
         ${bgcolor ? `background-color: ${bgcolor} !important;` : ''}
         ${bgcolor ? `color: ${getContrastYIQ(bgcolor)};` : ''}

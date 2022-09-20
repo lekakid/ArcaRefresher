@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
-import { saveAs } from 'file-saver';
+import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
 import Info from '../FeatureInfo';
@@ -50,8 +50,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleExport = useCallback(() => {
     const data = exportValues();
-    const file = new Blob([data], { type: 'text/plain' });
-    saveAs(file, 'settings.txt');
+    const blob = new Blob([data], { type: 'text/plain' });
+    const rs = blob.stream();
+    const filestream = streamSaver.createWriteStream('setting.txt');
+    return rs.pipeTo(filestream);
   }, []);
 
   const handleOpen = useCallback(() => {

@@ -34,9 +34,9 @@ const DEFAULT_CATEGORY_CONFIG = {
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { channelID } = useParser();
+  const { channel } = useParser();
   const { color } = useSelector((state) => state[Info.ID]);
-  const channelColor = color?.[channelID] || DEFAULT_CHANNEL_CONFIG;
+  const channelColor = color?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { badge, bgcolor, bold, through, disableVisited } =
     channelColor?.[category] || DEFAULT_CATEGORY_CONFIG;
 
@@ -49,9 +49,9 @@ function CategoryRow({ divider, category, nameMap }) {
           [type]: colorData.error ? '' : colorData.css.backgroundColor,
         },
       };
-      dispatch(setStyle({ channel: channelID, color: updatedData }));
+      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
     },
-    [channelColor, channelID, dispatch],
+    [channelColor, channel, dispatch],
   );
 
   const handleStyle = useCallback(
@@ -63,9 +63,9 @@ function CategoryRow({ divider, category, nameMap }) {
           [type]: !channelColor?.[id]?.[type],
         },
       };
-      dispatch(setStyle({ channel: channelID, color: updatedData }));
+      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
     },
-    [channelColor, channelID, dispatch],
+    [channelColor, channel, dispatch],
   );
 
   const handleResetStyle = useCallback(
@@ -74,9 +74,9 @@ function CategoryRow({ divider, category, nameMap }) {
         ...channelColor,
         [id]: {},
       };
-      dispatch(setStyle({ channel: channelID, color: updatedData }));
+      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
     },
-    [channelColor, channelID, dispatch],
+    [channelColor, channel, dispatch],
   );
 
   const badgeStyle = {

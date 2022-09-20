@@ -22,7 +22,9 @@ const useStyles = makeStyles({
 });
 
 const View = React.forwardRef((_props, ref) => {
-  const { category } = useParser();
+  const {
+    channel: { category },
+  } = useParser();
   const classes = useStyles();
 
   return (
