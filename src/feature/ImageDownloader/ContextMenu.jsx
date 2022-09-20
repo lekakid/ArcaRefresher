@@ -85,7 +85,6 @@ function ContextMenu({ triggerList }) {
       const { orig, ext, uploadName } = data.current;
       try {
         dispatch(setClose());
-        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
@@ -98,8 +97,6 @@ function ContextMenu({ triggerList }) {
           size,
         });
         stream.pipeTo(filestream);
-
-        dispatch(setContextSnack({ msg: '' }));
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
         dispatch(
