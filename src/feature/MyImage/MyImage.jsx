@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -27,9 +27,10 @@ export default function MyImage() {
   const [editor, setEditor] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
-  const sharedImgList = imgList[SHARED] || [];
-  const channelImgList = imgList[channel.ID] || [];
-  const targetImgList = [...channelImgList, ...sharedImgList];
+  const targetImgList = useMemo(
+    () => [...(imgList[SHARED] || []), ...(imgList[channel.ID] || [])],
+    [channel, imgList],
+  );
 
   useEffect(() => {
     if (!enabled) return;
