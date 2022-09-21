@@ -10,6 +10,7 @@ import {
   ARTICLE_AUTHOR,
   ARTICLE_TITLE,
   ARTICLE_URL,
+  CHANNEL_TITLE_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
@@ -18,6 +19,7 @@ import { setChannelInfo, setArticleInfo } from './slice';
 export default function Parser() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
+  const titleLoaded = useElementQuery(CHANNEL_TITLE_LOADED);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
@@ -25,7 +27,18 @@ export default function Parser() {
     const { pathname } = window.location;
     const ID = pathname.match(idRegex)?.[1]?.toLowerCase() || null;
 
+    dispatch(setChannelInfo({ ID }));
+  }, [dispatch]);
+
+  useLayoutEffect(() => {
+    if (!titleLoaded) return;
+
     const name = document.querySelector(CHANNEL_TITLE)?.textContent || null;
+    dispatch(setChannelInfo({ name }));
+  }, [dispatch, titleLoaded]);
+
+  useLayoutEffect(() => {
+    if (!boardLoaded) return;
 
     const category = [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
       (acc, cur) => {
@@ -39,7 +52,8 @@ export default function Parser() {
       },
       {},
     );
-    dispatch(setChannelInfo({ ID, name, category }));
+
+    dispatch(setChannelInfo({ category }));
   }, [boardLoaded, dispatch]);
 
   useLayoutEffect(() => {
