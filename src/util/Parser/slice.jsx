@@ -21,7 +21,10 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setChannelInfo(state, action) {
-      state.channel = action.payload;
+      state.channel = {
+        ...state.channel,
+        ...action.payload,
+      };
     },
     setArticleInfo(state, action) {
       state.article = action.payload;

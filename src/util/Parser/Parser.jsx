@@ -10,6 +10,7 @@ import {
   ARTICLE_AUTHOR,
   ARTICLE_TITLE,
   ARTICLE_URL,
+  CHANNEL_TITLE_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
@@ -18,16 +19,26 @@ import { setChannelInfo, setArticleInfo } from './slice';
 export default function Parser() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
+  const titleLoaded = useElementQuery(CHANNEL_TITLE_LOADED);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
-    if (!boardLoaded) return;
-
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
     const { pathname } = window.location;
     const ID = pathname.match(idRegex)?.[1]?.toLowerCase() || null;
 
+    dispatch(setChannelInfo({ ID }));
+  }, [dispatch]);
+
+  useLayoutEffect(() => {
+    if (!titleLoaded) return;
+
     const name = document.querySelector(CHANNEL_TITLE)?.textContent || null;
+    dispatch(setChannelInfo({ name }));
+  }, [dispatch, titleLoaded]);
+
+  useLayoutEffect(() => {
+    if (!boardLoaded) return;
 
     const category = [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
       (acc, cur) => {
@@ -41,7 +52,8 @@ export default function Parser() {
       },
       {},
     );
-    dispatch(setChannelInfo({ ID, name, category }));
+
+    dispatch(setChannelInfo({ category }));
   }, [boardLoaded, dispatch]);
 
   useLayoutEffect(() => {
@@ -49,9 +61,10 @@ export default function Parser() {
 
     const titleElement = document.querySelector(ARTICLE_TITLE);
     const category =
-      titleElement.querySelector('.badge')?.textContent || '일반';
+      titleElement?.querySelector('.badge')?.textContent || '일반';
     const title =
-      convertImgToAlt([...titleElement.childNodes].slice(2)) || '제목 없음';
+      convertImgToAlt([...(titleElement?.childNodes || [])].slice(2)) ||
+      '제목 없음';
     const author =
       getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
     const url =
