@@ -34,7 +34,7 @@ export default function CategoryStyler() {
       Object.keys(color[channel.ID]).reduce(
         (acc, id) => ({
           ...acc,
-          [channel.category[id]]: Math.random().toString(36).substr(2),
+          [channel.category[id]]: Math.random().toString(36).substring(2),
         }),
         {},
       ),
