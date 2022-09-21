@@ -21,8 +21,6 @@ export default function Parser() {
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
-    if (!boardLoaded) return;
-
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
     const { pathname } = window.location;
     const ID = pathname.match(idRegex)?.[1]?.toLowerCase() || null;
@@ -49,9 +47,10 @@ export default function Parser() {
 
     const titleElement = document.querySelector(ARTICLE_TITLE);
     const category =
-      titleElement.querySelector('.badge')?.textContent || '일반';
+      titleElement?.querySelector('.badge')?.textContent || '일반';
     const title =
-      convertImgToAlt([...titleElement.childNodes].slice(2)) || '제목 없음';
+      convertImgToAlt([...(titleElement?.childNodes || [])].slice(2)) ||
+      '제목 없음';
     const author =
       getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
     const url =
