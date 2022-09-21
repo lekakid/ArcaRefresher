@@ -42,7 +42,7 @@ export default function CategoryStyler() {
   }, [channel, color]);
 
   useLayoutEffect(() => {
-    if (!board || !styleMap) return () => {};
+    if (!board || !styleMap) return undefined;
 
     board.classList.add('ARColor');
 
