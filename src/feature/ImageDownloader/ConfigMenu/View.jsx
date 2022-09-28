@@ -19,7 +19,7 @@ import {
   setZipName,
   setZipImageName,
 } from '../slice';
-import { FORMAT, LABEL } from '../format';
+import { FORMAT_STRING, LABEL } from '../format';
 import FormatSelector from './FormatSelector';
 
 const View = React.forwardRef((_props, ref) => {
@@ -90,14 +90,17 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemSecondaryAction>
               <FormatSelector
                 formatList={[
-                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
-                  { value: FORMAT.TITLE, label: LABEL.TITLE },
-                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
-                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
-                  { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
-                  { value: FORMAT.URL, label: LABEL.URL },
-                  { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
+                  { value: FORMAT_STRING.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT_STRING.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT_STRING.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT_STRING.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT_STRING.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT_STRING.ARTICLE_ID, label: LABEL.ARTICLE_ID },
+                  { value: FORMAT_STRING.URL, label: LABEL.URL },
+                  {
+                    value: FORMAT_STRING.UPLOAD_NAME,
+                    label: LABEL.UPLOAD_NAME,
+                  },
                 ]}
                 onSelect={handleAddFormatFileName}
               />
@@ -111,13 +114,13 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemSecondaryAction>
               <FormatSelector
                 formatList={[
-                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
-                  { value: FORMAT.TITLE, label: LABEL.TITLE },
-                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
-                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
-                  { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
-                  { value: FORMAT.URL, label: LABEL.URL },
+                  { value: FORMAT_STRING.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT_STRING.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT_STRING.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT_STRING.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT_STRING.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT_STRING.ARTICLE_ID, label: LABEL.ARTICLE_ID },
+                  { value: FORMAT_STRING.URL, label: LABEL.URL },
                 ]}
                 onSelect={handleAddFormatZipName}
               />
@@ -135,15 +138,18 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemSecondaryAction>
               <FormatSelector
                 formatList={[
-                  { value: FORMAT.CHANNEL, label: LABEL.CHANNEL },
-                  { value: FORMAT.CHANNEL_ID, label: LABEL.CHANNEL_ID },
-                  { value: FORMAT.TITLE, label: LABEL.TITLE },
-                  { value: FORMAT.CATEGORY, label: LABEL.CATEGORY },
-                  { value: FORMAT.AUTHOR, label: LABEL.AUTHOR },
-                  { value: FORMAT.ARTICLE_ID, label: LABEL.ARTICLE_ID },
-                  { value: FORMAT.URL, label: LABEL.URL },
-                  { value: FORMAT.UPLOAD_NAME, label: LABEL.UPLOAD_NAME },
-                  { value: FORMAT.NUMBER, label: LABEL.NUMBER },
+                  { value: FORMAT_STRING.CHANNEL, label: LABEL.CHANNEL },
+                  { value: FORMAT_STRING.CHANNEL_ID, label: LABEL.CHANNEL_ID },
+                  { value: FORMAT_STRING.TITLE, label: LABEL.TITLE },
+                  { value: FORMAT_STRING.CATEGORY, label: LABEL.CATEGORY },
+                  { value: FORMAT_STRING.AUTHOR, label: LABEL.AUTHOR },
+                  { value: FORMAT_STRING.ARTICLE_ID, label: LABEL.ARTICLE_ID },
+                  { value: FORMAT_STRING.URL, label: LABEL.URL },
+                  {
+                    value: FORMAT_STRING.UPLOAD_NAME,
+                    label: LABEL.UPLOAD_NAME,
+                  },
+                  { value: FORMAT_STRING.NUMBER, label: LABEL.NUMBER },
                 ]}
                 onSelect={handleAddFormatZipImageName}
               />

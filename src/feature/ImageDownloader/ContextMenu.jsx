@@ -9,7 +9,8 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getImageInfo, replaceFormat } from './func';
+import { getImageInfo } from './func';
+import format from './format';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -88,7 +89,7 @@ function ContextMenu({ triggerList }) {
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
-        const name = replaceFormat(fileName, {
+        const name = format(fileName, {
           strings: infoString,
           fileName: uploadName,
         });
