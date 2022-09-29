@@ -8,6 +8,7 @@ const defaultConfigState = {
   fontSize: 15,
   topNews: true,
   recentVisit: true,
+  sideContents: true,
   sideNews: true,
   sideMenu: true,
   avatar: true,
@@ -40,6 +41,10 @@ export const slice = createSlice({
     },
     toggleRecentVisit(state) {
       state.recentVisit = !state.recentVisit;
+      setValue(Info.ID, state);
+    },
+    toggleSideContents(state) {
+      state.sideContents = !state.sideContents;
       setValue(Info.ID, state);
     },
     toggleSideNews(state) {
@@ -90,6 +95,7 @@ export const {
   setFontSize,
   toggleTopNews,
   toggleRecentVisit,
+  toggleSideContents,
   toggleSideNews,
   toggleSideMenu,
   toggleAvatar,

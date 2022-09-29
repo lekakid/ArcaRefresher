@@ -20,6 +20,14 @@ const useStyles = makeStyles(
         display: 'none',
       },
     },
+    SideContents: {
+      '& #recentHumor': {
+        display: 'none !important',
+      },
+      '& #recentLive': {
+        display: 'none !important',
+      },
+    },
     SideNews: {
       '& #newsRank': {
         display: 'none !important',
@@ -94,6 +102,7 @@ export default function LayoutCustom() {
     const {
       recentVisit,
       topNews,
+      sideContents,
       sideNews,
       sideMenu,
       avatar,
@@ -109,6 +118,7 @@ export default function LayoutCustom() {
       {
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
+        [classes.SideContents]: !sideContents,
         [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
