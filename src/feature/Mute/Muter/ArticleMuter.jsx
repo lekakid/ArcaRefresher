@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import { ARTICLE_IMAGES, ARTICLE_LOADED, ARTICLE_VIEW } from 'core/selector';
+import {
+  ARTICLE_GIFS,
+  ARTICLE_IMAGES,
+  ARTICLE_LOADED,
+  ARTICLE_VIEW,
+} from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 
 import Info from '../FeatureInfo';
@@ -53,7 +58,9 @@ function ArticleMuter() {
     if (!article) return;
 
     const muteArticle = () => {
-      const articleImage = [...document.querySelectorAll(ARTICLE_IMAGES)];
+      const articleImage = [
+        ...document.querySelectorAll(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`),
+      ];
       articleImage.forEach((i) => {
         const { clientWidth: width, clientHeight: height, src } = i;
 

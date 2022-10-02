@@ -15,7 +15,7 @@ import { withStyles } from '@material-ui/styles';
 import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useParser } from 'util/Parser';
 
 import { getGifInfo, getImageInfo } from './func';
@@ -39,7 +39,9 @@ function SelectionDialog({ classes, open, onClose }) {
   const { zipImageName, zipName } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
-    const query = emoticon ? ARTICLE_EMOTICON : ARTICLE_IMAGES;
+    const query = emoticon
+      ? ARTICLE_EMOTICON
+      : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {

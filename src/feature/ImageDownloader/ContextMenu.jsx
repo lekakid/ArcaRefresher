@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
@@ -21,7 +21,7 @@ function ContextMenu({ triggerList }) {
 
   useEffect(() => {
     const trigger = (target) => {
-      if (!target.closest(ARTICLE_IMAGES)) {
+      if (!target.closest(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`)) {
         data.current = null;
         setValid(false);
         return false;

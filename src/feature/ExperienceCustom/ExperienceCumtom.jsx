@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { useElementQuery } from 'core/hooks';
 import {
+  ARTICLE_GIFS,
   ARTICLE_IMAGES,
   ARTICLE_LOADED,
   ARTICLE_VIEW,
@@ -74,11 +75,13 @@ export default function ExperienceCustomizer() {
   useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
 
-    article.querySelectorAll(ARTICLE_IMAGES).forEach((i) => {
-      const a = document.createElement('a');
-      i.insertAdjacentElement('beforebegin', a);
-      a.append(i);
-    });
+    article
+      .querySelectorAll(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`)
+      .forEach((i) => {
+        const a = document.createElement('a');
+        i.insertAdjacentElement('beforebegin', a);
+        a.append(i);
+      });
   }, [article, blockMediaNewWindow]);
 
   useEffect(() => {
