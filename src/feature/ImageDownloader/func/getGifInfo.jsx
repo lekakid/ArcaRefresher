@@ -9,12 +9,12 @@ export default function getGifInfo(gif) {
   let orig;
   let thumb;
 
-  if (!gif.poster) {
-    orig = getArcaMediaURL(`${url}.gif`, 'orig');
-    thumb = getArcaMediaURL(`${url}.gif`, 'list');
-  } else {
+  if (url.indexOf('sac') > -1) {
     orig = getArcaMediaURL(url.replace('mp4', 'gif'), 'orig');
     thumb = getArcaMediaURL(url.replace('mp4', 'gif'), 'list');
+  } else {
+    orig = getArcaMediaURL(`${url}.gif`, 'orig');
+    thumb = getArcaMediaURL(`${url}.gif`, 'list');
   }
 
   return { orig, thumb, ext, uploadName };
