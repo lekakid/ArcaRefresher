@@ -1,15 +1,13 @@
-export default async function getBundleData(id) {
-  try {
-    const response = await fetch(`/api/emoticon/${id}`);
-    if (!response.ok) throw new Error('네트워크 오류');
+export default async function getBundleData(bundleID) {
+  const response = await fetch(`/api/emoticon/${bundleID}`);
+  if (!response.ok)
+    throw new Error(
+      `번들(${bundleID}) 이모티콘 목록을 받아오는데 실패했습니다.`,
+    );
 
-    const data = await response.json();
-    const emotList = data.map((i) => i.id);
-    const urlList = data.map((i) => i.imageUrl);
+  const data = await response.json();
+  const idList = data.map((i) => i.id);
+  const urlList = data.map((i) => i.imageUrl);
 
-    return { emotList, urlList };
-  } catch (error) {
-    console.warn('[Mute/getBundleData]', error);
-    return { emotList: [], urlList: [] };
-  }
+  return { idList, urlList };
 }

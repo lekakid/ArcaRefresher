@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { setClose } from 'menu/ContextMenu/slice';
+import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 
 import { getBundleData, getBundleInfo } from '../func';
 import { addEmoticon } from '../slice';
@@ -34,11 +34,48 @@ function Emoticon({ triggerList }) {
 
   const handleBundleMute = useCallback(() => {
     (async () => {
-      const { emotID, url } = data.current;
-      const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
-      const { emotList, urlList } = await getBundleData(bundleID);
+      try {
+        const { emotID, url } = data.current;
+        const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
+        const { idList, urlList } = await getBundleData(bundleID);
 
-      if (emotList.length === 0) {
+        if (idList.length === 0) {
+          dispatch(
+            addEmoticon({
+              id: bundleID,
+              emoticon: {
+                name: bundleName,
+                bundle: [parseInt(emotID, 10)],
+                url: [url],
+              },
+            }),
+          );
+        } else {
+          dispatch(
+            addEmoticon({
+              id: bundleID,
+              emoticon: { name: bundleName, bundle: idList, url: urlList },
+            }),
+          );
+        }
+      } catch (e) {
+        setContextSnack({
+          msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
+          time: 3000,
+        });
+        console.error(e);
+      }
+
+      dispatch(setClose());
+    })();
+  }, [dispatch]);
+
+  const handleSingleMute = useCallback(() => {
+    (async () => {
+      try {
+        const { emotID, url } = data.current;
+        const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
+
         dispatch(
           addEmoticon({
             id: bundleID,
@@ -49,34 +86,13 @@ function Emoticon({ triggerList }) {
             },
           }),
         );
-      } else {
-        dispatch(
-          addEmoticon({
-            id: bundleID,
-            emoticon: { name: bundleName, bundle: emotList, url: urlList },
-          }),
-        );
+      } catch (e) {
+        setContextSnack({
+          msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
+          time: 3000,
+        });
+        console.error(e);
       }
-
-      dispatch(setClose());
-    })();
-  }, [dispatch]);
-
-  const handleSingleMute = useCallback(() => {
-    (async () => {
-      const { emotID, url } = data.current;
-      const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
-
-      dispatch(
-        addEmoticon({
-          id: bundleID,
-          emoticon: {
-            name: bundleName,
-            bundle: [parseInt(emotID, 10)],
-            url: [url],
-          },
-        }),
-      );
 
       dispatch(setClose());
     })();

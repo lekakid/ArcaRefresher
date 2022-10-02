@@ -4,12 +4,13 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getImageInfo, replaceFormat } from './func';
+import { getImageInfo } from './func';
+import format from './format';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ function ContextMenu({ triggerList }) {
 
   useEffect(() => {
     const trigger = (target) => {
-      if (!target.closest(ARTICLE_IMAGES)) {
+      if (!target.closest(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`)) {
         data.current = null;
         setValid(false);
         return false;
@@ -88,7 +89,7 @@ function ContextMenu({ triggerList }) {
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
-        const name = replaceFormat(fileName, {
+        const name = format(fileName, {
           strings: infoString,
           fileName: uploadName,
         });

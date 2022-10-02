@@ -30,6 +30,7 @@ import {
   toggleUnvote,
   toggleModifiedIndicator,
   toggleLongComment,
+  toggleSideContents,
 } from '../slice';
 
 function labelFormat(x) {
@@ -49,6 +50,7 @@ const View = React.forwardRef((_props, ref) => {
     fontSize,
     topNews,
     recentVisit,
+    sideContents,
     sideNews,
     sideMenu,
     avatar,
@@ -79,6 +81,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleTopNews = useCallback(() => {
     dispatch(toggleTopNews());
+  }, [dispatch]);
+
+  const handleSideContents = useCallback(() => {
+    dispatch(toggleSideContents());
   }, [dispatch]);
 
   const handleSideNews = useCallback(() => {
@@ -177,6 +183,20 @@ const View = React.forwardRef((_props, ref) => {
               </ListItem>
               <Collapse in={sideMenu}>
                 <List disablePadding>
+                  <ListItem
+                    className={classes.nested}
+                    divider
+                    button
+                    onClick={handleSideContents}
+                  >
+                    <ListItemText primary="유머 채널/베스트 라이브 표시" />
+                    <ListItemSecondaryAction>
+                      <Switch
+                        checked={sideContents}
+                        onChange={handleSideContents}
+                      />
+                    </ListItemSecondaryAction>
+                  </ListItem>
                   <ListItem
                     className={classes.nested}
                     divider

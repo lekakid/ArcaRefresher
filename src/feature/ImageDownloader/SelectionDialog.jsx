@@ -15,10 +15,11 @@ import { withStyles } from '@material-ui/styles';
 import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_EMOTICON, ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useParser } from 'util/Parser';
 
-import { getImageInfo, replaceFormat } from './func';
+import { getGifInfo, getImageInfo } from './func';
+import format from './format';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
 
@@ -34,15 +35,21 @@ const styles = (theme) => ({
 });
 
 function SelectionDialog({ classes, open, onClose }) {
-  const infoString = useParser();
+  const formatValues = useParser();
   const { zipImageName, zipName } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
-    const query = emoticon ? ARTICLE_EMOTICON : ARTICLE_IMAGES;
+    const query = emoticon
+      ? ARTICLE_EMOTICON
+      : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
-        acc.push(getImageInfo(image));
+        if (image.tagName === 'VIDEO') {
+          acc.push(getGifInfo(image));
+        } else {
+          acc.push(getImageInfo(image));
+        }
       } catch (error) {
         console.warn('[ImageDownloader]', error);
       }
@@ -106,8 +113,8 @@ function SelectionDialog({ classes, open, onClose }) {
         }
         const { orig, ext, uploadName } = value;
 
-        const name = replaceFormat(zipImageName, {
-          strings: infoString,
+        const name = format(zipImageName, {
+          values: formatValues,
           index: count,
           fileName: uploadName,
         });
@@ -124,14 +131,14 @@ function SelectionDialog({ classes, open, onClose }) {
       },
     });
 
-    const zipFileName = replaceFormat(zipName, { strings: infoString });
+    const zipFileName = format(zipName, { values: formatValues });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.zip`, {
         size: totalSize,
       }),
     );
-  }, [data, infoString, onClose, selection, zipImageName, zipName]);
+  }, [data, formatValues, onClose, selection, zipImageName, zipName]);
 
   const imgList = data.map(({ thumb }) => thumb);
 
