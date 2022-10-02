@@ -6,11 +6,14 @@ import { ImageSearch } from '@material-ui/icons';
 import { ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { httpRequest } from 'func/httpRequest';
+import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
 function ContextMenu({ triggerList }) {
-  const { saucenaoBypass } = useSelector((state) => state[Info.ID]);
+  const { searchBySource, saucenaoBypass } = useSelector(
+    (state) => state[Info.ID],
+  );
   const dispatch = useDispatch();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
@@ -24,14 +27,14 @@ function ContextMenu({ triggerList }) {
       }
 
       const url = target.src.split('?')[0];
-      const orig = `${url}${target.tagName === 'VIDEO' ? '.gif' : ''}`;
+      const orig = getArcaMediaURL(url, searchBySource ? 'orig' : '');
       data.current = orig;
       setValid(true);
       return true;
     };
 
     triggerList.current.push(trigger);
-  }, [triggerList]);
+  }, [searchBySource, triggerList]);
 
   const handleGoogle = useCallback(() => {
     window.open(
@@ -58,8 +61,8 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
-        const blob = await fetch(data.current, { mode: 'no-cors' }).then(
-          (response) => response.blob(),
+        const blob = await fetch(data.current).then((response) =>
+          response.blob(),
         );
 
         if (blob.size > 15728640) {
@@ -116,10 +119,9 @@ function ContextMenu({ triggerList }) {
       try {
         dispatch(setClose());
         dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
-        const { response: blob } = await httpRequest({
-          url: data.current,
-          responseType: 'blob',
-        });
+        const blob = await fetch(data.current).then((response) =>
+          response.blob(),
+        );
 
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
