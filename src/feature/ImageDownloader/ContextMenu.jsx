@@ -90,7 +90,7 @@ function ContextMenu({ triggerList }) {
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
         const name = format(fileName, {
-          strings: infoString,
+          values: infoString,
           fileName: uploadName,
         });
 
