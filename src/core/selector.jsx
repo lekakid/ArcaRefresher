@@ -22,7 +22,6 @@ export const AUDIT_VIEW = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
 // CONTAINER ITEM SELECTOR
-export const BOARD_CATEGORIES = '.board-category a';
 export const BOARD_ARTICLES = 'a.vrow:not(.notice-unfilter)';
 export const BOARD_ARTICLES_WITHOUT_NOTICE = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
@@ -46,5 +45,4 @@ export const COMMENT_TITLE = '#comment .title';
 export const COMMENT_SUBTITLE = '#comment .reply-form__user-info';
 export const COMMENT_INPUT = '#comment .reply-form-textarea';
 export const COMMENT_EMOTICON = '#comment .emoticon';
-export const CHANNEL_TITLE = '.board-title span + a:not([class])';
 export const USER_INFO = 'span.user-info';

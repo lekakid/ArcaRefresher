@@ -9,7 +9,7 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { getImageInfo } from './func';
+import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 
 function ContextMenu({ triggerList }) {
@@ -27,7 +27,8 @@ function ContextMenu({ triggerList }) {
         return false;
       }
 
-      data.current = getImageInfo(target);
+      data.current =
+        target.tagName === 'IMG' ? getImageInfo(target) : getGifInfo(target);
       setValid(true);
       return true;
     };
