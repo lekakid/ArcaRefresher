@@ -4,8 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useElementQuery } from 'core/hooks';
 import {
   BOARD_LOADED,
-  BOARD_CATEGORIES,
-  CHANNEL_TITLE,
   ARTICLE_LOADED,
   ARTICLE_AUTHOR,
   ARTICLE_TITLE,
@@ -33,14 +31,16 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!titleLoaded) return;
 
-    const name = document.querySelector(CHANNEL_TITLE)?.textContent || null;
+    const name =
+      document.querySelector('.board-title .title')?.dataset.channelName ||
+      null;
     dispatch(setChannelInfo({ name }));
   }, [dispatch, titleLoaded]);
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
 
-    const category = [...document.querySelectorAll(BOARD_CATEGORIES)].reduce(
+    const category = [...document.querySelectorAll('.board-category a')].reduce(
       (acc, cur) => {
         if (cur.href.indexOf('category=') === -1)
           return { ...acc, 글머리없음: '글머리없음' };
