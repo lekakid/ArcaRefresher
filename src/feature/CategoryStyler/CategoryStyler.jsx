@@ -83,7 +83,7 @@ export default function CategoryStyler() {
       }
       .ARColor .color-${colorKey} .badge {
         ${badge ? `background-color: ${badge} !important;` : ''}
-        ${badge ? `color: ${getContrastYIQ(badge)}` : ''}
+        ${badge ? `color: ${getContrastYIQ(badge)} !important` : ''}
       }`;
   });
 
