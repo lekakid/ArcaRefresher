@@ -51,6 +51,7 @@
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^1.8.1",
     "@transcend-io/conflux": "^4.0.2",
+    "caniuse-lite": "^1.0.30001420",
     "clsx": "^1.1.1",
     "material-ui-color": "^1.2.0",
     "query-string": "^7.1.1",
