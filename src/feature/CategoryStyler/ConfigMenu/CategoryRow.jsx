@@ -35,7 +35,9 @@ function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { channel } = useParser();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { color },
+  } = useSelector((state) => state[Info.ID]);
   const channelColor = color?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { badge, bgcolor, bold, through, disableVisited } =
     channelColor?.[category] || DEFAULT_CATEGORY_CONFIG;

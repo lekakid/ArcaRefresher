@@ -22,7 +22,9 @@ const columns = [
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { variant, memo } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { variant, memo },
+  } = useSelector((state) => state[Info.ID]);
   const rows = Object.keys(memo).map((key) => ({
     id: key,
     memo: memo[key],

@@ -15,9 +15,9 @@ import Info from '../FeatureInfo';
 import { toggleSauceNaoBypass, toggleSearchBySource } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { searchBySource, saucenaoBypass } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    config: { searchBySource, saucenaoBypass },
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleSearchBySource = useCallback(() => {

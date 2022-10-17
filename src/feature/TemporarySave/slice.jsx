@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -23,29 +23,24 @@ export const slice = createSlice({
 
       state.currentSlot = state.currentSlot || timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(Info.ID, state.config);
     },
     saveAsArticle(state, action) {
       const { timestamp, title, content } = action.payload;
 
       state.currentSlot = timestamp;
       state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(Info.ID, state.config);
     },
     setArticleList(state, action) {
       state.config.tempArticleList = action.payload;
-      setValue(Info.ID, state.config);
     },
     setCurrentSlot(state, action) {
       state.currentSlot = action.payload;
     },
     toggleImportTitle(state) {
       state.config.importTitle = !state.config.importTitle;
-      setValue(Info.ID, state.config);
     },
     setAutoTime(state, action) {
       state.config.autoSaveTime = action.payload;
-      setValue(Info.ID, state.config);
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;

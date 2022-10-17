@@ -50,12 +50,14 @@ const View = React.forwardRef((_props, ref) => {
     channel: { category },
   } = useParser();
   const {
-    hideCountBar,
-    hideMutedMark,
-    muteIncludeReply,
-    user,
-    keyword,
-    emoticon,
+    config: {
+      hideCountBar,
+      hideMutedMark,
+      muteIncludeReply,
+      user,
+      keyword,
+      emoticon,
+    },
   } = useSelector((state) => state[Info.ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
     id: key,

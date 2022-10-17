@@ -108,7 +108,9 @@ const defaultTheme = {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, current, theme } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { enabled, current, theme },
+  } = useSelector((state) => state[Info.ID]);
   const [selectPreset, setSelectPreset] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);

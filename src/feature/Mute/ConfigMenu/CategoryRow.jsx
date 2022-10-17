@@ -13,7 +13,9 @@ const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const { channel } = useParser();
-  const { category: categoryConfig } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { category: categoryConfig },
+  } = useSelector((state) => state[Info.ID]);
   const channelConfig = categoryConfig?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { mutePreview, muteArticle } =
     channelConfig?.[category] || DEFAULT_CATEGORY_CONFIG;

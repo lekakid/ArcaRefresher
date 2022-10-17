@@ -29,7 +29,9 @@ const useStyles = makeStyles(() => ({
 
 export default function AutoRefresher() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { countdown, showProgress } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { countdown, showProgress },
+  } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState(false);
   const sockCount = useRef(0);

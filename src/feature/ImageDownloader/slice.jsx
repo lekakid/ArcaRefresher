@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -10,27 +10,25 @@ const defaultConfigState = {
   zipImageName: '%num%',
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: 'ImageDownloader',
   initialState,
   reducers: {
     toggleEnable(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+      state.config.enabled = !state.config.enabled;
     },
     setFileName(state, action) {
-      state.fileName = action.payload;
-      setValue(Info.ID, state);
+      state.config.fileName = action.payload;
     },
     setZipName(state, action) {
-      state.zipName = action.payload;
-      setValue(Info.ID, state);
+      state.config.zipName = action.payload;
     },
     setZipImageName(state, action) {
-      state.zipImageName = action.payload;
-      setValue(Info.ID, state);
+      state.config.zipImageName = action.payload;
     },
   },
 });

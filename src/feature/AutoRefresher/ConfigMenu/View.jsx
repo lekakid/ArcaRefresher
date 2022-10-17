@@ -17,7 +17,9 @@ import Info from '../FeatureInfo';
 import { toggleAnimation, setTimeLimit } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { countdown, showProgress } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { countdown, showProgress },
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleRefreshTime = useCallback(

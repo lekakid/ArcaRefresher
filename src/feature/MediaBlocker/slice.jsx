@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -20,11 +20,9 @@ export const slice = createSlice({
   reducers: {
     toggleEnabled(state) {
       state.config.enabled = !state.config.enabled;
-      setValue(Info.ID, state.config);
     },
     toggleDeletedOnly(state) {
       state.config.deletedOnly = !state.config.deletedOnly;
-      setValue(Info.ID, state.config);
     },
   },
 });

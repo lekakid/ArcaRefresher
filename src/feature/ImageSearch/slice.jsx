@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultState = {
@@ -8,19 +8,19 @@ const defaultState = {
   saucenaoBypass: false,
 };
 
-const initialState = getValue(Info.ID, defaultState);
+const initialState = {
+  config: getValue(Info.ID, defaultState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
     toggleSearchBySource(state) {
-      state.searchBySource = !state.searchBySource;
-      setValue(Info.ID, state);
+      state.config.searchBySource = !state.config.searchBySource;
     },
     toggleSauceNaoBypass(state) {
-      state.saucenaoBypass = !state.saucenaoBypass;
-      setValue(Info.ID, state);
+      state.config.saucenaoBypass = !state.config.saucenaoBypass;
     },
   },
 });

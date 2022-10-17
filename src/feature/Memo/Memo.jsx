@@ -16,7 +16,9 @@ import { getUserID, getKey } from 'func/user';
 import Info from './FeatureInfo';
 
 function MemoList() {
-  const { variant, memo } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { variant, memo },
+  } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
   const loaded = useElementQuery(FULL_LOADED);
 

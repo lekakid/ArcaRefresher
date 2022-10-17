@@ -13,7 +13,9 @@ import { addImage, removeImage } from './slice';
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { channel } = useParser();
-  const { imgList } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { imgList },
+  } = useSelector((state) => state[Info.ID]);
   const [exist, setExist] = useState({ channel: false, share: false });
   const data = useRef(null);
   const [valid, setValid] = useState(false);

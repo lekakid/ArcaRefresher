@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -9,35 +9,34 @@ const defaultConfigState = {
   forceLoad: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
     toggleEnabled(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+      state.config.enabled = !state.config.enabled;
     },
     addImage(state, action) {
       const { channel, url } = action.payload;
-      if (!state.imgList[channel]) state.imgList[channel] = [];
-      state.imgList[channel].push(url);
-      setValue(Info.ID, state);
+      if (!state.config.imgList[channel]) state.config.imgList[channel] = [];
+      state.config.imgList[channel].push(url);
     },
     removeImage(state, action) {
       const { channel, url } = action.payload;
-      state.imgList[channel] = state.imgList[channel].filter((u) => u !== url);
-      setValue(Info.ID, state);
+      state.config.imgList[channel] = state.config.imgList[channel].filter(
+        (u) => u !== url,
+      );
     },
     setImageList(state, action) {
       const { channel, list } = action.payload;
-      state.imgList[channel] = list;
-      setValue(Info.ID, state);
+      state.config.imgList[channel] = list;
     },
     toggleForceLoad(state) {
-      state.forceLoad = !state.forceLoad;
-      setValue(Info.ID, state);
+      state.config.forceLoad = !state.config.forceLoad;
     },
   },
 });

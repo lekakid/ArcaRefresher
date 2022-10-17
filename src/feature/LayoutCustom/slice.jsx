@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -21,71 +21,58 @@ const defaultConfigState = {
   unfoldLongComment: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
     toggleEnable(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+      state.config.enabled = !state.config.enabled;
     },
     setFontSize(state, action) {
-      state.fontSize = action.payload;
-      setValue(Info.ID, state);
+      state.config.fontSize = action.payload;
     },
     toggleTopNews(state) {
-      state.topNews = !state.topNews;
-      setValue(Info.ID, state);
+      state.config.topNews = !state.config.topNews;
     },
     toggleRecentVisit(state) {
-      state.recentVisit = !state.recentVisit;
-      setValue(Info.ID, state);
+      state.config.recentVisit = !state.config.recentVisit;
     },
     toggleSideContents(state) {
-      state.sideContents = !state.sideContents;
-      setValue(Info.ID, state);
+      state.config.sideContents = !state.config.sideContents;
     },
     toggleSideNews(state) {
-      state.sideNews = !state.sideNews;
-      setValue(Info.ID, state);
+      state.config.sideNews = !state.config.sideNews;
     },
     toggleSideMenu(state) {
-      state.sideMenu = !state.sideMenu;
-      setValue(Info.ID, state);
+      state.config.sideMenu = !state.config.sideMenu;
     },
     toggleAvatar(state) {
-      state.avatar = !state.avatar;
-      setValue(Info.ID, state);
+      state.config.avatar = !state.config.avatar;
     },
     setNotifyColor(state, action) {
-      state.notifyColor = action.payload;
-      setValue(Info.ID, state);
+      state.config.notifyColor = action.payload;
     },
     setUserInfoWith(state, action) {
-      state.userinfoWidth = action.payload;
-      setValue(Info.ID, state);
+      state.config.userinfoWidth = action.payload;
     },
     setResizeImage(state, action) {
-      state.resizeImage = action.payload;
-      setValue(Info.ID, state);
+      state.config.resizeImage = action.payload;
     },
     setResizeVideo(state, action) {
-      state.resizeVideo = action.payload;
-      setValue(Info.ID, state);
+      state.config.resizeVideo = action.payload;
     },
     toggleUnvote(state) {
-      state.hideUnvote = !state.hideUnvote;
-      setValue(Info.ID, state);
+      state.config.hideUnvote = !state.config.hideUnvote;
     },
     toggleModifiedIndicator(state) {
-      state.modifiedIndicator = !state.modifiedIndicator;
-      setValue(Info.ID, state);
+      state.config.modifiedIndicator = !state.config.modifiedIndicator;
     },
     toggleLongComment(state) {
-      state.unfoldLongComment = !state.unfoldLongComment;
-      setValue(Info.ID, state);
+      state.config.unfoldLongComment = !state.config.unfoldLongComment;
     },
   },
 });

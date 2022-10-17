@@ -35,9 +35,9 @@ const style = {
 };
 
 function ToastMuter() {
-  const { user, emoticon, hideMutedMark } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    config: { user, emoticon, hideMutedMark },
+  } = useSelector((state) => state[Info.ID]);
   const toastboxLoaded = useElementQuery(TOASTBOX);
   const filter = useEmoticon(emoticon);
 

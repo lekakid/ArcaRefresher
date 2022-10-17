@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { setValue } from 'core/storage';
+
 import Config from 'menu/ConfigMenu/slice';
 import ContextMenu from 'menu/ContextMenu/slice';
 
@@ -21,7 +23,7 @@ import MediaBlocker from 'feature/MediaBlocker/slice';
 
 import Parser from 'util/Parser/slice';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     // menu
     Config,
@@ -48,3 +50,18 @@ export default configureStore({
     Parser,
   },
 });
+
+(() => {
+  function extractConfigEntries(state) {
+    return Object.entries(state)
+      .filter(([, value]) => !!value.config)
+      .map(([key, value]) => [key, value.config]);
+  }
+
+  store.subscribe(() => {
+    const configEntries = extractConfigEntries(store.getState());
+    configEntries.forEach(([key, value]) => setValue(key, value));
+  });
+})();
+
+export default store;

@@ -65,12 +65,14 @@ function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const {
-    user,
-    keyword,
-    emoticon,
-    hideCountBar,
-    hideMutedMark,
-    muteIncludeReply,
+    config: {
+      user,
+      keyword,
+      emoticon,
+      hideCountBar,
+      hideMutedMark,
+      muteIncludeReply,
+    },
   } = useSelector((state) => state[Info.ID]);
   const [comment, setComment] = useState(undefined);
   const [countBar, setCountBar] = useState(undefined);

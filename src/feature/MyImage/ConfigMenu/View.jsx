@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useParser();
-  const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    config: { enabled, imgList, forceLoad },
+  } = useSelector((state) => state[Info.ID]);
   const [selectedChannel, setSelectedChannel] = useState(
     channel.ID || '_shared_',
   );

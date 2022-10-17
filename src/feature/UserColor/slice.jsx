@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
   color: {},
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
@@ -15,15 +17,13 @@ export const slice = createSlice({
     setColor(state, action) {
       const { user, color } = action.payload;
       if (color) {
-        state.color[user] = color;
+        state.config.color[user] = color;
       } else {
-        delete state.color[user];
+        delete state.config.color[user];
       }
-      setValue(Info.ID, state);
     },
     setColorList(state, action) {
-      state.color = action.payload;
-      setValue(Info.ID, state);
+      state.config.color = action.payload;
     },
   },
 });

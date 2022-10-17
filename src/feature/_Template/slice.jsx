@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -19,7 +19,6 @@ export const slice = createSlice({
   reducers: {
     someReducer(state, action) {
       state.config.prefixList = action.payload;
-      setValue(Info.ID, state.config);
     },
   },
 });

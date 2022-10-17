@@ -14,7 +14,9 @@ import { getUserID } from 'func/user';
 import Info from './FeatureInfo';
 
 export default function Colorize() {
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { color },
+  } = useSelector((state) => state[Info.ID]);
   const loaded = useElementQuery(FULL_LOADED);
 
   useLayoutEffect(() => {

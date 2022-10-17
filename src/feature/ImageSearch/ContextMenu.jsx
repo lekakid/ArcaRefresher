@@ -11,9 +11,9 @@ import { getArcaMediaURL } from 'func/url';
 import Info from './FeatureInfo';
 
 function ContextMenu({ triggerList }) {
-  const { searchBySource, saucenaoBypass } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    config: { searchBySource, saucenaoBypass },
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
   const data = useRef(null);
   const [valid, setValid] = useState(false);

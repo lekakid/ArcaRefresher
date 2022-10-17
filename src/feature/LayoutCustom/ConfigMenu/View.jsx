@@ -46,20 +46,22 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    enabled,
-    fontSize,
-    topNews,
-    recentVisit,
-    sideContents,
-    sideNews,
-    sideMenu,
-    avatar,
-    userinfoWidth,
-    resizeImage,
-    resizeVideo,
-    hideUnvote,
-    modifiedIndicator,
-    unfoldLongComment,
+    config: {
+      enabled,
+      fontSize,
+      topNews,
+      recentVisit,
+      sideContents,
+      sideNews,
+      sideMenu,
+      avatar,
+      userinfoWidth,
+      resizeImage,
+      resizeVideo,
+      hideUnvote,
+      modifiedIndicator,
+      unfoldLongComment,
+    },
   } = useSelector((state) => state[Info.ID]);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();

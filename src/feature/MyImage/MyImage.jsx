@@ -20,9 +20,9 @@ export default function MyImage() {
   const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
   const { channel } = useParser();
-  const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    config: { enabled, imgList, forceLoad },
+  } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const [editor, setEditor] = useState(null);
   const [loaded, setLoaded] = useState(false);

@@ -23,7 +23,9 @@ const useStyles = makeStyles({
 });
 
 export default function ImageDownloader() {
-  const { enabled } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { enabled },
+  } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
   const [open, setOpen] = useState(false);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);

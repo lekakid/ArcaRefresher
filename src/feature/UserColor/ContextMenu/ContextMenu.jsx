@@ -13,7 +13,9 @@ import InputDialog from './InputDialog';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    config: { color },
+  } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);

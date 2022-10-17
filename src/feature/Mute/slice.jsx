@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -12,74 +13,64 @@ const defaultConfigState = {
   muteIncludeReply: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
     addUser(state, action) {
-      state.user.push(action.payload);
-      setValue(Info.ID, state);
+      state.config.user.push(action.payload);
     },
     removeUser(state, action) {
-      const index = state.user.indexOf(action.payload);
-      state.user.splice(index, 1);
-      setValue(Info.ID, state);
+      const index = state.config.user.indexOf(action.payload);
+      state.config.user.splice(index, 1);
     },
     setUser(state, action) {
-      state.user = action.payload;
-      setValue(Info.ID, state);
+      state.config.user = action.payload;
     },
     addKeyword(state, action) {
-      state.keyword.push(action.payload);
-      setValue(Info.ID, state);
+      state.config.keyword.push(action.payload);
     },
     removeKeyword(state, action) {
-      state.keyword.push(action.payload);
-      setValue(Info.ID, state);
+      state.config.keyword.push(action.payload);
     },
     setKeyword(state, action) {
-      state.keyword = action.payload;
-      setValue(Info.ID, state);
+      state.config.keyword = action.payload;
     },
     addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
-      if (state.emoticon[id]) {
-        const { bundle, url } = state.emoticon[id];
+      if (state.config.emoticon[id]) {
+        const { bundle, url } = state.config.emoticon[id];
 
-        state.emoticon[id] = {
-          ...state.emoticon[id],
+        state.config.emoticon[id] = {
+          ...state.config.emoticon[id],
           bundle: [...bundle, ...emoticon.bundle],
           url: [...url, ...emoticon.url],
         };
       } else {
-        state.emoticon[id] = emoticon;
+        state.config.emoticon[id] = emoticon;
       }
-      setValue(Info.ID, state);
     },
     removeEmoticonList(state, action) {
       action.payload.forEach((id) => {
-        delete state.emoticon[id];
+        delete state.config.emoticon[id];
       });
-      setValue(Info.ID, state);
     },
     setCategoryConfig(state, action) {
       const { channel, config } = action.payload;
-      state.category[channel] = config;
-      setValue(Info.ID, state);
+      state.config.category[channel] = config;
     },
     toggleCountBar(state) {
-      state.hideCountBar = !state.hideCountBar;
-      setValue(Info.ID, state);
+      state.config.hideCountBar = !state.config.hideCountBar;
     },
     toggleMutedMark(state) {
-      state.hideMutedMark = !state.hideMutedMark;
-      setValue(Info.ID, state);
+      state.config.hideMutedMark = !state.config.hideMutedMark;
     },
     toggleIncludeReply(state) {
-      state.muteIncludeReply = !state.muteIncludeReply;
-      setValue(Info.ID, state);
+      state.config.muteIncludeReply = !state.config.muteIncludeReply;
     },
   },
 });

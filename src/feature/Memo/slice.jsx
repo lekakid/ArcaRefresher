@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
@@ -7,28 +8,27 @@ const defaultConfigState = {
   memo: {},
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
     setVariant(state, action) {
-      state.variant = action.payload;
-      setValue(Info.ID, state);
+      state.config.variant = action.payload;
     },
     setMemo(state, action) {
       const { user, memo } = action.payload;
       if (memo) {
-        state.memo[user] = memo;
+        state.config.memo[user] = memo;
       } else {
-        delete state.memo[user];
+        delete state.config.memo[user];
       }
-      setValue(Info.ID, state);
     },
     setMemoList(state, action) {
-      state.memo = action.payload;
-      setValue(Info.ID, state);
+      state.config.memo = action.payload;
     },
   },
 });

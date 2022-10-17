@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultConfigState = {
   color: {},
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  config: getValue(Info.ID, defaultConfigState),
+};
 
 export const slice = createSlice({
   name: Info.ID,
@@ -15,8 +17,7 @@ export const slice = createSlice({
   reducers: {
     setStyle(state, action) {
       const { channel, color } = action.payload;
-      state.color[channel] = color;
-      setValue(Info.ID, state);
+      state.config.color[channel] = color;
     },
   },
 });

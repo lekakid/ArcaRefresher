@@ -93,7 +93,7 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const config = useSelector((state) => state[Info.ID]);
+  const { config } = useSelector((state) => state[Info.ID]);
   const classes = useStyles(config);
 
   useLayoutEffect(() => {
