@@ -8,10 +8,10 @@ import {
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { withStyles, useTheme } from '@material-ui/styles';
 import { CheckCircle, CheckCircleOutline } from '@material-ui/icons';
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   itemBar: {
     background:
       'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
   checkbox: {
     color: theme.palette.grey.A100,
   },
-}));
+});
 
-export default function SelectableImageList({ imgList, selection, onChange }) {
+function SelectableImageList({ classes, imgList, selection, onChange }) {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const handleSelect = useCallback(
@@ -34,7 +34,6 @@ export default function SelectableImageList({ imgList, selection, onChange }) {
     [onChange, selection],
   );
 
-  const classes = useStyles();
   if (imgList.length === 0) {
     return (
       <Box
@@ -76,3 +75,5 @@ export default function SelectableImageList({ imgList, selection, onChange }) {
     </ImageList>
   );
 }
+
+export default withStyles(styles)(SelectableImageList);
