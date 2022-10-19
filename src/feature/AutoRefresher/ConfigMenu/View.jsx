@@ -18,7 +18,7 @@ import { toggleAnimation, setTimeLimit } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { countdown, showProgress },
+    storage: { countdown, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 

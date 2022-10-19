@@ -65,7 +65,7 @@ function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const {
-    config: {
+    storage: {
       user,
       keyword,
       emoticon,

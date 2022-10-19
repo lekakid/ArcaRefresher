@@ -18,7 +18,7 @@ import { setAutoTime } from '../slice';
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: { autoSaveTime },
+    storage: { autoSaveTime },
   } = useSelector((state) => state[Info.ID]);
 
   const handleSaveTime = useCallback(

@@ -37,7 +37,7 @@ const styles = (theme) => ({
 function SelectionDialog({ classes, open, onClose }) {
   const formatValues = useParser();
   const {
-    config: { zipImageName, zipName },
+    storage: { zipImageName, zipName },
   } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;

@@ -16,7 +16,7 @@ function generateInfo(element, container) {
 
 export default function MediaBlocker() {
   const {
-    config: { enabled, deletedOnly },
+    storage: { enabled, deletedOnly },
   } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const alertLoaded = useElementQuery(DELETED_ALERT_LOADED);

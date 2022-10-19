@@ -15,7 +15,7 @@ import Info from './FeatureInfo';
 
 export default function Colorize() {
   const {
-    config: { color },
+    storage: { color },
   } = useSelector((state) => state[Info.ID]);
   const loaded = useElementQuery(FULL_LOADED);
 

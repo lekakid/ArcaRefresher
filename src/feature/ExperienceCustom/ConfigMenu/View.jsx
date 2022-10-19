@@ -23,7 +23,7 @@ import {
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: {
+    storage: {
       openArticleNewWindow,
       blockMediaNewWindow,
       ratedownGuard,

@@ -21,7 +21,7 @@ export default function MyImage() {
   const editorLoaded = useElementQuery(WRITE_LOADED);
   const { channel } = useParser();
   const {
-    config: { enabled, imgList, forceLoad },
+    storage: { enabled, imgList, forceLoad },
   } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const [editor, setEditor] = useState(null);

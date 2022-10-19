@@ -41,7 +41,7 @@ function BoardMuter() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channel } = useParser();
   const {
-    config: { user, keyword, emoticon, category, hideCountBar },
+    storage: { user, keyword, emoticon, category, hideCountBar },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);

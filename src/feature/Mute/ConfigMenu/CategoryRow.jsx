@@ -14,7 +14,7 @@ function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const { channel } = useParser();
   const {
-    config: { category: categoryConfig },
+    storage: { category: categoryConfig },
   } = useSelector((state) => state[Info.ID]);
   const channelConfig = categoryConfig?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { mutePreview, muteArticle } =

@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 export default function AutoRefresher() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const {
-    config: { countdown, showProgress },
+    storage: { countdown, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState(false);

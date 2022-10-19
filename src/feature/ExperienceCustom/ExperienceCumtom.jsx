@@ -49,7 +49,7 @@ const IGNORE = 'IGNORE';
 
 export default function ExperienceCustomizer() {
   const {
-    config: {
+    storage: {
       openArticleNewWindow,
       blockMediaNewWindow,
       ratedownGuard,

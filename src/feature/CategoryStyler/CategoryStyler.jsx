@@ -18,7 +18,7 @@ export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channel } = useParser();
   const {
-    config: { color },
+    storage: { color },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [styleMap, setStyleMap] = useState(null);

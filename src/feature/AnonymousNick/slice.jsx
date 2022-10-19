@@ -42,7 +42,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
   show: false,
 };
 
@@ -51,13 +51,13 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setPrefixList(state, action) {
-      state.config.prefixList = action.payload;
+      state.storage.prefixList = action.payload;
     },
     setSuffixList(state, action) {
-      state.config.suffixList = action.payload;
+      state.storage.suffixList = action.payload;
     },
     setExtraPrefix(state, action) {
-      state.config.extraPrefix = action.payload;
+      state.storage.extraPrefix = action.payload;
     },
     toggleShow(state) {
       state.show = !state.show;

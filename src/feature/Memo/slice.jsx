@@ -9,7 +9,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -17,18 +17,18 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setVariant(state, action) {
-      state.config.variant = action.payload;
+      state.storage.variant = action.payload;
     },
     setMemo(state, action) {
       const { user, memo } = action.payload;
       if (memo) {
-        state.config.memo[user] = memo;
+        state.storage.memo[user] = memo;
       } else {
-        delete state.config.memo[user];
+        delete state.storage.memo[user];
       }
     },
     setMemoList(state, action) {
-      state.config.memo = action.payload;
+      state.storage.memo = action.payload;
     },
   },
 });

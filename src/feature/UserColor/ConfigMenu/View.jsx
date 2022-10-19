@@ -14,7 +14,7 @@ const columns = [
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: { color },
+    storage: { color },
   } = useSelector((state) => state[Info.ID]);
   const rows = Object.entries(color).map(([key, value]) => ({
     id: key,

@@ -14,7 +14,7 @@ import { someReducer } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { template },
+    storage: { template },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 

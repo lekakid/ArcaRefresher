@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: {
+    storage: {
       enabled,
       fontSize,
       topNews,

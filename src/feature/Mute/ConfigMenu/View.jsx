@@ -50,7 +50,7 @@ const View = React.forwardRef((_props, ref) => {
     channel: { category },
   } = useParser();
   const {
-    config: {
+    storage: {
       hideCountBar,
       hideMutedMark,
       muteIncludeReply,

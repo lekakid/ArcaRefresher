@@ -10,7 +10,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -18,20 +18,20 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleEnable(state) {
-      state.config.enabled = !state.config.enabled;
+      state.storage.enabled = !state.storage.enabled;
     },
     setCurrent(state, action) {
-      state.config.current = action.payload;
+      state.storage.current = action.payload;
     },
     setPreset(state, action) {
       const { key, preset } = action.payload;
-      if (preset) state.config.theme[key] = preset;
-      else delete state.config.theme[key];
+      if (preset) state.storage.theme[key] = preset;
+      else delete state.storage.theme[key];
     },
     renamePreset(state, action) {
       const { prev, next } = action.payload;
-      state.config.theme[next] = state.config.theme[prev];
-      delete state.config.theme[prev];
+      state.storage.theme[next] = state.storage.theme[prev];
+      delete state.storage.theme[prev];
     },
   },
 });

@@ -22,7 +22,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -30,49 +30,49 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleEnable(state) {
-      state.config.enabled = !state.config.enabled;
+      state.storage.enabled = !state.storage.enabled;
     },
     setFontSize(state, action) {
-      state.config.fontSize = action.payload;
+      state.storage.fontSize = action.payload;
     },
     toggleTopNews(state) {
-      state.config.topNews = !state.config.topNews;
+      state.storage.topNews = !state.storage.topNews;
     },
     toggleRecentVisit(state) {
-      state.config.recentVisit = !state.config.recentVisit;
+      state.storage.recentVisit = !state.storage.recentVisit;
     },
     toggleSideContents(state) {
-      state.config.sideContents = !state.config.sideContents;
+      state.storage.sideContents = !state.storage.sideContents;
     },
     toggleSideNews(state) {
-      state.config.sideNews = !state.config.sideNews;
+      state.storage.sideNews = !state.storage.sideNews;
     },
     toggleSideMenu(state) {
-      state.config.sideMenu = !state.config.sideMenu;
+      state.storage.sideMenu = !state.storage.sideMenu;
     },
     toggleAvatar(state) {
-      state.config.avatar = !state.config.avatar;
+      state.storage.avatar = !state.storage.avatar;
     },
     setNotifyColor(state, action) {
-      state.config.notifyColor = action.payload;
+      state.storage.notifyColor = action.payload;
     },
     setUserInfoWith(state, action) {
-      state.config.userinfoWidth = action.payload;
+      state.storage.userinfoWidth = action.payload;
     },
     setResizeImage(state, action) {
-      state.config.resizeImage = action.payload;
+      state.storage.resizeImage = action.payload;
     },
     setResizeVideo(state, action) {
-      state.config.resizeVideo = action.payload;
+      state.storage.resizeVideo = action.payload;
     },
     toggleUnvote(state) {
-      state.config.hideUnvote = !state.config.hideUnvote;
+      state.storage.hideUnvote = !state.storage.hideUnvote;
     },
     toggleModifiedIndicator(state) {
-      state.config.modifiedIndicator = !state.config.modifiedIndicator;
+      state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
     },
     toggleLongComment(state) {
-      state.config.unfoldLongComment = !state.config.unfoldLongComment;
+      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
     },
   },
 });

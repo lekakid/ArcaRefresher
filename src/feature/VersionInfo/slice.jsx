@@ -8,7 +8,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -17,7 +17,7 @@ export const slice = createSlice({
   reducers: {
     updateCheckedVersion(state) {
       // eslint-disable-next-line camelcase
-      state.config.checkedVersion = GM_info.script.version;
+      state.storage.checkedVersion = GM_info.script.version;
     },
   },
 });

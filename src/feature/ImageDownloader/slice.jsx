@@ -11,7 +11,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -19,16 +19,16 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleEnable(state) {
-      state.config.enabled = !state.config.enabled;
+      state.storage.enabled = !state.storage.enabled;
     },
     setFileName(state, action) {
-      state.config.fileName = action.payload;
+      state.storage.fileName = action.payload;
     },
     setZipName(state, action) {
-      state.config.zipName = action.payload;
+      state.storage.zipName = action.payload;
     },
     setZipImageName(state, action) {
-      state.config.zipImageName = action.payload;
+      state.storage.zipImageName = action.payload;
     },
   },
 });

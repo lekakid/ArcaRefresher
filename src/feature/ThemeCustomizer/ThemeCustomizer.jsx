@@ -8,7 +8,7 @@ import Info from './FeatureInfo';
 export default function ThemeCustomizer() {
   const { channel } = useParser();
   const {
-    config: { enabled, current, theme },
+    storage: { enabled, current, theme },
   } = useSelector((state) => state[Info.ID]);
 
   const currentTheme = theme[channel.ID] || theme[current];

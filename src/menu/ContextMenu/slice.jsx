@@ -10,7 +10,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(MODULE_ID, defaultConfigState),
+  storage: getValue(MODULE_ID, defaultConfigState),
   open: false,
   snack: false,
   snackTime: null,
@@ -21,7 +21,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setInteraction(state, action) {
-      state.config.interactionType = action.payload;
+      state.storage.interactionType = action.payload;
     },
     setOpen(state) {
       state.open = true;

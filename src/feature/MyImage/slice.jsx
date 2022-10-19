@@ -10,7 +10,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -18,25 +18,25 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleEnabled(state) {
-      state.config.enabled = !state.config.enabled;
+      state.storage.enabled = !state.storage.enabled;
     },
     addImage(state, action) {
       const { channel, url } = action.payload;
-      if (!state.config.imgList[channel]) state.config.imgList[channel] = [];
-      state.config.imgList[channel].push(url);
+      if (!state.storage.imgList[channel]) state.storage.imgList[channel] = [];
+      state.storage.imgList[channel].push(url);
     },
     removeImage(state, action) {
       const { channel, url } = action.payload;
-      state.config.imgList[channel] = state.config.imgList[channel].filter(
+      state.storage.imgList[channel] = state.storage.imgList[channel].filter(
         (u) => u !== url,
       );
     },
     setImageList(state, action) {
       const { channel, list } = action.payload;
-      state.config.imgList[channel] = list;
+      state.storage.imgList[channel] = list;
     },
     toggleForceLoad(state) {
-      state.config.forceLoad = !state.config.forceLoad;
+      state.storage.forceLoad = !state.storage.forceLoad;
     },
   },
 });

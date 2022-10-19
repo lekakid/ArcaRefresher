@@ -25,7 +25,7 @@ import FormatSelector from './FormatSelector';
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: { enabled, fileName, zipName, zipImageName },
+    storage: { enabled, fileName, zipName, zipImageName },
   } = useSelector((state) => state[Info.ID]);
 
   const handleEnable = useCallback(() => {

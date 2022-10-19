@@ -37,7 +37,7 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useParser();
   const {
-    config: { enabled, imgList, forceLoad },
+    storage: { enabled, imgList, forceLoad },
   } = useSelector((state) => state[Info.ID]);
   const [selectedChannel, setSelectedChannel] = useState(
     channel.ID || '_shared_',

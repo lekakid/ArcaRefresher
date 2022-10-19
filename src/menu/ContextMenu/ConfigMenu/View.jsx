@@ -34,7 +34,7 @@ const label = {
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { interactionType },
+    storage: { interactionType },
   } = useSelector((state) => state[MODULE_ID]);
   const dispatch = useDispatch();
 

@@ -14,7 +14,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -22,55 +22,55 @@ export const slice = createSlice({
   initialState,
   reducers: {
     addUser(state, action) {
-      state.config.user.push(action.payload);
+      state.storage.user.push(action.payload);
     },
     removeUser(state, action) {
-      const index = state.config.user.indexOf(action.payload);
-      state.config.user.splice(index, 1);
+      const index = state.storage.user.indexOf(action.payload);
+      state.storage.user.splice(index, 1);
     },
     setUser(state, action) {
-      state.config.user = action.payload;
+      state.storage.user = action.payload;
     },
     addKeyword(state, action) {
-      state.config.keyword.push(action.payload);
+      state.storage.keyword.push(action.payload);
     },
     removeKeyword(state, action) {
-      state.config.keyword.push(action.payload);
+      state.storage.keyword.push(action.payload);
     },
     setKeyword(state, action) {
-      state.config.keyword = action.payload;
+      state.storage.keyword = action.payload;
     },
     addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
-      if (state.config.emoticon[id]) {
-        const { bundle, url } = state.config.emoticon[id];
+      if (state.storage.emoticon[id]) {
+        const { bundle, url } = state.storage.emoticon[id];
 
-        state.config.emoticon[id] = {
-          ...state.config.emoticon[id],
+        state.storage.emoticon[id] = {
+          ...state.storage.emoticon[id],
           bundle: [...bundle, ...emoticon.bundle],
           url: [...url, ...emoticon.url],
         };
       } else {
-        state.config.emoticon[id] = emoticon;
+        state.storage.emoticon[id] = emoticon;
       }
     },
     removeEmoticonList(state, action) {
       action.payload.forEach((id) => {
-        delete state.config.emoticon[id];
+        delete state.storage.emoticon[id];
       });
     },
     setCategoryConfig(state, action) {
       const { channel, config } = action.payload;
-      state.config.category[channel] = config;
+      state.storage.category[channel] = config;
     },
     toggleCountBar(state) {
-      state.config.hideCountBar = !state.config.hideCountBar;
+      state.storage.hideCountBar = !state.storage.hideCountBar;
     },
     toggleMutedMark(state) {
-      state.config.hideMutedMark = !state.config.hideMutedMark;
+      state.storage.hideMutedMark = !state.storage.hideMutedMark;
     },
     toggleIncludeReply(state) {
-      state.config.muteIncludeReply = !state.config.muteIncludeReply;
+      state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
     },
   },
 });

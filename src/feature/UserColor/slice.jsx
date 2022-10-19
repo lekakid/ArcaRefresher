@@ -7,7 +7,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -17,13 +17,13 @@ export const slice = createSlice({
     setColor(state, action) {
       const { user, color } = action.payload;
       if (color) {
-        state.config.color[user] = color;
+        state.storage.color[user] = color;
       } else {
-        delete state.config.color[user];
+        delete state.storage.color[user];
       }
     },
     setColorList(state, action) {
-      state.config.color = action.payload;
+      state.storage.color = action.payload;
     },
   },
 });

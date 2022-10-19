@@ -7,7 +7,7 @@ import { saveArticle } from '../slice';
 export default function AutoSaver({ editor }) {
   const dispatch = useDispatch();
   const {
-    config: { autoSaveTime },
+    storage: { autoSaveTime },
     loadOpen,
   } = useSelector((state) => state[Info.ID]);
 

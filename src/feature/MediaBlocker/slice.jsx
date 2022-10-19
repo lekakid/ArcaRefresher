@@ -9,7 +9,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
   // 이 아래에 인터페이스 제어용 state 추가
   // show: true
 };
@@ -19,10 +19,10 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleEnabled(state) {
-      state.config.enabled = !state.config.enabled;
+      state.storage.enabled = !state.storage.enabled;
     },
     toggleDeletedOnly(state) {
-      state.config.deletedOnly = !state.config.deletedOnly;
+      state.storage.deletedOnly = !state.storage.deletedOnly;
     },
   },
 });

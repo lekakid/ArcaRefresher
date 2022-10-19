@@ -16,7 +16,7 @@ import { toggleSauceNaoBypass, toggleSearchBySource } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { searchBySource, saucenaoBypass },
+    storage: { searchBySource, saucenaoBypass },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 

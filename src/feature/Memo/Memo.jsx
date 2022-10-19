@@ -17,7 +17,7 @@ import Info from './FeatureInfo';
 
 function MemoList() {
   const {
-    config: { variant, memo },
+    storage: { variant, memo },
   } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
   const loaded = useElementQuery(FULL_LOADED);

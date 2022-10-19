@@ -17,7 +17,7 @@ function makeRegex(id = '') {
 function User({ triggerList }) {
   const dispatch = useDispatch();
   const {
-    config: { user },
+    storage: { user },
   } = useSelector((state) => state[Info.ID]);
   const data = useRef(null);
   const [valid, setValid] = useState(false);

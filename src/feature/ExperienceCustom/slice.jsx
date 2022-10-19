@@ -12,7 +12,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -20,26 +20,26 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleArticleNewWindow(state) {
-      state.config.openArticleNewWindow = !state.config.openArticleNewWindow;
+      state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
     },
     toggleHideFirstImage(state) {
-      state.config.hideFirstImage = !state.config.hideFirstImage;
+      state.storage.hideFirstImage = !state.storage.hideFirstImage;
     },
     toggleBlockMediaNewWindow(state) {
-      state.config.blockMediaNewWindow = !state.config.blockMediaNewWindow;
+      state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
     toggleBlockDeletedArticleMedia(state) {
-      state.config.blockDeletedArticleMedia =
-        !state.config.blockDeletedArticleMedia;
+      state.storage.blockDeletedArticleMedia =
+        !state.storage.blockDeletedArticleMedia;
     },
     toggleRateDownGuard(state) {
-      state.config.ratedownGuard = !state.config.ratedownGuard;
+      state.storage.ratedownGuard = !state.storage.ratedownGuard;
     },
     toggleComment(state) {
-      state.config.foldComment = !state.config.foldComment;
+      state.storage.foldComment = !state.storage.foldComment;
     },
     toggleWideArea(state) {
-      state.config.wideClickArea = !state.config.wideClickArea;
+      state.storage.wideClickArea = !state.storage.wideClickArea;
     },
   },
 });

@@ -14,7 +14,7 @@ function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const { channel } = useParser();
   const {
-    config: { imgList },
+    storage: { imgList },
   } = useSelector((state) => state[Info.ID]);
   const [exist, setExist] = useState({ channel: false, share: false });
   const data = useRef(null);

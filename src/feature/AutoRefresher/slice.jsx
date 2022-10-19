@@ -9,7 +9,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -17,10 +17,10 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setTimeLimit(state, action) {
-      state.config.countdown = action.payload;
+      state.storage.countdown = action.payload;
     },
     toggleAnimation(state) {
-      state.config.showProgress = !state.config.showProgress;
+      state.storage.showProgress = !state.storage.showProgress;
     },
   },
 });

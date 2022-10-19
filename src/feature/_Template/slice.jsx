@@ -8,7 +8,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
   // 이 아래에 인터페이스 제어용 state 추가
   // show: true
 };
@@ -18,7 +18,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     someReducer(state, action) {
-      state.config.prefixList = action.payload;
+      state.storage.prefixList = action.payload;
     },
   },
 });

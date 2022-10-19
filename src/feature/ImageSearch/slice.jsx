@@ -9,7 +9,7 @@ const defaultState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultState),
+  storage: getValue(Info.ID, defaultState),
 };
 
 export const slice = createSlice({
@@ -17,10 +17,10 @@ export const slice = createSlice({
   initialState,
   reducers: {
     toggleSearchBySource(state) {
-      state.config.searchBySource = !state.config.searchBySource;
+      state.storage.searchBySource = !state.storage.searchBySource;
     },
     toggleSauceNaoBypass(state) {
-      state.config.saucenaoBypass = !state.config.saucenaoBypass;
+      state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
     },
   },
 });

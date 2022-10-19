@@ -17,7 +17,7 @@ import { setExtraPrefix, setPrefixList, setSuffixList } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { prefixList, suffixList, extraPrefix },
+    storage: { prefixList, suffixList, extraPrefix },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 

@@ -60,7 +60,7 @@ const useStyles = makeStyles(
 );
 
 export default function AnonymousNick() {
-  const { config, show } = useSelector((state) => state[Info.ID]);
+  const { storage, show } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
 
@@ -68,9 +68,9 @@ export default function AnonymousNick() {
 
   useEffect(() => {
     if (!articleLoaded) return;
-    const updateInfoList = getInfoList(config);
+    const updateInfoList = getInfoList(storage);
     setInfoList(updateInfoList);
-  }, [articleLoaded, config]);
+  }, [articleLoaded, storage]);
 
   useEffect(() => {
     if (!show) return null;

@@ -8,7 +8,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultConfigState),
 };
 
 export const slice = createSlice({
@@ -17,7 +17,7 @@ export const slice = createSlice({
   reducers: {
     setStyle(state, action) {
       const { channel, color } = action.payload;
-      state.config.color[channel] = color;
+      state.storage.color[channel] = color;
     },
   },
 });

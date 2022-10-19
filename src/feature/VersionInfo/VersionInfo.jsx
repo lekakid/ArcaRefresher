@@ -9,7 +9,7 @@ import { updateCheckedVersion } from './slice';
 export default function VersionInfo() {
   const dispatch = useDispatch();
   const {
-    config: { checkedVersion },
+    storage: { checkedVersion },
   } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
 

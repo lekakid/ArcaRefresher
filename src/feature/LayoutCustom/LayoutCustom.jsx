@@ -93,11 +93,11 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const { config } = useSelector((state) => state[Info.ID]);
-  const classes = useStyles(config);
+  const { storage } = useSelector((state) => state[Info.ID]);
+  const classes = useStyles(storage);
 
   useLayoutEffect(() => {
-    if (!config.enabled) return undefined;
+    if (!storage.enabled) return undefined;
 
     const {
       recentVisit,
@@ -109,7 +109,7 @@ export default function LayoutCustom() {
       hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
-    } = config;
+    } = storage;
     const styles = clsx(
       classes.FontSize,
       classes.UserinfoWidth,
@@ -130,7 +130,7 @@ export default function LayoutCustom() {
     document.documentElement.classList.add(...styles);
 
     return () => document.documentElement.classList.remove(...styles);
-  }, [classes, config]);
+  }, [classes, storage]);
 
   return null;
 }

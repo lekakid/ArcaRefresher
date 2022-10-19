@@ -12,7 +12,7 @@ import Info from './FeatureInfo';
 
 function ContextMenu({ triggerList }) {
   const {
-    config: { searchBySource, saucenaoBypass },
+    storage: { searchBySource, saucenaoBypass },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
   const data = useRef(null);

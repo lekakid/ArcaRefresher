@@ -14,7 +14,7 @@ import MemoInput from './MemoInput';
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
   const {
-    config: { memo },
+    storage: { memo },
   } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const data = useRef(null);
