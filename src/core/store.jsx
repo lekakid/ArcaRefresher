@@ -52,14 +52,14 @@ const store = configureStore({
 });
 
 (() => {
-  function extractConfigEntries(state) {
+  function extractStorageEntries(state) {
     return Object.entries(state)
-      .filter(([, value]) => !!value.config)
-      .map(([key, value]) => [key, value.config]);
+      .filter(([, value]) => !!value.storage)
+      .map(([key, value]) => [key, value.storage]);
   }
 
   store.subscribe(() => {
-    const configEntries = extractConfigEntries(store.getState());
+    const configEntries = extractStorageEntries(store.getState());
     configEntries.forEach(([key, value]) => setValue(key, value));
   });
 })();
