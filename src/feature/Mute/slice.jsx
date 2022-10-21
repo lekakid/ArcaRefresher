@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   user: [],
   keyword: [],
   emoticon: {},
@@ -14,7 +14,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -71,6 +71,11 @@ export const slice = createSlice({
     },
     toggleIncludeReply(state) {
       state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

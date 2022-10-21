@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   checkedVersion: '',
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -18,6 +18,11 @@ export const slice = createSlice({
     updateCheckedVersion(state) {
       // eslint-disable-next-line camelcase
       state.storage.checkedVersion = GM_info.script.version;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   enabled: true,
   fontSize: 15,
   topNews: true,
@@ -22,7 +22,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -73,6 +73,11 @@ export const slice = createSlice({
     },
     toggleLongComment(state) {
       state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

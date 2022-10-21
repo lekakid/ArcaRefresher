@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   openArticleNewWindow: false,
   blockMediaNewWindow: false,
   ratedownGuard: false,
@@ -12,7 +12,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -40,6 +40,11 @@ export const slice = createSlice({
     },
     toggleWideArea(state) {
       state.storage.wideClickArea = !state.storage.wideClickArea;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

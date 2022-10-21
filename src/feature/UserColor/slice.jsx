@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   color: {},
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -24,6 +24,11 @@ export const slice = createSlice({
     },
     setColorList(state, action) {
       state.storage.color = action.payload;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

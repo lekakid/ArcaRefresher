@@ -3,13 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultState = {
+const defaultStorage = {
   searchBySource: false,
   saucenaoBypass: false,
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -21,6 +21,11 @@ export const slice = createSlice({
     },
     toggleSauceNaoBypass(state) {
       state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

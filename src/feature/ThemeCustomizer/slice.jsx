@@ -3,14 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   enabled: false,
   current: '',
   theme: {},
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
@@ -32,6 +32,11 @@ export const slice = createSlice({
       const { prev, next } = action.payload;
       state.storage.theme[next] = state.storage.theme[prev];
       delete state.storage.theme[prev];
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

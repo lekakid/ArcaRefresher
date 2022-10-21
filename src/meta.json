@@ -17,6 +17,7 @@
     "GM_getValue",
     "GM_deleteValue",
     "GM_listValues",
+    "GM_addValueChangeListener",
     "GM_xmlhttpRequest",
     "unsafeWindow"
   ]

@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   tempArticleList: {},
   importTitle: true,
   autoSaveTime: 60,
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   currentSlot: null,
   loadOpen: false,
 };
@@ -44,6 +44,11 @@ export const slice = createSlice({
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });

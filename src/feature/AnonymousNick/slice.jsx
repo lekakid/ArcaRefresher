@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   prefixList: [
     '웃는',
     '화난',
@@ -42,7 +42,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   show: false,
 };
 
@@ -61,6 +61,11 @@ export const slice = createSlice({
     },
     toggleShow(state) {
       state.show = !state.show;
+    },
+  },
+  extraReducers: {
+    syncStorage(state) {
+      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
