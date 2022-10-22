@@ -11,7 +11,7 @@ import {
   makeStyles,
   Switch,
 } from '@material-ui/core';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
 import Info from '../FeatureInfo';

@@ -44,10 +44,9 @@
   "dependencies": {
     "@babel/runtime": "^7.17.8",
     "@material-ui/core": "^4.12.4",
-    "@material-ui/data-grid": "^4.0.0-alpha.36",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/styles": "^4.11.5",
-    "@material-ui/x-license": "^4.0.0-alpha.37",
+    "@mui/x-data-grid": "^4.0.2",
     "@reduxjs/toolkit": "^1.8.1",
     "@transcend-io/conflux": "^4.0.2",
     "caniuse-lite": "^1.0.30001420",

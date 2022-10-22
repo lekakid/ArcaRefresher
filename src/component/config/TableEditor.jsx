@@ -7,7 +7,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Remove, Subject, TableChart } from '@material-ui/icons';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 function NoRowsOverlay(text) {
   return <GridOverlay>{text}</GridOverlay>;

@@ -12,8 +12,8 @@ import {
   Switch,
   Typography,
 } from '@material-ui/core';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Remove } from '@material-ui/icons';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { TextEditor } from 'component/config';
 import { useParser } from 'util/Parser';

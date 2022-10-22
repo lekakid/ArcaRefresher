@@ -22,8 +22,9 @@ export default function AutoSaver({ editor }) {
         editor.title.value || `${date.toLocaleString()}에 자동 저장됨`;
       const content = editor.content.html.get(true);
 
-      if (!currentSlot) dispatch(setCurrentSlot(timestamp));
-      dispatch($saveArticle({ title, content }));
+      const slot = currentSlot || timestamp;
+      if (!currentSlot) dispatch(setCurrentSlot(slot));
+      dispatch($saveArticle({ slot, title, content }));
     }, autoSaveTime * 1000);
 
     return () => clearInterval(timer);
