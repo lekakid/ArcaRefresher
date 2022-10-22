@@ -10,26 +10,22 @@ const defaultStorage = {
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   // 이 아래에 인터페이스 제어용 state 추가
-  // show: true
+  show: true,
 };
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    someReducer(state, action) {
-      state.storage.prefixList = action.payload;
-    },
-  },
-  extraReducers: {
-    // 모든 탭의 설정을 동기화하는데 사용됨
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
+    // storage 내부 제어 리듀서는 맨앞에 $를 추가하여 구분합니다.
+    // 탭간의 Redux state 동기화 시 이름에 $가 포함되는지로 동기화 여부를 결정합니다.
+    $setTemplate(state, action) {
+      state.storage.template = action.payload;
     },
   },
 });
 
-export const { someReducer } = slice.actions;
+export const { $setTemplate } = slice.actions;
 
 // 아래 파일에 모듈 추가 작업 필요
 // LINK src/core/store.jsx

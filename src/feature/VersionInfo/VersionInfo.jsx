@@ -4,7 +4,7 @@ import { Box, Button, IconButton, Snackbar } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
 import Info from './FeatureInfo';
-import { updateCheckedVersion } from './slice';
+import { $updateCheckedVersion } from './slice';
 
 export default function VersionInfo() {
   const dispatch = useDispatch();
@@ -24,12 +24,12 @@ export default function VersionInfo() {
       'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8',
     );
     setOpen(false);
-    dispatch(updateCheckedVersion());
+    dispatch($updateCheckedVersion());
   }, [dispatch]);
 
   const handleClose = useCallback(() => {
     setOpen(false);
-    dispatch(updateCheckedVersion());
+    dispatch($updateCheckedVersion());
   }, [dispatch]);
 
   return (

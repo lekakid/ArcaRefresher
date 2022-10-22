@@ -16,10 +16,10 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setVariant(state, action) {
+    $setVariant(state, action) {
       state.storage.variant = action.payload;
     },
-    setMemo(state, action) {
+    $setMemo(state, action) {
       const { user, memo } = action.payload;
       if (memo) {
         state.storage.memo[user] = memo;
@@ -27,17 +27,12 @@ export const slice = createSlice({
         delete state.storage.memo[user];
       }
     },
-    setMemoList(state, action) {
+    $setMemoList(state, action) {
       state.storage.memo = action.payload;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
-export const { setVariant, setMemo, setMemoList } = slice.actions;
+export const { $setVariant, $setMemo, $setMemoList } = slice.actions;
 
 export default slice.reducer;

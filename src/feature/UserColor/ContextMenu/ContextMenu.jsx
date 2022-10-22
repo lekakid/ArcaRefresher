@@ -7,7 +7,7 @@ import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserID } from 'func/user';
 
-import { setColor } from '../slice';
+import { $setColor } from '../slice';
 import Info from '../FeatureInfo';
 import InputDialog from './InputDialog';
 
@@ -48,7 +48,7 @@ function ContextMenu({ triggerList }) {
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch(setColor({ user: data.current, color: value }));
+      dispatch($setColor({ user: data.current, color: value }));
     },
     [dispatch],
   );

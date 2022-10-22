@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { toggleAnimation, setTimeLimit } from '../slice';
+import { $toggleAnimation, $setTimeLimit } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
@@ -24,13 +24,13 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleRefreshTime = useCallback(
     (e) => {
-      dispatch(setTimeLimit(e.target.value));
+      dispatch($setTimeLimit(e.target.value));
     },
     [dispatch],
   );
 
   const handleAnimation = useCallback(() => {
-    dispatch(toggleAnimation());
+    dispatch($toggleAnimation());
   }, [dispatch]);
 
   return (

@@ -7,7 +7,7 @@ import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserID } from 'func/user';
 
-import { setMemo } from '../slice';
+import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
@@ -49,7 +49,7 @@ function ContextMenu({ triggerList }) {
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch(setMemo({ user: data.current, memo: value }));
+      dispatch($setMemo({ user: data.current, memo: value }));
     },
     [data, dispatch],
   );

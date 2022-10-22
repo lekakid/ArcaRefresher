@@ -17,41 +17,36 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleEnabled(state) {
+    $toggleEnabled(state) {
       state.storage.enabled = !state.storage.enabled;
     },
-    addImage(state, action) {
+    $addImage(state, action) {
       const { channel, url } = action.payload;
       if (!state.storage.imgList[channel]) state.storage.imgList[channel] = [];
       state.storage.imgList[channel].push(url);
     },
-    removeImage(state, action) {
+    $removeImage(state, action) {
       const { channel, url } = action.payload;
       state.storage.imgList[channel] = state.storage.imgList[channel].filter(
         (u) => u !== url,
       );
     },
-    setImageList(state, action) {
+    $setImageList(state, action) {
       const { channel, list } = action.payload;
       state.storage.imgList[channel] = list;
     },
-    toggleForceLoad(state) {
+    $toggleForceLoad(state) {
       state.storage.forceLoad = !state.storage.forceLoad;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
 export const {
-  toggleEnabled,
-  addImage,
-  removeImage,
-  setImageList,
-  toggleForceLoad,
+  $toggleEnabled,
+  $addImage,
+  $removeImage,
+  $setImageList,
+  $toggleForceLoad,
 } = slice.actions;
 
 export default slice.reducer;

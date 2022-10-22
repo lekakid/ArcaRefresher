@@ -19,12 +19,12 @@ import { TextEditor } from 'component/config';
 import { useParser } from 'util/Parser';
 import Info from '../FeatureInfo';
 import {
-  removeEmoticonList,
-  setKeyword,
-  setUser,
-  toggleCountBar,
-  toggleMutedMark,
-  toggleIncludeReply,
+  $removeEmoticonList,
+  $setKeyword,
+  $setUser,
+  $toggleCountBar,
+  $toggleMutedMark,
+  $toggleIncludeReply,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 
@@ -69,22 +69,22 @@ const View = React.forwardRef((_props, ref) => {
   const [pageSize, setPageSize] = useState(10);
 
   const handleCountBar = useCallback(() => {
-    dispatch(toggleCountBar());
+    dispatch($toggleCountBar());
   }, [dispatch]);
 
   const handleMutedMark = useCallback(() => {
-    dispatch(toggleMutedMark());
+    dispatch($toggleMutedMark());
   }, [dispatch]);
 
   const handleIncludeReply = useCallback(() => {
-    dispatch(toggleIncludeReply());
+    dispatch($toggleIncludeReply());
   }, [dispatch]);
 
   const onSaveUser = useCallback(
     (text) => {
       const test = text.split('\n').filter((i) => i !== '');
       RegExp(test.join('|'));
-      dispatch(setUser(test));
+      dispatch($setUser(test));
     },
     [dispatch],
   );
@@ -93,7 +93,7 @@ const View = React.forwardRef((_props, ref) => {
     (text) => {
       const test = text.split('\n').filter((i) => i !== '');
       RegExp(test.join('|'));
-      dispatch(setKeyword(test));
+      dispatch($setKeyword(test));
     },
     [dispatch],
   );
@@ -103,7 +103,7 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   const handleRemove = useCallback(() => {
-    dispatch(removeEmoticonList(selection));
+    dispatch($removeEmoticonList(selection));
     setSelection([]);
   }, [dispatch, selection]);
 

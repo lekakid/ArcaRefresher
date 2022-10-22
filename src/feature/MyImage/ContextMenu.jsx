@@ -8,7 +8,7 @@ import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useParser } from 'util/Parser';
 
 import Info from './FeatureInfo';
-import { addImage, removeImage } from './slice';
+import { $addImage, $removeImage } from './slice';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ function ContextMenu({ triggerList }) {
   }, [valid, channel, imgList]);
 
   const handleChannelImage = useCallback(() => {
-    const action = exist.channel ? removeImage : addImage;
+    const action = exist.channel ? $removeImage : $addImage;
     dispatch(action({ channel: channel.ID, url: data.current }));
     dispatch(setClose());
     dispatch(
@@ -58,7 +58,7 @@ function ContextMenu({ triggerList }) {
   }, [exist, dispatch, channel]);
 
   const handleShareImage = useCallback(() => {
-    const action = exist.share ? removeImage : addImage;
+    const action = exist.share ? $removeImage : $addImage;
     dispatch(action({ channel: '_shared_', url: data.current }));
     dispatch(setClose());
     dispatch(

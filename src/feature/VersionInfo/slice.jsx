@@ -15,18 +15,13 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    updateCheckedVersion(state) {
+    $updateCheckedVersion(state) {
       // eslint-disable-next-line camelcase
       state.storage.checkedVersion = GM_info.script.version;
     },
   },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
-    },
-  },
 });
 
-export const { updateCheckedVersion } = slice.actions;
+export const { $updateCheckedVersion } = slice.actions;
 
 export default slice.reducer;

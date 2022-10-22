@@ -14,10 +14,10 @@ import {
 
 import Info from '../FeatureInfo';
 import {
-  toggleEnable,
-  setFileName,
-  setZipName,
-  setZipImageName,
+  $toggleEnable,
+  $setFileName,
+  $setZipName,
+  $setZipImageName,
 } from '../slice';
 import { FORMAT_STRING, LABEL } from '../format';
 import FormatSelector from './FormatSelector';
@@ -29,44 +29,44 @@ const View = React.forwardRef((_props, ref) => {
   } = useSelector((state) => state[Info.ID]);
 
   const handleEnable = useCallback(() => {
-    dispatch(toggleEnable());
+    dispatch($toggleEnable());
   }, [dispatch]);
 
   const handleFileName = useCallback(
     (e) => {
-      dispatch(setFileName(e.target.value));
+      dispatch($setFileName(e.target.value));
     },
     [dispatch],
   );
   const handleAddFormatFileName = useCallback(
     (value) => {
-      dispatch(setFileName(`${fileName}${value}`));
+      dispatch($setFileName(`${fileName}${value}`));
     },
     [dispatch, fileName],
   );
 
   const handleZipName = useCallback(
     (e) => {
-      dispatch(setZipName(e.target.value));
+      dispatch($setZipName(e.target.value));
     },
     [dispatch],
   );
   const handleAddFormatZipName = useCallback(
     (value) => {
-      dispatch(setZipName(`${zipName}${value}`));
+      dispatch($setZipName(`${zipName}${value}`));
     },
     [dispatch, zipName],
   );
 
   const handleZipImageName = useCallback(
     (e) => {
-      dispatch(setZipImageName(e.target.value));
+      dispatch($setZipImageName(e.target.value));
     },
     [dispatch],
   );
   const handleAddFormatZipImageName = useCallback(
     (value) => {
-      dispatch(setZipImageName(`${zipImageName}${value}`));
+      dispatch($setZipImageName(`${zipImageName}${value}`));
     },
     [dispatch, zipImageName],
   );

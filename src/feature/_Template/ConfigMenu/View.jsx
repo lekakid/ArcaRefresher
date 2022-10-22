@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { someReducer } from '../slice';
+import { $setTemplate } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
@@ -20,7 +20,7 @@ const View = React.forwardRef((_props, ref) => {
 
   const handler = useCallback(
     (value) => {
-      dispatch(someReducer(value));
+      dispatch($setTemplate(value));
     },
     [dispatch],
   );

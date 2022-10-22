@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useParser } from 'util/Parser';
 import Info from '../FeatureInfo';
-import { setCategoryConfig } from '../slice';
+import { $setCategoryConfig } from '../slice';
 
 const DEFAULT_CHANNEL_CONFIG = {};
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
@@ -30,7 +30,7 @@ function CategoryRow({ divider, category, nameMap }) {
         },
       };
       dispatch(
-        setCategoryConfig({
+        $setCategoryConfig({
           channel: channel.ID,
           config: newConfig,
         }),

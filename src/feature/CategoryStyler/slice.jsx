@@ -15,18 +15,13 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setStyle(state, action) {
+    $setStyle(state, action) {
       const { channel, color } = action.payload;
       state.storage.color[channel] = color;
     },
   },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
-    },
-  },
 });
 
-export const { setStyle } = slice.actions;
+export const { $setStyle } = slice.actions;
 
 export default slice.reducer;

@@ -14,7 +14,7 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setColor(state, action) {
+    $setColor(state, action) {
       const { user, color } = action.payload;
       if (color) {
         state.storage.color[user] = color;
@@ -22,17 +22,12 @@ export const slice = createSlice({
         delete state.storage.color[user];
       }
     },
-    setColorList(state, action) {
+    $setColorList(state, action) {
       state.storage.color = action.payload;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
-export const { setColor, setColorList } = slice.actions;
+export const { $setColor, $setColorList } = slice.actions;
 
 export default slice.reducer;

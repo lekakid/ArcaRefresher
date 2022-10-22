@@ -15,7 +15,7 @@ import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
 import Info from '../FeatureInfo';
-import { setArticleList, setCurrentSlot, toggleImportTitle } from '../slice';
+import { $setArticleList, setCurrentSlot, $toggleImportTitle } from '../slice';
 
 const columns = [
   { field: 'title', headerName: '제목', flex: 3 },
@@ -129,7 +129,7 @@ export default function LoadTable({ editor, open, onClose }) {
   }, [onClose]);
 
   const handleImportTitle = useCallback(() => {
-    dispatch(toggleImportTitle());
+    dispatch($toggleImportTitle());
   }, [dispatch]);
 
   const handleEdit = useCallback(() => {
@@ -146,7 +146,7 @@ export default function LoadTable({ editor, open, onClose }) {
       };
     }, {});
 
-    dispatch(setArticleList(newArticleList));
+    dispatch($setArticleList(newArticleList));
     setSelection([]);
     setEditMode(false);
   }, [dispatch, rows, selection]);

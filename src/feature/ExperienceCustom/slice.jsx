@@ -19,35 +19,30 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleArticleNewWindow(state) {
+    $toggleArticleNewWindow(state) {
       state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
     },
-    toggleBlockMediaNewWindow(state) {
+    $toggleBlockMediaNewWindow(state) {
       state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
-    toggleRateDownGuard(state) {
+    $toggleRateDownGuard(state) {
       state.storage.ratedownGuard = !state.storage.ratedownGuard;
     },
-    toggleComment(state) {
+    $toggleComment(state) {
       state.storage.foldComment = !state.storage.foldComment;
     },
-    toggleWideArea(state) {
+    $toggleWideArea(state) {
       state.storage.wideClickArea = !state.storage.wideClickArea;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
 export const {
-  toggleArticleNewWindow,
-  toggleBlockMediaNewWindow,
-  toggleRateDownGuard,
-  toggleComment,
-  toggleWideArea,
+  $toggleArticleNewWindow,
+  $toggleBlockMediaNewWindow,
+  $toggleRateDownGuard,
+  $toggleComment,
+  $toggleWideArea,
 } = slice.actions;
 
 export default slice.reducer;

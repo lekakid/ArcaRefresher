@@ -16,20 +16,15 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setTimeLimit(state, action) {
+    $setTimeLimit(state, action) {
       state.storage.countdown = action.payload;
     },
-    toggleAnimation(state) {
+    $toggleAnimation(state) {
       state.storage.showProgress = !state.storage.showProgress;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
-export const { setTimeLimit, toggleAnimation } = slice.actions;
+export const { $setTimeLimit, $toggleAnimation } = slice.actions;
 
 export default slice.reducer;

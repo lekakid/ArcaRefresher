@@ -16,20 +16,15 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleSearchBySource(state) {
+    $toggleSearchBySource(state) {
       state.storage.searchBySource = !state.storage.searchBySource;
     },
-    toggleSauceNaoBypass(state) {
+    $toggleSauceNaoBypass(state) {
       state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
-export const { toggleSearchBySource, toggleSauceNaoBypass } = slice.actions;
+export const { $toggleSearchBySource, $toggleSauceNaoBypass } = slice.actions;
 
 export default slice.reducer;

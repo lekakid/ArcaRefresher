@@ -50,27 +50,22 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setPrefixList(state, action) {
+    $setPrefixList(state, action) {
       state.storage.prefixList = action.payload;
     },
-    setSuffixList(state, action) {
+    $setSuffixList(state, action) {
       state.storage.suffixList = action.payload;
     },
-    setExtraPrefix(state, action) {
+    $setExtraPrefix(state, action) {
       state.storage.extraPrefix = action.payload;
     },
     toggleShow(state) {
       state.show = !state.show;
     },
   },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
-    },
-  },
 });
 
-export const { setPrefixList, setSuffixList, setExtraPrefix, toggleShow } =
+export const { $setPrefixList, $setSuffixList, $setExtraPrefix, toggleShow } =
   slice.actions;
 
 export default slice.reducer;

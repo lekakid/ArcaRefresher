@@ -18,27 +18,22 @@ export const slice = createSlice({
   name: 'ImageDownloader',
   initialState,
   reducers: {
-    toggleEnable(state) {
+    $toggleEnable(state) {
       state.storage.enabled = !state.storage.enabled;
     },
-    setFileName(state, action) {
+    $setFileName(state, action) {
       state.storage.fileName = action.payload;
     },
-    setZipName(state, action) {
+    $setZipName(state, action) {
       state.storage.zipName = action.payload;
     },
-    setZipImageName(state, action) {
+    $setZipImageName(state, action) {
       state.storage.zipImageName = action.payload;
-    },
-  },
-  extraReducers: {
-    syncStorage(state) {
-      state.storage = getValue(Info.ID, defaultStorage);
     },
   },
 });
 
-export const { toggleEnable, setFileName, setZipName, setZipImageName } =
+export const { $toggleEnable, $setFileName, $setZipName, $setZipImageName } =
   slice.actions;
 
 export default slice.reducer;

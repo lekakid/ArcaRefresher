@@ -13,11 +13,11 @@ import {
 
 import Info from '../FeatureInfo';
 import {
-  toggleArticleNewWindow,
-  toggleBlockMediaNewWindow,
-  toggleRateDownGuard,
-  toggleComment,
-  toggleWideArea,
+  $toggleArticleNewWindow,
+  $toggleBlockMediaNewWindow,
+  $toggleRateDownGuard,
+  $toggleComment,
+  $toggleWideArea,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
@@ -33,23 +33,23 @@ const View = React.forwardRef((_props, ref) => {
   } = useSelector((state) => state[Info.ID]);
 
   const handleArticleNewWindow = useCallback(() => {
-    dispatch(toggleArticleNewWindow());
+    dispatch($toggleArticleNewWindow());
   }, [dispatch]);
 
   const handleMediaNewWindow = useCallback(() => {
-    dispatch(toggleBlockMediaNewWindow());
+    dispatch($toggleBlockMediaNewWindow());
   }, [dispatch]);
 
   const handleRateDownGuard = useCallback(() => {
-    dispatch(toggleRateDownGuard());
+    dispatch($toggleRateDownGuard());
   }, [dispatch]);
 
   const handleComment = useCallback(() => {
-    dispatch(toggleComment());
+    dispatch($toggleComment());
   }, [dispatch]);
 
   const handleWideArea = useCallback(() => {
-    dispatch(toggleWideArea());
+    dispatch($toggleWideArea());
   }, [dispatch]);
 
   return (

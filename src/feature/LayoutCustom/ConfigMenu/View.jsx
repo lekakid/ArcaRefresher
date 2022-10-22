@@ -17,20 +17,20 @@ import { makeStyles } from '@material-ui/styles';
 
 import Info from '../FeatureInfo';
 import {
-  toggleEnable,
-  setFontSize,
-  toggleTopNews,
-  toggleRecentVisit,
-  toggleSideNews,
-  toggleSideMenu,
-  toggleAvatar,
-  setUserInfoWith,
-  setResizeImage,
-  setResizeVideo,
-  toggleUnvote,
-  toggleModifiedIndicator,
-  toggleLongComment,
-  toggleSideContents,
+  $toggleEnable,
+  $setFontSize,
+  $toggleTopNews,
+  $toggleRecentVisit,
+  $toggleSideNews,
+  $toggleSideMenu,
+  $toggleAvatar,
+  $setUserInfoWith,
+  $setResizeImage,
+  $setResizeVideo,
+  $toggleUnvote,
+  $toggleModifiedIndicator,
+  $toggleLongComment,
+  $toggleSideContents,
 } from '../slice';
 
 function labelFormat(x) {
@@ -67,71 +67,71 @@ const View = React.forwardRef((_props, ref) => {
   const classes = useStyles();
 
   const handleEnable = useCallback(() => {
-    dispatch(toggleEnable());
+    dispatch($toggleEnable());
   }, [dispatch]);
 
   const handleFontSize = useCallback(
     (_e, value) => {
-      dispatch(setFontSize(value));
+      dispatch($setFontSize(value));
     },
     [dispatch],
   );
 
   const handleRecentVisit = useCallback(() => {
-    dispatch(toggleRecentVisit());
+    dispatch($toggleRecentVisit());
   }, [dispatch]);
 
   const handleTopNews = useCallback(() => {
-    dispatch(toggleTopNews());
+    dispatch($toggleTopNews());
   }, [dispatch]);
 
   const handleSideContents = useCallback(() => {
-    dispatch(toggleSideContents());
+    dispatch($toggleSideContents());
   }, [dispatch]);
 
   const handleSideNews = useCallback(() => {
-    dispatch(toggleSideNews());
+    dispatch($toggleSideNews());
   }, [dispatch]);
 
   const handleSideMenu = useCallback(() => {
-    dispatch(toggleSideMenu());
+    dispatch($toggleSideMenu());
   }, [dispatch]);
 
   const handleAvatar = useCallback(() => {
-    dispatch(toggleAvatar());
+    dispatch($toggleAvatar());
   }, [dispatch]);
 
   const handleUserinfoWidth = useCallback(
     (e, value) => {
-      dispatch(setUserInfoWith(value));
+      dispatch($setUserInfoWith(value));
     },
     [dispatch],
   );
 
   const handleResizeImage = useCallback(
     (e, value) => {
-      dispatch(setResizeImage(value));
+      dispatch($setResizeImage(value));
     },
     [dispatch],
   );
 
   const handleResizeVideo = useCallback(
     (e, value) => {
-      dispatch(setResizeVideo(value));
+      dispatch($setResizeVideo(value));
     },
     [dispatch],
   );
 
   const handleUnvote = useCallback(() => {
-    dispatch(toggleUnvote());
+    dispatch($toggleUnvote());
   }, [dispatch]);
 
   const handleModifiedIndicator = useCallback(() => {
-    dispatch(toggleModifiedIndicator());
+    dispatch($toggleModifiedIndicator());
   }, [dispatch]);
 
   const handleUnfoldLongComment = useCallback(() => {
-    dispatch(toggleLongComment());
+    dispatch($toggleLongComment());
   }, [dispatch]);
 
   return (

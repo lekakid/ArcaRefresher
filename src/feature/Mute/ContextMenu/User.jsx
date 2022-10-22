@@ -8,7 +8,7 @@ import { setClose } from 'menu/ContextMenu/slice';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
-import { addUser, removeUser } from '../slice';
+import { $addUser, $removeUser } from '../slice';
 
 function makeRegex(id = '') {
   return `${id.replace('.', '\\.')}$`;
@@ -42,7 +42,7 @@ function User({ triggerList }) {
   const exist = user.indexOf(regex) > -1;
 
   const handleMute = useCallback(() => {
-    dispatch(exist ? removeUser(regex) : addUser(regex));
+    dispatch(exist ? $removeUser(regex) : $addUser(regex));
     dispatch(setClose());
   }, [dispatch, exist, regex]);
 
