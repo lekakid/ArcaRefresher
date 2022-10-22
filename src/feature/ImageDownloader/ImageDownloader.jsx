@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { GetApp } from '@material-ui/icons';
@@ -9,6 +9,7 @@ import { useElementQuery } from 'core/hooks';
 
 import SelectionDialog from './SelectionDialog';
 import Info from './FeatureInfo';
+import { setOpen } from './slice';
 
 const useStyles = makeStyles({
   root: {
@@ -23,11 +24,12 @@ const useStyles = makeStyles({
 });
 
 export default function ImageDownloader() {
+  const dispatch = useDispatch();
   const {
     storage: { enabled },
+    open,
   } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
-  const [open, setOpen] = useState(false);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const classes = useStyles();
 
@@ -61,12 +63,8 @@ export default function ImageDownloader() {
   }, [articleLoaded, classes, container, enabled]);
 
   const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+    dispatch(setOpen(true));
+  }, [dispatch]);
 
   if (!container) return null;
   if (!enabled) return null;
@@ -85,7 +83,7 @@ export default function ImageDownloader() {
           이미지 다운로더
         </Button>
       </Portal>
-      <SelectionDialog open={open} onClose={handleClose} />
+      <SelectionDialog />
     </>
   );
 }

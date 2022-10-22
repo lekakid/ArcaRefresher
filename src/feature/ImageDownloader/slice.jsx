@@ -12,6 +12,7 @@ const defaultStorage = {
 
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
+  open: false,
 };
 
 export const slice = createSlice({
@@ -30,10 +31,18 @@ export const slice = createSlice({
     $setZipImageName(state, action) {
       state.storage.zipImageName = action.payload;
     },
+    setOpen(state, action) {
+      state.open = action.payload;
+    },
   },
 });
 
-export const { $toggleEnable, $setFileName, $setZipName, $setZipImageName } =
-  slice.actions;
+export const {
+  $toggleEnable,
+  $setFileName,
+  $setZipName,
+  $setZipImageName,
+  setOpen,
+} = slice.actions;
 
 export default slice.reducer;
