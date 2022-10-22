@@ -22,15 +22,8 @@ export const slice = createSlice({
     toggleArticleNewWindow(state) {
       state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
     },
-    toggleHideFirstImage(state) {
-      state.storage.hideFirstImage = !state.storage.hideFirstImage;
-    },
     toggleBlockMediaNewWindow(state) {
       state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
-    },
-    toggleBlockDeletedArticleMedia(state) {
-      state.storage.blockDeletedArticleMedia =
-        !state.storage.blockDeletedArticleMedia;
     },
     toggleRateDownGuard(state) {
       state.storage.ratedownGuard = !state.storage.ratedownGuard;
@@ -52,7 +45,6 @@ export const slice = createSlice({
 export const {
   toggleArticleNewWindow,
   toggleBlockMediaNewWindow,
-  toggleHideDeletedArticleMedia,
   toggleRateDownGuard,
   toggleComment,
   toggleWideArea,
