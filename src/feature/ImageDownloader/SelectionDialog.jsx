@@ -83,20 +83,29 @@ function SelectionDialog({ classes }) {
     setSelection([]);
     setShowProgress(true);
 
-    const selectedData = data.filter((_data, index) =>
+    const selectedImages = data.filter((_data, index) =>
       selection.includes(index),
     );
 
-    const totalSize = await selectedData.reduce(
-      async (acc, { orig }) =>
-        (await acc) +
-        (await fetch(orig, { method: 'HEAD' }).then(
-          (response) => Number(response.headers.get('Content-Length')) || 0,
-        )),
-      0,
+    let totalSize = 0;
+    const availableImages = await selectedImages.reduce(
+      async (promise, info) => {
+        try {
+          const response = await fetch(info.orig);
+
+          totalSize += Number(response.headers.get('Content-Length')) || 0;
+          const acc = await promise;
+          acc.push(info);
+          return acc;
+        } catch (error) {
+          console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
+          return promise;
+        }
+      },
+      [],
     );
 
-    const iterator = selectedData.values();
+    const iterator = availableImages.values();
     let count = 1;
 
     const confirm = (event) => {
