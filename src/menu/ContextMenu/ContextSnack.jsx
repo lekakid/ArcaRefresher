@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 
 import { setContextSnack } from './slice';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 export default function ContextSnack() {
   const dispatch = useDispatch();
-  const { snack, snackTime } = useSelector((state) => state[MODULE_ID]);
+  const { snack, snackTime } = useSelector((state) => state[Info.ID]);
 
   const handleSnackClose = useCallback(() => {
     dispatch(setContextSnack(''));

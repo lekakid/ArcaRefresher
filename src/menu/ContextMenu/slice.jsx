@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   // r: right click
   // sr: shift + right click
   // cr: ctrl + right click
@@ -10,17 +10,17 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  storage: getValue(MODULE_ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   open: false,
   snack: false,
   snackTime: null,
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
-    setInteraction(state, action) {
+    $setInteraction(state, action) {
       state.storage.interactionType = action.payload;
     },
     setOpen(state) {
@@ -37,7 +37,7 @@ export const slice = createSlice({
   },
 });
 
-export const { setInteraction, setOpen, setClose, setContextSnack } =
+export const { $setInteraction, setOpen, setClose, setContextSnack } =
   slice.actions;
 
 export default slice.reducer;
