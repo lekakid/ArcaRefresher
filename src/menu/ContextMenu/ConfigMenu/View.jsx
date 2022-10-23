@@ -14,7 +14,7 @@ import {
 
 import { KeyIcon } from 'component';
 
-import { setInteraction } from '../slice';
+import { $setInteraction } from '../slice';
 import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
 
 const label = {
@@ -40,7 +40,7 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleInteraction = useCallback(
     (e) => {
-      dispatch(setInteraction(e.target.value));
+      dispatch($setInteraction(e.target.value));
     },
     [dispatch],
   );
