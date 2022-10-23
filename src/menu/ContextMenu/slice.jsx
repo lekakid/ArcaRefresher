@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 
 const defaultStorage = {
   // r: right click
@@ -10,14 +10,14 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(MODULE_ID, defaultStorage),
+  storage: getValue(Info.ID, defaultStorage),
   open: false,
   snack: false,
   snackTime: null,
 };
 
 export const slice = createSlice({
-  name: MODULE_ID,
+  name: Info.ID,
   initialState,
   reducers: {
     $setInteraction(state, action) {

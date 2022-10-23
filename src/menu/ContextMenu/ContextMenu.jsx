@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import ContextSnack from './ContextSnack';
 import { setClose, setOpen } from './slice';
 
@@ -30,7 +30,7 @@ export default function ContextMenu({ children }) {
   const {
     storage: { interactionType },
     open,
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const gestureTrack = useRef({ right: false, count: 0 });
   const triggerList = useRef([]);
   const [mousePos, setMousePos] = useState([]);
