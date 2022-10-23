@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   enabled: true,
   fontSize: 15,
   topNews: true,
@@ -21,91 +21,78 @@ const defaultConfigState = {
   unfoldLongComment: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleEnable(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+    $toggleEnable(state) {
+      state.storage.enabled = !state.storage.enabled;
     },
-    setFontSize(state, action) {
-      state.fontSize = action.payload;
-      setValue(Info.ID, state);
+    $setFontSize(state, action) {
+      state.storage.fontSize = action.payload;
     },
-    toggleTopNews(state) {
-      state.topNews = !state.topNews;
-      setValue(Info.ID, state);
+    $toggleTopNews(state) {
+      state.storage.topNews = !state.storage.topNews;
     },
-    toggleRecentVisit(state) {
-      state.recentVisit = !state.recentVisit;
-      setValue(Info.ID, state);
+    $toggleRecentVisit(state) {
+      state.storage.recentVisit = !state.storage.recentVisit;
     },
-    toggleSideContents(state) {
-      state.sideContents = !state.sideContents;
-      setValue(Info.ID, state);
+    $toggleSideContents(state) {
+      state.storage.sideContents = !state.storage.sideContents;
     },
-    toggleSideNews(state) {
-      state.sideNews = !state.sideNews;
-      setValue(Info.ID, state);
+    $toggleSideNews(state) {
+      state.storage.sideNews = !state.storage.sideNews;
     },
-    toggleSideMenu(state) {
-      state.sideMenu = !state.sideMenu;
-      setValue(Info.ID, state);
+    $toggleSideMenu(state) {
+      state.storage.sideMenu = !state.storage.sideMenu;
     },
-    toggleAvatar(state) {
-      state.avatar = !state.avatar;
-      setValue(Info.ID, state);
+    $toggleAvatar(state) {
+      state.storage.avatar = !state.storage.avatar;
     },
-    setNotifyColor(state, action) {
-      state.notifyColor = action.payload;
-      setValue(Info.ID, state);
+    $setNotifyColor(state, action) {
+      state.storage.notifyColor = action.payload;
     },
-    setUserInfoWith(state, action) {
-      state.userinfoWidth = action.payload;
-      setValue(Info.ID, state);
+    $setUserInfoWith(state, action) {
+      state.storage.userinfoWidth = action.payload;
     },
-    setResizeImage(state, action) {
-      state.resizeImage = action.payload;
-      setValue(Info.ID, state);
+    $setResizeImage(state, action) {
+      state.storage.resizeImage = action.payload;
     },
-    setResizeVideo(state, action) {
-      state.resizeVideo = action.payload;
-      setValue(Info.ID, state);
+    $setResizeVideo(state, action) {
+      state.storage.resizeVideo = action.payload;
     },
-    toggleUnvote(state) {
-      state.hideUnvote = !state.hideUnvote;
-      setValue(Info.ID, state);
+    $toggleUnvote(state) {
+      state.storage.hideUnvote = !state.storage.hideUnvote;
     },
-    toggleModifiedIndicator(state) {
-      state.modifiedIndicator = !state.modifiedIndicator;
-      setValue(Info.ID, state);
+    $toggleModifiedIndicator(state) {
+      state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
     },
-    toggleLongComment(state) {
-      state.unfoldLongComment = !state.unfoldLongComment;
-      setValue(Info.ID, state);
+    $toggleLongComment(state) {
+      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
     },
   },
 });
 
 export const {
-  toggleEnable,
-  setFontSize,
-  toggleTopNews,
-  toggleRecentVisit,
-  toggleSideContents,
-  toggleSideNews,
-  toggleSideMenu,
-  toggleAvatar,
-  setNotifyColor,
-  setUserInfoWith,
-  setResizeImage,
-  setResizeVideo,
-  toggleUnvote,
-  toggleModifiedIndicator,
-  toggleLongComment,
+  $toggleEnable,
+  $setFontSize,
+  $toggleTopNews,
+  $toggleRecentVisit,
+  $toggleSideContents,
+  $toggleSideNews,
+  $toggleSideMenu,
+  $toggleAvatar,
+  $setNotifyColor,
+  $setUserInfoWith,
+  $setResizeImage,
+  $setResizeVideo,
+  $toggleUnvote,
+  $toggleModifiedIndicator,
+  $toggleLongComment,
 } = slice.actions;
 
 export default slice.reducer;

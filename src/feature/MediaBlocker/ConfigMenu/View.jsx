@@ -12,20 +12,20 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { toggleEnabled, toggleDeletedOnly } from '../slice';
+import { $toggleEnabled, $toggleDeletedOnly } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { enabled, deletedOnly },
+    storage: { enabled, deletedOnly },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleEnabled = useCallback(() => {
-    dispatch(toggleEnabled());
+    dispatch($toggleEnabled());
   }, [dispatch]);
 
   const handleDeletedOnly = useCallback(() => {
-    dispatch(toggleDeletedOnly());
+    dispatch($toggleDeletedOnly());
   }, [dispatch]);
 
   return (

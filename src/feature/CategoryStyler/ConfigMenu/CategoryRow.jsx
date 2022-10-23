@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParser } from 'util/Parser';
 import { getContrastYIQ } from 'func/color';
 import Info from '../FeatureInfo';
-import { setStyle } from '../slice';
+import { $setStyle } from '../slice';
 
 const DEFAULT_CHANNEL_CONFIG = {};
 const DEFAULT_CATEGORY_CONFIG = {
@@ -35,7 +35,9 @@ function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { channel } = useParser();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { color },
+  } = useSelector((state) => state[Info.ID]);
   const channelColor = color?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { badge, bgcolor, bold, through, disableVisited } =
     channelColor?.[category] || DEFAULT_CATEGORY_CONFIG;
@@ -49,7 +51,7 @@ function CategoryRow({ divider, category, nameMap }) {
           [type]: colorData.error ? '' : colorData.css.backgroundColor,
         },
       };
-      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
+      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
     },
     [channelColor, channel, dispatch],
   );
@@ -63,7 +65,7 @@ function CategoryRow({ divider, category, nameMap }) {
           [type]: !channelColor?.[id]?.[type],
         },
       };
-      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
+      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
     },
     [channelColor, channel, dispatch],
   );
@@ -74,7 +76,7 @@ function CategoryRow({ divider, category, nameMap }) {
         ...channelColor,
         [id]: {},
       };
-      dispatch(setStyle({ channel: channel.ID, color: updatedData }));
+      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
     },
     [channelColor, channel, dispatch],
   );

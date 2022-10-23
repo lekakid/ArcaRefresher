@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   tempArticleList: {},
   importTitle: true,
   autoSaveTime: 60,
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   currentSlot: null,
   loadOpen: false,
 };
@@ -18,34 +18,22 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    saveArticle(state, action) {
-      const { timestamp, title, content } = action.payload;
+    $saveArticle(state, action) {
+      const { slot, title, content } = action.payload;
 
-      state.currentSlot = state.currentSlot || timestamp;
-      state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(Info.ID, state.config);
+      state.storage.tempArticleList[slot] = { title, content };
     },
-    saveAsArticle(state, action) {
-      const { timestamp, title, content } = action.payload;
-
-      state.currentSlot = timestamp;
-      state.config.tempArticleList[state.currentSlot] = { title, content };
-      setValue(Info.ID, state.config);
+    $setArticleList(state, action) {
+      state.storage.tempArticleList = action.payload;
     },
-    setArticleList(state, action) {
-      state.config.tempArticleList = action.payload;
-      setValue(Info.ID, state.config);
+    $toggleImportTitle(state) {
+      state.storage.importTitle = !state.storage.importTitle;
+    },
+    $setAutoTime(state, action) {
+      state.storage.autoSaveTime = action.payload;
     },
     setCurrentSlot(state, action) {
       state.currentSlot = action.payload;
-    },
-    toggleImportTitle(state) {
-      state.config.importTitle = !state.config.importTitle;
-      setValue(Info.ID, state.config);
-    },
-    setAutoTime(state, action) {
-      state.config.autoSaveTime = action.payload;
-      setValue(Info.ID, state.config);
     },
     setLoadOpen(state, action) {
       state.loadOpen = action.payload;
@@ -54,12 +42,11 @@ export const slice = createSlice({
 });
 
 export const {
-  saveArticle,
-  saveAsArticle,
-  setArticleList,
+  $saveArticle,
+  $setArticleList,
+  $toggleImportTitle,
+  $setAutoTime,
   setCurrentSlot,
-  toggleImportTitle,
-  setAutoTime,
   setLoadOpen,
 } = slice.actions;
 

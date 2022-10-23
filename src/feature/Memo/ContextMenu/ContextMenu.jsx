@@ -7,13 +7,15 @@ import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserID } from 'func/user';
 
-import { setMemo } from '../slice';
+import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { memo } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { memo },
+  } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);
@@ -47,7 +49,7 @@ function ContextMenu({ triggerList }) {
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch(setMemo({ user: data.current, memo: value }));
+      dispatch($setMemo({ user: data.current, memo: value }));
     },
     [data, dispatch],
   );

@@ -18,7 +18,12 @@ import {
 import { Add, Delete, Label } from '@material-ui/icons';
 
 import Info from '../FeatureInfo';
-import { toggleEnable, setCurrent, setPreset, renamePreset } from '../slice';
+import {
+  $toggleEnable,
+  $setCurrent,
+  $setPreset,
+  $renamePreset,
+} from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
 import EditPresetSelector from './EditPresetSelector';
@@ -108,7 +113,9 @@ const defaultTheme = {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, current, theme } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { enabled, current, theme },
+  } = useSelector((state) => state[Info.ID]);
   const [selectPreset, setSelectPreset] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
@@ -119,12 +126,12 @@ const View = React.forwardRef((_props, ref) => {
   };
 
   const handleEnabled = useCallback(() => {
-    dispatch(toggleEnable());
+    dispatch($toggleEnable());
   }, [dispatch]);
 
   const handleGlobalPreset = useCallback(
     (e) => {
-      dispatch(setCurrent(e.target.value));
+      dispatch($setCurrent(e.target.value));
     },
     [dispatch],
   );
@@ -143,7 +150,7 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleAddPreset = useCallback(
     (value) => {
-      dispatch(setPreset({ key: value, preset: { ...defaultTheme } }));
+      dispatch($setPreset({ key: value, preset: { ...defaultTheme } }));
       setCreateOpen(false);
       setSelectPreset(value);
     },
@@ -160,10 +167,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleRenamePreset = useCallback(
     (value) => {
-      dispatch(renamePreset({ prev: selectPreset, next: value }));
+      dispatch($renamePreset({ prev: selectPreset, next: value }));
       setRenameOpen(false);
       setSelectPreset(value);
-      if (selectPreset === current) dispatch(setCurrent(value));
+      if (selectPreset === current) dispatch($setCurrent(value));
     },
     [current, dispatch, selectPreset],
   );
@@ -177,10 +184,10 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   const handleRemovePreset = useCallback(() => {
-    dispatch(setPreset({ key: selectPreset, preset: null }));
+    dispatch($setPreset({ key: selectPreset, preset: null }));
     setConfirmOpen(false);
     setSelectPreset('');
-    if (selectPreset === current) dispatch(setCurrent(''));
+    if (selectPreset === current) dispatch($setCurrent(''));
   }, [current, dispatch, selectPreset]);
 
   const handleColor = useCallback(
@@ -189,7 +196,7 @@ const View = React.forwardRef((_props, ref) => {
         ...theme[selectPreset],
         [key]: color?.name !== 'none' ? color.css.backgroundColor : '',
       };
-      dispatch(setPreset({ key: selectPreset, preset: updatePreset }));
+      dispatch($setPreset({ key: selectPreset, preset: updatePreset }));
     },
     [dispatch, selectPreset, theme],
   );

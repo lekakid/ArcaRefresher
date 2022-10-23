@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   prefixList: [
     '웃는',
     '화난',
@@ -42,7 +42,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   show: false,
 };
 
@@ -50,17 +50,14 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setPrefixList(state, action) {
-      state.config.prefixList = action.payload;
-      setValue(Info.ID, state.config);
+    $setPrefixList(state, action) {
+      state.storage.prefixList = action.payload;
     },
-    setSuffixList(state, action) {
-      state.config.suffixList = action.payload;
-      setValue(Info.ID, state.config);
+    $setSuffixList(state, action) {
+      state.storage.suffixList = action.payload;
     },
-    setExtraPrefix(state, action) {
-      state.config.extraPrefix = action.payload;
-      setValue(Info.ID, state.config);
+    $setExtraPrefix(state, action) {
+      state.storage.extraPrefix = action.payload;
     },
     toggleShow(state) {
       state.show = !state.show;
@@ -68,7 +65,7 @@ export const slice = createSlice({
   },
 });
 
-export const { setPrefixList, setSuffixList, setExtraPrefix, toggleShow } =
+export const { $setPrefixList, $setSuffixList, $setExtraPrefix, toggleShow } =
   slice.actions;
 
 export default slice.reducer;

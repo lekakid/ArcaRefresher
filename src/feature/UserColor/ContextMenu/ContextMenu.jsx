@@ -7,13 +7,15 @@ import { USER_INFO } from 'core/selector';
 import { setClose } from 'menu/ContextMenu/slice';
 import { getUserID } from 'func/user';
 
-import { setColor } from '../slice';
+import { $setColor } from '../slice';
 import Info from '../FeatureInfo';
 import InputDialog from './InputDialog';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { color },
+  } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);
@@ -46,7 +48,7 @@ function ContextMenu({ triggerList }) {
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch(setColor({ user: data.current, color: value }));
+      dispatch($setColor({ user: data.current, color: value }));
     },
     [dispatch],
   );

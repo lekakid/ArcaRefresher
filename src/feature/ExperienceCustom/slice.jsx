@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   openArticleNewWindow: false,
   blockMediaNewWindow: false,
   ratedownGuard: false,
@@ -12,52 +12,37 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
 };
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleArticleNewWindow(state) {
-      state.config.openArticleNewWindow = !state.config.openArticleNewWindow;
-      setValue(Info.ID, state.config);
+    $toggleArticleNewWindow(state) {
+      state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
     },
-    toggleHideFirstImage(state) {
-      state.config.hideFirstImage = !state.config.hideFirstImage;
-      setValue(Info.ID, state.config);
+    $toggleBlockMediaNewWindow(state) {
+      state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
-    toggleBlockMediaNewWindow(state) {
-      state.config.blockMediaNewWindow = !state.config.blockMediaNewWindow;
-      setValue(Info.ID, state.config);
+    $toggleRateDownGuard(state) {
+      state.storage.ratedownGuard = !state.storage.ratedownGuard;
     },
-    toggleBlockDeletedArticleMedia(state) {
-      state.config.blockDeletedArticleMedia =
-        !state.config.blockDeletedArticleMedia;
-      setValue(Info.ID, state.config);
+    $toggleComment(state) {
+      state.storage.foldComment = !state.storage.foldComment;
     },
-    toggleRateDownGuard(state) {
-      state.config.ratedownGuard = !state.config.ratedownGuard;
-      setValue(Info.ID, state.config);
-    },
-    toggleComment(state) {
-      state.config.foldComment = !state.config.foldComment;
-      setValue(Info.ID, state.config);
-    },
-    toggleWideArea(state) {
-      state.config.wideClickArea = !state.config.wideClickArea;
-      setValue(Info.ID, state.config);
+    $toggleWideArea(state) {
+      state.storage.wideClickArea = !state.storage.wideClickArea;
     },
   },
 });
 
 export const {
-  toggleArticleNewWindow,
-  toggleBlockMediaNewWindow,
-  toggleHideDeletedArticleMedia,
-  toggleRateDownGuard,
-  toggleComment,
-  toggleWideArea,
+  $toggleArticleNewWindow,
+  $toggleBlockMediaNewWindow,
+  $toggleRateDownGuard,
+  $toggleComment,
+  $toggleWideArea,
 } = slice.actions;
 
 export default slice.reducer;

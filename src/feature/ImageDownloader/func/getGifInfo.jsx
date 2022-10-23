@@ -9,10 +9,13 @@ export default function getGifInfo(gif) {
   let orig;
   let thumb;
 
-  if (url.indexOf('sac') > -1) {
+  // v2
+  if (url.indexOf('sac') > -1 || gif.dataset.src) {
     orig = getArcaMediaURL(url.replace('mp4', 'gif'), 'orig');
     thumb = getArcaMediaURL(url.replace('mp4', 'gif'), 'list');
-  } else {
+  }
+  // v1
+  else {
     orig = getArcaMediaURL(`${url}.gif`, 'orig');
     thumb = getArcaMediaURL(`${url}.gif`, 'list');
   }

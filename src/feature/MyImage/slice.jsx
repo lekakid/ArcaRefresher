@@ -1,53 +1,52 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   enabled: true,
   imgList: { _shared_: [] },
   forceLoad: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleEnabled(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+    $toggleEnabled(state) {
+      state.storage.enabled = !state.storage.enabled;
     },
-    addImage(state, action) {
+    $addImage(state, action) {
       const { channel, url } = action.payload;
-      if (!state.imgList[channel]) state.imgList[channel] = [];
-      state.imgList[channel].push(url);
-      setValue(Info.ID, state);
+      if (!state.storage.imgList[channel]) state.storage.imgList[channel] = [];
+      state.storage.imgList[channel].push(url);
     },
-    removeImage(state, action) {
+    $removeImage(state, action) {
       const { channel, url } = action.payload;
-      state.imgList[channel] = state.imgList[channel].filter((u) => u !== url);
-      setValue(Info.ID, state);
+      state.storage.imgList[channel] = state.storage.imgList[channel].filter(
+        (u) => u !== url,
+      );
     },
-    setImageList(state, action) {
+    $setImageList(state, action) {
       const { channel, list } = action.payload;
-      state.imgList[channel] = list;
-      setValue(Info.ID, state);
+      state.storage.imgList[channel] = list;
     },
-    toggleForceLoad(state) {
-      state.forceLoad = !state.forceLoad;
-      setValue(Info.ID, state);
+    $toggleForceLoad(state) {
+      state.storage.forceLoad = !state.storage.forceLoad;
     },
   },
 });
 
 export const {
-  toggleEnabled,
-  addImage,
-  removeImage,
-  setImageList,
-  toggleForceLoad,
+  $toggleEnabled,
+  $addImage,
+  $removeImage,
+  $setImageList,
+  $toggleForceLoad,
 } = slice.actions;
 
 export default slice.reducer;

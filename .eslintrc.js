@@ -38,6 +38,7 @@ module.exports = {
     GM_deleteValue: true,
     GM_listValues: true,
     GM_xmlhttpRequest: true,
+    GM_addValueChangeListener: true,
     unsafeWindow: true,
     ClipboardItem: true,
   },

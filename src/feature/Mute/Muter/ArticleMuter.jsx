@@ -45,7 +45,9 @@ const style = {
 };
 
 function ArticleMuter() {
-  const { emoticon, hideMutedMark } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { emoticon, hideMutedMark },
+  } = useSelector((state) => state[Info.ID]);
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const [article, setArticle] = useState(null);
   const emoticonFilter = useEmoticon(emoticon);

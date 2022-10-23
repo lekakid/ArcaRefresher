@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import { setGroup } from './slice';
 
 export default function DrawerGroup({
@@ -17,7 +17,7 @@ export default function DrawerGroup({
   children,
 }) {
   const dispatch = useDispatch();
-  const { group } = useSelector((state) => state[MODULE_ID]);
+  const { group } = useSelector((state) => state[Info.ID]);
 
   const handleClick = useCallback(() => {
     dispatch(setGroup(groupKey));

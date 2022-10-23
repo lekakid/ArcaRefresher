@@ -13,7 +13,7 @@ import {
 
 import { TableEditor } from 'component/config';
 import Info from '../FeatureInfo';
-import { setMemoList, setVariant } from '../slice';
+import { $setMemoList, $setVariant } from '../slice';
 
 const columns = [
   { field: 'id', headerName: '이용자', flex: 1 },
@@ -22,7 +22,9 @@ const columns = [
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { variant, memo } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { variant, memo },
+  } = useSelector((state) => state[Info.ID]);
   const rows = Object.keys(memo).map((key) => ({
     id: key,
     memo: memo[key],
@@ -30,7 +32,7 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleVariant = useCallback(
     (e) => {
-      dispatch(setVariant(e.target.value));
+      dispatch($setVariant(e.target.value));
     },
     [dispatch],
   );
@@ -41,7 +43,7 @@ const View = React.forwardRef((_props, ref) => {
         (acc, row) => ({ ...acc, [row.id]: row.memo }),
         {},
       );
-      dispatch(setMemoList(updatedData));
+      dispatch($setMemoList(updatedData));
     },
     [dispatch],
   );

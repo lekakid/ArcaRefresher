@@ -1,38 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   variant: 'badge',
   memo: {},
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setVariant(state, action) {
-      state.variant = action.payload;
-      setValue(Info.ID, state);
+    $setVariant(state, action) {
+      state.storage.variant = action.payload;
     },
-    setMemo(state, action) {
+    $setMemo(state, action) {
       const { user, memo } = action.payload;
       if (memo) {
-        state.memo[user] = memo;
+        state.storage.memo[user] = memo;
       } else {
-        delete state.memo[user];
+        delete state.storage.memo[user];
       }
-      setValue(Info.ID, state);
     },
-    setMemoList(state, action) {
-      state.memo = action.payload;
-      setValue(Info.ID, state);
+    $setMemoList(state, action) {
+      state.storage.memo = action.payload;
     },
   },
 });
 
-export const { setVariant, setMemo, setMemoList } = slice.actions;
+export const { $setVariant, $setMemo, $setMemoList } = slice.actions;
 
 export default slice.reducer;

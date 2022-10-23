@@ -29,6 +29,7 @@ function MenuWrapper() {
     <>
       <ArticleMenu>
         <AnonymousNick.ArticleMenu />
+        <ImageDownloader.ArticleMenu />
         <MediaBlocker.ArticleMenu />
         <ExperienceCustom.ArticleMenu />
       </ArticleMenu>

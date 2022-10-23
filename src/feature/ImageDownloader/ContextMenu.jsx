@@ -14,7 +14,9 @@ import format from './format';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { fileName } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { fileName },
+  } = useSelector((state) => state[Info.ID]);
   const infoString = useParser();
   const data = useRef(null);
   const [valid, setValid] = useState(false);

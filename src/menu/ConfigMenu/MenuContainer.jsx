@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { ChevronLeft, Close, Menu } from '@material-ui/icons';
 
-import { MODULE_ID } from './ModuleInfo';
+import Info from './FeatureInfo';
 import { setOpen, setDrawer } from './slice';
 import Styles from './Styles';
 import HeaderButton from './HeaderButton';
@@ -24,7 +24,7 @@ import DrawerItem from './DrawerItem';
 
 function MenuContainer({ classes, groupList, menuList }) {
   const dispatch = useDispatch();
-  const { open, drawer, selection } = useSelector((state) => state[MODULE_ID]);
+  const { open, drawer, selection } = useSelector((state) => state[Info.ID]);
   const intersectionObserver = useRef(null);
   const [loadCount, setLoadCount] = useState(1);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));

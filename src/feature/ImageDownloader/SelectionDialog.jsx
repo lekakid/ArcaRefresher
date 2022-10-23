@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   CircularProgress,
@@ -22,6 +22,7 @@ import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
+import { setOpen } from './slice';
 
 const styles = (theme) => ({
   closeButton: {
@@ -34,9 +35,13 @@ const styles = (theme) => ({
   },
 });
 
-function SelectionDialog({ classes, open, onClose }) {
+function SelectionDialog({ classes }) {
+  const dispatch = useDispatch();
   const formatValues = useParser();
-  const { zipImageName, zipName } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { zipImageName, zipName },
+    open,
+  } = useSelector((state) => state[Info.ID]);
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
     const query = emoticon
@@ -74,24 +79,33 @@ function SelectionDialog({ classes, open, onClose }) {
   }, [data, selection]);
 
   const handleDownload = useCallback(async () => {
-    onClose();
+    dispatch(setOpen(false));
     setSelection([]);
     setShowProgress(true);
 
-    const selectedData = data.filter((_data, index) =>
+    const selectedImages = data.filter((_data, index) =>
       selection.includes(index),
     );
 
-    const totalSize = await selectedData.reduce(
-      async (acc, { orig }) =>
-        (await acc) +
-        (await fetch(orig, { method: 'HEAD' }).then(
-          (response) => Number(response.headers.get('Content-Length')) || 0,
-        )),
-      0,
+    let totalSize = 0;
+    const availableImages = await selectedImages.reduce(
+      async (promise, info) => {
+        try {
+          const response = await fetch(info.orig);
+
+          totalSize += Number(response.headers.get('Content-Length')) || 0;
+          const acc = await promise;
+          acc.push(info);
+          return acc;
+        } catch (error) {
+          console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
+          return promise;
+        }
+      },
+      [],
     );
 
-    const iterator = selectedData.values();
+    const iterator = availableImages.values();
     let count = 1;
 
     const confirm = (event) => {
@@ -138,7 +152,11 @@ function SelectionDialog({ classes, open, onClose }) {
         size: totalSize,
       }),
     );
-  }, [data, formatValues, onClose, selection, zipImageName, zipName]);
+  }, [dispatch, data, zipName, formatValues, selection, zipImageName]);
+
+  const handleClose = useCallback(() => {
+    dispatch(setOpen(false));
+  }, [dispatch]);
 
   const imgList = data.map(({ thumb }) => thumb);
 
@@ -157,10 +175,10 @@ function SelectionDialog({ classes, open, onClose }) {
   }
 
   return (
-    <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
+    <Dialog fullWidth maxWidth="lg" open={open} onClose={handleClose}>
       <DialogTitle>
         <Typography>이미지 다운로더</Typography>
-        <IconButton className={classes.closeButton} onClick={onClose}>
+        <IconButton className={classes.closeButton} onClick={handleClose}>
           <Close />
         </IconButton>
       </DialogTitle>

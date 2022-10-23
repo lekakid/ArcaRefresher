@@ -19,7 +19,7 @@ import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
 
 import { useParser } from 'util/Parser';
 import Info from '../FeatureInfo';
-import { setImageList, toggleEnabled, toggleForceLoad } from '../slice';
+import { $setImageList, $toggleEnabled, $toggleForceLoad } from '../slice';
 import ImageSelector from './ImageSelector';
 import MoveInput from './MoveInput';
 
@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useParser();
-  const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    storage: { enabled, imgList, forceLoad },
+  } = useSelector((state) => state[Info.ID]);
   const [selectedChannel, setSelectedChannel] = useState(
     channel.ID || '_shared_',
   );
@@ -47,11 +47,11 @@ const View = React.forwardRef((_props, ref) => {
   const classes = useStyles();
 
   const handleEnabled = useCallback(() => {
-    dispatch(toggleEnabled());
+    dispatch($toggleEnabled());
   }, [dispatch]);
 
   const handleForceLoad = useCallback(() => {
-    dispatch(toggleForceLoad());
+    dispatch($toggleForceLoad());
   }, [dispatch]);
 
   const handleChannel = useCallback((e) => {
@@ -89,8 +89,8 @@ const View = React.forwardRef((_props, ref) => {
         selection.includes(index),
       );
       const update = [...targetList, ...move];
-      dispatch(setImageList({ channel: selectedChannel, list: rest }));
-      dispatch(setImageList({ channel: targetChannel, list: update }));
+      dispatch($setImageList({ channel: selectedChannel, list: rest }));
+      dispatch($setImageList({ channel: targetChannel, list: update }));
       setOpen(false);
     },
     [dispatch, imgList, selectedChannel, selection],
@@ -100,7 +100,7 @@ const View = React.forwardRef((_props, ref) => {
     const update = imgList[selectedChannel].filter(
       (_img, index) => !selection.includes(index),
     );
-    dispatch(setImageList({ channel: selectedChannel, list: update }));
+    dispatch($setImageList({ channel: selectedChannel, list: update }));
     setSelection([]);
   }, [dispatch, imgList, selectedChannel, selection]);
 

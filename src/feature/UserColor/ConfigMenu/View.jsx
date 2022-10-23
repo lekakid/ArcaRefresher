@@ -4,7 +4,7 @@ import { Box, List, Paper, Typography } from '@material-ui/core';
 
 import { TableEditor } from 'component/config';
 import Info from '../FeatureInfo';
-import { setColorList } from '../slice';
+import { $setColorList } from '../slice';
 
 const columns = [
   { field: 'id', headerName: '이용자', flex: 1 },
@@ -13,7 +13,9 @@ const columns = [
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { color },
+  } = useSelector((state) => state[Info.ID]);
   const rows = Object.entries(color).map(([key, value]) => ({
     id: key,
     color: value,
@@ -25,7 +27,7 @@ const View = React.forwardRef((_props, ref) => {
         (acc, row) => ({ ...acc, [row.id]: row.color }),
         {},
       );
-      dispatch(setColorList(updatedData));
+      dispatch($setColorList(updatedData));
     },
     [dispatch],
   );

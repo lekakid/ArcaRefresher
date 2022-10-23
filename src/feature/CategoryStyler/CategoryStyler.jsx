@@ -17,7 +17,9 @@ import Info from './FeatureInfo';
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channel } = useParser();
-  const { color } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { color },
+  } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [styleMap, setStyleMap] = useState(null);
 

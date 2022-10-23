@@ -1,4 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import {
+  createStateSyncMiddleware,
+  initMessageListener,
+} from 'redux-state-sync';
+
+import { setValue } from 'core/storage';
 
 import Config from 'menu/ConfigMenu/slice';
 import ContextMenu from 'menu/ContextMenu/slice';
@@ -21,7 +27,11 @@ import MediaBlocker from 'feature/MediaBlocker/slice';
 
 import Parser from 'util/Parser/slice';
 
-export default configureStore({
+const syncConfig = {
+  predicate: (action) => action.type.indexOf('/$') > -1,
+};
+
+const store = configureStore({
   reducer: {
     // menu
     Config,
@@ -47,4 +57,22 @@ export default configureStore({
     // util
     Parser,
   },
+  middleware: [createStateSyncMiddleware(syncConfig)],
 });
+
+(() => {
+  function extractStorageEntries(state) {
+    return Object.entries(state)
+      .filter(([, value]) => !!value.storage)
+      .map(([key, value]) => [key, value.storage]);
+  }
+
+  store.subscribe(() => {
+    const configEntries = extractStorageEntries(store.getState());
+    configEntries.forEach(([key, value]) => setValue(key, value));
+  });
+})();
+
+initMessageListener(store);
+
+export default store;

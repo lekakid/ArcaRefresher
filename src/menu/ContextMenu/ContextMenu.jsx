@@ -28,8 +28,8 @@ function getKeyCombine(event) {
 export default function ContextMenu({ children }) {
   const dispatch = useDispatch();
   const {
+    storage: { interactionType },
     open,
-    config: { interactionType },
   } = useSelector((state) => state[MODULE_ID]);
   const gestureTrack = useRef({ right: false, count: 0 });
   const triggerList = useRef([]);

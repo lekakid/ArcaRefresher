@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useParser } from 'util/Parser';
 import Info from '../FeatureInfo';
-import { setCategoryConfig } from '../slice';
+import { $setCategoryConfig } from '../slice';
 
 const DEFAULT_CHANNEL_CONFIG = {};
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
@@ -13,7 +13,9 @@ const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const { channel } = useParser();
-  const { category: categoryConfig } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { category: categoryConfig },
+  } = useSelector((state) => state[Info.ID]);
   const channelConfig = categoryConfig?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
   const { mutePreview, muteArticle } =
     channelConfig?.[category] || DEFAULT_CATEGORY_CONFIG;
@@ -28,7 +30,7 @@ function CategoryRow({ divider, category, nameMap }) {
         },
       };
       dispatch(
-        setCategoryConfig({
+        $setCategoryConfig({
           channel: channel.ID,
           config: newConfig,
         }),

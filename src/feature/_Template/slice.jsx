@@ -1,30 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   template: 'template',
 };
 
 const initialState = {
-  config: getValue(Info.ID, defaultConfigState),
+  storage: getValue(Info.ID, defaultStorage),
   // 이 아래에 인터페이스 제어용 state 추가
-  // show: true
+  show: true,
 };
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    someReducer(state, action) {
-      state.config.prefixList = action.payload;
-      setValue(Info.ID, state.config);
+    // storage 내부 제어 리듀서는 맨앞에 $를 추가하여 구분합니다.
+    // 탭간의 Redux state 동기화 시 이름에 $가 포함되는지로 동기화 여부를 결정합니다.
+    $setTemplate(state, action) {
+      state.storage.template = action.payload;
     },
   },
 });
 
-export const { someReducer } = slice.actions;
+export const { $setTemplate } = slice.actions;
 
 // 아래 파일에 모듈 추가 작업 필요
 // LINK src/core/store.jsx

@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   user: [],
   keyword: [],
   emoticon: {},
@@ -12,91 +13,81 @@ const defaultConfigState = {
   muteIncludeReply: false,
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    addUser(state, action) {
-      state.user.push(action.payload);
-      setValue(Info.ID, state);
+    $addUser(state, action) {
+      state.storage.user.push(action.payload);
     },
-    removeUser(state, action) {
-      const index = state.user.indexOf(action.payload);
-      state.user.splice(index, 1);
-      setValue(Info.ID, state);
+    $removeUser(state, action) {
+      const index = state.storage.user.indexOf(action.payload);
+      state.storage.user.splice(index, 1);
     },
-    setUser(state, action) {
-      state.user = action.payload;
-      setValue(Info.ID, state);
+    $setUser(state, action) {
+      state.storage.user = action.payload;
     },
-    addKeyword(state, action) {
-      state.keyword.push(action.payload);
-      setValue(Info.ID, state);
+    $addKeyword(state, action) {
+      state.storage.keyword.push(action.payload);
     },
-    removeKeyword(state, action) {
-      state.keyword.push(action.payload);
-      setValue(Info.ID, state);
+    $removeKeyword(state, action) {
+      state.storage.keyword.push(action.payload);
     },
-    setKeyword(state, action) {
-      state.keyword = action.payload;
-      setValue(Info.ID, state);
+    $setKeyword(state, action) {
+      state.storage.keyword = action.payload;
     },
-    addEmoticon(state, action) {
+    $addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
-      if (state.emoticon[id]) {
-        const { bundle, url } = state.emoticon[id];
+      if (state.storage.emoticon[id]) {
+        const { bundle, url } = state.storage.emoticon[id];
 
-        state.emoticon[id] = {
-          ...state.emoticon[id],
+        state.storage.emoticon[id] = {
+          ...state.storage.emoticon[id],
           bundle: [...bundle, ...emoticon.bundle],
           url: [...url, ...emoticon.url],
         };
       } else {
-        state.emoticon[id] = emoticon;
+        state.storage.emoticon[id] = emoticon;
       }
-      setValue(Info.ID, state);
     },
-    removeEmoticonList(state, action) {
+    $removeEmoticonList(state, action) {
       action.payload.forEach((id) => {
-        delete state.emoticon[id];
+        delete state.storage.emoticon[id];
       });
-      setValue(Info.ID, state);
     },
-    setCategoryConfig(state, action) {
+    $setCategoryConfig(state, action) {
       const { channel, config } = action.payload;
-      state.category[channel] = config;
-      setValue(Info.ID, state);
+      state.storage.category[channel] = config;
     },
-    toggleCountBar(state) {
-      state.hideCountBar = !state.hideCountBar;
-      setValue(Info.ID, state);
+    $toggleCountBar(state) {
+      state.storage.hideCountBar = !state.storage.hideCountBar;
     },
-    toggleMutedMark(state) {
-      state.hideMutedMark = !state.hideMutedMark;
-      setValue(Info.ID, state);
+    $toggleMutedMark(state) {
+      state.storage.hideMutedMark = !state.storage.hideMutedMark;
     },
-    toggleIncludeReply(state) {
-      state.muteIncludeReply = !state.muteIncludeReply;
-      setValue(Info.ID, state);
+    $toggleIncludeReply(state) {
+      state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
     },
   },
 });
 
 export const {
-  addUser,
-  removeUser,
-  setUser,
-  addKeyword,
-  removeKeyword,
-  setKeyword,
-  addEmoticon,
-  removeEmoticonList,
-  setCategoryConfig,
-  toggleCountBar,
-  toggleMutedMark,
-  toggleIncludeReply,
+  $addUser,
+  $removeUser,
+  $setUser,
+  $addKeyword,
+  $removeKeyword,
+  $setKeyword,
+  $addEmoticon,
+  $removeEmoticonList,
+  $setCategoryConfig,
+  $toggleCountBar,
+  $toggleMutedMark,
+  $toggleIncludeReply,
 } = slice.actions;
 
 export default slice.reducer;

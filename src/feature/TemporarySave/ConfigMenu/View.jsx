@@ -13,17 +13,17 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { setAutoTime } from '../slice';
+import { $setAutoTime } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    config: { autoSaveTime },
+    storage: { autoSaveTime },
   } = useSelector((state) => state[Info.ID]);
 
   const handleSaveTime = useCallback(
     (e) => {
-      dispatch(setAutoTime(e.target.value));
+      dispatch($setAutoTime(e.target.value));
     },
     [dispatch],
   );

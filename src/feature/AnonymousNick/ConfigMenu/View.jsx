@@ -13,18 +13,18 @@ import {
 import { TextEditor } from 'component/config';
 
 import Info from '../FeatureInfo';
-import { setExtraPrefix, setPrefixList, setSuffixList } from '../slice';
+import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    config: { prefixList, suffixList, extraPrefix },
+    storage: { prefixList, suffixList, extraPrefix },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const onSavePrefixList = useCallback(
     (value) => {
       const updatedList = value.split('\n').filter((v) => v !== '');
-      dispatch(setPrefixList(updatedList));
+      dispatch($setPrefixList(updatedList));
     },
     [dispatch],
   );
@@ -32,14 +32,14 @@ const View = React.forwardRef((_props, ref) => {
   const onSaveSuffixList = useCallback(
     (value) => {
       const updatedList = value.split('\n').filter((v) => v !== '');
-      dispatch(setSuffixList(updatedList));
+      dispatch($setSuffixList(updatedList));
     },
     [dispatch],
   );
 
   const onChangeExtraPrefix = useCallback(
     (e) => {
-      dispatch(setExtraPrefix(e.target.value));
+      dispatch($setExtraPrefix(e.target.value));
     },
     [dispatch],
   );

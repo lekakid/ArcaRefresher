@@ -12,20 +12,20 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { toggleSauceNaoBypass, toggleSearchBySource } from '../slice';
+import { $toggleSauceNaoBypass, $toggleSearchBySource } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { searchBySource, saucenaoBypass } = useSelector(
-    (state) => state[Info.ID],
-  );
+  const {
+    storage: { searchBySource, saucenaoBypass },
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleSearchBySource = useCallback(() => {
-    dispatch(toggleSearchBySource());
+    dispatch($toggleSearchBySource());
   }, [dispatch]);
 
   const handleSauceNaoBypass = useCallback(() => {
-    dispatch(toggleSauceNaoBypass());
+    dispatch($toggleSauceNaoBypass());
   }, [dispatch]);
 
   return (

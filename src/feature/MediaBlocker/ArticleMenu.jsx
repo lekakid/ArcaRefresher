@@ -11,7 +11,7 @@ import Info from './FeatureInfo';
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
   const {
-    config: { enabled, deletedOnly },
+    storage: { enabled, deletedOnly },
   } = useSelector((state) => state[Info.ID]);
   const alertLoaded = useElementQuery(DELETED_ALERT_LOADED);
 

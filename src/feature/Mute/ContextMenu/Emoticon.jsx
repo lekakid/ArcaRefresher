@@ -6,7 +6,7 @@ import { Block } from '@material-ui/icons';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 
 import { getBundleData, getBundleInfo } from '../func';
-import { addEmoticon } from '../slice';
+import { $addEmoticon } from '../slice';
 
 function Emoticon({ triggerList }) {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ function Emoticon({ triggerList }) {
 
         if (idList.length === 0) {
           dispatch(
-            addEmoticon({
+            $addEmoticon({
               id: bundleID,
               emoticon: {
                 name: bundleName,
@@ -52,7 +52,7 @@ function Emoticon({ triggerList }) {
           );
         } else {
           dispatch(
-            addEmoticon({
+            $addEmoticon({
               id: bundleID,
               emoticon: { name: bundleName, bundle: idList, url: urlList },
             }),
@@ -77,7 +77,7 @@ function Emoticon({ triggerList }) {
         const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
 
         dispatch(
-          addEmoticon({
+          $addEmoticon({
             id: bundleID,
             emoticon: {
               name: bundleName,

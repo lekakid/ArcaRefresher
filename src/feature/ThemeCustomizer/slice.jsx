@@ -1,44 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
-const defaultConfigState = {
+const defaultStorage = {
   enabled: false,
   current: '',
   theme: {},
 };
 
-const initialState = getValue(Info.ID, defaultConfigState);
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage),
+};
 
 export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    toggleEnable(state) {
-      state.enabled = !state.enabled;
-      setValue(Info.ID, state);
+    $toggleEnable(state) {
+      state.storage.enabled = !state.storage.enabled;
     },
-    setCurrent(state, action) {
-      state.current = action.payload;
-      setValue(Info.ID, state);
+    $setCurrent(state, action) {
+      state.storage.current = action.payload;
     },
-    setPreset(state, action) {
+    $setPreset(state, action) {
       const { key, preset } = action.payload;
-      if (preset) state.theme[key] = preset;
-      else delete state.theme[key];
-      setValue(Info.ID, state);
+      if (preset) state.storage.theme[key] = preset;
+      else delete state.storage.theme[key];
     },
-    renamePreset(state, action) {
+    $renamePreset(state, action) {
       const { prev, next } = action.payload;
-      state.theme[next] = state.theme[prev];
-      delete state.theme[prev];
-      setValue(Info.ID, state);
+      state.storage.theme[next] = state.storage.theme[prev];
+      delete state.storage.theme[prev];
     },
   },
 });
 
-export const { toggleEnable, setCurrent, setPreset, renamePreset } =
+export const { $toggleEnable, $setCurrent, $setPreset, $renamePreset } =
   slice.actions;
 
 export default slice.reducer;

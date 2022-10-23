@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getValue, setValue } from 'core/storage';
+import { getValue } from 'core/storage';
 import { MODULE_ID } from './ModuleInfo';
 
 const defaultConfigState = {
@@ -10,7 +10,7 @@ const defaultConfigState = {
 };
 
 const initialState = {
-  config: getValue(MODULE_ID, defaultConfigState),
+  storage: getValue(MODULE_ID, defaultConfigState),
   open: false,
   snack: false,
   snackTime: null,
@@ -21,8 +21,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     setInteraction(state, action) {
-      state.config.interactionType = action.payload;
-      setValue(MODULE_ID, state.config);
+      state.storage.interactionType = action.payload;
     },
     setOpen(state) {
       state.open = true;

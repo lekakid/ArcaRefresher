@@ -12,19 +12,19 @@ import {
   Switch,
   Typography,
 } from '@material-ui/core';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import { Remove } from '@material-ui/icons';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { TextEditor } from 'component/config';
 import { useParser } from 'util/Parser';
 import Info from '../FeatureInfo';
 import {
-  removeEmoticonList,
-  setKeyword,
-  setUser,
-  toggleCountBar,
-  toggleMutedMark,
-  toggleIncludeReply,
+  $removeEmoticonList,
+  $setKeyword,
+  $setUser,
+  $toggleCountBar,
+  $toggleMutedMark,
+  $toggleIncludeReply,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 
@@ -50,12 +50,14 @@ const View = React.forwardRef((_props, ref) => {
     channel: { category },
   } = useParser();
   const {
-    hideCountBar,
-    hideMutedMark,
-    muteIncludeReply,
-    user,
-    keyword,
-    emoticon,
+    storage: {
+      hideCountBar,
+      hideMutedMark,
+      muteIncludeReply,
+      user,
+      keyword,
+      emoticon,
+    },
   } = useSelector((state) => state[Info.ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
     id: key,
@@ -67,22 +69,22 @@ const View = React.forwardRef((_props, ref) => {
   const [pageSize, setPageSize] = useState(10);
 
   const handleCountBar = useCallback(() => {
-    dispatch(toggleCountBar());
+    dispatch($toggleCountBar());
   }, [dispatch]);
 
   const handleMutedMark = useCallback(() => {
-    dispatch(toggleMutedMark());
+    dispatch($toggleMutedMark());
   }, [dispatch]);
 
   const handleIncludeReply = useCallback(() => {
-    dispatch(toggleIncludeReply());
+    dispatch($toggleIncludeReply());
   }, [dispatch]);
 
   const onSaveUser = useCallback(
     (text) => {
       const test = text.split('\n').filter((i) => i !== '');
       RegExp(test.join('|'));
-      dispatch(setUser(test));
+      dispatch($setUser(test));
     },
     [dispatch],
   );
@@ -91,7 +93,7 @@ const View = React.forwardRef((_props, ref) => {
     (text) => {
       const test = text.split('\n').filter((i) => i !== '');
       RegExp(test.join('|'));
-      dispatch(setKeyword(test));
+      dispatch($setKeyword(test));
     },
     [dispatch],
   );
@@ -101,7 +103,7 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   const handleRemove = useCallback(() => {
-    dispatch(removeEmoticonList(selection));
+    dispatch($removeEmoticonList(selection));
     setSelection([]);
   }, [dispatch, selection]);
 

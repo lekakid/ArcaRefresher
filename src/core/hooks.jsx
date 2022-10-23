@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useDebounceCallback } from '@react-hook/debounce';
 
 const defaultOpt = {
   childList: true,
@@ -41,8 +40,4 @@ export function useElementQuery(
   }, [blockDisconnect, opt, selector]);
 
   return exist;
-}
-
-export function useReduxDebounce(callback, wait = 300, leading = false) {
-  return useDebounceCallback(callback, wait, leading);
 }
