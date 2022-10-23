@@ -14,8 +14,8 @@ import {
 
 import { KeyIcon } from 'component';
 
-import { setInteraction } from '../slice';
-import { MODULE_ID, MODULE_NAME } from '../ModuleInfo';
+import { $setInteraction } from '../slice';
+import Info from '../FeatureInfo';
 
 const label = {
   r: {
@@ -35,19 +35,19 @@ const label = {
 const View = React.forwardRef((_props, ref) => {
   const {
     storage: { interactionType },
-  } = useSelector((state) => state[MODULE_ID]);
+  } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleInteraction = useCallback(
     (e) => {
-      dispatch(setInteraction(e.target.value));
+      dispatch($setInteraction(e.target.value));
     },
     [dispatch],
   );
 
   return (
     <Box ref={ref}>
-      <Typography variant="subtitle1">{MODULE_NAME}</Typography>
+      <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
           <ListItem>
@@ -104,5 +104,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${MODULE_ID})`;
+View.displayName = `ConfigMenuView(${Info.ID})`;
 export default View;
