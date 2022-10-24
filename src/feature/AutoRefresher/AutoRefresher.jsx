@@ -33,7 +33,10 @@ export default function AutoRefresher() {
     storage: { countdown, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
-  const [pause, setPause] = useState(false);
+  const [pause, setPause] = useState({
+    management: false,
+    unfocus: false,
+  });
   const sockCount = useRef(0);
 
   const classes = useStyles();
@@ -98,19 +101,24 @@ export default function AutoRefresher() {
       if (target.tagName !== 'INPUT') return;
 
       if (target.classList.contains('batch-check-all')) {
-        setPause(target.checked);
+        setPause((prev) => ({
+          ...prev,
+          management: target.checked,
+        }));
         return;
       }
 
-      setPause(!!board.querySelector('.batch-check:checked'));
+      setPause((prev) => ({
+        ...prev,
+        management: !!board.querySelector('.batch-check:checked'),
+      }));
     };
     const onFocusOut = () => {
-      if (document.hidden) {
-        setPause(true);
-      } else {
-        setPause(false);
-        handleRefresh();
-      }
+      setPause((prev) => ({
+        ...prev,
+        unfocus: document.hidden,
+      }));
+      if (!document.hidden) handleRefresh();
     };
     board.addEventListener('click', onManageArticle);
     document.addEventListener('visibilitychange', onFocusOut);
@@ -124,7 +132,7 @@ export default function AutoRefresher() {
   useEffect(() => {
     if (!board) return null;
     if (countdown === 0) return null;
-    if (pause) return null;
+    if (pause.management || pause.unfocus) return null;
 
     const timer = setInterval(handleRefresh, countdown * 1000);
 
@@ -135,7 +143,10 @@ export default function AutoRefresher() {
   return (
     <Fade in={countdown !== 0 && showProgress}>
       <div>
-        <RefreshProgress count={countdown} animate={!pause} />
+        <RefreshProgress
+          count={countdown}
+          animate={!(pause.management || pause.unfocus)}
+        />
       </div>
     </Fade>
   );
