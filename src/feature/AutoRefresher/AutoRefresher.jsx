@@ -50,10 +50,14 @@ export default function AutoRefresher() {
   }, [board, classes]);
 
   useEffect(() => {
+    if (!boardLoaded) return;
+
     const search = queryString.parse(window.location.search, {
       parseNumbers: true,
     });
-    if (boardLoaded && (!search.p || search.p === 1))
+    const searchKeys = Object.keys(search);
+    const targetKeys = ['p', 'after', 'before', 'near'];
+    if (search.p === 1 || !searchKeys.some((key) => targetKeys.includes(key)))
       setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
   }, [boardLoaded]);
 
