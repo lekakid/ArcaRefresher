@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Info from './FeatureInfo';
 
 const useStyles = makeStyles(
-  {
+  (theme) => ({
     FontSize: ({ fontSize }) => ({
       fontSize,
     }),
@@ -34,11 +34,82 @@ const useStyles = makeStyles(
       },
     },
     SideMenu: {
-      '& .right-sidebar': {
-        display: 'none',
+      '&:not([class*="width"])': {
+        [theme.breakpoints.up(991)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '&.width-1100': {
+        [theme.breakpoints.up(1500)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'left content content'",
+          },
+        },
+        [theme.breakpoints.between(991, 1500)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '&.width-1200': {
+        [theme.breakpoints.up(1600)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'left content content'",
+          },
+        },
+        [theme.breakpoints.between(991, 1600)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '&.width-1300': {
+        [theme.breakpoints.up(1700)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'left content content'",
+          },
+        },
+        [theme.breakpoints.between(991, 1700)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '&.width-1500': {
+        [theme.breakpoints.up(1900)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'left content content'",
+          },
+        },
+        [theme.breakpoints.between(991, 1900)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '&.width-1600': {
+        [theme.breakpoints.up(2000)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'left content content'",
+          },
+        },
+        [theme.breakpoints.between(991, 2000)]: {
+          '& .content-wrapper': {
+            gridTemplateAreas: "'content content'",
+          },
+        },
+      },
+      '& .left-ad-area': {
+        gridArea: 'left',
       },
       '& .board-article': {
+        gridArea: 'content',
         margin: 0,
+      },
+      '& .right-sidebar': {
+        display: 'none',
       },
     },
     Avatar: {
@@ -86,7 +157,7 @@ const useStyles = makeStyles(
         display: 'none !important',
       },
     },
-  },
+  }),
   {
     name: Info.ID,
   },
