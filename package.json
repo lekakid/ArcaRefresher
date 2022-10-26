@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "lint": "eslint . --ext jsx"
+    "hotfix": "git checkout master && git checkout -b hotfix && npm version patch",
+    "minor": "git checkout develop && npm version minor"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
