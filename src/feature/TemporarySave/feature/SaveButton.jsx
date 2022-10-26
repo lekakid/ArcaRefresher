@@ -19,7 +19,7 @@ export default function SaveButton({ editor, saveAs = false, ...btnProps }) {
     const title = editor.title.value || `${date.toLocaleString()}에 저장됨`;
     const content = editor.content.html.get(true);
 
-    const slot = saveAs ? timestamp : currentSlot;
+    const slot = saveAs ? timestamp : currentSlot || timestamp;
     if (!currentSlot) dispatch(setCurrentSlot(slot));
     dispatch($saveArticle({ slot, title, content }));
     setSnack(true);
