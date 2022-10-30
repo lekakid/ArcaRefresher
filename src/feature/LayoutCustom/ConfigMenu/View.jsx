@@ -27,6 +27,7 @@ import {
   $setUserInfoWith,
   $setResizeImage,
   $setResizeVideo,
+  $setResizeEmoticonPalette,
   $toggleUnvote,
   $toggleModifiedIndicator,
   $toggleLongComment,
@@ -35,6 +36,10 @@ import {
 
 function labelFormat(x) {
   return `${x}px`;
+}
+
+function emotLabelFormat(x) {
+  return `${x}칸`;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +63,7 @@ const View = React.forwardRef((_props, ref) => {
       userinfoWidth,
       resizeImage,
       resizeVideo,
+      resizeEmoticonPalette,
       hideUnvote,
       modifiedIndicator,
       unfoldLongComment,
@@ -118,6 +124,13 @@ const View = React.forwardRef((_props, ref) => {
   const handleResizeVideo = useCallback(
     (e, value) => {
       dispatch($setResizeVideo(value));
+    },
+    [dispatch],
+  );
+
+  const handleEmoticonPalette = useCallback(
+    (e, value) => {
+      dispatch($setResizeEmoticonPalette(value));
     },
     [dispatch],
   );
@@ -236,6 +249,21 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText>게시물 동영상 크기</ListItemText>
             <ListItemSecondaryAction>
               <Slider value={resizeVideo} onChange={handleResizeVideo} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>이모티콘 선택창 높이</ListItemText>
+            <ListItemSecondaryAction>
+              <Slider
+                value={resizeEmoticonPalette}
+                min={2}
+                max={5}
+                step={1}
+                marks
+                valueLabelFormat={emotLabelFormat}
+                valueLabelDisplay="auto"
+                onChange={handleEmoticonPalette}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleUnvote}>

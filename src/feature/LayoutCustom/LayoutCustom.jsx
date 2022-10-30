@@ -139,6 +139,11 @@ const useStyles = makeStyles(
         maxWidth: `${resizeVideo}% !important`,
       },
     }),
+    ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
+      '& .namlacon .emoticons': {
+        maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+      },
+    }),
     Unvote: {
       '& #rateDownForm': {
         display: 'none',
@@ -186,6 +191,7 @@ export default function LayoutCustom() {
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
+      classes.ResizeEmoticonPalette,
       {
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
