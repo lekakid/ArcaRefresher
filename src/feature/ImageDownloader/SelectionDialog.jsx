@@ -16,7 +16,7 @@ import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import { getGifInfo, getImageInfo } from './func';
 import format from './format';
@@ -37,7 +37,7 @@ const styles = (theme) => ({
 
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
-  const formatValues = useParser();
+  const formatValues = useContent();
   const {
     storage: { zipImageName, zipName },
     open,

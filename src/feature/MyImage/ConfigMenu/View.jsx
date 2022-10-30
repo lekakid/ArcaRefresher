@@ -17,7 +17,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
 
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import Info from '../FeatureInfo';
 import { $setImageList, $toggleEnabled, $toggleForceLoad } from '../slice';
 import ImageSelector from './ImageSelector';
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { enabled, imgList, forceLoad },
   } = useSelector((state) => state[Info.ID]);

@@ -3,7 +3,7 @@ import { Box, Divider, Grid, IconButton, Tooltip } from '@material-ui/core';
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import Info from '../FeatureInfo';
 import { $setCategoryConfig } from '../slice';
 
@@ -12,7 +12,7 @@ const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { category: categoryConfig },
   } = useSelector((state) => state[Info.ID]);

@@ -9,7 +9,7 @@ import {
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import { getUserInfo } from 'func/user';
 
 import { filterContent } from '../func';
@@ -39,7 +39,7 @@ const style = {
 function BoardMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { user, keyword, emoticon, category, hideCountBar },
   } = useSelector((state) => state[Info.ID]);

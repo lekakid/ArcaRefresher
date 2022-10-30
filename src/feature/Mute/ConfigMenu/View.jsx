@@ -16,7 +16,7 @@ import { Remove } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { TextEditor } from 'component/config';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import Info from '../FeatureInfo';
 import {
   $removeEmoticonList,
@@ -48,7 +48,7 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
     channel: { category },
-  } = useParser();
+  } = useContent();
   const {
     storage: {
       hideCountBar,

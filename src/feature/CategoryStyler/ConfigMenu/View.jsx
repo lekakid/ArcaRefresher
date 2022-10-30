@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import Info from '../FeatureInfo';
 import CategoryRow from './CategoryRow';
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 const View = React.forwardRef((_props, ref) => {
   const {
     channel: { category },
-  } = useParser();
+  } = useContent();
   const classes = useStyles();
 
   return (

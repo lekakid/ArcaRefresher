@@ -6,7 +6,7 @@ import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 import { getGifInfo, getImageInfo } from './func';
@@ -17,7 +17,7 @@ function ContextMenu({ triggerList }) {
   const {
     storage: { fileName },
   } = useSelector((state) => state[Info.ID]);
-  const infoString = useParser();
+  const infoString = useContent();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 

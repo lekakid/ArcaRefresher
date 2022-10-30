@@ -5,14 +5,14 @@ import { BrokenImage, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 import { $addImage, $removeImage } from './slice';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { imgList },
   } = useSelector((state) => state[Info.ID]);

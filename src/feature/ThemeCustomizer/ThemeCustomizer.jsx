@@ -2,11 +2,11 @@ import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import Info from './FeatureInfo';
 
 export default function ThemeCustomizer() {
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { enabled, current, theme },
   } = useSelector((state) => state[Info.ID]);

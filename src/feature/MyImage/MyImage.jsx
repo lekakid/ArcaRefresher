@@ -10,7 +10,7 @@ import {
 
 import { WRITE_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 
@@ -19,7 +19,7 @@ const SHARED = '_shared_';
 export default function MyImage() {
   const dispatch = useDispatch();
   const editorLoaded = useElementQuery(WRITE_LOADED);
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { enabled, imgList, forceLoad },
   } = useSelector((state) => state[Info.ID]);

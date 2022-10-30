@@ -17,7 +17,7 @@ import {
 import { ColorPicker } from 'material-ui-color';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import { getContrastYIQ } from 'func/color';
 import Info from '../FeatureInfo';
 import { $setStyle } from '../slice';
@@ -34,7 +34,7 @@ const DEFAULT_CATEGORY_CONFIG = {
 function CategoryRow({ divider, category, nameMap }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);
