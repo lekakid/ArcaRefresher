@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserInfo, getKey } from 'func/user';
+import { getUserInfo, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
 import Label from './Label';
@@ -32,7 +32,7 @@ function getInfoList({ prefixList, suffixList, extraPrefix }) {
   };
 
   return [...document.querySelectorAll(ARTICLE_USER_INFO)].map((e, index) => {
-    const key = getKey(e, index);
+    const key = getUserKey(e, index);
     const id = getUserInfo(e);
     const nick = getAnonymousNick(id);
     const container =

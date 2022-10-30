@@ -52,7 +52,7 @@ export function getUserIP(infoElement) {
   }
 }
 
-export function getKey(element, index) {
+export function getUserKey(element, index) {
   const comment = element.closest('div.comment-item');
   if (comment) return comment.id;
 
