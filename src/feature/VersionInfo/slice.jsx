@@ -15,9 +15,9 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    $updateCheckedVersion(state) {
+    $updateCheckedVersion(state, action) {
       // eslint-disable-next-line camelcase
-      state.storage.checkedVersion = GM_info.script.version;
+      state.storage.checkedVersion = action.payload;
     },
   },
 });
