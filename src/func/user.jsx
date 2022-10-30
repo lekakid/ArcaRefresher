@@ -57,7 +57,10 @@ export function getKey(element, index) {
   if (comment) return comment.id;
 
   const article = element.closest('a.vrow');
-  if (article) return `a_${article.pathname.split('/')[3]}`;
+  if (article) {
+    const notice = article.classList.contains('notice');
+    return `${notice ? 'n' : ''}a_${article.pathname.split('/')[3]}`;
+  }
 
   return `$.${index}`;
 }
