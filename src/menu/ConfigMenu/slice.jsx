@@ -4,7 +4,7 @@ import Info from './FeatureInfo';
 const initialState = {
   open: false,
   drawer: true,
-  selection: 'all',
+  selection: 'VersionInfo',
   group: 'global',
 };
 
