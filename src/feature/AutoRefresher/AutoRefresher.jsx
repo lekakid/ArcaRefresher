@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import queryString from 'query-string';
 
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
@@ -12,7 +12,7 @@ import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
 import { getNewArticle, swapArticle } from './article';
 
-const useStyles = makeStyles(() => ({
+const styles = {
   refreshed: {
     animationName: '$light',
     animationDuration: 500,
@@ -25,9 +25,9 @@ const useStyles = makeStyles(() => ({
       backgroundColor: 'rgba(246, 247, 239, 0)',
     },
   },
-}));
+};
 
-export default function AutoRefresher() {
+function AutoRefresher({ classes }) {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const {
     storage: { countdown, showProgress },
@@ -38,8 +38,6 @@ export default function AutoRefresher() {
     unfocus: false,
   });
   const sockCount = useRef(0);
-
-  const classes = useStyles();
 
   const handleRefresh = useCallback(async () => {
     if (sockCount.current === 0) return;
@@ -151,3 +149,5 @@ export default function AutoRefresher() {
     </Fade>
   );
 }
+
+export default withStyles(styles)(AutoRefresher);
