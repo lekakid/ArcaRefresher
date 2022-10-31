@@ -19,10 +19,10 @@ const styles = {
   },
   '@keyframes light': {
     '0%': {
-      backgroundColor: 'rgba(246, 247, 239, 1)',
+      backgroundColor: 'var(--color-bg-focus)',
     },
     '100%': {
-      backgroundColor: 'rgba(246, 247, 239, 0)',
+      backgroundColor: 'transparent',
     },
   },
 };
