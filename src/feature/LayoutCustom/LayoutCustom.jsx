@@ -169,11 +169,13 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const { storage } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { enabled, ...storage },
+  } = useSelector((state) => state[Info.ID]);
   const classes = useStyles(storage);
 
   useLayoutEffect(() => {
-    if (!storage.enabled) return undefined;
+    if (!enabled) return undefined;
 
     const {
       recentVisit,
@@ -207,7 +209,7 @@ export default function LayoutCustom() {
     document.documentElement.classList.add(...styles);
 
     return () => document.documentElement.classList.remove(...styles);
-  }, [classes, storage]);
+  }, [classes, enabled, storage]);
 
   return null;
 }
