@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Grid,
@@ -8,24 +9,38 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 
 import { useContent } from 'util/ContentInfo';
 
 import Info from '../FeatureInfo';
+import { $setStyle } from '../slice';
 import CategoryRow from './CategoryRow';
 
-const useStyles = makeStyles({
+const styles = {
   root: {
     width: '100%',
   },
-});
+};
 
-const View = React.forwardRef((_props, ref) => {
+const View = React.forwardRef(({ classes }, ref) => {
+  const dispatch = useDispatch();
+  const { channel } = useContent();
   const {
-    channel: { category },
-  } = useContent();
-  const classes = useStyles();
+    storage: { color },
+  } = useSelector((state) => state[Info.ID]);
+  const channelConfig = color[channel.ID];
+
+  const handleChange = useCallback(
+    (categoryId, value) => {
+      const updateConfig = {
+        ...channelConfig,
+        [categoryId]: value,
+      };
+      dispatch($setStyle({ channel: channel.ID, color: updateConfig }));
+    },
+    [channel, channelConfig, dispatch],
+  );
 
   return (
     <Box ref={ref}>
@@ -38,13 +53,15 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem>
             <Paper className={classes.root} variant="outlined">
               <Grid container>
-                {category &&
-                  Object.keys(category).map((id, index) => (
+                {channel.category &&
+                  Object.entries(channel.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}
                       divider={index !== 0}
-                      category={id}
-                      nameMap={category}
+                      id={id}
+                      label={label}
+                      initValue={channelConfig?.[id]}
+                      onChange={handleChange}
                     />
                   ))}
               </Grid>
@@ -57,4 +74,4 @@ const View = React.forwardRef((_props, ref) => {
 });
 
 View.displayName = `ConfigMenuView(${Info.ID})`;
-export default View;
+export default withStyles(styles)(View);
