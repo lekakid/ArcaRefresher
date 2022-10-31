@@ -25,6 +25,7 @@ import {
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,
+  $setCategoryConfig,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 
@@ -46,9 +47,7 @@ function CustomOverRay() {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const {
-    channel: { category },
-  } = useContent();
+  const { channel } = useContent();
   const {
     storage: {
       hideCountBar,
@@ -57,6 +56,7 @@ const View = React.forwardRef((_props, ref) => {
       user,
       keyword,
       emoticon,
+      category,
     },
   } = useSelector((state) => state[Info.ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
@@ -67,6 +67,8 @@ const View = React.forwardRef((_props, ref) => {
   }));
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+
+  const channelCategory = category[channel.ID];
 
   const handleCountBar = useCallback(() => {
     dispatch($toggleCountBar());
@@ -110,6 +112,17 @@ const View = React.forwardRef((_props, ref) => {
   const handleSelection = useCallback((current) => {
     setSelection(current);
   }, []);
+
+  const handleCategory = useCallback(
+    (categoryId, value) => {
+      const updateCategory = { ...channelCategory, [categoryId]: value };
+
+      dispatch(
+        $setCategoryConfig({ channel: channel.ID, config: updateCategory }),
+      );
+    },
+    [channel, channelCategory, dispatch],
+  );
 
   return (
     <Box ref={ref}>
@@ -192,13 +205,15 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {category &&
-                  Object.keys(category).map((id, index) => (
+                {channel.category &&
+                  Object.entries(channel.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}
                       divider={index !== 0}
-                      category={id}
-                      nameMap={category}
+                      id={id}
+                      label={label}
+                      initValue={channelCategory?.[id]}
+                      onChange={handleCategory}
                     />
                   ))}
               </Grid>
