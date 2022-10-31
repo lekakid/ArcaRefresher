@@ -13,6 +13,7 @@ const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   open: false,
   snack: false,
+  snackMsg: '',
   snackTime: null,
 };
 
@@ -23,21 +24,20 @@ export const slice = createSlice({
     $setInteraction(state, action) {
       state.storage.interactionType = action.payload;
     },
-    setOpen(state) {
-      state.open = true;
-    },
-    setClose(state) {
-      state.open = false;
+    setMenuOpen(state, action) {
+      state.open = action.payload;
     },
     setContextSnack(state, action) {
-      const { msg, time } = action.payload;
-      state.snack = msg;
-      state.snackTime = time || null;
+      const { open, msg, time } = action.payload;
+      state.snack = open;
+      if (open) {
+        state.snackMsg = msg || '';
+        state.snackTime = time;
+      }
     },
   },
 });
 
-export const { $setInteraction, setOpen, setClose, setContextSnack } =
-  slice.actions;
+export const { $setInteraction, setMenuOpen, setContextSnack } = slice.actions;
 
 export default slice.reducer;

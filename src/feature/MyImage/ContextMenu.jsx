@@ -4,21 +4,22 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { BrokenImage, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
 import { useContent } from 'util/ContentInfo';
+import { useContextMenu } from 'menu/ContextMenu';
 
 import Info from './FeatureInfo';
 import { $addImage, $removeImage } from './slice';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
+  const [setOpen, setSnack] = useContextMenu();
   const { channel } = useContent();
   const {
     storage: { imgList },
   } = useSelector((state) => state[Info.ID]);
-  const [exist, setExist] = useState({ channel: false, share: false });
   const data = useRef(null);
   const [valid, setValid] = useState(false);
+  const [exist, setExist] = useState({ channel: false, share: false });
 
   useEffect(() => {
     const trigger = (target) => {
@@ -48,26 +49,22 @@ function ContextMenu({ triggerList }) {
   const handleChannelImage = useCallback(() => {
     const action = exist.channel ? $removeImage : $addImage;
     dispatch(action({ channel: channel.ID, url: data.current }));
-    dispatch(setClose());
-    dispatch(
-      setContextSnack({
-        msg: `채널 자짤로 ${exist.channel ? '제거' : '저장'}했습니다.`,
-        time: 3000,
-      }),
-    );
-  }, [exist, dispatch, channel]);
+    setOpen(false);
+    setSnack({
+      msg: `채널 자짤로 ${exist.channel ? '제거' : '저장'}했습니다.`,
+      time: 3000,
+    });
+  }, [exist, dispatch, channel.ID, setOpen, setSnack]);
 
   const handleShareImage = useCallback(() => {
     const action = exist.share ? $removeImage : $addImage;
     dispatch(action({ channel: '_shared_', url: data.current }));
-    dispatch(setClose());
-    dispatch(
-      setContextSnack({
-        msg: `공용 자짤로 ${exist.share ? '제거' : '저장'}했습니다.`,
-        time: 3000,
-      }),
-    );
-  }, [exist, dispatch]);
+    setOpen(false);
+    setSnack({
+      msg: `공용 자짤로 ${exist.share ? '제거' : '저장'}했습니다.`,
+      time: 3000,
+    });
+  }, [exist, dispatch, setOpen, setSnack]);
 
   if (!valid) return null;
   return (

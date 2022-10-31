@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
@@ -16,6 +16,7 @@ function makeRegex(id = '') {
 
 function User({ triggerList }) {
   const dispatch = useDispatch();
+  const [setOpen] = useContextMenu();
   const {
     storage: { user },
   } = useSelector((state) => state[Info.ID]);
@@ -43,8 +44,8 @@ function User({ triggerList }) {
 
   const handleMute = useCallback(() => {
     dispatch(exist ? $removeUser(regex) : $addUser(regex));
-    dispatch(setClose());
-  }, [dispatch, exist, regex]);
+    setOpen(false);
+  }, [dispatch, exist, regex, setOpen]);
 
   if (!valid) return null;
   return (

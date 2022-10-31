@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import Info from './FeatureInfo';
 import ContextSnack from './ContextSnack';
-import { setClose, setOpen } from './slice';
+import { setMenuOpen } from './slice';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -47,7 +47,7 @@ export default function ContextMenu({ children }) {
       if (gestureTrack.current.right) gestureTrack.current.count += 1;
     };
     const handleScroll = () => {
-      dispatch(setClose());
+      dispatch(setMenuOpen(false));
     };
     const handleContext = (e) => {
       if (open) {
@@ -61,7 +61,7 @@ export default function ContextMenu({ children }) {
         triggerList.current.forEach((trigger) => {
           if (trigger(e.target)) {
             e.preventDefault();
-            dispatch(setOpen());
+            dispatch(setMenuOpen(true));
           }
         });
       }
@@ -83,7 +83,7 @@ export default function ContextMenu({ children }) {
   }, [dispatch, interactionType, open]);
 
   const handleClose = useCallback(() => {
-    dispatch(setClose());
+    dispatch(setMenuOpen(false));
   }, [dispatch]);
 
   const [left = 0, top = 0] = mousePos;

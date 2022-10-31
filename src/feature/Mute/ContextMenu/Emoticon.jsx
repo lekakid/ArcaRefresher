@@ -3,13 +3,13 @@ import { useDispatch } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-
+import { useContextMenu } from 'menu/ContextMenu';
 import { getBundleData, getBundleInfo } from '../func';
 import { $addEmoticon } from '../slice';
 
 function Emoticon({ triggerList }) {
   const dispatch = useDispatch();
+  const [setOpen, setSnack] = useContextMenu();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -59,16 +59,16 @@ function Emoticon({ triggerList }) {
           );
         }
       } catch (e) {
-        setContextSnack({
+        setSnack({
           msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
           time: 3000,
         });
         console.error(e);
       }
 
-      dispatch(setClose());
+      setOpen(false);
     })();
-  }, [dispatch]);
+  }, [dispatch, setOpen, setSnack]);
 
   const handleSingleMute = useCallback(() => {
     (async () => {
@@ -87,16 +87,16 @@ function Emoticon({ triggerList }) {
           }),
         );
       } catch (e) {
-        setContextSnack({
+        setSnack({
           msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
           time: 3000,
         });
         console.error(e);
       }
 
-      dispatch(setClose());
+      setOpen(false);
     })();
-  }, [dispatch]);
+  }, [dispatch, setOpen, setSnack]);
 
   if (!valid) return null;
   return (

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
@@ -13,10 +13,10 @@ import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 
 function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
   const {
     storage: { fileName },
   } = useSelector((state) => state[Info.ID]);
+  const [setOpen, setSnack] = useContextMenu();
   const infoString = useContent();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
@@ -43,8 +43,8 @@ function ContextMenu({ triggerList }) {
       const { orig } = data.current;
 
       try {
-        dispatch(setClose());
-        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
+        setOpen(false);
+        setSnack({ msg: '이미지를 다운로드 받는 중...' });
         const rawData = await fetch(orig).then((response) => response.blob());
 
         const canvas = document.createElement('canvas');
@@ -66,29 +66,25 @@ function ContextMenu({ triggerList }) {
           [convertedBlob.type]: convertedBlob,
         });
         navigator.clipboard.write([item]);
-        dispatch(
-          setContextSnack({
-            msg: '클립보드에 이미지가 복사되었습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '클립보드에 이미지가 복사되었습니다.',
+          time: 3000,
+        });
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
-        dispatch(
-          setContextSnack({
-            msg: '이미지 다운로드에 실패했습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '이미지 다운로드에 실패했습니다.',
+          time: 3000,
+        });
       }
     })();
-  }, [dispatch]);
+  }, [setOpen, setSnack]);
 
   const handleDownload = useCallback(() => {
     (async () => {
       const { orig, ext, uploadName } = data.current;
       try {
-        dispatch(setClose());
+        setOpen(false);
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
@@ -103,20 +99,18 @@ function ContextMenu({ triggerList }) {
         stream.pipeTo(filestream);
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
-        dispatch(
-          setContextSnack({
-            msg: '이미지 다운로드에 실패했습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '이미지 다운로드에 실패했습니다.',
+          time: 3000,
+        });
       }
     })();
-  }, [dispatch, fileName, infoString]);
+  }, [fileName, infoString, setOpen, setSnack]);
 
   const handleCopyURL = useCallback(() => {
-    dispatch(setClose());
+    setOpen(false);
     navigator.clipboard.writeText(data.current.orig);
-  }, [dispatch]);
+  }, [setOpen]);
 
   if (!valid) return null;
   return (

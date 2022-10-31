@@ -7,18 +7,18 @@ import Info from './FeatureInfo';
 
 export default function ContextSnack() {
   const dispatch = useDispatch();
-  const { snack, snackTime } = useSelector((state) => state[Info.ID]);
+  const { snack, snackMsg, snackTime } = useSelector((state) => state[Info.ID]);
 
   const handleSnackClose = useCallback(() => {
-    dispatch(setContextSnack(''));
+    dispatch(setContextSnack({ open: false }));
   }, [dispatch]);
 
   return (
     <Snackbar
-      open={!!snack}
+      open={snack}
       autoHideDuration={snackTime}
       onClose={handleSnackClose}
-      message={snack}
+      message={snackMsg}
     />
   );
 }

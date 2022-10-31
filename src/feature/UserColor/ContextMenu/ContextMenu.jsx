@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Colorize } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { getUserID } from 'func/user';
 
 import { $setColor } from '../slice';
@@ -13,10 +13,11 @@ import InputDialog from './InputDialog';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
+  const [setOpen] = useContextMenu();
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);
-  const [open, setOpen] = useState(false);
+  const [openInput, setOpenInput] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -38,12 +39,12 @@ function ContextMenu({ triggerList }) {
   }, [triggerList]);
 
   const handleClick = useCallback(() => {
-    dispatch(setClose());
-    setOpen(true);
-  }, [dispatch]);
+    setOpen(false);
+    setOpenInput(true);
+  }, [setOpen]);
 
   const handleInputClose = useCallback(() => {
-    setOpen(false);
+    setOpenInput(false);
   }, []);
 
   const handleInputSubmit = useCallback(
@@ -63,7 +64,7 @@ function ContextMenu({ triggerList }) {
         <Typography>색상 설정</Typography>
       </MenuItem>
       <InputDialog
-        open={open}
+        open={openInput}
         defaultValue={color[data.current]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}

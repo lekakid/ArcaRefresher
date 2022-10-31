@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 
 function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
+  const [setOpen] = useContextMenu();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -31,8 +30,8 @@ function ContextMenu({ triggerList }) {
 
   const handleInfo = useCallback(() => {
     window.open(`https://arca.live/u/@${data.current}`);
-    dispatch(setClose());
-  }, [dispatch]);
+    setOpen(false);
+  }, [setOpen]);
 
   if (!valid) return null;
   return (

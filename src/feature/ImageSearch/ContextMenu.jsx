@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { httpRequest } from 'func/httpRequest';
 import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
 function ContextMenu({ triggerList }) {
+  const [setOpen, setSnack] = useContextMenu();
   const {
     storage: { searchBySource, saucenaoBypass },
   } = useSelector((state) => state[Info.ID]);
-  const dispatch = useDispatch();
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -40,38 +40,36 @@ function ContextMenu({ triggerList }) {
     window.open(
       `https://www.google.com/searchbyimage?safe=off&image_url=${data.current}`,
     );
-    dispatch(setClose());
-  }, [dispatch]);
+    setOpen(false);
+  }, [setOpen]);
 
   const handleYandex = useCallback(() => {
     window.open(
       `https://yandex.com/images/search?rpt=imageview&url=${data.current}`,
     );
-    dispatch(setClose());
-  }, [dispatch]);
+    setOpen(false);
+  }, [setOpen]);
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
       window.open(`https://saucenao.com/search.php?db=999&url=${data.current}`);
-      dispatch(setClose());
+      setOpen(false);
       return;
     }
 
     (async () => {
       try {
-        dispatch(setClose());
-        dispatch(setContextSnack({ msg: 'SauceNao에서 검색 중...' }));
+        setOpen(false);
+        setSnack({ msg: 'SauceNao에서 검색 중...' });
         const blob = await fetch(data.current).then((response) =>
           response.blob(),
         );
 
         if (blob.size > 15728640) {
-          dispatch(
-            setContextSnack({
-              msg: '업로드 용량 제한(15MB)을 초과했습니다.',
-              time: 3000,
-            }),
-          );
+          setSnack({
+            msg: '업로드 용량 제한(15MB)을 초과했습니다.',
+            time: 3000,
+          });
           return;
         }
 
@@ -90,35 +88,31 @@ function ContextMenu({ triggerList }) {
           .querySelector('#yourimage a')
           ?.href.split('image=')[1];
         if (!resultURL) {
-          dispatch(
-            setContextSnack({
-              msg: '이미지 업로드에 실패했습니다.',
-              time: 3000,
-            }),
-          );
+          setSnack({
+            msg: '이미지 업로드에 실패했습니다.',
+            time: 3000,
+          });
           return;
         }
         window.open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
         );
-        dispatch(setContextSnack(''));
+        setSnack({});
       } catch (error) {
-        dispatch(
-          setContextSnack({
-            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          time: 3000,
+        });
         console.error(error);
       }
     })();
-  }, [saucenaoBypass, dispatch]);
+  }, [saucenaoBypass, setOpen, setSnack]);
 
   const handleTwigaten = useCallback(() => {
     (async () => {
       try {
-        dispatch(setClose());
-        dispatch(setContextSnack({ msg: 'TwiGaTen에서 검색 중...' }));
+        setOpen(false);
+        setSnack({ msg: 'TwiGaTen에서 검색 중...' });
         const blob = await fetch(data.current).then((response) =>
           response.blob(),
         );
@@ -132,24 +126,22 @@ function ContextMenu({ triggerList }) {
           data: formdata,
         });
         window.open(resultURL);
-        dispatch(setContextSnack(''));
+        setSnack({});
       } catch (error) {
-        dispatch(
-          setContextSnack({
-            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          time: 3000,
+        });
         console.error(error);
       }
     })();
-  }, [dispatch]);
+  }, [setOpen, setSnack]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
-        dispatch(setClose());
-        dispatch(setContextSnack({ msg: 'Ascii2D에서 검색 중...' }));
+        setOpen(false);
+        setSnack({ msg: 'Ascii2D에서 검색 중...' });
 
         const { response: tokenDocument } = await httpRequest({
           url: 'https://ascii2d.net',
@@ -171,18 +163,16 @@ function ContextMenu({ triggerList }) {
           data: formdata,
         });
         window.open(resultURL);
-        dispatch(setContextSnack(''));
+        setSnack({});
       } catch (error) {
-        dispatch(
-          setContextSnack({
-            msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          time: 3000,
+        });
         console.error(error);
       }
     })();
-  }, [dispatch]);
+  }, [setOpen, setSnack]);
 
   if (!valid) return null;
   return (

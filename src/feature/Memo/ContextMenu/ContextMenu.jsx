@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { getUserID } from 'func/user';
 
 import { $setMemo } from '../slice';
@@ -13,10 +13,11 @@ import MemoInput from './MemoInput';
 
 function ContextMenu({ triggerList }) {
   const dispatch = useDispatch();
+  const [setOpen] = useContextMenu();
   const {
     storage: { memo },
   } = useSelector((state) => state[Info.ID]);
-  const [open, setOpen] = useState(false);
+  const [openInput, setOpenInput] = useState(false);
   const data = useRef(null);
   const [valid, setValid] = useState(false);
 
@@ -39,12 +40,12 @@ function ContextMenu({ triggerList }) {
   }, [triggerList]);
 
   const handleClick = useCallback(() => {
-    dispatch(setClose());
-    setOpen(true);
-  }, [dispatch]);
+    setOpen(false);
+    setOpenInput(true);
+  }, [setOpen]);
 
   const handleInputClose = useCallback(() => {
-    setOpen(false);
+    setOpenInput(false);
   }, []);
 
   const handleInputSubmit = useCallback(
@@ -64,7 +65,7 @@ function ContextMenu({ triggerList }) {
         <Typography>메모</Typography>
       </MenuItem>
       <MemoInput
-        open={open}
+        open={openInput}
         defaultValue={memo[data.current]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
