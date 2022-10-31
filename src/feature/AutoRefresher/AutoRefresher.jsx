@@ -67,13 +67,10 @@ function AutoRefresher({ classes }) {
     if (!board) return;
     if (countdown === 0) return;
 
-    const { protocol, host, pathname, search } = window.location;
+    const { host, pathname, search } = window.location;
 
     const connect = () => {
-      const sock = new WebSocket(
-        `ws${protocol === 'https:' ? 's' : ''}://${host}/arcalive`,
-        'arcalive',
-      );
+      const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
       sock.onopen = () => {
         sock.send('hello');
         sock.send(`c|${pathname}${search}`);
