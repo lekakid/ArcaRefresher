@@ -30,25 +30,33 @@ const styles = {
 function AutoRefresher({ classes }) {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const {
-    storage: { countdown, showProgress },
+    storage: { countdown, maxTime, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState({
     management: false,
     unfocus: false,
   });
-  const sockCount = useRef(0);
+  const sockCount = useRef({ newArticle: 0, accTime: 0 });
 
   const handleRefresh = useCallback(async () => {
-    if (sockCount.current === 0) return;
+    if (sockCount.current.newArticle === 0) {
+      if (maxTime === -1) return;
+
+      if (sockCount.current.accTime < maxTime) {
+        sockCount.current.accTime += countdown;
+        return;
+      }
+    }
 
     const newArticle = await getNewArticle();
     if (newArticle.length === 0) return;
 
     swapArticle(board, newArticle, classes.refreshed);
     dispatchAREvent(EVENT_AUTOREFRESH);
-    sockCount.current = 0;
-  }, [board, classes]);
+    sockCount.current.newArticle = 0;
+    sockCount.current.accTime = 0;
+  }, [board, classes, countdown, maxTime]);
 
   useEffect(() => {
     if (!boardLoaded) return;
@@ -76,7 +84,7 @@ function AutoRefresher({ classes }) {
         sock.send(`c|${pathname}${search}`);
       };
       sock.onmessage = (e) => {
-        if (e.data === 'na') sockCount.current += 1;
+        if (e.data === 'na') sockCount.current.newArticle += 1;
       };
       sock.onclose = () => {
         setTimeout(connect, 1000);

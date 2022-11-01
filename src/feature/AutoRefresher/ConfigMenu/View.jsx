@@ -14,17 +14,24 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { $toggleAnimation, $setTimeLimit } from '../slice';
+import { $toggleAnimation, $setTimeLimit, $setMaxTime } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
-    storage: { countdown, showProgress },
+    storage: { countdown, maxTime, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const dispatch = useDispatch();
 
   const handleRefreshTime = useCallback(
     (e) => {
       dispatch($setTimeLimit(e.target.value));
+    },
+    [dispatch],
+  );
+
+  const handleMaxTime = useCallback(
+    (e) => {
+      dispatch($setMaxTime(e.target.value));
     },
     [dispatch],
   );
@@ -52,6 +59,25 @@ const View = React.forwardRef((_props, ref) => {
                 <MenuItem value={20}>20초</MenuItem>
                 <MenuItem value={30}>30초</MenuItem>
                 <MenuItem value={60}>1분</MenuItem>
+              </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText
+              primary="최대 갱신 스킵 시간"
+              secondary="이 시간만큼 게시물 갱신이 없으면 반드시 새로고침합니다."
+            />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={maxTime}
+                onChange={handleMaxTime}
+              >
+                <MenuItem value={-1}>사용 안 함</MenuItem>
+                <MenuItem value={60}>1분</MenuItem>
+                <MenuItem value={120}>2분</MenuItem>
+                <MenuItem value={300}>5분</MenuItem>
+                <MenuItem value={600}>10분</MenuItem>
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
