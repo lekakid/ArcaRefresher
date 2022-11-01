@@ -10,34 +10,28 @@ const defaultOpt = {
  * selector로 받은 엘리먼트가 감지될 때까지 화면 변화를 감지합니다.
  *
  * @param {string} selector 찾을 엘리먼트의 설렉터
- * @param {boolean} blockDisconnect 변화를 계속 추적할지 여부
+ * @param {Object} opt      옵저버 옵션
  * @returns
  */
-export function useElementQuery(
-  selector,
-  blockDisconnect = false,
-  opt = defaultOpt,
-) {
+export function useElementQuery(selector, opt = defaultOpt) {
   const [exist, setExist] = useState(false);
 
   useEffect(() => {
     if (document.querySelector(selector)) {
       setExist(true);
-      if (!blockDisconnect) return null;
+      return undefined;
     }
 
     const observer = new MutationObserver(() => {
-      if (document.querySelector(selector)) {
-        if (!blockDisconnect) observer.disconnect();
-        setExist(true);
-        return;
-      }
-      setExist(false);
+      if (!document.querySelector(selector)) return;
+
+      observer.disconnect();
+      setExist(true);
     });
     observer.observe(document.documentElement, opt);
 
     return () => observer.disconnect();
-  }, [blockDisconnect, opt, selector]);
+  }, [opt, selector]);
 
   return exist;
 }
