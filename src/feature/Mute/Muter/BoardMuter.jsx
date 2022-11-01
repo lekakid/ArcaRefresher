@@ -33,6 +33,9 @@ const style = {
         display: 'none !important',
       },
     },
+    '.hide-no-permission a.vrow[href$="#c_"]': {
+      display: 'none !important',
+    },
   },
 };
 
@@ -41,7 +44,14 @@ function BoardMuter() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const { channel } = useContent();
   const {
-    storage: { user, keyword, emoticon, category, hideCountBar },
+    storage: {
+      user,
+      keyword,
+      emoticon,
+      category,
+      hideCountBar,
+      hideNoPermission,
+    },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
@@ -122,6 +132,13 @@ function BoardMuter() {
       }
     });
   }, [board, emoticionFilter]);
+
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle(
+      'hide-no-permission',
+      hideNoPermission,
+    );
+  }, [hideNoPermission]);
 
   if (!countBar) return null;
   return (

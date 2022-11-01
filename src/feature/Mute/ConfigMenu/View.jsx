@@ -22,6 +22,7 @@ import {
   $removeEmoticonList,
   $setKeyword,
   $setUser,
+  $toggleHideNoPermission,
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,
@@ -50,6 +51,7 @@ const View = React.forwardRef((_props, ref) => {
   const { channel } = useContent();
   const {
     storage: {
+      hideNoPermission,
       hideCountBar,
       hideMutedMark,
       muteIncludeReply,
@@ -69,6 +71,10 @@ const View = React.forwardRef((_props, ref) => {
   const [pageSize, setPageSize] = useState(10);
 
   const channelCategory = category[channel.ID];
+
+  const handleNoPermission = useCallback(() => {
+    dispatch($toggleHideNoPermission());
+  }, [dispatch]);
 
   const handleCountBar = useCallback(() => {
     dispatch($toggleCountBar());
@@ -129,6 +135,15 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
+          <ListItem divider button onClick={handleNoPermission}>
+            <ListItemText>(권한 없음) 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideNoPermission}
+                onChange={handleNoPermission}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleCountBar}>
             <ListItemText
               primary="뮤트 카운터 숨김"
