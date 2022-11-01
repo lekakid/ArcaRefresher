@@ -32,6 +32,7 @@ import {
   $toggleModifiedIndicator,
   $toggleLongComment,
   $toggleSideContents,
+  $toggleHideVoiceComment,
 } from '../slice';
 
 function labelFormat(x) {
@@ -66,6 +67,7 @@ const View = React.forwardRef((_props, ref) => {
       resizeEmoticonPalette,
       hideUnvote,
       modifiedIndicator,
+      hideVoiceComment,
       unfoldLongComment,
     },
   } = useSelector((state) => state[Info.ID]);
@@ -141,6 +143,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleModifiedIndicator = useCallback(() => {
     dispatch($toggleModifiedIndicator());
+  }, [dispatch]);
+
+  const handleHideVoiceComment = useCallback(() => {
+    dispatch($toggleHideVoiceComment());
   }, [dispatch]);
 
   const handleUnfoldLongComment = useCallback(() => {
@@ -278,6 +284,15 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={modifiedIndicator}
                 onChange={handleModifiedIndicator}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleHideVoiceComment}>
+            <ListItemText primary="음성 댓글 버튼 숨기기" />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideVoiceComment}
+                onChange={handleHideVoiceComment}
               />
             </ListItemSecondaryAction>
           </ListItem>

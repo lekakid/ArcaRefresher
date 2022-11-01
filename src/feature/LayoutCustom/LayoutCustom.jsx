@@ -154,6 +154,11 @@ const useStyles = makeStyles(
         display: 'none',
       },
     },
+    HideVoiceComment: {
+      '& #comment .btn-voicecmt': {
+        display: 'none !important',
+      },
+    },
     UnfoldLongComment: {
       '& #comment .message': {
         maxHeight: 'none !important',
@@ -186,6 +191,7 @@ export default function LayoutCustom() {
       avatar,
       hideUnvote,
       modifiedIndicator,
+      hideVoiceComment,
       unfoldLongComment,
     } = storage;
     const styles = clsx(
@@ -203,6 +209,7 @@ export default function LayoutCustom() {
         [classes.Avatar]: !avatar,
         [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
+        [classes.HideVoiceComment]: hideVoiceComment,
         [classes.UnfoldLongComment]: unfoldLongComment,
       },
     ).split(' ');
