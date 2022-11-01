@@ -28,7 +28,7 @@ export function useElementQuery(selector, opt = defaultOpt) {
       observer.disconnect();
       setExist(true);
     });
-    observer.observe(document.documentElement, opt);
+    observer.observe(document.body, opt);
 
     return () => observer.disconnect();
   }, [opt, selector]);
