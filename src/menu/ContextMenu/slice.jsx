@@ -12,9 +12,7 @@ const defaultStorage = {
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   open: false,
-  snack: false,
-  snackMsg: '',
-  snackTime: null,
+  snackBag: [],
 };
 
 export const slice = createSlice({
@@ -27,17 +25,16 @@ export const slice = createSlice({
     setMenuOpen(state, action) {
       state.open = action.payload;
     },
-    setContextSnack(state, action) {
-      const { open, msg, time } = action.payload;
-      state.snack = open;
-      if (open) {
-        state.snackMsg = msg || '';
-        state.snackTime = time;
-      }
+    pushSnack(state, action) {
+      state.snackBag.push(action.payload);
+    },
+    shiftSnack(state) {
+      state.snackBag.shift();
     },
   },
 });
 
-export const { $setInteraction, setMenuOpen, setContextSnack } = slice.actions;
+export const { $setInteraction, setMenuOpen, pushSnack, shiftSnack } =
+  slice.actions;
 
 export default slice.reducer;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { setContextSnack, setMenuOpen } from './slice';
+import { pushSnack, setMenuOpen } from './slice';
 
 export default function useContextMenu() {
   const dispatch = useDispatch();
@@ -14,8 +14,7 @@ export default function useContextMenu() {
 
   const setSnack = useCallback(
     ({ msg, time }) => {
-      if (!msg) dispatch(setContextSnack({ open: false }));
-      dispatch(setContextSnack({ open: true, msg, time }));
+      dispatch(pushSnack({ msg, time }));
     },
     [dispatch],
   );
