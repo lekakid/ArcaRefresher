@@ -38,7 +38,10 @@ export default function ContextMenu({ children }) {
 
   useEffect(() => {
     const handleDown = ({ button }) => {
-      if (button === 2) gestureTrack.current.right = true;
+      if (button === 2) {
+        gestureTrack.current.right = true;
+        if (open) dispatch(setMenuOpen(false));
+      }
     };
     const handleUp = ({ button }) => {
       if (button === 2) gestureTrack.current.right = false;
@@ -96,6 +99,7 @@ export default function ContextMenu({ children }) {
         anchorReference="anchorPosition"
         anchorPosition={{ top, left }}
         MenuListProps={{ disablePadding: true }}
+        TransitionProps={{ exit: false }}
         classes={{ list: classes.list }}
         open={open}
         onClose={handleClose}
