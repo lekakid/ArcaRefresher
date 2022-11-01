@@ -15,7 +15,7 @@ function waitBody() {
         resolve();
       }
     });
-    obs.observe(document.documentElement, { childList: true, subtree: true });
+    obs.observe(document.documentElement, { childList: true });
   });
 }
 
