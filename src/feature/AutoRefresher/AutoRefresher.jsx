@@ -38,6 +38,7 @@ function AutoRefresher({ classes }) {
     unfocus: false,
   });
   const sockCount = useRef({ newArticle: 0, accTime: 0 });
+  const mouseMoveTimer = useRef(null);
 
   const handleRefresh = useCallback(async () => {
     if (sockCount.current.newArticle === 0) {
@@ -48,6 +49,8 @@ function AutoRefresher({ classes }) {
         return;
       }
     }
+
+    if (mouseMoveTimer.current) return;
 
     const newArticle = await getNewArticle();
     if (newArticle.length === 0) return;
@@ -66,8 +69,20 @@ function AutoRefresher({ classes }) {
     });
     const searchKeys = Object.keys(search);
     const targetKeys = ['p', 'after', 'before', 'near'];
-    if (search.p === 1 || !searchKeys.some((key) => targetKeys.includes(key)))
-      setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
+    if (search.p === 1 || !searchKeys.some((key) => targetKeys.includes(key))) {
+      const boardElement = document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE);
+      setBoard(boardElement);
+
+      boardElement.addEventListener('mousemove', () => {
+        if (mouseMoveTimer.current) {
+          clearTimeout(mouseMoveTimer.current);
+        }
+
+        mouseMoveTimer.current = setTimeout(() => {
+          mouseMoveTimer.current = null;
+        }, 1000);
+      });
+    }
   }, [boardLoaded]);
 
   // 웹 소켓으로 새로고침 트래픽 감소
