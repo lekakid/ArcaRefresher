@@ -12,6 +12,7 @@ const defaultStorage = {
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   open: false,
+  triggerList: [],
   snackBag: [],
 };
 
@@ -22,8 +23,11 @@ export const slice = createSlice({
     $setInteraction(state, action) {
       state.storage.interactionType = action.payload;
     },
-    setMenuOpen(state, action) {
+    setOpen(state, action) {
       state.open = action.payload;
+    },
+    addTrigger(state, action) {
+      state.triggerList.push(action.payload);
     },
     pushSnack(state, action) {
       state.snackBag.push(action.payload);
@@ -34,7 +38,7 @@ export const slice = createSlice({
   },
 });
 
-export const { $setInteraction, setMenuOpen, pushSnack, shiftSnack } =
+export const { $setInteraction, setOpen, addTrigger, pushSnack, shiftSnack } =
   slice.actions;
 
 export default slice.reducer;

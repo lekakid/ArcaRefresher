@@ -1,16 +1,21 @@
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { pushSnack, setMenuOpen } from './slice';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTrigger, pushSnack, setOpen } from './slice';
 
-export default function useContextMenu() {
+import Info from './FeatureInfo';
+
+export default function useContextMenu(initTrigger) {
   const dispatch = useDispatch();
+  const { open } = useSelector((state) => state[Info.ID]);
+  const [trigger] = useState(initTrigger);
 
-  const setOpen = useCallback(
-    (open) => {
-      dispatch(setMenuOpen(open));
-    },
-    [dispatch],
-  );
+  useEffect(() => {
+    dispatch(addTrigger(trigger));
+  }, [dispatch, trigger]);
+
+  const closeMenu = useCallback(() => {
+    dispatch(setOpen(false));
+  }, [dispatch]);
 
   const setSnack = useCallback(
     ({ msg, time }) => {
@@ -19,5 +24,5 @@ export default function useContextMenu() {
     [dispatch],
   );
 
-  return [setOpen, setSnack];
+  return [open, closeMenu, setSnack];
 }

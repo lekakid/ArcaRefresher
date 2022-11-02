@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
@@ -12,38 +12,40 @@ import Info from './FeatureInfo';
 import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 
-function ContextMenu({ triggerList }) {
+const selector = `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
+
+function ContextMenu({ targetRef }) {
   const {
     storage: { fileName },
   } = useSelector((state) => state[Info.ID]);
-  const [setOpen, setSnack] = useContextMenu();
+  const [open, closeMenu, setSnack] = useContextMenu({
+    method: 'closest',
+    selector,
+  });
   const infoString = useContent();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      data.current =
-        target.tagName === 'IMG' ? getImageInfo(target) : getGifInfo(target);
-      setValid(true);
-      return true;
-    };
+    if (!targetRef.current.closest(selector)) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    setData(
+      targetRef.current.tagName === 'IMG'
+        ? getImageInfo(targetRef.current)
+        : getGifInfo(targetRef.current),
+    );
+  }, [open, targetRef]);
 
   const handleClipboard = useCallback(() => {
     (async () => {
-      const { orig } = data.current;
+      const { orig } = data;
 
       try {
-        setOpen(false);
+        closeMenu();
         setSnack({ msg: '이미지를 다운로드 받는 중...' });
         const rawData = await fetch(orig).then((response) => response.blob());
 
@@ -78,13 +80,13 @@ function ContextMenu({ triggerList }) {
         });
       }
     })();
-  }, [setOpen, setSnack]);
+  }, [closeMenu, data, setSnack]);
 
   const handleDownload = useCallback(() => {
     (async () => {
-      const { orig, ext, uploadName } = data.current;
+      const { orig, ext, uploadName } = data;
       try {
-        setOpen(false);
+        closeMenu();
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
@@ -105,14 +107,14 @@ function ContextMenu({ triggerList }) {
         });
       }
     })();
-  }, [fileName, infoString, setOpen, setSnack]);
+  }, [data, closeMenu, fileName, infoString, setSnack]);
 
   const handleCopyURL = useCallback(() => {
-    setOpen(false);
-    navigator.clipboard.writeText(data.current.orig);
-  }, [setOpen]);
+    closeMenu();
+    navigator.clipboard.writeText(data.orig);
+  }, [closeMenu, data]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClipboard}>

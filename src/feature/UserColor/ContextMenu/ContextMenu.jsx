@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Colorize } from '@material-ui/icons';
@@ -11,37 +11,34 @@ import { $setColor } from '../slice';
 import Info from '../FeatureInfo';
 import InputDialog from './InputDialog';
 
-function ContextMenu({ triggerList }) {
+function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
-  const [setOpen] = useContextMenu();
+  const [open, closeMenu] = useContextMenu({
+    method: 'closest',
+    selector: USER_INFO,
+  });
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);
   const [openInput, setOpenInput] = useState(false);
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(USER_INFO)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      const userInfo = target.closest(USER_INFO);
-      data.current = getUserID(userInfo);
-      setValid(true);
-      return true;
-    };
+    const userInfo = targetRef.current.closest(USER_INFO);
+    if (!userInfo) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    setData(getUserID(userInfo));
+  }, [open, targetRef]);
 
   const handleClick = useCallback(() => {
-    setOpen(false);
+    closeMenu();
     setOpenInput(true);
-  }, [setOpen]);
+  }, [closeMenu]);
 
   const handleInputClose = useCallback(() => {
     setOpenInput(false);
@@ -49,12 +46,12 @@ function ContextMenu({ triggerList }) {
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch($setColor({ user: data.current, color: value }));
+      dispatch($setColor({ user: data, color: value }));
     },
-    [dispatch],
+    [data, dispatch],
   );
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>
@@ -65,7 +62,7 @@ function ContextMenu({ triggerList }) {
       </MenuItem>
       <InputDialog
         open={openInput}
-        defaultValue={color[data.current]}
+        defaultValue={color[data]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />

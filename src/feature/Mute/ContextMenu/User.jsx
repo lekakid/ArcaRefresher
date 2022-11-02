@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
@@ -14,45 +14,46 @@ function makeRegex(id = '') {
   return `${id.replace('.', '\\.')}$`;
 }
 
-function User({ triggerList }) {
+function User({ targetRef }) {
   const dispatch = useDispatch();
-  const [setOpen] = useContextMenu();
+  const [open, closeMenu] = useContextMenu({
+    method: 'closest',
+    selector: USER_INFO,
+  });
   const {
     storage: { user },
   } = useSelector((state) => state[Info.ID]);
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(USER_INFO)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      data.current = getUserInfo(target.closest(USER_INFO));
-      setValid(true);
-      return true;
-    };
+    const userInfo = targetRef.current.closest(USER_INFO);
+    if (!userInfo) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
-
-  const regex = makeRegex(data.current || '');
-  const exist = user.indexOf(regex) > -1;
+    const regex = makeRegex(getUserInfo(userInfo));
+    const exist = user.includes(regex);
+    setData({ regex, exist });
+  }, [open, targetRef, user]);
 
   const handleMute = useCallback(() => {
-    dispatch(exist ? $removeUser(regex) : $addUser(regex));
-    setOpen(false);
-  }, [dispatch, exist, regex, setOpen]);
+    const { regex, exist } = data;
 
-  if (!valid) return null;
+    dispatch(exist ? $removeUser(regex) : $addUser(regex));
+    closeMenu();
+  }, [data, dispatch, closeMenu]);
+
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleMute}>
-        <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
-        <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
+        <ListItemIcon>{data.exist ? <Redo /> : <Block />}</ListItemIcon>
+        <Typography>
+          {data.exist ? '사용자 뮤트 해제' : '사용자 뮤트'}
+        </Typography>
       </MenuItem>
     </List>
   );

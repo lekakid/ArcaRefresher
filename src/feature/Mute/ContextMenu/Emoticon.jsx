@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
@@ -7,35 +7,32 @@ import { useContextMenu } from 'menu/ContextMenu';
 import { getBundleData, getBundleInfo } from '../func';
 import { $addEmoticon } from '../slice';
 
-function Emoticon({ triggerList }) {
+function Emoticon({ targetRef }) {
   const dispatch = useDispatch();
-  const [setOpen, setSnack] = useContextMenu();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [open, closeMenu, setSnack] = useContextMenu({
+    method: 'matches',
+    selector: '.emoticon',
+  });
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.matches('.emoticon')) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      data.current = {
-        emotID: target.dataset.id,
-        url: target.src.replace('https:', ''),
-      };
-      setValid(true);
-      return true;
-    };
+    if (!targetRef.current.matches('.emoticon')) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    setData({
+      emotID: targetRef.current.dataset.id,
+      url: targetRef.current.src.replace('https:', ''),
+    });
+  }, [open, targetRef]);
 
   const handleBundleMute = useCallback(() => {
     (async () => {
       try {
-        const { emotID, url } = data.current;
+        const { emotID, url } = data;
         const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
         const { idList, urlList } = await getBundleData(bundleID);
 
@@ -66,14 +63,14 @@ function Emoticon({ triggerList }) {
         console.error(e);
       }
 
-      setOpen(false);
+      closeMenu();
     })();
-  }, [dispatch, setOpen, setSnack]);
+  }, [closeMenu, data, dispatch, setSnack]);
 
   const handleSingleMute = useCallback(() => {
     (async () => {
       try {
-        const { emotID, url } = data.current;
+        const { emotID, url } = data;
         const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
 
         dispatch(
@@ -94,11 +91,11 @@ function Emoticon({ triggerList }) {
         console.error(e);
       }
 
-      setOpen(false);
+      closeMenu();
     })();
-  }, [dispatch, setOpen, setSnack]);
+  }, [closeMenu, data, dispatch, setSnack]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleBundleMute}>

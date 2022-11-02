@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
@@ -10,60 +10,53 @@ import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
-function ContextMenu({ triggerList }) {
-  const [setOpen, setSnack] = useContextMenu();
+function ContextMenu({ targetRef }) {
+  const [open, closeMenu, setSnack] = useContextMenu({
+    method: 'closest',
+    selector: ARTICLE_IMAGES,
+  });
   const {
     storage: { searchBySource, saucenaoBypass },
   } = useSelector((state) => state[Info.ID]);
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(ARTICLE_IMAGES)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      const url = target.src.split('?')[0];
-      const orig = getArcaMediaURL(url, searchBySource ? 'orig' : '');
-      data.current = orig;
-      setValid(true);
-      return true;
-    };
+    if (!targetRef.current.closest(ARTICLE_IMAGES)) return;
 
-    triggerList.current.push(trigger);
-  }, [searchBySource, triggerList]);
+    const url = targetRef.current.src.split('?')[0];
+    const orig = getArcaMediaURL(url, searchBySource ? 'orig' : '');
+    setData(orig);
+  }, [open, searchBySource, targetRef]);
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://www.google.com/searchbyimage?safe=off&image_url=${data.current}`,
+      `https://www.google.com/searchbyimage?safe=off&image_url=${data}`,
     );
-    setOpen(false);
-  }, [setOpen]);
+    closeMenu();
+  }, [closeMenu, data]);
 
   const handleYandex = useCallback(() => {
-    window.open(
-      `https://yandex.com/images/search?rpt=imageview&url=${data.current}`,
-    );
-    setOpen(false);
-  }, [setOpen]);
+    window.open(`https://yandex.com/images/search?rpt=imageview&url=${data}`);
+    closeMenu();
+  }, [closeMenu, data]);
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
-      window.open(`https://saucenao.com/search.php?db=999&url=${data.current}`);
-      setOpen(false);
+      window.open(`https://saucenao.com/search.php?db=999&url=${data}`);
+      closeMenu();
       return;
     }
 
     (async () => {
       try {
-        setOpen(false);
+        closeMenu();
         setSnack({ msg: 'SauceNao에서 검색 중...' });
-        const blob = await fetch(data.current).then((response) =>
-          response.blob(),
-        );
+        const blob = await fetch(data).then((response) => response.blob());
 
         if (blob.size > 15728640) {
           setSnack({
@@ -106,16 +99,14 @@ function ContextMenu({ triggerList }) {
         console.error(error);
       }
     })();
-  }, [saucenaoBypass, setOpen, setSnack]);
+  }, [saucenaoBypass, data, closeMenu, setSnack]);
 
   const handleTwigaten = useCallback(() => {
     (async () => {
       try {
-        setOpen(false);
+        closeMenu();
         setSnack({ msg: 'TwiGaTen에서 검색 중...' });
-        const blob = await fetch(data.current).then((response) =>
-          response.blob(),
-        );
+        const blob = await fetch(data).then((response) => response.blob());
 
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
@@ -135,12 +126,12 @@ function ContextMenu({ triggerList }) {
         console.error(error);
       }
     })();
-  }, [setOpen, setSnack]);
+  }, [closeMenu, data, setSnack]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
-        setOpen(false);
+        closeMenu();
         setSnack({ msg: 'Ascii2D에서 검색 중...' });
 
         const { response: tokenDocument } = await httpRequest({
@@ -155,7 +146,7 @@ function ContextMenu({ triggerList }) {
         const formdata = new FormData();
         formdata.append('utf8', '✓');
         formdata.append('authenticity_token', token);
-        formdata.append('uri', data.current);
+        formdata.append('uri', data);
 
         const { finalUrl: resultURL } = await httpRequest({
           url: 'https://ascii2d.net/search/uri',
@@ -172,9 +163,9 @@ function ContextMenu({ triggerList }) {
         console.error(error);
       }
     })();
-  }, [setOpen, setSnack]);
+  }, [closeMenu, data, setSnack]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleGoogle}>
