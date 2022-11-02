@@ -75,21 +75,21 @@ function CommentMuter() {
     },
   } = useSelector((state) => state[Info.ID]);
   const [comment, setComment] = useState(undefined);
-  const [countBar, setCountBar] = useState(undefined);
+  const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
   const emoticonFilter = useEmoticon(emoticon);
 
   useLayoutEffect(() => {
     if (!commentLoaded) return;
 
-    const tmpComment = document.querySelector(COMMENT_INNER_VIEW);
-    if (!tmpComment) return;
+    const commentElement = document.querySelector(COMMENT_INNER_VIEW);
+    if (!commentElement) return;
 
-    setComment(tmpComment);
+    setComment(commentElement);
 
     const countBarContainer = document.createElement('div');
-    tmpComment.insertAdjacentElement('beforebegin', countBarContainer);
-    setCountBar(countBarContainer);
+    commentElement.insertAdjacentElement('beforebegin', countBarContainer);
+    setContainer(countBarContainer);
 
     addAREvent(EVENT_COMMENT_REFRESH, () => {
       const refreshedComment = document.querySelector(COMMENT_INNER_VIEW);
@@ -97,7 +97,6 @@ function CommentMuter() {
       refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
     });
   }, [dispatch, commentLoaded]);
-
   useLayoutEffect(() => {
     if (!commentLoaded) return undefined;
 
@@ -156,10 +155,10 @@ function CommentMuter() {
     };
   }, [comment, keyword, user, muteIncludeReply]);
 
-  if (!countBar) return null;
+  if (!container) return null;
   return (
     <CountBar
-      renderContainer={countBar}
+      renderContainer={container}
       classContainer={comment}
       count={count}
       hide={hideCountBar}

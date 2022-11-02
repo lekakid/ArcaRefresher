@@ -8,7 +8,9 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
+  Select,
   Switch,
   Typography,
 } from '@material-ui/core';
@@ -27,6 +29,7 @@ import {
   $toggleMutedMark,
   $toggleIncludeReply,
   $setCategoryConfig,
+  $setBoardBarPos,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 
@@ -52,6 +55,7 @@ const View = React.forwardRef((_props, ref) => {
   const {
     storage: {
       hideNoPermission,
+      boardBarPos,
       hideCountBar,
       hideMutedMark,
       muteIncludeReply,
@@ -75,6 +79,13 @@ const View = React.forwardRef((_props, ref) => {
   const handleNoPermission = useCallback(() => {
     dispatch($toggleHideNoPermission());
   }, [dispatch]);
+
+  const handleCountBarPos = useCallback(
+    (e) => {
+      dispatch($setBoardBarPos(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleCountBar = useCallback(() => {
     dispatch($toggleCountBar());
@@ -142,6 +153,19 @@ const View = React.forwardRef((_props, ref) => {
                 checked={hideNoPermission}
                 onChange={handleNoPermission}
               />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText primary="게시판 뮤트 카운터 위치" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={boardBarPos}
+                onChange={handleCountBarPos}
+              >
+                <MenuItem value="afterbegin">게시판 위</MenuItem>
+                <MenuItem value="afterend">게시판 아래</MenuItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleCountBar}>
