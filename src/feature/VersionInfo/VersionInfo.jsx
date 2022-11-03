@@ -55,7 +55,7 @@ export default function VersionInfo() {
 
   const handleChangeLog = useCallback(() => {
     window.open(
-      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8',
+      `https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=${GM_info.script.version}`,
     );
     setNoti((prev) => ({
       ...prev,
