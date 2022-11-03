@@ -20,8 +20,8 @@ function ContextMenu({ targetRef }) {
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);
-  const [openInput, setOpenInput] = useState(false);
   const [data, setData] = useState(undefined);
+  const [target, setTarget] = useState(undefined);
 
   useEffect(() => {
     if (!open) {
@@ -36,37 +36,40 @@ function ContextMenu({ targetRef }) {
   }, [open, targetRef]);
 
   const handleClick = useCallback(() => {
+    setTarget(data);
     closeMenu();
-    setOpenInput(true);
-  }, [closeMenu]);
+  }, [closeMenu, data]);
 
   const handleInputClose = useCallback(() => {
-    setOpenInput(false);
+    setTarget(undefined);
   }, []);
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch($setColor({ user: data, color: value }));
+      dispatch($setColor({ user: target, color: value }));
     },
-    [data, dispatch],
+    [target, dispatch],
   );
 
-  if (!data) return null;
   return (
-    <List>
-      <MenuItem onClick={handleClick}>
-        <ListItemIcon>
-          <Colorize />
-        </ListItemIcon>
-        <Typography>색상 설정</Typography>
-      </MenuItem>
+    <>
+      {data && (
+        <List>
+          <MenuItem onClick={handleClick}>
+            <ListItemIcon>
+              <Colorize />
+            </ListItemIcon>
+            <Typography>색상 설정</Typography>
+          </MenuItem>
+        </List>
+      )}
       <InputDialog
-        open={openInput}
-        defaultValue={color[data]}
+        open={!!target}
+        defaultValue={color[target] || ''}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />
-    </List>
+    </>
   );
 }
 
