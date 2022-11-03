@@ -22,7 +22,7 @@ function ContextMenu({ targetRef }) {
     method: 'closest',
     selector,
   });
-  const infoString = useContent();
+  const contentInfo = useContent();
   const [data, setData] = useState(undefined);
 
   useEffect(() => {
@@ -91,7 +91,7 @@ function ContextMenu({ targetRef }) {
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
         const name = format(fileName, {
-          values: infoString,
+          values: contentInfo,
           fileName: uploadName,
         });
 
@@ -107,7 +107,7 @@ function ContextMenu({ targetRef }) {
         });
       }
     })();
-  }, [data, closeMenu, fileName, infoString, setSnack]);
+  }, [data, closeMenu, fileName, contentInfo, setSnack]);
 
   const handleCopyURL = useCallback(() => {
     closeMenu();

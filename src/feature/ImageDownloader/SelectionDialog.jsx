@@ -37,7 +37,7 @@ const styles = (theme) => ({
 
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
-  const formatValues = useContent();
+  const contentInfo = useContent();
   const {
     storage: { zipImageName, zipName },
     open,
@@ -128,7 +128,7 @@ function SelectionDialog({ classes }) {
         const { orig, ext, uploadName } = value;
 
         const name = format(zipImageName, {
-          values: formatValues,
+          values: contentInfo,
           index: count,
           fileName: uploadName,
         });
@@ -145,14 +145,14 @@ function SelectionDialog({ classes }) {
       },
     });
 
-    const zipFileName = format(zipName, { values: formatValues });
+    const zipFileName = format(zipName, { values: contentInfo });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.zip`, {
         size: totalSize,
       }),
     );
-  }, [dispatch, data, zipName, formatValues, selection, zipImageName]);
+  }, [dispatch, data, zipName, contentInfo, selection, zipImageName]);
 
   const handleClose = useCallback(() => {
     dispatch(setOpen(false));
