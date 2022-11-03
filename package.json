@@ -7,7 +7,7 @@
   "private": true,
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint"
+      "pre-push": "eslint . --ext jsx"
     }
   },
   "scripts": {
