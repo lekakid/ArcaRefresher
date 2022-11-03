@@ -20,8 +20,8 @@ function ContextMenu({ targetRef }) {
   const {
     storage: { memo },
   } = useSelector((state) => state[Info.ID]);
-  const [openInput, setOpenInput] = useState(false);
   const [data, setData] = useState(undefined);
+  const [target, setTarget] = useState(undefined);
 
   useEffect(() => {
     if (!open) {
@@ -37,37 +37,40 @@ function ContextMenu({ targetRef }) {
   }, [open, targetRef]);
 
   const handleClick = useCallback(() => {
+    setTarget(data);
     closeMenu();
-    setOpenInput(true);
-  }, [closeMenu]);
+  }, [closeMenu, data]);
 
   const handleInputClose = useCallback(() => {
-    setOpenInput(false);
+    setTarget(undefined);
   }, []);
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch($setMemo({ user: data, memo: value }));
+      dispatch($setMemo({ user: target, memo: value }));
     },
-    [data, dispatch],
+    [target, dispatch],
   );
 
-  if (!data) return null;
   return (
-    <List>
-      <MenuItem onClick={handleClick}>
-        <ListItemIcon>
-          <Comment />
-        </ListItemIcon>
-        <Typography>메모</Typography>
-      </MenuItem>
+    <>
+      {data && (
+        <List>
+          <MenuItem onClick={handleClick}>
+            <ListItemIcon>
+              <Comment />
+            </ListItemIcon>
+            <Typography>메모</Typography>
+          </MenuItem>
+        </List>
+      )}
       <MemoInput
-        open={openInput}
-        defaultValue={memo[data]}
+        open={!!target}
+        defaultValue={memo[target] || ''}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />
-    </List>
+    </>
   );
 }
 
