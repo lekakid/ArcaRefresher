@@ -139,6 +139,11 @@ const useStyles = makeStyles(
         maxWidth: `${resizeVideo}% !important`,
       },
     }),
+    ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
+      '& .namlacon .emoticons': {
+        maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+      },
+    }),
     Unvote: {
       '& #rateDownForm': {
         display: 'none',
@@ -147,6 +152,11 @@ const useStyles = makeStyles(
     ModifiedIndicator: {
       '& b.modified': {
         display: 'none',
+      },
+    },
+    HideVoiceComment: {
+      '& #comment .btn-voicecmt': {
+        display: 'none !important',
       },
     },
     UnfoldLongComment: {
@@ -164,11 +174,13 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const { storage } = useSelector((state) => state[Info.ID]);
+  const {
+    storage: { enabled, ...storage },
+  } = useSelector((state) => state[Info.ID]);
   const classes = useStyles(storage);
 
   useLayoutEffect(() => {
-    if (!storage.enabled) return undefined;
+    if (!enabled) return undefined;
 
     const {
       recentVisit,
@@ -179,6 +191,7 @@ export default function LayoutCustom() {
       avatar,
       hideUnvote,
       modifiedIndicator,
+      hideVoiceComment,
       unfoldLongComment,
     } = storage;
     const styles = clsx(
@@ -186,6 +199,7 @@ export default function LayoutCustom() {
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
+      classes.ResizeEmoticonPalette,
       {
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
@@ -195,13 +209,14 @@ export default function LayoutCustom() {
         [classes.Avatar]: !avatar,
         [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
+        [classes.HideVoiceComment]: hideVoiceComment,
         [classes.UnfoldLongComment]: unfoldLongComment,
       },
     ).split(' ');
     document.documentElement.classList.add(...styles);
 
     return () => document.documentElement.classList.remove(...styles);
-  }, [classes, storage]);
+  }, [classes, enabled, storage]);
 
   return null;
 }

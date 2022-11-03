@@ -1,60 +1,58 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 import { getUserID } from 'func/user';
 
 import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
-function ContextMenu({ triggerList }) {
+function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
+  const [open, closeMenu] = useContextMenu({
+    method: 'closest',
+    selector: USER_INFO,
+  });
   const {
     storage: { memo },
   } = useSelector((state) => state[Info.ID]);
-  const [open, setOpen] = useState(false);
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [openInput, setOpenInput] = useState(false);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(USER_INFO)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      const userInfo = target.closest(USER_INFO);
-      const id = getUserID(userInfo);
-      data.current = id;
-      setValid(true);
-      return true;
-    };
+    const userInfo = targetRef.current.closest(USER_INFO);
+    if (!userInfo) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    const id = getUserID(userInfo);
+    setData(id);
+  }, [open, targetRef]);
 
   const handleClick = useCallback(() => {
-    dispatch(setClose());
-    setOpen(true);
-  }, [dispatch]);
+    closeMenu();
+    setOpenInput(true);
+  }, [closeMenu]);
 
   const handleInputClose = useCallback(() => {
-    setOpen(false);
+    setOpenInput(false);
   }, []);
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch($setMemo({ user: data.current, memo: value }));
+      dispatch($setMemo({ user: data, memo: value }));
     },
     [data, dispatch],
   );
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>
@@ -64,8 +62,8 @@ function ContextMenu({ triggerList }) {
         <Typography>메모</Typography>
       </MenuItem>
       <MemoInput
-        open={open}
-        defaultValue={memo[data.current]}
+        open={openInput}
+        defaultValue={memo[data]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />

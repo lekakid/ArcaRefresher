@@ -9,7 +9,7 @@ import {
 } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import { getUserInfo } from 'func/user';
 
 import { filterContent } from '../func';
@@ -33,19 +33,30 @@ const style = {
         display: 'none !important',
       },
     },
+    '.hide-no-permission a.vrow[href$="#c_"]': {
+      display: 'none !important',
+    },
   },
 };
 
 function BoardMuter() {
   const dispatch = useDispatch();
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
-    storage: { user, keyword, emoticon, category, hideCountBar },
+    storage: {
+      user,
+      keyword,
+      emoticon,
+      category,
+      boardBarPos,
+      hideCountBar,
+      hideNoPermission,
+    },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
-  const [countBar, setCountBar] = useState(undefined);
+  const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
   const emoticionFilter = useEmoticon(emoticon);
 
@@ -54,19 +65,25 @@ function BoardMuter() {
     if (!boardLoaded) return;
     if (!channel.category) return;
 
-    const tmpBoard = document.querySelector(BOARD_VIEW);
-    if (!tmpBoard) return;
+    const boardElement = document.querySelector(BOARD_VIEW);
+    if (!boardElement) return;
 
-    setBoard(tmpBoard);
+    setBoard(boardElement);
     const name2id = Object.fromEntries(
       Object.entries(channel.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
-    const countHeader = document.createElement('div');
-    tmpBoard.insertAdjacentElement('afterbegin', countHeader);
-    setCountBar(countHeader);
+    const containerElement = document.createElement('div');
+    setContainer(containerElement);
   }, [dispatch, boardLoaded, channel]);
+
+  useLayoutEffect(() => {
+    if (!board) return;
+
+    board.insertAdjacentElement(boardBarPos, container);
+    board.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
+  }, [board, container, boardBarPos]);
 
   // 유저, 키워드, 카테고리 뮤트처리
   useLayoutEffect(() => {
@@ -123,10 +140,17 @@ function BoardMuter() {
     });
   }, [board, emoticionFilter]);
 
-  if (!countBar) return null;
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle(
+      'hide-no-permission',
+      hideNoPermission,
+    );
+  }, [hideNoPermission]);
+
+  if (!container) return null;
   return (
     <CountBar
-      renderContainer={countBar}
+      renderContainer={container}
       classContainer={board}
       count={count}
       hide={hideCountBar}

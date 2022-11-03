@@ -5,6 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   countdown: 5,
+  maxTime: -1,
   showProgress: true,
 };
 
@@ -19,12 +20,15 @@ export const slice = createSlice({
     $setTimeLimit(state, action) {
       state.storage.countdown = action.payload;
     },
+    $setMaxTime(state, action) {
+      state.storage.maxTime = action.payload;
+    },
     $toggleAnimation(state) {
       state.storage.showProgress = !state.storage.showProgress;
     },
   },
 });
 
-export const { $setTimeLimit, $toggleAnimation } = slice.actions;
+export const { $setTimeLimit, $setMaxTime, $toggleAnimation } = slice.actions;
 
 export default slice.reducer;

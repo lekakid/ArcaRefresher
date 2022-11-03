@@ -7,8 +7,7 @@
   "updateURL": "https://github.com/lekakid/ArcaRefresher/releases/latest/download/ArcaRefresher.meta.js",
   "homepageURL": "https://github.com/lekakid/ArcaRefresher",
   "supportURL": "https://arca.live/b/namurefresher",
-  "match": ["https://*.arca.live/*", "https://arca.live/*"],
-  "exclude-match": ["https://st*.arca.live/*"],
+  "match": ["https://arca.live/*"],
   "noframes": true,
   "run-at": "document-start",
   "grant": [
@@ -17,7 +16,6 @@
     "GM_getValue",
     "GM_deleteValue",
     "GM_listValues",
-    "GM_addValueChangeListener",
     "GM_xmlhttpRequest",
     "unsafeWindow"
   ]

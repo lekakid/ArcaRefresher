@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
-async function awaitDocumentBody() {
+function waitBody() {
   return new Promise((resolve) => {
     if (document.body) {
       resolve();
@@ -15,13 +15,13 @@ async function awaitDocumentBody() {
         resolve();
       }
     });
-    obs.observe(document, { childList: true, subtree: true });
+    obs.observe(document.documentElement, { childList: true });
   });
 }
 
 (async () => {
+  await waitBody();
   const appContainer = document.createElement('div');
-  await awaitDocumentBody();
   document.body.append(appContainer);
 
   ReactDOM.render(<App />, appContainer);

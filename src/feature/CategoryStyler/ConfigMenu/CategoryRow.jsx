@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Box,
   Divider,
@@ -15,14 +15,9 @@ import {
   Replay,
 } from '@material-ui/icons';
 import { ColorPicker } from 'material-ui-color';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { useParser } from 'util/Parser';
 import { getContrastYIQ } from 'func/color';
-import Info from '../FeatureInfo';
-import { $setStyle } from '../slice';
 
-const DEFAULT_CHANNEL_CONFIG = {};
 const DEFAULT_CATEGORY_CONFIG = {
   badge: '',
   bgcolor: '',
@@ -31,55 +26,44 @@ const DEFAULT_CATEGORY_CONFIG = {
   disableVisited: false,
 };
 
-function CategoryRow({ divider, category, nameMap }) {
-  const dispatch = useDispatch();
+function CategoryRow({ divider, id, label, initValue, onChange }) {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { channel } = useParser();
-  const {
-    storage: { color },
-  } = useSelector((state) => state[Info.ID]);
-  const channelColor = color?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
-  const { badge, bgcolor, bold, through, disableVisited } =
-    channelColor?.[category] || DEFAULT_CATEGORY_CONFIG;
+  const [value, setValue] = useState({
+    ...DEFAULT_CATEGORY_CONFIG,
+    ...initValue,
+  });
 
   const handleColor = useCallback(
-    (id, type) => (colorData) => {
-      const updatedData = {
-        ...channelColor,
-        [id]: {
-          ...channelColor[id],
-          [type]: colorData.error ? '' : colorData.css.backgroundColor,
-        },
+    (type) => (color) => {
+      const updateValue = {
+        ...value,
+        [type]: color.error ? '' : color.css.backgroundColor,
       };
-      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
+      setValue(updateValue);
+      onChange(id, updateValue);
     },
-    [channelColor, channel, dispatch],
+    [id, onChange, value],
   );
 
-  const handleStyle = useCallback(
-    (id, type) => () => {
-      const updatedData = {
-        ...channelColor,
-        [id]: {
-          ...channelColor[id],
-          [type]: !channelColor?.[id]?.[type],
-        },
+  const handleBool = useCallback(
+    (type) => () => {
+      const updateValue = {
+        ...value,
+        [type]: !value[type],
       };
-      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
+      setValue(updateValue);
+      onChange(id, updateValue);
     },
-    [channelColor, channel, dispatch],
+    [id, onChange, value],
   );
 
-  const handleResetStyle = useCallback(
-    (id) => () => {
-      const updatedData = {
-        ...channelColor,
-        [id]: {},
-      };
-      dispatch($setStyle({ channel: channel.ID, color: updatedData }));
-    },
-    [channelColor, channel, dispatch],
-  );
+  const handleResetStyle = useCallback(() => {
+    const updateValue = { ...DEFAULT_CATEGORY_CONFIG };
+    setValue(updateValue);
+    onChange(id, updateValue);
+  }, [id, onChange]);
+
+  const { badge = null, bgcolor = null, bold, through, disableVisited } = value;
 
   const badgeStyle = {
     margin: '0.25rem',
@@ -113,7 +97,7 @@ function CategoryRow({ divider, category, nameMap }) {
           style={backgroundStyle}
         >
           <span className="badge badge-success" style={badgeStyle}>
-            {nameMap[category]}
+            {label}
           </span>
           <span className="title">게시물 제목</span>
         </Box>
@@ -130,8 +114,8 @@ function CategoryRow({ divider, category, nameMap }) {
                 hideTextfield
                 deferred
                 disableAlpha
-                value={badge || null}
-                onChange={handleColor(category, 'badge')}
+                value={badge}
+                onChange={handleColor('badge')}
               />
             </span>
           </Tooltip>
@@ -141,28 +125,28 @@ function CategoryRow({ divider, category, nameMap }) {
                 hideTextfield
                 deferred
                 disableAlpha
-                value={bgcolor || null}
-                onChange={handleColor(category, 'bgcolor')}
+                value={bgcolor}
+                onChange={handleColor('bgcolor')}
               />
             </span>
           </Tooltip>
           <Tooltip title="굵게">
-            <IconButton onClick={handleStyle(category, 'bold')}>
+            <IconButton onClick={handleBool('bold')}>
               <FormatBold />
             </IconButton>
           </Tooltip>
           <Tooltip title="취소선">
-            <IconButton onClick={handleStyle(category, 'through')}>
+            <IconButton onClick={handleBool('through')}>
               <FormatStrikethrough />
             </IconButton>
           </Tooltip>
           <Tooltip title={disableVisited ? '방문 표시 안함' : '방문 표시'}>
-            <IconButton onClick={handleStyle(category, 'disableVisited')}>
+            <IconButton onClick={handleBool('disableVisited')}>
               {disableVisited ? <NoMeetingRoom /> : <MeetingRoom />}
             </IconButton>
           </Tooltip>
           <Tooltip title="리셋">
-            <IconButton onClick={handleResetStyle(category)}>
+            <IconButton onClick={handleResetStyle}>
               <Replay />
             </IconButton>
           </Tooltip>
@@ -171,9 +155,5 @@ function CategoryRow({ divider, category, nameMap }) {
     </>
   );
 }
-
-CategoryRow.defaultProps = {
-  categoryConfig: {},
-};
 
 export default CategoryRow;

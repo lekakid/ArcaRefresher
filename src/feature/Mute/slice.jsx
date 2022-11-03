@@ -8,6 +8,8 @@ const defaultStorage = {
   keyword: [],
   emoticon: {},
   category: {},
+  hideNoPermission: false,
+  boardBarPos: 'afterbegin',
   hideCountBar: false,
   hideMutedMark: false,
   muteIncludeReply: false,
@@ -63,6 +65,12 @@ export const slice = createSlice({
       const { channel, config } = action.payload;
       state.storage.category[channel] = config;
     },
+    $toggleHideNoPermission(state) {
+      state.storage.hideNoPermission = !state.storage.hideNoPermission;
+    },
+    $setBoardBarPos(state, action) {
+      state.storage.boardBarPos = action.payload;
+    },
     $toggleCountBar(state) {
       state.storage.hideCountBar = !state.storage.hideCountBar;
     },
@@ -85,6 +93,8 @@ export const {
   $addEmoticon,
   $removeEmoticonList,
   $setCategoryConfig,
+  $toggleHideNoPermission,
+  $setBoardBarPos,
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,

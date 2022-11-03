@@ -12,8 +12,8 @@ const defaultStorage = {
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   open: false,
-  snack: false,
-  snackTime: null,
+  triggerList: [],
+  snackBag: [],
 };
 
 export const slice = createSlice({
@@ -23,21 +23,22 @@ export const slice = createSlice({
     $setInteraction(state, action) {
       state.storage.interactionType = action.payload;
     },
-    setOpen(state) {
-      state.open = true;
+    setOpen(state, action) {
+      state.open = action.payload;
     },
-    setClose(state) {
-      state.open = false;
+    addTrigger(state, action) {
+      state.triggerList.push(action.payload);
     },
-    setContextSnack(state, action) {
-      const { msg, time } = action.payload;
-      state.snack = msg;
-      state.snackTime = time || null;
+    pushSnack(state, action) {
+      state.snackBag.push(action.payload);
+    },
+    shiftSnack(state) {
+      state.snackBag.shift();
     },
   },
 });
 
-export const { $setInteraction, setOpen, setClose, setContextSnack } =
+export const { $setInteraction, setOpen, addTrigger, pushSnack, shiftSnack } =
   slice.actions;
 
 export default slice.reducer;

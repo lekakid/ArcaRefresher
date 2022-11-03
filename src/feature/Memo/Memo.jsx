@@ -11,7 +11,7 @@ import {
 import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserID, getKey } from 'func/user';
+import { getUserID, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
 
@@ -25,7 +25,7 @@ function MemoList() {
   useLayoutEffect(() => {
     const appendMemo = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
-        const key = getKey(e, index);
+        const key = getUserKey(e, index);
         const id = getUserID(e);
         const container =
           e.querySelector('.memo') || document.createElement('span');

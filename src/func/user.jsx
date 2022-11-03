@@ -52,12 +52,15 @@ export function getUserIP(infoElement) {
   }
 }
 
-export function getKey(element, index) {
+export function getUserKey(element, index) {
   const comment = element.closest('div.comment-item');
   if (comment) return comment.id;
 
   const article = element.closest('a.vrow');
-  if (article) return `a_${article.pathname.split('/')[3]}`;
+  if (article) {
+    const notice = article.classList.contains('notice');
+    return `${notice ? 'n' : ''}a_${article.pathname.split('/')[3]}`;
+  }
 
   return `$.${index}`;
 }

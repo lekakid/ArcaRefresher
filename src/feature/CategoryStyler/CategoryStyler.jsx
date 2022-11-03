@@ -9,14 +9,14 @@ import {
   BOARD_VIEW,
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import { getContrastYIQ } from 'func/color';
 
 import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
   const boardLoaded = useElementQuery(BOARD_LOADED);
-  const { channel } = useParser();
+  const { channel } = useContent();
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);

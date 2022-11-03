@@ -25,7 +25,7 @@ import UserColor from 'feature/UserColor/slice';
 import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
 import MediaBlocker from 'feature/MediaBlocker/slice';
 
-import Parser from 'util/Parser/slice';
+import ContentInfo from 'util/ContentInfo/slice';
 
 const syncConfig = {
   predicate: (action) => action.type.indexOf('/$') > -1,
@@ -55,23 +55,16 @@ const store = configureStore({
     MediaBlocker,
 
     // util
-    Parser,
+    ContentInfo,
   },
   middleware: [createStateSyncMiddleware(syncConfig)],
 });
 
-(() => {
-  function extractStorageEntries(state) {
-    return Object.entries(state)
-      .filter(([, value]) => !!value.storage)
-      .map(([key, value]) => [key, value.storage]);
-  }
-
-  store.subscribe(() => {
-    const configEntries = extractStorageEntries(store.getState());
-    configEntries.forEach(([key, value]) => setValue(key, value));
-  });
-})();
+store.subscribe(() => {
+  Object.entries(store.getState())
+    .filter(([, value]) => !!value.storage)
+    .map(([key, value]) => setValue(key, value.storage));
+});
 
 initMessageListener(store);
 

@@ -16,7 +16,7 @@ import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 
 import { getGifInfo, getImageInfo } from './func';
 import format from './format';
@@ -37,7 +37,7 @@ const styles = (theme) => ({
 
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
-  const formatValues = useParser();
+  const contentInfo = useContent();
   const {
     storage: { zipImageName, zipName },
     open,
@@ -128,7 +128,7 @@ function SelectionDialog({ classes }) {
         const { orig, ext, uploadName } = value;
 
         const name = format(zipImageName, {
-          values: formatValues,
+          values: contentInfo,
           index: count,
           fileName: uploadName,
         });
@@ -145,14 +145,14 @@ function SelectionDialog({ classes }) {
       },
     });
 
-    const zipFileName = format(zipName, { values: formatValues });
+    const zipFileName = format(zipName, { values: contentInfo });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.zip`, {
         size: totalSize,
       }),
     );
-  }, [dispatch, data, zipName, formatValues, selection, zipImageName]);
+  }, [dispatch, data, zipName, contentInfo, selection, zipImageName]);
 
   const handleClose = useCallback(() => {
     dispatch(setOpen(false));

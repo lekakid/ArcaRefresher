@@ -10,7 +10,7 @@ import {
 import { AuthorTag } from 'component';
 import { USER_INFO, FULL_LOADED } from 'core/selector';
 import { useElementQuery } from 'core/hooks';
-import { getUserIP, getKey } from 'func/user';
+import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
 import Info from './FeatureInfo';
@@ -42,7 +42,7 @@ export default function IPInfo() {
     const refreshUserInfo = () => {
       const list = [...document.querySelectorAll(USER_INFO)]
         .map((e, index) => {
-          const key = getKey(e, index);
+          const key = getUserKey(e, index);
           const ip = getUserIP(e);
           if (!ip) return null;
 

@@ -1,43 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Box, Divider, Grid, IconButton, Tooltip } from '@material-ui/core';
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { useParser } from 'util/Parser';
-import Info from '../FeatureInfo';
-import { $setCategoryConfig } from '../slice';
-
-const DEFAULT_CHANNEL_CONFIG = {};
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 
-function CategoryRow({ divider, category, nameMap }) {
-  const dispatch = useDispatch();
-  const { channel } = useParser();
-  const {
-    storage: { category: categoryConfig },
-  } = useSelector((state) => state[Info.ID]);
-  const channelConfig = categoryConfig?.[channel.ID] || DEFAULT_CHANNEL_CONFIG;
-  const { mutePreview, muteArticle } =
-    channelConfig?.[category] || DEFAULT_CATEGORY_CONFIG;
+function CategoryRow({ divider, id, label, initValue, onChange }) {
+  const [value, setValue] = useState({
+    ...DEFAULT_CATEGORY_CONFIG,
+    ...initValue,
+  });
 
-  const handleCategory = useCallback(
-    (categoryID, type) => () => {
-      const newConfig = {
-        ...channelConfig,
-        [categoryID]: {
-          ...channelConfig?.[categoryID],
-          [type]: !channelConfig?.[categoryID]?.[type],
-        },
+  const handleBool = useCallback(
+    (type) => () => {
+      const updateValue = {
+        ...value,
+        [type]: !value[type],
       };
-      dispatch(
-        $setCategoryConfig({
-          channel: channel.ID,
-          config: newConfig,
-        }),
-      );
+      setValue(updateValue);
+      onChange(id, updateValue);
     },
-    [channelConfig, channel, dispatch],
+    [value, onChange, id],
   );
+
+  const { mutePreview, muteArticle } = value;
 
   return (
     <>
@@ -55,19 +40,19 @@ function CategoryRow({ divider, category, nameMap }) {
           alignItems="center"
         >
           <span className="badge badge-success" style={{ margin: '0.25rem' }}>
-            {nameMap[category]}
+            {label}
           </span>
         </Box>
       </Grid>
       <Grid item xs={6}>
         <Box display="flex" justifyContent="flex-end" alignItems="center">
           <Tooltip title="미리보기 뮤트">
-            <IconButton onClick={handleCategory(category, 'mutePreview')}>
+            <IconButton onClick={handleBool('mutePreview')}>
               {mutePreview ? <BrokenImage /> : <Image />}
             </IconButton>
           </Tooltip>
           <Tooltip title="게시물 뮤트">
-            <IconButton onClick={handleCategory(category, 'muteArticle')}>
+            <IconButton onClick={handleBool('muteArticle')}>
               {muteArticle ? <VolumeOff /> : <VolumeUp />}
             </IconButton>
           </Tooltip>
@@ -76,9 +61,5 @@ function CategoryRow({ divider, category, nameMap }) {
     </>
   );
 }
-
-CategoryRow.defaultProps = {
-  categoryConfig: {},
-};
 
 export default CategoryRow;

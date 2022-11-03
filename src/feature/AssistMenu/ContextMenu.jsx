@@ -1,40 +1,43 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
+import { getUserInfo } from 'func/user';
 
-function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+function ContextMenu({ targetRef }) {
+  const [open, closeMenu] = useContextMenu({
+    method: 'closest',
+    selector: USER_INFO,
+  });
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      const userInfo = target.closest(USER_INFO);
-      if (!userInfo) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      const id = userInfo?.querySelector('[data-filter]')?.dataset.filter || '';
-      data.current = id.replace('#', '/');
-      setValid(/^[^,]+$/.test(id));
-      return true;
-    };
+    const userInfo = targetRef.current.closest(USER_INFO);
+    if (!userInfo) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    const id = getUserInfo(userInfo);
+    if (id.includes('.')) {
+      // 유동
+      setData(undefined);
+      return;
+    }
+
+    setData(id.replace('#', '/'));
+  }, [open, targetRef]);
 
   const handleInfo = useCallback(() => {
-    window.open(`https://arca.live/u/@${data.current}`);
-    dispatch(setClose());
-  }, [dispatch]);
+    window.open(`https://arca.live/u/@${data}`);
+    closeMenu();
+  }, [closeMenu, data]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleInfo}>

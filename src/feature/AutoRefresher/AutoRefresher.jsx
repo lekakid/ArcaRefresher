@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import queryString from 'query-string';
 
 import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
@@ -12,45 +12,54 @@ import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
 import { getNewArticle, swapArticle } from './article';
 
-const useStyles = makeStyles(() => ({
+const styles = {
   refreshed: {
     animationName: '$light',
     animationDuration: 500,
   },
   '@keyframes light': {
     '0%': {
-      backgroundColor: 'rgba(246, 247, 239, 1)',
+      backgroundColor: 'var(--color-bg-focus)',
     },
     '100%': {
-      backgroundColor: 'rgba(246, 247, 239, 0)',
+      backgroundColor: 'transparent',
     },
   },
-}));
+};
 
-export default function AutoRefresher() {
+function AutoRefresher({ classes }) {
   const boardLoaded = useElementQuery(BOARD_LOADED);
   const {
-    storage: { countdown, showProgress },
+    storage: { countdown, maxTime, showProgress },
   } = useSelector((state) => state[Info.ID]);
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState({
     management: false,
     unfocus: false,
   });
-  const sockCount = useRef(0);
-
-  const classes = useStyles();
+  const sockCount = useRef({ newArticle: 0, accTime: 0 });
+  const mouseMoveTimer = useRef(null);
 
   const handleRefresh = useCallback(async () => {
-    if (sockCount.current === 0) return;
+    if (sockCount.current.newArticle === 0) {
+      if (maxTime === -1) return;
+
+      if (sockCount.current.accTime < maxTime) {
+        sockCount.current.accTime += countdown;
+        return;
+      }
+    }
+
+    if (mouseMoveTimer.current) return;
 
     const newArticle = await getNewArticle();
     if (newArticle.length === 0) return;
 
     swapArticle(board, newArticle, classes.refreshed);
     dispatchAREvent(EVENT_AUTOREFRESH);
-    sockCount.current = 0;
-  }, [board, classes]);
+    sockCount.current.newArticle = 0;
+    sockCount.current.accTime = 0;
+  }, [board, classes, countdown, maxTime]);
 
   useEffect(() => {
     if (!boardLoaded) return;
@@ -59,9 +68,23 @@ export default function AutoRefresher() {
       parseNumbers: true,
     });
     const searchKeys = Object.keys(search);
-    const targetKeys = ['p', 'after', 'before', 'near'];
-    if (search.p === 1 || !searchKeys.some((key) => targetKeys.includes(key)))
-      setBoard(document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE));
+    const targetKeys = ['after', 'before', 'near'];
+    if (search.p > 1 || searchKeys.some((key) => targetKeys.includes(key)))
+      return;
+
+    const boardElement = document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE);
+    if (!boardElement) return;
+    setBoard(boardElement);
+
+    boardElement.addEventListener('mousemove', () => {
+      if (mouseMoveTimer.current) {
+        clearTimeout(mouseMoveTimer.current);
+      }
+
+      mouseMoveTimer.current = setTimeout(() => {
+        mouseMoveTimer.current = null;
+      }, 1000);
+    });
   }, [boardLoaded]);
 
   // 웹 소켓으로 새로고침 트래픽 감소
@@ -69,19 +92,16 @@ export default function AutoRefresher() {
     if (!board) return;
     if (countdown === 0) return;
 
-    const { protocol, host, pathname, search } = window.location;
+    const { host, pathname, search } = window.location;
 
     const connect = () => {
-      const sock = new WebSocket(
-        `ws${protocol === 'https:' ? 's' : ''}://${host}/arcalive`,
-        'arcalive',
-      );
+      const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
       sock.onopen = () => {
         sock.send('hello');
         sock.send(`c|${pathname}${search}`);
       };
       sock.onmessage = (e) => {
-        if (e.data === 'na') sockCount.current += 1;
+        if (e.data === 'na') sockCount.current.newArticle += 1;
       };
       sock.onclose = () => {
         setTimeout(connect, 1000);
@@ -151,3 +171,5 @@ export default function AutoRefresher() {
     </Fade>
   );
 }
+
+export default withStyles(styles)(AutoRefresher);

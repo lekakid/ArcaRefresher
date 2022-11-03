@@ -1,50 +1,52 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { setClose, setContextSnack } from 'menu/ContextMenu/slice';
-import { useParser } from 'util/Parser';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 
-function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
+const selector = `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
+
+function ContextMenu({ targetRef }) {
   const {
     storage: { fileName },
   } = useSelector((state) => state[Info.ID]);
-  const infoString = useParser();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+  const [open, closeMenu, setSnack] = useContextMenu({
+    method: 'closest',
+    selector,
+  });
+  const contentInfo = useContent();
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    const trigger = (target) => {
-      if (!target.closest(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`)) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      data.current =
-        target.tagName === 'IMG' ? getImageInfo(target) : getGifInfo(target);
-      setValid(true);
-      return true;
-    };
+    if (!targetRef.current.closest(selector)) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    setData(
+      targetRef.current.tagName === 'IMG'
+        ? getImageInfo(targetRef.current)
+        : getGifInfo(targetRef.current),
+    );
+  }, [open, targetRef]);
 
   const handleClipboard = useCallback(() => {
     (async () => {
-      const { orig } = data.current;
+      const { orig } = data;
 
       try {
-        dispatch(setClose());
-        dispatch(setContextSnack({ msg: '이미지를 다운로드 받는 중...' }));
+        closeMenu();
+        setSnack({ msg: '이미지를 다운로드 받는 중...' });
         const rawData = await fetch(orig).then((response) => response.blob());
 
         const canvas = document.createElement('canvas');
@@ -66,34 +68,30 @@ function ContextMenu({ triggerList }) {
           [convertedBlob.type]: convertedBlob,
         });
         navigator.clipboard.write([item]);
-        dispatch(
-          setContextSnack({
-            msg: '클립보드에 이미지가 복사되었습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '클립보드에 이미지가 복사되었습니다.',
+          time: 3000,
+        });
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
-        dispatch(
-          setContextSnack({
-            msg: '이미지 다운로드에 실패했습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '이미지 다운로드에 실패했습니다.',
+          time: 3000,
+        });
       }
     })();
-  }, [dispatch]);
+  }, [closeMenu, data, setSnack]);
 
   const handleDownload = useCallback(() => {
     (async () => {
-      const { orig, ext, uploadName } = data.current;
+      const { orig, ext, uploadName } = data;
       try {
-        dispatch(setClose());
+        closeMenu();
         const response = await fetch(orig);
         const size = Number(response.headers.get('Content-Length'));
         const stream = response.body;
         const name = format(fileName, {
-          values: infoString,
+          values: contentInfo,
           fileName: uploadName,
         });
 
@@ -103,22 +101,20 @@ function ContextMenu({ triggerList }) {
         stream.pipeTo(filestream);
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
-        dispatch(
-          setContextSnack({
-            msg: '이미지 다운로드에 실패했습니다.',
-            time: 3000,
-          }),
-        );
+        setSnack({
+          msg: '이미지 다운로드에 실패했습니다.',
+          time: 3000,
+        });
       }
     })();
-  }, [dispatch, fileName, infoString]);
+  }, [data, closeMenu, fileName, contentInfo, setSnack]);
 
   const handleCopyURL = useCallback(() => {
-    dispatch(setClose());
-    navigator.clipboard.writeText(data.current.orig);
-  }, [dispatch]);
+    closeMenu();
+    navigator.clipboard.writeText(data.orig);
+  }, [closeMenu, data]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClipboard}>

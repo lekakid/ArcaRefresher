@@ -8,7 +8,9 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
+  Select,
   Switch,
   Typography,
 } from '@material-ui/core';
@@ -16,15 +18,18 @@ import { Remove } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { TextEditor } from 'component/config';
-import { useParser } from 'util/Parser';
+import { useContent } from 'util/ContentInfo';
 import Info from '../FeatureInfo';
 import {
   $removeEmoticonList,
   $setKeyword,
   $setUser,
+  $toggleHideNoPermission,
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,
+  $setCategoryConfig,
+  $setBoardBarPos,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 
@@ -46,17 +51,18 @@ function CustomOverRay() {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const {
-    channel: { category },
-  } = useParser();
+  const { channel } = useContent();
   const {
     storage: {
+      hideNoPermission,
+      boardBarPos,
       hideCountBar,
       hideMutedMark,
       muteIncludeReply,
       user,
       keyword,
       emoticon,
+      category,
     },
   } = useSelector((state) => state[Info.ID]);
   const tableRows = Object.keys(emoticon).map((key) => ({
@@ -67,6 +73,19 @@ const View = React.forwardRef((_props, ref) => {
   }));
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+
+  const channelCategory = category[channel.ID];
+
+  const handleNoPermission = useCallback(() => {
+    dispatch($toggleHideNoPermission());
+  }, [dispatch]);
+
+  const handleCountBarPos = useCallback(
+    (e) => {
+      dispatch($setBoardBarPos(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleCountBar = useCallback(() => {
     dispatch($toggleCountBar());
@@ -111,11 +130,44 @@ const View = React.forwardRef((_props, ref) => {
     setSelection(current);
   }, []);
 
+  const handleCategory = useCallback(
+    (categoryId, value) => {
+      const updateCategory = { ...channelCategory, [categoryId]: value };
+
+      dispatch(
+        $setCategoryConfig({ channel: channel.ID, config: updateCategory }),
+      );
+    },
+    [channel, channelCategory, dispatch],
+  );
+
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
+          <ListItem divider button onClick={handleNoPermission}>
+            <ListItemText>(권한 없음) 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideNoPermission}
+                onChange={handleNoPermission}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText primary="게시판 뮤트 카운터 위치" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={boardBarPos}
+                onChange={handleCountBarPos}
+              >
+                <MenuItem value="afterbegin">게시판 위</MenuItem>
+                <MenuItem value="afterend">게시판 아래</MenuItem>
+              </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleCountBar}>
             <ListItemText
               primary="뮤트 카운터 숨김"
@@ -192,13 +244,15 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {category &&
-                  Object.keys(category).map((id, index) => (
+                {channel.category &&
+                  Object.entries(channel.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}
                       divider={index !== 0}
-                      category={id}
-                      nameMap={category}
+                      id={id}
+                      label={label}
+                      initValue={channelCategory?.[id]}
+                      onChange={handleCategory}
                     />
                   ))}
               </Grid>

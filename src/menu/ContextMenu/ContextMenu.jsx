@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import Info from './FeatureInfo';
 import ContextSnack from './ContextSnack';
-import { setClose, setOpen } from './slice';
+import { setOpen } from './slice';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -30,15 +30,19 @@ export default function ContextMenu({ children }) {
   const {
     storage: { interactionType },
     open,
+    triggerList,
   } = useSelector((state) => state[Info.ID]);
   const gestureTrack = useRef({ right: false, count: 0 });
-  const triggerList = useRef([]);
+  const targetRef = useRef(undefined);
   const [mousePos, setMousePos] = useState([]);
   const classes = useStyles();
 
   useEffect(() => {
     const handleDown = ({ button }) => {
-      if (button === 2) gestureTrack.current.right = true;
+      if (button === 2) {
+        gestureTrack.current.right = true;
+        dispatch(setOpen(false));
+      }
     };
     const handleUp = ({ button }) => {
       if (button === 2) gestureTrack.current.right = false;
@@ -47,25 +51,26 @@ export default function ContextMenu({ children }) {
       if (gestureTrack.current.right) gestureTrack.current.count += 1;
     };
     const handleScroll = () => {
-      dispatch(setClose());
+      dispatch(setOpen(false));
     };
     const handleContext = (e) => {
-      if (open) {
-        e.preventDefault();
-        return;
-      }
-
-      if (gestureTrack.current.count <= 20) {
-        if (getKeyCombine(e) !== interactionType) return;
-        setMousePos([e.clientX, e.clientY]);
-        triggerList.current.forEach((trigger) => {
-          if (trigger(e.target)) {
-            e.preventDefault();
-            dispatch(setOpen());
-          }
-        });
-      }
+      const { count: trackCount } = gestureTrack.current;
       gestureTrack.current.count = 0;
+
+      if (trackCount > 20) return;
+      if (getKeyCombine(e) !== interactionType) return;
+      if (
+        !triggerList.some(
+          ({ method, selector }) => !!e.target[method](selector),
+        )
+      )
+        return;
+
+      e.preventDefault();
+
+      setMousePos([e.clientX, e.clientY]);
+      targetRef.current = e.target;
+      dispatch(setOpen(true));
     };
 
     document.addEventListener('mousedown', handleDown);
@@ -80,10 +85,10 @@ export default function ContextMenu({ children }) {
       document.removeEventListener('scroll', handleScroll);
       document.removeEventListener('contextmenu', handleContext);
     };
-  }, [dispatch, interactionType, open]);
+  }, [dispatch, interactionType, triggerList]);
 
   const handleClose = useCallback(() => {
-    dispatch(setClose());
+    dispatch(setOpen(false));
   }, [dispatch]);
 
   const [left = 0, top = 0] = mousePos;
@@ -96,6 +101,7 @@ export default function ContextMenu({ children }) {
         anchorReference="anchorPosition"
         anchorPosition={{ top, left }}
         MenuListProps={{ disablePadding: true }}
+        TransitionProps={{ exit: false }}
         classes={{ list: classes.list }}
         open={open}
         onClose={handleClose}
@@ -109,7 +115,7 @@ export default function ContextMenu({ children }) {
           React.cloneElement(child, {
             // eslint-disable-next-line react/no-array-index-key
             key: index,
-            triggerList,
+            targetRef,
           }),
         )}
       </Menu>

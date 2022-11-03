@@ -16,8 +16,10 @@ const defaultStorage = {
   userinfoWidth: 10,
   resizeImage: 100,
   resizeVideo: 100,
+  resizeEmoticonPalette: 2,
   hideUnvote: false,
   modifiedIndicator: false,
+  hideVoiceComment: false,
   unfoldLongComment: false,
 };
 
@@ -65,11 +67,17 @@ export const slice = createSlice({
     $setResizeVideo(state, action) {
       state.storage.resizeVideo = action.payload;
     },
+    $setResizeEmoticonPalette(state, action) {
+      state.storage.resizeEmoticonPalette = action.payload;
+    },
     $toggleUnvote(state) {
       state.storage.hideUnvote = !state.storage.hideUnvote;
     },
     $toggleModifiedIndicator(state) {
       state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
+    },
+    $toggleHideVoiceComment(state) {
+      state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
     },
     $toggleLongComment(state) {
       state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
@@ -90,8 +98,10 @@ export const {
   $setUserInfoWith,
   $setResizeImage,
   $setResizeVideo,
+  $setResizeEmoticonPalette,
   $toggleUnvote,
   $toggleModifiedIndicator,
+  $toggleHideVoiceComment,
   $toggleLongComment,
 } = slice.actions;
 
