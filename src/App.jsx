@@ -12,18 +12,22 @@ import ContentInfo from 'util/ContentInfo';
 
 export default function App() {
   const browserDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [darkMode, setDarkMode] = useState(false);
+  const [arcaDarkMode, setArcaDarkMode] = useState(
+    document.documentElement.classList.contains('theme-dark'),
+  );
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      setDarkMode(document.documentElement.classList.contains('theme-dark'));
+      setArcaDarkMode(
+        document.documentElement.classList.contains('theme-dark'),
+      );
     });
     observer.observe(document.documentElement, { attributes: true });
   }, []);
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={browserDarkMode || darkMode ? dark : light}>
+      <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
         <ContentInfo />
         <Feature />
         <Menu />
