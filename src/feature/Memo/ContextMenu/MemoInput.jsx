@@ -26,6 +26,15 @@ export default function MemoDialog({
     setInput(e.target.value);
   }, []);
 
+  const handleDialogClose = useCallback(
+    (e, reason) => {
+      if (reason === 'backdropClick') return;
+
+      onClose();
+    },
+    [onClose],
+  );
+
   const handleSubmit = useCallback(
     (e) => {
       if (e.key && e.key !== 'Enter') return;
@@ -37,7 +46,7 @@ export default function MemoDialog({
   );
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onClose={handleDialogClose}>
       <DialogTitle>이용자 메모</DialogTitle>
       <DialogContent>
         <Typography>저장할 메모를 작성해주세요</Typography>
