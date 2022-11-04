@@ -13,8 +13,12 @@
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "hotfix": "git checkout master && git checkout -b hotfix && npm version patch --no-git-tag-version",
-    "minor": "git checkout develop && npm version minor --no-git-tag-version"
+    "hotfix:branch": "git checkout master && git checkout -b hotfix",
+    "hotfix:version": "version=$(npm version patch --no-git-tag-version) && git commit -am \"[package] ${version}\"",
+    "hotfix": "npm run hotfix:branch && npm run hotfix:version",
+    "minor:branch": "git checkout develop",
+    "minor:version": "version=$(npm version minor --no-git-tag-version) && git commit -am \"[package] ${version}\"",
+    "minor": "npm run minor:branch && npm run minor:version"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
