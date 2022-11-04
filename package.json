@@ -13,8 +13,8 @@
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "hotfix": "git checkout master && git checkout -b hotfix && npm version patch",
-    "minor": "git checkout develop && npm version minor"
+    "hotfix": "git checkout master && git checkout -b hotfix && npm version patch --no-git-tag-version",
+    "minor": "git checkout develop && npm version minor --no-git-tag-version"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
