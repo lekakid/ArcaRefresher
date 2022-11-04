@@ -51,7 +51,7 @@ export default function VersionInfo() {
     setNoti({
       open: result !== 0,
       refresh: result < 0,
-      once: reuslt >= 2
+      once: result >= 2
     });
   }, [checkedVersion]);
 
