@@ -43,6 +43,7 @@ export default function VersionInfo() {
   const [noti, setNoti] = useState({
     open: false,
     refresh: false,
+    once: false
   });
 
   useEffect(() => {
@@ -50,19 +51,20 @@ export default function VersionInfo() {
     setNoti({
       open: result !== 0,
       refresh: result < 0,
+      once: reuslt >= 2
     });
   }, [checkedVersion]);
 
   const handleChangeLog = useCallback(() => {
     window.open(
-      `https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=${GM_info.script.version}`,
+      `https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8${noti.once ? "" : `&target=title&keyword=${GM_info.script.version}`}`,
     );
     setNoti((prev) => ({
       ...prev,
       open: false,
     }));
     dispatch($updateCheckedVersion(GM_info.script.version));
-  }, [dispatch]);
+  }, [dispatch, noti]);
 
   const handleRefresh = useCallback(() => {
     window.location.reload();
