@@ -140,8 +140,11 @@ const useStyles = makeStyles(
       },
     }),
     ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
-      '& .namlacon .emoticons': {
-        maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+      '& .namlacon': {
+        height: 'auto !important',
+        '& .emoticons': {
+          maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+        },
       },
     }),
     Unvote: {
