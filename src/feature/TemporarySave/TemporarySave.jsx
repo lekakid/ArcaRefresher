@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ButtonGroup, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { useElementQuery } from 'core/hooks';
-import { WRITE_LOADED } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
 
 import { AutoSaver, SaveButton, LoadButton } from './feature';
 
@@ -33,7 +32,9 @@ const useStyles = makeStyles({
 });
 
 export default function TemporarySave() {
-  const editorLoaded = useElementQuery(WRITE_LOADED);
+  const {
+    load: { write: editorLoaded },
+  } = useContent();
   const [container, setContainer] = useState(null);
   const [editor, setEditor] = useState(null);
   const classes = useStyles();

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 
-import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { ARTICLE_USER_INFO } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
 import { getUserInfo, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
@@ -62,7 +62,9 @@ const useStyles = makeStyles(
 export default function AnonymousNick() {
   const { storage, show } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const {
+    load: { article: articleLoaded },
+  } = useContent();
 
   const classes = useStyles();
 

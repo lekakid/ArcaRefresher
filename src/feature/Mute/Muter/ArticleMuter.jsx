@@ -2,13 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import {
-  ARTICLE_GIFS,
-  ARTICLE_IMAGES,
-  ARTICLE_LOADED,
-  ARTICLE_VIEW,
-} from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { ARTICLE_GIFS, ARTICLE_IMAGES, ARTICLE_VIEW } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
 
 import Info from '../FeatureInfo';
 import useEmoticon from './useEmoticon';
@@ -48,7 +43,9 @@ function ArticleMuter() {
   const {
     storage: { emoticon, hideMutedMark },
   } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const {
+    load: { article: articleLoaded },
+  } = useContent();
   const [article, setArticle] = useState(null);
   const emoticonFilter = useEmoticon(emoticon);
 

@@ -5,14 +5,13 @@ import { Refresh } from '@material-ui/icons';
 
 import {
   COMMENT_VIEW,
-  COMMENT_LOADED,
   COMMENT_TITLE,
   COMMENT_SUBTITLE,
   COMMENT_INNER_VIEW,
 } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { getDateStr } from 'func/time';
+import { useContent } from 'util/ContentInfo';
 
 const style = {
   '@global': {
@@ -37,7 +36,9 @@ function CommentRefresh({ classes }) {
     bottom: undefined,
   });
   const comment = useRef(undefined);
-  const commentLoaded = useElementQuery(COMMENT_LOADED);
+  const {
+    load: { comment: commentLoaded },
+  } = useContent();
 
   // 초기화
   useEffect(() => {

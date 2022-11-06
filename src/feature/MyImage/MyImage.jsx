@@ -8,8 +8,6 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-import { WRITE_LOADED } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
 import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
@@ -18,7 +16,9 @@ const SHARED = '_shared_';
 
 export default function MyImage() {
   const dispatch = useDispatch();
-  const editorLoaded = useElementQuery(WRITE_LOADED);
+  const {
+    load: { write: editorLoaded },
+  } = useContent();
   const { channel } = useContent();
   const {
     storage: { enabled, imgList, forceLoad },

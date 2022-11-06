@@ -5,12 +5,11 @@ import { withStyles } from '@material-ui/styles';
 import {
   COMMENT_INNER_VIEW,
   COMMENT_ITEMS,
-  COMMENT_LOADED,
   COMMENT_WRAPPERS,
   COMMENT_EMOTICON,
 } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
+import { useContent } from 'util/ContentInfo';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
@@ -63,7 +62,9 @@ const style = {
 
 function CommentMuter() {
   const dispatch = useDispatch();
-  const commentLoaded = useElementQuery(COMMENT_LOADED);
+  const {
+    load: { comment: commentLoaded },
+  } = useContent();
   const {
     storage: {
       user,

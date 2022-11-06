@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useElementQuery } from 'core/hooks';
-import {
-  ARTICLE_LOADED,
-  ARTICLE_MEDIA,
-  DELETED_ALERT_LOADED,
-} from 'core/selector';
+import { ARTICLE_MEDIA, DELETED_ALERT_LOADED } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
+
 import Blocker from './Blocker';
 import Info from './FeatureInfo';
 
@@ -18,7 +16,9 @@ export default function MediaBlocker() {
   const {
     storage: { enabled, deletedOnly },
   } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const {
+    load: { article: articleLoaded },
+  } = useContent();
   const alertLoaded = useElementQuery(DELETED_ALERT_LOADED);
   const [infoList, setInfoList] = useState([]);
 

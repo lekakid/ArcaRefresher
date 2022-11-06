@@ -10,16 +10,12 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { useElementQuery } from 'core/hooks';
 import {
   ARTICLE_GIFS,
   ARTICLE_IMAGES,
-  ARTICLE_LOADED,
   ARTICLE_VIEW,
   BOARD_ARTICLES,
-  BOARD_LOADED,
   BOARD_VIEW,
-  COMMENT_LOADED,
   COMMENT_VIEW,
 } from 'core/selector';
 import {
@@ -28,6 +24,7 @@ import {
   EVENT_AUTOREFRESH,
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
+import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
@@ -57,9 +54,7 @@ export default function ExperienceCustomizer() {
       wideClickArea,
     },
   } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const commentLoaded = useElementQuery(COMMENT_LOADED);
-  const boardLoaded = useElementQuery(BOARD_LOADED);
+  const { load } = useContent();
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
@@ -67,10 +62,10 @@ export default function ExperienceCustomizer() {
   const classes = useStyles();
 
   useEffect(() => {
-    if (articleLoaded) {
+    if (load.article) {
       setArticle(document.querySelector(ARTICLE_VIEW));
     }
-  }, [articleLoaded]);
+  }, [load.article]);
 
   useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
@@ -105,16 +100,16 @@ export default function ExperienceCustomizer() {
   }, [article, ratedownGuard]);
 
   useEffect(() => {
-    if (!commentLoaded) return;
+    if (!load.comment) return;
 
     setComment(document.querySelector(COMMENT_VIEW));
     addAREvent(EVENT_COMMENT_REFRESH, () => {
       setComment(document.querySelector(COMMENT_VIEW));
     });
-  }, [commentLoaded]);
+  }, [load.comment]);
 
   useEffect(() => {
-    if (!boardLoaded || !openArticleNewWindow) return null;
+    if (!load.board || !openArticleNewWindow) return null;
 
     const board = document.querySelector(BOARD_VIEW);
     const applyNewWindow = () => {
@@ -134,7 +129,7 @@ export default function ExperienceCustomizer() {
 
       removeAREvent(EVENT_AUTOREFRESH, applyNewWindow);
     };
-  }, [boardLoaded, openArticleNewWindow]);
+  }, [load.board, openArticleNewWindow]);
 
   useEffect(() => {
     if (!comment || !foldComment) return null;

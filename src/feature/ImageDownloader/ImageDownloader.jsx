@@ -4,8 +4,8 @@ import { Button, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { GetApp } from '@material-ui/icons';
 
-import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { ARTICLE_BODY, ARTICLE_MENU } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
 
 import SelectionDialog from './SelectionDialog';
 import Info from './FeatureInfo';
@@ -30,7 +30,9 @@ export default function ImageDownloader() {
     open,
   } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const {
+    load: { article: articleLoaded },
+  } = useContent();
   const classes = useStyles();
 
   useEffect(() => {
