@@ -1,5 +1,5 @@
 import ArticleMenu from './ArticleMenu';
 import ConfigMenu from './ConfigMenu';
-import Feature from './ExperienceCumtom';
+import Feature from './ExperienceCustom';
 
 export { ArticleMenu, ConfigMenu, Feature };
