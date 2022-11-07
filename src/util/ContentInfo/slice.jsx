@@ -7,6 +7,7 @@ const initialState = {
     board: false,
     comment: false,
     write: false,
+    full: false,
   },
   channel: {
     ID: null,

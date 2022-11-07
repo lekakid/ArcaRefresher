@@ -11,6 +11,7 @@ import {
   CHANNEL_TITLE_LOADED,
   COMMENT_LOADED,
   WRITE_LOADED,
+  FULL_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
@@ -23,6 +24,7 @@ export default function Parser() {
   const articleLoaded = useElementQuery(ARTICLE_LOADED);
   const commentLoaded = useElementQuery(COMMENT_LOADED);
   const writeLoaded = useElementQuery(WRITE_LOADED);
+  const fullLoaded = useElementQuery(FULL_LOADED);
 
   useLayoutEffect(() => {
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
@@ -93,6 +95,12 @@ export default function Parser() {
 
     dispatch(setLoadInfo({ write: true }));
   }, [writeLoaded, dispatch]);
+
+  useLayoutEffect(() => {
+    if (!fullLoaded) return;
+
+    dispatch(setLoadInfo({ full: true }));
+  }, [fullLoaded, dispatch]);
 
   return null;
 }

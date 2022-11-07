@@ -9,8 +9,8 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { AuthorTag } from 'component';
-import { USER_INFO, FULL_LOADED } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { USER_INFO } from 'core/selector';
+import { useContent } from 'util/ContentInfo';
 import { getUserID, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
@@ -20,7 +20,9 @@ function MemoList() {
     storage: { variant, memo },
   } = useSelector((state) => state[Info.ID]);
   const [infoList, setInfoList] = useState([]);
-  const loaded = useElementQuery(FULL_LOADED);
+  const {
+    load: { full: loaded },
+  } = useContent();
 
   useLayoutEffect(() => {
     const appendMemo = () => {
