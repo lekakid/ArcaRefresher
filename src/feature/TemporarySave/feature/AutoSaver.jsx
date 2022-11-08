@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Info from '../FeatureInfo';
-import { $saveArticle, setCurrentSlot } from '../slice';
+import { $saveArticle } from '../slice';
 
 export default function AutoSaver({ editor }) {
   const dispatch = useDispatch();
@@ -13,18 +13,16 @@ export default function AutoSaver({ editor }) {
   } = useSelector((state) => state[Info.ID]);
 
   useEffect(() => {
-    if (autoSaveTime === 0 || loadOpen) return null;
+    if (autoSaveTime === 0 || loadOpen) return undefined;
+    if (!currentSlot) return undefined;
 
     const timer = setInterval(() => {
       const date = new Date();
-      const timestamp = date.getTime();
       const title =
         editor.title.value || `${date.toLocaleString()}에 자동 저장됨`;
       const content = editor.content.html.get(true);
 
-      const slot = currentSlot || timestamp;
-      if (!currentSlot) dispatch(setCurrentSlot(slot));
-      dispatch($saveArticle({ slot, title, content }));
+      dispatch($saveArticle({ slot: currentSlot, title, content }));
     }, autoSaveTime * 1000);
 
     return () => clearInterval(timer);
