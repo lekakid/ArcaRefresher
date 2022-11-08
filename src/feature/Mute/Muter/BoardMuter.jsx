@@ -7,10 +7,10 @@ import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
 import { getUserInfo } from 'func/user';
 
-import { filterContent } from '../func';
 import Info from '../FeatureInfo';
+import { filterContent } from '../func';
+import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
-import useEmoticon from './useEmoticon';
 
 const style = {
   '@global': {
@@ -44,7 +44,6 @@ function BoardMuter() {
     storage: {
       user,
       keyword,
-      emoticon,
       category,
       boardBarPos,
       hideCountBar,
@@ -55,7 +54,7 @@ function BoardMuter() {
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticionFilter = useEmoticon(emoticon);
+  const emoticionFilter = useSelector(emoticonFilterSelector);
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {

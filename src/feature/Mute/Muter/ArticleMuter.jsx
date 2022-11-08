@@ -6,7 +6,7 @@ import { ARTICLE_GIFS, ARTICLE_IMAGES, ARTICLE_VIEW } from 'core/selector';
 import { useContent } from 'util/ContentInfo';
 
 import Info from '../FeatureInfo';
-import useEmoticon from './useEmoticon';
+import { emoticonFilterSelector } from '../selector';
 
 const style = {
   '@global': {
@@ -41,13 +41,13 @@ const style = {
 
 function ArticleMuter() {
   const {
-    storage: { emoticon, hideMutedMark },
+    storage: { hideMutedMark },
   } = useSelector((state) => state[Info.ID]);
   const {
     load: { article: articleLoaded },
   } = useContent();
   const [article, setArticle] = useState(null);
-  const emoticonFilter = useEmoticon(emoticon);
+  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
     if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));

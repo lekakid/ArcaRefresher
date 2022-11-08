@@ -14,8 +14,8 @@ import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
+import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
-import useEmoticon from './useEmoticon';
 
 const style = {
   '@global': {
@@ -66,19 +66,12 @@ function CommentMuter() {
     load: { comment: commentLoaded },
   } = useContent();
   const {
-    storage: {
-      user,
-      keyword,
-      emoticon,
-      hideCountBar,
-      hideMutedMark,
-      muteIncludeReply,
-    },
+    storage: { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply },
   } = useSelector((state) => state[Info.ID]);
   const [comment, setComment] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticonFilter = useEmoticon(emoticon);
+  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useLayoutEffect(() => {
     if (!commentLoaded) return;
