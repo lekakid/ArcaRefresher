@@ -2,17 +2,20 @@ import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { BOARD_ARTICLES_WITHOUT_NOTICE, BOARD_VIEW } from 'core/selector';
+import {
+  BOARD_ARTICLES_WITHOUT_NOTICE,
+  BOARD_LOADED,
+  BOARD_VIEW,
+} from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
+import { useLoadChecker } from 'util/LoadChecker';
 import { useContent } from 'util/ContentInfo';
 import { getContrastYIQ } from 'func/color';
 
 import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
-  const {
-    load: { board: boardLoaded },
-  } = useContent();
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
   const {
     storage: { color },

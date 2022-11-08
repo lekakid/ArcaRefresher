@@ -2,13 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import Info from './FeatureInfo';
 
 const initialState = {
-  load: {
-    article: false,
-    board: false,
-    comment: false,
-    write: false,
-    full: false,
-  },
   channel: {
     ID: null,
     name: null,
@@ -27,12 +20,6 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    setLoadInfo(state, action) {
-      state.load = {
-        ...state.load,
-        ...action.payload,
-      };
-    },
     setChannelInfo(state, action) {
       state.channel = {
         ...state.channel,

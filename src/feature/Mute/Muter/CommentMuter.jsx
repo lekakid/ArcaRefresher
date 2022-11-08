@@ -7,9 +7,10 @@ import {
   COMMENT_ITEMS,
   COMMENT_WRAPPERS,
   COMMENT_EMOTICON,
+  COMMENT_LOADED,
 } from 'core/selector';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
-import { useContent } from 'util/ContentInfo';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
@@ -62,9 +63,7 @@ const style = {
 
 function CommentMuter() {
   const dispatch = useDispatch();
-  const {
-    load: { comment: commentLoaded },
-  } = useContent();
+  const commentLoaded = useLoadChecker(COMMENT_LOADED);
   const {
     storage: { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply },
   } = useSelector((state) => state[Info.ID]);

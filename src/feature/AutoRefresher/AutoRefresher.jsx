@@ -4,9 +4,9 @@ import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import queryString from 'query-string';
 
-import { BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
+import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
-import { useContent } from 'util/ContentInfo';
+import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
@@ -28,9 +28,7 @@ const styles = {
 };
 
 function AutoRefresher({ classes }) {
-  const {
-    load: { board: boardLoaded },
-  } = useContent();
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
   const {
     storage: { countdown, maxTime, showProgress },
   } = useSelector((state) => state[Info.ID]);

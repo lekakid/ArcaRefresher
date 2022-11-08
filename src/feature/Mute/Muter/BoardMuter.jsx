@@ -2,9 +2,14 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import { BOARD_ARTICLES_WITHOUT_NOTICE, BOARD_VIEW } from 'core/selector';
+import {
+  BOARD_ARTICLES_WITHOUT_NOTICE,
+  BOARD_LOADED,
+  BOARD_VIEW,
+} from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
@@ -36,9 +41,7 @@ const style = {
 
 function BoardMuter() {
   const dispatch = useDispatch();
-  const {
-    load: { board: boardLoaded },
-  } = useContent();
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
   const {
     storage: {

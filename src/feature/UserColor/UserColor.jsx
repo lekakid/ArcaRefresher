@@ -7,8 +7,8 @@ import {
   EVENT_COMMENT_REFRESH,
   removeAREvent,
 } from 'core/event';
-import { USER_INFO } from 'core/selector';
-import { useContent } from 'util/ContentInfo';
+import { FULL_LOADED, USER_INFO } from 'core/selector';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserID } from 'func/user';
 
 import Info from './FeatureInfo';
@@ -17,9 +17,7 @@ export default function Colorize() {
   const {
     storage: { color },
   } = useSelector((state) => state[Info.ID]);
-  const {
-    load: { full: loaded },
-  } = useContent();
+  const loaded = useLoadChecker(FULL_LOADED);
 
   useLayoutEffect(() => {
     const colorizeUser = () => {

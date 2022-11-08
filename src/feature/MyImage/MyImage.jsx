@@ -9,6 +9,8 @@ import {
 } from '@material-ui/core';
 
 import { useContent } from 'util/ContentInfo';
+import { useLoadChecker } from 'util/LoadChecker';
+import { WRITE_LOADED } from 'core/selector';
 
 import Info from './FeatureInfo';
 
@@ -16,9 +18,7 @@ const SHARED = '_shared_';
 
 export default function MyImage() {
   const dispatch = useDispatch();
-  const {
-    load: { write: editorLoaded },
-  } = useContent();
+  const editorLoaded = useLoadChecker(WRITE_LOADED);
   const { channel } = useContent();
   const {
     storage: { enabled, imgList, forceLoad },

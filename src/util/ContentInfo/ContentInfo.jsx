@@ -1,7 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useElementQuery } from 'core/hooks';
 import {
   BOARD_LOADED,
   ARTICLE_LOADED,
@@ -9,22 +8,18 @@ import {
   ARTICLE_TITLE,
   ARTICLE_URL,
   CHANNEL_TITLE_LOADED,
-  COMMENT_LOADED,
-  WRITE_LOADED,
-  FULL_LOADED,
 } from 'core/selector';
+import { useLoadChecker } from 'util/LoadChecker';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
-import { setChannelInfo, setArticleInfo, setLoadInfo } from './slice';
+
+import { setChannelInfo, setArticleInfo } from './slice';
 
 export default function Parser() {
   const dispatch = useDispatch();
-  const titleLoaded = useElementQuery(CHANNEL_TITLE_LOADED);
-  const boardLoaded = useElementQuery(BOARD_LOADED);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
-  const commentLoaded = useElementQuery(COMMENT_LOADED);
-  const writeLoaded = useElementQuery(WRITE_LOADED);
-  const fullLoaded = useElementQuery(FULL_LOADED);
+  const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
+  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
@@ -46,8 +41,6 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!boardLoaded) return;
 
-    dispatch(setLoadInfo({ board: true }));
-
     const category = [...document.querySelectorAll('.board-category a')].reduce(
       (acc, cur) => {
         if (cur.href.indexOf('category=') === -1)
@@ -67,8 +60,6 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!articleLoaded) return;
 
-    dispatch(setLoadInfo({ article: true }));
-
     const titleElement = document.querySelector(ARTICLE_TITLE);
     const category =
       titleElement?.querySelector('.badge')?.textContent || '일반';
@@ -83,24 +74,6 @@ export default function Parser() {
 
     dispatch(setArticleInfo({ ID, category, title, author, url }));
   }, [articleLoaded, dispatch]);
-
-  useLayoutEffect(() => {
-    if (!commentLoaded) return;
-
-    dispatch(setLoadInfo({ comment: true }));
-  }, [commentLoaded, dispatch]);
-
-  useLayoutEffect(() => {
-    if (!writeLoaded) return;
-
-    dispatch(setLoadInfo({ write: true }));
-  }, [writeLoaded, dispatch]);
-
-  useLayoutEffect(() => {
-    if (!fullLoaded) return;
-
-    dispatch(setLoadInfo({ full: true }));
-  }, [fullLoaded, dispatch]);
 
   return null;
 }

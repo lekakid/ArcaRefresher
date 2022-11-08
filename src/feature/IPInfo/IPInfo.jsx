@@ -8,8 +8,8 @@ import {
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
 import { AuthorTag } from 'component';
-import { USER_INFO } from 'core/selector';
-import { useContent } from 'util/ContentInfo';
+import { FULL_LOADED, USER_INFO } from 'core/selector';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
@@ -35,9 +35,7 @@ const useStyles = makeStyles(
 
 export default function IPInfo() {
   const [infoList, setInfoList] = useState([]);
-  const {
-    load: { full: loaded },
-  } = useContent();
+  const loaded = useLoadChecker(FULL_LOADED);
   const classes = useStyles();
 
   useEffect(() => {

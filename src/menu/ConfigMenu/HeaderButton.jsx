@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
 
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { useLoadChecker } from 'util/LoadChecker';
 
 import { setOpen } from './slice';
 
 export default function HeaderButton() {
   const dispatch = useDispatch();
   const [nav, setNav] = useState(null);
-  const navigationLoaded = useElementQuery(NAVIGATION_LOADED);
+  const navigationLoaded = useLoadChecker(NAVIGATION_LOADED);
 
   useEffect(() => {
     if (navigationLoaded) {

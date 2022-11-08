@@ -26,6 +26,7 @@ import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
 import MediaBlocker from 'feature/MediaBlocker/slice';
 
 import ContentInfo from 'util/ContentInfo/slice';
+import LoadChecker from 'util/LoadChecker/slice';
 
 const syncConfig = {
   predicate: (action) => action.type.indexOf('/$') > -1,
@@ -56,6 +57,7 @@ const store = configureStore({
 
     // util
     ContentInfo,
+    LoadChecker,
   },
   middleware: [createStateSyncMiddleware(syncConfig)],
 });

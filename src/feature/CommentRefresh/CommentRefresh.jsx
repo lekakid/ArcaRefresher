@@ -8,10 +8,11 @@ import {
   COMMENT_TITLE,
   COMMENT_SUBTITLE,
   COMMENT_INNER_VIEW,
+  COMMENT_LOADED,
 } from 'core/selector';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getDateStr } from 'func/time';
-import { useContent } from 'util/ContentInfo';
 
 const style = {
   '@global': {
@@ -36,9 +37,7 @@ function CommentRefresh({ classes }) {
     bottom: undefined,
   });
   const comment = useRef(undefined);
-  const {
-    load: { comment: commentLoaded },
-  } = useContent();
+  const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   // 초기화
   useEffect(() => {
