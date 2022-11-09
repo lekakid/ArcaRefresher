@@ -41,20 +41,19 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!boardLoaded) return;
 
-    const category = [...document.querySelectorAll('.board-category a')].reduce(
-      (acc, cur) => {
-        if (cur.href.indexOf('category=') === -1)
-          return { ...acc, 글머리없음: '글머리없음' };
+    const categoryEntries = [
+      ...document.querySelectorAll('.board-category a'),
+    ].map((element) => {
+      if (!element.href.includes('category='))
+        return ['글머리없음', '글머리없음'];
 
-        const id = decodeURI(cur.href.split('category=')[1].split('&')[0]);
-        const text = cur.textContent;
+      const id = decodeURI(element.href.split('category=')[1].split('&')[0]);
+      const text = element.textContent;
 
-        return { ...acc, [id]: text };
-      },
-      {},
-    );
+      return [id, text];
+    });
 
-    dispatch(setChannelInfo({ category }));
+    dispatch(setChannelInfo({ category: Object.fromEntries(categoryEntries) }));
   }, [boardLoaded, dispatch]);
 
   useLayoutEffect(() => {
