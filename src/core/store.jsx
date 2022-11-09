@@ -16,34 +16,24 @@ const featureContext = require.context(
 
 const utilContext = require.context('util/', true, /^util\/(?!_).+\/slice$/);
 
-const menuReducer = menuContext
+const menuReducerEntries = menuContext
   .keys()
-  .reduce(
-    (acc, cur) => ({ ...acc, [cur.split('/')[1]]: menuContext(cur).default }),
-    {},
-  );
+  .map((path) => [path.split('/')[1], menuContext(path).default]);
 
-const featureReducer = featureContext.keys().reduce(
-  (acc, cur) => ({
-    ...acc,
-    [cur.split('/')[1]]: featureContext(cur).default,
-  }),
-  {},
-);
-
-const utilReducer = utilContext
+const featureReducerEntries = featureContext
   .keys()
-  .reduce(
-    (acc, cur) => ({ ...acc, [cur.split('/')[1]]: utilContext(cur).default }),
-    {},
-  );
+  .map((path) => [path.split('/')[1], featureContext(path).default]);
+
+const utilReducerEntries = utilContext
+  .keys()
+  .map((path) => [path.split('/')[1], utilContext(path).default]);
 
 const store = configureStore({
-  reducer: {
-    ...menuReducer,
-    ...featureReducer,
-    ...utilReducer,
-  },
+  reducer: Object.fromEntries([
+    ...menuReducerEntries,
+    ...featureReducerEntries,
+    ...utilReducerEntries,
+  ]),
   middleware: [
     createStateSyncMiddleware({
       predicate: (action) => action.type.indexOf('/$') > -1,
