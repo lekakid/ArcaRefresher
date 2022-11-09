@@ -39,11 +39,8 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleEdit = useCallback(
     (updatedRows) => {
-      const updatedData = updatedRows.reduce(
-        (acc, row) => ({ ...acc, [row.id]: row.memo }),
-        {},
-      );
-      dispatch($setMemoList(updatedData));
+      const entries = updatedRows.map((row) => [row.id, row.memo]);
+      dispatch($setMemoList(Object.fromEntries(entries)));
     },
     [dispatch],
   );
