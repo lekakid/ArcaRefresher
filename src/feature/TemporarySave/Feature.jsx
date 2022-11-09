@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { useLoadChecker } from 'util/LoadChecker';
 import { WRITE_LOADED } from 'core/selector';
 
-import { AutoSaver, SaveButton, LoadButton } from './feature';
+import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 
 const useStyles = makeStyles({
   '@global': {

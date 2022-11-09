@@ -6,60 +6,49 @@ import {
 
 import { setValue } from 'core/storage';
 
-import Config from 'menu/ConfigMenu/slice';
-import ContextMenu from 'menu/ContextMenu/slice';
+const menuContext = require.context('menu/', true, /^menu\/(?!_).+\/slice$/);
 
-import AutoRefresher from 'feature/AutoRefresher/slice';
-import ImageDownloader from 'feature/ImageDownloader/slice';
-import ImageSearch from 'feature/ImageSearch/slice';
-import VersionInfo from 'feature/VersionInfo/slice';
-import AnonymousNick from 'feature/AnonymousNick/slice';
-import Memo from 'feature/Memo/slice';
-import LayoutCustom from 'feature/LayoutCustom/slice';
-import ExperienceCustom from 'feature/ExperienceCustom/slice';
-import TemporarySave from 'feature/TemporarySave/slice';
-import Mute from 'feature/Mute/slice';
-import MyImage from 'feature/MyImage/slice';
-import CategoryStyler from 'feature/CategoryStyler/slice';
-import UserColor from 'feature/UserColor/slice';
-import ThemeCustomizer from 'feature/ThemeCustomizer/slice';
-import MediaBlocker from 'feature/MediaBlocker/slice';
+const featureContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/slice$/,
+);
 
-import ContentInfo from 'util/ContentInfo/slice';
-import LoadChecker from 'util/LoadChecker/slice';
+const utilContext = require.context('util/', true, /^util\/(?!_).+\/slice$/);
 
-const syncConfig = {
-  predicate: (action) => action.type.indexOf('/$') > -1,
-};
+const menuReducer = menuContext
+  .keys()
+  .reduce(
+    (acc, cur) => ({ ...acc, [cur.split('/')[1]]: menuContext(cur).default }),
+    {},
+  );
+
+const featureReducer = featureContext.keys().reduce(
+  (acc, cur) => ({
+    ...acc,
+    [cur.split('/')[1]]: featureContext(cur).default,
+  }),
+  {},
+);
+
+const utilReducer = utilContext
+  .keys()
+  .reduce(
+    (acc, cur) => ({ ...acc, [cur.split('/')[1]]: utilContext(cur).default }),
+    {},
+  );
 
 const store = configureStore({
   reducer: {
-    // menu
-    Config,
-    ContextMenu,
-
-    // feature
-    AutoRefresher,
-    ImageDownloader,
-    ImageSearch,
-    VersionInfo,
-    AnonymousNick,
-    Memo,
-    LayoutCustom,
-    ExperienceCustom,
-    TemporarySave,
-    Mute,
-    MyImage,
-    CategoryStyler,
-    UserColor,
-    ThemeCustomizer,
-    MediaBlocker,
-
-    // util
-    ContentInfo,
-    LoadChecker,
+    ...menuReducer,
+    ...featureReducer,
+    ...utilReducer,
   },
-  middleware: [createStateSyncMiddleware(syncConfig)],
+  middleware: [
+    createStateSyncMiddleware({
+      predicate: (action) => action.type.indexOf('/$') > -1,
+    }),
+  ],
 });
 
 store.subscribe(() => {
