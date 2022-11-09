@@ -47,15 +47,12 @@ const TableEditor = React.forwardRef(
     const handleMode = useCallback(() => {
       if (textMode) {
         const textRows = text.split('\n').filter((e) => e !== '');
-        const updatedRows = textRows.map((e) =>
-          e.split(delimiter).reduce(
-            (acc, value, index) => ({
-              ...acc,
-              [columns[index].field]: value,
-            }),
-            {},
-          ),
-        );
+        const updatedRows = textRows.map((e) => {
+          const entries = e
+            .split(delimiter)
+            .map((value, index) => [columns[index].field, value]);
+          return Object.fromEntries(entries);
+        });
         setRows(updatedRows);
         onEdit(updatedRows);
       } else {
