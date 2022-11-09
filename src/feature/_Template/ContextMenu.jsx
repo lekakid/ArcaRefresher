@@ -1,42 +1,42 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 
 // 우클릭 메뉴
-function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
+function ContextMenu({ targetRef }) {
+  // menu/ContextMenu 에서 메뉴를 열지 말지 판단할 용도로 함수(method)와 설렉터를 넘김
+  const [open, closeMenu] = useContextMenu({
+    method: 'closest',
+    selector: USER_INFO,
+  });
+  const [data, setData] = useState(undefined);
 
+  // 데이터 취득 처리
   useEffect(() => {
-    // 유저 정보 취득 예시
-    const trigger = (target) => {
-      const userInfo = target.closest(USER_INFO);
-      if (!userInfo) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
+    // 오른쪽 클릭 메뉴가 열려있지 않을 경우
+    if (!open) {
+      setData(undefined);
+      return;
+    }
 
-      const id = userInfo?.querySelector('[data-filter]')?.dataset.filter || '';
-      data.current = id.replace('#', '/');
-      setValid(/^[^,]+$/.test(id));
-      return true;
-    };
+    // 취득한 대상이 아닐 경우
+    // 대부분의 경우 useContextMenu와 동일한 조건
+    if (!targetRef.current.closest(USER_INFO)) return;
 
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+    // 데이터 가공 후 반환
+    const url = targetRef.current.src.split('?')[0];
+    setData(url);
+  }, [open, targetRef]);
 
   const handleClick = useCallback(() => {
     // 클릭 시 동작 작성
-    dispatch(setClose());
-  }, [dispatch]);
+    closeMenu();
+  }, [closeMenu]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>
