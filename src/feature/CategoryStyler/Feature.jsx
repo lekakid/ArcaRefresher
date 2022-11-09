@@ -32,15 +32,12 @@ export default function CategoryStyler() {
     if (!channel.category) return;
     if (!color[channel.ID]) return;
 
-    setStyleMap(
-      Object.keys(color[channel.ID]).reduce(
-        (acc, id) => ({
-          ...acc,
-          [channel.category[id]]: Math.random().toString(36).substring(2),
-        }),
-        {},
-      ),
-    );
+    const entries = Object.keys(color[channel.ID]).map((id) => [
+      channel.category[id],
+      Math.random().toString(36).substring(2),
+    ]);
+
+    setStyleMap(Object.fromEntries(entries));
   }, [channel, color]);
 
   useLayoutEffect(() => {
