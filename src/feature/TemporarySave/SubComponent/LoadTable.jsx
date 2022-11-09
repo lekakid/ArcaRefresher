@@ -87,10 +87,10 @@ export default function LoadTable({ editor, open, onClose }) {
   const {
     storage: { tempArticleList, importTitle },
   } = useSelector((state) => state[Info.ID]);
-  const rows = Object.keys(tempArticleList).map((key, index) => ({
+  const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
     id: index,
-    title: tempArticleList[key].title,
-    content: tempArticleList[key].content,
+    title: value.title,
+    content: value.content,
     date: key,
   }));
   const [selection, setSelection] = useState([]);
@@ -137,16 +137,11 @@ export default function LoadTable({ editor, open, onClose }) {
   }, []);
 
   const handleRemove = useCallback(() => {
-    const newArticleList = rows.reduce((acc, { id, date, title, content }) => {
-      if (selection.some((s) => s === id)) return acc;
+    const newArticleEntries = rows
+      .filter((row) => !selection.includes(row.id))
+      .map(({ date, title, content }) => [date, { title, content }]);
 
-      return {
-        ...acc,
-        [date]: { title, content },
-      };
-    }, {});
-
-    dispatch($setArticleList(newArticleList));
+    dispatch($setArticleList(Object.fromEntries(newArticleEntries)));
     setSelection([]);
     setEditMode(false);
   }, [dispatch, rows, selection]);
