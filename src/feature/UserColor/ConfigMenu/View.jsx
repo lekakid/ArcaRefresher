@@ -23,11 +23,8 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleEdit = useCallback(
     (updatedRows) => {
-      const updatedData = updatedRows.reduce(
-        (acc, row) => ({ ...acc, [row.id]: row.color }),
-        {},
-      );
-      dispatch($setColorList(updatedData));
+      const entries = updatedRows.map((row) => [row.id, row.color]);
+      dispatch($setColorList(Object.fromEntries(entries)));
     },
     [dispatch],
   );
