@@ -4,6 +4,7 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  spoofTitle: '',
   openArticleNewWindow: false,
   blockMediaNewWindow: false,
   ratedownGuard: false,
@@ -19,6 +20,9 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
+    $setSpoofTitle(state, action) {
+      state.storage.spoofTitle = action.payload;
+    },
     $toggleArticleNewWindow(state) {
       state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
     },
@@ -38,6 +42,7 @@ export const slice = createSlice({
 });
 
 export const {
+  $setSpoofTitle,
   $toggleArticleNewWindow,
   $toggleBlockMediaNewWindow,
   $toggleRateDownGuard,

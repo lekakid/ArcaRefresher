@@ -8,11 +8,13 @@ import {
   ListItemText,
   Paper,
   Switch,
+  TextField,
   Typography,
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
 import {
+  $setSpoofTitle,
   $toggleArticleNewWindow,
   $toggleBlockMediaNewWindow,
   $toggleRateDownGuard,
@@ -24,6 +26,7 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
     storage: {
+      spoofTitle,
       openArticleNewWindow,
       blockMediaNewWindow,
       ratedownGuard,
@@ -31,6 +34,13 @@ const View = React.forwardRef((_props, ref) => {
       wideClickArea,
     },
   } = useSelector((state) => state[Info.ID]);
+
+  const handleSpoofTitle = useCallback(
+    (e) => {
+      dispatch($setSpoofTitle(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleArticleNewWindow = useCallback(() => {
     dispatch($toggleArticleNewWindow());
@@ -57,6 +67,19 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
+          <ListItem>
+            <ListItemText
+              primary="사이트 표시 제목 변경"
+              secondary="공란일 시 변경하지 않습니다."
+            />
+          </ListItem>
+          <ListItem divider>
+            <TextField
+              fullWidth
+              value={spoofTitle}
+              onChange={handleSpoofTitle}
+            />
+          </ListItem>
           <ListItem divider button onClick={handleArticleNewWindow}>
             <ListItemText
               primary="게시물 새 창에서 열기"

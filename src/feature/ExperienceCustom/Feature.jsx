@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -50,6 +50,7 @@ const IGNORE = 'IGNORE';
 export default function ExperienceCustomizer() {
   const {
     storage: {
+      spoofTitle,
       openArticleNewWindow,
       blockMediaNewWindow,
       ratedownGuard,
@@ -60,11 +61,17 @@ export default function ExperienceCustomizer() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
+
+  const titleRef = useRef(document.title);
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
   const [confirm, setConfirm] = useState(WAITING);
   const classes = useStyles();
+
+  useEffect(() => {
+    document.title = spoofTitle || titleRef.current;
+  }, [spoofTitle]);
 
   useEffect(() => {
     if (articleLoaded) {
