@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
@@ -16,28 +16,19 @@ function makeRegex(id = '') {
 
 function User({ targetRef }) {
   const dispatch = useDispatch();
-  const [open, closeMenu] = useContextMenu({
-    method: 'closest',
-    selector: USER_INFO,
-  });
   const {
     storage: { user },
   } = useSelector((state) => state[Info.ID]);
-  const [data, setData] = useState(undefined);
 
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    const userInfo = targetRef.current.closest(USER_INFO);
-    if (!userInfo) return;
-
-    const regex = makeRegex(getUserInfo(userInfo));
-    const exist = user.includes(regex);
-    setData({ regex, exist });
-  }, [open, targetRef, user]);
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: USER_INFO,
+    dataExtractor: (target) => {
+      const regex = makeRegex(getUserInfo(target));
+      const exist = user.includes(regex);
+      return { regex, exist };
+    },
+  });
 
   const handleMute = useCallback(() => {
     const { regex, exist } = data;

@@ -1,44 +1,30 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
 import Info from './FeatureInfo';
 import { getGifInfo, getImageInfo } from './func';
 import format from './format';
 
-const selector = `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
-
 function ContextMenu({ targetRef }) {
   const {
     storage: { fileName },
   } = useSelector((state) => state[Info.ID]);
-  const [open, closeMenu, setSnack] = useContextMenu({
-    method: 'closest',
-    selector,
-  });
   const contentInfo = useContent();
-  const [data, setData] = useState(undefined);
 
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    if (!targetRef.current.closest(selector)) return;
-
-    setData(
-      targetRef.current.tagName === 'IMG'
-        ? getImageInfo(targetRef.current)
-        : getGifInfo(targetRef.current),
-    );
-  }, [open, targetRef]);
+  const setSnack = useContextSnack();
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+    dataExtractor: (target) =>
+      target.tagName === 'IMG' ? getImageInfo(target) : getGifInfo(target),
+  });
 
   const handleClipboard = useCallback(() => {
     (async () => {

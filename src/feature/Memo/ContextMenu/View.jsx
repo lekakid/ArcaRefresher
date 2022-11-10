@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
@@ -13,43 +13,31 @@ import MemoInput from './MemoInput';
 
 function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
-  const [open, closeMenu] = useContextMenu({
-    method: 'closest',
-    selector: USER_INFO,
-  });
   const {
     storage: { memo },
   } = useSelector((state) => state[Info.ID]);
-  const [data, setData] = useState(undefined);
-  const [target, setTarget] = useState(undefined);
+  const [user, setUser] = useState(undefined);
 
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    const userInfo = targetRef.current.closest(USER_INFO);
-    if (!userInfo) return;
-
-    const id = getUserID(userInfo);
-    setData(id);
-  }, [open, targetRef]);
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: USER_INFO,
+    dataExtractor: (target) => getUserID(target),
+  });
 
   const handleClick = useCallback(() => {
-    setTarget(data);
+    setUser(data);
     closeMenu();
   }, [closeMenu, data]);
 
   const handleInputClose = useCallback(() => {
-    setTarget(undefined);
+    setUser(undefined);
   }, []);
 
   const handleInputSubmit = useCallback(
     (value) => {
-      dispatch($setMemo({ user: target, memo: value }));
+      dispatch($setMemo({ user, memo: value }));
     },
-    [target, dispatch],
+    [user, dispatch],
   );
 
   return (
@@ -65,8 +53,8 @@ function ContextMenu({ targetRef }) {
         </List>
       )}
       <MemoInput
-        open={!!target}
-        defaultValue={memo[target] || ''}
+        open={!!user}
+        defaultValue={memo[user] || ''}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />

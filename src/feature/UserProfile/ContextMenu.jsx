@@ -1,36 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getUserNick } from 'func/user';
 
 function ContextMenu({ targetRef }) {
-  const [open, closeMenu, setSnack] = useContextMenu({
-    method: 'closest',
+  const setSnack = useContextSnack();
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
     selector: USER_INFO,
+    dataExtractor: (target) => {
+      const id = getUserNick(target);
+      if (id.includes('.')) return undefined;
+
+      return { id, url: id.replace('#', '/') };
+    },
   });
-  const [data, setData] = useState(undefined);
-
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    const userInfo = targetRef.current.closest(USER_INFO);
-    if (!userInfo) return;
-
-    const id = getUserNick(userInfo);
-    if (id.includes('.')) {
-      // 유동
-      setData(undefined);
-      return;
-    }
-
-    setData({ id, url: id.replace('#', '/') });
-  }, [open, targetRef]);
 
   const handleProfile = useCallback(() => {
     window.open(`https://arca.live/u/@${data.url}`);
