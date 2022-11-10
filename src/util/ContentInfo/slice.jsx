@@ -27,11 +27,14 @@ export const slice = createSlice({
       };
     },
     setArticleInfo(state, action) {
-      state.article = action.payload;
+      state.article = {
+        ...state.article,
+        ...action.payload,
+      };
     },
   },
 });
 
-export const { setChannelInfo, setArticleInfo } = slice.actions;
+export const { setLoadInfo, setChannelInfo, setArticleInfo } = slice.actions;
 
 export default slice.reducer;

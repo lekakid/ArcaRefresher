@@ -1,7 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useElementQuery } from 'core/hooks';
 import {
   BOARD_LOADED,
   ARTICLE_LOADED,
@@ -10,15 +9,17 @@ import {
   ARTICLE_URL,
   CHANNEL_TITLE_LOADED,
 } from 'core/selector';
+import { useLoadChecker } from 'util/LoadChecker';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
+
 import { setChannelInfo, setArticleInfo } from './slice';
 
 export default function Parser() {
   const dispatch = useDispatch();
-  const boardLoaded = useElementQuery(BOARD_LOADED);
-  const titleLoaded = useElementQuery(CHANNEL_TITLE_LOADED);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
+  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
     const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
@@ -40,20 +41,19 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!boardLoaded) return;
 
-    const category = [...document.querySelectorAll('.board-category a')].reduce(
-      (acc, cur) => {
-        if (cur.href.indexOf('category=') === -1)
-          return { ...acc, 글머리없음: '글머리없음' };
+    const categoryEntries = [
+      ...document.querySelectorAll('.board-category a'),
+    ].map((element) => {
+      if (!element.href.includes('category='))
+        return ['글머리없음', '글머리없음'];
 
-        const id = decodeURI(cur.href.split('category=')[1].split('&')[0]);
-        const text = cur.textContent;
+      const id = decodeURI(element.href.split('category=')[1].split('&')[0]);
+      const text = element.textContent;
 
-        return { ...acc, [id]: text };
-      },
-      {},
-    );
+      return [id, text];
+    });
 
-    dispatch(setChannelInfo({ category }));
+    dispatch(setChannelInfo({ category: Object.fromEntries(categoryEntries) }));
   }, [boardLoaded, dispatch]);
 
   useLayoutEffect(() => {

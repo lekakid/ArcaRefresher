@@ -7,15 +7,15 @@ import {
   BOARD_LOADED,
   BOARD_VIEW,
 } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserInfo } from 'func/user';
 
-import { filterContent } from '../func';
 import Info from '../FeatureInfo';
+import { filterContent } from '../func';
+import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
-import useEmoticon from './useEmoticon';
 
 const style = {
   '@global': {
@@ -41,13 +41,12 @@ const style = {
 
 function BoardMuter() {
   const dispatch = useDispatch();
-  const boardLoaded = useElementQuery(BOARD_LOADED);
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
   const {
     storage: {
       user,
       keyword,
-      emoticon,
       category,
       boardBarPos,
       hideCountBar,
@@ -58,7 +57,7 @@ function BoardMuter() {
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticionFilter = useEmoticon(emoticon);
+  const emoticionFilter = useSelector(emoticonFilterSelector);
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {

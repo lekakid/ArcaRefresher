@@ -32,6 +32,7 @@ import {
   $setBoardBarPos,
 } from '../slice';
 import CategoryRow from './CategoryRow';
+import { emoticonTableSelector } from '../selector';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
@@ -61,16 +62,10 @@ const View = React.forwardRef((_props, ref) => {
       muteIncludeReply,
       user,
       keyword,
-      emoticon,
       category,
     },
   } = useSelector((state) => state[Info.ID]);
-  const tableRows = Object.keys(emoticon).map((key) => ({
-    id: key,
-    name: emoticon[key].name,
-    bundle: emoticon[key].bundle,
-    url: emoticon[key].url,
-  }));
+  const tableRows = useSelector(emoticonTableSelector);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 

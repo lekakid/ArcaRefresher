@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
-import { useElementQuery } from 'core/hooks';
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
+import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from './FeatureInfo';
 
@@ -13,7 +13,7 @@ export default function ArticleMenu() {
   const {
     storage: { enabled, deletedOnly },
   } = useSelector((state) => state[Info.ID]);
-  const alertLoaded = useElementQuery(DELETED_ALERT_LOADED);
+  const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
 
   const handleClick = useCallback(() => {
     const body = document.querySelector(ARTICLE_CONTENT);

@@ -1,42 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 import { USER_INFO } from 'core/selector';
-import { setClose } from 'menu/ContextMenu/slice';
+import { useContextMenu } from 'menu/ContextMenu';
 
 // 우클릭 메뉴
-function ContextMenu({ triggerList }) {
-  const dispatch = useDispatch();
-  const data = useRef(null);
-  const [valid, setValid] = useState(false);
-
-  useEffect(() => {
-    // 유저 정보 취득 예시
-    const trigger = (target) => {
-      const userInfo = target.closest(USER_INFO);
-      if (!userInfo) {
-        data.current = null;
-        setValid(false);
-        return false;
-      }
-
-      const id = userInfo?.querySelector('[data-filter]')?.dataset.filter || '';
-      data.current = id.replace('#', '/');
-      setValid(/^[^,]+$/.test(id));
-      return true;
-    };
-
-    triggerList.current.push(trigger);
-  }, [triggerList]);
+function ContextMenu({ targetRef }) {
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: USER_INFO,
+    dataExtractor: (target) => target.src.split('?')[0],
+  });
 
   const handleClick = useCallback(() => {
     // 클릭 시 동작 작성
-    dispatch(setClose());
-  }, [dispatch]);
+    closeMenu();
+  }, [closeMenu]);
 
-  if (!valid) return null;
+  if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>

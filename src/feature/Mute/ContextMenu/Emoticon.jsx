@@ -1,33 +1,24 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getBundleData, getBundleInfo } from '../func';
 import { $addEmoticon } from '../slice';
 
 function Emoticon({ targetRef }) {
   const dispatch = useDispatch();
-  const [open, closeMenu, setSnack] = useContextMenu({
-    method: 'matches',
+
+  const setSnack = useContextSnack();
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
     selector: '.emoticon',
+    dataExtractor: (target) => ({
+      emotID: target.dataset.id,
+      url: target.src.replace('https:', ''),
+    }),
   });
-  const [data, setData] = useState(undefined);
-
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    if (!targetRef.current.matches('.emoticon')) return;
-
-    setData({
-      emotID: targetRef.current.dataset.id,
-      url: targetRef.current.src.replace('https:', ''),
-    });
-  }, [open, targetRef]);
 
   const handleBundleMute = useCallback(() => {
     (async () => {

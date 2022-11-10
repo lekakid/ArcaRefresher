@@ -29,6 +29,15 @@ export default function InputDialog({
     setInput(updatedInput);
   }, []);
 
+  const handleDialogClose = useCallback(
+    (e, reason) => {
+      if (reason === 'backdropClick') return;
+
+      onClose();
+    },
+    [onClose],
+  );
+
   const handleSave = useCallback(() => {
     const cssColor = input.name !== 'none' ? input.css.backgroundColor : null;
     onSubmit(cssColor);
@@ -36,7 +45,7 @@ export default function InputDialog({
   }, [input, onClose, onSubmit]);
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onClose={handleDialogClose}>
       <DialogTitle>색상 설정</DialogTitle>
       <DialogContent>
         <Typography>지정할 색상을 선택해주세요</Typography>

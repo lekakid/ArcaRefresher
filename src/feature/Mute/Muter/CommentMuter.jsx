@@ -5,18 +5,18 @@ import { withStyles } from '@material-ui/styles';
 import {
   COMMENT_INNER_VIEW,
   COMMENT_ITEMS,
-  COMMENT_LOADED,
   COMMENT_WRAPPERS,
   COMMENT_EMOTICON,
+  COMMENT_LOADED,
 } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
+import { useLoadChecker } from 'util/LoadChecker';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
+import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
-import useEmoticon from './useEmoticon';
 
 const style = {
   '@global': {
@@ -63,21 +63,14 @@ const style = {
 
 function CommentMuter() {
   const dispatch = useDispatch();
-  const commentLoaded = useElementQuery(COMMENT_LOADED);
+  const commentLoaded = useLoadChecker(COMMENT_LOADED);
   const {
-    storage: {
-      user,
-      keyword,
-      emoticon,
-      hideCountBar,
-      hideMutedMark,
-      muteIncludeReply,
-    },
+    storage: { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply },
   } = useSelector((state) => state[Info.ID]);
   const [comment, setComment] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticonFilter = useEmoticon(emoticon);
+  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useLayoutEffect(() => {
     if (!commentLoaded) return;

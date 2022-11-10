@@ -8,10 +8,10 @@ import {
   ARTICLE_LOADED,
   ARTICLE_VIEW,
 } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from '../FeatureInfo';
-import useEmoticon from './useEmoticon';
+import { emoticonFilterSelector } from '../selector';
 
 const style = {
   '@global': {
@@ -46,11 +46,11 @@ const style = {
 
 function ArticleMuter() {
   const {
-    storage: { emoticon, hideMutedMark },
+    storage: { hideMutedMark },
   } = useSelector((state) => state[Info.ID]);
-  const articleLoaded = useElementQuery(ARTICLE_LOADED);
+  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const [article, setArticle] = useState(null);
-  const emoticonFilter = useEmoticon(emoticon);
+  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
     if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));

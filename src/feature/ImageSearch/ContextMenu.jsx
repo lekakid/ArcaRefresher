@@ -1,37 +1,29 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { httpRequest } from 'func/httpRequest';
 import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
 function ContextMenu({ targetRef }) {
-  const [open, closeMenu, setSnack] = useContextMenu({
-    method: 'closest',
-    selector: ARTICLE_IMAGES,
-  });
   const {
     storage: { searchBySource, saucenaoBypass },
   } = useSelector((state) => state[Info.ID]);
-  const [data, setData] = useState(undefined);
 
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    if (!targetRef.current.closest(ARTICLE_IMAGES)) return;
-
-    const url = targetRef.current.src.split('?')[0];
-    const orig = getArcaMediaURL(url, searchBySource ? 'orig' : '');
-    setData(orig);
-  }, [open, searchBySource, targetRef]);
+  const setSnack = useContextSnack();
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: ARTICLE_IMAGES,
+    dataExtractor: (target) => {
+      const url = target.src.split('?')[0];
+      return getArcaMediaURL(url, searchBySource ? 'orig' : '');
+    },
+  });
 
   const handleGoogle = useCallback(() => {
     window.open(

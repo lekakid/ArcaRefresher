@@ -1,43 +1,34 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { BrokenImage, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'util/ContentInfo';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 
 import Info from './FeatureInfo';
 import { $addImage, $removeImage } from './slice';
 
-const selector = `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
-
 function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
-  const [open, closeMenu, setSnack] = useContextMenu({
-    method: 'closest',
-    selector,
-  });
-  const { channel } = useContent();
   const {
     storage: { imgList },
   } = useSelector((state) => state[Info.ID]);
-  const [data, setData] = useState(undefined);
+  const { channel } = useContent();
 
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-      return;
-    }
-
-    if (!targetRef.current.closest(selector)) return;
-
-    const url = targetRef.current.src.split('?')[0];
-    const channelExist = imgList[channel.ID]?.includes(url) || false;
-    // eslint-disable-next-line dot-notation
-    const shareExist = imgList['_shared_']?.includes(url) || false;
-    setData({ url, channel: channelExist, share: shareExist });
-  }, [channel, imgList, open, targetRef]);
+  const setSnack = useContextSnack();
+  const [data, closeMenu] = useContextMenu({
+    targetRef,
+    selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+    dataExtractor: (target) => {
+      const url = target.src.split('?')[0];
+      const channelExist = imgList[channel.ID]?.includes(url) || false;
+      // eslint-disable-next-line dot-notation
+      const shareExist = imgList['_shared_']?.includes(url) || false;
+      return { url, channel: channelExist, share: shareExist };
+    },
+  });
 
   const handleChannelImage = useCallback(() => {
     const action = data.channel ? $removeImage : $addImage;

@@ -5,6 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
+  group: 'uiux',
   Icon: Layers,
   label: Info.name,
   View,

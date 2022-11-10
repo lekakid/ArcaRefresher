@@ -59,12 +59,7 @@ export default function ContextMenu({ children }) {
 
       if (trackCount > 20) return;
       if (getKeyCombine(e) !== interactionType) return;
-      if (
-        !triggerList.some(
-          ({ method, selector }) => !!e.target[method](selector),
-        )
-      )
-        return;
+      if (!triggerList.some((selector) => !!e.target.closest(selector))) return;
 
       e.preventDefault();
 

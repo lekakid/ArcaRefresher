@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import { TOASTBOX } from 'core/selector';
-import { useElementQuery } from 'core/hooks';
+import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from '../FeatureInfo';
-import useEmoticon from './useEmoticon';
+import { emoticonFilterSelector } from '../selector';
 
 const style = {
   '@global': {
@@ -36,10 +36,10 @@ const style = {
 
 function ToastMuter() {
   const {
-    storage: { user, emoticon, hideMutedMark },
+    storage: { user, hideMutedMark },
   } = useSelector((state) => state[Info.ID]);
-  const toastboxLoaded = useElementQuery(TOASTBOX);
-  const filter = useEmoticon(emoticon);
+  const toastboxLoaded = useLoadChecker(TOASTBOX);
+  const filter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
     if (!toastboxLoaded) return null;
