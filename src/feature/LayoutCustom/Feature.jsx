@@ -101,6 +101,11 @@ const useStyles = makeStyles(
           },
         },
       },
+      [theme.breakpoints.down(991)]: {
+        '& .content-wrapper': {
+          gridTemplateAreas: "'content'",
+        },
+      },
       '& .left-ad-area': {
         gridArea: 'left',
       },
