@@ -79,10 +79,10 @@ function ContextMenu({ targetRef }) {
           });
           return;
         }
+        setSnack();
         window.open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
         );
-        setSnack({});
       } catch (error) {
         setSnack({
           msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
@@ -108,8 +108,8 @@ function ContextMenu({ targetRef }) {
           method: 'POST',
           data: formdata,
         });
+        setSnack();
         window.open(resultURL);
-        setSnack({});
       } catch (error) {
         setSnack({
           msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
@@ -145,8 +145,8 @@ function ContextMenu({ targetRef }) {
           method: 'POST',
           data: formdata,
         });
+        setSnack();
         window.open(resultURL);
-        setSnack({});
       } catch (error) {
         setSnack({
           msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',

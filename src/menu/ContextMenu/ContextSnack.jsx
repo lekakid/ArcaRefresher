@@ -13,10 +13,16 @@ export default function ContextSnack() {
 
   useEffect(() => {
     if (snackBag.length && !snack) {
-      const next = { ...snackBag[0] };
-      setSnack(next);
       dispatch(shiftSnack());
-      if (next.msg) setOpen(true);
+      console.log(snackBag);
+      if (!snackBag[0]) return;
+
+      // mui에 clickaway onClose 이후 clickaway가 바로 터지는 버그가 있음
+      setTimeout(() => {
+        const next = { ...snackBag[0] };
+        setSnack(next);
+        setOpen(true);
+      }, 50);
     }
     if (snackBag.length && snack && open) {
       setOpen(false);
