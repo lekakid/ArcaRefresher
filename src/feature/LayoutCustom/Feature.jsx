@@ -34,83 +34,57 @@ const useStyles = makeStyles(
       },
     },
     SideMenu: {
-      '&:not([class*="width"])': {
-        [theme.breakpoints.up(991)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
-        },
-      },
       '&.width-1100': {
-        [theme.breakpoints.up(1500)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(1500)]: {
+            gridTemplateColumns: 'auto 1fr',
           },
-        },
-        [theme.breakpoints.between(991, 1500)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+          [theme.breakpoints.down(1500)]: {
+            gridTemplateColumns: '1fr',
           },
         },
       },
       '&.width-1200': {
-        [theme.breakpoints.up(1600)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(1600)]: {
+            gridTemplateColumns: 'auto 1fr',
           },
-        },
-        [theme.breakpoints.between(991, 1600)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+          [theme.breakpoints.down(1600)]: {
+            gridTemplateColumns: '1fr',
           },
         },
       },
       '&.width-1300': {
-        [theme.breakpoints.up(1700)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(1700)]: {
+            gridTemplateColumns: 'auto 1fr',
           },
-        },
-        [theme.breakpoints.between(991, 1700)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+          [theme.breakpoints.down(1700)]: {
+            gridTemplateColumns: '1fr',
           },
         },
       },
       '&.width-1500': {
-        [theme.breakpoints.up(1900)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(1900)]: {
+            gridTemplateColumns: 'auto 1fr',
           },
-        },
-        [theme.breakpoints.between(991, 1900)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+          [theme.breakpoints.down(1900)]: {
+            gridTemplateColumns: '1fr',
           },
         },
       },
       '&.width-1600': {
-        [theme.breakpoints.up(2000)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(2000)]: {
+            gridTemplateColumns: 'auto 1fr',
+          },
+          [theme.breakpoints.down(2000)]: {
+            gridTemplateColumns: '1fr',
           },
         },
-        [theme.breakpoints.between(991, 2000)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
-        },
-      },
-      [theme.breakpoints.down(991)]: {
-        '& .content-wrapper': {
-          gridTemplateAreas: "'content'",
-        },
-      },
-      '& .left-ad-area': {
-        gridArea: 'left',
       },
       '& .board-article': {
-        gridArea: 'content',
         margin: 0,
       },
       '& .right-sidebar': {
