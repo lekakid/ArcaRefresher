@@ -27,7 +27,7 @@ function ContextMenu({ targetRef }) {
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://www.google.com/searchbyimage?safe=off&image_url=${data}`,
+      `https://lens.google.com/uploadbyurl?url=${data}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
     );
     closeMenu();
   }, [closeMenu, data]);
