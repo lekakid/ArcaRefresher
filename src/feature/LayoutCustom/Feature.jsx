@@ -6,150 +6,116 @@ import clsx from 'clsx';
 import Info from './FeatureInfo';
 
 const useStyles = makeStyles(
-  (theme) => ({
-    FontSize: ({ fontSize }) => ({
-      fontSize,
-    }),
-    TopNews: {
-      '& .topbar-area': {
-        display: 'none !important',
-      },
-    },
-    RecentVisit: {
-      '& .channel-visit-history': {
-        display: 'none',
-      },
-    },
-    SideContents: {
-      '& #recentHumor': {
-        display: 'none !important',
-      },
-      '& #recentLive': {
-        display: 'none !important',
-      },
-    },
-    SideNews: {
-      '& #newsRank': {
-        display: 'none !important',
-      },
-    },
-    SideMenu: {
-      '&.width-1100': {
-        '& .body .content-wrapper': {
-          [theme.breakpoints.up(1500)]: {
-            gridTemplateColumns: 'auto 1fr',
-          },
-          [theme.breakpoints.down(1500)]: {
-            gridTemplateColumns: '1fr',
+  (theme) => {
+    const widthEntries = [1100, 1200, 1300, 1500, 1600].map((w) => [
+      `&.width-${w}`,
+      {
+        [`&.width-${w}`]: {
+          '& .body .content-wrapper': {
+            [theme.breakpoints.up(w + 400)]: {
+              gridTemplateColumns: 'auto 1fr',
+            },
+            [theme.breakpoints.down(w + 400)]: {
+              gridTemplateColumns: '1fr',
+            },
           },
         },
       },
-      '&.width-1200': {
-        '& .body .content-wrapper': {
-          [theme.breakpoints.up(1600)]: {
-            gridTemplateColumns: 'auto 1fr',
-          },
-          [theme.breakpoints.down(1600)]: {
-            gridTemplateColumns: '1fr',
-          },
+    ]);
+
+    return {
+      FontSize: ({ fontSize }) => ({
+        fontSize,
+      }),
+      TopNews: {
+        '& .topbar-area': {
+          display: 'none !important',
         },
       },
-      '&.width-1300': {
-        '& .body .content-wrapper': {
-          [theme.breakpoints.up(1700)]: {
-            gridTemplateColumns: 'auto 1fr',
-          },
-          [theme.breakpoints.down(1700)]: {
-            gridTemplateColumns: '1fr',
-          },
+      RecentVisit: {
+        '& .channel-visit-history': {
+          display: 'none',
         },
       },
-      '&.width-1500': {
-        '& .body .content-wrapper': {
-          [theme.breakpoints.up(1900)]: {
-            gridTemplateColumns: 'auto 1fr',
-          },
-          [theme.breakpoints.down(1900)]: {
-            gridTemplateColumns: '1fr',
-          },
+      SideContents: {
+        '& #recentHumor, & #recentLive': {
+          display: 'none !important',
         },
       },
-      '&.width-1600': {
-        '& .body .content-wrapper': {
-          [theme.breakpoints.up(2000)]: {
-            gridTemplateColumns: 'auto 1fr',
-          },
-          [theme.breakpoints.down(2000)]: {
-            gridTemplateColumns: '1fr',
-          },
+      SideNews: {
+        '& #newsRank': {
+          display: 'none !important',
         },
       },
-      '& .board-article': {
-        margin: 0,
+      SideMenu: {
+        ...Object.fromEntries(widthEntries),
+        '& .board-article': {
+          margin: 0,
+        },
+        '& .right-sidebar': {
+          display: 'none',
+        },
       },
-      '& .right-sidebar': {
-        display: 'none',
+      Avatar: {
+        '& .avatar': {
+          display: 'none !important',
+        },
+        '& .input-wrapper > .input': {
+          width: 'calc(100% - 5rem) !important',
+        },
       },
-    },
-    Avatar: {
-      '& .avatar': {
-        display: 'none !important',
-      },
-      '& .input-wrapper > .input': {
-        width: 'calc(100% - 5rem) !important',
-      },
-    },
-    UserinfoWidth: ({ userinfoWidth }) => ({
-      '& .vcol.col-author': {
-        width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
-      },
-    }),
-    ResizeImage: ({ resizeImage }) => ({
-      '& .article-body': {
-        '& img, & video:not([controls])': {
-          '&:not([class$="emoticon"])': {
-            maxWidth: `${resizeImage}% !important`,
+      UserinfoWidth: ({ userinfoWidth }) => ({
+        '& .vcol.col-author': {
+          width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
+        },
+      }),
+      ResizeImage: ({ resizeImage }) => ({
+        '& .article-body': {
+          '& img, & video:not([controls])': {
+            '&:not([class$="emoticon"])': {
+              maxWidth: `${resizeImage}% !important`,
+            },
           },
         },
-      },
-    }),
-    ResizeVideo: ({ resizeVideo }) => ({
-      '& .article-body video[controls]': {
-        maxWidth: `${resizeVideo}% !important`,
-      },
-    }),
-    ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
-      '& .namlacon': {
-        height: 'auto !important',
-        '& .emoticons': {
-          maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+      }),
+      ResizeVideo: ({ resizeVideo }) => ({
+        '& .article-body video[controls]': {
+          maxWidth: `${resizeVideo}% !important`,
+        },
+      }),
+      ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
+        '& .namlacon': {
+          height: 'auto !important',
+          '& .emoticons': {
+            maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+          },
+        },
+      }),
+      Unvote: {
+        '& #rateDownForm': {
+          display: 'none',
         },
       },
-    }),
-    Unvote: {
-      '& #rateDownForm': {
-        display: 'none',
+      ModifiedIndicator: {
+        '& b.modified': {
+          display: 'none',
+        },
       },
-    },
-    ModifiedIndicator: {
-      '& b.modified': {
-        display: 'none',
+      HideVoiceComment: {
+        '& #comment .btn-voicecmt': {
+          display: 'none !important',
+        },
       },
-    },
-    HideVoiceComment: {
-      '& #comment .btn-voicecmt': {
-        display: 'none !important',
+      UnfoldLongComment: {
+        '& #comment .message': {
+          maxHeight: 'none !important',
+        },
+        '& #comment .btn-more': {
+          display: 'none !important',
+        },
       },
-    },
-    UnfoldLongComment: {
-      '& #comment .message': {
-        maxHeight: 'none !important',
-      },
-      '& #comment .btn-more': {
-        display: 'none !important',
-      },
-    },
-  }),
+    };
+  },
   {
     name: Info.ID,
   },
