@@ -17,10 +17,10 @@ export const emoticonFilterSelector = createSelector(
 export const emoticonTableSelector = createSelector(
   [(state) => state[Info.ID].storage.emoticon],
   (emoticon) =>
-    Object.keys(emoticon).map((key) => ({
+    Object.entries(emoticon).map(([key, { name, bundle, url }]) => ({
       id: key,
-      name: emoticon[key].name,
-      bundle: emoticon[key].bundle,
-      url: emoticon[key].url,
+      name,
+      bundle,
+      url,
     })),
 );
