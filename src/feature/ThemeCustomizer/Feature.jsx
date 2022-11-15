@@ -26,8 +26,8 @@ export default function ThemeCustomizer() {
     <style>
       {`
         html.theme-custom {
-          ${Object.keys(currentTheme)
-            .map((key) => `--color-${key}: ${currentTheme[key]} !important;`)
+          ${Object.entries(currentTheme)
+            .map(([key, value]) => `--color-${key}: ${value} !important;`)
             .join('\n')}
         }
       `}
