@@ -3,7 +3,7 @@ import React from 'react';
 import User from './User';
 import Emoticon from './Emoticon';
 
-export default function ContextMenu({ targetRef }) {
+function ContextMenu({ targetRef }) {
   return (
     <>
       <User targetRef={targetRef} />
@@ -11,3 +11,7 @@ export default function ContextMenu({ targetRef }) {
     </>
   );
 }
+
+ContextMenu.sortOrder = 200;
+
+export default ContextMenu;

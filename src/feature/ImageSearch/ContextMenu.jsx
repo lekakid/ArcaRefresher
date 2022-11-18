@@ -10,6 +10,9 @@ import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
+const ERROR_MSG =
+  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
+
 function ContextMenu({ targetRef }) {
   const {
     storage: { searchBySource, saucenaoBypass },
@@ -27,7 +30,7 @@ function ContextMenu({ targetRef }) {
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://www.google.com/searchbyimage?safe=off&image_url=${data}`,
+      `https://lens.google.com/uploadbyurl?url=${data}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
     );
     closeMenu();
   }, [closeMenu, data]);
@@ -79,13 +82,13 @@ function ContextMenu({ targetRef }) {
           });
           return;
         }
+        setSnack();
         window.open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
         );
-        setSnack({});
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
@@ -108,11 +111,11 @@ function ContextMenu({ targetRef }) {
           method: 'POST',
           data: formdata,
         });
+        setSnack();
         window.open(resultURL);
-        setSnack({});
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
@@ -145,11 +148,11 @@ function ContextMenu({ targetRef }) {
           method: 'POST',
           data: formdata,
         });
+        setSnack();
         window.open(resultURL);
-        setSnack({});
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
@@ -193,5 +196,7 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
+
+ContextMenu.sortOrder = 100;
 
 export default ContextMenu;

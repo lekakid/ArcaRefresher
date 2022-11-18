@@ -20,6 +20,7 @@ import {
   $toggleRateDownGuard,
   $toggleComment,
   $toggleWideArea,
+  $toggleIgnoreExternalLinkWarning,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
@@ -29,6 +30,7 @@ const View = React.forwardRef((_props, ref) => {
       spoofTitle,
       openArticleNewWindow,
       blockMediaNewWindow,
+      ignoreExternalLinkWarning,
       ratedownGuard,
       foldComment,
       wideClickArea,
@@ -48,6 +50,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleMediaNewWindow = useCallback(() => {
     dispatch($toggleBlockMediaNewWindow());
+  }, [dispatch]);
+
+  const handleExternalLinkWarning = useCallback(() => {
+    dispatch($toggleIgnoreExternalLinkWarning());
   }, [dispatch]);
 
   const handleRateDownGuard = useCallback(() => {
@@ -101,6 +107,18 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={blockMediaNewWindow}
                 onChange={handleMediaNewWindow}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleExternalLinkWarning}>
+            <ListItemText
+              primary="외부 링크 오픈 시 경고 무시"
+              secondary="새로고침 후에 적용됩니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={ignoreExternalLinkWarning}
+                onChange={handleExternalLinkWarning}
               />
             </ListItemSecondaryAction>
           </ListItem>

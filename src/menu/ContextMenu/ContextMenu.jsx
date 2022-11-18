@@ -93,6 +93,7 @@ export default function ContextMenu({ children }) {
       <Menu
         keepMounted
         disableScrollLock
+        disableRestoreFocus
         anchorReference="anchorPosition"
         anchorPosition={{ top, left }}
         MenuListProps={{ disablePadding: true }}

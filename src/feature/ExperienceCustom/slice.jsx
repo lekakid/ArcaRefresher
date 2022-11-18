@@ -7,6 +7,7 @@ const defaultStorage = {
   spoofTitle: '',
   openArticleNewWindow: false,
   blockMediaNewWindow: false,
+  ignoreExternalLinkWarning: false,
   ratedownGuard: false,
   foldComment: false,
   wideClickArea: true,
@@ -29,6 +30,10 @@ export const slice = createSlice({
     $toggleBlockMediaNewWindow(state) {
       state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
+    $toggleIgnoreExternalLinkWarning(state) {
+      state.storage.ignoreExternalLinkWarning =
+        !state.storage.ignoreExternalLinkWarning;
+    },
     $toggleRateDownGuard(state) {
       state.storage.ratedownGuard = !state.storage.ratedownGuard;
     },
@@ -45,6 +50,7 @@ export const {
   $setSpoofTitle,
   $toggleArticleNewWindow,
   $toggleBlockMediaNewWindow,
+  $toggleIgnoreExternalLinkWarning,
   $toggleRateDownGuard,
   $toggleComment,
   $toggleWideArea,

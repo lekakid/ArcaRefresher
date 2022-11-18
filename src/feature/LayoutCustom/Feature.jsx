@@ -6,171 +6,116 @@ import clsx from 'clsx';
 import Info from './FeatureInfo';
 
 const useStyles = makeStyles(
-  (theme) => ({
-    FontSize: ({ fontSize }) => ({
-      fontSize,
-    }),
-    TopNews: {
-      '& .topbar-area': {
-        display: 'none !important',
-      },
-    },
-    RecentVisit: {
-      '& .channel-visit-history': {
-        display: 'none',
-      },
-    },
-    SideContents: {
-      '& #recentHumor': {
-        display: 'none !important',
-      },
-      '& #recentLive': {
-        display: 'none !important',
-      },
-    },
-    SideNews: {
-      '& #newsRank': {
-        display: 'none !important',
-      },
-    },
-    SideMenu: {
-      '&:not([class*="width"])': {
-        [theme.breakpoints.up(991)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+  (theme) => {
+    const widthEntries = [1100, 1200, 1300, 1500, 1600].map((w) => [
+      `&.width-${w}`,
+      {
+        [`&.width-${w}`]: {
+          '& .body .content-wrapper': {
+            [theme.breakpoints.up(w + 400)]: {
+              gridTemplateColumns: 'auto 1fr',
+            },
+            [theme.breakpoints.down(w + 400)]: {
+              gridTemplateColumns: '1fr',
+            },
           },
         },
       },
-      '&.width-1100': {
-        [theme.breakpoints.up(1500)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
+    ]);
+
+    return {
+      FontSize: ({ fontSize }) => ({
+        fontSize,
+      }),
+      TopNews: {
+        '& .topbar-area': {
+          display: 'none !important',
+        },
+      },
+      RecentVisit: {
+        '& .channel-visit-history': {
+          display: 'none',
+        },
+      },
+      SideContents: {
+        '& #recentHumor, & #recentLive': {
+          display: 'none !important',
+        },
+      },
+      SideNews: {
+        '& #newsRank': {
+          display: 'none !important',
+        },
+      },
+      SideMenu: {
+        ...Object.fromEntries(widthEntries),
+        '& .board-article': {
+          margin: 0,
+        },
+        '& .right-sidebar': {
+          display: 'none',
+        },
+      },
+      Avatar: {
+        '& .avatar': {
+          display: 'none !important',
+        },
+        '& .input-wrapper > .input': {
+          width: 'calc(100% - 5rem) !important',
+        },
+      },
+      UserinfoWidth: ({ userinfoWidth }) => ({
+        '& .vcol.col-author': {
+          width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
+        },
+      }),
+      ResizeImage: ({ resizeImage }) => ({
+        '& .article-body': {
+          '& img, & video:not([controls])': {
+            '&:not([class$="emoticon"])': {
+              maxWidth: `${resizeImage}% !important`,
+            },
           },
         },
-        [theme.breakpoints.between(991, 1500)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
+      }),
+      ResizeVideo: ({ resizeVideo }) => ({
+        '& .article-body video[controls]': {
+          maxWidth: `${resizeVideo}% !important`,
+        },
+      }),
+      ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
+        '& .namlacon': {
+          height: 'auto !important',
+          '& .emoticons': {
+            maxHeight: `${resizeEmoticonPalette * 100}px !important`,
           },
         },
-      },
-      '&.width-1200': {
-        [theme.breakpoints.up(1600)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
-          },
-        },
-        [theme.breakpoints.between(991, 1600)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
+      }),
+      Unvote: {
+        '& #rateDownForm': {
+          display: 'none',
         },
       },
-      '&.width-1300': {
-        [theme.breakpoints.up(1700)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
-          },
-        },
-        [theme.breakpoints.between(991, 1700)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
+      ModifiedIndicator: {
+        '& b.modified': {
+          display: 'none',
         },
       },
-      '&.width-1500': {
-        [theme.breakpoints.up(1900)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
-          },
-        },
-        [theme.breakpoints.between(991, 1900)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
+      HideVoiceComment: {
+        '& #comment .btn-voicecmt': {
+          display: 'none !important',
         },
       },
-      '&.width-1600': {
-        [theme.breakpoints.up(2000)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'left content content'",
-          },
+      UnfoldLongComment: {
+        '& #comment .message': {
+          maxHeight: 'none !important',
         },
-        [theme.breakpoints.between(991, 2000)]: {
-          '& .content-wrapper': {
-            gridTemplateAreas: "'content content'",
-          },
+        '& #comment .btn-more': {
+          display: 'none !important',
         },
       },
-      '& .left-ad-area': {
-        gridArea: 'left',
-      },
-      '& .board-article': {
-        gridArea: 'content',
-        margin: 0,
-      },
-      '& .right-sidebar': {
-        display: 'none',
-      },
-    },
-    Avatar: {
-      '& .avatar': {
-        display: 'none !important',
-      },
-      '& .input-wrapper > .input': {
-        width: 'calc(100% - 5rem) !important',
-      },
-    },
-    UserinfoWidth: ({ userinfoWidth }) => ({
-      '& .vcol.col-author': {
-        width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
-      },
-    }),
-    ResizeImage: ({ resizeImage }) => ({
-      '& .article-body': {
-        '& img, & video:not([controls])': {
-          '&:not([class$="emoticon"])': {
-            maxWidth: `${resizeImage}% !important`,
-          },
-        },
-      },
-    }),
-    ResizeVideo: ({ resizeVideo }) => ({
-      '& .article-body video[controls]': {
-        maxWidth: `${resizeVideo}% !important`,
-      },
-    }),
-    ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
-      '& .namlacon': {
-        height: 'auto !important',
-        '& .emoticons': {
-          maxHeight: `${resizeEmoticonPalette * 100}px !important`,
-        },
-      },
-    }),
-    Unvote: {
-      '& #rateDownForm': {
-        display: 'none',
-      },
-    },
-    ModifiedIndicator: {
-      '& b.modified': {
-        display: 'none',
-      },
-    },
-    HideVoiceComment: {
-      '& #comment .btn-voicecmt': {
-        display: 'none !important',
-      },
-    },
-    UnfoldLongComment: {
-      '& #comment .message': {
-        maxHeight: 'none !important',
-      },
-      '& #comment .btn-more': {
-        display: 'none !important',
-      },
-    },
-  }),
+    };
+  },
   {
     name: Info.ID,
   },

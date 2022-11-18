@@ -6,8 +6,8 @@ export default function useContextSnack() {
   const dispatch = useDispatch();
 
   const setSnack = useCallback(
-    ({ msg, time }) => {
-      dispatch(pushSnack({ msg, time }));
+    (snack) => {
+      dispatch(pushSnack(snack));
     },
     [dispatch],
   );

@@ -25,9 +25,9 @@ const View = React.forwardRef((_props, ref) => {
   const {
     storage: { variant, memo },
   } = useSelector((state) => state[Info.ID]);
-  const rows = Object.keys(memo).map((key) => ({
+  const rows = Object.entries(memo).map(([key, value]) => ({
     id: key,
-    memo: memo[key],
+    memo: value,
   }));
 
   const handleVariant = useCallback(
