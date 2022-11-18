@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function AnonymousNick({ nick, container }) {
-  return ReactDOM.createPortal(<span>{nick}</span>, container);
+function AnonymousNick({ container, children }) {
+  return ReactDOM.createPortal(<span>{children}</span>, container);
 }
 
 export default React.memo(AnonymousNick);
