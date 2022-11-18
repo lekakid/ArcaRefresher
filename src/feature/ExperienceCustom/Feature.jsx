@@ -53,6 +53,7 @@ export default function ExperienceCustomizer() {
       spoofTitle,
       openArticleNewWindow,
       blockMediaNewWindow,
+      ignoreExternalLinkWarning,
       ratedownGuard,
       foldComment,
       wideClickArea,
@@ -90,6 +91,15 @@ export default function ExperienceCustomizer() {
         a.append(i);
       });
   }, [article, blockMediaNewWindow]);
+
+  useEffect(() => {
+    if (!article || !ignoreExternalLinkWarning) return;
+
+    article.querySelectorAll('a.external').forEach((e) => {
+      // eslint-disable-next-line no-param-reassign
+      e.href = e.href.replace('https://oo.pe/', '');
+    });
+  }, [article, ignoreExternalLinkWarning]);
 
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
