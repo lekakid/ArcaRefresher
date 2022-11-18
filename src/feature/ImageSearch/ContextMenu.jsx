@@ -10,6 +10,9 @@ import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
+const ERROR_MSG =
+  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
+
 function ContextMenu({ targetRef }) {
   const {
     storage: { searchBySource, saucenaoBypass },
@@ -85,7 +88,7 @@ function ContextMenu({ targetRef }) {
         );
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
@@ -112,7 +115,7 @@ function ContextMenu({ targetRef }) {
         window.open(resultURL);
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
@@ -149,7 +152,7 @@ function ContextMenu({ targetRef }) {
         window.open(resultURL);
       } catch (error) {
         setSnack({
-          msg: '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.',
+          msg: ERROR_MSG,
           time: 3000,
         });
         console.error(error);
