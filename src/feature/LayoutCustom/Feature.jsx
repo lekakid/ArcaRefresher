@@ -10,14 +10,12 @@ const useStyles = makeStyles(
     const widthEntries = [1100, 1200, 1300, 1500, 1600].map((w) => [
       `&.width-${w}`,
       {
-        [`&.width-${w}`]: {
-          '& .body .content-wrapper': {
-            [theme.breakpoints.up(w + 400)]: {
-              gridTemplateColumns: 'auto 1fr',
-            },
-            [theme.breakpoints.down(w + 400)]: {
-              gridTemplateColumns: '1fr',
-            },
+        '& .body .content-wrapper': {
+          [theme.breakpoints.up(w + 400)]: {
+            gridTemplateColumns: 'auto 1fr',
+          },
+          [theme.breakpoints.down(w + 400)]: {
+            gridTemplateColumns: '1fr',
           },
         },
       },
