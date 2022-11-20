@@ -49,6 +49,11 @@ const useStyles = makeStyles(
       },
       SideMenu: {
         ...Object.fromEntries(widthEntries),
+        '&:not([class*=width])': {
+          '& .body .content-wrapper': {
+            gridTemplateColumns: '1fr',
+          },
+        },
         '& .board-article': {
           margin: 0,
         },
