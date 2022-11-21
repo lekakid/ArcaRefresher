@@ -91,13 +91,14 @@ function SelectionDialog({ classes }) {
     const availableImages = await selectedImages.reduce(
       async (promise, info) => {
         try {
-          const response = await fetch(info.orig).then((res) => res.body);
+          const response = await fetch(info.orig);
+          const stream = response.body;
 
           totalSize += Number(response.headers.get('Content-Length')) || 0;
           const acc = await promise;
           acc.push({
             ...info,
-            stream: response
+            stream
           });
           return acc;
         } catch (error) {
