@@ -91,14 +91,13 @@ function SelectionDialog({ classes }) {
     const availableImages = await selectedImages.reduce(
       async (promise, info) => {
         try {
-          const response = await fetch(info.orig);
-          const stream = response.body;
+          const response = await fetch(info.orig).then((res) => res.body);
 
           totalSize += Number(response.headers.get('Content-Length')) || 0;
           const acc = await promise;
           acc.push({
             ...info,
-            stream
+            stream: response
           });
           return acc;
         } catch (error) {
@@ -129,8 +128,7 @@ function SelectionDialog({ classes }) {
           window.removeEventListener('beforeunload', confirm);
           return controller.close();
         }
-
-        const { ext, uploadName, stream } = value;
+        const { orig, ext, uploadName } = value;
 
         const name = format(zipImageName, {
           values: contentInfo,
@@ -138,6 +136,7 @@ function SelectionDialog({ classes }) {
           fileName: uploadName,
         });
 
+        const stream = await fetch(orig).then((response) => response.body);
         count += 1;
         return controller.enqueue({
           name: `/${name}.${ext}`,
