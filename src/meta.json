@@ -17,6 +17,8 @@
     "GM_deleteValue",
     "GM_listValues",
     "GM_xmlhttpRequest",
+    "GM_download",
+    "GM_setClipboard",
     "unsafeWindow"
   ]
 }

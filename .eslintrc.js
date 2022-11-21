@@ -39,6 +39,8 @@ module.exports = {
     GM_listValues: true,
     GM_xmlhttpRequest: true,
     GM_addValueChangeListener: true,
+    GM_download: true,
+    GM_setClipboard: true,
     unsafeWindow: true,
     ClipboardItem: true,
   },

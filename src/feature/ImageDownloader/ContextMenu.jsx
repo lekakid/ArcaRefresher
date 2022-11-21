@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
-import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
@@ -73,18 +72,12 @@ function ContextMenu({ targetRef }) {
       const { orig, ext, uploadName } = data;
       try {
         closeMenu();
-        const response = await fetch(orig);
-        const size = Number(response.headers.get('Content-Length'));
-        const stream = response.body;
         const name = format(fileName, {
           values: contentInfo,
           fileName: uploadName,
         });
 
-        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-          size,
-        });
-        stream.pipeTo(filestream);
+        GM_download(orig, `${name}.${ext}`);
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
         setSnack({
@@ -97,7 +90,7 @@ function ContextMenu({ targetRef }) {
 
   const handleCopyURL = useCallback(() => {
     closeMenu();
-    navigator.clipboard.writeText(data.orig);
+    GM_setClipboard(data.orig);
   }, [closeMenu, data]);
 
   if (!data) return null;
