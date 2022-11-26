@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={unsafeWindow.document.cookie.includes("display-config") ? arcaDarkMode ? dark : light : browserDarkMode ? dark : light}>
+      <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
         <LoadChecker />
         <ContentInfo />
         <Feature />
