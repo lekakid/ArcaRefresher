@@ -79,9 +79,11 @@ export function swapArticle(
     lazyWrapper?.replaceWith(lazyWrapper.firstElementChild);
 
     const time = a.querySelector('time');
-    time.textContent &&= getDateStr(
-      time.dateTime,
-      in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
-    );
+    if (time) {
+      time.textContent = getDateStr(
+          time.dateTime,
+          in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
+      );
+    }
   });
 }
