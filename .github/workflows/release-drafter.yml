@@ -44,7 +44,7 @@ jobs:
       - name: Install Package
         uses: bahmutov/npm-install@v1
         with:
-          install-command: npm i --force
+          install-command: npm ci --force
 
       - name: Build
         run: npm run build
