@@ -45,8 +45,8 @@ function SelectionDialog({ classes }) {
   const [data] = useState(() => {
     const emoticon = window.location.pathname.indexOf('/e/') !== -1;
     const query = emoticon
-        ? ARTICLE_EMOTICON
-        : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
+      ? ARTICLE_EMOTICON
+      : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
@@ -84,29 +84,25 @@ function SelectionDialog({ classes }) {
     setShowProgress(true);
 
     const selectedImages = data.filter((_data, index) =>
-        selection.includes(index),
+      selection.includes(index),
     );
 
     let totalSize = 0;
     const availableImages = await selectedImages.reduce(
-        async (promise, info) => {
-          try {
-            const response = await fetch(info.orig);
-            const stream = response.body;
+      async (promise, info) => {
+        try {
+          const response = await fetch(info.orig, { method: 'HEAD' });
 
-            totalSize += Number(response.headers.get('Content-Length')) || 0;
-            const acc = await promise;
-            acc.push({
-              ...info,
-              stream
-            });
-            return acc;
-          } catch (error) {
-            console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
-            return promise;
-          }
-        },
-        [],
+          totalSize += Number(response.headers.get('Content-Length')) || 0;
+          const acc = await promise;
+          acc.push(info);
+          return acc;
+        } catch (error) {
+          console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
+          return promise;
+        }
+      },
+      [],
     );
 
     const iterator = availableImages.values();
@@ -115,7 +111,7 @@ function SelectionDialog({ classes }) {
     const confirm = (event) => {
       // eslint-disable-next-line no-param-reassign
       event.returnValue =
-          '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
+        '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
     };
 
     const myReadable = new ReadableStream({
@@ -130,7 +126,7 @@ function SelectionDialog({ classes }) {
           return controller.close();
         }
 
-        const { ext, uploadName, stream } = value;
+        const { orig, ext, uploadName } = value;
 
         const name = format(zipImageName, {
           values: contentInfo,
@@ -138,6 +134,7 @@ function SelectionDialog({ classes }) {
           fileName: uploadName,
         });
 
+        const stream = await fetch(orig).then((response) => response.body);
         count += 1;
         return controller.enqueue({
           name: `/${name}.${ext}`,
@@ -152,9 +149,9 @@ function SelectionDialog({ classes }) {
     const zipFileName = format(zipName, { values: contentInfo });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
-        streamSaver.createWriteStream(`${zipFileName}.zip`, {
-          size: totalSize,
-        }),
+      streamSaver.createWriteStream(`${zipFileName}.zip`, {
+        size: totalSize,
+      }),
     );
   }, [dispatch, data, zipName, contentInfo, selection, zipImageName]);
 
@@ -166,42 +163,42 @@ function SelectionDialog({ classes }) {
 
   if (showProgress) {
     return (
-        <Dialog maxWidth="lg" open>
-          <DialogTitle>
-            <Typography>이미지 다운로더</Typography>
-          </DialogTitle>
-          <DialogContent classes={{ root: classes.progressContainer }}>
-            <Typography>다운로드를 준비 중입니다...</Typography>
-            <CircularProgress color="primary" />
-          </DialogContent>
-        </Dialog>
+      <Dialog maxWidth="lg" open>
+        <DialogTitle>
+          <Typography>이미지 다운로더</Typography>
+        </DialogTitle>
+        <DialogContent classes={{ root: classes.progressContainer }}>
+          <Typography>다운로드를 준비 중입니다...</Typography>
+          <CircularProgress color="primary" />
+        </DialogContent>
+      </Dialog>
     );
   }
 
   return (
-      <Dialog fullWidth maxWidth="lg" open={open} onClose={handleClose}>
-        <DialogTitle>
-          <Typography>이미지 다운로더</Typography>
-          <IconButton className={classes.closeButton} onClick={handleClose}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <SelectableImageList
-              imgList={imgList}
-              selection={selection}
-              onChange={handleSelection}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSelectAll}>
-            {selection.length !== data.length ? '전체 선택' : '선택 해제'}
-          </Button>
-          <Button disabled={selection.length === 0} onClick={handleDownload}>
-            다운로드
-          </Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog fullWidth maxWidth="lg" open={open} onClose={handleClose}>
+      <DialogTitle>
+        <Typography>이미지 다운로더</Typography>
+        <IconButton className={classes.closeButton} onClick={handleClose}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <SelectableImageList
+          imgList={imgList}
+          selection={selection}
+          onChange={handleSelection}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleSelectAll}>
+          {selection.length !== data.length ? '전체 선택' : '선택 해제'}
+        </Button>
+        <Button disabled={selection.length === 0} onClick={handleDownload}>
+          다운로드
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
