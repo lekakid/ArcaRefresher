@@ -1,9 +1,15 @@
 {
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-    "prettier.endOfLine": "crlf",
-    "prettier.singleQuote": true,
-    "prettier.useEditorConfig": false,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "prettier.printWidth": 100,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "prettier.endOfLine": "crlf",
+  "prettier.singleQuote": true,
+  "prettier.useEditorConfig": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.printWidth": 100,
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
 }

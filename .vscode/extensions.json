@@ -3,6 +3,7 @@
     "formulahendry.auto-rename-tag",
     "exodiusstudios.comment-anchors",
     "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "arcanis.vscode-zipfs"
   ]
 }
