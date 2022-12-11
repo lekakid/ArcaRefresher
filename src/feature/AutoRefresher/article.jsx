@@ -76,14 +76,12 @@ export function swapArticle(
   ];
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
-    if (lazyWrapper) lazyWrapper.replaceWith(lazyWrapper.firstElementChild);
+    lazyWrapper?.replaceWith(lazyWrapper.firstElementChild);
 
     const time = a.querySelector('time');
-    if (time) {
-      time.textContent = getDateStr(
-        time.dateTime,
-        in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
-      );
-    }
+    time.textContent &&= getDateStr(
+      time.dateTime,
+      in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
+    );
   });
 }
