@@ -1,10 +1,5 @@
 export function getUserInfo(infoElement) {
-  try {
-    const data = infoElement.querySelector('[data-filter]').dataset.filter;
-    return data;
-  } catch (error) {
-    return '';
-  }
+  return infoElement.querySelector('[data-filter]')?.dataset.filter || '';
 }
 
 export function getUserNick(infoElement) {
@@ -14,16 +9,16 @@ export function getUserNick(infoElement) {
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
 
-    if (id?.indexOf('#') > -1) {
+    if (id?.includes('#')) {
       return `${nick}${id}`;
     }
 
-    if (id?.indexOf('.') > -1) {
+    if (id?.includes('.')) {
       return `${nick}(${id})`;
     }
 
     return nick;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -36,7 +31,7 @@ export function getUserID(infoElement) {
       .filter((e) => e);
 
     return id || nick;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -45,9 +40,8 @@ export function getUserIP(infoElement) {
   try {
     const data = infoElement.querySelector('[data-filter]').dataset.filter;
     const id = data.match(/[0-9]{1,3}\.[0-9]{1,3}$/g)[0];
-
     return id;
-  } catch (error) {
+  } catch {
     return '';
   }
 }

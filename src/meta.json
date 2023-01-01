@@ -9,7 +9,7 @@
   "supportURL": "https://arca.live/b/namurefresher",
   "match": ["https://arca.live/*"],
   "noframes": true,
-  "run-at": "document-start",
+  "run-at": "document-body",
   "grant": [
     "GM_info",
     "GM_setValue",
