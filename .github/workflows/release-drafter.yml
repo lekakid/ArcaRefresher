@@ -36,18 +36,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Yarn
+        uses: mskelton/setup-yarn@v1
         with:
           node-version: 16.17
 
-      - name: Install Package
-        uses: bahmutov/npm-install@v1
-        with:
-          install-command: npm ci --force
-
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Upload Assets (user.js)
         uses: actions/upload-release-asset@latest
