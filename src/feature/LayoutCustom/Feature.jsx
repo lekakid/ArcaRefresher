@@ -36,7 +36,7 @@ const useStyles = makeStyles(
         },
       },
       SideContents: {
-        '& #recentHumor, & #recentLive': {
+        '& .sidebar .sidebar-item:first-child': {
           display: 'none !important',
         },
       },

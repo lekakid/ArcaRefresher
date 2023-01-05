@@ -91,7 +91,7 @@ function SelectionDialog({ classes }) {
     const availableImages = await selectedImages.reduce(
       async (promise, info) => {
         try {
-          const response = await fetch(info.orig);
+          const response = await fetch(info.orig, { method: 'HEAD' });
 
           totalSize += Number(response.headers.get('Content-Length')) || 0;
           const acc = await promise;
@@ -125,6 +125,7 @@ function SelectionDialog({ classes }) {
           window.removeEventListener('beforeunload', confirm);
           return controller.close();
         }
+
         const { orig, ext, uploadName } = value;
 
         const name = format(zipImageName, {

@@ -1,8 +1,14 @@
 node_modules
 *.log
-*.lock
 /.idea
 /dist
 /.nyc_output
 /coverage
 /types
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
