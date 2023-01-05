@@ -210,7 +210,7 @@ const View = React.forwardRef((_props, ref) => {
                     button
                     onClick={handleSideContents}
                   >
-                    <ListItemText primary="유머 채널/베스트 라이브 표시" />
+                    <ListItemText primary="사이드 컨텐츠 패널 표시" />
                     <ListItemSecondaryAction>
                       <Switch
                         checked={sideContents}
