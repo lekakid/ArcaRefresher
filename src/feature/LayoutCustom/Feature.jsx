@@ -25,6 +25,11 @@ const useStyles = makeStyles(
       FontSize: ({ fontSize }) => ({
         fontSize,
       }),
+      LeftNotiPos: {
+        '& .body #toastbox': {
+          right: 'initial',
+        },
+      },
       TopNews: {
         '& .topbar-area': {
           display: 'none !important',
@@ -134,6 +139,7 @@ export default function LayoutCustom() {
     if (!enabled) return undefined;
 
     const {
+      notifyPosition,
       recentVisit,
       topNews,
       sideContents,
@@ -152,6 +158,7 @@ export default function LayoutCustom() {
       classes.ResizeVideo,
       classes.ResizeEmoticonPalette,
       {
+        [classes.LeftNotiPos]: notifyPosition === 'left',
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
         [classes.SideContents]: !sideContents,

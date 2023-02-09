@@ -6,6 +6,7 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   enabled: true,
   fontSize: 15,
+  notifyPosition: 'right',
   topNews: true,
   recentVisit: true,
   sideContents: true,
@@ -36,6 +37,9 @@ export const slice = createSlice({
     },
     $setFontSize(state, action) {
       state.storage.fontSize = action.payload;
+    },
+    $setNotifyPosition(state, action) {
+      state.storage.notifyPosition = action.payload;
     },
     $toggleTopNews(state) {
       state.storage.topNews = !state.storage.topNews;
@@ -88,6 +92,7 @@ export const slice = createSlice({
 export const {
   $toggleEnable,
   $setFontSize,
+  $setNotifyPosition,
   $toggleTopNews,
   $toggleRecentVisit,
   $toggleSideContents,
