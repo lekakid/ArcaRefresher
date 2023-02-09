@@ -4,8 +4,9 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
-import { getBundleData, getBundleInfo } from '../func';
+import { getEmoticonList, getBundleName } from '../func';
 import { $addEmoticon } from '../slice';
+import getBundleID from '../func/getBundleID';
 
 function Emoticon({ targetRef }) {
   const dispatch = useDispatch();
@@ -13,8 +14,9 @@ function Emoticon({ targetRef }) {
   const setSnack = useContextSnack();
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: '.emoticon',
+    selector: '[class$="emoticon"]',
     dataExtractor: (target) => ({
+      bundleID: target.dataset.storeId,
       emotID: target.dataset.id,
       url: target.src.replace('https:', ''),
     }),
@@ -23,9 +25,13 @@ function Emoticon({ targetRef }) {
   const handleBundleMute = useCallback(() => {
     (async () => {
       try {
+        let { bundleID } = data;
         const { emotID, url } = data;
-        const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
-        const { idList, urlList } = await getBundleData(bundleID);
+        if (!bundleID) {
+          bundleID = await getBundleID(emotID);
+        }
+        const bundleName = await getBundleName(bundleID);
+        const { idList, urlList } = await getEmoticonList(bundleID);
 
         if (idList.length === 0) {
           dispatch(
@@ -61,8 +67,12 @@ function Emoticon({ targetRef }) {
   const handleSingleMute = useCallback(() => {
     (async () => {
       try {
+        let { bundleID } = data;
         const { emotID, url } = data;
-        const { id: bundleID, name: bundleName } = await getBundleInfo(emotID);
+        if (!bundleID) {
+          bundleID = await getBundleID(emotID);
+        }
+        const bundleName = await getBundleName(bundleID);
 
         dispatch(
           $addEmoticon({
@@ -70,7 +80,7 @@ function Emoticon({ targetRef }) {
             emoticon: {
               name: bundleName,
               bundle: [parseInt(emotID, 10)],
-              url: [url],
+              url: [url.replace('-p', '')],
             },
           }),
         );

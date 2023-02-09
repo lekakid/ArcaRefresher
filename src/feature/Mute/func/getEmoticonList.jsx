@@ -1,4 +1,4 @@
-export default async function getBundleData(bundleID) {
+export default async function getEmoticonList(bundleID) {
   const response = await fetch(`/api/emoticon/${bundleID}`);
   if (!response.ok)
     throw new Error(
