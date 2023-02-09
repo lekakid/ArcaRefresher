@@ -33,6 +33,9 @@ const style = {
         display: 'none !important',
       },
     },
+    '.hide-service-notice .notice-service': {
+      display: 'none !important',
+    },
     '.hide-no-permission a.vrow[href$="#c_"]': {
       display: 'none !important',
     },
@@ -50,6 +53,7 @@ function BoardMuter() {
       category,
       boardBarPos,
       hideCountBar,
+      hideServiceNotice,
       hideNoPermission,
     },
   } = useSelector((state) => state[Info.ID]);
@@ -120,6 +124,7 @@ function BoardMuter() {
     };
   }, [board, nameToIDMap, keyword, user, channel, category]);
 
+  // 게시물 미리보기 뮤트
   useLayoutEffect(() => {
     if (!board) return;
 
@@ -139,6 +144,15 @@ function BoardMuter() {
     });
   }, [board, emoticionFilter]);
 
+  // 서비스 공지사항
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle(
+      'hide-service-notice',
+      hideServiceNotice,
+    );
+  }, [hideServiceNotice]);
+
+  // (권한 없음) 게시물
   useLayoutEffect(() => {
     document.documentElement.classList.toggle(
       'hide-no-permission',

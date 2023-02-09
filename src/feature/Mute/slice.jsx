@@ -8,6 +8,7 @@ const defaultStorage = {
   keyword: [],
   emoticon: {},
   category: {},
+  hideServiceNotice: false,
   hideNoPermission: false,
   boardBarPos: 'afterbegin',
   hideCountBar: false,
@@ -65,6 +66,9 @@ export const slice = createSlice({
       const { channel, config } = action.payload;
       state.storage.category[channel] = config;
     },
+    $toggleHideNoticeService(state) {
+      state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
+    },
     $toggleHideNoPermission(state) {
       state.storage.hideNoPermission = !state.storage.hideNoPermission;
     },
@@ -93,6 +97,7 @@ export const {
   $addEmoticon,
   $removeEmoticonList,
   $setCategoryConfig,
+  $toggleHideNoticeService,
   $toggleHideNoPermission,
   $setBoardBarPos,
   $toggleCountBar,

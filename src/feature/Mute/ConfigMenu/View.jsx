@@ -30,6 +30,7 @@ import {
   $toggleIncludeReply,
   $setCategoryConfig,
   $setBoardBarPos,
+  $toggleHideNoticeService,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 import { emoticonTableSelector } from '../selector';
@@ -55,6 +56,7 @@ const View = React.forwardRef((_props, ref) => {
   const { channel } = useContent();
   const {
     storage: {
+      hideServiceNotice,
       hideNoPermission,
       boardBarPos,
       hideCountBar,
@@ -70,6 +72,10 @@ const View = React.forwardRef((_props, ref) => {
   const [pageSize, setPageSize] = useState(10);
 
   const channelCategory = category[channel.ID];
+
+  const handleServiceNotice = useCallback(() => {
+    dispatch($toggleHideNoticeService());
+  }, [dispatch]);
 
   const handleNoPermission = useCallback(() => {
     dispatch($toggleHideNoPermission());
@@ -141,6 +147,15 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
+          <ListItem divider button onClick={handleServiceNotice}>
+            <ListItemText>서비스 공지사항 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideServiceNotice}
+                onChange={handleServiceNotice}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleNoPermission}>
             <ListItemText>(권한 없음) 숨김</ListItemText>
             <ListItemSecondaryAction>
