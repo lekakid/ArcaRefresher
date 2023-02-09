@@ -1,10 +1,5 @@
+# yarn
 node_modules
-*.log
-/.idea
-/dist
-/.nyc_output
-/coverage
-/types
 .yarn/*
 !.yarn/cache
 !.yarn/patches
@@ -12,3 +7,12 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# IntelliJ
+*.log
+/.idea
+
+# Project
+/dist
+/types
+
