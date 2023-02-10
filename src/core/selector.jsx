@@ -27,9 +27,9 @@ export const BOARD_ARTICLES = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
-  '.article-body img:not([class$="emoticon"]):not(.twemoji)';
+  '.article-content img:not([class$="emoticon"]):not(.twemoji)';
 export const ARTICLE_GIFS =
-  '.article-body video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
+  '.article-content video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
 export const ARTICLE_MEDIA =
   '.article-content img:not(.twemoji), .article-content video';
 export const ARTICLE_EMOTICON = '.article-body *[class$="emoticon"]';
