@@ -6,29 +6,21 @@ import {
 } from 'core/selector';
 import { getDateStr, in24Hours } from 'func/time';
 
+const parser = new DOMParser();
+
 export async function getNewArticle() {
   try {
-    const newArticles = await new Promise((resolve, reject) => {
-      const req = new XMLHttpRequest();
+    const response = await fetch(window.location.href);
+    if (!response.ok) throw new Error('[AutoRefresher] 연결 거부');
 
-      req.open('GET', window.location.href);
-      req.responseType = 'document';
-      req.timeout = 2000;
-      req.onload = () => {
-        const { response } = req;
-        const articles = response
-          .querySelector(BOARD_VIEW_WITHOUT_ARTICLE)
-          .querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
-        resolve(articles);
-      };
-      req.ontimeout = () => {
-        reject(new Error('[AutoRefresher] 연결 시간 초과'));
-      };
-      req.onerror = () => {
-        reject(new Error('[AutoRefresher] 연결 거부'));
-      };
-      req.send();
-    });
+    const updateDocument = parser.parseFromString(
+      await response.text(),
+      'text/html',
+    );
+    const newArticles = updateDocument
+      .querySelector(BOARD_VIEW_WITHOUT_ARTICLE)
+      .querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
+
     return [...newArticles];
   } catch (error) {
     console.error(error);
