@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import queryString from 'query-string';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
@@ -26,6 +25,15 @@ const styles = {
     },
   },
 };
+
+function parseSearch(searchString) {
+  const entries = searchString
+    .substring(1)
+    .split('&')
+    .filter((t) => t)
+    .map((t) => t.split('='));
+  return Object.fromEntries(entries);
+}
 
 function AutoRefresher({ classes }) {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
@@ -64,12 +72,13 @@ function AutoRefresher({ classes }) {
   useEffect(() => {
     if (!boardLoaded) return;
 
-    const search = queryString.parse(window.location.search, {
-      parseNumbers: true,
-    });
+    const search = parseSearch(window.location.search);
     const searchKeys = Object.keys(search);
     const targetKeys = ['after', 'before', 'near'];
-    if (search.p > 1 || searchKeys.some((key) => targetKeys.includes(key)))
+    if (
+      parseInt(search.p, 10) > 1 ||
+      searchKeys.some((key) => targetKeys.includes(key))
+    )
       return;
 
     const boardElement = document.querySelector(BOARD);
