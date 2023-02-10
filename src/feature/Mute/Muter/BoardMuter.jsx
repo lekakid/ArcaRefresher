@@ -90,12 +90,14 @@ function BoardMuter() {
 
     const muteArticle = () => {
       const articleList = [...board.querySelectorAll(BOARD_ARTICLES)];
-      const articleInfo = articleList.map((a) => ({
-        element: a,
-        user: getUserInfo(a.querySelector('.user-info')),
-        content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge')?.textContent || '글머리없음',
-      }));
+      const articleInfo = articleList
+        .filter((a) => !a.href.includes('#c_'))
+        .map((a) => ({
+          element: a,
+          user: getUserInfo(a.querySelector('.user-info')),
+          content: a.querySelector('.title')?.textContent || '',
+          category: a.querySelector('.badge')?.textContent || '글머리없음',
+        }));
       const channelCategory = category[channel.ID] || {};
 
       const result = filterContent({
