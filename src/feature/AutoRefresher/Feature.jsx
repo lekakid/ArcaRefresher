@@ -4,7 +4,7 @@ import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import queryString from 'query-string';
 
-import { BOARD_LOADED, BOARD_VIEW_WITHOUT_ARTICLE } from 'core/selector';
+import { BOARD_LOADED, BOARD } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 
@@ -72,7 +72,7 @@ function AutoRefresher({ classes }) {
     if (search.p > 1 || searchKeys.some((key) => targetKeys.includes(key)))
       return;
 
-    const boardElement = document.querySelector(BOARD_VIEW_WITHOUT_ARTICLE);
+    const boardElement = document.querySelector(BOARD);
     if (!boardElement) return;
     setBoard(boardElement);
 

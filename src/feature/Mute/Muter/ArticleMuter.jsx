@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE_VIEW } from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from '../FeatureInfo';
@@ -48,7 +48,7 @@ function ArticleMuter() {
   const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
-    if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
+    if (articleLoaded) setArticle(document.querySelector(ARTICLE));
   }, [articleLoaded]);
 
   // 이모티콘 뮤트

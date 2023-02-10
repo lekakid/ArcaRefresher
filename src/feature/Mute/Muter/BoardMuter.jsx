@@ -2,7 +2,12 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import { BOARD_ARTICLES, BOARD_LOADED, BOARD_VIEW } from 'core/selector';
+import {
+  BOARD_LOADED,
+  BOARD,
+  BOARD_IN_ARTICLE,
+  BOARD_ITEMS,
+} from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
 import { useLoadChecker } from 'util/LoadChecker';
@@ -64,7 +69,9 @@ function BoardMuter() {
     if (!boardLoaded) return;
     if (!channel.category) return;
 
-    const boardElement = document.querySelector(BOARD_VIEW);
+    const boardElement = document.querySelector(
+      `${BOARD}, ${BOARD_IN_ARTICLE}`,
+    );
     if (!boardElement) return;
 
     setBoard(boardElement);
@@ -89,7 +96,7 @@ function BoardMuter() {
     if (!board) return undefined;
 
     const muteArticle = () => {
-      const articleList = [...board.querySelectorAll(BOARD_ARTICLES)];
+      const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
       const articleInfo = articleList
         .filter((a) => !a.href.includes('#c_'))
         .map((a) => ({

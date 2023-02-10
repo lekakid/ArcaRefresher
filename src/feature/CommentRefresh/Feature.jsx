@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/styles';
 import { Refresh } from '@material-ui/icons';
 
 import {
-  COMMENT_VIEW,
+  COMMENT,
   COMMENT_TITLE,
   COMMENT_SUBTITLE,
-  COMMENT_INNER_VIEW,
+  COMMENT_INNER,
   COMMENT_LOADED,
 } from 'core/selector';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
@@ -43,7 +43,7 @@ function CommentRefresh({ classes }) {
   useEffect(() => {
     if (!commentLoaded) return;
 
-    const initComment = document.querySelector(COMMENT_INNER_VIEW);
+    const initComment = document.querySelector(COMMENT_INNER);
     comment.current = initComment;
     const top = document.createElement('span');
     const bottom = document.createElement('span');
@@ -59,10 +59,10 @@ function CommentRefresh({ classes }) {
     const observer = new MutationObserver(() => {
       if (comment.current.parentElement) return;
 
-      comment.current = document.querySelector(COMMENT_INNER_VIEW);
+      comment.current = document.querySelector(COMMENT_INNER);
       dispatchAREvent(EVENT_COMMENT_REFRESH);
     });
-    observer.observe(comment.current.closest(COMMENT_VIEW), {
+    observer.observe(comment.current.closest(COMMENT), {
       childList: true,
       subtree: true,
     });
@@ -78,7 +78,7 @@ function CommentRefresh({ classes }) {
     const text = await response.text();
     const parser = new DOMParser();
     const resultDocument = parser.parseFromString(text, 'text/html');
-    const newComments = resultDocument.querySelector(COMMENT_INNER_VIEW);
+    const newComments = resultDocument.querySelector(COMMENT_INNER);
     if (!newComments) return;
 
     newComments.querySelectorAll('time').forEach((time) => {

@@ -11,19 +11,18 @@ export const FULL_LOADED = 'footer';
 
 // CONTAINER SELECTOR
 export const NAVIGATION_MENU = 'ul.navbar-nav';
-export const BOARD_VIEW =
-  'div.board-article-list .list-table, div.included-article-list .list-table';
-export const BOARD_VIEW_WITHOUT_ARTICLE = 'div.board-article-list .list-table';
-export const ARTICLE_VIEW = '.article-wrapper';
-export const COMMENT_VIEW = '#comment';
-export const COMMENT_INNER_VIEW = '#comment .list-area';
-export const WRITE_VIEW = '.article-write';
-export const AUDIT_VIEW = '.board-audit-list';
+export const BOARD_IN_ARTICLE = 'div.included-article-list .list-table';
+export const BOARD = 'div.board-article-list .list-table';
+export const ARTICLE = '.article-wrapper';
+export const COMMENT = '#comment';
+export const COMMENT_INNER = '#comment .list-area';
+export const WRITE = '.article-write';
+export const AUDIT = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
 // CONTAINER ITEM SELECTOR
-export const BOARD_ARTICLES_WITH_NOTICE = 'a.vrow:not(.notice-unfilter)';
-export const BOARD_ARTICLES = 'a.vrow:not(.notice)';
+export const BOARD_NOTICES = 'a.vrow.notice:not(.notice-unfilter)';
+export const BOARD_ITEMS = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =

@@ -1,9 +1,4 @@
-import {
-  BOARD_ARTICLES_WITH_NOTICE,
-  BOARD_ARTICLES,
-  BOARD_VIEW_WITHOUT_ARTICLE,
-  USER_INFO,
-} from 'core/selector';
+import { BOARD_NOTICES, BOARD_ITEMS, BOARD, USER_INFO } from 'core/selector';
 import { getDateStr, in24Hours } from 'func/time';
 
 const parser = new DOMParser();
@@ -18,8 +13,8 @@ export async function getNewArticle() {
       'text/html',
     );
     const newArticles = updateDocument
-      .querySelector(BOARD_VIEW_WITHOUT_ARTICLE)
-      .querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
+      .querySelector(BOARD)
+      .querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`);
 
     return [...newArticles];
   } catch (error) {
@@ -34,7 +29,7 @@ export function swapArticle(
   animationClass,
 ) {
   const insertedArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE),
+    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
   ];
 
   // Filtering new articles, swap exist articles to new thing
@@ -53,7 +48,7 @@ export function swapArticle(
     return !exist;
   });
 
-  const insertPos = articleContainer.querySelector(BOARD_ARTICLES);
+  const insertPos = articleContainer.querySelector(BOARD_ITEMS);
   newArticles.forEach((a) => {
     a.classList.add(animationClass);
     articleContainer.insertBefore(a, insertPos);
@@ -62,7 +57,7 @@ export function swapArticle(
 
   // calibrate preview image, time zone
   const calibrateArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE),
+    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
   ];
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
