@@ -2,11 +2,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import {
-  BOARD_ARTICLES_WITHOUT_NOTICE,
-  BOARD_LOADED,
-  BOARD_VIEW,
-} from 'core/selector';
+import { BOARD_ARTICLES, BOARD_LOADED, BOARD_VIEW } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
 import { useLoadChecker } from 'util/LoadChecker';
@@ -93,9 +89,7 @@ function BoardMuter() {
     if (!board) return undefined;
 
     const muteArticle = () => {
-      const articleList = [
-        ...board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE),
-      ];
+      const articleList = [...board.querySelectorAll(BOARD_ARTICLES)];
       const articleInfo = articleList.map((a) => ({
         element: a,
         user: getUserInfo(a.querySelector('.user-info')),

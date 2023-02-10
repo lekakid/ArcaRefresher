@@ -1,6 +1,6 @@
 import {
+  BOARD_ARTICLES_WITH_NOTICE,
   BOARD_ARTICLES,
-  BOARD_ARTICLES_WITHOUT_NOTICE,
   BOARD_VIEW_WITHOUT_ARTICLE,
   USER_INFO,
 } from 'core/selector';
@@ -18,7 +18,7 @@ export async function getNewArticle() {
         const { response } = req;
         const articles = response
           .querySelector(BOARD_VIEW_WITHOUT_ARTICLE)
-          .querySelectorAll(BOARD_ARTICLES);
+          .querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
         resolve(articles);
       };
       req.ontimeout = () => {
@@ -42,7 +42,7 @@ export function swapArticle(
   animationClass,
 ) {
   const insertedArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES),
+    ...articleContainer.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE),
   ];
 
   // Filtering new articles, swap exist articles to new thing
@@ -61,9 +61,7 @@ export function swapArticle(
     return !exist;
   });
 
-  const insertPos = articleContainer.querySelector(
-    BOARD_ARTICLES_WITHOUT_NOTICE,
-  );
+  const insertPos = articleContainer.querySelector(BOARD_ARTICLES);
   newArticles.forEach((a) => {
     a.classList.add(animationClass);
     articleContainer.insertBefore(a, insertPos);
@@ -72,7 +70,7 @@ export function swapArticle(
 
   // calibrate preview image, time zone
   const calibrateArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES),
+    ...articleContainer.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE),
   ];
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
@@ -81,8 +79,8 @@ export function swapArticle(
     const time = a.querySelector('time');
     if (time) {
       time.textContent = getDateStr(
-          time.dateTime,
-          in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
+        time.dateTime,
+        in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
       );
     }
   });

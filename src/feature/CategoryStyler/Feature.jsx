@@ -2,11 +2,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import {
-  BOARD_ARTICLES_WITHOUT_NOTICE,
-  BOARD_LOADED,
-  BOARD_VIEW,
-} from 'core/selector';
+import { BOARD_ARTICLES, BOARD_LOADED, BOARD_VIEW } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 import { useContent } from 'util/ContentInfo';
@@ -46,7 +42,7 @@ export default function CategoryStyler() {
     board.classList.add('ARColor');
 
     const colorize = () => {
-      board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE).forEach((a) => {
+      board.querySelectorAll(BOARD_ARTICLES).forEach((a) => {
         const badge = a.querySelector('.badge')?.textContent || '글머리없음';
         if (styleMap[badge]) a.classList.add(`color-${styleMap[badge]}`);
       });

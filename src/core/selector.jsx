@@ -22,8 +22,8 @@ export const AUDIT_VIEW = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
 // CONTAINER ITEM SELECTOR
-export const BOARD_ARTICLES = 'a.vrow:not(.notice-unfilter)';
-export const BOARD_ARTICLES_WITHOUT_NOTICE = 'a.vrow:not(.notice)';
+export const BOARD_ARTICLES_WITH_NOTICE = 'a.vrow:not(.notice-unfilter)';
+export const BOARD_ARTICLES = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =

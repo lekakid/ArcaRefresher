@@ -15,7 +15,7 @@ import {
   ARTICLE_IMAGES,
   ARTICLE_LOADED,
   ARTICLE_VIEW,
-  BOARD_ARTICLES,
+  BOARD_ARTICLES_WITH_NOTICE,
   BOARD_LOADED,
   BOARD_VIEW,
   COMMENT_LOADED,
@@ -135,7 +135,7 @@ export default function ExperienceCustomizer() {
 
     const board = document.querySelector(BOARD_VIEW);
     const applyNewWindow = () => {
-      const articles = board.querySelectorAll(BOARD_ARTICLES);
+      const articles = board.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
       articles.forEach((a) => {
         a.setAttribute('target', '_blank');
       });
@@ -144,7 +144,7 @@ export default function ExperienceCustomizer() {
     applyNewWindow();
     addAREvent(EVENT_AUTOREFRESH, applyNewWindow);
     return () => {
-      const articles = board.querySelectorAll(BOARD_ARTICLES);
+      const articles = board.querySelectorAll(BOARD_ARTICLES_WITH_NOTICE);
       articles.forEach((a) => {
         a.setAttribute('target', '');
       });
