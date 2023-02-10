@@ -14,11 +14,11 @@
     "dev": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "hotfix:branch": "git checkout master && git checkout -b hotfix",
-    "hotfix:version": "version=$(yarn version patch --no-git-tag-version) && git commit -am \"[package] ${version}\"",
-    "hotfix": "yarn run hotfix:branch && yarn run hotfix:version",
+    "hotfix:version": "version=$(npm version patch --no-git-tag-version) && git commit -am \"[package] ${version}\"",
+    "hotfix": "npm run hotfix:branch && npm run hotfix:version",
     "minor:branch": "git checkout develop",
     "minor:version": "version=$(npm version minor --no-git-tag-version) && git commit -am \"[package] ${version}\"",
-    "minor": "yarn run minor:branch && yarn run minor:version"
+    "minor": "npm run minor:branch && npm run minor:version"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
@@ -65,5 +65,5 @@
     "redux-state-sync": "^3.1.4",
     "streamsaver": "^2.0.6"
   },
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "npm@3.3.0"
 }
