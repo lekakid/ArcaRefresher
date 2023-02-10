@@ -22,14 +22,6 @@ const style = {
           display: 'none !important',
         },
       },
-      '& .filtered-toast .toast-body': {
-        '&::after': {
-          content: '"[뮤트된 이용자의 알림]"',
-        },
-        '& > a': {
-          display: 'none',
-        },
-      },
     },
   },
 };
@@ -58,9 +50,8 @@ function ToastMuter() {
         const header = toast
           .querySelector('.toast-header > strong')
           .textContent.split('님의')[0];
-        const content = toast
-          .querySelector('.toast-body')
-          .textContent.split('님의')[0];
+        const body = toast.querySelector('.toast-body');
+        const content = body.textContent.split('님의')[0];
 
         const regex = new RegExp(user.join('|'));
         if (regex.test(header) || regex.test(content)) {
@@ -68,7 +59,8 @@ function ToastMuter() {
             toast.remove();
             return;
           }
-          toast.classList.add('filtered-toast');
+
+          body.textContent = '[뮤트된 이용자의 알림]';
         }
       });
 
