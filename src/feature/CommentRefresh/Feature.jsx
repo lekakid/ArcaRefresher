@@ -82,7 +82,6 @@ function CommentRefresh({ classes }) {
     if (!newComments) return;
 
     newComments.querySelectorAll('time').forEach((time) => {
-      // eslint-disable-next-line no-param-reassign
       time.textContent = getDateStr(time.dateTime, 'year-month-day hh:mm:ss');
     });
 

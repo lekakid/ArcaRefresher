@@ -96,7 +96,6 @@ export default function ExperienceCustomizer() {
     if (!article || !ignoreExternalLinkWarning) return;
 
     article.querySelectorAll('a.external').forEach((e) => {
-      // eslint-disable-next-line no-param-reassign
       e.href = e.href.replace('https://oo.pe/', '');
       e.classList.remove('external');
     });

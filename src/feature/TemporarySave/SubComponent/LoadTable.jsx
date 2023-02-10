@@ -108,7 +108,6 @@ export default function LoadTable({ editor, open, onClose }) {
       const content = params.getValue(params.id, 'content');
 
       editor.content.html.set(content);
-      // eslint-disable-next-line no-param-reassign
       if (importTitle) editor.title.value = title;
 
       setSelection([]);
