@@ -31,7 +31,7 @@ const View = React.forwardRef((_props, ref) => {
         <List>
           <ListItem button onClick={handleVisible}>
             <ListItemText
-              primary="반고닉 이용자 아이디 표시"
+              primary="반고닉 이용자 고유아이디 표시"
               secondary="로그인 상태에서 정상동작합니다"
             />
             <ListItemSecondaryAction>
