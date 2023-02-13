@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import {
-  BOARD_ARTICLES_WITHOUT_NOTICE,
   BOARD_LOADED,
-  BOARD_VIEW,
+  BOARD,
+  BOARD_IN_ARTICLE,
+  BOARD_ITEMS,
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
@@ -33,6 +34,9 @@ const style = {
         display: 'none !important',
       },
     },
+    '.hide-service-notice .notice-service': {
+      display: 'none !important',
+    },
     '.hide-no-permission a.vrow[href$="#c_"]': {
       display: 'none !important',
     },
@@ -50,6 +54,7 @@ function BoardMuter() {
       category,
       boardBarPos,
       hideCountBar,
+      hideServiceNotice,
       hideNoPermission,
     },
   } = useSelector((state) => state[Info.ID]);
@@ -64,7 +69,9 @@ function BoardMuter() {
     if (!boardLoaded) return;
     if (!channel.category) return;
 
-    const boardElement = document.querySelector(BOARD_VIEW);
+    const boardElement = document.querySelector(
+      `${BOARD}, ${BOARD_IN_ARTICLE}`,
+    );
     if (!boardElement) return;
 
     setBoard(boardElement);
@@ -89,15 +96,15 @@ function BoardMuter() {
     if (!board) return undefined;
 
     const muteArticle = () => {
-      const articleList = [
-        ...board.querySelectorAll(BOARD_ARTICLES_WITHOUT_NOTICE),
-      ];
-      const articleInfo = articleList.map((a) => ({
-        element: a,
-        user: getUserInfo(a.querySelector('.user-info')),
-        content: a.querySelector('.title')?.textContent || '',
-        category: a.querySelector('.badge')?.textContent || '글머리없음',
-      }));
+      const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
+      const articleInfo = articleList
+        .filter((a) => !a.href.includes('#c_'))
+        .map((a) => ({
+          element: a,
+          user: getUserInfo(a.querySelector('.user-info')),
+          content: a.querySelector('.title')?.textContent || '',
+          category: a.querySelector('.badge')?.textContent || '글머리없음',
+        }));
       const channelCategory = category[channel.ID] || {};
 
       const result = filterContent({
@@ -120,6 +127,7 @@ function BoardMuter() {
     };
   }, [board, nameToIDMap, keyword, user, channel, category]);
 
+  // 게시물 미리보기 뮤트
   useLayoutEffect(() => {
     if (!board) return;
 
@@ -139,6 +147,15 @@ function BoardMuter() {
     });
   }, [board, emoticionFilter]);
 
+  // 서비스 공지사항
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle(
+      'hide-service-notice',
+      hideServiceNotice,
+    );
+  }, [hideServiceNotice]);
+
+  // (권한 없음) 게시물
   useLayoutEffect(() => {
     document.documentElement.classList.toggle(
       'hide-no-permission',

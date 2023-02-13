@@ -14,12 +14,14 @@ import {
   ARTICLE_GIFS,
   ARTICLE_IMAGES,
   ARTICLE_LOADED,
-  ARTICLE_VIEW,
-  BOARD_ARTICLES,
+  ARTICLE,
+  BOARD_NOTICES,
+  BOARD_ITEMS,
   BOARD_LOADED,
-  BOARD_VIEW,
+  BOARD,
+  BOARD_IN_ARTICLE,
   COMMENT_LOADED,
-  COMMENT_VIEW,
+  COMMENT,
 } from 'core/selector';
 import {
   addAREvent,
@@ -76,7 +78,7 @@ export default function ExperienceCustomizer() {
 
   useEffect(() => {
     if (articleLoaded) {
-      setArticle(document.querySelector(ARTICLE_VIEW));
+      setArticle(document.querySelector(ARTICLE));
     }
   }, [articleLoaded]);
 
@@ -96,7 +98,6 @@ export default function ExperienceCustomizer() {
     if (!article || !ignoreExternalLinkWarning) return;
 
     article.querySelectorAll('a.external').forEach((e) => {
-      // eslint-disable-next-line no-param-reassign
       e.href = e.href.replace('https://oo.pe/', '');
       e.classList.remove('external');
     });
@@ -125,18 +126,20 @@ export default function ExperienceCustomizer() {
   useEffect(() => {
     if (!commentLoaded) return;
 
-    setComment(document.querySelector(COMMENT_VIEW));
+    setComment(document.querySelector(COMMENT));
     addAREvent(EVENT_COMMENT_REFRESH, () => {
-      setComment(document.querySelector(COMMENT_VIEW));
+      setComment(document.querySelector(COMMENT));
     });
   }, [commentLoaded]);
 
   useEffect(() => {
     if (!boardLoaded || !openArticleNewWindow) return null;
 
-    const board = document.querySelector(BOARD_VIEW);
+    const board = document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`);
     const applyNewWindow = () => {
-      const articles = board.querySelectorAll(BOARD_ARTICLES);
+      const articles = board.querySelectorAll(
+        `${BOARD_NOTICES}, ${BOARD_ITEMS}`,
+      );
       articles.forEach((a) => {
         a.setAttribute('target', '_blank');
       });
@@ -145,7 +148,9 @@ export default function ExperienceCustomizer() {
     applyNewWindow();
     addAREvent(EVENT_AUTOREFRESH, applyNewWindow);
     return () => {
-      const articles = board.querySelectorAll(BOARD_ARTICLES);
+      const articles = board.querySelectorAll(
+        `${BOARD_NOTICES}, ${BOARD_ITEMS}`,
+      );
       articles.forEach((a) => {
         a.setAttribute('target', '');
       });

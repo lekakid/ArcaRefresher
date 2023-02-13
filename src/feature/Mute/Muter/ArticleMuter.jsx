@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import {
-  ARTICLE_GIFS,
-  ARTICLE_IMAGES,
-  ARTICLE_LOADED,
-  ARTICLE_VIEW,
-} from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from '../FeatureInfo';
@@ -16,7 +11,7 @@ import { emoticonFilterSelector } from '../selector';
 const style = {
   '@global': {
     '.article-content': {
-      '& .filtered-emoticon': {
+      '& .muted:not(.deleted)': {
         '& img, & video': {
           display: 'none !important',
         },
@@ -32,7 +27,7 @@ const style = {
           padding: 'unset !important',
         },
       },
-      '& .hide-filtered-emoticon': {
+      '& .deleted': {
         '& img, & video': {
           display: 'none !important',
         },
@@ -53,36 +48,37 @@ function ArticleMuter() {
   const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
-    if (articleLoaded) setArticle(document.querySelector(ARTICLE_VIEW));
+    if (articleLoaded) setArticle(document.querySelector(ARTICLE));
   }, [articleLoaded]);
 
+  // 이모티콘 뮤트
   useEffect(() => {
-    if (!article) return;
+    if (!article) return undefined;
 
     const muteArticle = () => {
-      const articleImage = [
-        ...document.querySelectorAll(`${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`),
-      ];
+      const articleImage = [...document.querySelectorAll(ARTICLE_EMOTICON)];
       articleImage.forEach((i) => {
-        const { clientWidth: width, clientHeight: height, src } = i;
-
-        // Normal Image
-        if (width > 100 || height > 100) return;
+        const { src } = i;
 
         const filterFormat = src
           .replace('https:', '')
           .replace('-p', '')
           .replace('.mp4', '.mp4.gif');
 
-        // eslint-disable-next-line no-unused-expressions
         i.closest('a')?.classList.toggle(
-          hideMutedMark ? 'hide-filtered-emoticon' : 'filtered-emoticon',
+          'muted',
           emoticonFilter.url.indexOf(filterFormat) > -1,
         );
       });
     };
 
-    window.addEventListener('load', muteArticle);
+    if (document.readyState !== 'complete') {
+      window.addEventListener('load', muteArticle);
+      return () => window.removeEventListener('load', muteArticle);
+    }
+
+    muteArticle();
+    return undefined;
   }, [article, emoticonFilter, hideMutedMark]);
 
   return null;

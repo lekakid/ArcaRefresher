@@ -14,6 +14,12 @@ const useStyles = makeStyles({
   imgList: {
     minHeight: 200,
     maxHeight: 400,
+    '& video': {
+      top: '50%',
+      width: '100%',
+      position: 'relative',
+      transform: 'translateY(-50%)',
+    },
   },
   itemBar: {
     background: 'none',
@@ -71,7 +77,7 @@ export default function ImageSelector({ list, selection, onChange }) {
       {list.map((img, index) => (
         <ImageListItem key={img} onClick={handleCheck(index)}>
           {img.indexOf('.mp4') > -1 ? (
-            <video src={img} alt={img} autoPlay loop muted playsinline />
+            <video src={img} alt={img} autoPlay loop muted />
           ) : (
             <img src={img} alt={img} />
           )}

@@ -14,7 +14,6 @@ export default function ContextSnack() {
   useEffect(() => {
     if (snackBag.length && !snack) {
       dispatch(shiftSnack());
-      console.log(snackBag);
       if (!snackBag[0]) return;
 
       // mui에 clickaway onClose 이후 clickaway가 바로 터지는 버그가 있음

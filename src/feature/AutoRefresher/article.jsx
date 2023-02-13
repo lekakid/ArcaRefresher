@@ -1,34 +1,21 @@
-import {
-  BOARD_ARTICLES,
-  BOARD_ARTICLES_WITHOUT_NOTICE,
-  BOARD_VIEW_WITHOUT_ARTICLE,
-  USER_INFO,
-} from 'core/selector';
+import { BOARD_NOTICES, BOARD_ITEMS, BOARD, USER_INFO } from 'core/selector';
 import { getDateStr, in24Hours } from 'func/time';
+
+const parser = new DOMParser();
 
 export async function getNewArticle() {
   try {
-    const newArticles = await new Promise((resolve, reject) => {
-      const req = new XMLHttpRequest();
+    const response = await fetch(window.location.href);
+    if (!response.ok) throw new Error('[AutoRefresher] 연결 거부');
 
-      req.open('GET', window.location.href);
-      req.responseType = 'document';
-      req.timeout = 2000;
-      req.onload = () => {
-        const { response } = req;
-        const articles = response
-          .querySelector(BOARD_VIEW_WITHOUT_ARTICLE)
-          .querySelectorAll(BOARD_ARTICLES);
-        resolve(articles);
-      };
-      req.ontimeout = () => {
-        reject(new Error('[AutoRefresher] 연결 시간 초과'));
-      };
-      req.onerror = () => {
-        reject(new Error('[AutoRefresher] 연결 거부'));
-      };
-      req.send();
-    });
+    const updateDocument = parser.parseFromString(
+      await response.text(),
+      'text/html',
+    );
+    const newArticles = updateDocument
+      .querySelector(BOARD)
+      .querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`);
+
     return [...newArticles];
   } catch (error) {
     console.error(error);
@@ -42,7 +29,7 @@ export function swapArticle(
   animationClass,
 ) {
   const insertedArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES),
+    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
   ];
 
   // Filtering new articles, swap exist articles to new thing
@@ -61,9 +48,7 @@ export function swapArticle(
     return !exist;
   });
 
-  const insertPos = articleContainer.querySelector(
-    BOARD_ARTICLES_WITHOUT_NOTICE,
-  );
+  const insertPos = articleContainer.querySelector(BOARD_ITEMS);
   newArticles.forEach((a) => {
     a.classList.add(animationClass);
     articleContainer.insertBefore(a, insertPos);
@@ -72,7 +57,7 @@ export function swapArticle(
 
   // calibrate preview image, time zone
   const calibrateArticles = [
-    ...articleContainer.querySelectorAll(BOARD_ARTICLES),
+    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
   ];
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
@@ -81,8 +66,8 @@ export function swapArticle(
     const time = a.querySelector('time');
     if (time) {
       time.textContent = getDateStr(
-          time.dateTime,
-          in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
+        time.dateTime,
+        in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
       );
     }
   });

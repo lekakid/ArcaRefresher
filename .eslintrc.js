@@ -13,7 +13,7 @@ module.exports = {
     ],
     'no-param-reassign': [
       'error',
-      { props: true, ignorePropertyModificationsFor: ['state'] },
+      { props: false },
     ],
     'import/prefer-default-export': 'off',
     'react/jsx-wrap-multilines': [
@@ -40,7 +40,6 @@ module.exports = {
     GM_xmlhttpRequest: true,
     GM_addValueChangeListener: true,
     unsafeWindow: true,
-    ClipboardItem: true,
   },
   env: {
     browser: true,

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import {
-  COMMENT_INNER_VIEW,
+  COMMENT_INNER,
   COMMENT_ITEMS,
   COMMENT_WRAPPERS,
   COMMENT_EMOTICON,
@@ -75,7 +75,7 @@ function CommentMuter() {
   useLayoutEffect(() => {
     if (!commentLoaded) return;
 
-    const commentElement = document.querySelector(COMMENT_INNER_VIEW);
+    const commentElement = document.querySelector(COMMENT_INNER);
     if (!commentElement) return;
 
     setComment(commentElement);
@@ -85,7 +85,7 @@ function CommentMuter() {
     setContainer(countBarContainer);
 
     addAREvent(EVENT_COMMENT_REFRESH, () => {
-      const refreshedComment = document.querySelector(COMMENT_INNER_VIEW);
+      const refreshedComment = document.querySelector(COMMENT_INNER);
       setComment(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
     });

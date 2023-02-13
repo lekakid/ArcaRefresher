@@ -109,7 +109,6 @@ function SelectionDialog({ classes }) {
     let count = 1;
 
     const confirm = (event) => {
-      // eslint-disable-next-line no-param-reassign
       event.returnValue =
         '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
     };

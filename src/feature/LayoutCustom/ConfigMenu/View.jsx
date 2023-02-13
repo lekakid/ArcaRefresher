@@ -7,7 +7,9 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
+  Select,
   Slider,
   Switch,
   Typography,
@@ -19,6 +21,7 @@ import Info from '../FeatureInfo';
 import {
   $toggleEnable,
   $setFontSize,
+  $setNotifyPosition,
   $toggleTopNews,
   $toggleRecentVisit,
   $toggleSideNews,
@@ -55,6 +58,7 @@ const View = React.forwardRef((_props, ref) => {
     storage: {
       enabled,
       fontSize,
+      notifyPosition,
       topNews,
       recentVisit,
       sideContents,
@@ -81,6 +85,13 @@ const View = React.forwardRef((_props, ref) => {
   const handleFontSize = useCallback(
     (_e, value) => {
       dispatch($setFontSize(value));
+    },
+    [dispatch],
+  );
+
+  const handleNotifyPosition = useCallback(
+    (e) => {
+      dispatch($setNotifyPosition(e.target.value));
     },
     [dispatch],
   );
@@ -178,6 +189,19 @@ const View = React.forwardRef((_props, ref) => {
                 defaultValue={fontSize}
                 onChangeCommitted={handleFontSize}
               />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText primary="알림창 위치 설정" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={notifyPosition}
+                onChange={handleNotifyPosition}
+              >
+                <MenuItem value="left">왼쪽</MenuItem>
+                <MenuItem value="right">오른쪽</MenuItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           {mobile && (
