@@ -2,7 +2,12 @@ import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { BOARD_ITEMS, BOARD_LOADED, BOARD } from 'core/selector';
+import {
+  BOARD_ITEMS,
+  BOARD_LOADED,
+  BOARD,
+  BOARD_IN_ARTICLE,
+} from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 import { useContent } from 'util/ContentInfo';
@@ -21,7 +26,7 @@ export default function CategoryStyler() {
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    setBoard(document.querySelector(BOARD));
+    setBoard(document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`));
   }, [boardLoaded]);
 
   useLayoutEffect(() => {
