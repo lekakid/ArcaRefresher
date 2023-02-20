@@ -158,6 +158,16 @@ function SelectionDialog({ classes }) {
     dispatch(setOpen(false));
   }, [dispatch]);
 
+  const handleSubmit = useCallback(
+    (e) => {
+      if (e.key && e.key !== 'Enter') return;
+      if (selection.length === 0) return;
+
+      handleDownload();
+    },
+    [handleDownload, selection],
+  );
+
   const imgList = data.map(({ thumb }) => thumb);
 
   if (showProgress) {
@@ -175,7 +185,13 @@ function SelectionDialog({ classes }) {
   }
 
   return (
-    <Dialog fullWidth maxWidth="lg" open={open} onClose={handleClose}>
+    <Dialog
+      fullWidth
+      maxWidth="lg"
+      open={open}
+      onClose={handleClose}
+      onKeyUp={handleSubmit}
+    >
       <DialogTitle>
         <Typography>이미지 다운로더</Typography>
         <IconButton className={classes.closeButton} onClick={handleClose}>
