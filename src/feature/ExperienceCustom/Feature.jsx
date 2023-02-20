@@ -211,7 +211,9 @@ export default function ExperienceCustomizer() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleConfirm}>예</Button>
-          <Button onClick={handleClose}>아니오</Button>
+          <Button variant="contained" color="primary" onClick={handleClose}>
+            아니오
+          </Button>
         </DialogActions>
       </Dialog>
       {unfoldContainer && foldComment && (
