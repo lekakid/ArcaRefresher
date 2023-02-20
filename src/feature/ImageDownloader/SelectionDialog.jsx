@@ -193,7 +193,12 @@ function SelectionDialog({ classes }) {
         <Button onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}
         </Button>
-        <Button disabled={selection.length === 0} onClick={handleDownload}>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={selection.length === 0}
+          onClick={handleDownload}
+        >
           다운로드
         </Button>
       </DialogActions>
