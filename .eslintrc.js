@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: ['react-app', 'airbnb', 'prettier'],
   parser: '@babel/eslint-parser',
-  plugins: ['@babel'],
+  plugins: ['@babel', 'unused-imports'],
   rules: {
     'no-console': 'off',
     camelcase: [
@@ -11,10 +11,7 @@ module.exports = {
         ignoreGlobals: true,
       },
     ],
-    'no-param-reassign': [
-      'error',
-      { props: false },
-    ],
+    'no-param-reassign': ['error', { props: false }],
     'import/prefer-default-export': 'off',
     'react/jsx-wrap-multilines': [
       'error',
@@ -23,6 +20,7 @@ module.exports = {
       },
     ],
     'react/prop-types': 'off',
+    'unused-imports/no-unused-imports': 'error',
   },
   settings: {
     'import/resolver': {
