@@ -156,4 +156,13 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   );
 }
 
-export default CategoryRow;
+function compare(prev, next) {
+  return (
+    prev.badge === next.badge &&
+    prev.bgcolor === next.bgcolor &&
+    prev.bold === next.bold &&
+    prev.through === next.through &&
+    prev.disableVisited === next.disableVisited
+  );
+}
+export default React.memo(CategoryRow, compare);

@@ -26,20 +26,19 @@ const styles = {
 const View = React.forwardRef(({ classes }, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
-  const {
-    storage: { color },
-  } = useSelector((state) => state[Info.ID]);
-  const channelConfig = color[channel.ID];
+  const color = useSelector(
+    (state) => state[Info.ID].storage.color[channel.ID],
+  );
 
   const handleChange = useCallback(
     (categoryId, value) => {
       const updateConfig = {
-        ...channelConfig,
+        ...color,
         [categoryId]: value,
       };
       dispatch($setStyle({ channel: channel.ID, color: updateConfig }));
     },
-    [channel, channelConfig, dispatch],
+    [channel, color, dispatch],
   );
 
   return (
@@ -60,7 +59,7 @@ const View = React.forwardRef(({ classes }, ref) => {
                       divider={index !== 0}
                       id={id}
                       label={label}
-                      initValue={channelConfig?.[id]}
+                      initValue={color?.[id]}
                       onChange={handleChange}
                     />
                   ))}
