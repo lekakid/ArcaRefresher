@@ -72,16 +72,29 @@ export default function ExperienceCustomizer() {
   const [confirm, setConfirm] = useState(WAITING);
   const classes = useStyles();
 
-  useEffect(() => {
-    document.title = spoofTitle || titleRef.current;
-  }, [spoofTitle]);
-
+  // 게시물 로드 확인 및 엘리먼트 저장
   useEffect(() => {
     if (articleLoaded) {
       setArticle(document.querySelector(ARTICLE));
     }
   }, [articleLoaded]);
 
+  // 댓글 로드 확인 및 엘리먼트 저장
+  useEffect(() => {
+    if (!commentLoaded) return;
+
+    setComment(document.querySelector(COMMENT));
+    addAREvent(EVENT_COMMENT_REFRESH, () => {
+      setComment(document.querySelector(COMMENT));
+    });
+  }, [commentLoaded]);
+
+  // 사이트 표시 제목 변경
+  useEffect(() => {
+    document.title = spoofTitle || titleRef.current;
+  }, [spoofTitle]);
+
+  // 이미지, 영상 새 창에서 열기 방지
   useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
 
@@ -94,6 +107,7 @@ export default function ExperienceCustomizer() {
       });
   }, [article, blockMediaNewWindow]);
 
+  // 외부 링크 경고 무시
   useEffect(() => {
     if (!article || !ignoreExternalLinkWarning) return;
 
@@ -103,6 +117,7 @@ export default function ExperienceCustomizer() {
     });
   }, [article, ignoreExternalLinkWarning]);
 
+  // 비추천 방지
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
 
@@ -123,15 +138,7 @@ export default function ExperienceCustomizer() {
     return () => ratedownButton.removeEventListener('click', ratedownClick);
   }, [article, ratedownGuard]);
 
-  useEffect(() => {
-    if (!commentLoaded) return;
-
-    setComment(document.querySelector(COMMENT));
-    addAREvent(EVENT_COMMENT_REFRESH, () => {
-      setComment(document.querySelector(COMMENT));
-    });
-  }, [commentLoaded]);
-
+  // 게시판 새 창 열기 방지
   useEffect(() => {
     if (!boardLoaded || !openArticleNewWindow) return null;
 
@@ -159,6 +166,7 @@ export default function ExperienceCustomizer() {
     };
   }, [boardLoaded, openArticleNewWindow]);
 
+  // 댓글 접기 방지
   useEffect(() => {
     if (!comment || !foldComment) return null;
 
@@ -174,6 +182,7 @@ export default function ExperienceCustomizer() {
     return () => document.documentElement.classList.remove(classes.comment);
   }, [classes, comment, foldComment, unfoldContainer]);
 
+  // 넓은 답글창 열기
   useEffect(() => {
     if (!comment || !wideClickArea) return null;
 
