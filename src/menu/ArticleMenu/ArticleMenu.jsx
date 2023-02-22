@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, makeStyles, Portal, Typography } from '@material-ui/core';
+import { Grid, Portal, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { ARTICLE_HEADER_MENU, ARTICLE_LOADED } from 'core/selector';
 import { useLoadChecker } from 'util/LoadChecker';

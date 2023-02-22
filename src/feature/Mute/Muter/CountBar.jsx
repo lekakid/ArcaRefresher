@@ -1,6 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Chip, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Chip, Grid, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 const TypeString = {
   keyword: '키워드',

@@ -11,8 +11,8 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
-  withStyles,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 import { Close, Menu } from '@material-ui/icons';
 
 import Info from './FeatureInfo';

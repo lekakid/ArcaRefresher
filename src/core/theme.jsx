@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core';
+import { createTheme } from '@material-ui/core/styles';
 import { koKR } from '@material-ui/core/locale';
 
 const overrides = {

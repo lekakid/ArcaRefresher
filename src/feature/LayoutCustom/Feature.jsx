@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 
 import Info from './FeatureInfo';

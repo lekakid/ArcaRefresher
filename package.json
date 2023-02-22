@@ -27,6 +27,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "babel-loader": "^8.2.4",
+    "babel-plugin-import": "^1.13.6",
     "clean-terminal-webpack-plugin": "^3.0.0",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",

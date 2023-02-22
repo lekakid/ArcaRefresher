@@ -8,9 +8,9 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  makeStyles,
   Switch,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
