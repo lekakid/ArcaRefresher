@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
-  Container,
+  Box,
   Dialog,
   Divider,
   Drawer,
@@ -13,7 +13,7 @@ import {
   useMediaQuery,
   withStyles,
 } from '@material-ui/core';
-import { ChevronLeft, Close, Menu } from '@material-ui/icons';
+import { Close, Menu } from '@material-ui/icons';
 
 import Info from './FeatureInfo';
 import { setOpen, setDrawer } from './slice';
@@ -96,10 +96,13 @@ function MenuContainer({ classes, groupList, menuList }) {
   return (
     <>
       <Dialog
-        fullScreen
+        fullScreen={mobile}
+        fullWidth
+        maxWidth="md"
         className={classes.root}
         PaperProps={{
           className: classes.bg,
+          square: true,
         }}
         TransitionProps={{
           mountOnEnter: true,
@@ -107,57 +110,44 @@ function MenuContainer({ classes, groupList, menuList }) {
         open={open}
         onClose={handleConfigClose}
       >
-        <Container maxWidth="md">
-          <AppBar color="secondary" position="fixed">
-            <Toolbar>
-              {mobile && (
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  className={classes.menuButton}
-                  onClick={handleDrawerToggle}
-                >
-                  <Menu />
-                </IconButton>
-              )}
-              <Typography variant="h5" noWrap className={classes.title}>
-                {`Arca Refresher ${GM_info.script.version}`}
-              </Typography>
-              <IconButton color="inherit" onClick={handleConfigClose}>
-                <Close />
+        <AppBar color="secondary" position="relative">
+          <Toolbar>
+            {mobile && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                className={classes.menuButton}
+                onClick={handleDrawerToggle}
+              >
+                <Menu />
               </IconButton>
-            </Toolbar>
-          </AppBar>
-          <nav>
-            <Drawer
-              variant={mobile ? 'temporary' : 'permanent'}
-              classes={{ paper: classes.drawer }}
-              ModalProps={{ keepMounted: true }}
-              open={!mobile || drawer}
-              onClose={handleDrawerToggle}
-            >
-              <div className={classes.toolbar}>
-                {mobile && (
-                  <IconButton onClick={handleDrawerToggle}>
-                    <ChevronLeft />
-                  </IconButton>
-                )}
-              </div>
+            )}
+            <Typography variant="h5" noWrap className={classes.title}>
+              {`Arca Refresher ${GM_info.script.version}`}
+            </Typography>
+            <IconButton color="inherit" onClick={handleConfigClose}>
+              <Close />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Box display="flex" minHeight={0} flexGrow={1}>
+          <Drawer
+            variant={mobile ? 'temporary' : 'permanent'}
+            classes={{ paper: classes.drawer }}
+            ModalProps={{ disablePortal: true, keepMounted: true }}
+            open={!mobile || drawer}
+            onClose={handleDrawerToggle}
+          >
+            <List disablePadding>
+              <DrawerItem key="all" configKey="all" icon={<Menu />}>
+                전체 설정
+              </DrawerItem>
               <Divider />
-              <List disablePadding>
-                <DrawerItem key="all" configKey="all" icon={<Menu />}>
-                  전체 설정
-                </DrawerItem>
-                <Divider />
-                {navi}
-              </List>
-            </Drawer>
-          </nav>
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {content}
-          </main>
-        </Container>
+              {navi}
+            </List>
+          </Drawer>
+          <main className={classes.content}>{content}</main>
+        </Box>
       </Dialog>
       <HeaderButton />
     </>
