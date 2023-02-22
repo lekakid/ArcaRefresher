@@ -45,10 +45,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const WAITING = 'WAITING';
-const CONFIRM = 'CONFIRM';
-const IGNORE = 'IGNORE';
-
 export default function ExperienceCustomizer() {
   const {
     storage: {
@@ -69,7 +65,8 @@ export default function ExperienceCustomizer() {
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
-  const [confirm, setConfirm] = useState(WAITING);
+  const confirmRef = useRef();
+  const [confirm, setConfirm] = useState(false);
   const classes = useStyles();
 
   // 게시물 로드 확인 및 엘리먼트 저장
@@ -118,25 +115,44 @@ export default function ExperienceCustomizer() {
   }, [article, ignoreExternalLinkWarning]);
 
   // 비추천 방지
+  const handleConfirm = useCallback(
+    (value) => async () => {
+      if (!confirmRef.current) return; // ?
+      setConfirm(false);
+      confirmRef.current(value);
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
 
     const ratedownButton = article.querySelector('#rateDown');
     if (!ratedownButton) return null;
 
-    const ratedownClick = (e) => {
-      setConfirm((prev) => {
-        if (prev === WAITING) {
-          e.preventDefault();
-          return CONFIRM;
-        }
-        return WAITING;
+    const ratedownClick = async (e) => {
+      if (confirmRef.current) {
+        // 이미 비추천 막고 있음
+        confirmRef.current = undefined;
+        return;
+      }
+
+      e.preventDefault();
+      setConfirm(true);
+      const value = await new Promise((resolve) => {
+        confirmRef.current = resolve;
       });
+
+      if (value) {
+        ratedownButton.click();
+        return;
+      }
+      confirmRef.current = undefined;
     };
 
     ratedownButton.addEventListener('click', ratedownClick);
     return () => ratedownButton.removeEventListener('click', ratedownClick);
-  }, [article, ratedownGuard]);
+  }, [article, handleConfirm, ratedownGuard]);
 
   // 게시판 새 창 열기 방지
   useEffect(() => {
@@ -201,26 +217,20 @@ export default function ExperienceCustomizer() {
     return () => comment.removeEventListener('click', handleClick);
   }, [comment, wideClickArea]);
 
-  const handleConfirm = useCallback(() => {
-    setConfirm(IGNORE);
-
-    article.querySelector('#rateDown').click();
-  }, [article]);
-
-  const handleClose = useCallback(() => {
-    setConfirm(WAITING);
-  }, []);
-
   return (
     <>
-      <Dialog open={confirm === CONFIRM} onClose={handleClose}>
+      <Dialog open={confirm} onClose={handleConfirm(false)}>
         <DialogTitle>비추천 재확인</DialogTitle>
         <DialogContent>
           비추천을 누르셨습니다. 진짜 비추천하시겠습니까?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleConfirm}>예</Button>
-          <Button variant="contained" color="primary" onClick={handleClose}>
+          <Button onClick={handleConfirm(true)}>예</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConfirm(false)}
+          >
             아니오
           </Button>
         </DialogActions>
