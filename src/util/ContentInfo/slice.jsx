@@ -1,9 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Info from './FeatureInfo';
 
+const idRegex = /\/b\/([0-9a-z]{4,20})/;
+const { pathname } = window.location;
+const channelID = pathname.match(idRegex)?.[1] || null;
+
 const initialState = {
   channel: {
-    ID: null,
+    ID: channelID,
     name: null,
     category: null,
   },
