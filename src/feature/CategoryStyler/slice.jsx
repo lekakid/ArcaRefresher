@@ -15,6 +15,11 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
+    $setCategoryStyle(state, action) {
+      const { channel, category, value } = action.payload;
+      if (!state.storage.color[channel]) state.storage.color[channel] = {};
+      state.storage.color[channel][category] = value;
+    },
     $setStyle(state, action) {
       const { channel, color } = action.payload;
       state.storage.color[channel] = color;
@@ -22,6 +27,6 @@ export const slice = createSlice({
   },
 });
 
-export const { $setStyle } = slice.actions;
+export const { $setCategoryStyle, $setStyle } = slice.actions;
 
 export default slice.reducer;
