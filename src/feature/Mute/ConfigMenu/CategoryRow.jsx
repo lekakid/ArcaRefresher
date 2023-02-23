@@ -62,4 +62,4 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   );
 }
 
-export default CategoryRow;
+export default React.memo(CategoryRow);

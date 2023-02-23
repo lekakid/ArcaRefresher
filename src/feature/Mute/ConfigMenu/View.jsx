@@ -55,23 +55,19 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
   const {
-    storage: {
-      hideServiceNotice,
-      hideNoPermission,
-      boardBarPos,
-      hideCountBar,
-      hideMutedMark,
-      muteIncludeReply,
-      user,
-      keyword,
-      category,
-    },
-  } = useSelector((state) => state[Info.ID]);
+    hideServiceNotice,
+    hideNoPermission,
+    boardBarPos,
+    hideCountBar,
+    hideMutedMark,
+    muteIncludeReply,
+    user,
+    keyword,
+    category: { [channel.ID]: category },
+  } = useSelector((state) => state[Info.ID].storage);
   const tableRows = useSelector(emoticonTableSelector);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-
-  const channelCategory = category[channel.ID];
 
   const handleServiceNotice = useCallback(() => {
     dispatch($toggleHideNoticeService());
@@ -132,14 +128,16 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   const handleCategory = useCallback(
-    (categoryId, value) => {
-      const updateCategory = { ...channelCategory, [categoryId]: value };
-
+    (id, value) => {
       dispatch(
-        $setCategoryConfig({ channel: channel.ID, config: updateCategory }),
+        $setCategoryConfig({
+          channel: channel.ID,
+          category: id,
+          config: value,
+        }),
       );
     },
-    [channel, channelCategory, dispatch],
+    [channel, dispatch],
   );
 
   return (
@@ -261,7 +259,7 @@ const View = React.forwardRef((_props, ref) => {
                       divider={index !== 0}
                       id={id}
                       label={label}
-                      initValue={channelCategory?.[id]}
+                      initValue={category?.[id]}
                       onChange={handleCategory}
                     />
                   ))}
