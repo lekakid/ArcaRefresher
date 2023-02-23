@@ -6,9 +6,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Portal,
+  Tooltip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { ZoomIn } from '@material-ui/icons';
 
 import {
   ARTICLE_GIFS,
@@ -33,6 +36,8 @@ import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
+
+const PREVIEW_SELECTOR = '.article-content img, .article-content video';
 
 const useStyles = makeStyles(() => ({
   comment: {
@@ -67,6 +72,7 @@ export default function ExperienceCustomizer() {
   const [unfoldContainer, setUnfoldContainer] = useState(null);
   const confirmRef = useRef();
   const [confirm, setConfirm] = useState(false);
+  const [resizeContainer, setResizeContaier] = useState(null);
   const classes = useStyles();
 
   // 게시물 로드 확인 및 엘리먼트 저장
@@ -217,6 +223,29 @@ export default function ExperienceCustomizer() {
     return () => comment.removeEventListener('click', handleClick);
   }, [comment, wideClickArea]);
 
+  // 미리보기 훼이크 걷어내기
+  useEffect(() => {
+    if (!article) return;
+
+    const preview = article.querySelector(PREVIEW_SELECTOR);
+    if (!preview) return;
+
+    if (preview.clientWidth < 20 || preview.clientHeight < 20) {
+      const container = document.createElement('span');
+      preview.closest('p, div').insertAdjacentElement('beforeend', container);
+      setResizeContaier(container);
+    }
+  }, [article]);
+
+  const handleFakePreview = useCallback(() => {
+    const thumb = document.querySelector(PREVIEW_SELECTOR);
+    thumb.style = { width: '', height: '' };
+    setResizeContaier((prev) => {
+      prev.remove();
+      return null;
+    });
+  }, []);
+
   return (
     <>
       <Dialog open={confirm} onClose={handleConfirm(false)}>
@@ -238,6 +267,15 @@ export default function ExperienceCustomizer() {
       {unfoldContainer && foldComment && (
         <Portal container={unfoldContainer}>
           <CommentButton className="unfold-comment" />
+        </Portal>
+      )}
+      {resizeContainer && (
+        <Portal container={resizeContainer}>
+          <Tooltip placement="right" title="미리보기 확대">
+            <IconButton onClick={handleFakePreview}>
+              <ZoomIn />
+            </IconButton>
+          </Tooltip>
         </Portal>
       )}
     </>
