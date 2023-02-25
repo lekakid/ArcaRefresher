@@ -13,15 +13,33 @@ import {
   Grid,
   ListItemSecondaryAction,
   Box,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { Delete, SelectAll, SyncAlt } from '@material-ui/icons';
+import {
+  Add,
+  Cancel,
+  Delete,
+  Done,
+  FileCopy,
+  FlipToFront,
+  SelectAll,
+} from '@material-ui/icons';
 
 import { useContent } from 'util/ContentInfo';
 import Info from '../FeatureInfo';
-import { $setImageList, $toggleEnabled, $toggleForceLoad } from '../slice';
+import {
+  $addFolder,
+  $removeFolder,
+  $setFolderData,
+  $toggleEnabled,
+  $toggleForceLoad,
+} from '../slice';
 import ImageSelector from './ImageSelector';
-import MoveInput from './MoveInput';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,14 +54,15 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
-  const {
-    storage: { enabled, imgList, forceLoad },
-  } = useSelector((state) => state[Info.ID]);
-  const [selectedChannel, setSelectedChannel] = useState(
-    channel.ID || '_shared_',
+  const { enabled, imgList, forceLoad } = useSelector(
+    (state) => state[Info.ID].storage,
   );
+  const [currentFolder, setCurrentFolder] = useState('_shared_');
+  const [inputName, setInputName] = useState(undefined);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [removeFolderName, setRemoveFolderName] = useState('');
+  const [moveInfo, setMoveInfo] = useState(undefined);
   const [selection, setSelection] = useState([]);
-  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
   const handleEnabled = useCallback(() => {
@@ -54,60 +73,101 @@ const View = React.forwardRef((_props, ref) => {
     dispatch($toggleForceLoad());
   }, [dispatch]);
 
-  const handleChannel = useCallback((e) => {
-    setSelectedChannel(e.target.value);
+  const onSelectFolder = useCallback((e) => {
+    setCurrentFolder(e.target.value);
     setSelection([]);
   }, []);
 
-  const handleSelect = useCallback((update) => {
-    setSelection(update);
+  const createFolder = useCallback(() => {
+    dispatch($addFolder(inputName));
+    setCurrentFolder(inputName);
+    setInputName(undefined);
+  }, [dispatch, inputName]);
+
+  const removeFolder = useCallback(() => {
+    setCurrentFolder('_shared_');
+    dispatch($removeFolder(removeFolderName));
+    setOpenDialog(false);
+  }, [dispatch, removeFolderName]);
+
+  const handleInputName = useCallback((e) => {
+    const regex = /^[0-9a-zA-Zㄱ-힣]*$/;
+    if (!regex.test(e.target.value)) return;
+    setInputName(e.target.value);
   }, []);
 
-  const handleSelectAll = useCallback(() => {
-    if (imgList[selectedChannel].length === selection.length) {
+  const handleInputFocus = useCallback((e) => {
+    e.target.select();
+  }, []);
+
+  const handleInputEnter = useCallback(
+    (e) => {
+      if (e?.key !== 'Enter') return;
+
+      createFolder();
+    },
+    [createFolder],
+  );
+
+  const onSelectAll = useCallback(() => {
+    if (imgList[currentFolder].length === selection.length) {
       setSelection([]);
     } else {
-      setSelection([...Array(imgList[selectedChannel].length).keys()]);
+      setSelection([...Array(imgList[currentFolder].length).keys()]);
     }
-  }, [imgList, selectedChannel, selection]);
+  }, [imgList, currentFolder, selection]);
 
-  const handleMoveOpen = useCallback(() => {
-    setOpen(true);
+  const setMoveMode = useCallback(() => {
+    setMoveInfo({ folder: currentFolder, selection });
+  }, [currentFolder, selection]);
+
+  const cancelMoveMode = useCallback(() => {
+    setMoveInfo(undefined);
   }, []);
 
-  const handleMoveClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+  const handleCopy = useCallback(() => {
+    const targetList = imgList[currentFolder];
+    const move = moveInfo.selection
+      .map((i) => imgList[moveInfo.folder][i])
+      .filter((i) => !targetList.includes(i));
+    const update = [...targetList, ...move];
+    dispatch($setFolderData({ folder: currentFolder, list: update }));
 
-  const handleMove = useCallback(
-    (targetChannel) => {
-      const targetList = imgList[targetChannel];
-      const rest = imgList[selectedChannel].filter(
-        (_img, index) => !selection.includes(index),
-      );
-      const move = imgList[selectedChannel].filter((img, index) =>
-        selection.includes(index),
-      );
-      const update = [...targetList, ...move];
-      dispatch($setImageList({ channel: selectedChannel, list: rest }));
-      dispatch($setImageList({ channel: targetChannel, list: update }));
-      setOpen(false);
-    },
-    [dispatch, imgList, selectedChannel, selection],
-  );
+    setMoveInfo(undefined);
+  }, [currentFolder, dispatch, imgList, moveInfo]);
+
+  const handleMove = useCallback(() => {
+    const targetList = imgList[currentFolder];
+    const checked = imgList[moveInfo.folder].map(() => false);
+    moveInfo.selection.forEach((i) => {
+      checked[i] = true;
+    });
+
+    const move = imgList[moveInfo.folder]
+      .filter((_img, i) => checked[i])
+      .filter((i) => !targetList.includes(i));
+    const update = [...targetList, ...move];
+    dispatch($setFolderData({ folder: currentFolder, list: update }));
+
+    const rest = imgList[moveInfo.folder].filter((_img, i) => !checked[i]);
+    dispatch($setFolderData({ folder: moveInfo.folder, list: rest }));
+
+    setMoveInfo(undefined);
+  }, [imgList, currentFolder, moveInfo, dispatch]);
 
   const handleDelete = useCallback(() => {
-    const update = imgList[selectedChannel].filter(
-      (_img, index) => !selection.includes(index),
+    const checked = imgList[currentFolder].map(() => false);
+    selection.forEach((i) => {
+      checked[i] = true;
+    });
+    const update = imgList[currentFolder].filter(
+      (_img, index) => !checked[index],
     );
-    dispatch($setImageList({ channel: selectedChannel, list: update }));
+    dispatch($setFolderData({ folder: currentFolder, list: update }));
     setSelection([]);
-  }, [dispatch, imgList, selectedChannel, selection]);
+  }, [dispatch, imgList, currentFolder, selection]);
 
-  const channelList = [...Object.keys(imgList), channel.ID].filter(
-    (c, index, arr) => c !== null && arr.indexOf(c) === index,
-  );
-
+  const folderList = Object.keys(imgList).sort();
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
@@ -130,63 +190,156 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
           <ListItem>
             <ListItemText
-              primary="등록된 목록"
-              secondary="등록된 이미지들은 글 작성 시 최상단에 자동으로 첨부됩니다."
+              primary="갤러리"
+              secondary="채널 slug와 같은 이름을 가진 폴더는 글 작성 시 이미지가 자동으로 첨부됩니다."
             />
           </ListItem>
           <ListItem>
             <Paper variant="outlined" classes={{ root: classes.container }}>
               <Grid container>
+                <Grid item xs={12}>
+                  {inputName === undefined && (
+                    <Select
+                      variant="outlined"
+                      fullWidth
+                      classes={{ root: classes.channelSelect }}
+                      value={currentFolder}
+                      onChange={onSelectFolder}
+                    >
+                      {folderList.map((key) => (
+                        <ListItem key={key} value={key}>
+                          {key === '_shared_' ? '공용 폴더' : key}
+                        </ListItem>
+                      ))}
+                    </Select>
+                  )}
+                  {inputName !== undefined && (
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      autoFocus
+                      size="small"
+                      value={inputName}
+                      error={folderList.includes(inputName)}
+                      onChange={handleInputName}
+                      onFocus={handleInputFocus}
+                      onKeyUp={handleInputEnter}
+                    />
+                  )}
+                </Grid>
                 <Grid item xs={4}>
-                  <Select
-                    variant="outlined"
-                    classes={{ root: classes.channelSelect }}
-                    value={selectedChannel}
-                    onChange={handleChannel}
-                  >
-                    {channelList.map((key) => (
-                      <ListItem key={key} value={key}>
-                        {key === '_shared_' ? '공유 자짤' : key}
-                      </ListItem>
-                    ))}
-                  </Select>
+                  {inputName !== undefined && (
+                    <>
+                      <Button
+                        startIcon={<Done />}
+                        disabled={
+                          inputName === '' || folderList.includes(inputName)
+                        }
+                        onClick={createFolder}
+                      >
+                        확인
+                      </Button>
+                      <Button
+                        startIcon={<Cancel />}
+                        onClick={() => setInputName(undefined)}
+                      >
+                        취소
+                      </Button>
+                    </>
+                  )}
+                  {inputName === undefined && (
+                    <>
+                      <Button
+                        startIcon={<Add />}
+                        onClick={() => setInputName(channel.ID)}
+                      >
+                        폴더 추가
+                      </Button>
+                      <Button
+                        startIcon={<Delete />}
+                        disabled={!!moveInfo || currentFolder === '_shared_'}
+                        onClick={() => {
+                          setOpenDialog(true);
+                          setRemoveFolderName(currentFolder);
+                        }}
+                      >
+                        폴더 삭제
+                      </Button>
+                    </>
+                  )}
                 </Grid>
                 <Grid item xs={8} style={{ textAlign: 'right' }}>
-                  <Button startIcon={<SelectAll />} onClick={handleSelectAll}>
-                    전체 선택
-                  </Button>
-                  <Button
-                    startIcon={<SyncAlt />}
-                    disabled={selection.length === 0}
-                    onClick={handleMoveOpen}
-                  >
-                    이동
-                  </Button>
-                  <Button
-                    startIcon={<Delete />}
-                    disabled={selection.length === 0}
-                    onClick={handleDelete}
-                  >
-                    삭제
-                  </Button>
+                  {!moveInfo && (
+                    <>
+                      <Button
+                        startIcon={<FlipToFront />}
+                        disabled={selection.length === 0}
+                        onClick={setMoveMode}
+                      >
+                        이동/복사
+                      </Button>
+                      <Button
+                        startIcon={<Delete />}
+                        disabled={selection.length === 0}
+                        onClick={handleDelete}
+                      >
+                        선택 삭제
+                      </Button>
+                      <Button startIcon={<SelectAll />} onClick={onSelectAll}>
+                        전체 선택
+                      </Button>
+                    </>
+                  )}
+                  {moveInfo && (
+                    <>
+                      <Button
+                        startIcon={<FlipToFront />}
+                        disabled={moveInfo.folder === currentFolder}
+                        name="move"
+                        onClick={handleMove}
+                      >
+                        이동
+                      </Button>
+                      <Button
+                        startIcon={<FileCopy />}
+                        disabled={moveInfo.folder === currentFolder}
+                        name="copy"
+                        onClick={handleCopy}
+                      >
+                        복사
+                      </Button>
+                      <Button startIcon={<Cancel />} onClick={cancelMoveMode}>
+                        취소
+                      </Button>
+                    </>
+                  )}
                 </Grid>
               </Grid>
               <Divider />
               <ImageSelector
-                list={imgList[selectedChannel]}
+                list={imgList[currentFolder]}
                 selection={selection}
-                onChange={handleSelect}
+                disabled={!!moveInfo}
+                onChange={(update) => setSelection(update)}
               />
             </Paper>
           </ListItem>
         </List>
       </Paper>
-      <MoveInput
-        open={open}
-        channelList={channelList}
-        onClose={handleMoveClose}
-        onSubmit={handleMove}
-      />
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>폴더 삭제</DialogTitle>
+        <DialogContent>{`'${removeFolderName}' 폴더를 삭제합니까?`}</DialogContent>
+        <DialogActions>
+          <Button onClick={removeFolder}>예</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenDialog(false)}
+          >
+            아니오
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 });
