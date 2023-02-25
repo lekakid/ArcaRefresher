@@ -230,7 +230,7 @@ export default function ExperienceCustomizer() {
     const preview = article.querySelector(PREVIEW_SELECTOR);
     if (!preview) return;
 
-    if (preview.clientWidth < 20 || preview.clientHeight < 20) {
+    if (preview.clientWidth < 10 || preview.clientHeight < 10) {
       const container = document.createElement('span');
       preview.closest('p, div').insertAdjacentElement('beforeend', container);
       setResizeContaier(container);
