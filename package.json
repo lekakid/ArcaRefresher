@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.19.1",
+  "version": "3.20.0",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -27,6 +27,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "babel-loader": "^8.2.4",
+    "babel-plugin-import": "^1.13.6",
     "clean-terminal-webpack-plugin": "^3.0.0",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -39,6 +40,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.4",
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
@@ -60,6 +62,7 @@
     "material-ui-color": "^1.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-qr-code": "^2.0.11",
     "react-redux": "^7.2.8",
     "redux-state-sync": "^3.1.4",
     "streamsaver": "^2.0.6"

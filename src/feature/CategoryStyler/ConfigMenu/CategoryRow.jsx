@@ -67,17 +67,15 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
 
   const badgeStyle = {
     margin: '0.25rem',
-    ...(badge ? { backgroundColor: badge, color: getContrastYIQ(badge) } : {}),
+    ...(badge && { backgroundColor: badge, color: getContrastYIQ(badge) }),
   };
   const backgroundStyle = {
-    ...(bgcolor
-      ? {
-          background: `linear-gradient(90deg, ${bgcolor}, rgba(0, 0, 0, 0))`,
-          color: getContrastYIQ(bgcolor),
-        }
-      : {}),
-    ...(bold ? { fontWeight: 'bold' } : {}),
-    ...(through ? { textDecoration: 'line-through' } : {}),
+    ...(bgcolor && {
+      background: `linear-gradient(90deg, ${bgcolor}, rgba(0, 0, 0, 0))`,
+      color: getContrastYIQ(bgcolor),
+    }),
+    ...(bold && { fontWeight: 'bold' }),
+    ...(through && { textDecoration: 'line-through' }),
   };
 
   return (
@@ -156,4 +154,13 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   );
 }
 
-export default CategoryRow;
+function compare(prev, next) {
+  return (
+    prev.badge === next.badge &&
+    prev.bgcolor === next.bgcolor &&
+    prev.bold === next.bold &&
+    prev.through === next.through &&
+    prev.disableVisited === next.disableVisited
+  );
+}
+export default React.memo(CategoryRow, compare);

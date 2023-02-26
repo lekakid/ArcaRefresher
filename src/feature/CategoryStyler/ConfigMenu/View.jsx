@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import { useContent } from 'util/ContentInfo';
 
 import Info from '../FeatureInfo';
-import { $setStyle } from '../slice';
+import { $setCategoryStyle } from '../slice';
 import CategoryRow from './CategoryRow';
 
 const styles = {
@@ -26,20 +26,15 @@ const styles = {
 const View = React.forwardRef(({ classes }, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
-  const {
-    storage: { color },
-  } = useSelector((state) => state[Info.ID]);
-  const channelConfig = color[channel.ID];
+  const color = useSelector(
+    (state) => state[Info.ID].storage.color[channel.ID],
+  );
 
   const handleChange = useCallback(
-    (categoryId, value) => {
-      const updateConfig = {
-        ...channelConfig,
-        [categoryId]: value,
-      };
-      dispatch($setStyle({ channel: channel.ID, color: updateConfig }));
+    (id, value) => {
+      dispatch($setCategoryStyle({ channel: channel.ID, category: id, value }));
     },
-    [channel, channelConfig, dispatch],
+    [channel, dispatch],
   );
 
   return (
@@ -60,7 +55,7 @@ const View = React.forwardRef(({ classes }, ref) => {
                       divider={index !== 0}
                       id={id}
                       label={label}
-                      initValue={channelConfig?.[id]}
+                      initValue={color?.[id]}
                       onChange={handleChange}
                     />
                   ))}

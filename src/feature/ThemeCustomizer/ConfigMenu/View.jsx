@@ -17,6 +17,8 @@ import {
 } from '@material-ui/core';
 import { Add, Delete, Label } from '@material-ui/icons';
 
+import { GroupableSelect } from 'component/config';
+
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -26,7 +28,6 @@ import {
 } from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
-import EditPresetSelector from './EditPresetSelector';
 import ThemeColorList from './ThemeColorList';
 
 const createRow = (key, primary, secondary = '') => ({
@@ -237,7 +238,7 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText primary="프리셋 설정" />
             <ListItemSecondaryAction>
               <ButtonGroup>
-                <EditPresetSelector
+                <GroupableSelect
                   variant="outlined"
                   displayEmpty
                   value={selectPreset}
@@ -249,7 +250,7 @@ const View = React.forwardRef((_props, ref) => {
                       {key}
                     </MenuItem>
                   ))}
-                </EditPresetSelector>
+                </GroupableSelect>
                 <Tooltip title="추가">
                   <Button onClick={handleAddOpen}>
                     <Add />

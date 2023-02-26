@@ -5,11 +5,5 @@
   "prettier.singleQuote": true,
   "prettier.useEditorConfig": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.printWidth": 100,
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true
-  },
-  "eslint.nodePath": ".yarn/sdks",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
+  "prettier.printWidth": 100
 }

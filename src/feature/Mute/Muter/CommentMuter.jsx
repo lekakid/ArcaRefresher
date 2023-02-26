@@ -40,7 +40,7 @@ const style = {
         '&.show-filtered-user .comment-wrapper.filtered-user': {
           display: 'block',
         },
-        '& .muted-emoticon': {
+        '& .emoticon-muted': {
           '& .emoticon-wrapper': {
             width: 'auto !important',
             height: 'auto !important',
@@ -53,7 +53,7 @@ const style = {
             },
           },
         },
-        '& .hide-muted-emoticon': {
+        '& .hide-emoticon-muted': {
           display: 'none !important',
         },
       },
@@ -100,7 +100,7 @@ function CommentMuter() {
         c.closest(
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
-          hideMutedMark ? 'hide-muted-emoticon' : 'muted-emoticon',
+          hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
           emoticonFilter.bundle?.indexOf(id) > -1,
         );
       });

@@ -1,4 +1,5 @@
+import GroupableSelect from './GroupableSelect';
 import TextEditor from './TextEditor';
 import TableEditor from './TableEditor';
 
-export { TextEditor, TableEditor };
+export { GroupableSelect, TextEditor, TableEditor };

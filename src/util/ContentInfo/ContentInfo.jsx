@@ -22,14 +22,6 @@ export default function Parser() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
-    const idRegex = /\/b\/([0-9a-zA-Z]{4,20})/;
-    const { pathname } = window.location;
-    const ID = pathname.match(idRegex)?.[1]?.toLowerCase() || null;
-
-    dispatch(setChannelInfo({ ID }));
-  }, [dispatch]);
-
-  useLayoutEffect(() => {
     if (!titleLoaded) return;
 
     const name =

@@ -30,6 +30,7 @@ export default (theme) => ({
     },
   },
   bg: {
+    aspectRatio: '9 / 7',
     backgroundColor: theme.palette.background.default,
   },
   menuButton: {
@@ -47,22 +48,16 @@ export default (theme) => ({
   },
   drawer: {
     width: drawerWidth,
+    position: 'relative',
     [theme.breakpoints.up('sm')]: {
       zIndex: theme.zIndex.appBar - 1,
     },
   },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-  },
   content: {
     flexGrow: 1,
+    overflowY: 'auto',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: drawerWidth,
-    },
   },
 });

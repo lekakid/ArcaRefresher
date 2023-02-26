@@ -5,7 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   enabled: true,
-  imgList: { _shared_: [] },
+  imgList: {},
   forceLoad: false,
 };
 
@@ -20,33 +20,42 @@ export const slice = createSlice({
     $toggleEnabled(state) {
       state.storage.enabled = !state.storage.enabled;
     },
+    $toggleForceLoad(state) {
+      state.storage.forceLoad = !state.storage.forceLoad;
+    },
     $addImage(state, action) {
-      const { channel, url } = action.payload;
-      if (!state.storage.imgList[channel]) state.storage.imgList[channel] = [];
-      state.storage.imgList[channel].push(url);
+      const { folder, url } = action.payload;
+      state.storage.imgList[folder].push(url);
     },
     $removeImage(state, action) {
-      const { channel, url } = action.payload;
-      state.storage.imgList[channel] = state.storage.imgList[channel].filter(
+      const { folder, url } = action.payload;
+      state.storage.imgList[folder] = state.storage.imgList[folder].filter(
         (u) => u !== url,
       );
     },
-    $setImageList(state, action) {
-      const { channel, list } = action.payload;
-      state.storage.imgList[channel] = list;
+    $addFolder(state, action) {
+      const folder = action.payload;
+      state.storage.imgList[folder] = [];
     },
-    $toggleForceLoad(state) {
-      state.storage.forceLoad = !state.storage.forceLoad;
+    $removeFolder(state, action) {
+      const folder = action.payload;
+      delete state.storage.imgList[folder];
+    },
+    $setFolderData(state, action) {
+      const { folder, list } = action.payload;
+      state.storage.imgList[folder] = list;
     },
   },
 });
 
 export const {
   $toggleEnabled,
+  $toggleForceLoad,
   $addImage,
   $removeImage,
-  $setImageList,
-  $toggleForceLoad,
+  $addFolder,
+  $removeFolder,
+  $setFolderData,
 } = slice.actions;
 
 export default slice.reducer;

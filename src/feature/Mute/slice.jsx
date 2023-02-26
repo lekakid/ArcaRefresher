@@ -63,8 +63,10 @@ export const slice = createSlice({
       });
     },
     $setCategoryConfig(state, action) {
-      const { channel, config } = action.payload;
-      state.storage.category[channel] = config;
+      const { channel, category, config } = action.payload;
+      if (!state.storage.category[channel])
+        state.storage.category[channel] = {};
+      state.storage.category[channel][category] = config;
     },
     $toggleHideNoticeService(state) {
       state.storage.hideServiceNotice = !state.storage.hideServiceNotice;

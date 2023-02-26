@@ -6,9 +6,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Portal,
+  Tooltip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { ZoomIn } from '@material-ui/icons';
 
 import {
   ARTICLE_GIFS,
@@ -34,6 +37,8 @@ import { useLoadChecker } from 'util/LoadChecker';
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
 
+const PREVIEW_SELECTOR = '.article-content img, .article-content video';
+
 const useStyles = makeStyles(() => ({
   comment: {
     '& #comment:not(.temp-show)': {
@@ -44,10 +49,6 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
-
-const WAITING = 'WAITING';
-const CONFIRM = 'CONFIRM';
-const IGNORE = 'IGNORE';
 
 export default function ExperienceCustomizer() {
   const {
@@ -69,19 +70,34 @@ export default function ExperienceCustomizer() {
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
-  const [confirm, setConfirm] = useState(WAITING);
+  const confirmRef = useRef();
+  const [confirm, setConfirm] = useState(false);
+  const [resizeContainer, setResizeContaier] = useState(null);
   const classes = useStyles();
 
-  useEffect(() => {
-    document.title = spoofTitle || titleRef.current;
-  }, [spoofTitle]);
-
+  // 게시물 로드 확인 및 엘리먼트 저장
   useEffect(() => {
     if (articleLoaded) {
       setArticle(document.querySelector(ARTICLE));
     }
   }, [articleLoaded]);
 
+  // 댓글 로드 확인 및 엘리먼트 저장
+  useEffect(() => {
+    if (!commentLoaded) return;
+
+    setComment(document.querySelector(COMMENT));
+    addAREvent(EVENT_COMMENT_REFRESH, () => {
+      setComment(document.querySelector(COMMENT));
+    });
+  }, [commentLoaded]);
+
+  // 사이트 표시 제목 변경
+  useEffect(() => {
+    document.title = spoofTitle || titleRef.current;
+  }, [spoofTitle]);
+
+  // 이미지, 영상 새 창에서 열기 방지
   useEffect(() => {
     if (!article || !blockMediaNewWindow) return;
 
@@ -94,6 +110,7 @@ export default function ExperienceCustomizer() {
       });
   }, [article, blockMediaNewWindow]);
 
+  // 외부 링크 경고 무시
   useEffect(() => {
     if (!article || !ignoreExternalLinkWarning) return;
 
@@ -103,35 +120,47 @@ export default function ExperienceCustomizer() {
     });
   }, [article, ignoreExternalLinkWarning]);
 
+  // 비추천 방지
+  const handleConfirm = useCallback(
+    (value) => async () => {
+      if (!confirmRef.current) return; // ?
+      setConfirm(false);
+      confirmRef.current(value);
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
 
     const ratedownButton = article.querySelector('#rateDown');
     if (!ratedownButton) return null;
 
-    const ratedownClick = (e) => {
-      setConfirm((prev) => {
-        if (prev === WAITING) {
-          e.preventDefault();
-          return CONFIRM;
-        }
-        return WAITING;
+    const ratedownClick = async (e) => {
+      if (confirmRef.current) {
+        // 이미 비추천 막고 있음
+        confirmRef.current = undefined;
+        return;
+      }
+
+      e.preventDefault();
+      setConfirm(true);
+      const value = await new Promise((resolve) => {
+        confirmRef.current = resolve;
       });
+
+      if (value) {
+        ratedownButton.click();
+        return;
+      }
+      confirmRef.current = undefined;
     };
 
     ratedownButton.addEventListener('click', ratedownClick);
     return () => ratedownButton.removeEventListener('click', ratedownClick);
-  }, [article, ratedownGuard]);
+  }, [article, handleConfirm, ratedownGuard]);
 
-  useEffect(() => {
-    if (!commentLoaded) return;
-
-    setComment(document.querySelector(COMMENT));
-    addAREvent(EVENT_COMMENT_REFRESH, () => {
-      setComment(document.querySelector(COMMENT));
-    });
-  }, [commentLoaded]);
-
+  // 게시판 새 창 열기 방지
   useEffect(() => {
     if (!boardLoaded || !openArticleNewWindow) return null;
 
@@ -159,6 +188,7 @@ export default function ExperienceCustomizer() {
     };
   }, [boardLoaded, openArticleNewWindow]);
 
+  // 댓글 접기 방지
   useEffect(() => {
     if (!comment || !foldComment) return null;
 
@@ -174,6 +204,7 @@ export default function ExperienceCustomizer() {
     return () => document.documentElement.classList.remove(classes.comment);
   }, [classes, comment, foldComment, unfoldContainer]);
 
+  // 넓은 답글창 열기
   useEffect(() => {
     if (!comment || !wideClickArea) return null;
 
@@ -192,31 +223,59 @@ export default function ExperienceCustomizer() {
     return () => comment.removeEventListener('click', handleClick);
   }, [comment, wideClickArea]);
 
-  const handleConfirm = useCallback(() => {
-    setConfirm(IGNORE);
+  // 미리보기 훼이크 걷어내기
+  useEffect(() => {
+    if (!article) return;
 
-    article.querySelector('#rateDown').click();
+    const preview = article.querySelector(PREVIEW_SELECTOR);
+    if (!preview) return;
+
+    if (preview.clientWidth < 10 || preview.clientHeight < 10) {
+      const container = document.createElement('span');
+      preview.closest('p, div').insertAdjacentElement('beforeend', container);
+      setResizeContaier(container);
+    }
   }, [article]);
 
-  const handleClose = useCallback(() => {
-    setConfirm(WAITING);
+  const handleFakePreview = useCallback(() => {
+    const thumb = document.querySelector(PREVIEW_SELECTOR);
+    thumb.style = { width: '', height: '' };
+    setResizeContaier((prev) => {
+      prev.remove();
+      return null;
+    });
   }, []);
 
   return (
     <>
-      <Dialog open={confirm === CONFIRM} onClose={handleClose}>
+      <Dialog open={confirm} onClose={handleConfirm(false)}>
         <DialogTitle>비추천 재확인</DialogTitle>
         <DialogContent>
           비추천을 누르셨습니다. 진짜 비추천하시겠습니까?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleConfirm}>예</Button>
-          <Button onClick={handleClose}>아니오</Button>
+          <Button onClick={handleConfirm(true)}>예</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConfirm(false)}
+          >
+            아니오
+          </Button>
         </DialogActions>
       </Dialog>
       {unfoldContainer && foldComment && (
         <Portal container={unfoldContainer}>
           <CommentButton className="unfold-comment" />
+        </Portal>
+      )}
+      {resizeContainer && (
+        <Portal container={resizeContainer}>
+          <Tooltip placement="right" title="미리보기 확대">
+            <IconButton onClick={handleFakePreview}>
+              <ZoomIn />
+            </IconButton>
+          </Tooltip>
         </Portal>
       )}
     </>
