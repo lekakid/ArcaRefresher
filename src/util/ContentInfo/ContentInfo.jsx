@@ -15,7 +15,7 @@ import { getUserNick } from 'func/user';
 
 import { setChannelInfo, setArticleInfo } from './slice';
 
-export default function Parser() {
+export default function ContentInfo() {
   const dispatch = useDispatch();
   const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
@@ -24,28 +24,40 @@ export default function Parser() {
   useLayoutEffect(() => {
     if (!titleLoaded) return;
 
-    const name =
-      document.querySelector('.board-title .title')?.dataset.channelName ||
-      null;
-    dispatch(setChannelInfo({ name }));
+    try {
+      const { channelName } = document.querySelector(
+        '.board-title .title',
+      ).dataset;
+      dispatch(setChannelInfo({ name: channelName }));
+    } catch (error) {
+      console.warn('[ContentInfo] 채널 이름을 받아오지 못했습니다.');
+    }
   }, [dispatch, titleLoaded]);
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
 
-    const categoryEntries = [
-      ...document.querySelectorAll('.board-category a'),
-    ].map((element) => {
-      if (!element.href.includes('category='))
-        return ['글머리없음', '글머리없음'];
+    try {
+      const categoryEntries = [
+        ...document.querySelectorAll('.board-category a'),
+      ].map((element) => {
+        if (!element.href.includes('category='))
+          return ['글머리없음', '글머리없음'];
 
-      const id = decodeURI(element.href.split('category=')[1].split('&')[0]);
-      const text = element.textContent;
+        const id = decodeURI(element.href.split('category=')[1].split('&')[0]);
+        const text = element.textContent;
 
-      return [id, text];
-    });
+        return [id, text];
+      });
 
-    dispatch(setChannelInfo({ category: Object.fromEntries(categoryEntries) }));
+      if (categoryEntries.length === 0) throw new Error();
+
+      dispatch(
+        setChannelInfo({ category: Object.fromEntries(categoryEntries) }),
+      );
+    } catch (error) {
+      console.warn('[ContentInfo] 카테고리 목록을 얻어오지 못했습니다.');
+    }
   }, [boardLoaded, dispatch]);
 
   useLayoutEffect(() => {

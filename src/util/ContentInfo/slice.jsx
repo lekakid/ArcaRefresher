@@ -13,7 +13,7 @@ const initialState = {
   },
   article: {
     ID: null,
-    category: null,
+    category: {},
     title: null,
     author: null,
     url: null,
