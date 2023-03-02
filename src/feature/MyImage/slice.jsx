@@ -5,7 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   enabled: true,
-  imgList: {},
+  imgList: { _shared_: [] },
   forceLoad: false,
 };
 
