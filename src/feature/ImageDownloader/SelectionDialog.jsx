@@ -83,9 +83,13 @@ function SelectionDialog({ classes }) {
     setSelection([]);
     setShowProgress(true);
 
-    const selectedImages = data.filter((_data, index) =>
-      selection.includes(index),
-    );
+    const selectedTable = data.map(() => false);
+    selection.forEach((s) => {
+      selectedTable[s] = true;
+    });
+    const selectedImages = selectedTable
+      .map((s, i) => (s ? data[i] : undefined))
+      .filter((d) => !!d);
 
     let totalSize = 0;
     const availableImages = await selectedImages.reduce(
@@ -109,13 +113,16 @@ function SelectionDialog({ classes }) {
     let count = 1;
 
     const confirm = (event) => {
-      event.returnValue =
+      event.preventDefault();
+      const message =
         '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
+      event.returnValue = message;
+      return message;
     };
 
     const myReadable = new ReadableStream({
       start() {
-        setShowProgress(false);
+        setOpen(false);
         window.addEventListener('beforeunload', confirm);
       },
       async pull(controller) {
@@ -172,12 +179,12 @@ function SelectionDialog({ classes }) {
 
   if (showProgress) {
     return (
-      <Dialog maxWidth="lg" open>
-        <DialogTitle>
-          <Typography>이미지 다운로더</Typography>
-        </DialogTitle>
+      <Dialog
+        maxWidth="lg"
+        open={open}
+        TransitionProps={{ onExited: () => setShowProgress(false) }}
+      >
         <DialogContent classes={{ root: classes.progressContainer }}>
-          <Typography>다운로드를 준비 중입니다...</Typography>
           <CircularProgress color="primary" />
         </DialogContent>
       </Dialog>
@@ -206,7 +213,8 @@ function SelectionDialog({ classes }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSelectAll}>
+        <Typography>{`${selection.length}/${imgList.length}`}</Typography>
+        <Button variant="outlined" onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}
         </Button>
         <Button
