@@ -41,10 +41,19 @@ const store = configureStore({
   ],
 });
 
+let prevState = store.getState();
+
 store.subscribe(() => {
-  Object.entries(store.getState())
+  const currentState = store.getState();
+
+  Object.entries(currentState)
     .filter(([, value]) => !!value.storage)
-    .map(([key, value]) => setValue(key, value.storage));
+    .forEach(([key, value]) => {
+      if (prevState[key].storage !== value.storage)
+        setValue(key, value.storage);
+    });
+
+  prevState = currentState;
 });
 
 initMessageListener(store);
