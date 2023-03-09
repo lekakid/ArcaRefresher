@@ -37,7 +37,7 @@ const View = React.forwardRef((_props, ref) => {
           <TableEditor
             headerText="색상 편집"
             columns={columns}
-            initialRows={rows}
+            rows={rows}
             noRowsText="저장된 이용자가 없습니다."
             delimiter="::"
             onEdit={handleEdit}

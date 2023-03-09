@@ -66,7 +66,7 @@ const View = React.forwardRef((_props, ref) => {
           <TableEditor
             headerText="저장된 메모"
             columns={columns}
-            initialRows={rows}
+            rows={memoRows}
             noRowsText="저장된 메모가 없습니다."
             delimiter="::"
             onEdit={handleEdit}
