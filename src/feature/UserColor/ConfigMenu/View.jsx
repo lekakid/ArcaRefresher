@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, Paper, Typography } from '@material-ui/core';
 
 import { TableEditor } from 'component/config';
+import { createSelector } from '@reduxjs/toolkit';
 import Info from '../FeatureInfo';
 import { $setColorList } from '../slice';
 
@@ -11,15 +12,19 @@ const columns = [
   { field: 'color', headerName: '색상', flex: 1, editable: true },
 ];
 
+const colorEntriesSelector = createSelector(
+  (state) => state[Info.ID].storage,
+  (color) => {
+    Object.entries(color).map(([key, value]) => ({
+      id: key,
+      color: value,
+    }));
+  },
+);
+
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const {
-    storage: { color },
-  } = useSelector((state) => state[Info.ID]);
-  const rows = Object.entries(color).map(([key, value]) => ({
-    id: key,
-    color: value,
-  }));
+  const rows = useSelector(colorEntriesSelector);
 
   const handleEdit = useCallback(
     (updatedRows) => {
