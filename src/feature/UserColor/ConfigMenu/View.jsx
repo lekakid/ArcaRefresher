@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, Paper, Typography } from '@material-ui/core';
+import { createSelector } from '@reduxjs/toolkit';
 
 import { TableEditor } from 'component/config';
-import { createSelector } from '@reduxjs/toolkit';
+
 import Info from '../FeatureInfo';
 import { $setColorList } from '../slice';
 
@@ -13,13 +14,12 @@ const columns = [
 ];
 
 const colorEntriesSelector = createSelector(
-  (state) => state[Info.ID].storage,
-  (color) => {
+  (state) => state[Info.ID].storage.color,
+  (color) =>
     Object.entries(color).map(([key, value]) => ({
       id: key,
       color: value,
-    }));
-  },
+    })),
 );
 
 const View = React.forwardRef((_props, ref) => {
