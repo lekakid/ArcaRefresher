@@ -230,9 +230,12 @@ export default function ExperienceCustomizer() {
     const preview = article.querySelector(PREVIEW_SELECTOR);
     if (!preview) return;
 
-    if (preview.clientWidth < 10 || preview.clientHeight < 10) {
+    if (preview.clientWidth < 10 && preview.clientHeight < 10) {
+      const alterParent = document.createElement('span');
+      preview.parentElement.append(alterParent);
+      alterParent.append(preview);
       const container = document.createElement('span');
-      preview.closest('p, div').insertAdjacentElement('beforeend', container);
+      alterParent.append(container);
       setResizeContaier(container);
     }
   }, [article]);
@@ -241,6 +244,7 @@ export default function ExperienceCustomizer() {
     const thumb = document.querySelector(PREVIEW_SELECTOR);
     thumb.style = { width: '', height: '' };
     setResizeContaier((prev) => {
+      thumb.closest('span').replaceWith(thumb);
       prev.remove();
       return null;
     });
