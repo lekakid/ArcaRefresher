@@ -13,6 +13,7 @@ import {
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 import { getDateStr } from 'func/time';
+import toDocument from 'func/toDocument';
 
 const style = {
   '@global': {
@@ -76,8 +77,7 @@ function CommentRefresh({ classes }) {
     }
 
     const text = await response.text();
-    const parser = new DOMParser();
-    const resultDocument = parser.parseFromString(text, 'text/html');
+    const resultDocument = toDocument(text);
     const newComments = resultDocument.querySelector(COMMENT_INNER);
     if (!newComments) return;
 

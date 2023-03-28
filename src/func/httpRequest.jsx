@@ -1,3 +1,5 @@
+import toDocument from './toDocument';
+
 /**
  * CORS 우회 용도 외엔 최소한으로 사용할 것
  */
@@ -23,10 +25,7 @@ export function httpRequest(
         if (responseType === 'document') {
           resolve({
             ...response,
-            response: new DOMParser().parseFromString(
-              response.responseText,
-              'text/html',
-            ),
+            response: toDocument(response.responseText),
           });
           return;
         }

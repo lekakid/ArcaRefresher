@@ -1,17 +1,13 @@
 import { BOARD_NOTICES, BOARD_ITEMS, BOARD, USER_INFO } from 'core/selector';
 import { getDateStr, in24Hours } from 'func/time';
-
-const parser = new DOMParser();
+import toDocument from 'func/toDocument';
 
 export async function getNewArticle() {
   try {
     const response = await fetch(window.location.href);
     if (!response.ok) throw new Error('[AutoRefresher] 연결 거부');
 
-    const updateDocument = parser.parseFromString(
-      await response.text(),
-      'text/html',
-    );
+    const updateDocument = toDocument(await response.text());
     const newArticles = updateDocument
       .querySelector(BOARD)
       .querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`);
