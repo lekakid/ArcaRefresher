@@ -1,11 +1,22 @@
 /**
  * 설정 값을 가져옵니다.
- * @param {string} key            키 값
- * @param {Object} defaultValue   값이 없을 시 사용할 기본값
- * @return {Object}               저장된 설정 값
+ * @param {string}   key            키 값
+ * @param {Object}   defaultValue   값이 없을 시 사용할 기본값
+ * @param {function} formatUpdater  데이터 포맷 업데이트 함수
+ * @return {Object}                 저장된 설정 값
  */
-export function getValue(key, defaultValue) {
-  return { ...defaultValue, ...GM_getValue(key) };
+export function getValue(key, defaultValue, formatUpdater) {
+  let value = GM_getValue(key);
+  if (!value) return { ...defaultValue };
+
+  const recentVersion = defaultValue?.version || 0;
+  const valueVersion = value?.version || 0;
+  if (formatUpdater && recentVersion > valueVersion) {
+    value = formatUpdater(value);
+    GM_setValue(key, value);
+  }
+
+  return { ...defaultValue, ...value };
 }
 
 /**
