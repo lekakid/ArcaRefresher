@@ -5,29 +5,44 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { ColorPicker, createColor } from 'material-ui-color';
+import { Close } from '@material-ui/icons';
+import { withStyles } from '@material-ui/styles';
 
-export default function MemoDialog({
-  open,
-  onClose,
-  onSubmit,
-  defaultValue = '',
-}) {
-  const [input, setInput] = useState('');
+const styles = (theme) => ({
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+  },
+});
+
+function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
+  const [msg, setMsg] = useState('');
+  const [color, setColor] = useState(createColor(''));
 
   useEffect(() => {
     if (!open) return;
-    setInput(defaultValue);
+    console.log(defaultValue);
+    setMsg(defaultValue.msg);
+    setColor(createColor(defaultValue.color));
   }, [defaultValue, open]);
 
-  const handleChange = useCallback((e) => {
-    setInput(e.target.value);
+  const handleMsgChange = useCallback((e) => {
+    setMsg(e.target.value);
+  }, []);
+
+  const handleColorChange = useCallback((input) => {
+    const updatedInput = typeof input === 'string' ? createColor(input) : input;
+    setColor(updatedInput);
   }, []);
 
   const handleDialogClose = useCallback(
-    (e, reason) => {
+    (_e, reason) => {
       if (reason === 'backdropClick') return;
 
       onClose();
@@ -39,28 +54,44 @@ export default function MemoDialog({
     (e) => {
       if (e.key && e.key !== 'Enter') return;
 
-      onSubmit(input);
+      const cssColor = color.name !== 'none' ? color.css.backgroundColor : '';
+      onSubmit({ msg, color: cssColor });
       onClose();
     },
-    [input, onClose, onSubmit],
+    [msg, color, onClose, onSubmit],
   );
 
   return (
-    <Dialog open={open} onClose={handleDialogClose}>
-      <DialogTitle>이용자 메모</DialogTitle>
-      <DialogContent>
-        <Typography>저장할 메모를 작성해주세요</Typography>
+    <Dialog maxWidth="xs" open={open} onClose={handleDialogClose}>
+      <DialogTitle disableTypography>
+        <Typography variant="h6">메모 작성</Typography>
+        <IconButton className={classes.closeButton} onClick={handleDialogClose}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
         <TextField
-          value={input}
-          onChange={handleChange}
-          onKeyPress={handleSubmit}
           autoFocus
+          variant="outlined"
+          size="small"
+          label="메세지"
+          value={msg}
+          onChange={handleMsgChange}
+          onKeyPress={handleSubmit}
         />
+        <ColorPicker disableAlpha value={color} onChange={handleColorChange} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit}>{input ? '저장' : '삭제'}</Button>
-        <Button onClick={onClose}>취소</Button>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          저장
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
+
+MemoDialog.defaultProps = {
+  defaultValue: { msg: '', color: '' },
+};
+export default withStyles(styles)(MemoDialog);

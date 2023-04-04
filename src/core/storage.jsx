@@ -7,7 +7,7 @@
  */
 export function getValue(key, defaultValue, formatUpdater) {
   let value = GM_getValue(key);
-  if (!value) return { ...defaultValue };
+  if (!value) return defaultValue ? { ...defaultValue } : null;
 
   const recentVersion = defaultValue?.version || 0;
   const valueVersion = value?.version || 0;
@@ -26,6 +26,14 @@ export function getValue(key, defaultValue, formatUpdater) {
  */
 export function setValue(key, value) {
   GM_setValue(key, value);
+}
+
+/**
+ * 설정 값을 지웁니다.
+ * @param {string} key    키 값
+ */
+export function deleteValue(key) {
+  GM_deleteValue(key);
 }
 
 /**

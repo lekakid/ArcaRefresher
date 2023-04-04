@@ -12,29 +12,32 @@ import {
   Typography,
 } from '@material-ui/core';
 import streamSaver from 'streamsaver';
+import { createSelector } from '@reduxjs/toolkit';
 
 import { TableEditor } from 'component/config';
-import { createSelector } from '@reduxjs/toolkit';
 import Info from '../FeatureInfo';
 import { $setMemoList, $setVariant } from '../slice';
 
 const columns = [
   { field: 'id', headerName: '이용자', flex: 1 },
-  { field: 'memo', headerName: '메모', flex: 1, editable: true },
+  { field: 'msg', headerName: '메모 메세지', flex: 1, editable: true },
+  { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
 ];
 
 const memoEntriesSelector = createSelector(
   (state) => state[Info.ID].storage.memo,
   (memo) =>
-    Object.entries(memo).map(([key, value]) => ({
+    Object.entries(memo).map(([key, { msg = '', color = '' }]) => ({
       id: key,
-      memo: value,
+      msg,
+      color,
     })),
 );
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const variant = useSelector((state) => state[Info.ID].storage.variant);
+  const memoData = useSelector((state) => state[Info.ID].storage.memo);
   const memoRows = useSelector(memoEntriesSelector);
   const inputRef = useRef();
 
@@ -50,46 +53,46 @@ const View = React.forwardRef((_props, ref) => {
       (async () => {
         try {
           const path = e.target.files[0];
-          const data = await new Promise((resolve) => {
+          const memoList = await new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = () => {
               const result = JSON.parse(reader.result);
-              resolve(result);
+              resolve(result.data);
             };
             reader.readAsText(path);
           });
 
-          const memoList = data.data;
-          const memoEntries = memoList
-            .map(({ userType, memoKey, memoText }) => {
-              switch (userType) {
-                case 1:
-                  return [`#${memoKey}`, memoText];
-                case 0:
-                case 2:
-                  return [memoKey, memoText];
-                default:
-                  return [];
-              }
-            })
-            .filter((m) => m.length > 0);
+          const updateData = { ...memoData };
+          memoList.forEach(({ userType, memoKey, memoValue }) => {
+            switch (userType) {
+              case 1:
+                (updateData[`#${memoKey}`] ??= {}).msg = memoValue;
+                break;
+              case 0:
+              case 2:
+                (updateData[memoKey] ??= {}).msg = memoValue;
+                break;
+              default:
+                break;
+            }
+          });
 
-          dispatch($setMemoList(Object.fromEntries(memoEntries)));
+          dispatch($setMemoList(updateData));
         } catch (error) {
           console.error(error);
         }
       })();
     },
-    [dispatch],
+    [dispatch, memoData],
   );
 
   const handleExportMobile = useCallback(() => {
     const ipRegex = /^[0-9]{1,3}\.[0-9]{1,3}$/;
-    const data = memoRows.map(({ id, memo }) => {
+    const data = memoRows.map(({ id, msg }) => {
       const row = {
         userType: 0,
         memoKey: id.replace('#', ''),
-        memoValue: memo,
+        memoValue: msg,
       };
 
       if (ipRegex.test(id)) row.userType = 2;
@@ -110,7 +113,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleEdit = useCallback(
     (updatedRows) => {
-      const entries = updatedRows.map((row) => [row.id, row.memo]);
+      const entries = updatedRows.map(({ id, msg, color }) => [
+        id,
+        { msg, color },
+      ]);
       dispatch($setMemoList(Object.fromEntries(entries)));
     },
     [dispatch],

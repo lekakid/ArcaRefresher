@@ -59,11 +59,10 @@ const TableEditor = React.forwardRef(
     }, []);
 
     const handleCellEdit = useCallback(
-      ({ id, value }) => {
-        const updatedRows = rows.map((row) => {
-          if (row.id === id) return { id, value };
-          return row;
-        });
+      ({ id, field, value }) => {
+        const updatedRows = rows.map((row) =>
+          row.id === id ? { ...row, [field]: value } : row,
+        );
         onEdit?.(updatedRows);
       },
       [onEdit, rows],

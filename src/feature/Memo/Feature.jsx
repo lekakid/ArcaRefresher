@@ -16,9 +16,7 @@ import { getUserID, getUserKey } from 'func/user';
 import Info from './FeatureInfo';
 
 function MemoList() {
-  const {
-    storage: { variant, memo },
-  } = useSelector((state) => state[Info.ID]);
+  const { variant, memo } = useSelector((state) => state[Info.ID].storage);
   const [infoList, setInfoList] = useState([]);
   const loaded = useLoadChecker(FULL_LOADED);
 
@@ -49,11 +47,42 @@ function MemoList() {
     };
   }, [loaded]);
 
+  useLayoutEffect(() => {
+    const colorizeUser = () => {
+      [...document.querySelectorAll(USER_INFO)].forEach((e) => {
+        const id = getUserID(e);
+
+        if (memo[id]?.color) {
+          e.style.setProperty('color', memo[id].color, 'important');
+          e.style.setProperty('font-weight', 'bold');
+
+          e.querySelector('a')?.style.setProperty(
+            'color',
+            memo[id].color,
+            'important',
+          );
+        } else {
+          e.style.setProperty('color', '');
+          e.style.setProperty('font-weight', '');
+          e.querySelector('a')?.style.setProperty('color', '');
+        }
+      });
+    };
+    if (loaded) colorizeUser();
+    addAREvent(EVENT_AUTOREFRESH, colorizeUser);
+    addAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
+
+    return () => {
+      removeAREvent(EVENT_AUTOREFRESH, colorizeUser);
+      removeAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
+    };
+  }, [memo, loaded]);
+
   return (
     <>
       {infoList.map(({ key, id, container }) => (
         <Portal key={key} container={container}>
-          <AuthorTag variant={variant}>{memo[id]}</AuthorTag>
+          <AuthorTag variant={variant}>{memo[id]?.msg}</AuthorTag>
         </Portal>
       ))}
     </>
