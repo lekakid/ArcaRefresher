@@ -6,7 +6,6 @@ import { ImageSearch } from '@material-ui/icons';
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { httpRequest } from 'func/httpRequest';
-import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
@@ -22,27 +21,35 @@ function ContextMenu({ targetRef }) {
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: ARTICLE_IMAGES,
-    dataExtractor: (target) => {
-      const url = target.src.split('?')[0];
-      return getArcaMediaURL(url, searchBySource ? 'orig' : '');
-    },
+    dataExtractor: (target) =>
+      `${target.src}${searchBySource ? '&type=orig' : ''}`,
   });
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://lens.google.com/uploadbyurl?url=${data}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
+      `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(
+        data,
+      )}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
     );
     closeMenu();
   }, [closeMenu, data]);
 
   const handleYandex = useCallback(() => {
-    window.open(`https://yandex.com/images/search?rpt=imageview&url=${data}`);
+    window.open(
+      `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
+        data,
+      )}`,
+    );
     closeMenu();
   }, [closeMenu, data]);
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
-      window.open(`https://saucenao.com/search.php?db=999&url=${data}`);
+      window.open(
+        `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
+          data,
+        )}`,
+      );
       closeMenu();
       return;
     }

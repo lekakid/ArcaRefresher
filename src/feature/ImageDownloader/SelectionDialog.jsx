@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -18,11 +18,11 @@ import streamSaver from 'streamsaver';
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'util/ContentInfo';
 
-import { getGifInfo, getImageInfo } from './func';
-import format from './format';
+import format from './func/format';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
 import { setOpen } from './slice';
+import { getImageInfo } from './func';
 
 const styles = (theme) => ({
   closeButton: {
@@ -38,23 +38,19 @@ const styles = (theme) => ({
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
   const contentInfo = useContent();
-  const {
-    storage: { zipImageName, zipName },
-    open,
-  } = useSelector((state) => state[Info.ID]);
-  const [data] = useState(() => {
-    const emoticon = window.location.pathname.indexOf('/e/') !== -1;
-    const query = emoticon
+  const { zipImageName, zipName } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
+  const { open } = useSelector((state) => state[Info.ID]);
+  const data = useMemo(() => {
+    const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
+    const query = isEmotShop
       ? ARTICLE_EMOTICON
       : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
-        if (image.tagName === 'VIDEO') {
-          acc.push(getGifInfo(image));
-        } else {
-          acc.push(getImageInfo(image));
-        }
+        acc.push(getImageInfo(image));
       } catch (error) {
         console.warn('[ImageDownloader]', error);
       }
@@ -62,7 +58,7 @@ function SelectionDialog({ classes }) {
     }, []);
 
     return dataResult;
-  });
+  }, []);
   const [selection, setSelection] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
 

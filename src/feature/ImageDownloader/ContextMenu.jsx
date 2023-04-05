@@ -8,22 +8,18 @@ import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
+import { format, getImageInfo } from './func';
 import Info from './FeatureInfo';
-import { getGifInfo, getImageInfo } from './func';
-import format from './format';
 
 function ContextMenu({ targetRef }) {
-  const {
-    storage: { fileName },
-  } = useSelector((state) => state[Info.ID]);
+  const { fileName } = useSelector((state) => state[Info.ID].storage);
   const contentInfo = useContent();
 
   const setSnack = useContextSnack();
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
-    dataExtractor: (target) =>
-      target.tagName === 'IMG' ? getImageInfo(target) : getGifInfo(target),
+    dataExtractor: (target) => getImageInfo(target),
   });
 
   const handleClipboard = useCallback(() => {
@@ -97,7 +93,7 @@ function ContextMenu({ targetRef }) {
 
   const handleCopyURL = useCallback(() => {
     closeMenu();
-    navigator.clipboard.writeText(data.orig);
+    navigator.clipboard.writeText(`https:${data.orig}`);
   }, [closeMenu, data]);
 
   if (!data) return null;
