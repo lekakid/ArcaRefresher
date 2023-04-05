@@ -28,7 +28,7 @@ export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =
   '.article-content img:not([class$="emoticon"]):not(.twemoji)';
 export const ARTICLE_GIFS =
-  '.article-content video[data-orig="gif"]:not([class$="emoticon"]):not(.twemoji)';
+  '.article-content video[data-orig="gif"]:not([class$="emoticon"])';
 export const ARTICLE_MEDIA =
   '.article-content img:not(.twemoji), .article-content video';
 export const ARTICLE_EMOTICON = '.article-body *[class$="emoticon"]';

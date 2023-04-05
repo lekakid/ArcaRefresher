@@ -5,7 +5,6 @@ const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
 module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: `ArcaRefresher.user.js`,
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
@@ -19,7 +18,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true
+            cacheDirectory: true,
           },
         },
       },

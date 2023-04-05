@@ -1,2 +1,4 @@
-export { default as getImageInfo } from './getImageInfo';
-export { default as getGifInfo } from './getGifInfo';
+import format from './format';
+import getImageInfo from './getImageInfo';
+
+export { format, getImageInfo };

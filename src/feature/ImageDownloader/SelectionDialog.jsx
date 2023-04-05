@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -18,11 +18,11 @@ import streamSaver from 'streamsaver';
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'util/ContentInfo';
 
-import { getGifInfo, getImageInfo } from './func';
-import format from './format';
+import format from './func/format';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
 import { setOpen } from './slice';
+import { getImageInfo } from './func';
 
 const styles = (theme) => ({
   closeButton: {
@@ -38,23 +38,19 @@ const styles = (theme) => ({
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
   const contentInfo = useContent();
-  const {
-    storage: { zipImageName, zipName },
-    open,
-  } = useSelector((state) => state[Info.ID]);
-  const [data] = useState(() => {
-    const emoticon = window.location.pathname.indexOf('/e/') !== -1;
-    const query = emoticon
+  const { zipImageName, zipName } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
+  const { open } = useSelector((state) => state[Info.ID]);
+  const data = useMemo(() => {
+    const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
+    const query = isEmotShop
       ? ARTICLE_EMOTICON
       : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
     const dataResult = imageList.reduce((acc, image) => {
       try {
-        if (image.tagName === 'VIDEO') {
-          acc.push(getGifInfo(image));
-        } else {
-          acc.push(getImageInfo(image));
-        }
+        acc.push(getImageInfo(image));
       } catch (error) {
         console.warn('[ImageDownloader]', error);
       }
@@ -62,7 +58,7 @@ function SelectionDialog({ classes }) {
     }, []);
 
     return dataResult;
-  });
+  }, []);
   const [selection, setSelection] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
 
@@ -83,9 +79,13 @@ function SelectionDialog({ classes }) {
     setSelection([]);
     setShowProgress(true);
 
-    const selectedImages = data.filter((_data, index) =>
-      selection.includes(index),
-    );
+    const selectedTable = data.map(() => false);
+    selection.forEach((s) => {
+      selectedTable[s] = true;
+    });
+    const selectedImages = selectedTable
+      .map((s, i) => (s ? data[i] : undefined))
+      .filter((d) => !!d);
 
     let totalSize = 0;
     const availableImages = await selectedImages.reduce(
@@ -109,13 +109,16 @@ function SelectionDialog({ classes }) {
     let count = 1;
 
     const confirm = (event) => {
-      event.returnValue =
+      event.preventDefault();
+      const message =
         '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
+      event.returnValue = message;
+      return message;
     };
 
     const myReadable = new ReadableStream({
       start() {
-        setShowProgress(false);
+        setOpen(false);
         window.addEventListener('beforeunload', confirm);
       },
       async pull(controller) {
@@ -172,12 +175,12 @@ function SelectionDialog({ classes }) {
 
   if (showProgress) {
     return (
-      <Dialog maxWidth="lg" open>
-        <DialogTitle>
-          <Typography>이미지 다운로더</Typography>
-        </DialogTitle>
+      <Dialog
+        maxWidth="lg"
+        open={open}
+        TransitionProps={{ onExited: () => setShowProgress(false) }}
+      >
         <DialogContent classes={{ root: classes.progressContainer }}>
-          <Typography>다운로드를 준비 중입니다...</Typography>
           <CircularProgress color="primary" />
         </DialogContent>
       </Dialog>
@@ -206,7 +209,8 @@ function SelectionDialog({ classes }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSelectAll}>
+        <Typography>{`${selection.length}/${imgList.length}`}</Typography>
+        <Button variant="outlined" onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}
         </Button>
         <Button

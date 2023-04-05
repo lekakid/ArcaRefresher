@@ -19,7 +19,7 @@ import {
   $setZipName,
   $setZipImageName,
 } from '../slice';
-import { FORMAT_STRING, LABEL } from '../format';
+import { FORMAT_STRING, LABEL } from '../func/format';
 import FormatSelector from './FormatSelector';
 
 const View = React.forwardRef((_props, ref) => {

@@ -5,29 +5,43 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import { withStyles } from '@material-ui/styles';
 
-export default function MemoDialog({
-  open,
-  onClose,
-  onSubmit,
-  defaultValue = '',
-}) {
-  const [input, setInput] = useState('');
+import { TwitterPicker } from 'react-color';
+
+const styles = (theme) => ({
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+  },
+});
+
+function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
+  const [msg, setMsg] = useState('');
+  const [color, setColor] = useState('');
 
   useEffect(() => {
     if (!open) return;
-    setInput(defaultValue);
+    setMsg(defaultValue.msg);
+    setColor(defaultValue.color);
   }, [defaultValue, open]);
 
-  const handleChange = useCallback((e) => {
-    setInput(e.target.value);
+  const handleMsgChange = useCallback((e) => {
+    setMsg(e.target.value);
+  }, []);
+
+  const handleColorChange = useCallback((input) => {
+    setColor(input.hex);
   }, []);
 
   const handleDialogClose = useCallback(
-    (e, reason) => {
+    (_e, reason) => {
       if (reason === 'backdropClick') return;
 
       onClose();
@@ -39,28 +53,49 @@ export default function MemoDialog({
     (e) => {
       if (e.key && e.key !== 'Enter') return;
 
-      onSubmit(input);
+      onSubmit({ msg, color });
       onClose();
     },
-    [input, onClose, onSubmit],
+    [msg, color, onClose, onSubmit],
   );
 
   return (
-    <Dialog open={open} onClose={handleDialogClose}>
-      <DialogTitle>이용자 메모</DialogTitle>
-      <DialogContent>
-        <Typography>저장할 메모를 작성해주세요</Typography>
+    <Dialog maxWidth="xs" open={open} onClose={handleDialogClose}>
+      <DialogTitle disableTypography>
+        <Typography variant="h6">메모 작성</Typography>
+        <IconButton className={classes.closeButton} onClick={handleDialogClose}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
         <TextField
-          value={input}
-          onChange={handleChange}
-          onKeyPress={handleSubmit}
           autoFocus
+          fullWidth
+          size="small"
+          variant="outlined"
+          margin="normal"
+          label="메세지"
+          value={msg}
+          onChange={handleMsgChange}
+          onKeyPress={handleSubmit}
+        />
+        <TwitterPicker
+          triangle="hide"
+          color={color}
+          onChangeComplete={handleColorChange}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit}>{input ? '저장' : '삭제'}</Button>
-        <Button onClick={onClose}>취소</Button>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          저장
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
+
+MemoDialog.defaultProps = {
+  defaultValue: { msg: '', color: '' },
+};
+export default withStyles(styles)(MemoDialog);

@@ -26,19 +26,10 @@ function Toolbar({ disabled, onRemove }) {
 const TableEditor = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function TableEditor(
-    {
-      divider,
-      headerText,
-      initialRows,
-      columns,
-      noRowsText,
-      delimiter,
-      onEdit,
-    },
+    { divider, headerText, rows, columns, noRowsText, delimiter, onEdit },
     ref,
   ) {
     const [textMode, setTextMode] = useState(false);
-    const [rows, setRows] = useState(() => initialRows);
     const [selection, setSelection] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const [text, setText] = useState('');
@@ -53,7 +44,6 @@ const TableEditor = React.forwardRef(
             .map((value, index) => [columns[index].field, value]);
           return Object.fromEntries(entries);
         });
-        setRows(updatedRows);
         onEdit(updatedRows);
       } else {
         setText(
@@ -69,12 +59,10 @@ const TableEditor = React.forwardRef(
     }, []);
 
     const handleCellEdit = useCallback(
-      ({ id, value }) => {
-        const updatedRows = rows.map((row) => {
-          if (row.id === id) return { id, value };
-          return row;
-        });
-        setRows(updatedRows);
+      ({ id, field, value }) => {
+        const updatedRows = rows.map((row) =>
+          row.id === id ? { ...row, [field]: value } : row,
+        );
         onEdit?.(updatedRows);
       },
       [onEdit, rows],
@@ -85,7 +73,6 @@ const TableEditor = React.forwardRef(
         if (selection.includes(row.id)) return false;
         return true;
       });
-      setRows(updatedRows);
       onEdit?.(updatedRows);
     }, [onEdit, rows, selection]);
 

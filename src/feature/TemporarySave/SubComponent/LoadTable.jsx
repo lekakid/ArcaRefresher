@@ -8,7 +8,9 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
+  Grid,
   Switch,
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
@@ -71,14 +73,27 @@ function CustomToolbar({
   }
 
   return (
-    <Box display="flex" justifyContent="flex-end">
-      <FormControlLabel
-        control={<Switch checked={importTitle} onChange={onClickImportTitle} />}
-        label="제목 포함"
-        className={classes.label}
-      />
-      {toolButton}
-    </Box>
+    <Grid container alignItems="center">
+      <Grid item xs={8}>
+        <Box display="flex" px={1}>
+          <Typography variant="caption">
+            100개 이상 저장 시 전체적인 속도 저하가 있을 수 있습니다.
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={4}>
+        <Box display="flex" justifyContent="flex-end">
+          <FormControlLabel
+            control={
+              <Switch checked={importTitle} onChange={onClickImportTitle} />
+            }
+            label="제목 포함"
+            className={classes.label}
+          />
+          {toolButton}
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
 
@@ -184,7 +199,7 @@ export default function LoadTable({ editor, open, onClose }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<Close />} onClick={handleClose}>
+        <Button variant="outlined" startIcon={<Close />} onClick={handleClose}>
           닫기
         </Button>
       </DialogActions>

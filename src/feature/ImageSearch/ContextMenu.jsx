@@ -6,7 +6,6 @@ import { ImageSearch } from '@material-ui/icons';
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { httpRequest } from 'func/httpRequest';
-import { getArcaMediaURL } from 'func/url';
 
 import Info from './FeatureInfo';
 
@@ -22,27 +21,35 @@ function ContextMenu({ targetRef }) {
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: ARTICLE_IMAGES,
-    dataExtractor: (target) => {
-      const url = target.src.split('?')[0];
-      return getArcaMediaURL(url, searchBySource ? 'orig' : '');
-    },
+    dataExtractor: (target) =>
+      `${target.src}${searchBySource ? '&type=orig' : ''}`,
   });
 
   const handleGoogle = useCallback(() => {
     window.open(
-      `https://lens.google.com/uploadbyurl?url=${data}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
+      `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(
+        data,
+      )}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
     );
     closeMenu();
   }, [closeMenu, data]);
 
   const handleYandex = useCallback(() => {
-    window.open(`https://yandex.com/images/search?rpt=imageview&url=${data}`);
+    window.open(
+      `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
+        data,
+      )}`,
+    );
     closeMenu();
   }, [closeMenu, data]);
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
-      window.open(`https://saucenao.com/search.php?db=999&url=${data}`);
+      window.open(
+        `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
+          data,
+        )}`,
+      );
       closeMenu();
       return;
     }
@@ -66,15 +73,13 @@ function ContextMenu({ targetRef }) {
         formdata.append('frame', 1);
         formdata.append('database', 999);
 
-        const { response } = await httpRequest({
-          url: 'https://saucenao.com/search.php',
+        const resultURL = await httpRequest('https://saucenao.com/search.php', {
           method: 'POST',
           data: formdata,
-          responseType: 'document',
-        });
-        const resultURL = response
-          .querySelector('#yourimage a')
-          ?.href.split('image=')[1];
+        }).then(
+          ({ response }) =>
+            response.querySelector('#yourimage a')?.href.split('image=')[1],
+        );
         if (!resultURL) {
           setSnack({
             msg: '이미지 업로드에 실패했습니다.',
@@ -106,11 +111,13 @@ function ContextMenu({ targetRef }) {
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
 
-        const { finalUrl: resultURL } = await httpRequest({
-          url: 'https://twigaten.204504byse.info/search/media',
-          method: 'POST',
-          data: formdata,
-        });
+        const resultURL = await httpRequest(
+          'https://twigaten.204504byse.info/search/media',
+          {
+            method: 'POST',
+            data: formdata,
+          },
+        ).then(({ finalUrl }) => finalUrl);
         setSnack();
         window.open(resultURL);
       } catch (error) {
@@ -129,13 +136,10 @@ function ContextMenu({ targetRef }) {
         closeMenu();
         setSnack({ msg: 'Ascii2D에서 검색 중...' });
 
-        const { response: tokenDocument } = await httpRequest({
-          url: 'https://ascii2d.net',
-          responseType: 'document',
-        });
-        const token = tokenDocument.querySelector(
-          'input[name="authenticity_token"]',
-        )?.value;
+        const token = await httpRequest('https://ascii2d.net').then(
+          ({ response }) =>
+            response.querySelector('input[name="authenticity_token"]')?.value,
+        );
         if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
 
         const formdata = new FormData();
@@ -143,11 +147,10 @@ function ContextMenu({ targetRef }) {
         formdata.append('authenticity_token', token);
         formdata.append('uri', data);
 
-        const { finalUrl: resultURL } = await httpRequest({
-          url: 'https://ascii2d.net/search/uri',
+        const resultURL = await httpRequest('https://ascii2d.net/search/uri', {
           method: 'POST',
           data: formdata,
-        });
+        }).then(({ finalUrl }) => finalUrl);
         setSnack();
         window.open(resultURL);
       } catch (error) {

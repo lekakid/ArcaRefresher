@@ -54,7 +54,7 @@ function ContextMenu({ targetRef }) {
       )}
       <MemoInput
         open={!!user}
-        defaultValue={memo[user] || ''}
+        defaultValue={memo[user]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />

@@ -1,3 +1,5 @@
+import toDocument from 'func/toDocument';
+
 export default async function getBundleInfo(bundleID) {
   const response = await fetch(`/e/${bundleID}`);
   if (!response.ok) {
@@ -5,8 +7,7 @@ export default async function getBundleInfo(bundleID) {
   }
 
   const text = await response.text();
-  const parser = new DOMParser();
-  const bundleDocument = parser.parseFromString(text, 'text/html');
+  const bundleDocument = toDocument(text);
 
   return bundleDocument.title;
 }

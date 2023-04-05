@@ -35,9 +35,6 @@ export default (theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
   },
   nested: {
     paddingLeft: theme.spacing(4),
