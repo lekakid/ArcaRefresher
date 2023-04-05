@@ -9,9 +9,10 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { ColorPicker, createColor } from 'material-ui-color';
 import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/styles';
+
+import { TwitterPicker } from 'react-color';
 
 const styles = (theme) => ({
   closeButton: {
@@ -23,13 +24,12 @@ const styles = (theme) => ({
 
 function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
   const [msg, setMsg] = useState('');
-  const [color, setColor] = useState(createColor(''));
+  const [color, setColor] = useState('');
 
   useEffect(() => {
     if (!open) return;
-    console.log(defaultValue);
     setMsg(defaultValue.msg);
-    setColor(createColor(defaultValue.color));
+    setColor(defaultValue.color);
   }, [defaultValue, open]);
 
   const handleMsgChange = useCallback((e) => {
@@ -37,8 +37,7 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
   }, []);
 
   const handleColorChange = useCallback((input) => {
-    const updatedInput = typeof input === 'string' ? createColor(input) : input;
-    setColor(updatedInput);
+    setColor(input.hex);
   }, []);
 
   const handleDialogClose = useCallback(
@@ -54,8 +53,7 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
     (e) => {
       if (e.key && e.key !== 'Enter') return;
 
-      const cssColor = color.name !== 'none' ? color.css.backgroundColor : '';
-      onSubmit({ msg, color: cssColor });
+      onSubmit({ msg, color });
       onClose();
     },
     [msg, color, onClose, onSubmit],
@@ -73,14 +71,20 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
         <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
         <TextField
           autoFocus
-          variant="outlined"
+          fullWidth
           size="small"
+          variant="outlined"
+          margin="normal"
           label="메세지"
           value={msg}
           onChange={handleMsgChange}
           onKeyPress={handleSubmit}
         />
-        <ColorPicker disableAlpha value={color} onChange={handleColorChange} />
+        <TwitterPicker
+          triangle="hide"
+          color={color}
+          onChangeComplete={handleColorChange}
+        />
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
