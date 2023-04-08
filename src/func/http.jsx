@@ -3,7 +3,7 @@ import toDocument from './toDocument';
 /**
  * CORS 우회 용도 외엔 최소한으로 사용할 것
  */
-export function httpRequest(
+export function request(
   url,
   {
     method = 'GET',
