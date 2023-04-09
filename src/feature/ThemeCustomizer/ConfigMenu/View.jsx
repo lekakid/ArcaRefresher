@@ -195,7 +195,7 @@ const View = React.forwardRef((_props, ref) => {
     (key) => (color) => {
       const updatePreset = {
         ...theme[selectPreset],
-        [key]: color?.name !== 'none' ? color.css.backgroundColor : '',
+        [key]: color,
       };
       dispatch($setPreset({ key: selectPreset, preset: updatePreset }));
     },

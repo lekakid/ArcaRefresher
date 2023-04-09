@@ -6,8 +6,9 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@material-ui/core';
-import { ColorPicker, createColor } from 'material-ui-color';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+
+import ColorPicker from 'component/ColorPicker';
 
 const ThemeColorList = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -40,14 +41,11 @@ const ThemeColorList = React.forwardRef(
                   <ListItem key={key} divider disabled={disabled}>
                     <ListItemText primary={primary} secondary={secondary} />
                     <ListItemSecondaryAction>
-                      <span>
-                        <ColorPicker
-                          hideTextfield
-                          deferred
-                          value={createColor(presetData[key])}
-                          onChange={onColorChange(key)}
-                        />
-                      </span>
+                      <ColorPicker
+                        disabled={disabled}
+                        color={presetData[key]}
+                        onChange={onColorChange(key)}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}

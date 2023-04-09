@@ -14,8 +14,8 @@ import {
   NoMeetingRoom,
   Replay,
 } from '@material-ui/icons';
-import { ColorPicker } from 'material-ui-color';
 
+import ColorPicker from 'component/ColorPicker';
 import { getContrastYIQ } from 'func/color';
 
 const DEFAULT_CATEGORY_CONFIG = {
@@ -37,7 +37,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
     (type) => (color) => {
       const updateValue = {
         ...value,
-        [type]: color.error ? '' : color.css.backgroundColor,
+        [type]: color,
       };
       setValue(updateValue);
       onChange(id, updateValue);
@@ -108,24 +108,12 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
         >
           <Tooltip title="카테고리 색">
             <span>
-              <ColorPicker
-                hideTextfield
-                deferred
-                disableAlpha
-                value={badge}
-                onChange={handleColor('badge')}
-              />
+              <ColorPicker color={badge} onChange={handleColor('badge')} />
             </span>
           </Tooltip>
           <Tooltip title="배경색">
             <span>
-              <ColorPicker
-                hideTextfield
-                deferred
-                disableAlpha
-                value={bgcolor}
-                onChange={handleColor('bgcolor')}
-              />
+              <ColorPicker color={bgcolor} onChange={handleColor('bgcolor')} />
             </span>
           </Tooltip>
           <Tooltip title="굵게">
