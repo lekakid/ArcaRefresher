@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
@@ -28,7 +28,7 @@ import {
 } from '../slice';
 import PresetNameInput from './PresetNameInput';
 import RemoveConfirm from './RemoveConfirm';
-import ThemeColorList from './ThemeColorList';
+import PresetEditor from './PresetEditor';
 
 const createRow = (key, primary, secondary = '') => ({
   key,
@@ -84,7 +84,7 @@ const groups = [
   },
 ];
 
-const defaultTheme = {
+const defaultPreset = {
   'bg-navbar': '#3d414d',
   'bg-body': '#eee',
   'bg-main': '#fff',
@@ -117,16 +117,21 @@ const defaultTheme = {
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    storage: { enabled, current, theme },
-  } = useSelector((state) => state[Info.ID]);
-  const [selectPreset, setSelectPreset] = useState('');
+    enabled,
+    current: currentPresetKey,
+    theme,
+  } = useSelector((state) => state[Info.ID].storage);
+  const [editingPresetKey, setEditingPresetKey] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const presetData = {
-    ...defaultTheme,
-    ...theme[selectPreset],
-  };
+  const editingPreset = useMemo(
+    () => ({
+      ...defaultPreset,
+      ...theme[editingPresetKey],
+    }),
+    [editingPresetKey, theme],
+  );
 
   const handleEnabled = useCallback(() => {
     dispatch($toggleEnable());
@@ -140,7 +145,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   const handleTargetPreset = useCallback((e) => {
-    setSelectPreset(e.target.value);
+    setEditingPresetKey(e.target.value);
   }, []);
 
   const handleAddOpen = useCallback(() => {
@@ -153,9 +158,9 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleAddPreset = useCallback(
     (value) => {
-      dispatch($setPreset({ key: value, preset: { ...defaultTheme } }));
+      dispatch($setPreset({ key: value, preset: { ...defaultPreset } }));
+      setEditingPresetKey(value);
       setCreateOpen(false);
-      setSelectPreset(value);
     },
     [dispatch],
   );
@@ -170,12 +175,12 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleRenamePreset = useCallback(
     (value) => {
-      dispatch($renamePreset({ prev: selectPreset, next: value }));
+      dispatch($renamePreset({ prev: editingPresetKey, next: value }));
+      setEditingPresetKey(value);
       setRenameOpen(false);
-      setSelectPreset(value);
-      if (selectPreset === current) dispatch($setCurrent(value));
+      if (editingPresetKey === currentPresetKey) dispatch($setCurrent(value));
     },
-    [current, dispatch, selectPreset],
+    [currentPresetKey, dispatch, editingPresetKey],
   );
 
   const handleRemoveOpen = useCallback(() => {
@@ -187,21 +192,17 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   const handleRemovePreset = useCallback(() => {
-    dispatch($setPreset({ key: selectPreset, preset: null }));
+    dispatch($setPreset({ key: editingPresetKey, preset: null }));
     setConfirmOpen(false);
-    setSelectPreset('');
-    if (selectPreset === current) dispatch($setCurrent(''));
-  }, [current, dispatch, selectPreset]);
+    setEditingPresetKey('');
+    if (editingPresetKey === currentPresetKey) dispatch($setCurrent(''));
+  }, [currentPresetKey, dispatch, editingPresetKey]);
 
-  const handleColor = useCallback(
-    (key) => (color) => {
-      const updatePreset = {
-        ...theme[selectPreset],
-        [key]: color,
-      };
-      dispatch($setPreset({ key: selectPreset, preset: updatePreset }));
+  const handlePresetChange = useCallback(
+    (nextPreset) => {
+      dispatch($setPreset({ key: editingPresetKey, preset: nextPreset }));
     },
-    [dispatch, selectPreset, theme],
+    [dispatch, editingPresetKey],
   );
 
   return (
@@ -224,7 +225,7 @@ const View = React.forwardRef((_props, ref) => {
               <Select
                 variant="outlined"
                 displayEmpty
-                value={current}
+                value={currentPresetKey}
                 onChange={handleGlobalPreset}
               >
                 <MenuItem value="">없음</MenuItem>
@@ -243,7 +244,7 @@ const View = React.forwardRef((_props, ref) => {
                 <GroupableSelect
                   variant="outlined"
                   displayEmpty
-                  value={selectPreset}
+                  value={editingPresetKey}
                   onChange={handleTargetPreset}
                 >
                   <MenuItem value="">프리셋 선택</MenuItem>
@@ -260,7 +261,7 @@ const View = React.forwardRef((_props, ref) => {
                 </Tooltip>
                 <Tooltip title="이름 수정">
                   <Button
-                    disabled={selectPreset === ''}
+                    disabled={!editingPresetKey}
                     onClick={handleRenameOpen}
                   >
                     <Label />
@@ -268,7 +269,7 @@ const View = React.forwardRef((_props, ref) => {
                 </Tooltip>
                 <Tooltip title="제거">
                   <Button
-                    disabled={selectPreset === ''}
+                    disabled={!editingPresetKey}
                     onClick={handleRemoveOpen}
                   >
                     <Delete />
@@ -279,11 +280,12 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
           <Box clone mx={2}>
             <Paper variant="outlined">
-              <ThemeColorList
+              <PresetEditor
                 groupData={groups}
-                presetData={presetData}
-                disabled={!selectPreset}
-                onColorChange={handleColor}
+                defaultPreset={defaultPreset}
+                preset={editingPreset}
+                disabled={!editingPresetKey}
+                onChange={handlePresetChange}
               />
             </Paper>
           </Box>
@@ -296,13 +298,13 @@ const View = React.forwardRef((_props, ref) => {
       />
       <PresetNameInput
         open={renameOpen}
-        initialValue={selectPreset}
+        initialValue={editingPresetKey}
         onSubmit={handleRenamePreset}
         onClose={handleRenameClose}
       />
       <RemoveConfirm
         open={confirmOpen}
-        target={selectPreset}
+        target={editingPresetKey}
         onSubmit={handleRemovePreset}
         onClose={handleRemoveClose}
       />

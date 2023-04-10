@@ -25,8 +25,8 @@ const styles = (theme) => ({
 });
 
 const Picker = React.forwardRef(
-  ({ classes, disabled, color, onChange }, ref) => {
-    const [innerColor, setInnerColor] = useState('');
+  ({ classes, disabled, defaultColor, color, onChange }, ref) => {
+    const [innerColor, setInnerColor] = useState(defaultColor);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleChange = useCallback(
@@ -38,9 +38,9 @@ const Picker = React.forwardRef(
     );
 
     const handleRemove = useCallback(() => {
-      onChange?.('');
-      setInnerColor('');
-    }, [onChange]);
+      onChange?.(defaultColor || '');
+      setInnerColor(defaultColor || '');
+    }, [defaultColor, onChange]);
 
     return (
       <>
@@ -48,7 +48,7 @@ const Picker = React.forwardRef(
           ref={ref}
           variant="outlined"
           disabled={disabled}
-          style={{ background: color || innerColor }}
+          style={{ background: color ?? innerColor }}
           className={classes.pickerButton}
           onClick={(e) => setAnchorEl(e.target)}
         />
@@ -72,7 +72,7 @@ const Picker = React.forwardRef(
           }}
           onClose={() => setAnchorEl(null)}
         >
-          <ChromePicker color={innerColor} onChange={handleChange} />
+          <ChromePicker color={color ?? innerColor} onChange={handleChange} />
           <IconButton
             size="small"
             className={classes.removeButton}
@@ -85,5 +85,9 @@ const Picker = React.forwardRef(
     );
   },
 );
+
+Picker.defaultProps = {
+  defaultcolor: '',
+};
 
 export default withStyles(styles)(Picker);

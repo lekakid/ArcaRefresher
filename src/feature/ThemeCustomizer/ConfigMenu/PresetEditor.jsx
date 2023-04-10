@@ -10,10 +10,10 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 import ColorPicker from 'component/ColorPicker';
 
-const ThemeColorList = React.forwardRef(
+const PresetEditor = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ThemeColorList(
-    { groupData, presetData, disabled, onColorChange },
+  function PresetEditor(
+    { groupData, defaultPreset, preset, disabled, onChange },
     ref,
   ) {
     const [openGroup, setOpenGroup] = useState(() => ({}));
@@ -23,6 +23,15 @@ const ThemeColorList = React.forwardRef(
         setOpenGroup((prev) => ({ ...prev, [key]: !prev[key] }));
       },
       [],
+    );
+
+    const handleChange = useCallback(
+      (key, color) => {
+        const nextPreset = { ...preset };
+        nextPreset[key] = color;
+        onChange?.(nextPreset);
+      },
+      [onChange, preset],
     );
 
     return (
@@ -43,8 +52,9 @@ const ThemeColorList = React.forwardRef(
                     <ListItemSecondaryAction>
                       <ColorPicker
                         disabled={disabled}
-                        color={presetData[key]}
-                        onChange={onColorChange(key)}
+                        defaultColor={defaultPreset[key]}
+                        color={preset[key]}
+                        onChange={(color) => handleChange(key, color)}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -58,4 +68,4 @@ const ThemeColorList = React.forwardRef(
   },
 );
 
-export default ThemeColorList;
+export default PresetEditor;
