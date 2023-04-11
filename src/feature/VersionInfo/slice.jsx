@@ -15,13 +15,12 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    $updateCheckedVersion(state, action) {
-      // eslint-disable-next-line camelcase
+    $setCheckedVersion(state, action) {
       state.storage.checkedVersion = action.payload;
     },
   },
 });
 
-export const { $updateCheckedVersion } = slice.actions;
+export const { $setCheckedVersion, syncVersion } = slice.actions;
 
 export default slice.reducer;

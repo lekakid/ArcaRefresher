@@ -3,109 +3,123 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
+import { disableStorage } from 'core/store';
+
 import Info from './FeatureInfo';
-import { $updateCheckedVersion } from './slice';
+import { $setCheckedVersion } from './slice';
+import { compare } from './func';
 
-function parse(versionString) {
-  const token = versionString.split('.');
-  return {
-    major: Number(token[0]),
-    minor: Number(token[1]),
-    patch: Number(token[2]),
-  };
-}
-
-/**
- * 적용 중인 스크립트 버전과 마지막으로 확인한 버전을 비교합니다.
- *
- * @param {string} script  적용 중인 스크립트 버전 스트링
- * @param {string} storage  마지막으로 확인한 버전 스트링
- * @returns                 값이 양수라면 업데이트 확인 필요, 음수라면 새로고침이 필요함
- */
-function compare(script, storage) {
-  const scriptVersion = parse(script);
-  const storageVersion = parse(storage);
-
-  if (scriptVersion.major !== storageVersion.major) {
-    return scriptVersion.major - storageVersion.major;
-  }
-  if (scriptVersion.minor !== storageVersion.minor) {
-    return scriptVersion.minor - storageVersion.minor;
-  }
-  return scriptVersion.patch - storageVersion.patch;
-}
+const MODE_UPGRADE = 1;
+const MODE_DOWNGRADE = -1;
+const MODE_DISABLE_STOAGE = -2;
 
 export default function VersionInfo() {
   const dispatch = useDispatch();
-  const {
-    storage: { checkedVersion },
-  } = useSelector((state) => state[Info.ID]);
+  const { checkedVersion } = useSelector((state) => state[Info.ID].storage);
+  const [boradcastChannel, setBroadcastChannel] = useState(null);
   const [noti, setNoti] = useState({
     open: false,
-    refresh: false,
-    once: false
+    mode: 0,
   });
 
+  // 브로드캐스트 채널 생성
   useEffect(() => {
-    const result = compare(GM_info.script.version, checkedVersion);
-    setNoti({
-      open: result !== 0,
-      refresh: result < 0,
-      once: result < 2
-    });
-  }, [checkedVersion]);
+    const bc = new BroadcastChannel(`AR_${Info.ID}`);
+    setBroadcastChannel(bc);
+  }, []);
+
+  useEffect(() => {
+    if (!boradcastChannel) return;
+
+    boradcastChannel.onmessage = ({ data }) => {
+      if (data.msg === 'disable_storage') {
+        disableStorage();
+        setNoti({ open: true, mode: MODE_DISABLE_STOAGE });
+      }
+    };
+  }, [boradcastChannel, dispatch]);
+
+  useEffect(() => {
+    if (!boradcastChannel) return;
+
+    const diff = compare(GM_info.script.version, checkedVersion);
+    if (diff < 0) {
+      setNoti({ open: true, mode: MODE_DOWNGRADE });
+    }
+    if (diff > 0) {
+      setNoti({ open: true, mode: MODE_UPGRADE });
+    }
+    if (diff !== 0) {
+      // 다른 탭들의 데이터 저장 방지
+      boradcastChannel.postMessage({ msg: 'disable_storage' });
+    }
+  }, [boradcastChannel, checkedVersion, dispatch]);
 
   const handleChangeLog = useCallback(() => {
-    window.open(
-      `https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8${noti.once ? "" : `&target=title&keyword=${GM_info.script.version}`}`,
-    );
-    setNoti((prev) => ({
-      ...prev,
-      open: false,
-    }));
-    dispatch($updateCheckedVersion(GM_info.script.version));
-  }, [dispatch, noti]);
+    const url =
+      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
+    window.open(`${url}${GM_info.script.version}`);
+    setNoti({ open: false, mode: 0 });
+    dispatch($setCheckedVersion(GM_info.script.version));
+  }, [dispatch]);
+
+  const handleDowngrade = useCallback(() => {
+    dispatch($setCheckedVersion(GM_info.script.version));
+    setNoti({ open: false, mode: 0 });
+  }, [dispatch]);
 
   const handleRefresh = useCallback(() => {
     window.location.reload();
   }, []);
 
   const handleClose = useCallback(() => {
-    setNoti((prev) => ({
-      ...prev,
-      open: false,
-    }));
-    dispatch($updateCheckedVersion(GM_info.script.version));
+    setNoti({ open: false, mode: 0 });
+    dispatch($setCheckedVersion(GM_info.script.version));
   }, [dispatch]);
 
   let message = '';
   let action;
-  if (noti.refresh) {
-    message =
-      '이 탭에 업데이트 된 스크립트를 적용하려면 새로고침이 필요합니다.';
-    action = (
-      <Button size="small" color="inherit" onClick={handleRefresh}>
-        <Box fontWeight="fontWeightBold">새로고침</Box>
-      </Button>
-    );
-  } else {
-    message = '리프레셔가 업데이트 되었습니다.';
-    action = (
-      <>
-        <Button size="small" color="inherit" onClick={handleChangeLog}>
-          <Box fontWeight="fontWeightBold">업데이트 내역</Box>
+  switch (noti.mode) {
+    case MODE_UPGRADE: {
+      message = '리프레셔가 업데이트 되었습니다.';
+      action = (
+        <>
+          <Button size="small" color="inherit" onClick={handleChangeLog}>
+            <Box fontWeight="fontWeightBold">업데이트 내역</Box>
+          </Button>
+          <IconButton size="small" color="inherit" onClick={handleClose}>
+            <Close fontSize="small" />
+          </IconButton>
+        </>
+      );
+      break;
+    }
+    case MODE_DOWNGRADE: {
+      message = '리프레셔를 다운그레이드 하셨나요?';
+      action = (
+        <Button size="small" color="inherit" onClick={handleDowngrade}>
+          <Box fontWeight="fontWeightBold">예</Box>
         </Button>
-        <IconButton size="small" color="inherit" onClick={handleClose}>
-          <Close fontSize="small" />
-        </IconButton>
-      </>
-    );
+      );
+      break;
+    }
+    case MODE_DISABLE_STOAGE: {
+      message = `이 탭의 스크립트 버전이 맞지 않습니다.
+        이 탭에서 변경한 설정, 메모 등이 저장되지 않습니다.`;
+      action = (
+        <Button size="small" color="inherit" onClick={handleRefresh}>
+          <Box fontWeight="fontWeightBold">새로고침</Box>
+        </Button>
+      );
+      break;
+    }
+    default:
+      break;
   }
 
   return (
     <Snackbar
       open={noti.open}
-      onClose={handleClose}
       message={message}
       ClickAwayListenerProps={{
         mouseEvent: false,
