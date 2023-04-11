@@ -8,6 +8,7 @@ import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
+import { request } from 'func/http';
 import { format, getImageInfo } from './func';
 import Info from './FeatureInfo';
 
@@ -29,7 +30,9 @@ function ContextMenu({ targetRef }) {
       try {
         closeMenu();
         setSnack({ msg: '이미지를 다운로드 받는 중...' });
-        const rawData = await fetch(orig).then((response) => response.blob());
+        const rawData = await request(orig, { responseType: 'blob' }).then(
+          (r) => r.response,
+        );
 
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
@@ -69,9 +72,17 @@ function ContextMenu({ targetRef }) {
       const { orig, ext, uploadName } = data;
       try {
         closeMenu();
-        const response = await fetch(orig);
-        const size = Number(response.headers.get('Content-Length'));
-        const stream = response.body;
+        const response = await request(orig, {
+          method: 'HEAD',
+        });
+        const redirectedURL = response.finalUrl;
+        const size =
+          Number(
+            response.responseHeaders
+              .split('content-length: ')[1]
+              .split('\r')[0],
+          ) || 0;
+        const stream = await fetch(redirectedURL).then((r) => r.body);
         const name = format(fileName, {
           values: contentInfo,
           fileName: uploadName,

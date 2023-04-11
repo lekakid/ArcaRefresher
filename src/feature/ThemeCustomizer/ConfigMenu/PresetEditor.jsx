@@ -6,13 +6,14 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@material-ui/core';
-import { ColorPicker, createColor } from 'material-ui-color';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
-const ThemeColorList = React.forwardRef(
+import ColorPicker from 'component/ColorPicker';
+
+const PresetEditor = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function ThemeColorList(
-    { groupData, presetData, disabled, onColorChange },
+  function PresetEditor(
+    { groupData, defaultPreset, preset, disabled, onChange },
     ref,
   ) {
     const [openGroup, setOpenGroup] = useState(() => ({}));
@@ -22,6 +23,15 @@ const ThemeColorList = React.forwardRef(
         setOpenGroup((prev) => ({ ...prev, [key]: !prev[key] }));
       },
       [],
+    );
+
+    const handleChange = useCallback(
+      (key, color) => {
+        const nextPreset = { ...preset };
+        nextPreset[key] = color;
+        onChange?.(nextPreset);
+      },
+      [onChange, preset],
     );
 
     return (
@@ -40,14 +50,12 @@ const ThemeColorList = React.forwardRef(
                   <ListItem key={key} divider disabled={disabled}>
                     <ListItemText primary={primary} secondary={secondary} />
                     <ListItemSecondaryAction>
-                      <span>
-                        <ColorPicker
-                          hideTextfield
-                          deferred
-                          value={createColor(presetData[key])}
-                          onChange={onColorChange(key)}
-                        />
-                      </span>
+                      <ColorPicker
+                        disabled={disabled}
+                        defaultColor={defaultPreset[key]}
+                        color={preset[key]}
+                        onChange={(color) => handleChange(key, color)}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}
@@ -60,4 +68,4 @@ const ThemeColorList = React.forwardRef(
   },
 );
 
-export default ThemeColorList;
+export default PresetEditor;

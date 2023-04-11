@@ -36,14 +36,21 @@ const store = configureStore({
   ]),
   middleware: [
     createStateSyncMiddleware({
+      channel: `AR_${GM_info.script.version}`,
       predicate: (action) => action.type.indexOf('/$') > -1,
     }),
   ],
 });
 
-let prevState = store.getState();
+let isSync = true;
+function disableStorage() {
+  isSync = false;
+}
 
+let prevState = store.getState();
 store.subscribe(() => {
+  if (!isSync) return;
+
   const currentState = store.getState();
 
   Object.entries(currentState)
@@ -59,3 +66,4 @@ store.subscribe(() => {
 initMessageListener(store);
 
 export default store;
+export { disableStorage };

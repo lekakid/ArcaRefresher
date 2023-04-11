@@ -18,6 +18,7 @@ import streamSaver from 'streamsaver';
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'util/ContentInfo';
 
+import { request } from 'func/http';
 import format from './func/format';
 import Info from './FeatureInfo';
 import SelectableImageList from './SelectableImageList';
@@ -91,9 +92,20 @@ function SelectionDialog({ classes }) {
     const availableImages = await selectedImages.reduce(
       async (promise, info) => {
         try {
-          const response = await fetch(info.orig, { method: 'HEAD' });
+          const response = await request(info.orig, {
+            method: 'HEAD',
+          });
+          if (response.status !== 200) throw new Error();
+          info.orig = response.finalUrl;
 
-          totalSize += Number(response.headers.get('Content-Length')) || 0;
+          const size =
+            Number(
+              response.responseHeaders
+                .split('content-length: ')[1]
+                .split('\r')[0],
+            ) || 0;
+
+          totalSize += size;
           const acc = await promise;
           acc.push(info);
           return acc;

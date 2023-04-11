@@ -5,7 +5,7 @@ import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
-import { httpRequest } from 'func/httpRequest';
+import { request } from 'func/http';
 
 import Info from './FeatureInfo';
 
@@ -73,7 +73,7 @@ function ContextMenu({ targetRef }) {
         formdata.append('frame', 1);
         formdata.append('database', 999);
 
-        const resultURL = await httpRequest('https://saucenao.com/search.php', {
+        const resultURL = await request('https://saucenao.com/search.php', {
           method: 'POST',
           data: formdata,
         }).then(
@@ -111,7 +111,7 @@ function ContextMenu({ targetRef }) {
         const formdata = new FormData();
         formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
 
-        const resultURL = await httpRequest(
+        const resultURL = await request(
           'https://twigaten.204504byse.info/search/media',
           {
             method: 'POST',
@@ -136,7 +136,7 @@ function ContextMenu({ targetRef }) {
         closeMenu();
         setSnack({ msg: 'Ascii2D에서 검색 중...' });
 
-        const token = await httpRequest('https://ascii2d.net').then(
+        const token = await request('https://ascii2d.net').then(
           ({ response }) =>
             response.querySelector('input[name="authenticity_token"]')?.value,
         );
@@ -147,7 +147,7 @@ function ContextMenu({ targetRef }) {
         formdata.append('authenticity_token', token);
         formdata.append('uri', data);
 
-        const resultURL = await httpRequest('https://ascii2d.net/search/uri', {
+        const resultURL = await request('https://ascii2d.net/search/uri', {
           method: 'POST',
           data: formdata,
         }).then(({ finalUrl }) => finalUrl);

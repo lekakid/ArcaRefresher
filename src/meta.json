@@ -8,6 +8,12 @@
   "homepageURL": "https://github.com/lekakid/ArcaRefresher",
   "supportURL": "https://arca.live/b/namurefresher",
   "match": ["https://arca.live/*"],
+  "connect": [
+    "namu.la",
+    "saucenao.com",
+    "twigaten.204504byse.info",
+    "ascii2d.net"
+  ],
   "noframes": true,
   "run-at": "document-body",
   "grant": [
