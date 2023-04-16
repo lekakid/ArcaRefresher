@@ -104,7 +104,7 @@ function ContextMenu({ targetRef }) {
 
   const handleCopyURL = useCallback(() => {
     closeMenu();
-    navigator.clipboard.writeText(`https:${data.orig}`);
+    navigator.clipboard.writeText(data.orig);
   }, [closeMenu, data]);
 
   if (!data) return null;
