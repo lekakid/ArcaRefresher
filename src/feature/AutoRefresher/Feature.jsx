@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
-import { BOARD_LOADED, BOARD } from 'core/selector';
+import { BOARD_LOADED, BOARD, CURRENT_PAGE_NUMBER } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 
@@ -77,6 +77,11 @@ function AutoRefresher({ classes }) {
     const targetKeys = ['after', 'before', 'near'];
     if (parseInt(search.p, 10) > 1 || searchKeys.some(key => targetKeys.includes(key)))
       return;
+
+    const currentPageElement = document.querySelector(CURRENT_PAGE_NUMBER);
+    const numberOrDate = currentPageElement.children.item(0).innerHTML; // current page index
+    if (numberOrDate.includes('datetime') || parseInt(numberOrDate, 10) > 1)
+      return; // checks current page is first page
 
     const boardElement = document.querySelector(BOARD);
     if (!boardElement) return;
