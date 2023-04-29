@@ -13,6 +13,7 @@ export const FULL_LOADED = 'footer';
 export const NAVIGATION_MENU = 'ul.navbar-nav';
 export const BOARD_IN_ARTICLE = 'div.included-article-list .list-table';
 export const BOARD = 'div.article-list .list-table';
+export const CURRENT_PAGE_NUMBER  = 'li.page-item.active';
 export const ARTICLE = '.article-wrapper';
 export const COMMENT = '#comment';
 export const COMMENT_INNER = '#comment .list-area';
