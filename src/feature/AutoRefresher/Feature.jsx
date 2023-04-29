@@ -75,10 +75,7 @@ function AutoRefresher({ classes }) {
     const search = parseSearch(window.location.search);
     const searchKeys = Object.keys(search);
     const targetKeys = ['after', 'before', 'near'];
-    if (
-      parseInt(search.p, 10) > 1 ||
-      searchKeys.some((key) => targetKeys.includes(key))
-    )
+    if (parseInt(search.p, 10) > 1 || searchKeys.some(key => targetKeys.includes(key)))
       return;
 
     const boardElement = document.querySelector(BOARD);
@@ -96,18 +93,19 @@ function AutoRefresher({ classes }) {
     });
   }, [boardLoaded]);
 
-  // 웹 소켓으로 새로고침 트래픽 감소
+  // 웹 소켓으로 새로고침 트래픽 감소 <- 이거 어짜피 탐색할떄마다 계속 연결끊어지는데 의미있음?
   useEffect(() => {
     if (!board) return;
     if (countdown === 0) return;
 
-    const { host, pathname, search } = window.location;
+    const { host, pathname } = window.location;
 
     const connect = () => {
       const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
       sock.onopen = () => {
+        const lastSlash = pathname.indexOf('/', 4); /* '/b/'.length + 1 */
         sock.send('hello');
-        sock.send(`c|${pathname}${search}`);
+        sock.send(`c|${pathname.substring(0, lastSlash !== -1 ? lastSlash : pathname.length)}`); // 게시물까지 보내면 na대신 nc가 날아옴 (new comment)
       };
       sock.onmessage = (e) => {
         if (e.data === 'na') sockCount.current.newArticle += 1;
