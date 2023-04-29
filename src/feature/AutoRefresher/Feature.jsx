@@ -103,14 +103,14 @@ function AutoRefresher({ classes }) {
     if (!board) return;
     if (countdown === 0) return;
 
-    const { host, pathname } = window.location;
+    const { host, pathname, search } = window.location;
 
     const connect = () => {
       const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
       sock.onopen = () => {
         const lastSlash = pathname.indexOf('/', 4); /* '/b/'.length + 1 */
         sock.send('hello');
-        sock.send(`c|${pathname.substring(0, lastSlash !== -1 ? lastSlash : pathname.length)}`); // 게시물까지 보내면 na대신 nc가 날아옴 (new comment)
+        sock.send(`c|${pathname.substring(0, lastSlash !== -1 ? lastSlash : pathname.length)}${search}`); // 게시글 보고있을때에는 na대신 nc가 날아옴 (new comment)
       };
       sock.onmessage = (e) => {
         if (e.data === 'na') sockCount.current.newArticle += 1;
