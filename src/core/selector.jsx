@@ -1,4 +1,4 @@
-// CONTAINER LOAD CHECK SELECTOR
+// 게시판 등 컨테이너 요소의 내용물이 100% 로드 됐는지 체크하는 용도
 export const NAVIGATION_LOADED = '.content-wrapper';
 export const CHANNEL_TITLE_LOADED = '.btns-board';
 export const BOARD_LOADED = '.article-list + .btns-board';
@@ -9,11 +9,10 @@ export const WRITE_LOADED = '.fr-box';
 export const AUDIT_LOADED = '.board-audit-list + a.btn';
 export const FULL_LOADED = 'footer';
 
-// CONTAINER SELECTOR
+// 게시판 등 컨테이너 자체
 export const NAVIGATION_MENU = 'ul.navbar-nav';
 export const BOARD_IN_ARTICLE = 'div.included-article-list .list-table';
 export const BOARD = 'div.article-list .list-table';
-export const CURRENT_PAGE_NUMBER  = 'li.page-item.active';
 export const ARTICLE = '.article-wrapper';
 export const COMMENT = '#comment';
 export const COMMENT_INNER = '#comment .list-area';
@@ -21,7 +20,7 @@ export const WRITE = '.article-write';
 export const AUDIT = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
-// CONTAINER ITEM SELECTOR
+// 컨테이너 내에 있는 아이템
 export const BOARD_NOTICES = 'a.vrow.notice:not(.notice-unfilter)';
 export const BOARD_ITEMS = 'a.vrow:not(.notice)';
 export const ARTICLE_TITLE = '.article-head .title';
