@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
-import { BOARD_LOADED, BOARD } from 'core/selector';
+import { BOARD_LOADED, BOARD, CURRENT_PAGE_NUMBER } from 'core/selector';
 import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
 
@@ -75,11 +75,13 @@ function AutoRefresher({ classes }) {
     const search = parseSearch(window.location.search);
     const searchKeys = Object.keys(search);
     const targetKeys = ['after', 'before', 'near'];
-    if (
-      parseInt(search.p, 10) > 1 ||
-      searchKeys.some((key) => targetKeys.includes(key))
-    )
+    if (parseInt(search.p, 10) > 1 || searchKeys.some(key => targetKeys.includes(key)))
       return;
+
+    const currentPageElement = document.querySelector(CURRENT_PAGE_NUMBER);
+    const numberOrDate = currentPageElement.children.item(0).innerHTML; // current page index
+    if (numberOrDate.includes('datetime') || parseInt(numberOrDate, 10) > 1)
+      return; // checks current page is first page
 
     const boardElement = document.querySelector(BOARD);
     if (!boardElement) return;
@@ -96,7 +98,7 @@ function AutoRefresher({ classes }) {
     });
   }, [boardLoaded]);
 
-  // 웹 소켓으로 새로고침 트래픽 감소
+  // 웹 소켓으로 새로고침 트래픽 감소 <- 이거 어짜피 탐색할떄마다 계속 연결끊어지는데 의미있음?
   useEffect(() => {
     if (!board) return;
     if (countdown === 0) return;
@@ -106,8 +108,9 @@ function AutoRefresher({ classes }) {
     const connect = () => {
       const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
       sock.onopen = () => {
+        const lastSlash = pathname.indexOf('/', 4); /* '/b/'.length + 1 */
         sock.send('hello');
-        sock.send(`c|${pathname}${search}`);
+        sock.send(`c|${pathname.substring(0, lastSlash !== -1 ? lastSlash : pathname.length)}${search}`); // 게시글 보고있을때에는 na대신 nc가 날아옴 (new comment)
       };
       sock.onmessage = (e) => {
         if (e.data === 'na') sockCount.current.newArticle += 1;
