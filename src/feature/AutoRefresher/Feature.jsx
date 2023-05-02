@@ -115,6 +115,7 @@ function AutoRefresher({ classes }) {
 
   useEffect(() => {
     if (!enabled) return undefined;
+    if (!boardLoaded) return undefined;
 
     const boardElement = document.querySelector(BOARD);
     setBoard(boardElement);
@@ -132,7 +133,7 @@ function AutoRefresher({ classes }) {
     boardElement.addEventListener('mousemove', handleMouse);
 
     return () => boardElement.removeEventListener('mousemove', handleMouse);
-  }, [enabled]);
+  }, [boardLoaded, enabled]);
 
   // 웹 소켓 셋업
   useEffect(() => {
