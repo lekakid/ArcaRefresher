@@ -101,35 +101,6 @@ function ContextMenu({ targetRef }) {
     })();
   }, [saucenaoBypass, data, closeMenu, setSnack]);
 
-  const handleTwigaten = useCallback(() => {
-    (async () => {
-      try {
-        closeMenu();
-        setSnack({ msg: 'TwiGaTen에서 검색 중...' });
-        const blob = await fetch(data).then((response) => response.blob());
-
-        const formdata = new FormData();
-        formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
-
-        const resultURL = await request(
-          'https://twigaten.204504byse.info/search/media',
-          {
-            method: 'POST',
-            data: formdata,
-          },
-        ).then(({ finalUrl }) => finalUrl);
-        setSnack();
-        window.open(resultURL);
-      } catch (error) {
-        setSnack({
-          msg: ERROR_MSG,
-          time: 3000,
-        });
-        console.error(error);
-      }
-    })();
-  }, [closeMenu, data, setSnack]);
-
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
@@ -183,12 +154,6 @@ function ContextMenu({ targetRef }) {
           <ImageSearch />
         </ListItemIcon>
         <Typography>SauceNao 검색</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleTwigaten}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>TwitGeTen 검색</Typography>
       </MenuItem>
       <MenuItem onClick={handleAscii2D}>
         <ListItemIcon>
