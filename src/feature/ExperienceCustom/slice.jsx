@@ -11,6 +11,7 @@ const defaultStorage = {
   ratedownGuard: false,
   foldComment: false,
   wideClickArea: true,
+  enhancedArticleManage: true,
 };
 
 const initialState = {
@@ -43,6 +44,10 @@ export const slice = createSlice({
     $toggleWideArea(state) {
       state.storage.wideClickArea = !state.storage.wideClickArea;
     },
+    $toggleEnhancedArticleManage(state) {
+      state.storage.enhancedArticleManage =
+        !state.storage.enhancedArticleManage;
+    },
   },
 });
 
@@ -54,6 +59,7 @@ export const {
   $toggleRateDownGuard,
   $toggleComment,
   $toggleWideArea,
+  $toggleEnhancedArticleManage,
 } = slice.actions;
 
 export default slice.reducer;
