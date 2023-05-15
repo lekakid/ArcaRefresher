@@ -101,6 +101,11 @@ function ContextMenu({ targetRef }) {
     })();
   }, [saucenaoBypass, data, closeMenu, setSnack]);
 
+  const handleIqdb = useCallback(() => {
+    window.open(`https://iqdb.org/?url=${encodeURIComponent(data)}`);
+    closeMenu();
+  }, [closeMenu, data]);
+
   const handleAscii2D = useCallback(() => {
     (async () => {
       try {
@@ -154,6 +159,12 @@ function ContextMenu({ targetRef }) {
           <ImageSearch />
         </ListItemIcon>
         <Typography>SauceNao 검색</Typography>
+      </MenuItem>
+      <MenuItem onClick={handleIqdb}>
+        <ListItemIcon>
+          <ImageSearch />
+        </ListItemIcon>
+        <Typography>IQDB 검색</Typography>
       </MenuItem>
       <MenuItem onClick={handleAscii2D}>
         <ListItemIcon>
