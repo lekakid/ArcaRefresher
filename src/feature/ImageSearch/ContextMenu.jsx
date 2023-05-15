@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { ImageSearch } from '@material-ui/icons';
+import { ImageSearch, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
@@ -139,9 +139,23 @@ function ContextMenu({ targetRef }) {
     })();
   }, [closeMenu, data, setSnack]);
 
+  const handleAllOpen = useCallback(() => {
+    handleGoogle();
+    handleYandex();
+    handleSauceNao();
+    handleIqdb();
+    handleAscii2D();
+  }, [handleAscii2D, handleGoogle, handleIqdb, handleSauceNao, handleYandex]);
+
   if (!data) return null;
   return (
     <List>
+      <MenuItem onClick={handleAllOpen}>
+        <ListItemIcon>
+          <PhotoLibrary />
+        </ListItemIcon>
+        <Typography>모든 사이트로 검색</Typography>
+      </MenuItem>
       <MenuItem onClick={handleGoogle}>
         <ListItemIcon>
           <ImageSearch />
