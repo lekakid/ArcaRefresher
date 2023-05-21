@@ -6,6 +6,7 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   countdown: 5,
   maxTime: -1,
+  refreshOnArticle: false,
   showProgress: true,
 };
 
@@ -23,12 +24,20 @@ export const slice = createSlice({
     $setMaxTime(state, action) {
       state.storage.maxTime = action.payload;
     },
+    $toggleRefreshOnArticle(state) {
+      state.storage.refreshOnArticle = !state.storage.refreshOnArticle;
+    },
     $toggleAnimation(state) {
       state.storage.showProgress = !state.storage.showProgress;
     },
   },
 });
 
-export const { $setTimeLimit, $setMaxTime, $toggleAnimation } = slice.actions;
+export const {
+  $setTimeLimit,
+  $setMaxTime,
+  $toggleRefreshOnArticle,
+  $toggleAnimation,
+} = slice.actions;
 
 export default slice.reducer;

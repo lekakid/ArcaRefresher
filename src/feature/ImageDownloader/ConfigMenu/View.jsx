@@ -10,6 +10,8 @@ import {
   Typography,
   Switch,
   Box,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
@@ -18,15 +20,15 @@ import {
   $setFileName,
   $setZipName,
   $setZipImageName,
+  $setZipExtension,
 } from '../slice';
 import { FORMAT_STRING, LABEL } from '../func/format';
 import FormatSelector from './FormatSelector';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const {
-    storage: { enabled, fileName, zipName, zipImageName },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, fileName, zipName, zipExtension, zipImageName } =
+    useSelector((state) => state[Info.ID].storage);
 
   const handleEnable = useCallback(() => {
     dispatch($toggleEnable());
@@ -56,6 +58,13 @@ const View = React.forwardRef((_props, ref) => {
       dispatch($setZipName(`${zipName}${value}`));
     },
     [dispatch, zipName],
+  );
+
+  const handleZipExtension = useCallback(
+    (e) => {
+      dispatch($setZipExtension(e.target.value));
+    },
+    [dispatch],
   );
 
   const handleZipImageName = useCallback(
@@ -124,6 +133,19 @@ const View = React.forwardRef((_props, ref) => {
                 ]}
                 onSelect={handleAddFormatZipName}
               />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText primary="일괄 다운로드 시 압축파일 확장자" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={zipExtension}
+                onChange={handleZipExtension}
+              >
+                <MenuItem value="zip">zip</MenuItem>
+                <MenuItem value="cbz">cbz</MenuItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem>

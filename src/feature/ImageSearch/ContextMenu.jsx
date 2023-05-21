@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { ImageSearch } from '@material-ui/icons';
+import { ImageSearch, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
@@ -101,34 +101,10 @@ function ContextMenu({ targetRef }) {
     })();
   }, [saucenaoBypass, data, closeMenu, setSnack]);
 
-  const handleTwigaten = useCallback(() => {
-    (async () => {
-      try {
-        closeMenu();
-        setSnack({ msg: 'TwiGaTen에서 검색 중...' });
-        const blob = await fetch(data).then((response) => response.blob());
-
-        const formdata = new FormData();
-        formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
-
-        const resultURL = await request(
-          'https://twigaten.204504byse.info/search/media',
-          {
-            method: 'POST',
-            data: formdata,
-          },
-        ).then(({ finalUrl }) => finalUrl);
-        setSnack();
-        window.open(resultURL);
-      } catch (error) {
-        setSnack({
-          msg: ERROR_MSG,
-          time: 3000,
-        });
-        console.error(error);
-      }
-    })();
-  }, [closeMenu, data, setSnack]);
+  const handleIqdb = useCallback(() => {
+    window.open(`https://iqdb.org/?url=${encodeURIComponent(data)}`);
+    closeMenu();
+  }, [closeMenu, data]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
@@ -163,9 +139,23 @@ function ContextMenu({ targetRef }) {
     })();
   }, [closeMenu, data, setSnack]);
 
+  const handleAllOpen = useCallback(() => {
+    handleGoogle();
+    handleYandex();
+    handleSauceNao();
+    handleIqdb();
+    handleAscii2D();
+  }, [handleAscii2D, handleGoogle, handleIqdb, handleSauceNao, handleYandex]);
+
   if (!data) return null;
   return (
     <List>
+      <MenuItem onClick={handleAllOpen}>
+        <ListItemIcon>
+          <PhotoLibrary />
+        </ListItemIcon>
+        <Typography>모든 사이트로 검색</Typography>
+      </MenuItem>
       <MenuItem onClick={handleGoogle}>
         <ListItemIcon>
           <ImageSearch />
@@ -184,11 +174,11 @@ function ContextMenu({ targetRef }) {
         </ListItemIcon>
         <Typography>SauceNao 검색</Typography>
       </MenuItem>
-      <MenuItem onClick={handleTwigaten}>
+      <MenuItem onClick={handleIqdb}>
         <ListItemIcon>
           <ImageSearch />
         </ListItemIcon>
-        <Typography>TwitGeTen 검색</Typography>
+        <Typography>IQDB 검색</Typography>
       </MenuItem>
       <MenuItem onClick={handleAscii2D}>
         <ListItemIcon>

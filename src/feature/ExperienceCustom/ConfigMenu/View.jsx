@@ -21,21 +21,21 @@ import {
   $toggleComment,
   $toggleWideArea,
   $toggleIgnoreExternalLinkWarning,
+  $toggleEnhancedArticleManage,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    storage: {
-      spoofTitle,
-      openArticleNewWindow,
-      blockMediaNewWindow,
-      ignoreExternalLinkWarning,
-      ratedownGuard,
-      foldComment,
-      wideClickArea,
-    },
-  } = useSelector((state) => state[Info.ID]);
+    spoofTitle,
+    openArticleNewWindow,
+    blockMediaNewWindow,
+    ignoreExternalLinkWarning,
+    ratedownGuard,
+    foldComment,
+    wideClickArea,
+    enhancedArticleManage,
+  } = useSelector((state) => state[Info.ID].storage);
 
   const handleSpoofTitle = useCallback(
     (e) => {
@@ -66,6 +66,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleWideArea = useCallback(() => {
     dispatch($toggleWideArea());
+  }, [dispatch]);
+
+  const handleEnhancedArticleManage = useCallback(() => {
+    dispatch($toggleEnhancedArticleManage());
   }, [dispatch]);
 
   return (
@@ -140,13 +144,25 @@ const View = React.forwardRef((_props, ref) => {
               <Switch checked={foldComment} onChange={handleComment} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleWideArea}>
+          <ListItem divider button onClick={handleWideArea}>
             <ListItemText
               primary="넓은 답글 버튼 사용"
               secondary="댓글 어디를 클릭하든 답글창이 열립니다."
             />
             <ListItemSecondaryAction>
               <Switch checked={wideClickArea} onChange={handleWideArea} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleEnhancedArticleManage}>
+            <ListItemText
+              primary="개선된 게시물 관리 사용"
+              secondary="체크박스의 클릭 범위를 여유롭게 만들고 드래그로 한번에 선택할 수 있습니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={enhancedArticleManage}
+                onChange={handleEnhancedArticleManage}
+              />
             </ListItemSecondaryAction>
           </ListItem>
         </List>

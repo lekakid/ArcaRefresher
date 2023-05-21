@@ -14,12 +14,17 @@ import {
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { $toggleAnimation, $setTimeLimit, $setMaxTime } from '../slice';
+import {
+  $toggleAnimation,
+  $setTimeLimit,
+  $setMaxTime,
+  $toggleRefreshOnArticle,
+} from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { countdown, maxTime, showProgress },
-  } = useSelector((state) => state[Info.ID]);
+  const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const dispatch = useDispatch();
 
   const handleRefreshTime = useCallback(
@@ -35,6 +40,10 @@ const View = React.forwardRef((_props, ref) => {
     },
     [dispatch],
   );
+
+  const handleRefreshOnArticle = useCallback(() => {
+    dispatch($toggleRefreshOnArticle());
+  }, [dispatch]);
 
   const handleAnimation = useCallback(() => {
     dispatch($toggleAnimation());
@@ -79,6 +88,18 @@ const View = React.forwardRef((_props, ref) => {
                 <MenuItem value={300}>5분</MenuItem>
                 <MenuItem value={600}>10분</MenuItem>
               </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleRefreshOnArticle}>
+            <ListItemText
+              primary="게시물 조회 중에도 갱신"
+              secondary="단, 1페이지를 확실히 보장할 수 있을 때만 동작합니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={refreshOnArticle}
+                onClick={handleRefreshOnArticle}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem button onClick={handleAnimation}>

@@ -7,6 +7,7 @@ const defaultStorage = {
   enabled: true,
   fileName: '%title%',
   zipName: '%title%',
+  zipExtension: 'zip',
   zipImageName: '%num%',
 };
 
@@ -28,6 +29,9 @@ export const slice = createSlice({
     $setZipName(state, action) {
       state.storage.zipName = action.payload;
     },
+    $setZipExtension(state, action) {
+      state.storage.zipExtension = action.payload;
+    },
     $setZipImageName(state, action) {
       state.storage.zipImageName = action.payload;
     },
@@ -41,6 +45,7 @@ export const {
   $toggleEnable,
   $setFileName,
   $setZipName,
+  $setZipExtension,
   $setZipImageName,
   setOpen,
 } = slice.actions;
