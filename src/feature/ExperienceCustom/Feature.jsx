@@ -261,6 +261,8 @@ export default function ExperienceCustomizer() {
     let dragged = false;
 
     const dragStartHandler = (e) => {
+      if (e.button !== 0) return;
+
       const row = e.target.closest('a.vrow:not(.notice)');
       if (!row) return;
 
@@ -268,7 +270,9 @@ export default function ExperienceCustomizer() {
       const check = row.querySelector('input[type="checkbox"]');
       value = !check.checked;
     };
-    const dragEndHandler = () => {
+    const dragEndHandler = (e) => {
+      if (e.button !== 0) return;
+
       selectedElement = undefined;
     };
     const clickHandler = (e) => {
