@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { Close, FormatColorReset } from '@material-ui/icons';
 import { withStyles } from '@material-ui/styles';
 
 import { TwitterPicker } from 'react-color';
@@ -77,6 +77,7 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
           margin="normal"
           label="메세지"
           value={msg}
+          inputProps={{ style: { color } }}
           onChange={handleMsgChange}
           onKeyPress={handleSubmit}
         />
@@ -87,6 +88,9 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
         />
       </DialogContent>
       <DialogActions>
+        <Button variant="outlined" onClick={() => setColor('')}>
+          <FormatColorReset />
+        </Button>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           저장
         </Button>
