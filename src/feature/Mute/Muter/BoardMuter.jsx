@@ -48,16 +48,14 @@ function BoardMuter() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
   const {
-    storage: {
-      user,
-      keyword,
-      category,
-      boardBarPos,
-      hideCountBar,
-      hideServiceNotice,
-      hideNoPermission,
-    },
-  } = useSelector((state) => state[Info.ID]);
+    user,
+    keyword,
+    category,
+    boardBarPos,
+    hideCountBar,
+    hideServiceNotice,
+    hideNoPermission,
+  } = useSelector((state) => state[Info.ID].storage);
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [container, setContainer] = useState(undefined);

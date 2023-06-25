@@ -64,14 +64,14 @@ const style = {
 function CommentMuter() {
   const dispatch = useDispatch();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
-  const {
-    storage: { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply },
-  } = useSelector((state) => state[Info.ID]);
+  const { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply } =
+    useSelector((state) => state[Info.ID].storage);
   const [comment, setComment] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
   const emoticonFilter = useSelector(emoticonFilterSelector);
 
+  // 댓글 창 로드 검사 및 컨테이너 생성
   useLayoutEffect(() => {
     if (!commentLoaded) return;
 
@@ -90,6 +90,8 @@ function CommentMuter() {
       refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
     });
   }, [dispatch, commentLoaded]);
+
+  // 이모티콘 뮤트
   useLayoutEffect(() => {
     if (!commentLoaded) return undefined;
 
@@ -114,6 +116,7 @@ function CommentMuter() {
     };
   }, [commentLoaded, emoticonFilter, hideMutedMark, muteIncludeReply]);
 
+  // 키워드, 이용자 뮤트
   useLayoutEffect(() => {
     if (!comment) return undefined;
 
