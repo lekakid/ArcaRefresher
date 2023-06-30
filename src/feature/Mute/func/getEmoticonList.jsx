@@ -1,3 +1,5 @@
+import trimEmotURL from './trimEmotURL';
+
 export default async function getEmoticonList(bundleID) {
   const response = await fetch(`/api/emoticon/${bundleID}`);
   if (!response.ok)
@@ -7,7 +9,7 @@ export default async function getEmoticonList(bundleID) {
 
   const data = await response.json();
   const idList = data.map((i) => i.id);
-  const urlList = data.map((i) => i.imageUrl);
+  const urlList = data.map((i) => trimEmotURL(i.imageUrl));
 
   return { idList, urlList };
 }

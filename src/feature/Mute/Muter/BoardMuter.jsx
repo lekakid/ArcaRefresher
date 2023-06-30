@@ -13,10 +13,10 @@ import { useContent } from 'util/ContentInfo';
 import { useLoadChecker } from 'util/LoadChecker';
 import { getUserInfo } from 'func/user';
 
-import Info from '../FeatureInfo';
-import { filterContent } from '../func';
-import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
+import { filterContent, trimEmotURL } from '../func';
+import { emoticonFilterSelector } from '../selector';
+import Info from '../FeatureInfo';
 
 const style = {
   '@global': {
@@ -134,10 +134,8 @@ function BoardMuter() {
     );
     images.forEach((e) => {
       const url = e.matches('img')
-        ? e.src.replace('https:', '').replace('?type=list', '')
-        : e.textContent
-            .match(/(\/\/.+)?type=list/g)[0]
-            .replace('?type=list', '');
+        ? trimEmotURL(e.src)
+        : trimEmotURL(e.textContent.match(/(\/\/.+)type=list/g)[0]);
 
       if (emoticionFilter.url.indexOf(url) > -1) {
         e.parentNode.classList.add('filtered-emoticon');
