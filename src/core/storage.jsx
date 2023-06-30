@@ -13,6 +13,7 @@ export function getValue(key, defaultValue, formatUpdater) {
   const valueVersion = value?.version || 0;
   if (formatUpdater && recentVersion > valueVersion) {
     value = formatUpdater(value);
+    GM_setValue(`${key}_v${valueVersion}`);
     GM_setValue(key, value);
   }
 
