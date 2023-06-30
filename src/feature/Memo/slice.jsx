@@ -9,7 +9,7 @@ const defaultStorage = {
   memo: {},
 };
 
-function formatUpdater(storage) {
+function formatUpdater(storage, defaultValue) {
   // version 0 => 1
   const version = storage?.version || 0;
 
@@ -33,7 +33,7 @@ function formatUpdater(storage) {
     }
     default:
       console.warn('지원하지 않는 버전 데이터입니다.', storage);
-      return {};
+      return defaultValue;
   }
 }
 
