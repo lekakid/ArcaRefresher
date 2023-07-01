@@ -22,7 +22,7 @@ function ContextMenu({ targetRef }) {
   });
 
   const handleProfile = useCallback(() => {
-    window.open(`https://arca.live/u/@${data.url}`);
+    GM_openInTab(`https://arca.live/u/@${data.url}`);
     closeMenu();
   }, [closeMenu, data]);
 
@@ -33,7 +33,7 @@ function ContextMenu({ targetRef }) {
   }, [closeMenu, data, setSnack]);
 
   const handleSearchAll = useCallback(async () => {
-    window.open(
+    GM_openInTab(
       `https://arca.live/b/breaking?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
@@ -42,7 +42,7 @@ function ContextMenu({ targetRef }) {
   }, [closeMenu, data]);
 
   const handleSearchChannel = useCallback(async () => {
-    window.open(
+    GM_openInTab(
       `https://arca.live/b/${channel.ID}?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
