@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Chip, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -31,11 +31,10 @@ function CountBar({ renderContainer, classContainer, count, hide }) {
   const [showStates, setShowStates] = useState(undefined);
   const classes = useStyles();
 
-  useLayoutEffect(() => {
-    const updated = Object.fromEntries(
-      Object.keys(count).map((key) => [key, false]),
+  useEffect(() => {
+    setShowStates((prev) =>
+      Object.fromEntries(Object.keys(count).map((key) => [key, prev?.[key]])),
     );
-    setShowStates(updated);
   }, [count]);
 
   const handleClick = useCallback(

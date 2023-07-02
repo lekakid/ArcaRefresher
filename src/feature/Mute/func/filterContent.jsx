@@ -25,28 +25,28 @@ export default function filterContent({
 
   contents.forEach(({ element, user, content, category }) => {
     if (filter.user && filter.userRegex.test(user)) {
-      element.classList.add('filtered', 'filtered-user');
+      element.classList.add('filtered-user');
       count.user += 1;
       count.all += 1;
     } else {
-      element.classList.remove('filtered', 'filtered-user');
+      element.classList.remove('filtered-user');
     }
 
     if (filter.keyword && filter.keywordRegex.test(content)) {
-      element.classList.add('filtered', 'filtered-keyword');
+      element.classList.add('filtered-keyword');
       count.keyword += 1;
       count.all += 1;
     } else {
-      element.classList.remove('filtered', 'filtered-keyword');
+      element.classList.remove('filtered-keyword');
     }
 
     const categoryID = categoryMap[category];
     if (filter.category[categoryID]?.muteArticle) {
-      element.classList.add('filtered', 'filtered-category');
+      element.classList.add('filtered-category');
       count.category += 1;
       count.all += 1;
     } else {
-      element.classList.remove('filtered', 'filtered-category');
+      element.classList.remove('filtered-category');
     }
 
     if (filter.category[categoryID]?.mutePreview) {

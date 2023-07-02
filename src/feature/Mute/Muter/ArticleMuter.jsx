@@ -5,8 +5,9 @@ import { withStyles } from '@material-ui/styles';
 import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'util/LoadChecker';
 
-import Info from '../FeatureInfo';
+import { trimEmotURL } from '../func';
 import { emoticonFilterSelector } from '../selector';
+import Info from '../FeatureInfo';
 
 const style = {
   '@global': {
@@ -40,9 +41,7 @@ const style = {
 };
 
 function ArticleMuter() {
-  const {
-    storage: { hideMutedMark },
-  } = useSelector((state) => state[Info.ID]);
+  const { hideMutedMark } = useSelector((state) => state[Info.ID].storage);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const [article, setArticle] = useState(null);
   const emoticonFilter = useSelector(emoticonFilterSelector);
@@ -60,10 +59,7 @@ function ArticleMuter() {
       articleImage.forEach((i) => {
         const { src } = i;
 
-        const filterFormat = src
-          .replace('https:', '')
-          .replace('-p', '')
-          .replace('.mp4', '.mp4.gif');
+        const filterFormat = trimEmotURL(src);
 
         i.closest('a')?.classList.toggle(
           'muted',

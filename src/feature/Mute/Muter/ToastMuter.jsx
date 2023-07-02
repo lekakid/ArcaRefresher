@@ -27,9 +27,9 @@ const style = {
 };
 
 function ToastMuter() {
-  const {
-    storage: { user, hideMutedMark },
-  } = useSelector((state) => state[Info.ID]);
+  const { user, hideMutedMark } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const toastboxLoaded = useLoadChecker(TOASTBOX);
   const filter = useSelector(emoticonFilterSelector);
 
@@ -38,6 +38,7 @@ function ToastMuter() {
 
     const toastbox = document.querySelector(TOASTBOX);
     const observer = new MutationObserver(() => {
+      // 이모티콘 뮤트 처리
       toastbox.querySelectorAll('img').forEach((img) => {
         const url = img.src.replace('https:', '');
         if (filter.url.indexOf(url) > -1) {
@@ -45,6 +46,7 @@ function ToastMuter() {
         }
       });
 
+      // 사용자 뮤트
       if (!user.length) return;
       toastbox.querySelectorAll('.toast').forEach((toast) => {
         const header = toast
