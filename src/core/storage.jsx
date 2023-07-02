@@ -12,8 +12,8 @@ export function getValue(key, defaultValue, formatUpdater) {
   const recentVersion = defaultValue?.version || 0;
   const valueVersion = value?.version || 0;
   if (formatUpdater && recentVersion > valueVersion) {
+    GM_setValue(`${key}_v${valueVersion}`, value);
     value = formatUpdater(value, defaultValue);
-    GM_setValue(`${key}_v${valueVersion}`);
     GM_setValue(key, value);
   }
 
