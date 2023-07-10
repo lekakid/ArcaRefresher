@@ -26,7 +26,7 @@ function ContextMenu({ targetRef }) {
   });
 
   const handleGoogle = useCallback(() => {
-    window.open(
+    GM_openInTab(
       `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(
         data,
       )}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
@@ -35,7 +35,7 @@ function ContextMenu({ targetRef }) {
   }, [closeMenu, data]);
 
   const handleYandex = useCallback(() => {
-    window.open(
+    GM_openInTab(
       `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
         data,
       )}`,
@@ -45,7 +45,7 @@ function ContextMenu({ targetRef }) {
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
-      window.open(
+      GM_openInTab(
         `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
           data,
         )}`,
@@ -88,7 +88,7 @@ function ContextMenu({ targetRef }) {
           return;
         }
         setSnack();
-        window.open(
+        GM_openInTab(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
         );
       } catch (error) {
@@ -102,7 +102,7 @@ function ContextMenu({ targetRef }) {
   }, [saucenaoBypass, data, closeMenu, setSnack]);
 
   const handleIqdb = useCallback(() => {
-    window.open(`https://iqdb.org/?url=${encodeURIComponent(data)}`);
+    GM_openInTab(`https://iqdb.org/?url=${encodeURIComponent(data)}`);
     closeMenu();
   }, [closeMenu, data]);
 
@@ -128,7 +128,7 @@ function ContextMenu({ targetRef }) {
           data: formdata,
         }).then(({ finalUrl }) => finalUrl);
         setSnack();
-        window.open(resultURL);
+        GM_openInTab(resultURL);
       } catch (error) {
         setSnack({
           msg: ERROR_MSG,
