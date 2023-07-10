@@ -26,6 +26,7 @@ module.exports = merge(common, {
       metajs: false,
       proxyScript: {
         filename: 'ArcaRefresher.proxy.user.js',
+        enable: true,
       },
     }),
   ],
