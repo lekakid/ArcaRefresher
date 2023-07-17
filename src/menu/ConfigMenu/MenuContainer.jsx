@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
   Box,
+  CircularProgress,
   Dialog,
   Divider,
   Drawer,
@@ -25,25 +26,28 @@ import DrawerItem from './DrawerItem';
 function MenuContainer({ classes, groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, drawer, selection } = useSelector((state) => state[Info.ID]);
-  const intersectionObserver = useRef(null);
   const [loadCount, setLoadCount] = useState(1);
+  const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    intersectionObserver.current = new IntersectionObserver(([entry]) => {
+    if (!target) return undefined;
+
+    const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
         setLoadCount((prev) => prev + 1);
+        observer.observe(entry.target);
       }
     });
-  }, []);
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [target]);
 
   useEffect(() => {
     if (mobile) dispatch(setDrawer(false));
   }, [dispatch, mobile]);
-
-  const handleTarget = useCallback((element) => {
-    if (element) intersectionObserver.current.observe(element);
-  }, []);
 
   const handleConfigClose = useCallback(() => {
     if (mobile) dispatch(setDrawer(false));
@@ -86,7 +90,7 @@ function MenuContainer({ classes, groupList, menuList }) {
   if (selection === 'all') {
     content = menuList
       .filter((_value, index) => index < loadCount)
-      .map(({ key, View }) => <View ref={handleTarget} key={key} />);
+      .map(({ key, View }) => <View key={key} />);
   } else {
     content = menuList.map(
       ({ key, View }) => selection === key && <View key={key} />,
@@ -146,7 +150,19 @@ function MenuContainer({ classes, groupList, menuList }) {
               {navi}
             </List>
           </Drawer>
-          <main className={classes.content}>{content}</main>
+          <main className={classes.content}>
+            {content}
+            {selection === 'all' && loadCount < menuList.length && (
+              <Box
+                ref={setTarget}
+                display="flex"
+                justifyContent="center"
+                marginTop={4}
+              >
+                <CircularProgress />
+              </Box>
+            )}
+          </main>
         </Box>
       </Dialog>
       <HeaderButton />
