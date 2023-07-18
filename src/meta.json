@@ -11,13 +11,13 @@
   "connect": [
     "namu.la",
     "saucenao.com",
-    "twigaten.204504byse.info",
     "ascii2d.net"
   ],
   "noframes": true,
   "run-at": "document-body",
   "grant": [
     "GM_info",
+    "GM_openInTab",
     "GM_setValue",
     "GM_getValue",
     "GM_deleteValue",

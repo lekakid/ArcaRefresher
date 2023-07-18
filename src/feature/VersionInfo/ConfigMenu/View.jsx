@@ -21,11 +21,11 @@ const View = React.forwardRef((_props, ref) => {
   const [open, setOpen] = useState(false);
 
   const handleVisitChannel = useCallback(() => {
-    window.open('https://arca.live/b/namurefresher');
+    GM_openInTab('https://arca.live/b/namurefresher');
   }, []);
 
   const handleVisitGithub = useCallback(() => {
-    window.open('https://github.com/lekakid/ArcaRefresher');
+    GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
   const handleVisitToss = useCallback(() => {

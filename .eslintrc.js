@@ -31,6 +31,7 @@ module.exports = {
   },
   globals: {
     GM_info: true,
+    GM_openInTab: true,
     GM_setValue: true,
     GM_getValue: true,
     GM_deleteValue: true,

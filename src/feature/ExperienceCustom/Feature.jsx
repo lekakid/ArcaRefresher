@@ -71,7 +71,7 @@ export default function ExperienceCustomizer() {
   const [unfoldContainer, setUnfoldContainer] = useState(null);
   const confirmRef = useRef();
   const [confirm, setConfirm] = useState(false);
-  const [resizeContainer, setResizeContaier] = useState(null);
+  const [fakePreview, setFakePreview] = useState(null);
   const classes = useStyles();
 
   // 게시물 로드 확인 및 엘리먼트 저장
@@ -231,21 +231,19 @@ export default function ExperienceCustomizer() {
 
     if (preview.clientWidth < 10 && preview.clientHeight < 10) {
       const alterParent = document.createElement('span');
-      preview.parentElement.append(alterParent);
+      preview.parentElement.insertAdjacentElement('afterbegin', alterParent);
       alterParent.append(preview);
       const container = document.createElement('span');
-      alterParent.append(container);
-      setResizeContaier(container);
+      preview.parentElement.insertAdjacentElement('afterbegin', container);
+      setFakePreview({ container, preview });
     }
   }, [article]);
 
   const handleFakePreview = useCallback(() => {
-    const thumb = document.querySelector(PREVIEW_SELECTOR);
-    thumb.style = { width: '', height: '' };
-    setResizeContaier((prev) => {
-      thumb.closest('span').replaceWith(thumb);
-      prev.remove();
-      return null;
+    setFakePreview(({ preview, container }) => {
+      preview.style = { width: '', height: '' };
+      preview.parentElement.replaceWith(preview);
+      container.remove();
     });
   }, []);
 
@@ -348,8 +346,8 @@ export default function ExperienceCustomizer() {
           <CommentButton className="unfold-comment" />
         </Portal>
       )}
-      {resizeContainer && (
-        <Portal container={resizeContainer}>
+      {fakePreview && (
+        <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">
             <IconButton onClick={handleFakePreview}>
               <ZoomIn />
