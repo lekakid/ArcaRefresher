@@ -63,14 +63,14 @@ const View = React.forwardRef((_props, ref) => {
           });
 
           const updateData = { ...memoData };
-          memoList.forEach(({ userType, memoKey, memoValue }) => {
+          memoList.forEach(({ userType, memoKey, memoText }) => {
             switch (userType) {
               case 1:
-                (updateData[`#${memoKey}`] ??= {}).msg = memoValue;
+                (updateData[`#${memoKey}`] ??= {}).msg = memoText;
                 break;
               case 0:
               case 2:
-                (updateData[memoKey] ??= {}).msg = memoValue;
+                (updateData[memoKey] ??= {}).msg = memoText;
                 break;
               default:
                 break;
@@ -92,7 +92,7 @@ const View = React.forwardRef((_props, ref) => {
       const row = {
         userType: 0,
         memoKey: id.replace('#', ''),
-        memoValue: msg,
+        memoText: msg,
       };
 
       if (ipRegex.test(id)) row.userType = 2;
