@@ -22,7 +22,7 @@ export const TOASTBOX = '#toastbox';
 
 // 컨테이너 내에 있는 아이템
 export const BOARD_NOTICES = 'a.vrow.notice:not(.notice-unfilter)';
-export const BOARD_ITEMS = 'a.vrow:not(.notice)';
+export const BOARD_ITEMS = '.vrow.column:not(.notice):not(.head), .vrow.hybrid';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR = '.article-head .user-info';
 export const ARTICLE_IMAGES =

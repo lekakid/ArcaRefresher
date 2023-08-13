@@ -96,7 +96,7 @@ function BoardMuter() {
     const muteArticle = () => {
       const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
       const articleInfo = articleList
-        .filter((a) => !a.href.includes('#c_'))
+        .filter((a) => !a.href?.includes('#c_'))
         .map((a) => ({
           element: a,
           user: getUserInfo(a.querySelector('.user-info')),
