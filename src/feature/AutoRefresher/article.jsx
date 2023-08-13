@@ -1,5 +1,4 @@
 import { BOARD_NOTICES, BOARD_ITEMS, BOARD, USER_INFO } from 'core/selector';
-import { getDateStr, in24Hours } from 'func/time';
 import toDocument from 'func/toDocument';
 
 export async function getNewArticle() {
@@ -51,20 +50,14 @@ export function swapArticle(
     articleContainer.removeChild(articleContainer.lastChild);
   });
 
-  // calibrate preview image, time zone
+  // calibrate preview image
   const calibrateArticles = [
     ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
   ];
   calibrateArticles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
     lazyWrapper?.replaceWith(lazyWrapper.firstElementChild);
-
-    const time = a.querySelector('time');
-    if (time) {
-      time.textContent = getDateStr(
-        time.dateTime,
-        in24Hours(time.dateTime) ? 'hh:mm' : 'year.month.day',
-      );
-    }
   });
+
+  unsafeWindow.applyLocalTimeFix();
 }

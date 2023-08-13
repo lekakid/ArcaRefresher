@@ -12,7 +12,6 @@ import {
 } from 'core/selector';
 import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'util/LoadChecker';
-import { getDateStr } from 'func/time';
 import toDocument from 'func/toDocument';
 
 const style = {
@@ -81,11 +80,8 @@ function CommentRefresh({ classes }) {
     const newComments = resultDocument.querySelector(COMMENT_INNER);
     if (!newComments) return;
 
-    newComments.querySelectorAll('time').forEach((time) => {
-      time.textContent = getDateStr(time.dateTime, 'year-month-day hh:mm:ss');
-    });
-
     comment.current.replaceWith(newComments);
+    unsafeWindow.applyLocalTimeFix();
   }, []);
 
   return (
