@@ -13,6 +13,7 @@ const defaultStorage = {
   category: {},
   hideServiceNotice: false,
   hideNoPermission: false,
+  hideClosedDeal: true,
   boardBarPos: 'afterbegin',
   hideCountBar: false,
   hideMutedMark: false,
@@ -100,6 +101,9 @@ export const slice = createSlice({
     $toggleHideNoPermission(state) {
       state.storage.hideNoPermission = !state.storage.hideNoPermission;
     },
+    $toggleHideClosedDeal(state) {
+      state.storage.hideClosedDeal = !state.storage.hideClosedDeal;
+    },
     $setBoardBarPos(state, action) {
       state.storage.boardBarPos = action.payload;
     },
@@ -127,6 +131,7 @@ export const {
   $setCategoryConfig,
   $toggleHideNoticeService,
   $toggleHideNoPermission,
+  $toggleHideClosedDeal,
   $setBoardBarPos,
   $toggleCountBar,
   $toggleMutedMark,
