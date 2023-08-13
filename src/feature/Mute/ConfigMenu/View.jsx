@@ -31,6 +31,7 @@ import {
   $setCategoryConfig,
   $setBoardBarPos,
   $toggleHideNoticeService,
+  $toggleHideClosedDeal,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 import { emoticonTableSelector } from '../selector';
@@ -57,6 +58,7 @@ const View = React.forwardRef((_props, ref) => {
   const {
     hideServiceNotice,
     hideNoPermission,
+    hideClosedDeal,
     boardBarPos,
     hideCountBar,
     hideMutedMark,
@@ -75,6 +77,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleNoPermission = useCallback(() => {
     dispatch($toggleHideNoPermission());
+  }, [dispatch]);
+
+  const handleClosedDeal = useCallback(() => {
+    dispatch($toggleHideClosedDeal());
   }, [dispatch]);
 
   const handleCountBarPos = useCallback(
@@ -161,6 +167,12 @@ const View = React.forwardRef((_props, ref) => {
                 checked={hideNoPermission}
                 onChange={handleNoPermission}
               />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleClosedDeal}>
+            <ListItemText>[핫딜 채널] 식은딜 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch checked={hideClosedDeal} onChange={handleClosedDeal} />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider>

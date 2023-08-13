@@ -37,7 +37,10 @@ const style = {
     '.hide-service-notice .notice-service': {
       display: 'none !important',
     },
-    '.hide-no-permission a.vrow[href$="#c_"]': {
+    '.hide-no-permission .vrow[href$="#c_"]': {
+      display: 'none !important',
+    },
+    '.hide-closed-deal .vrow.ar-closed': {
       display: 'none !important',
     },
   },
@@ -55,6 +58,7 @@ function BoardMuter() {
     hideCountBar,
     hideServiceNotice,
     hideNoPermission,
+    hideClosedDeal,
   } = useSelector((state) => state[Info.ID].storage);
   const [board, setBoard] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
@@ -158,6 +162,20 @@ function BoardMuter() {
       hideNoPermission,
     );
   }, [hideNoPermission]);
+
+  // [핫딜 채널] 식은딜 게시물
+  useLayoutEffect(() => {
+    if (!board) return;
+
+    const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
+    articleList
+      .filter((a) => a.querySelector('.deal-close'))
+      .forEach((a) => a.classList.add('ar-closed'));
+    document.documentElement.classList.toggle(
+      'hide-closed-deal',
+      hideClosedDeal,
+    );
+  }, [board, hideClosedDeal]);
 
   if (!container) return null;
   return (
