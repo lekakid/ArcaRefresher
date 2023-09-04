@@ -10,6 +10,7 @@ const defaultStorage = {
   topNews: true,
   recentVisit: true,
   sideContents: true,
+  sideBests: false,
   sideNews: true,
   sideMenu: true,
   avatar: true,
@@ -49,6 +50,9 @@ export const slice = createSlice({
     },
     $toggleSideContents(state) {
       state.storage.sideContents = !state.storage.sideContents;
+    },
+    $toggleSideBests(state) {
+      state.storage.sideBests = !state.storage.sideBests;
     },
     $toggleSideNews(state) {
       state.storage.sideNews = !state.storage.sideNews;
@@ -96,6 +100,7 @@ export const {
   $toggleTopNews,
   $toggleRecentVisit,
   $toggleSideContents,
+  $toggleSideBests,
   $toggleSideNews,
   $toggleSideMenu,
   $toggleAvatar,

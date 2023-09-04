@@ -36,6 +36,7 @@ import {
   $toggleLongComment,
   $toggleSideContents,
   $toggleHideVoiceComment,
+  $toggleSideBests,
 } from '../slice';
 
 function labelFormat(x) {
@@ -55,26 +56,25 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    storage: {
-      enabled,
-      fontSize,
-      notifyPosition,
-      topNews,
-      recentVisit,
-      sideContents,
-      sideNews,
-      sideMenu,
-      avatar,
-      userinfoWidth,
-      resizeImage,
-      resizeVideo,
-      resizeEmoticonPalette,
-      hideUnvote,
-      modifiedIndicator,
-      hideVoiceComment,
-      unfoldLongComment,
-    },
-  } = useSelector((state) => state[Info.ID]);
+    enabled,
+    fontSize,
+    notifyPosition,
+    topNews,
+    recentVisit,
+    sideContents,
+    sideBests,
+    sideNews,
+    sideMenu,
+    avatar,
+    userinfoWidth,
+    resizeImage,
+    resizeVideo,
+    resizeEmoticonPalette,
+    hideUnvote,
+    modifiedIndicator,
+    hideVoiceComment,
+    unfoldLongComment,
+  } = useSelector((state) => state[Info.ID].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();
 
@@ -106,6 +106,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleSideContents = useCallback(() => {
     dispatch($toggleSideContents());
+  }, [dispatch]);
+
+  const handleSideBests = useCallback(() => {
+    dispatch($toggleSideBests());
   }, [dispatch]);
 
   const handleSideNews = useCallback(() => {
@@ -240,6 +244,17 @@ const View = React.forwardRef((_props, ref) => {
                         checked={sideContents}
                         onChange={handleSideContents}
                       />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem
+                    className={classes.nested}
+                    divider
+                    button
+                    onClick={handleSideBests}
+                  >
+                    <ListItemText primary="개념글 패널 표시" />
+                    <ListItemSecondaryAction>
+                      <Switch checked={sideBests} onChange={handleSideBests} />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <ListItem

@@ -45,6 +45,11 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
+      SideBests: {
+        '& .sidebar .sidebar-item:nth-child(2)': {
+          display: 'none !important',
+        },
+      },
       SideNews: {
         '& #newsRank': {
           display: 'none !important',
@@ -143,6 +148,7 @@ export default function LayoutCustom() {
       recentVisit,
       topNews,
       sideContents,
+      sideBests,
       sideNews,
       sideMenu,
       avatar,
@@ -162,6 +168,7 @@ export default function LayoutCustom() {
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
         [classes.SideContents]: !sideContents,
+        [classes.SideBests]: !sideBests,
         [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
