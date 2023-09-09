@@ -1,107 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import {
-  Box,
-  Checkbox,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core';
+import React, { useCallback, useState } from 'react';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-const useStyles = makeStyles({
-  imgList: {
-    minHeight: 200,
-    maxHeight: 400,
-    '& video': {
-      top: '50%',
-      width: '100%',
-      position: 'relative',
-      transform: 'translateY(-50%)',
+const columns = [
+  { field: 'url', headerName: '이미지 주소', flex: 1 },
+  { field: 'memo', headerName: '메모', flex: 1, editable: true },
+];
+
+function NoRowsOverlay() {
+  return <GridOverlay>저장된 자짤이 없습니다.</GridOverlay>;
+}
+
+export default function ImageSelector({ rows, disabled, onSelect, onEdit }) {
+  const [pageSize, setPageSize] = useState(10);
+
+  const handleSelection = useCallback(
+    (current) => {
+      onSelect(current);
     },
-  },
-  itemBar: {
-    background: 'none',
-  },
-  checkbox: {
-    background: 'rgba(255, 255, 255, 0.5) !important',
-  },
-});
+    [onSelect],
+  );
 
-export default function ImageSelector({ list, selection, disabled, onChange }) {
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const classes = useStyles();
-  const [currentList, setCurrentList] = useState();
-  const [checked, setChecked] = useState([]);
+  const handleCellEdit = useCallback(
+    ({ id, field, value }) => {
+      const updatedRows = rows.map((row) =>
+        row.url === id ? { ...row, [field]: value } : row,
+      );
+      onEdit?.(updatedRows);
+    },
+    [onEdit, rows],
+  );
 
-  useEffect(() => {
-    const updateChecked = list.map(() => false);
-    selection.forEach((s) => {
-      updateChecked[s] = true;
-    });
-    setChecked(updateChecked);
-    setCurrentList(list);
-  }, [list, selection]);
+  const handlePageSize = useCallback((currentSize) => {
+    setPageSize(currentSize);
+  }, []);
 
-  const handleCheck = (index) => () => {
-    const update = [...checked];
-    update[index] = !update[index];
-
-    setChecked(update);
-    if (onChange) {
-      const updateSelection = update
-        .map((c, i) => (c ? i : -1))
-        .filter((i) => i > -1);
-      onChange(updateSelection);
-    }
-  };
-
-  if (list.length === 0) {
-    return (
-      <Box
-        width="100%"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        className={classes.imgList}
-      >
-        <Typography>저장된 자짤이 없습니다.</Typography>
-      </Box>
-    );
-  }
-
-  if (list !== currentList) return null;
   return (
-    <ImageList
-      cols={mobile ? 3 : 5}
-      rowHeight={100}
-      className={classes.imgList}
-    >
-      {list.map((img, index) => (
-        <ImageListItem key={img} onClick={handleCheck(index)}>
-          {img.indexOf('.mp4') > -1 ? (
-            <video src={img} alt={img} autoPlay loop muted />
-          ) : (
-            <img src={img} alt={img} />
-          )}
-          <ImageListItemBar
-            className={classes.itemBar}
-            position="top"
-            actionPosition="left"
-            actionIcon={
-              !disabled && (
-                <Checkbox
-                  size="small"
-                  className={classes.checkbox}
-                  checked={checked[index]}
-                  onChange={handleCheck(index)}
-                />
-              )
-            }
-          />
-        </ImageListItem>
-      ))}
-    </ImageList>
+    <DataGrid
+      rows={rows}
+      getRowId={(row) => row.url}
+      columns={columns}
+      autoHeight
+      rowHeight={40}
+      pagination
+      checkboxSelection={!disabled}
+      disableColumnMenu
+      disableSelectionOnClick
+      components={{
+        NoRowsOverlay,
+      }}
+      pageSize={pageSize}
+      rowsPerPageOptions={[10, 25, 50, 100]}
+      onPageSizeChange={handlePageSize}
+      onCellEditCommit={handleCellEdit}
+      onSelectionModelChange={handleSelection}
+    />
   );
 }
