@@ -23,6 +23,7 @@ const defaultStorage = {
   modifiedIndicator: false,
   hideVoiceComment: false,
   unfoldLongComment: false,
+  fixDarkModeWriteForm: true,
 };
 
 const initialState = {
@@ -90,6 +91,9 @@ export const slice = createSlice({
     $toggleLongComment(state) {
       state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
     },
+    $toggleDarkModeWriteForm(state) {
+      state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
+    },
   },
 });
 
@@ -113,6 +117,7 @@ export const {
   $toggleModifiedIndicator,
   $toggleHideVoiceComment,
   $toggleLongComment,
+  $toggleDarkModeWriteForm,
 } = slice.actions;
 
 export default slice.reducer;

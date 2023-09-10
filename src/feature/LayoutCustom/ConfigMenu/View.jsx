@@ -37,6 +37,7 @@ import {
   $toggleSideContents,
   $toggleHideVoiceComment,
   $toggleSideBests,
+  $toggleDarkModeWriteForm,
 } from '../slice';
 
 function labelFormat(x) {
@@ -74,6 +75,7 @@ const View = React.forwardRef((_props, ref) => {
     modifiedIndicator,
     hideVoiceComment,
     unfoldLongComment,
+    fixDarkModeWriteForm,
   } = useSelector((state) => state[Info.ID].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();
@@ -166,6 +168,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleUnfoldLongComment = useCallback(() => {
     dispatch($toggleLongComment());
+  }, [dispatch]);
+
+  const handleDarkModeWriteForm = useCallback(() => {
+    dispatch($toggleDarkModeWriteForm());
   }, [dispatch]);
 
   return (
@@ -335,7 +341,7 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleUnfoldLongComment}>
+          <ListItem divider button onClick={handleUnfoldLongComment}>
             <ListItemText
               primary="장문 댓글 바로보기"
               secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
@@ -344,6 +350,18 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={unfoldLongComment}
                 onChange={handleUnfoldLongComment}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleDarkModeWriteForm}>
+            <ListItemText
+              primary="다크모드 글작성 배경색 강제 픽스"
+              secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={fixDarkModeWriteForm}
+                onChange={handleDarkModeWriteForm}
               />
             </ListItemSecondaryAction>
           </ListItem>

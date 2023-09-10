@@ -127,6 +127,21 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
+      FixDarkModeWriteForm: {
+        '& .dark-theme.fr-box.fr-basic .fr-wrapper': {
+          border: '1px solid var(--color-bd-outer)',
+          borderBottom: 'none',
+        },
+        '& .dark-theme.fr-box.fr-basic .fr-element': {
+          background: 'var(--color-bg-body)',
+          color: 'var(--color-text)',
+        },
+        '& .dark-theme .fr-second-toolbar': {
+          background: '#353535',
+          border: '1px solid var(--color-bd-outer)',
+          color: 'var(--color-text)',
+        },
+      },
     };
   },
   {
@@ -135,9 +150,9 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const {
-    storage: { enabled, ...storage },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, ...storage } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const classes = useStyles(storage);
 
   useLayoutEffect(() => {
@@ -156,6 +171,7 @@ export default function LayoutCustom() {
       modifiedIndicator,
       hideVoiceComment,
       unfoldLongComment,
+      fixDarkModeWriteForm,
     } = storage;
     const styles = clsx(
       classes.FontSize,
@@ -176,6 +192,7 @@ export default function LayoutCustom() {
         [classes.ModifiedIndicator]: !modifiedIndicator,
         [classes.HideVoiceComment]: hideVoiceComment,
         [classes.UnfoldLongComment]: unfoldLongComment,
+        [classes.FixDarkModeWriteForm]: fixDarkModeWriteForm,
       },
     ).split(' ');
     document.documentElement.classList.add(...styles);
