@@ -10,7 +10,7 @@ const defaultStorage = {
   topNews: true,
   recentVisit: true,
   sideContents: true,
-  sideBests: false,
+  sideBests: true,
   sideNews: true,
   sideMenu: true,
   avatar: true,
