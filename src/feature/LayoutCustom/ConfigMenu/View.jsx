@@ -38,6 +38,7 @@ import {
   $toggleHideVoiceComment,
   $toggleSideBests,
   $toggleDarkModeWriteForm,
+  $toggleReverseComment,
 } from '../slice';
 
 function labelFormat(x) {
@@ -73,6 +74,7 @@ const View = React.forwardRef((_props, ref) => {
     resizeEmoticonPalette,
     hideUnvote,
     modifiedIndicator,
+    reverseComment,
     hideVoiceComment,
     unfoldLongComment,
     fixDarkModeWriteForm,
@@ -160,6 +162,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleModifiedIndicator = useCallback(() => {
     dispatch($toggleModifiedIndicator());
+  }, [dispatch]);
+
+  const handleReverseComment = useCallback(() => {
+    dispatch($toggleReverseComment());
   }, [dispatch]);
 
   const handleHideVoiceComment = useCallback(() => {
@@ -329,6 +335,15 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={modifiedIndicator}
                 onChange={handleModifiedIndicator}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleReverseComment}>
+            <ListItemText primary="댓글 입력창을 가장 위로 올리기" />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={reverseComment}
+                onChange={handleReverseComment}
               />
             </ListItemSecondaryAction>
           </ListItem>

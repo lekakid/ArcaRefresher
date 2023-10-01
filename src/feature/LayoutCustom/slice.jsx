@@ -21,6 +21,7 @@ const defaultStorage = {
   resizeEmoticonPalette: 2,
   hideUnvote: false,
   modifiedIndicator: false,
+  reverseComment: false,
   hideVoiceComment: false,
   unfoldLongComment: false,
   fixDarkModeWriteForm: true,
@@ -85,6 +86,9 @@ export const slice = createSlice({
     $toggleModifiedIndicator(state) {
       state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
     },
+    $toggleReverseComment(state) {
+      state.storage.reverseComment = !state.storage.reverseComment;
+    },
     $toggleHideVoiceComment(state) {
       state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
     },
@@ -115,6 +119,7 @@ export const {
   $setResizeEmoticonPalette,
   $toggleUnvote,
   $toggleModifiedIndicator,
+  $toggleReverseComment,
   $toggleHideVoiceComment,
   $toggleLongComment,
   $toggleDarkModeWriteForm,

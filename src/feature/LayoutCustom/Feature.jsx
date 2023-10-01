@@ -114,6 +114,21 @@ const useStyles = makeStyles(
           display: 'none',
         },
       },
+      ReverseComment: {
+        '& #comment': {
+          display: 'grid',
+          gridTemplateAreas: '"title"\n"form"\n"comments"',
+        },
+        '& #comment .title': {
+          gridArea: 'title',
+        },
+        '& #comment #commentForm': {
+          gridArea: 'form',
+        },
+        '& #comment .list-area': {
+          gridArea: 'comments',
+        },
+      },
       HideVoiceComment: {
         '& #comment .btn-voicecmt': {
           display: 'none !important',
@@ -169,6 +184,7 @@ export default function LayoutCustom() {
       avatar,
       hideUnvote,
       modifiedIndicator,
+      reverseComment,
       hideVoiceComment,
       unfoldLongComment,
       fixDarkModeWriteForm,
@@ -190,6 +206,7 @@ export default function LayoutCustom() {
         [classes.Avatar]: !avatar,
         [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
+        [classes.ReverseComment]: reverseComment,
         [classes.HideVoiceComment]: hideVoiceComment,
         [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.FixDarkModeWriteForm]: fixDarkModeWriteForm,
