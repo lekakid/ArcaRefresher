@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.26.0",
+  "version": "3.26.1",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -13,12 +13,8 @@
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "hotfix:branch": "git checkout master && git checkout -b hotfix",
-    "hotfix:version": "version=$(npm version patch --no-git-tag-version) && git commit -am \"[package] ${version}\"",
-    "hotfix": "npm run hotfix:branch && npm run hotfix:version",
-    "minor:branch": "git checkout develop",
-    "minor:version": "version=$(npm version minor --no-git-tag-version) && git commit -am \"[package] ${version}\"",
-    "minor": "npm run minor:branch && npm run minor:version"
+    "hotfix": "version=$(npm --no-git-tag-version version patch) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}",
+    "minor": "version=$(npm --no-git-tag-version version minor) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
