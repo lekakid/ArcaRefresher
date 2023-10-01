@@ -151,6 +151,9 @@ const useStyles = makeStyles(
           background: 'var(--color-bg-body)',
           color: 'var(--color-text)',
         },
+        '& .dark-theme.fr-box.fr-basic .fr-placeholder': {
+          zIndex: 3,
+        },
         '& .dark-theme .fr-second-toolbar': {
           background: '#353535',
           border: '1px solid var(--color-bd-outer)',
