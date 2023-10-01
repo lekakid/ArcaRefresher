@@ -10,6 +10,7 @@ const defaultStorage = {
   topNews: true,
   recentVisit: true,
   sideContents: true,
+  sideBests: false,
   sideNews: true,
   sideMenu: true,
   avatar: true,
@@ -20,8 +21,10 @@ const defaultStorage = {
   resizeEmoticonPalette: 2,
   hideUnvote: false,
   modifiedIndicator: false,
+  reverseComment: false,
   hideVoiceComment: false,
   unfoldLongComment: false,
+  fixDarkModeWriteForm: true,
 };
 
 const initialState = {
@@ -49,6 +52,9 @@ export const slice = createSlice({
     },
     $toggleSideContents(state) {
       state.storage.sideContents = !state.storage.sideContents;
+    },
+    $toggleSideBests(state) {
+      state.storage.sideBests = !state.storage.sideBests;
     },
     $toggleSideNews(state) {
       state.storage.sideNews = !state.storage.sideNews;
@@ -80,11 +86,17 @@ export const slice = createSlice({
     $toggleModifiedIndicator(state) {
       state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
     },
+    $toggleReverseComment(state) {
+      state.storage.reverseComment = !state.storage.reverseComment;
+    },
     $toggleHideVoiceComment(state) {
       state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
     },
     $toggleLongComment(state) {
       state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
+    },
+    $toggleDarkModeWriteForm(state) {
+      state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
     },
   },
 });
@@ -96,6 +108,7 @@ export const {
   $toggleTopNews,
   $toggleRecentVisit,
   $toggleSideContents,
+  $toggleSideBests,
   $toggleSideNews,
   $toggleSideMenu,
   $toggleAvatar,
@@ -106,8 +119,10 @@ export const {
   $setResizeEmoticonPalette,
   $toggleUnvote,
   $toggleModifiedIndicator,
+  $toggleReverseComment,
   $toggleHideVoiceComment,
   $toggleLongComment,
+  $toggleDarkModeWriteForm,
 } = slice.actions;
 
 export default slice.reducer;

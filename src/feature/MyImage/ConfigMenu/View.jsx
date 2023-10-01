@@ -27,7 +27,6 @@ import {
   Done,
   FileCopy,
   FlipToFront,
-  SelectAll,
 } from '@material-ui/icons';
 
 import { useContent } from 'util/ContentInfo';
@@ -109,14 +108,6 @@ const View = React.forwardRef((_props, ref) => {
     [createFolder],
   );
 
-  const onSelectAll = useCallback(() => {
-    if (imgList[currentFolder].length === selection.length) {
-      setSelection([]);
-    } else {
-      setSelection([...Array(imgList[currentFolder].length).keys()]);
-    }
-  }, [imgList, currentFolder, selection]);
-
   const setMoveMode = useCallback(() => {
     setMoveInfo({ folder: currentFolder, selection });
   }, [currentFolder, selection]);
@@ -127,9 +118,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleCopy = useCallback(() => {
     const targetList = imgList[currentFolder];
-    const move = moveInfo.selection
-      .map((i) => imgList[moveInfo.folder][i])
-      .filter((i) => !targetList.includes(i));
+
+    const move = imgList[moveInfo.folder]
+      .filter((i) => moveInfo.selection.includes(i.url))
+      .filter((i) => !targetList.some((j) => j.url === i.url));
     const update = [...targetList, ...move];
     dispatch($setFolderData({ folder: currentFolder, list: update }));
 
@@ -138,34 +130,35 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleMove = useCallback(() => {
     const targetList = imgList[currentFolder];
-    const checked = imgList[moveInfo.folder].map(() => false);
-    moveInfo.selection.forEach((i) => {
-      checked[i] = true;
-    });
 
     const move = imgList[moveInfo.folder]
-      .filter((_img, i) => checked[i])
-      .filter((i) => !targetList.includes(i));
+      .filter((i) => moveInfo.selection.includes(i.url))
+      .filter((i) => !targetList.some((j) => j.url === i.url));
     const update = [...targetList, ...move];
     dispatch($setFolderData({ folder: currentFolder, list: update }));
 
-    const rest = imgList[moveInfo.folder].filter((_img, i) => !checked[i]);
+    const rest = imgList[moveInfo.folder].filter(
+      (i) => !moveInfo.selection.includes(i.url),
+    );
     dispatch($setFolderData({ folder: moveInfo.folder, list: rest }));
 
     setMoveInfo(undefined);
   }, [imgList, currentFolder, moveInfo, dispatch]);
 
   const handleDelete = useCallback(() => {
-    const checked = imgList[currentFolder].map(() => false);
-    selection.forEach((i) => {
-      checked[i] = true;
-    });
     const update = imgList[currentFolder].filter(
-      (_img, index) => !checked[index],
+      (img) => !selection.includes(img.url),
     );
     dispatch($setFolderData({ folder: currentFolder, list: update }));
     setSelection([]);
   }, [dispatch, imgList, currentFolder, selection]);
+
+  const handleChange = useCallback(
+    (update) => {
+      dispatch($setFolderData({ folder: currentFolder, list: update }));
+    },
+    [dispatch, currentFolder],
+  );
 
   const folderList = Object.keys(imgList).sort();
   return (
@@ -190,7 +183,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
           <ListItem>
             <ListItemText
-              primary="갤러리"
+              primary="자짤 목록"
               secondary="채널 slug와 같은 이름을 가진 폴더는 글 작성 시 이미지가 자동으로 첨부됩니다."
             />
           </ListItem>
@@ -285,9 +278,6 @@ const View = React.forwardRef((_props, ref) => {
                       >
                         선택 삭제
                       </Button>
-                      <Button startIcon={<SelectAll />} onClick={onSelectAll}>
-                        전체 선택
-                      </Button>
                     </>
                   )}
                   {moveInfo && (
@@ -317,10 +307,10 @@ const View = React.forwardRef((_props, ref) => {
               </Grid>
               <Divider />
               <ImageSelector
-                list={imgList[currentFolder]}
-                selection={selection}
+                rows={imgList[currentFolder]}
                 disabled={!!moveInfo}
-                onChange={(update) => setSelection(update)}
+                onSelect={(update) => setSelection(update)}
+                onEdit={handleChange}
               />
             </Paper>
           </ListItem>

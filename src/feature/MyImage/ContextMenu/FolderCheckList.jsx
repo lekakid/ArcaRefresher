@@ -12,7 +12,7 @@ import {
   Grid,
   TextField,
 } from '@material-ui/core';
-import { Add, Done } from '@material-ui/icons';
+import { Add, ExpandMore } from '@material-ui/icons';
 
 import { useContent } from 'util/ContentInfo';
 
@@ -21,42 +21,45 @@ import { $addFolder, $addImage, $removeImage } from '../slice';
 
 function FolderCheckList({ open, url, onClose }) {
   const dispatch = useDispatch();
-  const { channel } = useContent();
+  const { channel, article } = useContent();
   const { imgList } = useSelector((state) => state[Info.ID].storage);
-  const [openInput, setOpenInput] = useState(false);
-  const [input, setInput] = useState('');
+  const [openFolderInput, setOpenFolderInput] = useState(false);
+  const [folderInput, setFolderInput] = useState('');
 
   const handleSelectFolder = useCallback(
     (e) => {
       const action = e.target.checked ? $addImage : $removeImage;
-      dispatch(action({ folder: e.target.name, url }));
+      dispatch(
+        action({ folder: e.target.name, image: { url, memo: article.url } }),
+      );
     },
-    [dispatch, url],
+    [article.url, dispatch, url],
   );
 
-  const handleInput = useCallback((e) => {
+  const handleFolderInput = useCallback((e) => {
     const regex = /^[0-9a-zA-Zㄱ-힣]*$/;
     if (!regex.test(e.target.value)) return;
-    setInput(e.target.value);
+    setFolderInput(e.target.value);
   }, []);
 
   const createFolder = useCallback(() => {
-    dispatch($addFolder(input));
-    dispatch($addImage({ folder: input, url }));
-    setOpenInput(false);
-  }, [dispatch, input, url]);
+    dispatch($addFolder(folderInput));
+    setOpenFolderInput(false);
+  }, [dispatch, folderInput]);
 
   const handleFocus = useCallback((e) => {
     e.target.select();
   }, []);
 
-  const handleEnter = useCallback(
+  const handleFolderEnter = useCallback(
     (e) => {
       if (e?.key !== 'Enter') return;
+      if (folderInput === '') return;
+      if (Object.keys(imgList).includes(folderInput)) return;
 
       createFolder();
     },
-    [createFolder],
+    [createFolder, folderInput, imgList],
   );
 
   const folderList = Object.entries(imgList);
@@ -72,7 +75,7 @@ function FolderCheckList({ open, url, onClose }) {
                 <Checkbox
                   size="small"
                   name={folder}
-                  checked={list.includes(url)}
+                  checked={list.some((i) => i.url === url)}
                   onChange={handleSelectFolder}
                 />
               }
@@ -82,48 +85,51 @@ function FolderCheckList({ open, url, onClose }) {
         </FormGroup>
       </DialogContent>
       <DialogActions>
-        {openInput && (
-          <Grid container>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                size="small"
-                autoFocus
-                value={input}
-                error={folderList.some(([folder]) => input === folder)}
-                onChange={handleInput}
-                onFocus={handleFocus}
-                onKeyUp={handleEnter}
-              />
-            </Grid>
+        <Grid container>
+          {openFolderInput && (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  autoFocus
+                  value={folderInput}
+                  error={folderList.includes(folderInput) || folderInput === ''}
+                  onChange={handleFolderInput}
+                  onFocus={handleFocus}
+                  onKeyUp={handleFolderEnter}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  startIcon={<Add />}
+                  disabled={
+                    folderList.includes(folderInput) || folderInput === ''
+                  }
+                  onClick={createFolder}
+                >
+                  폴더 추가
+                </Button>
+              </Grid>
+            </>
+          )}
+          {!openFolderInput && (
             <Grid item xs={12}>
               <Button
                 fullWidth
-                startIcon={<Done />}
-                disabled={
-                  folderList.some(([folder]) => input === folder) ||
-                  input === ''
-                }
-                onClick={createFolder}
+                startIcon={<ExpandMore />}
+                onClick={() => {
+                  setFolderInput(channel.ID);
+                  setOpenFolderInput(true);
+                }}
               >
-                완료
+                새 폴더 만들기
               </Button>
             </Grid>
-          </Grid>
-        )}
-        {!openInput && (
-          <Button
-            fullWidth
-            startIcon={<Add />}
-            onClick={() => {
-              setInput(channel.ID);
-              setOpenInput(true);
-            }}
-          >
-            새 폴더 만들기
-          </Button>
-        )}
+          )}
+        </Grid>
       </DialogActions>
     </Dialog>
   );

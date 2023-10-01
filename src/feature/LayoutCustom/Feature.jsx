@@ -45,6 +45,11 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
+      SideBests: {
+        '& .sidebar .sidebar-item:nth-child(2)': {
+          display: 'none !important',
+        },
+      },
       SideNews: {
         '& #newsRank': {
           display: 'none !important',
@@ -109,6 +114,21 @@ const useStyles = makeStyles(
           display: 'none',
         },
       },
+      ReverseComment: {
+        '& #comment': {
+          display: 'grid',
+          gridTemplateAreas: '"title"\n"form"\n"comments"',
+        },
+        '& #comment .title': {
+          gridArea: 'title',
+        },
+        '& #comment #commentForm': {
+          gridArea: 'form',
+        },
+        '& #comment .list-area': {
+          gridArea: 'comments',
+        },
+      },
       HideVoiceComment: {
         '& #comment .btn-voicecmt': {
           display: 'none !important',
@@ -122,6 +142,21 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
+      FixDarkModeWriteForm: {
+        '& .dark-theme.fr-box.fr-basic .fr-wrapper': {
+          border: '1px solid var(--color-bd-outer)',
+          borderBottom: 'none',
+        },
+        '& .dark-theme.fr-box.fr-basic .fr-element': {
+          background: 'var(--color-bg-body)',
+          color: 'var(--color-text)',
+        },
+        '& .dark-theme .fr-second-toolbar': {
+          background: '#353535',
+          border: '1px solid var(--color-bd-outer)',
+          color: 'var(--color-text)',
+        },
+      },
     };
   },
   {
@@ -130,9 +165,9 @@ const useStyles = makeStyles(
 );
 
 export default function LayoutCustom() {
-  const {
-    storage: { enabled, ...storage },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, ...storage } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const classes = useStyles(storage);
 
   useLayoutEffect(() => {
@@ -143,13 +178,16 @@ export default function LayoutCustom() {
       recentVisit,
       topNews,
       sideContents,
+      sideBests,
       sideNews,
       sideMenu,
       avatar,
       hideUnvote,
       modifiedIndicator,
+      reverseComment,
       hideVoiceComment,
       unfoldLongComment,
+      fixDarkModeWriteForm,
     } = storage;
     const styles = clsx(
       classes.FontSize,
@@ -162,13 +200,16 @@ export default function LayoutCustom() {
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
         [classes.SideContents]: !sideContents,
+        [classes.SideBests]: !sideBests,
         [classes.SideNews]: !sideNews,
         [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
         [classes.Unvote]: hideUnvote,
         [classes.ModifiedIndicator]: !modifiedIndicator,
+        [classes.ReverseComment]: reverseComment,
         [classes.HideVoiceComment]: hideVoiceComment,
         [classes.UnfoldLongComment]: unfoldLongComment,
+        [classes.FixDarkModeWriteForm]: fixDarkModeWriteForm,
       },
     ).split(' ');
     document.documentElement.classList.add(...styles);

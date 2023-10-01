@@ -36,6 +36,9 @@ import {
   $toggleLongComment,
   $toggleSideContents,
   $toggleHideVoiceComment,
+  $toggleSideBests,
+  $toggleDarkModeWriteForm,
+  $toggleReverseComment,
 } from '../slice';
 
 function labelFormat(x) {
@@ -55,26 +58,27 @@ const useStyles = makeStyles((theme) => ({
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
-    storage: {
-      enabled,
-      fontSize,
-      notifyPosition,
-      topNews,
-      recentVisit,
-      sideContents,
-      sideNews,
-      sideMenu,
-      avatar,
-      userinfoWidth,
-      resizeImage,
-      resizeVideo,
-      resizeEmoticonPalette,
-      hideUnvote,
-      modifiedIndicator,
-      hideVoiceComment,
-      unfoldLongComment,
-    },
-  } = useSelector((state) => state[Info.ID]);
+    enabled,
+    fontSize,
+    notifyPosition,
+    topNews,
+    recentVisit,
+    sideContents,
+    sideBests,
+    sideNews,
+    sideMenu,
+    avatar,
+    userinfoWidth,
+    resizeImage,
+    resizeVideo,
+    resizeEmoticonPalette,
+    hideUnvote,
+    modifiedIndicator,
+    reverseComment,
+    hideVoiceComment,
+    unfoldLongComment,
+    fixDarkModeWriteForm,
+  } = useSelector((state) => state[Info.ID].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const classes = useStyles();
 
@@ -106,6 +110,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleSideContents = useCallback(() => {
     dispatch($toggleSideContents());
+  }, [dispatch]);
+
+  const handleSideBests = useCallback(() => {
+    dispatch($toggleSideBests());
   }, [dispatch]);
 
   const handleSideNews = useCallback(() => {
@@ -156,12 +164,20 @@ const View = React.forwardRef((_props, ref) => {
     dispatch($toggleModifiedIndicator());
   }, [dispatch]);
 
+  const handleReverseComment = useCallback(() => {
+    dispatch($toggleReverseComment());
+  }, [dispatch]);
+
   const handleHideVoiceComment = useCallback(() => {
     dispatch($toggleHideVoiceComment());
   }, [dispatch]);
 
   const handleUnfoldLongComment = useCallback(() => {
     dispatch($toggleLongComment());
+  }, [dispatch]);
+
+  const handleDarkModeWriteForm = useCallback(() => {
+    dispatch($toggleDarkModeWriteForm());
   }, [dispatch]);
 
   return (
@@ -246,6 +262,17 @@ const View = React.forwardRef((_props, ref) => {
                     className={classes.nested}
                     divider
                     button
+                    onClick={handleSideBests}
+                  >
+                    <ListItemText primary="개념글 패널 표시" />
+                    <ListItemSecondaryAction>
+                      <Switch checked={sideBests} onChange={handleSideBests} />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem
+                    className={classes.nested}
+                    divider
+                    button
                     onClick={handleSideNews}
                   >
                     <ListItemText primary="뉴스 패널 표시" />
@@ -311,6 +338,15 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
+          <ListItem divider button onClick={handleReverseComment}>
+            <ListItemText primary="댓글 입력창을 가장 위로 올리기" />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={reverseComment}
+                onChange={handleReverseComment}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleHideVoiceComment}>
             <ListItemText primary="음성 댓글 버튼 숨기기" />
             <ListItemSecondaryAction>
@@ -320,7 +356,7 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleUnfoldLongComment}>
+          <ListItem divider button onClick={handleUnfoldLongComment}>
             <ListItemText
               primary="장문 댓글 바로보기"
               secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
@@ -329,6 +365,18 @@ const View = React.forwardRef((_props, ref) => {
               <Switch
                 checked={unfoldLongComment}
                 onChange={handleUnfoldLongComment}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleDarkModeWriteForm}>
+            <ListItemText
+              primary="다크모드 글작성 배경색 강제 픽스"
+              secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={fixDarkModeWriteForm}
+                onChange={handleDarkModeWriteForm}
               />
             </ListItemSecondaryAction>
           </ListItem>

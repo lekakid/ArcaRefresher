@@ -40,7 +40,8 @@ export default function MyImage() {
   }, [dispatch, editorLoaded, enabled]);
 
   const handleLoad = useCallback(() => {
-    const img = targetImgList[Math.floor(Math.random() * targetImgList.length)];
+    const img =
+      targetImgList[Math.floor(Math.random() * targetImgList.length)].url;
     if (!img) return;
 
     const html =
