@@ -5,6 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   enabled: true,
+  downloadMethod: 'fetch',
   fileName: '%title%',
   zipName: '%title%',
   zipExtension: 'zip',
@@ -22,6 +23,9 @@ export const slice = createSlice({
   reducers: {
     $toggleEnable(state) {
       state.storage.enabled = !state.storage.enabled;
+    },
+    $setDownloadMethod(state, action) {
+      state.storage.downloadMethod = action.payload;
     },
     $setFileName(state, action) {
       state.storage.fileName = action.payload;
@@ -43,6 +47,7 @@ export const slice = createSlice({
 
 export const {
   $toggleEnable,
+  $setDownloadMethod,
   $setFileName,
   $setZipName,
   $setZipExtension,
