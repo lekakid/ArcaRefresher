@@ -37,7 +37,8 @@ import { useLoadChecker } from 'util/LoadChecker';
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';
 
-const PREVIEW_SELECTOR = '.article-content img, .article-content video';
+const PREVIEW_SELECTOR =
+  '.article-content img:not(.twemoji), .article-content video';
 
 const useStyles = makeStyles(() => ({
   comment: {
