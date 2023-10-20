@@ -25,7 +25,9 @@ import DrawerItem from './DrawerItem';
 
 function MenuContainer({ classes, groupList, menuList }) {
   const dispatch = useDispatch();
-  const { open, drawer, selection } = useSelector((state) => state[Info.ID]);
+  const { open, opacity, drawer, selection } = useSelector(
+    (state) => state[Info.ID],
+  );
   const [loadCount, setLoadCount] = useState(1);
   const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -106,7 +108,11 @@ function MenuContainer({ classes, groupList, menuList }) {
         className={classes.root}
         PaperProps={{
           className: classes.bg,
+          style: { opacity },
           square: true,
+        }}
+        BackdropProps={{
+          invisible: opacity !== 1,
         }}
         TransitionProps={{
           mountOnEnter: true,

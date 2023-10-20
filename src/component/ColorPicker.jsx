@@ -25,9 +25,22 @@ const styles = (theme) => ({
 });
 
 const Picker = React.forwardRef(
-  ({ classes, disabled, defaultColor, color, onChange }, ref) => {
+  (
+    { classes, disabled, defaultColor, color, onOpen, onClose, onChange },
+    ref,
+  ) => {
     const [innerColor, setInnerColor] = useState(defaultColor);
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleOpen = (e) => {
+      onOpen?.();
+      setAnchorEl(e.target);
+    };
+
+    const handleClose = () => {
+      onClose?.();
+      setAnchorEl(null);
+    };
 
     const handleChange = useCallback(
       (c) => {
@@ -50,7 +63,7 @@ const Picker = React.forwardRef(
           disabled={disabled}
           style={{ background: color ?? innerColor }}
           className={classes.pickerButton}
-          onClick={(e) => setAnchorEl(e.target)}
+          onClick={handleOpen}
         />
         <Popover
           open={!!anchorEl}
@@ -70,7 +83,7 @@ const Picker = React.forwardRef(
           style={{
             zIndex: 2300,
           }}
-          onClose={() => setAnchorEl(null)}
+          onClose={handleClose}
         >
           <ChromePicker color={color ?? innerColor} onChange={handleChange} />
           <IconButton

@@ -3,6 +3,7 @@ import Info from './FeatureInfo';
 
 const initialState = {
   open: false,
+  opacity: 1,
   drawer: true,
   selection: 'VersionInfo',
   group: 'global',
@@ -14,6 +15,9 @@ export const slice = createSlice({
   reducers: {
     setOpen(state, action) {
       state.open = action.payload;
+    },
+    setOpacity(state, action) {
+      state.opacity = action.payload;
     },
     setDrawer(state, action) {
       state.drawer = action.payload;
@@ -27,6 +31,7 @@ export const slice = createSlice({
   },
 });
 
-export const { setOpen, setDrawer, setSelection, setGroup } = slice.actions;
+export const { setOpen, setOpacity, setDrawer, setSelection, setGroup } =
+  slice.actions;
 
 export default slice.reducer;

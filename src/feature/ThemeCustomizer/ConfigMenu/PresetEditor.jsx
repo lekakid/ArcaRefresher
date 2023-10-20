@@ -9,6 +9,7 @@ import {
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 import ColorPicker from 'component/ColorPicker';
+import { useOpacity } from 'menu/ConfigMenu';
 
 const PresetEditor = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -17,6 +18,7 @@ const PresetEditor = React.forwardRef(
     ref,
   ) {
     const [openGroup, setOpenGroup] = useState(() => ({}));
+    const setOpacity = useOpacity();
 
     const handleOpen = useCallback(
       (key) => () => {
@@ -54,6 +56,8 @@ const PresetEditor = React.forwardRef(
                         disabled={disabled}
                         defaultColor={defaultPreset[key]}
                         color={preset[key]}
+                        onOpen={() => setOpacity(0)}
+                        onClose={() => setOpacity(1)}
                         onChange={(color) => handleChange(key, color)}
                       />
                     </ListItemSecondaryAction>
