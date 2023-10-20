@@ -7,22 +7,34 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Paper,
+  Select,
   Switch,
   Typography,
 } from '@material-ui/core';
 
 import Info from '../FeatureInfo';
-import { $toggleSauceNaoBypass, $toggleSearchBySource } from '../slice';
+import {
+  $setSearchGoogleMethod,
+  $toggleSauceNaoBypass,
+  $toggleSearchBySource,
+} from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { searchBySource, saucenaoBypass },
-  } = useSelector((state) => state[Info.ID]);
+  const { searchBySource, searchGoogleMethod, saucenaoBypass } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const dispatch = useDispatch();
 
   const handleSearchBySource = useCallback(() => {
     dispatch($toggleSearchBySource());
   }, [dispatch]);
+
+  const handleGoogleMethod = useCallback(
+    (e) => {
+      dispatch($setSearchGoogleMethod(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleSauceNaoBypass = useCallback(() => {
     dispatch($toggleSauceNaoBypass());
@@ -40,6 +52,19 @@ const View = React.forwardRef((_props, ref) => {
             />
             <ListItemSecondaryAction>
               <Switch checked={searchBySource} onClick={handleSearchBySource} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>구글 이미지 검색 방식</ListItemText>
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={searchGoogleMethod}
+                onChange={handleGoogleMethod}
+              >
+                <ListItem value="lens">구글 렌즈</ListItem>
+                <ListItem value="source">소스 검색</ListItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem button onClick={handleSauceNaoBypass}>

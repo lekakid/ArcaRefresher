@@ -13,9 +13,9 @@ const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
 
 function ContextMenu({ targetRef }) {
-  const {
-    storage: { searchBySource, saucenaoBypass },
-  } = useSelector((state) => state[Info.ID]);
+  const { searchBySource, searchGoogleMethod, saucenaoBypass } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
 
   const setSnack = useContextSnack();
   const [data, closeMenu] = useContextMenu({
@@ -26,13 +26,13 @@ function ContextMenu({ targetRef }) {
   });
 
   const handleGoogle = useCallback(() => {
-    GM_openInTab(
-      `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(
-        data,
-      )}&hl=ko&re=df&st=1668437351496&ep=gsbubu`,
-    );
+    const url = {
+      lens: 'https://lens.google.com/uploadbyurl?hl=ko&re=df&st=1668437351496&ep=gsbubu&url=',
+      source: 'https://www.google.com/searchbyimage?client=app&image_url=',
+    };
+    GM_openInTab(`${url[searchGoogleMethod]}${encodeURIComponent(data)}`);
     closeMenu();
-  }, [closeMenu, data]);
+  }, [closeMenu, data, searchGoogleMethod]);
 
   const handleYandex = useCallback(() => {
     GM_openInTab(
