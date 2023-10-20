@@ -13,9 +13,7 @@ import MemoInput from './MemoInput';
 
 function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
-  const {
-    storage: { memo },
-  } = useSelector((state) => state[Info.ID]);
+  const { memo } = useSelector((state) => state[Info.ID].storage);
   const [user, setUser] = useState(undefined);
 
   const [data, closeMenu] = useContextMenu({
