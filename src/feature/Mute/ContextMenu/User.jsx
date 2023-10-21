@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
-import { USER_INFO } from 'core/selector';
+import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { getUserInfo } from 'func/user';
 
@@ -16,15 +16,19 @@ function makeRegex(id = '') {
 
 function User({ targetRef }) {
   const dispatch = useDispatch();
-  const {
-    storage: { user },
-  } = useSelector((state) => state[Info.ID]);
+  const { user } = useSelector((state) => state[Info.ID].storage);
 
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: USER_INFO,
+    selector: `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`,
     dataExtractor: (target) => {
-      const regex = makeRegex(getUserInfo(target));
+      let userElement = target;
+      if (target.matches('.vrow')) {
+        userElement = target.querySelector('span.user-info');
+      }
+      if (!userElement) return undefined;
+
+      const regex = makeRegex(getUserInfo(userElement));
       const exist = user.includes(regex);
       return { regex, exist };
     },

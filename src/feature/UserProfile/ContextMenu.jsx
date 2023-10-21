@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, Person, Search } from '@material-ui/icons';
 
-import { USER_INFO } from 'core/selector';
+import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getUserNick } from 'func/user';
 import { useContent } from 'util/ContentInfo';
@@ -12,9 +12,16 @@ function ContextMenu({ targetRef }) {
   const { channel } = useContent();
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: USER_INFO,
+    selector: `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`,
     dataExtractor: (target) => {
-      const id = getUserNick(target);
+      let userElement = target;
+      if (target.matches('.vrow')) {
+        userElement = target.querySelector('span.user-info');
+      }
+      if (!userElement) return undefined;
+
+      const id = getUserNick(userElement);
+      // 유동 제외
       if (id.includes('.')) return undefined;
 
       return { id, url: id.replace('#', '/') };

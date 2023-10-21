@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Comment } from '@material-ui/icons';
 
-import { USER_INFO } from 'core/selector';
+import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { getUserID } from 'func/user';
 
@@ -18,8 +18,16 @@ function ContextMenu({ targetRef }) {
 
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: USER_INFO,
-    dataExtractor: (target) => getUserID(target),
+    selector: `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`,
+    dataExtractor: (target) => {
+      let userElement = target;
+      if (target.matches('.vrow')) {
+        userElement = target.querySelector('span.user-info');
+      }
+      if (!userElement) return undefined;
+
+      return getUserID(userElement);
+    },
   });
 
   const handleClick = useCallback(() => {
