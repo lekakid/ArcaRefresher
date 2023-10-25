@@ -18,6 +18,7 @@ const defaultStorage = {
   hideCountBar: false,
   hideMutedMark: false,
   muteIncludeReply: false,
+  mk2: true,
 };
 
 function formatUpdater(storage, defaultValue) {
@@ -116,6 +117,9 @@ export const slice = createSlice({
     $toggleIncludeReply(state) {
       state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
     },
+    $toggleMK2(state) {
+      state.storage.mk2 = !state.storage.mk2;
+    },
   },
 });
 
@@ -136,6 +140,7 @@ export const {
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,
+  $toggleMK2,
 } = slice.actions;
 
 export default slice.reducer;
