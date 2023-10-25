@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
-import { getEmoticonList, getBundleName } from '../func';
+import { getEmoticonList, getBundleName, trimEmotURL } from '../func';
 import { $addEmoticon } from '../slice';
 import getBundleID from '../func/getBundleID';
 
@@ -40,7 +40,7 @@ function Emoticon({ targetRef }) {
               emoticon: {
                 name: bundleName,
                 bundle: [parseInt(emotID, 10)],
-                url: [url],
+                url: [trimEmotURL(url)],
               },
             }),
           );
@@ -80,7 +80,7 @@ function Emoticon({ targetRef }) {
             emoticon: {
               name: bundleName,
               bundle: [parseInt(emotID, 10)],
-              url: [url.replace('-p', '')],
+              url: [trimEmotURL(url)],
             },
           }),
         );
