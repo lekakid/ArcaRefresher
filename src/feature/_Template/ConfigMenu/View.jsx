@@ -13,9 +13,7 @@ import Info from '../FeatureInfo';
 import { $setTemplate } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { template },
-  } = useSelector((state) => state[Info.ID]);
+  const { template } = useSelector((state) => state[Info.ID].storage);
   const dispatch = useDispatch();
 
   const handler = useCallback(
