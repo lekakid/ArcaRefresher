@@ -171,6 +171,6 @@ function ContextMenu({ targetRef }) {
   );
 }
 
-ContextMenu.sortOrder = 0;
+ContextMenu.sortOrder = 900;
 
 export default ContextMenu;

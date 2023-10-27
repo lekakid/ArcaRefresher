@@ -80,6 +80,6 @@ function ContextMenu({ targetRef }) {
   );
 }
 
-ContextMenu.sortOrder = 100;
+ContextMenu.sortOrder = 101;
 
 export default ContextMenu;
