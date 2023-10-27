@@ -25,11 +25,15 @@ const useStyles = makeStyles(
       FontSize: ({ fontSize }) => ({
         fontSize,
       }),
-      LeftNotiPos: {
+      NotiPos: ({ notifyPosition }) => ({
         '& .body #toastbox': {
-          right: 'initial',
+          right: notifyPosition.indexOf('left') > -1 ? 'initial' : 0,
+          height:
+            notifyPosition.indexOf('top') > -1
+              ? 'calc(100% - 4rem - 52px)'
+              : undefined,
         },
-      },
+      }),
       TopNews: {
         '& .topbar-area': {
           display: 'none !important',
@@ -174,7 +178,6 @@ export default function LayoutCustom() {
     if (!enabled) return undefined;
 
     const {
-      notifyPosition,
       recentVisit,
       topNews,
       sideContents,
@@ -191,12 +194,12 @@ export default function LayoutCustom() {
     } = storage;
     const styles = clsx(
       classes.FontSize,
+      classes.NotiPos,
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
       classes.ResizeEmoticonPalette,
       {
-        [classes.LeftNotiPos]: notifyPosition === 'left',
         [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
         [classes.SideContents]: !sideContents,

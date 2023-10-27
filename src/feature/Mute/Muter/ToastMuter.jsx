@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
+import { EVENT_ARCA_WS_MESSAGE, addAREvent, removeAREvent } from 'core/event';
 import { TOASTBOX } from 'core/selector';
 import { useLoadChecker } from 'util/LoadChecker';
 
 import Info from '../FeatureInfo';
+import { trimEmotURL } from '../func';
 import { emoticonFilterSelector } from '../selector';
 
 const style = {
@@ -27,21 +29,64 @@ const style = {
 };
 
 function ToastMuter() {
-  const { user, hideMutedMark } = useSelector(
+  const { mk2, user, hideMutedMark } = useSelector(
     (state) => state[Info.ID].storage,
   );
   const toastboxLoaded = useLoadChecker(TOASTBOX);
-  const filter = useSelector(emoticonFilterSelector);
+  const emotFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
-    if (!toastboxLoaded) return null;
+    if (!mk2) return undefined;
+
+    const listener = (e) => {
+      const data = e.data.split('|');
+      if (data[0] !== 'n') return e;
+
+      const noti = JSON.parse(data[1]);
+
+      // 이모티콘 뮤트 처리
+      if (noti.mediaUrl) {
+        const url = trimEmotURL(noti.mediaUrl);
+        if (emotFilter.url.indexOf(url) > -1) {
+          if (hideMutedMark) return undefined;
+
+          delete noti.mediaUrl;
+          noti.title = 'Arca Refresher';
+          noti.message = '[뮤트된 아카콘]';
+        }
+      }
+
+      // 사용자 뮤트
+      if (user?.length > 0) {
+        const regex = new RegExp(user.join('|'));
+        if (regex.test(noti.username)) {
+          if (hideMutedMark) return undefined;
+
+          if (noti.mediaUrl) delete noti.mediaUrl;
+          noti.title = 'Arca Refresher';
+          noti.message = '[뮤트된 이용자의 알림]';
+        }
+      }
+
+      const injectedData = `${data[0]}|${JSON.stringify(noti)}`;
+      Object.defineProperty(e, 'data', { value: injectedData });
+      return e;
+    };
+    addAREvent(EVENT_ARCA_WS_MESSAGE, listener);
+
+    return () => removeAREvent(EVENT_ARCA_WS_MESSAGE, listener);
+  }, [emotFilter, hideMutedMark, user, mk2]);
+
+  useEffect(() => {
+    if (mk2) return undefined;
+    if (!toastboxLoaded) return undefined;
 
     const toastbox = document.querySelector(TOASTBOX);
     const observer = new MutationObserver(() => {
       // 이모티콘 뮤트 처리
       toastbox.querySelectorAll('img').forEach((img) => {
-        const url = img.src.replace('https:', '');
-        if (filter.url.indexOf(url) > -1) {
+        const url = trimEmotURL(img.src);
+        if (emotFilter.url.indexOf(url) > -1) {
           img.parentNode.classList.add('filtered-emoticon');
         }
       });
@@ -76,7 +121,7 @@ function ToastMuter() {
     });
 
     return () => observer.disconnect();
-  }, [filter, hideMutedMark, toastboxLoaded, user]);
+  }, [emotFilter, hideMutedMark, toastboxLoaded, user, mk2]);
 
   return null;
 }

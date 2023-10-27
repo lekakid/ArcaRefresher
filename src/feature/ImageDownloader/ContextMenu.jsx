@@ -13,7 +13,9 @@ import { format, getImageInfo } from './func';
 import Info from './FeatureInfo';
 
 function ContextMenu({ targetRef }) {
-  const { fileName } = useSelector((state) => state[Info.ID].storage);
+  const { downloadMethod, fileName } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const contentInfo = useContent();
 
   const setSnack = useContextSnack();
@@ -29,7 +31,7 @@ function ContextMenu({ targetRef }) {
 
       try {
         closeMenu();
-        setSnack({ msg: '이미지를 다운로드 받는 중...' });
+        setSnack({ msg: '이미지를 다운로드 중...' });
         const rawData = await request(orig, { responseType: 'blob' }).then(
           (r) => r.response,
         );
@@ -72,26 +74,63 @@ function ContextMenu({ targetRef }) {
       const { orig, ext, uploadName } = data;
       try {
         closeMenu();
-        const response = await request(orig, {
-          method: 'HEAD',
-        });
-        const redirectedURL = response.finalUrl;
-        const size =
-          Number(
-            response.responseHeaders
-              .split('content-length: ')[1]
-              .split('\r')[0],
-          ) || 0;
-        const stream = await fetch(redirectedURL).then((r) => r.body);
-        const name = format(fileName, {
-          values: contentInfo,
-          fileName: uploadName,
-        });
+        switch (downloadMethod) {
+          case 'fetch': {
+            const response = await request(orig, {
+              method: 'HEAD',
+            });
+            const redirectedURL = response.finalUrl;
+            const size =
+              Number(
+                response.responseHeaders
+                  .split('content-length: ')[1]
+                  .split('\r')[0],
+              ) || 0;
+            const stream = await fetch(redirectedURL).then((r) => r.body);
+            const name = format(fileName, {
+              values: contentInfo,
+              fileName: uploadName,
+            });
 
-        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-          size,
-        });
-        stream.pipeTo(filestream);
+            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+              size,
+            });
+            stream.pipeTo(filestream);
+            break;
+          }
+          case 'xhr': {
+            setSnack({
+              msg: '다운로드 준비 중...',
+            });
+            const response = await request(orig, {
+              responseType: 'blob',
+            });
+
+            const size =
+              Number(
+                response.responseHeaders
+                  .split('content-length: ')[1]
+                  .split('\r')[0],
+              ) || 0;
+            const stream = response.response.stream();
+            const name = format(fileName, {
+              values: contentInfo,
+              fileName: uploadName,
+            });
+
+            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+              size,
+            });
+            stream.pipeTo(filestream);
+            setSnack();
+            break;
+          }
+          default: {
+            throw new Error(
+              '[ImageDownload] 확인할 수 없는 다운로드 방식 사용',
+            );
+          }
+        }
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
         setSnack({
@@ -100,7 +139,7 @@ function ContextMenu({ targetRef }) {
         });
       }
     })();
-  }, [data, closeMenu, fileName, contentInfo, setSnack]);
+  }, [data, closeMenu, downloadMethod, fileName, contentInfo, setSnack]);
 
   const handleCopyURL = useCallback(() => {
     closeMenu();

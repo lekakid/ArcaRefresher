@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
+import { useOpacity } from 'menu/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -80,7 +81,12 @@ const View = React.forwardRef((_props, ref) => {
     fixDarkModeWriteForm,
   } = useSelector((state) => state[Info.ID].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const setOpacity = useOpacity();
   const classes = useStyles();
+
+  const SliderCommited = () => {
+    setOpacity(1);
+  };
 
   const handleEnable = useCallback(() => {
     dispatch($toggleEnable());
@@ -96,6 +102,7 @@ const View = React.forwardRef((_props, ref) => {
   const handleNotifyPosition = useCallback(
     (e) => {
       dispatch($setNotifyPosition(e.target.value));
+      unsafeWindow.showNotiAlert('[ArcaRefresher] 알림 위치가 변경되었습니다.');
     },
     [dispatch],
   );
@@ -130,23 +137,26 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleUserinfoWidth = useCallback(
     (e, value) => {
+      setOpacity(0.6);
       dispatch($setUserInfoWith(value));
     },
-    [dispatch],
+    [dispatch, setOpacity],
   );
 
   const handleResizeImage = useCallback(
     (e, value) => {
+      setOpacity(0.6);
       dispatch($setResizeImage(value));
     },
-    [dispatch],
+    [dispatch, setOpacity],
   );
 
   const handleResizeVideo = useCallback(
     (e, value) => {
+      setOpacity(0.6);
       dispatch($setResizeVideo(value));
     },
-    [dispatch],
+    [dispatch, setOpacity],
   );
 
   const handleEmoticonPalette = useCallback(
@@ -217,6 +227,8 @@ const View = React.forwardRef((_props, ref) => {
               >
                 <MenuItem value="left">왼쪽</MenuItem>
                 <MenuItem value="right">오른쪽</MenuItem>
+                <MenuItem value="lefttop">왼쪽 위</MenuItem>
+                <MenuItem value="righttop">오른쪽 위</MenuItem>
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
@@ -293,19 +305,31 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem divider>
             <ListItemText>게시판 이용자 너비</ListItemText>
             <ListItemSecondaryAction>
-              <Slider value={userinfoWidth} onChange={handleUserinfoWidth} />
+              <Slider
+                value={userinfoWidth}
+                onChange={handleUserinfoWidth}
+                onChangeCommitted={SliderCommited}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider>
             <ListItemText>게시물 이미지 크기</ListItemText>
             <ListItemSecondaryAction>
-              <Slider value={resizeImage} onChange={handleResizeImage} />
+              <Slider
+                value={resizeImage}
+                onChange={handleResizeImage}
+                onChangeCommitted={SliderCommited}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider>
             <ListItemText>게시물 동영상 크기</ListItemText>
             <ListItemSecondaryAction>
-              <Slider value={resizeVideo} onChange={handleResizeVideo} />
+              <Slider
+                value={resizeVideo}
+                onChange={handleResizeVideo}
+                onChangeCommitted={SliderCommited}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider>

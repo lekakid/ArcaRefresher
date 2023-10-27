@@ -17,6 +17,7 @@ import {
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
+  $setDownloadMethod,
   $setFileName,
   $setZipName,
   $setZipImageName,
@@ -27,12 +28,25 @@ import FormatSelector from './FormatSelector';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, fileName, zipName, zipExtension, zipImageName } =
-    useSelector((state) => state[Info.ID].storage);
+  const {
+    enabled,
+    downloadMethod,
+    fileName,
+    zipName,
+    zipExtension,
+    zipImageName,
+  } = useSelector((state) => state[Info.ID].storage);
 
   const handleEnable = useCallback(() => {
     dispatch($toggleEnable());
   }, [dispatch]);
+
+  const handleDownloadMethod = useCallback(
+    (e) => {
+      dispatch($setDownloadMethod(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleFileName = useCallback(
     (e) => {
@@ -40,6 +54,7 @@ const View = React.forwardRef((_props, ref) => {
     },
     [dispatch],
   );
+
   const handleAddFormatFileName = useCallback(
     (value) => {
       dispatch($setFileName(`${fileName}${value}`));
@@ -89,6 +104,19 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText primary="사용" />
             <ListItemSecondaryAction>
               <Switch checked={enabled} onClick={handleEnable} />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>다운로드 방식</ListItemText>
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={downloadMethod}
+                onChange={handleDownloadMethod}
+              >
+                <ListItem value="fetch">fetch</ListItem>
+                <ListItem value="xhr">XHR</ListItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem>

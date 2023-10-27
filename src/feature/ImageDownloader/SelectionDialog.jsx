@@ -39,7 +39,7 @@ const styles = (theme) => ({
 function SelectionDialog({ classes }) {
   const dispatch = useDispatch();
   const contentInfo = useContent();
-  const { zipImageName, zipName, zipExtension } = useSelector(
+  const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
     (state) => state[Info.ID].storage,
   );
   const { open } = useSelector((state) => state[Info.ID]);
@@ -148,12 +148,28 @@ function SelectionDialog({ classes }) {
           fileName: uploadName,
         });
 
-        const stream = await fetch(orig).then((response) => response.body);
         count += 1;
-        return controller.enqueue({
-          name: `/${name}.${ext}`,
-          stream: () => stream,
-        });
+        switch (downloadMethod) {
+          case 'fetch': {
+            const stream = await fetch(orig).then((response) => response.body);
+            return controller.enqueue({
+              name: `/${name}.${ext}`,
+              stream: () => stream,
+            });
+          }
+          case 'xhr': {
+            const stream = await request(orig, { responseType: 'blob' }).then(
+              ({ response }) => response.stream(),
+            );
+            return controller.enqueue({
+              name: `/${name}.${ext}`,
+              stream: () => stream,
+            });
+          }
+          default:
+            console.warn('[ImageDownload] 확인할 수 없는 다운로드 방식 사용');
+            return undefined;
+        }
       },
       cancel() {
         window.removeEventListener('beforeunload', confirm);
@@ -175,6 +191,7 @@ function SelectionDialog({ classes }) {
     contentInfo,
     zipExtension,
     zipImageName,
+    downloadMethod,
   ]);
 
   const handleClose = useCallback(() => {

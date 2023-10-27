@@ -24,16 +24,17 @@ export function getUserNick(infoElement) {
 }
 
 export function getUserID(infoElement) {
-  try {
-    const data = infoElement.querySelector('[data-filter]').dataset.filter;
-    const [, nick, id] = data
+  const data = infoElement.querySelector('[data-filter]');
+  if (data) {
+    const [, nick, id] = data.dataset.filter
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
 
     return id || nick;
-  } catch {
-    return '';
   }
+
+  const nick = infoElement.firstElementChild.textContent.replace('@', '');
+  return nick;
 }
 
 export function getUserIP(infoElement) {

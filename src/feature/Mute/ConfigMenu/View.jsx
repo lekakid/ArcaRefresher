@@ -32,6 +32,7 @@ import {
   $setBoardBarPos,
   $toggleHideNoticeService,
   $toggleHideClosedDeal,
+  $toggleMK2,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 import { emoticonTableSelector } from '../selector';
@@ -56,6 +57,7 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
   const {
+    mk2,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
@@ -70,6 +72,10 @@ const View = React.forwardRef((_props, ref) => {
   const tableRows = useSelector(emoticonTableSelector);
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+
+  const handleMK2 = useCallback(() => {
+    dispatch($toggleMK2());
+  }, [dispatch]);
 
   const handleServiceNotice = useCallback(() => {
     dispatch($toggleHideNoticeService());
@@ -151,6 +157,15 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
+          <ListItem divider button onClick={handleMK2}>
+            <ListItemText
+              primary="알림 뮤트 MK.2 (실험적)"
+              secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch checked={mk2} onChange={handleMK2} />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleServiceNotice}>
             <ListItemText>서비스 공지사항 숨김</ListItemText>
             <ListItemSecondaryAction>
