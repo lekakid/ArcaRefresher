@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Bookmark } from '@material-ui/icons';
 
@@ -6,13 +7,16 @@ import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
+import Info from './FeatureInfo';
+
 // 우클릭 메뉴
 function ContextMenu({ targetRef }) {
+  const { enabled } = useSelector((store) => store[Info.ID].storage);
   const { channel } = useContent();
   const setSnack = useContextSnack();
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: `${BOARD_ITEMS}`,
+    selector: `${enabled ? BOARD_ITEMS : 'NULL'}`,
     dataExtractor: (target) => {
       // 로그인 체크
       if (!unsafeWindow.LiveConfig?.nickname) return undefined;
@@ -55,5 +59,7 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
+
+ContextMenu.sortOrder = 200;
 
 export default ContextMenu;

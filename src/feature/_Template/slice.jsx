@@ -27,6 +27,4 @@ export const slice = createSlice({
 
 export const { $setTemplate } = slice.actions;
 
-// 아래 파일에 모듈 추가 작업 필요
-// LINK src/core/store.jsx
 export default slice.reducer;

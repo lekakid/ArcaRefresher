@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
   Select,
   Typography,
@@ -16,7 +17,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { TableEditor } from 'component/config';
 import Info from '../FeatureInfo';
-import { $setMemoList, $setVariant } from '../slice';
+import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
 const columns = [
   { field: 'id', headerName: '이용자', flex: 1 },
@@ -36,10 +37,19 @@ const memoEntriesSelector = createSelector(
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const variant = useSelector((state) => state[Info.ID].storage.variant);
+  const { variant, contextRange } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const memoData = useSelector((state) => state[Info.ID].storage.memo);
   const memoRows = useSelector(memoEntriesSelector);
   const inputRef = useRef();
+
+  const handleContextRange = useCallback(
+    (e) => {
+      dispatch($setContextRange(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleVariant = useCallback(
     (e) => {
@@ -128,6 +138,19 @@ const View = React.forwardRef((_props, ref) => {
       <Paper>
         <List>
           <ListItem divider>
+            <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={contextRange}
+                onChange={handleContextRange}
+              >
+                <MenuItem value="articleItem">게시글</MenuItem>
+                <MenuItem value="nickname">닉네임</MenuItem>
+              </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
             <ListItemText>모양 선택</ListItemText>
             <ListItemSecondaryAction>
               <Select
@@ -135,8 +158,8 @@ const View = React.forwardRef((_props, ref) => {
                 value={variant}
                 onChange={handleVariant}
               >
-                <ListItem value="badge">둥근 뱃지</ListItem>
-                <ListItem value="text">텍스트</ListItem>
+                <MenuItem value="badge">둥근 뱃지</MenuItem>
+                <MenuItem value="text">텍스트</MenuItem>
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
