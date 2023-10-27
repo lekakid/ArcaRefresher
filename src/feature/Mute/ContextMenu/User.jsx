@@ -16,11 +16,23 @@ function makeRegex(id = '') {
 
 function User({ targetRef }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state[Info.ID].storage);
+  const { user, contextRange } = useSelector((state) => state[Info.ID].storage);
+  let contextSelector;
+  switch (contextRange) {
+    case 'articleItem':
+      contextSelector = `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`;
+      break;
+    case 'nickname':
+      contextSelector = USER_INFO;
+      break;
+    default:
+      console.warn('[Mute] contextRange 값이 올바르지 않음');
+      contextSelector = USER_INFO;
+  }
 
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`,
+    selector: contextSelector,
     dataExtractor: (target) => {
       let userElement = target;
       if (target.matches('.vrow')) {

@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, Person, Search } from '@material-ui/icons';
 
@@ -7,12 +8,28 @@ import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getUserNick } from 'func/user';
 import { useContent } from 'util/ContentInfo';
 
+import Info from './FeatureInfo';
+
 function ContextMenu({ targetRef }) {
   const setSnack = useContextSnack();
+  const { contextRange } = useSelector((store) => store[Info.ID].storage);
   const { channel } = useContent();
+  let contextSelector;
+  switch (contextRange) {
+    case 'articleItem':
+      contextSelector = `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`;
+      break;
+    case 'nickname':
+      contextSelector = USER_INFO;
+      break;
+    default:
+      console.warn('[UserProfile] contextRange 값이 올바르지 않음');
+      contextSelector = USER_INFO;
+  }
+
   const [data, closeMenu] = useContextMenu({
     targetRef,
-    selector: `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`,
+    selector: contextSelector,
     dataExtractor: (target) => {
       let userElement = target;
       if (target.matches('.vrow')) {

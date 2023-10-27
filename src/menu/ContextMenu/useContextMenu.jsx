@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTrigger, setOpen } from './slice';
+import { addTrigger, removeTrigger, setOpen } from './slice';
 
 import Info from './FeatureInfo';
 
@@ -19,6 +19,8 @@ export default function useContextMenu({ targetRef, selector, dataExtractor }) {
 
   useEffect(() => {
     dispatch(addTrigger(selector));
+
+    return () => dispatch(removeTrigger(selector));
   }, [dispatch, selector]);
 
   useEffect(() => {

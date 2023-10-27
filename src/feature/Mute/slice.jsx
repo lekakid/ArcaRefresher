@@ -11,6 +11,7 @@ const defaultStorage = {
   keyword: [],
   emoticon: {},
   category: {},
+  contextRange: 'articleItem',
   hideServiceNotice: false,
   hideNoPermission: false,
   hideClosedDeal: true,
@@ -96,6 +97,9 @@ export const slice = createSlice({
         state.storage.category[channel] = {};
       state.storage.category[channel][category] = config;
     },
+    $setContextRange(state, action) {
+      state.storage.contextRange = action.payload;
+    },
     $toggleHideNoticeService(state) {
       state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
     },
@@ -133,6 +137,7 @@ export const {
   $addEmoticon,
   $removeEmoticonList,
   $setCategoryConfig,
+  $setContextRange,
   $toggleHideNoticeService,
   $toggleHideNoPermission,
   $toggleHideClosedDeal,

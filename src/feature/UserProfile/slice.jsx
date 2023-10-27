@@ -4,6 +4,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   showId: false,
+  contextRange: 'articleItem',
 };
 
 const initialState = {
@@ -17,9 +18,12 @@ export const slice = createSlice({
     $toggleIdVisible(state) {
       state.storage.showId = !state.storage.showId;
     },
+    $setContextRange(state, action) {
+      state.storage.contextRange = action.payload;
+    },
   },
 });
 
-export const { $toggleIdVisible } = slice.actions;
+export const { $toggleIdVisible, $setContextRange } = slice.actions;
 
 export default slice.reducer;

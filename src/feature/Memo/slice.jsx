@@ -5,6 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   version: 1,
+  contextRange: 'articleItem',
   variant: 'badge',
   memo: {},
 };
@@ -45,6 +46,9 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
+    $setContextRange(state, action) {
+      state.storage.contextRange = action.payload;
+    },
     $setVariant(state, action) {
       state.storage.variant = action.payload;
     },
@@ -62,6 +66,7 @@ export const slice = createSlice({
   },
 });
 
-export const { $setVariant, $setMemo, $setMemoList } = slice.actions;
+export const { $setContextRange, $setVariant, $setMemo, $setMemoList } =
+  slice.actions;
 
 export default slice.reducer;

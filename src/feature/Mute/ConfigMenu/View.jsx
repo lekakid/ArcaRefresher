@@ -33,6 +33,7 @@ import {
   $toggleHideNoticeService,
   $toggleHideClosedDeal,
   $toggleMK2,
+  $setContextRange,
 } from '../slice';
 import CategoryRow from './CategoryRow';
 import { emoticonTableSelector } from '../selector';
@@ -58,6 +59,7 @@ const View = React.forwardRef((_props, ref) => {
   const { channel } = useContent();
   const {
     mk2,
+    contextRange,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
@@ -76,6 +78,13 @@ const View = React.forwardRef((_props, ref) => {
   const handleMK2 = useCallback(() => {
     dispatch($toggleMK2());
   }, [dispatch]);
+
+  const handleContextRange = useCallback(
+    (e) => {
+      dispatch($setContextRange(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleServiceNotice = useCallback(() => {
     dispatch($toggleHideNoticeService());
@@ -173,6 +182,19 @@ const View = React.forwardRef((_props, ref) => {
                 checked={hideServiceNotice}
                 onChange={handleServiceNotice}
               />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={contextRange}
+                onChange={handleContextRange}
+              >
+                <MenuItem value="articleItem">게시글</MenuItem>
+                <MenuItem value="nickname">닉네임</MenuItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleNoPermission}>

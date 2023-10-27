@@ -29,6 +29,10 @@ export const slice = createSlice({
     addTrigger(state, action) {
       state.triggerList.push(action.payload);
     },
+    removeTrigger(state, action) {
+      const i = state.triggerList.findIndex((t) => t === action.payload);
+      state.triggerList.splice(i, 1);
+    },
     pushSnack(state, action) {
       state.snackBag.push(action.payload);
     },
@@ -38,7 +42,13 @@ export const slice = createSlice({
   },
 });
 
-export const { $setInteraction, setOpen, addTrigger, pushSnack, shiftSnack } =
-  slice.actions;
+export const {
+  $setInteraction,
+  setOpen,
+  addTrigger,
+  removeTrigger,
+  pushSnack,
+  shiftSnack,
+} = slice.actions;
 
 export default slice.reducer;
