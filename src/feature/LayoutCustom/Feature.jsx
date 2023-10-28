@@ -39,10 +39,49 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
-      RecentVisit: {
-        '& .channel-visit-history': {
-          display: 'none',
-        },
+      RecentVisit: ({ recentVisit }) => {
+        switch (recentVisit) {
+          case 'beforeBtns':
+            return {
+              '& .board-article-list': {
+                display: 'flex',
+                flexDirection: 'column',
+                '& .board-title': {
+                  order: -99,
+                },
+                '& .channel-visit-history': {
+                  order: -50,
+                  marginBottom: '0.5rem',
+                },
+              },
+            };
+          case 'afterAd':
+            return {
+              '& .board-article-list': {
+                display: 'inherit',
+                '& .channel-visit-history': {
+                  display: 'inherit',
+                },
+              },
+            };
+          case 'none':
+            return {
+              '& .board-article-list': {
+                '& .channel-visit-history': {
+                  display: 'none',
+                },
+              },
+            };
+          default:
+            return {
+              '& .board-article-list': {
+                display: 'inherit',
+                '& .channel-visit-history': {
+                  display: 'inherit',
+                },
+              },
+            };
+        }
       },
       SideContents: {
         '& .sidebar .sidebar-item:first-child': {
@@ -178,7 +217,6 @@ export default function LayoutCustom() {
     if (!enabled) return undefined;
 
     const {
-      recentVisit,
       topNews,
       sideContents,
       sideBests,
@@ -194,13 +232,13 @@ export default function LayoutCustom() {
     } = storage;
     const styles = clsx(
       classes.FontSize,
+      classes.RecentVisit,
       classes.NotiPos,
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
       classes.ResizeEmoticonPalette,
       {
-        [classes.RecentVisit]: !recentVisit,
         [classes.TopNews]: !topNews,
         [classes.SideContents]: !sideContents,
         [classes.SideBests]: !sideBests,

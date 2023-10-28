@@ -4,11 +4,12 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  version: 1,
   enabled: true,
   fontSize: 15,
   notifyPosition: 'right',
   topNews: true,
-  recentVisit: true,
+  recentVisit: 'afterAd',
   sideContents: true,
   sideBests: true,
   sideNews: true,
@@ -27,8 +28,27 @@ const defaultStorage = {
   fixDarkModeWriteForm: true,
 };
 
+function formatUpdater(storage, defaultValue) {
+  // version 0 => 1
+  const version = storage?.version || 0;
+
+  switch (version) {
+    case 0: {
+      const updateStorage = { ...storage };
+      updateStorage.recentVisit = updateStorage.recentVisit
+        ? 'afterAd'
+        : 'none';
+      updateStorage.version = 1;
+      return updateStorage;
+    }
+    default:
+      console.warn('지원하지 않는 버전 데이터입니다.', storage);
+      return defaultValue;
+  }
+}
+
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage),
+  storage: getValue(Info.ID, defaultStorage, formatUpdater),
 };
 
 export const slice = createSlice({
@@ -47,8 +67,8 @@ export const slice = createSlice({
     $toggleTopNews(state) {
       state.storage.topNews = !state.storage.topNews;
     },
-    $toggleRecentVisit(state) {
-      state.storage.recentVisit = !state.storage.recentVisit;
+    $setRecentVisit(state, action) {
+      state.storage.recentVisit = action.payload;
     },
     $toggleSideContents(state) {
       state.storage.sideContents = !state.storage.sideContents;
@@ -106,7 +126,7 @@ export const {
   $setFontSize,
   $setNotifyPosition,
   $toggleTopNews,
-  $toggleRecentVisit,
+  $setRecentVisit,
   $toggleSideContents,
   $toggleSideBests,
   $toggleSideNews,

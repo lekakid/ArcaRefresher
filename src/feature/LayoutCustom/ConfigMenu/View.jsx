@@ -24,7 +24,7 @@ import {
   $setFontSize,
   $setNotifyPosition,
   $toggleTopNews,
-  $toggleRecentVisit,
+  $setRecentVisit,
   $toggleSideNews,
   $toggleSideMenu,
   $toggleAvatar,
@@ -107,9 +107,12 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleRecentVisit = useCallback(() => {
-    dispatch($toggleRecentVisit());
-  }, [dispatch]);
+  const handleRecentVisit = useCallback(
+    (e) => {
+      dispatch($setRecentVisit(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleTopNews = useCallback(() => {
     dispatch($toggleTopNews());
@@ -241,9 +244,17 @@ const View = React.forwardRef((_props, ref) => {
             </ListItem>
           )}
           <ListItem divider button onClick={handleRecentVisit}>
-            <ListItemText primary="최근 방문 채널 표시" />
+            <ListItemText primary="최근 방문 채널 위치" />
             <ListItemSecondaryAction>
-              <Switch checked={recentVisit} onChange={handleRecentVisit} />
+              <Select
+                variant="outlined"
+                value={recentVisit}
+                onChange={handleRecentVisit}
+              >
+                <MenuItem value="beforeBtns">개념글 버튼 위</MenuItem>
+                <MenuItem value="afterAd">광고 아래</MenuItem>
+                <MenuItem value="none">숨김</MenuItem>
+              </Select>
             </ListItemSecondaryAction>
           </ListItem>
           {!mobile && (
