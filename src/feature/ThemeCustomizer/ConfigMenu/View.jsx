@@ -209,7 +209,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider button onClick={handleEnabled}>
             <ListItemText primary="사용" />
             <ListItemSecondaryAction>
@@ -278,17 +278,19 @@ const View = React.forwardRef((_props, ref) => {
               </ButtonGroup>
             </ListItemSecondaryAction>
           </ListItem>
-          <Box clone mx={2}>
-            <Paper variant="outlined">
-              <PresetEditor
-                groupData={groups}
-                defaultPreset={defaultPreset}
-                preset={editingPreset}
-                disabled={!editingPresetKey}
-                onChange={handlePresetChange}
-              />
-            </Paper>
-          </Box>
+          <ListItem>
+            <Box clone width="100%">
+              <Paper variant="outlined">
+                <PresetEditor
+                  groupData={groups}
+                  defaultPreset={defaultPreset}
+                  preset={editingPreset}
+                  disabled={!editingPresetKey}
+                  onChange={handlePresetChange}
+                />
+              </Paper>
+            </Box>
+          </ListItem>
         </List>
       </Paper>
       <PresetNameInput

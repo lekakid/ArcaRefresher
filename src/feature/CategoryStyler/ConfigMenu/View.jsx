@@ -41,7 +41,7 @@ const View = React.forwardRef(({ classes }, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem>
             <ListItemText>색상 설정</ListItemText>
           </ListItem>

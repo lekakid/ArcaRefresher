@@ -76,7 +76,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem>
             <ListItemText
               primary="사이트 표시 제목 변경"

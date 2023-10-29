@@ -99,7 +99,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider button onClick={handleEnable}>
             <ListItemText primary="사용" />
             <ListItemSecondaryAction>

@@ -32,7 +32,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem>
             <ListItemText primary="자동 저장 시간 설정" />
             <ListItemSecondaryAction>

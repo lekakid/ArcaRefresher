@@ -201,7 +201,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem button onClick={handleEnable}>
             <ListItemText primary="사용" />
             <ListItemSecondaryAction>
@@ -212,7 +212,7 @@ const View = React.forwardRef((_props, ref) => {
       </Paper>
       <Typography variant="subtitle2">사이트</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider>
             <ListItemText primary="알림창 위치 설정" />
             <ListItemSecondaryAction>
@@ -320,7 +320,7 @@ const View = React.forwardRef((_props, ref) => {
       </Paper>
       <Typography variant="subtitle2">게시물</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider>
             <ListItemText>이미지 크기</ListItemText>
             <ListItemSecondaryAction>
@@ -351,7 +351,7 @@ const View = React.forwardRef((_props, ref) => {
       </Paper>
       <Typography variant="subtitle2">댓글</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem button onClick={handleUnfoldLongComment}>
             <ListItemText
               primary="장문 댓글 바로보기"
@@ -410,7 +410,7 @@ const View = React.forwardRef((_props, ref) => {
       </Paper>
       <Typography variant="subtitle2">접근성</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider>
             <ListItemText
               primary="사이트 전체 폰트 크기"

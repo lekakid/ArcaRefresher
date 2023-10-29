@@ -37,7 +37,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider>
             <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
             <ListItemSecondaryAction>
