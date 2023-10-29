@@ -236,7 +236,7 @@ const View = React.forwardRef((_props, ref) => {
               </ListItemSecondaryAction>
             </ListItem>
           )}
-          <ListItem divider button onClick={handleRecentVisit}>
+          <ListItem divider>
             <ListItemText primary="최근 방문 채널 위치" />
             <ListItemSecondaryAction>
               <Select
