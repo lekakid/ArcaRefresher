@@ -59,7 +59,7 @@ const useStyles = makeStyles(
             };
           case 'afterAd':
             return {
-              '& .board-article-list': {
+              '& .board-article-list, & .included-article-list': {
                 display: 'inherit',
                 '& .channel-visit-history': {
                   display: 'inherit',
@@ -68,7 +68,7 @@ const useStyles = makeStyles(
             };
           case 'none':
             return {
-              '& .board-article-list': {
+              '& .board-article-list, & .included-article-list': {
                 '& .channel-visit-history': {
                   display: 'none',
                 },
