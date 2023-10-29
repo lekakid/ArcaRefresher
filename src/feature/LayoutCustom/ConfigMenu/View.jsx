@@ -244,7 +244,7 @@ const View = React.forwardRef((_props, ref) => {
                 value={recentVisit}
                 onChange={handleRecentVisit}
               >
-                <MenuItem value="beforeBtns">개념글 버튼 위</MenuItem>
+                <MenuItem value="beforeAd">광고 위</MenuItem>
                 <MenuItem value="afterAd">광고 아래</MenuItem>
                 <MenuItem value="none">숨김</MenuItem>
               </Select>

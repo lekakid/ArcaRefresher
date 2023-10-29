@@ -39,13 +39,17 @@ const useStyles = makeStyles(
       },
       RecentVisit: ({ recentVisit }) => {
         switch (recentVisit) {
-          case 'beforeBtns':
+          case 'beforeAd':
             return {
-              '& .board-article-list': {
+              '& .board-article-list, & .included-article-list': {
                 display: 'flex',
                 flexDirection: 'column',
                 '& .board-title': {
                   order: -99,
+                },
+                '& .board-title+.btns-board': {
+                  order: -98,
+                  marginBottom: '0.5rem',
                 },
                 '& .channel-visit-history': {
                   order: -50,
