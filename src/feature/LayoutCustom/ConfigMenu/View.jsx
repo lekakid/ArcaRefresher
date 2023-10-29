@@ -92,13 +92,7 @@ const View = React.forwardRef((_props, ref) => {
     dispatch($toggleEnable());
   }, [dispatch]);
 
-  const handleFontSize = useCallback(
-    (_e, value) => {
-      dispatch($setFontSize(value));
-    },
-    [dispatch],
-  );
-
+  // ------ 사이트 ------
   const handleNotifyPosition = useCallback(
     (e) => {
       dispatch($setNotifyPosition(e.target.value));
@@ -107,6 +101,10 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
+  const handleTopNews = useCallback(() => {
+    dispatch($toggleTopNews());
+  }, [dispatch]);
+
   const handleRecentVisit = useCallback(
     (e) => {
       dispatch($setRecentVisit(e.target.value));
@@ -114,8 +112,8 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleTopNews = useCallback(() => {
-    dispatch($toggleTopNews());
+  const handleSideMenu = useCallback(() => {
+    dispatch($toggleSideMenu());
   }, [dispatch]);
 
   const handleSideContents = useCallback(() => {
@@ -130,10 +128,6 @@ const View = React.forwardRef((_props, ref) => {
     dispatch($toggleSideNews());
   }, [dispatch]);
 
-  const handleSideMenu = useCallback(() => {
-    dispatch($toggleSideMenu());
-  }, [dispatch]);
-
   const handleAvatar = useCallback(() => {
     dispatch($toggleAvatar());
   }, [dispatch]);
@@ -146,6 +140,7 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch, setOpacity],
   );
 
+  // ------ 게시물 ------
   const handleResizeImage = useCallback(
     (e, value) => {
       setOpacity(0.6);
@@ -162,15 +157,13 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch, setOpacity],
   );
 
-  const handleEmoticonPalette = useCallback(
-    (e, value) => {
-      dispatch($setResizeEmoticonPalette(value));
-    },
-    [dispatch],
-  );
-
   const handleUnvote = useCallback(() => {
     dispatch($toggleUnvote());
+  }, [dispatch]);
+
+  // ------ 댓글 ------
+  const handleUnfoldLongComment = useCallback(() => {
+    dispatch($toggleLongComment());
   }, [dispatch]);
 
   const handleModifiedIndicator = useCallback(() => {
@@ -185,9 +178,20 @@ const View = React.forwardRef((_props, ref) => {
     dispatch($toggleHideVoiceComment());
   }, [dispatch]);
 
-  const handleUnfoldLongComment = useCallback(() => {
-    dispatch($toggleLongComment());
-  }, [dispatch]);
+  const handleEmoticonPalette = useCallback(
+    (e, value) => {
+      dispatch($setResizeEmoticonPalette(value));
+    },
+    [dispatch],
+  );
+
+  // ------ 접근성 ------
+  const handleFontSize = useCallback(
+    (_e, value) => {
+      dispatch($setFontSize(value));
+    },
+    [dispatch],
+  );
 
   const handleDarkModeWriteForm = useCallback(() => {
     dispatch($toggleDarkModeWriteForm());
@@ -198,28 +202,17 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
-          <ListItem divider button onClick={handleEnable}>
+          <ListItem button onClick={handleEnable}>
             <ListItemText primary="사용" />
             <ListItemSecondaryAction>
               <Switch checked={enabled} onChange={handleEnable} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider>
-            <ListItemText
-              primary="사이트 전체 폰트 크기 설정"
-              secondary="표시 설정에서 글자 크기 브라우저 기본 설정 필요"
-            />
-            <ListItemSecondaryAction>
-              <Slider
-                min={8}
-                max={30}
-                valueLabelDisplay="auto"
-                valueLabelFormat={labelFormat}
-                defaultValue={fontSize}
-                onChangeCommitted={handleFontSize}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">사이트</Typography>
+      <Paper>
+        <List>
           <ListItem divider>
             <ListItemText primary="알림창 위치 설정" />
             <ListItemSecondaryAction>
@@ -313,7 +306,7 @@ const View = React.forwardRef((_props, ref) => {
               <Switch checked={avatar} onChange={handleAvatar} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider>
+          <ListItem>
             <ListItemText>게시판 이용자 너비</ListItemText>
             <ListItemSecondaryAction>
               <Slider
@@ -323,8 +316,13 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">게시물</Typography>
+      <Paper>
+        <List>
           <ListItem divider>
-            <ListItemText>게시물 이미지 크기</ListItemText>
+            <ListItemText>이미지 크기</ListItemText>
             <ListItemSecondaryAction>
               <Slider
                 value={resizeImage}
@@ -334,7 +332,7 @@ const View = React.forwardRef((_props, ref) => {
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider>
-            <ListItemText>게시물 동영상 크기</ListItemText>
+            <ListItemText>동영상 크기</ListItemText>
             <ListItemSecondaryAction>
               <Slider
                 value={resizeVideo}
@@ -343,25 +341,27 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider>
-            <ListItemText>이모티콘 선택창 높이</ListItemText>
-            <ListItemSecondaryAction>
-              <Slider
-                value={resizeEmoticonPalette}
-                min={2}
-                max={5}
-                step={1}
-                marks
-                valueLabelFormat={emotLabelFormat}
-                valueLabelDisplay="auto"
-                onChange={handleEmoticonPalette}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleUnvote}>
+          <ListItem button onClick={handleUnvote}>
             <ListItemText primary="비추천 버튼 숨김" />
             <ListItemSecondaryAction>
               <Switch checked={hideUnvote} onChange={handleUnvote} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">댓글</Typography>
+      <Paper>
+        <List>
+          <ListItem button onClick={handleUnfoldLongComment}>
+            <ListItemText
+              primary="장문 댓글 바로보기"
+              secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                checked={unfoldLongComment}
+                onChange={handleUnfoldLongComment}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem divider button onClick={handleModifiedIndicator}>
@@ -391,15 +391,39 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleUnfoldLongComment}>
+          <ListItem>
+            <ListItemText>이모티콘 선택창 높이</ListItemText>
+            <ListItemSecondaryAction>
+              <Slider
+                value={resizeEmoticonPalette}
+                min={2}
+                max={5}
+                step={1}
+                marks
+                valueLabelFormat={emotLabelFormat}
+                valueLabelDisplay="auto"
+                onChange={handleEmoticonPalette}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">접근성</Typography>
+      <Paper>
+        <List>
+          <ListItem divider>
             <ListItemText
-              primary="장문 댓글 바로보기"
-              secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
+              primary="사이트 전체 폰트 크기"
+              secondary="표시 설정에서 글자 크기 브라우저 기본 설정 필요"
             />
             <ListItemSecondaryAction>
-              <Switch
-                checked={unfoldLongComment}
-                onChange={handleUnfoldLongComment}
+              <Slider
+                min={8}
+                max={30}
+                valueLabelDisplay="auto"
+                valueLabelFormat={labelFormat}
+                defaultValue={fontSize}
+                onChangeCommitted={handleFontSize}
               />
             </ListItemSecondaryAction>
           </ListItem>

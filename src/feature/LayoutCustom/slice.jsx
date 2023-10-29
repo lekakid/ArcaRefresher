@@ -6,24 +6,28 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   version: 1,
   enabled: true,
-  fontSize: 15,
+  // 사이트
   notifyPosition: 'right',
   topNews: true,
   recentVisit: 'afterAd',
+  sideMenu: true,
   sideContents: true,
   sideBests: true,
   sideNews: true,
-  sideMenu: true,
   avatar: true,
   userinfoWidth: 10,
+  // 게시물
   resizeImage: 100,
   resizeVideo: 100,
-  resizeEmoticonPalette: 2,
   hideUnvote: false,
+  // 댓글
+  unfoldLongComment: false,
   modifiedIndicator: false,
   reverseComment: false,
   hideVoiceComment: false,
-  unfoldLongComment: false,
+  resizeEmoticonPalette: 2,
+  // 접근성
+  fontSize: 15,
   fixDarkModeWriteForm: true,
 };
 
@@ -57,9 +61,7 @@ export const slice = createSlice({
     $toggleEnable(state) {
       state.storage.enabled = !state.storage.enabled;
     },
-    $setFontSize(state, action) {
-      state.storage.fontSize = action.payload;
-    },
+    // 사이트
     $setNotifyPosition(state, action) {
       state.storage.notifyPosition = action.payload;
     },
@@ -68,6 +70,9 @@ export const slice = createSlice({
     },
     $setRecentVisit(state, action) {
       state.storage.recentVisit = action.payload;
+    },
+    $toggleSideMenu(state) {
+      state.storage.sideMenu = !state.storage.sideMenu;
     },
     $toggleSideContents(state) {
       state.storage.sideContents = !state.storage.sideContents;
@@ -78,26 +83,25 @@ export const slice = createSlice({
     $toggleSideNews(state) {
       state.storage.sideNews = !state.storage.sideNews;
     },
-    $toggleSideMenu(state) {
-      state.storage.sideMenu = !state.storage.sideMenu;
-    },
     $toggleAvatar(state) {
       state.storage.avatar = !state.storage.avatar;
     },
     $setUserInfoWith(state, action) {
       state.storage.userinfoWidth = action.payload;
     },
+    // 게시물
     $setResizeImage(state, action) {
       state.storage.resizeImage = action.payload;
     },
     $setResizeVideo(state, action) {
       state.storage.resizeVideo = action.payload;
     },
-    $setResizeEmoticonPalette(state, action) {
-      state.storage.resizeEmoticonPalette = action.payload;
-    },
     $toggleUnvote(state) {
       state.storage.hideUnvote = !state.storage.hideUnvote;
+    },
+    // 댓글
+    $toggleLongComment(state) {
+      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
     },
     $toggleModifiedIndicator(state) {
       state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
@@ -108,8 +112,12 @@ export const slice = createSlice({
     $toggleHideVoiceComment(state) {
       state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
     },
-    $toggleLongComment(state) {
-      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
+    $setResizeEmoticonPalette(state, action) {
+      state.storage.resizeEmoticonPalette = action.payload;
+    },
+    // 접근성
+    $setFontSize(state, action) {
+      state.storage.fontSize = action.payload;
     },
     $toggleDarkModeWriteForm(state) {
       state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
@@ -119,24 +127,28 @@ export const slice = createSlice({
 
 export const {
   $toggleEnable,
-  $setFontSize,
+  // 사이트
   $setNotifyPosition,
   $toggleTopNews,
   $setRecentVisit,
+  $toggleSideMenu,
   $toggleSideContents,
   $toggleSideBests,
   $toggleSideNews,
-  $toggleSideMenu,
   $toggleAvatar,
   $setUserInfoWith,
+  // 게시물
   $setResizeImage,
   $setResizeVideo,
-  $setResizeEmoticonPalette,
   $toggleUnvote,
+  // 댓글
+  $toggleLongComment,
   $toggleModifiedIndicator,
   $toggleReverseComment,
   $toggleHideVoiceComment,
-  $toggleLongComment,
+  $setResizeEmoticonPalette,
+  // 접근성
+  $setFontSize,
   $toggleDarkModeWriteForm,
 } = slice.actions;
 

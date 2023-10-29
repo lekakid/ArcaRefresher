@@ -22,9 +22,7 @@ const useStyles = makeStyles(
     ]);
 
     return {
-      FontSize: ({ fontSize }) => ({
-        fontSize,
-      }),
+      // ------ 사이트 -------
       NotiPos: ({ notifyPosition }) => ({
         '& .body #toastbox': {
           right: notifyPosition.indexOf('left') > -1 ? 'initial' : 0,
@@ -83,6 +81,20 @@ const useStyles = makeStyles(
             };
         }
       },
+      SideMenu: {
+        ...Object.fromEntries(widthEntries),
+        '&:not([class*=width])': {
+          '& .body .content-wrapper': {
+            gridTemplateColumns: '1fr',
+          },
+        },
+        '& .board-article': {
+          margin: 0,
+        },
+        '& .right-sidebar': {
+          display: 'none',
+        },
+      },
       SideContents: {
         '& .sidebar .sidebar-item:first-child': {
           display: 'none !important',
@@ -98,20 +110,6 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
-      SideMenu: {
-        ...Object.fromEntries(widthEntries),
-        '&:not([class*=width])': {
-          '& .body .content-wrapper': {
-            gridTemplateColumns: '1fr',
-          },
-        },
-        '& .board-article': {
-          margin: 0,
-        },
-        '& .right-sidebar': {
-          display: 'none',
-        },
-      },
       Avatar: {
         '& .avatar': {
           display: 'none !important',
@@ -125,6 +123,7 @@ const useStyles = makeStyles(
           width: `calc(7rem * (1 + ${userinfoWidth * 0.01})) !important`,
         },
       }),
+      // ------ 게시물 ------
       ResizeImage: ({ resizeImage }) => ({
         '& .article-body': {
           '& img, & video:not([controls])': {
@@ -139,17 +138,18 @@ const useStyles = makeStyles(
           maxWidth: `${resizeVideo}% !important`,
         },
       }),
-      ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
-        '& .namlacon': {
-          height: 'auto !important',
-          '& .emoticons': {
-            maxHeight: `${resizeEmoticonPalette * 100}px !important`,
-          },
-        },
-      }),
       Unvote: {
         '& #rateDownForm': {
           display: 'none',
+        },
+      },
+      // ------ 댓글 ------
+      UnfoldLongComment: {
+        '& #comment .message': {
+          maxHeight: 'none !important',
+        },
+        '& #comment .btn-more': {
+          display: 'none !important',
         },
       },
       ModifiedIndicator: {
@@ -177,14 +177,18 @@ const useStyles = makeStyles(
           display: 'none !important',
         },
       },
-      UnfoldLongComment: {
-        '& #comment .message': {
-          maxHeight: 'none !important',
+      ResizeEmoticonPalette: ({ resizeEmoticonPalette }) => ({
+        '& .namlacon': {
+          height: 'auto !important',
+          '& .emoticons': {
+            maxHeight: `${resizeEmoticonPalette * 100}px !important`,
+          },
         },
-        '& #comment .btn-more': {
-          display: 'none !important',
-        },
-      },
+      }),
+      // ------ 접근성 ------
+      FontSize: ({ fontSize }) => ({
+        fontSize,
+      }),
       FixDarkModeWriteForm: {
         '& .dark-theme.fr-box.fr-basic .fr-wrapper': {
           border: '1px solid var(--color-bd-outer)',
@@ -218,38 +222,38 @@ export default function LayoutCustom() {
 
     const {
       topNews,
+      sideMenu,
       sideContents,
       sideBests,
       sideNews,
-      sideMenu,
       avatar,
       hideUnvote,
+      unfoldLongComment,
       modifiedIndicator,
       reverseComment,
       hideVoiceComment,
-      unfoldLongComment,
       fixDarkModeWriteForm,
     } = storage;
     const styles = clsx(
-      classes.FontSize,
-      classes.RecentVisit,
       classes.NotiPos,
+      classes.RecentVisit,
       classes.UserinfoWidth,
       classes.ResizeImage,
       classes.ResizeVideo,
       classes.ResizeEmoticonPalette,
+      classes.FontSize,
       {
         [classes.TopNews]: !topNews,
+        [classes.SideMenu]: !sideMenu,
         [classes.SideContents]: !sideContents,
         [classes.SideBests]: !sideBests,
         [classes.SideNews]: !sideNews,
-        [classes.SideMenu]: !sideMenu,
         [classes.Avatar]: !avatar,
         [classes.Unvote]: hideUnvote,
+        [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.ModifiedIndicator]: !modifiedIndicator,
         [classes.ReverseComment]: reverseComment,
         [classes.HideVoiceComment]: hideVoiceComment,
-        [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.FixDarkModeWriteForm]: fixDarkModeWriteForm,
       },
     ).split(' ');
