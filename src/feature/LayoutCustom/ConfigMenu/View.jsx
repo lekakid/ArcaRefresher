@@ -352,7 +352,7 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">댓글</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem button onClick={handleUnfoldLongComment}>
+          <ListItem divider button onClick={handleUnfoldLongComment}>
             <ListItemText
               primary="장문 댓글 바로보기"
               secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
