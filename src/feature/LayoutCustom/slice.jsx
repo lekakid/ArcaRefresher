@@ -15,7 +15,6 @@ const defaultStorage = {
   sideNews: true,
   sideMenu: true,
   avatar: true,
-  notifyColor: '',
   userinfoWidth: 10,
   resizeImage: 100,
   resizeVideo: 100,
@@ -85,9 +84,6 @@ export const slice = createSlice({
     $toggleAvatar(state) {
       state.storage.avatar = !state.storage.avatar;
     },
-    $setNotifyColor(state, action) {
-      state.storage.notifyColor = action.payload;
-    },
     $setUserInfoWith(state, action) {
       state.storage.userinfoWidth = action.payload;
     },
@@ -132,7 +128,6 @@ export const {
   $toggleSideNews,
   $toggleSideMenu,
   $toggleAvatar,
-  $setNotifyColor,
   $setUserInfoWith,
   $setResizeImage,
   $setResizeVideo,
