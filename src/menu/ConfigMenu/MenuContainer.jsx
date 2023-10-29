@@ -28,7 +28,7 @@ function MenuContainer({ classes, groupList, menuList }) {
   const { open, opacity, drawer, selection } = useSelector(
     (state) => state[Info.ID],
   );
-  const [loadCount, setLoadCount] = useState(1);
+  const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
@@ -90,7 +90,11 @@ function MenuContainer({ classes, groupList, menuList }) {
 
   let content = null;
   if (selection === 'all') {
-    content = menuList
+    const sortedMenuList = groupList
+      .map(({ key }) => menuList.filter(({ group }) => group === key))
+      .flat();
+    sortedMenuList.push(...menuList.filter(({ group }) => !group));
+    content = sortedMenuList
       .filter((_value, index) => index < loadCount)
       .map(({ key, View }) => <View key={key} />);
   } else {
