@@ -165,7 +165,7 @@ const View = React.forwardRef((_props, ref) => {
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
           <ListItem divider button onClick={handleMK2}>
             <ListItemText
               primary="알림 뮤트 MK.2 (실험적)"
@@ -175,16 +175,7 @@ const View = React.forwardRef((_props, ref) => {
               <Switch checked={mk2} onChange={handleMK2} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleServiceNotice}>
-            <ListItemText>서비스 공지사항 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideServiceNotice}
-                onChange={handleServiceNotice}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider>
+          <ListItem>
             <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
             <ListItemSecondaryAction>
               <Select
@@ -197,21 +188,11 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleNoPermission}>
-            <ListItemText>(권한 없음) 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideNoPermission}
-                onChange={handleNoPermission}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleClosedDeal}>
-            <ListItemText>[핫딜 채널] 식은딜 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch checked={hideClosedDeal} onChange={handleClosedDeal} />
-            </ListItemSecondaryAction>
-          </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">모양 설정</Typography>
+      <Paper>
+        <List disablePadding>
           <ListItem divider>
             <ListItemText primary="게시판 뮤트 카운터 위치" />
             <ListItemSecondaryAction>
@@ -243,7 +224,7 @@ const View = React.forwardRef((_props, ref) => {
               <Switch checked={hideMutedMark} onChange={handleMutedMark} />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleIncludeReply}>
+          <ListItem button onClick={handleIncludeReply}>
             <ListItemText>댓글 뮤트 시 답글도 같이 뮤트</ListItemText>
             <ListItemSecondaryAction>
               <Switch
@@ -252,6 +233,40 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">특정 컨텐츠</Typography>
+      <Paper>
+        <List disablePadding>
+          <ListItem divider button onClick={handleServiceNotice}>
+            <ListItemText>[모든 채널] 서비스 공지사항 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideServiceNotice}
+                onChange={handleServiceNotice}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider button onClick={handleNoPermission}>
+            <ListItemText>[모든 채널] 운영 관련(권한 없음) 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch
+                checked={hideNoPermission}
+                onChange={handleNoPermission}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem button onClick={handleClosedDeal}>
+            <ListItemText>[핫딜 채널] 식은딜 숨김</ListItemText>
+            <ListItemSecondaryAction>
+              <Switch checked={hideClosedDeal} onChange={handleClosedDeal} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">뮤트 조건</Typography>
+      <Paper>
+        <List disablePadding>
           <TextEditor
             divider
             headerText="검사할 닉네임"
