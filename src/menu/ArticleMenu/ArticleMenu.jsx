@@ -7,12 +7,14 @@ import { useLoadChecker } from 'util/LoadChecker';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
-    '.edit-menu:empty': {
-      display: 'none',
+    '.edit-menu': {
+      borderBottom: '1px solid var(--color-bd-outer)',
+      '&:empty': {
+        display: 'none',
+      },
     },
   },
   root: {
-    borderTop: '1px solid var(--color-border-outer)',
     '& .MuiButton-root': {
       color: 'var(--color-text-color)',
     },
