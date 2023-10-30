@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
     "hotfix": "version=$(npm --no-git-tag-version version patch) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}",
     "minor": "version=$(npm --no-git-tag-version version minor) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}"
   },
@@ -41,6 +42,7 @@
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
     "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0",
