@@ -4,24 +4,35 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  version: 1,
+  version: 2,
   enabled: false,
   current: '',
   theme: {},
 };
 
 function formatUpdater(storage, defaultValue) {
-  // version 0 => 1
+  // version 0 => 2
   const version = storage?.version || 0;
 
   switch (version) {
-    case 0: {
+    case 0:
+    case 1: {
+      // [from, to]
+      const remapTable = [
+        ['highlight-color', 'bg-highlight'],
+        ['user-highlight', 'bg-highlight-user'],
+        ['border-navbar', 'bd-navbar'],
+        ['border-outer', 'bd-outer'],
+        ['border-inner', 'bd-inner'],
+        ['btn-hover', 'bd-btn-hover'],
+      ];
       const entries = Object.entries(storage.theme).map(([key, value]) => {
-        value['bg-highlight'] = value['highlight-color'];
-        delete value['highlight-color'];
-
-        value['bg-highlight-user'] = value['user-highlight'];
-        delete value['user-highlight'];
+        remapTable.forEach(([from, to]) => {
+          if (!value[to]) {
+            value[to] = value[from];
+            delete value[from];
+          }
+        });
 
         return [key, value];
       });
