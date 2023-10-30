@@ -40,11 +40,11 @@
     "husky": "^7.0.4",
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
-    "webpack": "5.70.0",
+    "webpack": "^5.89.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0",
-    "webpack-userscript": "^2.5.8"
+    "webpack-userscript": "^3.2.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -54,7 +54,7 @@
     "@mui/x-data-grid": "^4.0.2",
     "@reduxjs/toolkit": "^1.8.1",
     "@transcend-io/conflux": "^4.0.2",
-    "caniuse-lite": "^1.0.30001420",
+    "caniuse-lite": "^1.0.30001558",
     "clsx": "^1.1.1",
     "react": "17.0.2",
     "react-color": "^2.19.3",
