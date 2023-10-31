@@ -1,6 +1,16 @@
 // prettier-ignore
 
 /**
+ * @typedef {Object} GroupInfo
+ * 
+ * 설정에서 보일 그룹에 대한 정보를 담고 있습니다.
+ * 
+ * @property {string} key           그룹 ID
+ * @property {string} label         그룹의 이름
+ * @property {Icon}   Icon          그룹 아이콘
+ */
+
+/**
  * @typedef {Object} FeatureInfo
  *
  * 각 기능 모듈들에 대한 string 정보를 담고 있습니다.

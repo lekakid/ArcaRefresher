@@ -64,11 +64,11 @@ function MenuContainer({ classes, groupList, menuList }) {
   }, [dispatch, drawer]);
 
   const navi = [
-    ...groupList.map(({ key, icon, label }, index) => (
+    ...groupList.map(({ key, label, Icon: GroupIcon }, index) => (
       <DrawerGroup
         key={key}
         groupKey={key}
-        groupIcon={icon}
+        groupIcon={<GroupIcon />}
         open={(group === '' && index === 0) || group === key}
         groupText={label}
       >

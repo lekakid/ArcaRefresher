@@ -11,7 +11,7 @@ const menuContext = require.context('menu/', true, /^menu\/(?!_).+\/slice$/);
 const featureContext = require.context(
   'feature/',
   true,
-  /^feature\/(?!_).+\/slice$/,
+  /^feature\/(?!_).+\/.+\/slice$/,
 );
 
 const utilContext = require.context('util/', true, /^util\/(?!_).+\/slice$/);
@@ -22,7 +22,7 @@ const menuReducerEntries = menuContext
 
 const featureReducerEntries = featureContext
   .keys()
-  .map((path) => [path.split('/')[1], featureContext(path).default]);
+  .map((path) => [path.split('/')[2], featureContext(path).default]);
 
 const utilReducerEntries = utilContext
   .keys()

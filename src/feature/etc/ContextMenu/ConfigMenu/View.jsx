@@ -13,8 +13,8 @@ import {
 } from '@material-ui/core';
 
 import { KeyIcon } from 'component';
+import { $setInteraction } from 'menu/ContextMenu/slice';
 
-import { $setInteraction } from '../slice';
 import Info from '../FeatureInfo';
 
 const label = {
@@ -33,9 +33,7 @@ const label = {
 };
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { interactionType },
-  } = useSelector((state) => state[Info.ID]);
+  const { interactionType } = useSelector((state) => state[Info.ID].storage);
   const dispatch = useDispatch();
 
   const handleInteraction = useCallback(

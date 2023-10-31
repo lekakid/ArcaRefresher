@@ -18,7 +18,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: 'ImageDownloader',
+  name: Info.ID,
   initialState,
   reducers: {
     $toggleEnable(state) {

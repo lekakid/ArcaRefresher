@@ -1,14 +1,4 @@
 import React from 'react';
-import {
-  Create,
-  Description,
-  List,
-  MoreHoriz,
-  People,
-  Web,
-} from '@material-ui/icons';
-
-import ContextMenuConfigMenu from './ContextMenu/ConfigMenu';
 
 import ArticleMenuContainer from './ArticleMenu';
 import ConfigMenuContainer from './ConfigMenu';
@@ -17,17 +7,22 @@ import ContextMenuContainer from './ContextMenu';
 const articleMenuContext = require.context(
   'feature/',
   true,
-  /^feature\/(?!_).+\/ArticleMenu$/,
+  /^feature\/(?!_).+\/.+\/ArticleMenu$/,
 );
 const configMenuContext = require.context(
   'feature/',
   true,
-  /^feature\/(?!_).+\/ConfigMenu$/,
+  /^feature\/(?!_).+\/.+\/ConfigMenu$/,
+);
+const groupContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/GroupInfo$/,
 );
 const contextMenuContext = require.context(
   'feature/',
   true,
-  /^feature\/(?!_).+\/ContextMenu$/,
+  /^feature\/(?!_).+\/.+\/ContextMenu$/,
 );
 
 const articleMenuChildren = articleMenuContext
@@ -47,6 +42,11 @@ const contextMenuChildren = contextMenuContext
   .sort((a, b) => a.Component.sortOrder - b.Component.sortOrder)
   .map(({ Component, key }) => <Component key={key} />);
 
+const groupList = groupContext
+  .keys()
+  .map((path) => groupContext(path).default)
+  .sort((a, b) => a.order - b.order);
+
 const configMenuChildren = configMenuContext
   .keys()
   .map((path) => configMenuContext(path).default);
@@ -57,15 +57,8 @@ function MenuWrapper() {
       <ArticleMenuContainer>{articleMenuChildren}</ArticleMenuContainer>
       <ContextMenuContainer>{contextMenuChildren}</ContextMenuContainer>
       <ConfigMenuContainer
-        groupList={[
-          { key: 'site', icon: <Web />, label: '사이트' },
-          { key: 'user', icon: <People />, label: '이용자' },
-          { key: 'board', icon: <List />, label: '게시판' },
-          { key: 'article', icon: <Description />, label: '게시물' },
-          { key: 'write', icon: <Create />, label: '글작성' },
-          { key: 'etc', icon: <MoreHoriz />, label: '기타' },
-        ]}
-        menuList={[ContextMenuConfigMenu, ...configMenuChildren]}
+        groupList={groupList}
+        menuList={configMenuChildren}
       />
     </>
   );
