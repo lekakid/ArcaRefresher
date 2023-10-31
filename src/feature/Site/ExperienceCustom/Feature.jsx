@@ -32,7 +32,7 @@ import {
   EVENT_AUTOREFRESH,
   EVENT_COMMENT_REFRESH,
 } from 'core/event';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';

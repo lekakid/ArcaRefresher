@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { EVENT_ARCA_WS_MESSAGE, addAREvent, removeAREvent } from 'core/event';
 import { TOASTBOX } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 
 import Info from '../FeatureInfo';
 import { trimEmotURL } from '../func';

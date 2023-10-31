@@ -8,7 +8,7 @@ import {
   removeAREvent,
 } from 'core/event';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { getUserNick } from 'func/user';
 
 import Info from './FeatureInfo';

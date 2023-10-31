@@ -9,7 +9,7 @@ import {
 } from 'core/event';
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 
 import { trimEmotURL } from '../func';
 import { emoticonFilterSelector } from '../selector';

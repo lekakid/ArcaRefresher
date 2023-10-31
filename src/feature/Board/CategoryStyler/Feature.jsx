@@ -9,7 +9,7 @@ import {
   BOARD_IN_ARTICLE,
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { useContent } from 'util/ContentInfo';
 import { getContrastYIQ } from 'func/color';
 

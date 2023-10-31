@@ -10,7 +10,7 @@ import {
 } from 'core/selector';
 import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
 import { useContent } from 'util/ContentInfo';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { getUserInfo } from 'func/user';
 
 import CountBar from './CountBar';

@@ -9,7 +9,7 @@ import {
   ARTICLE_URL,
   CHANNEL_TITLE_LOADED,
 } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
 

@@ -10,7 +10,7 @@ import {
   COMMENT_LOADED,
 } from 'core/selector';
 import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
