@@ -5,7 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'global',
+  group: 'user',
   Icon: AssignmentInd,
   label: Info.name,
   View,

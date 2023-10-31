@@ -1,5 +1,12 @@
 import React from 'react';
-import { Description, List, Style, Web } from '@material-ui/icons';
+import {
+  Create,
+  Description,
+  List,
+  MoreHoriz,
+  People,
+  Web,
+} from '@material-ui/icons';
 
 import ContextMenuConfigMenu from './ContextMenu/ConfigMenu';
 
@@ -51,10 +58,12 @@ function MenuWrapper() {
       <ContextMenuContainer>{contextMenuChildren}</ContextMenuContainer>
       <ConfigMenuContainer
         groupList={[
-          { key: 'global', icon: <Web />, label: '전역 도구' },
-          { key: 'board', icon: <List />, label: '게시판 도구' },
-          { key: 'article', icon: <Description />, label: '게시물 도구' },
-          { key: 'uiux', icon: <Style />, label: 'UI/UX' },
+          { key: 'site', icon: <Web />, label: '사이트' },
+          { key: 'user', icon: <People />, label: '이용자' },
+          { key: 'board', icon: <List />, label: '게시판' },
+          { key: 'article', icon: <Description />, label: '게시물' },
+          { key: 'write', icon: <Create />, label: '글작성' },
+          { key: 'etc', icon: <MoreHoriz />, label: '기타' },
         ]}
         menuList={[ContextMenuConfigMenu, ...configMenuChildren]}
       />

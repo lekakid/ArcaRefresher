@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   Collapse,
   List,
@@ -7,18 +7,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import Info from './FeatureInfo';
 import { setGroup } from './slice';
 
 export default function DrawerGroup({
   groupKey,
   groupIcon,
   groupText,
+  open,
   children,
 }) {
   const dispatch = useDispatch();
-  const { group } = useSelector((state) => state[Info.ID]);
-
   const handleClick = useCallback(() => {
     dispatch(setGroup(groupKey));
   }, [dispatch, groupKey]);
@@ -29,7 +27,7 @@ export default function DrawerGroup({
         <ListItemIcon>{groupIcon}</ListItemIcon>
         <ListItemText>{groupText}</ListItemText>
       </ListItem>
-      <Collapse in={group === groupKey}>
+      <Collapse in={open}>
         <List disablePadding>{children}</List>
       </Collapse>
     </>

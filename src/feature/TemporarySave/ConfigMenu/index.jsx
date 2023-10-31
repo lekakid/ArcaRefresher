@@ -5,7 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'article',
+  group: 'write',
   Icon: Book,
   label: Info.name,
   View,

@@ -25,13 +25,14 @@ import DrawerItem from './DrawerItem';
 
 function MenuContainer({ classes, groupList, menuList }) {
   const dispatch = useDispatch();
-  const { open, opacity, drawer, selection } = useSelector(
+  const { open, opacity, drawer, group, selection } = useSelector(
     (state) => state[Info.ID],
   );
   const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
+  // 전체 설정 조회 시 사용되는 스크롤 관련 옵저버
   useEffect(() => {
     if (!target) return undefined;
 
@@ -47,6 +48,7 @@ function MenuContainer({ classes, groupList, menuList }) {
     return () => observer.disconnect();
   }, [target]);
 
+  // 모바일 환경
   useEffect(() => {
     if (mobile) dispatch(setDrawer(false));
   }, [dispatch, mobile]);
@@ -62,10 +64,16 @@ function MenuContainer({ classes, groupList, menuList }) {
   }, [dispatch, drawer]);
 
   const navi = [
-    ...groupList.map(({ key, icon, label }) => (
-      <DrawerGroup key={key} groupKey={key} groupIcon={icon} groupText={label}>
+    ...groupList.map(({ key, icon, label }, index) => (
+      <DrawerGroup
+        key={key}
+        groupKey={key}
+        groupIcon={icon}
+        open={(group === '' && index === 0) || group === key}
+        groupText={label}
+      >
         {menuList
-          .filter(({ group }) => group === key)
+          .filter(({ group: groupKey }) => groupKey === key)
           .map(({ key: menuKey, label: menuLabel, Icon }) => (
             <DrawerItem
               key={menuKey}
@@ -80,7 +88,7 @@ function MenuContainer({ classes, groupList, menuList }) {
     )),
     <Divider key="d1" />,
     menuList
-      .filter(({ group }) => !group)
+      .filter(({ group: groupKey }) => !groupKey)
       .map(({ key: menuKey, label: menuLabel, Icon }) => (
         <DrawerItem key={menuKey} configKey={menuKey} icon={<Icon />}>
           {menuLabel}
@@ -91,9 +99,11 @@ function MenuContainer({ classes, groupList, menuList }) {
   let content = null;
   if (selection === 'all') {
     const sortedMenuList = groupList
-      .map(({ key }) => menuList.filter(({ group }) => group === key))
+      .map(({ key }) =>
+        menuList.filter(({ group: groupKey }) => groupKey === key),
+      )
       .flat();
-    sortedMenuList.push(...menuList.filter(({ group }) => !group));
+    sortedMenuList.push(...menuList.filter(({ group: groupKey }) => !groupKey));
     content = sortedMenuList
       .filter((_value, index) => index < loadCount)
       .map(({ key, View }) => <View key={key} />);

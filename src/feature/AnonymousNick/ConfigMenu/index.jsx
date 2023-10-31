@@ -1,4 +1,4 @@
-import { Group } from '@material-ui/icons';
+import { PeopleOutline } from '@material-ui/icons';
 
 import View from './View';
 import Info from '../FeatureInfo';
@@ -6,8 +6,8 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.ID,
-  group: 'article',
-  Icon: Group,
+  group: 'user',
+  Icon: PeopleOutline,
   label: Info.name,
   View,
 };

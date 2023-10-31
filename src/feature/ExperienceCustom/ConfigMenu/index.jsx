@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.ID,
-  group: 'uiux',
+  group: 'site',
   Icon: DirectionsRun,
   label: Info.name,
   View,

@@ -6,7 +6,7 @@ const initialState = {
   opacity: 1,
   drawer: true,
   selection: 'VersionInfo',
-  group: 'global',
+  group: '',
 };
 
 export const slice = createSlice({

@@ -5,7 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'global',
+  group: 'user',
   Icon: Comment,
   label: Info.name,
   View,

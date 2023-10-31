@@ -5,7 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'board',
+  group: 'site',
   Icon: Brush,
   label: Info.name,
   View,
