@@ -38,9 +38,16 @@ const PresetEditor = React.forwardRef(
 
     return (
       <List ref={ref} disablePadding>
-        {groupData.map(({ key: groupKey, text, rows }) => (
+        {groupData.map(({ key: groupKey, text, rows }, groupIndex) => (
           <React.Fragment key={groupKey}>
-            <ListItem button divider onClick={handleOpen(groupKey)}>
+            <ListItem
+              button
+              divider={
+                groupIndex < groupData.length - 1 ||
+                (groupIndex === groupData.length - 1 && openGroup[groupKey])
+              }
+              onClick={handleOpen(groupKey)}
+            >
               <ListItemText>{text}</ListItemText>
               <ListItemSecondaryAction>
                 {openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />}
@@ -48,8 +55,15 @@ const PresetEditor = React.forwardRef(
             </ListItem>
             <Collapse in={openGroup[groupKey]}>
               <List disablePadding>
-                {rows.map(({ key, primary, secondary }) => (
-                  <ListItem key={key} divider disabled={disabled}>
+                {rows.map(({ key, primary, secondary }, colorIndex) => (
+                  <ListItem
+                    key={key}
+                    divider={
+                      groupIndex < groupData.length - 1 ||
+                      colorIndex < rows.length - 1
+                    }
+                    disabled={disabled}
+                  >
                     <ListItemText primary={primary} secondary={secondary} />
                     <ListItemSecondaryAction>
                       <ColorPicker
