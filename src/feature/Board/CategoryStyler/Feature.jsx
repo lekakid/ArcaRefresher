@@ -18,11 +18,9 @@ import Info from './FeatureInfo';
 export default function CategoryStyler() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
-  const {
-    storage: { color },
-  } = useSelector((state) => state[Info.ID]);
+  const { color } = useSelector((state) => state[Info.ID].storage);
   const [board, setBoard] = useState(null);
-  const [styleMap, setStyleMap] = useState(null);
+  const [keyMap, setKeyMap] = useState(null);
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
@@ -31,25 +29,24 @@ export default function CategoryStyler() {
 
   useLayoutEffect(() => {
     if (!channel.category) return;
-    if (!color[channel.ID]) return;
 
-    const entries = Object.keys(color[channel.ID]).map((id) => [
-      channel.category[id],
+    const entries = Object.values(channel.category).map((value) => [
+      value,
       Math.random().toString(36).substring(2),
     ]);
 
-    setStyleMap(Object.fromEntries(entries));
-  }, [channel, color]);
+    setKeyMap(Object.fromEntries(entries));
+  }, [channel]);
 
   useLayoutEffect(() => {
-    if (!board || !styleMap) return undefined;
+    if (!board || !keyMap) return undefined;
 
     board.classList.add('ARColor');
 
     const colorize = () => {
       board.querySelectorAll(BOARD_ITEMS).forEach((a) => {
         const badge = a.querySelector('.badge')?.textContent || '글머리없음';
-        if (styleMap[badge]) a.classList.add(`color-${styleMap[badge]}`);
+        if (keyMap[badge]) a.classList.add(`color-${keyMap[badge]}`);
       });
     };
 
@@ -59,13 +56,15 @@ export default function CategoryStyler() {
     return () => {
       removeAREvent(EVENT_AUTOREFRESH, colorize);
     };
-  }, [board, styleMap]);
+  }, [board, keyMap]);
 
-  if (!styleMap) return null;
+  if (!color[channel.ID]) return null;
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
-    const colorKey = styleMap[channel.category[key]];
+    const colorKey = keyMap?.[channel.category?.[key]];
+    if (!colorKey) return '';
+
     return `.ARColor .color-${colorKey} {
         ${bgcolor ? `background-color: ${bgcolor} !important;` : ''}
         ${bgcolor ? `color: ${getContrastYIQ(bgcolor)};` : ''}
@@ -83,6 +82,7 @@ export default function CategoryStyler() {
       }
       .ARColor .color-${colorKey} .badge {
         ${badge ? `background-color: ${badge} !important;` : ''}
+        ${badge ? `border: 1px solid ${badge} !important;` : ''}
         ${badge ? `color: ${getContrastYIQ(badge)} !important` : ''}
       }`;
   });
