@@ -134,11 +134,11 @@ function View({ targetRef }) {
   }, [closeMenu, emotData, dispatch, setSnack]);
 
   const handleMute = useCallback(() => {
-    const { regex, exist } = emotData;
+    const { regex, exist } = userData;
 
     dispatch(exist ? $removeUser(regex) : $addUser(regex));
     closeMenu();
-  }, [emotData, dispatch, closeMenu]);
+  }, [userData, dispatch, closeMenu]);
 
   return (
     <>
