@@ -9,16 +9,18 @@ import {
   Box,
   Dialog,
   DialogContent,
+  useMediaQuery,
 } from '@material-ui/core';
 import { GitHub, Help, OpenInNew } from '@material-ui/icons';
 import QRCode from 'react-qr-code';
 
 import Info from '../FeatureInfo';
 
-const DONATION_URL = 'https://toss.me/lekakid';
+const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 
 const View = React.forwardRef((_props, ref) => {
   const [open, setOpen] = useState(false);
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const handleVisitChannel = useCallback(() => {
     GM_openInTab('https://arca.live/b/namurefresher');
@@ -28,9 +30,17 @@ const View = React.forwardRef((_props, ref) => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
-  const handleVisitToss = useCallback(() => {
-    setOpen(true);
+  const handleVisitCoffeeBuyMe = useCallback(() => {
+    GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
   }, []);
+
+  const handleVisitToss = useCallback(() => {
+    if (mobile) {
+      GM_openInTab(DONATION_TOSS_URL);
+      return;
+    }
+    setOpen(true);
+  }, [mobile]);
 
   return (
     <Box ref={ref}>
@@ -49,14 +59,25 @@ const View = React.forwardRef((_props, ref) => {
               <Help />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleVisitGithub}>
+          <ListItem button onClick={handleVisitGithub}>
             <ListItemText primary="Github" />
             <ListItemSecondaryAction>
               <GitHub />
             </ListItemSecondaryAction>
           </ListItem>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">후원</Typography>
+      <Paper>
+        <List disablePadding>
+          <ListItem divider button onClick={handleVisitCoffeeBuyMe}>
+            <ListItemText primary="Buy Me a Coffee" />
+            <ListItemSecondaryAction>
+              <OpenInNew />
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem button onClick={handleVisitToss}>
-            <ListItemText primary="토스로 후원하기" />
+            <ListItemText primary="토스아이디" />
             <ListItemSecondaryAction>
               <OpenInNew />
             </ListItemSecondaryAction>
@@ -69,7 +90,7 @@ const View = React.forwardRef((_props, ref) => {
             아래의 QR코드로 방문해주세요
           </Typography>
           <Box padding={2}>
-            <QRCode value={DONATION_URL} />
+            <QRCode value={DONATION_TOSS_URL} />
           </Box>
         </DialogContent>
       </Dialog>
