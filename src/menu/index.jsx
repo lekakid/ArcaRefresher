@@ -33,14 +33,10 @@ const articleMenuChildren = articleMenuContext
   }))
   .map(({ Component, key }) => <Component key={key} />);
 
-const contextMenuChildren = contextMenuContext
+const contextMenuList = contextMenuContext
   .keys()
-  .map((path) => ({
-    Component: contextMenuContext(path).default,
-    key: path,
-  }))
-  .sort((a, b) => a.Component.sortOrder - b.Component.sortOrder)
-  .map(({ Component, key }) => <Component key={key} />);
+  .map((path) => contextMenuContext(path).default)
+  .sort((a, b) => a.order - b.order);
 
 const groupList = groupContext
   .keys()
@@ -55,7 +51,7 @@ function MenuWrapper() {
   return (
     <>
       <ArticleMenuContainer>{articleMenuChildren}</ArticleMenuContainer>
-      <ContextMenuContainer>{contextMenuChildren}</ContextMenuContainer>
+      <ContextMenuContainer menuList={contextMenuList} />
       <ConfigMenuContainer
         groupList={groupList}
         menuList={configMenuChildren}

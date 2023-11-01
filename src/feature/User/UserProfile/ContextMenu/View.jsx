@@ -8,7 +8,7 @@ import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getUserNick } from 'func/user';
 import { useContent } from 'util/ContentInfo';
 
-import Info from './FeatureInfo';
+import Info from '../FeatureInfo';
 
 function ContextMenu({ targetRef }) {
   const setSnack = useContextSnack();
@@ -104,7 +104,5 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
-
-ContextMenu.sortOrder = 100;
 
 export default ContextMenu;

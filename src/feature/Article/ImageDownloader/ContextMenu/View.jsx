@@ -9,8 +9,8 @@ import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
 import { request } from 'func/http';
-import { format, getImageInfo } from './func';
-import Info from './FeatureInfo';
+import { format, getImageInfo } from '../func';
+import Info from '../FeatureInfo';
 
 function ContextMenu({ targetRef }) {
   const { downloadMethod, fileName } = useSelector(
@@ -170,7 +170,5 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
-
-ContextMenu.sortOrder = 900;
 
 export default ContextMenu;

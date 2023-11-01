@@ -7,7 +7,7 @@ import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { request } from 'func/http';
 
-import Info from './FeatureInfo';
+import Info from '../FeatureInfo';
 
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
@@ -189,7 +189,5 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
-
-ContextMenu.sortOrder = 901;
 
 export default ContextMenu;

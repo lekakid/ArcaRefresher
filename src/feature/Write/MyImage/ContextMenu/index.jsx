@@ -1,3 +1,10 @@
-import ContextMenu from './View';
+import 'core/types';
+import View from './View';
+import Info from '../FeatureInfo';
 
-export default ContextMenu;
+/** @type {ContextMenuInfo} */
+export default {
+  key: Info.ID,
+  View,
+  order: 903,
+};

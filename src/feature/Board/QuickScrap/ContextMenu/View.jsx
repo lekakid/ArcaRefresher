@@ -7,7 +7,7 @@ import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { useContent } from 'util/ContentInfo';
 
-import Info from './FeatureInfo';
+import Info from '../FeatureInfo';
 
 // 우클릭 메뉴
 function ContextMenu({ targetRef }) {
@@ -59,7 +59,5 @@ function ContextMenu({ targetRef }) {
     </List>
   );
 }
-
-ContextMenu.sortOrder = 200;
 
 export default ContextMenu;
