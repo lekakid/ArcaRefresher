@@ -8,7 +8,7 @@ import {
   BOARD,
   BOARD_IN_ARTICLE,
 } from 'core/selector';
-import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
+import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 import { useContent } from 'util/ContentInfo';
 import { getContrastYIQ } from 'func/color';
@@ -16,8 +16,10 @@ import { getContrastYIQ } from 'func/color';
 import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
+  const [addEventListener, removeEventListener] = useEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel } = useContent();
+
   const { color } = useSelector((state) => state[Info.ID].storage);
   const [board, setBoard] = useState(null);
   const [keyMap, setKeyMap] = useState(null);
@@ -51,12 +53,12 @@ export default function CategoryStyler() {
     };
 
     colorize();
-    addAREvent(EVENT_AUTOREFRESH, colorize);
+    addEventListener(EVENT_BOARD_REFRESH, colorize);
 
     return () => {
-      removeAREvent(EVENT_AUTOREFRESH, colorize);
+      removeEventListener(EVENT_BOARD_REFRESH, colorize);
     };
-  }, [board, keyMap]);
+  }, [board, keyMap, addEventListener, removeEventListener]);
 
   if (!color[channel.ID]) return null;
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {

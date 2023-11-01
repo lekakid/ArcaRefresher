@@ -2,23 +2,25 @@ import React, { useLayoutEffect, useState } from 'react';
 import { Portal } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
-import {
-  addAREvent,
-  removeAREvent,
-  EVENT_AUTOREFRESH,
-  EVENT_COMMENT_REFRESH,
-} from 'core/event';
-import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
+import { AuthorTag } from 'component';
+import {
+  EVENT_BOARD_REFRESH,
+  EVENT_COMMENT_REFRESH,
+  useEvent,
+} from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
+
 import { getUserID, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
 
 function MemoList() {
+  const [addEventListener, removeEventListener] = useEvent();
+  const loaded = useLoadChecker(FULL_LOADED);
+
   const { variant, memo } = useSelector((state) => state[Info.ID].storage);
   const [infoList, setInfoList] = useState([]);
-  const loaded = useLoadChecker(FULL_LOADED);
 
   useLayoutEffect(() => {
     const appendMemo = () => {
@@ -38,14 +40,14 @@ function MemoList() {
       setInfoList(list);
     };
     if (loaded) appendMemo();
-    addAREvent(EVENT_AUTOREFRESH, appendMemo);
-    addAREvent(EVENT_COMMENT_REFRESH, appendMemo);
+    addEventListener(EVENT_BOARD_REFRESH, appendMemo);
+    addEventListener(EVENT_COMMENT_REFRESH, appendMemo);
 
     return () => {
-      removeAREvent(EVENT_AUTOREFRESH, appendMemo);
-      removeAREvent(EVENT_COMMENT_REFRESH, appendMemo);
+      removeEventListener(EVENT_BOARD_REFRESH, appendMemo);
+      removeEventListener(EVENT_COMMENT_REFRESH, appendMemo);
     };
-  }, [loaded]);
+  }, [loaded, addEventListener, removeEventListener]);
 
   useLayoutEffect(() => {
     const colorizeUser = () => {
@@ -69,14 +71,14 @@ function MemoList() {
       });
     };
     if (loaded) colorizeUser();
-    addAREvent(EVENT_AUTOREFRESH, colorizeUser);
-    addAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
+    addEventListener(EVENT_BOARD_REFRESH, colorizeUser);
+    addEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
 
     return () => {
-      removeAREvent(EVENT_AUTOREFRESH, colorizeUser);
-      removeAREvent(EVENT_COMMENT_REFRESH, colorizeUser);
+      removeEventListener(EVENT_BOARD_REFRESH, colorizeUser);
+      removeEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
     };
-  }, [memo, loaded]);
+  }, [memo, loaded, addEventListener, removeEventListener]);
 
   return (
     <>

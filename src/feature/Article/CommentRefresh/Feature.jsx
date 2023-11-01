@@ -10,7 +10,7 @@ import {
   COMMENT_INNER,
   COMMENT_LOADED,
 } from 'core/selector';
-import { dispatchAREvent, EVENT_COMMENT_REFRESH } from 'core/event';
+import { EVENT_COMMENT_REFRESH, useDispatchEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 import toDocument from 'func/toDocument';
 
@@ -32,12 +32,14 @@ const style = {
 };
 
 function CommentRefresh({ classes }) {
+  const dispatchEvent = useDispatchEvent(EVENT_COMMENT_REFRESH);
+  const commentLoaded = useLoadChecker(COMMENT_LOADED);
+
   const [title, setTitle] = useState({
     top: undefined,
     bottom: undefined,
   });
   const comment = useRef(undefined);
-  const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   // 초기화
   useEffect(() => {
@@ -60,13 +62,13 @@ function CommentRefresh({ classes }) {
       if (comment.current.parentElement) return;
 
       comment.current = document.querySelector(COMMENT_INNER);
-      dispatchAREvent(EVENT_COMMENT_REFRESH);
+      dispatchEvent(EVENT_COMMENT_REFRESH);
     });
     observer.observe(comment.current.closest(COMMENT), {
       childList: true,
       subtree: true,
     });
-  }, [commentLoaded]);
+  }, [commentLoaded, dispatchEvent]);
 
   const handleClick = useCallback(async () => {
     const response = await fetch(window.location.href);

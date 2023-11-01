@@ -9,7 +9,7 @@ import {
   COMMENT_EMOTICON,
   COMMENT_LOADED,
 } from 'core/selector';
-import { addAREvent, EVENT_COMMENT_REFRESH, removeAREvent } from 'core/event';
+import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 import { getUserInfo } from 'func/user';
 
@@ -63,7 +63,9 @@ const style = {
 
 function CommentMuter() {
   const dispatch = useDispatch();
+  const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
+
   const { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply } =
     useSelector((state) => state[Info.ID].storage);
   const [comment, setComment] = useState(undefined);
@@ -84,12 +86,12 @@ function CommentMuter() {
     commentElement.insertAdjacentElement('beforebegin', countBarContainer);
     setContainer(countBarContainer);
 
-    addAREvent(EVENT_COMMENT_REFRESH, () => {
+    addEventListener(EVENT_COMMENT_REFRESH, () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
       setComment(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
     });
-  }, [dispatch, commentLoaded]);
+  }, [dispatch, commentLoaded, addEventListener]);
 
   // 이모티콘 뮤트
   useLayoutEffect(() => {
@@ -108,13 +110,20 @@ function CommentMuter() {
       });
     };
 
-    addAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
+    addEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     muteEmoticon();
 
     return () => {
-      removeAREvent(EVENT_COMMENT_REFRESH, muteEmoticon);
+      removeEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
-  }, [commentLoaded, emoticonFilter, hideMutedMark, muteIncludeReply]);
+  }, [
+    commentLoaded,
+    emoticonFilter,
+    hideMutedMark,
+    muteIncludeReply,
+    addEventListener,
+    removeEventListener,
+  ]);
 
   // 키워드, 이용자 뮤트
   useLayoutEffect(() => {
@@ -143,13 +152,20 @@ function CommentMuter() {
 
     if (document.readyState === 'complete') muteComment();
     window.addEventListener('load', muteComment);
-    addAREvent(EVENT_COMMENT_REFRESH, muteComment);
+    addEventListener(EVENT_COMMENT_REFRESH, muteComment);
 
     return () => {
       window.removeEventListener('load', muteComment);
-      removeAREvent(EVENT_COMMENT_REFRESH, muteComment);
+      removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
-  }, [comment, keyword, user, muteIncludeReply]);
+  }, [
+    comment,
+    keyword,
+    user,
+    muteIncludeReply,
+    addEventListener,
+    removeEventListener,
+  ]);
 
   if (!container) return null;
   return (

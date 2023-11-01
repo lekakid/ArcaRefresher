@@ -8,9 +8,9 @@ import {
   BOARD_IN_ARTICLE,
   BOARD_ITEMS,
 } from 'core/selector';
-import { addAREvent, EVENT_AUTOREFRESH, removeAREvent } from 'core/event';
-import { useContent } from 'util/ContentInfo';
+import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
+import { useContent } from 'util/ContentInfo';
 import { getUserInfo } from 'func/user';
 
 import CountBar from './CountBar';
@@ -48,7 +48,9 @@ const style = {
 
 function BoardMuter() {
   const dispatch = useDispatch();
+  const [addEventListener, removeEventListener] = useEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
+
   const { channel } = useContent();
   const {
     user,
@@ -121,13 +123,22 @@ function BoardMuter() {
 
     if (document.readyState === 'complete') muteArticle();
     window.addEventListener('load', muteArticle);
-    addAREvent(EVENT_AUTOREFRESH, muteArticle);
+    addEventListener(EVENT_BOARD_REFRESH, muteArticle);
 
     return () => {
       window.removeEventListener('load', muteArticle);
-      removeAREvent(EVENT_AUTOREFRESH, muteArticle);
+      removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
-  }, [board, nameToIDMap, keyword, user, channel, category]);
+  }, [
+    board,
+    nameToIDMap,
+    keyword,
+    user,
+    channel,
+    category,
+    addEventListener,
+    removeEventListener,
+  ]);
 
   // 게시물 미리보기 뮤트
   useLayoutEffect(() => {

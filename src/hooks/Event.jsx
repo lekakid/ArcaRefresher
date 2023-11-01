@@ -1,5 +1,7 @@
-export const EVENT_AUTOREFRESH = 'AREVENT_AUTOREFRESH';
-export const EVENT_COMMENT_REFRESH = 'AREVENT_COMMENTREFRESH';
+import { useCallback } from 'react';
+
+export const EVENT_BOARD_REFRESH = 'AREVENT_BOARD_REFRESH';
+export const EVENT_COMMENT_REFRESH = 'AREVENT_COMMENT_REFRESH';
 export const EVENT_ARCA_WS_MESSAGE = 'EVENT_ARCA_WS_MESSAGE';
 
 const AREvent = {};
@@ -38,26 +40,28 @@ function WrappedWebSocket(...contructorArguments) {
 }
 unsafeWindow.WebSocket = WrappedWebSocket;
 
-export function addAREvent(event, callback) {
-  if (!AREvent[event]) AREvent[event] = [];
+export function useEvent() {
+  const addListener = useCallback((type, callback) => {
+    AREvent[type] ??= [];
+    AREvent[type].push(callback);
+  }, []);
 
-  AREvent[event].push(callback);
+  const removeListener = useCallback((type, callback) => {
+    AREvent[type] ??= [];
+    AREvent[type] = AREvent[type].filter((f) => f !== callback);
+  }, []);
+
+  return [addListener, removeListener];
 }
 
-export function removeAREvent(event, callback) {
-  try {
-    AREvent[event] = AREvent[event].filter((f) => f !== callback);
-  } catch (error) {
-    console.warn(error);
-  }
-}
+export function useDispatchEvent() {
+  const dispatchEvent = useCallback((type) => {
+    try {
+      AREvent[type].forEach((callback) => callback());
+    } catch (error) {
+      console.warn(error);
+    }
+  }, []);
 
-export function dispatchAREvent(event) {
-  try {
-    AREvent[event].forEach((arEvent) => {
-      arEvent();
-    });
-  } catch (error) {
-    console.warn(error);
-  }
+  return dispatchEvent;
 }

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import {
-  addAREvent,
-  EVENT_AUTOREFRESH,
-  EVENT_COMMENT_REFRESH,
-} from 'core/event';
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
+import {
+  EVENT_BOARD_REFRESH,
+  EVENT_COMMENT_REFRESH,
+  useEvent,
+} from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 import { getUserIP, getUserKey } from 'func/user';
 
@@ -34,9 +34,11 @@ const useStyles = makeStyles(
 );
 
 export default function IPInfo() {
-  const [infoList, setInfoList] = useState([]);
+  const [addEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
   const classes = useStyles();
+
+  const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {
     const refreshUserInfo = () => {
@@ -64,9 +66,9 @@ export default function IPInfo() {
       setInfoList(list);
     };
     if (loaded) refreshUserInfo();
-    addAREvent(EVENT_AUTOREFRESH, refreshUserInfo);
-    addAREvent(EVENT_COMMENT_REFRESH, refreshUserInfo);
-  }, [loaded]);
+    addEventListener(EVENT_BOARD_REFRESH, refreshUserInfo);
+    addEventListener(EVENT_COMMENT_REFRESH, refreshUserInfo);
+  }, [loaded, addEventListener]);
 
   return (
     <>

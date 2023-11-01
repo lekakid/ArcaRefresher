@@ -10,7 +10,7 @@ import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
-import { dispatchAREvent, EVENT_AUTOREFRESH } from 'core/event';
+import { EVENT_BOARD_REFRESH, useDispatchEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 
 import Info from './FeatureInfo';
@@ -46,7 +46,9 @@ function parseSearch(searchString) {
 }
 
 function AutoRefresher({ classes }) {
+  const dispatchEvent = useDispatchEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
+
   const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
     (state) => state[Info.ID].storage,
   );
@@ -106,12 +108,12 @@ function AutoRefresher({ classes }) {
     const newArticle = await getNewArticle();
     if (newArticle.length === 0) return;
     swapArticle(board, newArticle, classes.refreshed);
-    dispatchAREvent(EVENT_AUTOREFRESH);
+    dispatchEvent(EVENT_BOARD_REFRESH);
 
     // 리셋
     refreshData.current.newArticle = 0;
     refreshData.current.accTime = 0;
-  }, [board, classes, countdown, maxTime]);
+  }, [board, classes, countdown, maxTime, dispatchEvent]);
 
   useEffect(() => {
     if (!enabled) return undefined;

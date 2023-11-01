@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import { EVENT_ARCA_WS_MESSAGE, addAREvent, removeAREvent } from 'core/event';
 import { TOASTBOX } from 'core/selector';
+import { EVENT_ARCA_WS_MESSAGE, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 
 import Info from '../FeatureInfo';
@@ -29,10 +29,12 @@ const style = {
 };
 
 function ToastMuter() {
+  const [addEventListener, removeEventListener] = useEvent();
+  const toastboxLoaded = useLoadChecker(TOASTBOX);
+
   const { mk2, user, hideMutedMark } = useSelector(
     (state) => state[Info.ID].storage,
   );
-  const toastboxLoaded = useLoadChecker(TOASTBOX);
   const emotFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
@@ -72,10 +74,17 @@ function ToastMuter() {
       Object.defineProperty(e, 'data', { value: injectedData });
       return e;
     };
-    addAREvent(EVENT_ARCA_WS_MESSAGE, listener);
+    addEventListener(EVENT_ARCA_WS_MESSAGE, listener);
 
-    return () => removeAREvent(EVENT_ARCA_WS_MESSAGE, listener);
-  }, [emotFilter, hideMutedMark, user, mk2]);
+    return () => removeEventListener(EVENT_ARCA_WS_MESSAGE, listener);
+  }, [
+    emotFilter,
+    hideMutedMark,
+    user,
+    mk2,
+    addEventListener,
+    removeEventListener,
+  ]);
 
   useEffect(() => {
     if (mk2) return undefined;

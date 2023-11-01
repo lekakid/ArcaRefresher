@@ -27,11 +27,10 @@ import {
   COMMENT,
 } from 'core/selector';
 import {
-  addAREvent,
-  removeAREvent,
-  EVENT_AUTOREFRESH,
+  EVENT_BOARD_REFRESH,
   EVENT_COMMENT_REFRESH,
-} from 'core/event';
+  useEvent,
+} from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
 
 import Info from './FeatureInfo';
@@ -52,6 +51,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ExperienceCustomizer() {
+  const [addEventListener, removeEventListener] = useEvent();
+  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+  const boardLoaded = useLoadChecker(BOARD_LOADED);
+  const commentLoaded = useLoadChecker(COMMENT_LOADED);
+  const classes = useStyles();
+
   const {
     spoofTitle,
     openArticleNewWindow,
@@ -62,10 +67,6 @@ export default function ExperienceCustomizer() {
     wideClickArea,
     enhancedArticleManage,
   } = useSelector((state) => state[Info.ID].storage);
-  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const boardLoaded = useLoadChecker(BOARD_LOADED);
-  const commentLoaded = useLoadChecker(COMMENT_LOADED);
-
   const titleRef = useRef(document.title);
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
@@ -73,7 +74,6 @@ export default function ExperienceCustomizer() {
   const confirmRef = useRef();
   const [confirm, setConfirm] = useState(false);
   const [fakePreview, setFakePreview] = useState(null);
-  const classes = useStyles();
 
   // 게시물 로드 확인 및 엘리먼트 저장
   useEffect(() => {
@@ -87,10 +87,10 @@ export default function ExperienceCustomizer() {
     if (!commentLoaded) return;
 
     setComment(document.querySelector(COMMENT));
-    addAREvent(EVENT_COMMENT_REFRESH, () => {
+    addEventListener(EVENT_COMMENT_REFRESH, () => {
       setComment(document.querySelector(COMMENT));
     });
-  }, [commentLoaded]);
+  }, [commentLoaded, addEventListener]);
 
   // 사이트 표시 제목 변경
   useEffect(() => {
@@ -175,7 +175,7 @@ export default function ExperienceCustomizer() {
     };
 
     applyNewWindow();
-    addAREvent(EVENT_AUTOREFRESH, applyNewWindow);
+    addEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
     return () => {
       const articles = board.querySelectorAll(
         `${BOARD_NOTICES}, ${BOARD_ITEMS}`,
@@ -184,9 +184,14 @@ export default function ExperienceCustomizer() {
         a.setAttribute('target', '');
       });
 
-      removeAREvent(EVENT_AUTOREFRESH, applyNewWindow);
+      removeEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
     };
-  }, [boardLoaded, openArticleNewWindow]);
+  }, [
+    boardLoaded,
+    openArticleNewWindow,
+    addEventListener,
+    removeEventListener,
+  ]);
 
   // 댓글 접기 방지
   useEffect(() => {
