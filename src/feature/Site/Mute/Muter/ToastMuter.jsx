@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import { TOASTBOX } from 'core/selector';
-import { EVENT_ARCA_WS_MESSAGE, useEvent } from 'hooks/Event';
+import { useArcaSocket } from 'hooks/WebSocket';
 import { useLoadChecker } from 'hooks';
 
 import Info from '../FeatureInfo';
@@ -29,7 +29,7 @@ const style = {
 };
 
 function ToastMuter() {
-  const [addEventListener, removeEventListener] = useEvent();
+  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
   const toastboxLoaded = useLoadChecker(TOASTBOX);
 
   const { mk2, user, hideMutedMark } = useSelector(
@@ -74,16 +74,16 @@ function ToastMuter() {
       Object.defineProperty(e, 'data', { value: injectedData });
       return e;
     };
-    addEventListener(EVENT_ARCA_WS_MESSAGE, listener);
+    subscribeSocket(listener);
 
-    return () => removeEventListener(EVENT_ARCA_WS_MESSAGE, listener);
+    return () => unsubscribeSocket(listener);
   }, [
     emotFilter,
     hideMutedMark,
     user,
     mk2,
-    addEventListener,
-    removeEventListener,
+    subscribeSocket,
+    unsubscribeSocket,
   ]);
 
   useEffect(() => {
