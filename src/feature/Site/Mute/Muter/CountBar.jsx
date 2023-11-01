@@ -13,7 +13,7 @@ const TypeString = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    borderBottom: '1px solid var(--color-border-outer)',
+    borderBottom: '1px solid var(--color-bd-outer)',
   },
   label: {
     paddingLeft: theme.spacing(1),
