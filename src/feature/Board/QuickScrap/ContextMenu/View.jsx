@@ -21,12 +21,16 @@ function ContextMenu({ targetRef }) {
       // 로그인 체크
       if (!unsafeWindow.LiveConfig?.nickname) return undefined;
 
-      if (target.matches(BOARD_ITEMS)) {
-        const articleId = target.pathname.split('/').pop();
+      if (!target.matches('a')) {
+        const articleId = target
+          .querySelector('a.title')
+          .pathname.split('/')
+          .pop();
         return articleId;
       }
 
-      return undefined;
+      const articleId = target.pathname.split('/').pop();
+      return articleId;
     },
   });
 
