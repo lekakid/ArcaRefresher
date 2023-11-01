@@ -6,7 +6,7 @@ const { UserscriptPlugin } = require('webpack-userscript');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-cheap-source-map',
   output: {
     filename: 'ArcaRefresher.debug.user.js',
   },
@@ -22,7 +22,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new UserscriptPlugin({
-      headers: path.join(__dirname, './src/meta.json'),
+      headers: path.join(__dirname, './src/proxy-meta.json'),
       metajs: false,
       proxyScript: {
         filename: 'ArcaRefresher.proxy.user.js',
