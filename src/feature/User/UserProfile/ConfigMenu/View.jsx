@@ -13,18 +13,27 @@ import {
   Select,
 } from '@material-ui/core';
 
+import { BACKGROUND, CURRENT, FOREGROUND } from 'func/window';
+
+import { $setContextRange, $setOpenType, $toggleIdVisible } from '../slice';
 import Info from '../FeatureInfo';
-import { $setContextRange, $toggleIdVisible } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { showId, contextRange } = useSelector(
+  const { contextRange, openType, showId } = useSelector(
     (state) => state[Info.ID].storage,
   );
 
   const handleContextRange = useCallback(
     (e) => {
       dispatch($setContextRange(e.target.value));
+    },
+    [dispatch],
+  );
+
+  const handleOpenType = useCallback(
+    (e) => {
+      dispatch($setOpenType(e.target.value));
     },
     [dispatch],
   );
@@ -48,6 +57,20 @@ const View = React.forwardRef((_props, ref) => {
               >
                 <MenuItem value="articleItem">게시글</MenuItem>
                 <MenuItem value="nickname">닉네임</MenuItem>
+              </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem divider>
+            <ListItemText primary="프로필 및 검색 창을 여는 방식" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={openType}
+                onChange={handleOpenType}
+              >
+                <MenuItem value={CURRENT}>열려있는 창에서</MenuItem>
+                <MenuItem value={FOREGROUND}>새 창으로</MenuItem>
+                <MenuItem value={BACKGROUND}>백그라운드 창으로</MenuItem>
               </Select>
             </ListItemSecondaryAction>
           </ListItem>

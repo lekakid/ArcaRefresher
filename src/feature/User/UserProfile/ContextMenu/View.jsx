@@ -8,11 +8,14 @@ import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { getUserNick } from 'func/user';
 import { useContent } from 'util/ContentInfo';
 
+import { open } from 'func/window';
 import Info from '../FeatureInfo';
 
 function ContextMenu({ targetRef }) {
   const setSnack = useContextSnack();
-  const { contextRange } = useSelector((store) => store[Info.ID].storage);
+  const { contextRange, openType } = useSelector(
+    (store) => store[Info.ID].storage,
+  );
   const { channel } = useContent();
   let contextSelector;
   switch (contextRange) {
@@ -46,9 +49,9 @@ function ContextMenu({ targetRef }) {
   });
 
   const handleProfile = useCallback(() => {
-    GM_openInTab(`https://arca.live/u/@${data.url}`);
+    open(`https://arca.live/u/@${data.url}`, openType);
     closeMenu();
-  }, [closeMenu, data]);
+  }, [closeMenu, data, openType]);
 
   const handleCopyId = useCallback(async () => {
     closeMenu();
@@ -57,22 +60,24 @@ function ContextMenu({ targetRef }) {
   }, [closeMenu, data, setSnack]);
 
   const handleSearchAll = useCallback(async () => {
-    GM_openInTab(
+    open(
       `https://arca.live/b/breaking?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
+      openType,
     );
     closeMenu();
-  }, [closeMenu, data]);
+  }, [closeMenu, data, openType]);
 
   const handleSearchChannel = useCallback(async () => {
-    GM_openInTab(
+    open(
       `https://arca.live/b/${channel.ID}?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
+      openType,
     );
     closeMenu();
-  }, [channel, closeMenu, data]);
+  }, [channel, closeMenu, data, openType]);
 
   if (!data) return null;
   return (
