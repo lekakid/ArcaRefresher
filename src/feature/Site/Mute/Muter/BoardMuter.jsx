@@ -152,7 +152,7 @@ function BoardMuter() {
         ? trimEmotURL(e.src)
         : trimEmotURL(e.textContent.match(/(\/\/.+)type=list/g)[0]);
 
-      if (emoticionFilter.url.indexOf(url) > -1) {
+      if (emoticionFilter.url[url]) {
         e.parentNode.classList.add('filtered-emoticon');
       }
     });

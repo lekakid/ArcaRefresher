@@ -60,21 +60,42 @@ function ArticleMuter() {
         const { src } = i;
 
         const filterFormat = trimEmotURL(src);
+        const wrapper = i.closest('a');
+        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+          wrapper.classList.add('muted');
+          wrapper.dataset.href = wrapper.href;
+          wrapper.removeAttribute('href');
+          wrapper.title = emoticonFilter.url[filterFormat];
+        }
+      });
+    };
 
-        i.closest('a')?.classList.toggle(
-          'muted',
-          emoticonFilter.url.indexOf(filterFormat) > -1,
-        );
+    const unmuteArticle = () => {
+      const articleImage = [...document.querySelectorAll(ARTICLE_EMOTICON)];
+      articleImage.forEach((i) => {
+        const { src } = i;
+
+        const filterFormat = trimEmotURL(src);
+        const wrapper = i.closest('a');
+        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+          wrapper.classList.remove('muted');
+          wrapper.href = wrapper.dataset.href;
+          delete wrapper.dataset.href;
+          wrapper.removeAttribute('title');
+        }
       });
     };
 
     if (document.readyState !== 'complete') {
       window.addEventListener('load', muteArticle);
-      return () => window.removeEventListener('load', muteArticle);
+      return () => {
+        window.removeEventListener('load', muteArticle);
+        unmuteArticle();
+      };
     }
 
     muteArticle();
-    return undefined;
+    return () => unmuteArticle();
   }, [article, emoticonFilter, hideMutedMark]);
 
   return null;

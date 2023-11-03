@@ -45,9 +45,6 @@ const style = {
             width: 'auto !important',
             height: 'auto !important',
             textDecoration: 'none !important',
-            '&::after': {
-              content: '"[아카콘 뮤트됨]"',
-            },
             '& > img, & > video': {
               display: 'none !important',
             },
@@ -105,15 +102,31 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          emoticonFilter.bundle?.indexOf(id) > -1,
+          !!emoticonFilter.bundle[id],
         );
+
+        if (!emoticonFilter.bundle[id] || hideMutedMark) return;
+        const muted = document.createElement('span');
+        muted.append('[아카콘 뮤트됨]');
+        muted.classList.add('muted');
+        muted.title = emoticonFilter.bundle[id];
+        c.closest('.emoticon-wrapper').append(muted);
       });
     };
 
-    addEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     muteEmoticon();
+    addEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
 
     return () => {
+      const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
+      commentEmot.forEach((c) => {
+        c.closest(
+          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+        ).classList.remove(
+          hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
+        );
+        c.closest('.emoticon-wrapper').querySelector('span')?.remove();
+      });
       removeEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
   }, [

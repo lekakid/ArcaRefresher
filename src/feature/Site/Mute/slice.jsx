@@ -77,14 +77,52 @@ export const slice = createSlice({
       if (state.storage.emoticon[id]) {
         const { bundle, url } = state.storage.emoticon[id];
 
+        const updatedBundle = [...bundle, ...emoticon.bundle];
+        const updatedUrl = [...url, ...emoticon.url];
+
         state.storage.emoticon[id] = {
           ...state.storage.emoticon[id],
-          bundle: [...bundle, ...emoticon.bundle],
-          url: [...url, ...emoticon.url],
+          bundle: updatedBundle.filter(
+            (e, i) => updatedBundle.indexOf(e) === i,
+          ),
+          url: updatedUrl.filter((e, i) => updatedUrl.indexOf(e) === i),
         };
       } else {
         state.storage.emoticon[id] = emoticon;
       }
+    },
+    $removeEmoticon(state, action) {
+      const { id, emotID, url } = action.payload;
+
+      if (id && (emotID || url)) {
+        if (!state.storage.emoticon[id]) {
+          console.warn(`[Mute] 없는 이모티콘 삭제 시도 (${id})`);
+          return;
+        }
+
+        let index = state.storage.emoticon[id].bundle.indexOf(emotID);
+        if (index === -1) index = state.storage.emoticon[id].url.indexOf(url);
+
+        state.storage.emoticon[id].bundle = state.storage.emoticon[
+          id
+        ].bundle.filter((_e, i) => i !== index);
+        state.storage.emoticon[id].url = state.storage.emoticon[id].url.filter(
+          (_u, i) => i !== index,
+        );
+        return;
+      }
+
+      if (id) {
+        if (!state.storage.emoticon[id]) {
+          console.warn(`[Mute] 없는 이모티콘 삭제 시도 (${id})`);
+          return;
+        }
+
+        delete state.storage.emoticon[id];
+        return;
+      }
+
+      console.warn(`[Mute] $removeEmoticon Payload 오류`);
     },
     $removeEmoticonList(state, action) {
       action.payload.forEach((id) => {
@@ -135,6 +173,7 @@ export const {
   $removeKeyword,
   $setKeyword,
   $addEmoticon,
+  $removeEmoticon,
   $removeEmoticonList,
   $setCategoryConfig,
   $setContextRange,

@@ -7,9 +7,13 @@ import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { getUserInfo } from 'func/user';
 
-import { getEmoticonList, getBundleName, trimEmotURL } from '../func';
-import { $addEmoticon, $addUser, $removeUser } from '../slice';
-import getBundleID from '../func/getBundleID';
+import {
+  getEmoticonList,
+  getBundleID,
+  getBundleName,
+  trimEmotURL,
+} from '../func';
+import { $addEmoticon, $addUser, $removeEmoticon, $removeUser } from '../slice';
 import Info from '../FeatureInfo';
 
 function makeRegex(id = '') {
@@ -35,12 +39,26 @@ function View({ targetRef }) {
   const setSnack = useContextSnack();
   const [emotData, closeMenu] = useContextMenu({
     targetRef,
-    selector: '[class$="emoticon"]',
-    dataExtractor: (target) => ({
-      bundleID: target.dataset.storeId,
-      emotID: target.dataset.id,
-      url: target.src.replace('https:', ''),
-    }),
+    selector:
+      '[class$="emoticon"], .emoticon-wrapper > span, .article-body a.muted',
+    dataExtractor: (target) => {
+      let emotElement = target;
+      let muted = false;
+      if (target.matches('span.muted')) {
+        emotElement = target.parentElement.querySelector('.emoticon');
+        muted = true;
+      }
+      if (target.matches('a.muted')) {
+        emotElement = target.querySelector('[class$="emoticon"]');
+        muted = true;
+      }
+      return {
+        muted,
+        bundleID: emotElement.dataset.storeId,
+        emotID: parseInt(emotElement.dataset.id, 10),
+        url: trimEmotURL(emotElement.src),
+      };
+    },
   });
 
   const [userData] = useContextMenu({
@@ -104,10 +122,15 @@ function View({ targetRef }) {
   const handleSingleMute = useCallback(() => {
     (async () => {
       try {
-        let { bundleID } = emotData;
-        const { emotID, url } = emotData;
+        let { bundleID, emotID } = emotData;
+        const { url } = emotData;
         if (!bundleID) {
           bundleID = await getBundleID(emotID);
+        }
+        if (!emotID) {
+          const bundle = await getEmoticonList(bundleID);
+          const index = bundle.urlList.indexOf(url);
+          emotID = bundle.idList[index];
         }
         const bundleName = await getBundleName(bundleID);
 
@@ -116,9 +139,63 @@ function View({ targetRef }) {
             id: bundleID,
             emoticon: {
               name: bundleName,
-              bundle: [parseInt(emotID, 10)],
-              url: [trimEmotURL(url)],
+              bundle: [emotID || -1],
+              url: [url],
             },
+          }),
+        );
+      } catch (e) {
+        setSnack({
+          msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
+          time: 3000,
+        });
+        console.error(e);
+      }
+
+      closeMenu();
+    })();
+  }, [closeMenu, emotData, dispatch, setSnack]);
+
+  const handleBundleUnmute = useCallback(() => {
+    (async () => {
+      try {
+        let { bundleID } = emotData;
+        const { emotID } = emotData;
+        if (!bundleID) {
+          bundleID = await getBundleID(emotID);
+        }
+
+        dispatch(
+          $removeEmoticon({
+            id: bundleID,
+          }),
+        );
+      } catch (e) {
+        setSnack({
+          msg: `${e.message}\n개발자 도구(F12)의 콘솔(Console)창 캡쳐와 함께 문의바랍니다.`,
+          time: 3000,
+        });
+        console.error(e);
+      }
+
+      closeMenu();
+    })();
+  }, [closeMenu, emotData, dispatch, setSnack]);
+
+  const handleSingleUnmute = useCallback(() => {
+    (async () => {
+      try {
+        let { bundleID } = emotData;
+        const { emotID, url } = emotData;
+        if (!bundleID) {
+          bundleID = await getBundleID(emotID);
+        }
+
+        dispatch(
+          $removeEmoticon({
+            id: bundleID,
+            emotID,
+            url,
           }),
         );
       } catch (e) {
@@ -142,7 +219,7 @@ function View({ targetRef }) {
 
   return (
     <>
-      {emotData && (
+      {emotData && !emotData.muted && (
         <List>
           <MenuItem onClick={handleBundleMute}>
             <ListItemIcon>
@@ -155,6 +232,22 @@ function View({ targetRef }) {
               <Block />
             </ListItemIcon>
             <Typography>이 아카콘만 뮤트</Typography>
+          </MenuItem>
+        </List>
+      )}
+      {emotData && emotData.muted && (
+        <List>
+          <MenuItem onClick={handleBundleUnmute}>
+            <ListItemIcon>
+              <Block />
+            </ListItemIcon>
+            <Typography>아카콘 묶음 뮤트 해제</Typography>
+          </MenuItem>
+          <MenuItem onClick={handleSingleUnmute}>
+            <ListItemIcon>
+              <Block />
+            </ListItemIcon>
+            <Typography>이 아카콘만 뮤트 해제</Typography>
           </MenuItem>
         </List>
       )}
