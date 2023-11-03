@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';
+import { BACKGROUND } from 'func/window';
+
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  openType: BACKGROUND,
   searchBySource: false,
   searchGoogleMethod: 'lens',
   saucenaoBypass: false,
@@ -17,6 +20,9 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
+    $setOpenType(state, action) {
+      state.storage.openType = action.payload;
+    },
     $toggleSearchBySource(state) {
       state.storage.searchBySource = !state.storage.searchBySource;
     },
@@ -30,6 +36,7 @@ export const slice = createSlice({
 });
 
 export const {
+  $setOpenType,
   $toggleSearchBySource,
   $setSearchGoogleMethod,
   $toggleSauceNaoBypass,

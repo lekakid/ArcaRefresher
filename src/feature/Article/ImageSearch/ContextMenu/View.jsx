@@ -6,6 +6,7 @@ import { ImageSearch, PhotoLibrary } from '@material-ui/icons';
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { request } from 'func/http';
+import { open } from 'func/window';
 
 import Info from '../FeatureInfo';
 
@@ -13,9 +14,8 @@ const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
 
 function ContextMenu({ targetRef }) {
-  const { searchBySource, searchGoogleMethod, saucenaoBypass } = useSelector(
-    (state) => state[Info.ID].storage,
-  );
+  const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
+    useSelector((state) => state[Info.ID].storage);
 
   const setSnack = useContextSnack();
   const [data, closeMenu] = useContextMenu({
@@ -30,9 +30,9 @@ function ContextMenu({ targetRef }) {
       lens: 'https://lens.google.com/uploadbyurl?hl=ko&re=df&st=1668437351496&ep=gsbubu&url=',
       source: 'https://www.google.com/searchbyimage?client=app&image_url=',
     };
-    GM_openInTab(`${url[searchGoogleMethod]}${encodeURIComponent(data)}`);
+    open(`${url[searchGoogleMethod]}${encodeURIComponent(data)}`, openType);
     closeMenu();
-  }, [closeMenu, data, searchGoogleMethod]);
+  }, [closeMenu, data, searchGoogleMethod, openType]);
 
   const handleYandex = useCallback(() => {
     GM_openInTab(
@@ -45,10 +45,11 @@ function ContextMenu({ targetRef }) {
 
   const handleSauceNao = useCallback(() => {
     if (!saucenaoBypass) {
-      GM_openInTab(
+      open(
         `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
           data,
         )}`,
+        openType,
       );
       closeMenu();
       return;
@@ -88,8 +89,9 @@ function ContextMenu({ targetRef }) {
           return;
         }
         setSnack();
-        GM_openInTab(
+        open(
           `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
+          openType,
         );
       } catch (error) {
         setSnack({
@@ -99,12 +101,12 @@ function ContextMenu({ targetRef }) {
         console.error(error);
       }
     })();
-  }, [saucenaoBypass, data, closeMenu, setSnack]);
+  }, [saucenaoBypass, openType, data, closeMenu, setSnack]);
 
   const handleIqdb = useCallback(() => {
-    GM_openInTab(`https://iqdb.org/?url=${encodeURIComponent(data)}`);
+    GM_openInTab(`https://iqdb.org/?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
-  }, [closeMenu, data]);
+  }, [closeMenu, data, openType]);
 
   const handleAscii2D = useCallback(() => {
     (async () => {
@@ -128,7 +130,7 @@ function ContextMenu({ targetRef }) {
           data: formdata,
         }).then(({ finalUrl }) => finalUrl);
         setSnack();
-        GM_openInTab(resultURL);
+        open(resultURL, openType);
       } catch (error) {
         setSnack({
           msg: ERROR_MSG,
@@ -137,7 +139,7 @@ function ContextMenu({ targetRef }) {
         console.error(error);
       }
     })();
-  }, [closeMenu, data, setSnack]);
+  }, [closeMenu, data, openType, setSnack]);
 
   const handleAllOpen = useCallback(() => {
     handleGoogle();

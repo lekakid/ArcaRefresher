@@ -6,24 +6,34 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
   Paper,
   Select,
   Switch,
   Typography,
 } from '@material-ui/core';
 
+import { BACKGROUND, FOREGROUND } from 'func/window';
+
 import Info from '../FeatureInfo';
 import {
+  $setOpenType,
   $setSearchGoogleMethod,
   $toggleSauceNaoBypass,
   $toggleSearchBySource,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { searchBySource, searchGoogleMethod, saucenaoBypass } = useSelector(
-    (state) => state[Info.ID].storage,
-  );
+  const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
+    useSelector((state) => state[Info.ID].storage);
   const dispatch = useDispatch();
+
+  const handleOpenType = useCallback(
+    (e) => {
+      dispatch($setOpenType(e.target.value));
+    },
+    [dispatch],
+  );
 
   const handleSearchBySource = useCallback(() => {
     dispatch($toggleSearchBySource());
@@ -45,6 +55,19 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
+          <ListItem divider>
+            <ListItemText primary="검색 결과 창을 여는 방식" />
+            <ListItemSecondaryAction>
+              <Select
+                variant="outlined"
+                value={openType}
+                onChange={handleOpenType}
+              >
+                <MenuItem value={FOREGROUND}>새 창으로</MenuItem>
+                <MenuItem value={BACKGROUND}>백그라운드 창으로</MenuItem>
+              </Select>
+            </ListItemSecondaryAction>
+          </ListItem>
           <ListItem divider button onClick={handleSearchBySource}>
             <ListItemText
               primary="원본 이미지로 검색"
