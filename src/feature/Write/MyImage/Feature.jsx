@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks';
 import { WRITE_LOADED } from 'core/selector';
 
@@ -20,9 +20,9 @@ export default function MyImage() {
   const dispatch = useDispatch();
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const { channel } = useContent();
-  const {
-    storage: { enabled, imgList, forceLoad },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, imgList, forceLoad } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const [open, setOpen] = useState(false);
   const [editor, setEditor] = useState(null);
   const [loaded, setLoaded] = useState(false);

@@ -16,7 +16,7 @@ import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 
 import { request } from 'func/http';
 import format from './func/format';

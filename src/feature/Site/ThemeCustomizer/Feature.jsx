@@ -2,14 +2,14 @@ import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 import Info from './FeatureInfo';
 
 export default function ThemeCustomizer() {
   const { channel } = useContent();
-  const {
-    storage: { enabled, current, theme },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, current, theme } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
 
   const currentTheme = theme[channel.ID] || theme[current];
   useLayoutEffect(() => {

@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 import { $setCategoryStyle } from '../slice';
@@ -25,7 +25,7 @@ const styles = {
 
 const View = React.forwardRef(({ classes }, ref) => {
   const dispatch = useDispatch();
-  const { channel } = useContent();
+  const { channel, board } = useContent();
   const color = useSelector(
     (state) => state[Info.ID].storage.color[channel.ID],
   );
@@ -48,8 +48,8 @@ const View = React.forwardRef(({ classes }, ref) => {
           <ListItem>
             <Paper className={classes.root} variant="outlined">
               <Grid container>
-                {channel.category &&
-                  Object.entries(channel.category).map(([id, label], index) => (
+                {board.category &&
+                  Object.entries(board.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}
                       divider={index !== 0}

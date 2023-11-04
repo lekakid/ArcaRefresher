@@ -8,7 +8,6 @@ import { light, dark } from 'core/theme';
 
 import Menu from 'menu';
 import Feature from 'feature';
-import ContentInfo from 'util/ContentInfo';
 
 export default function App() {
   const browserDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -28,7 +27,6 @@ export default function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
-        <ContentInfo />
         <Feature />
         <Menu />
       </ThemeProvider>

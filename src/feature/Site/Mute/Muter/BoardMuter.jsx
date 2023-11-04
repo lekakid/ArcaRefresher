@@ -10,7 +10,7 @@ import {
 } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 import { getUserInfo } from 'func/user';
 
 import CountBar from './CountBar';
@@ -51,7 +51,7 @@ function BoardMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
-  const { channel } = useContent();
+  const { channel, board } = useContent();
   const {
     user,
     keyword,
@@ -62,7 +62,7 @@ function BoardMuter() {
     hideNoPermission,
     hideClosedDeal,
   } = useSelector((state) => state[Info.ID].storage);
-  const [board, setBoard] = useState(undefined);
+  const [boardContainer, setBoardContainer] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [container, setContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
@@ -71,36 +71,36 @@ function BoardMuter() {
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    if (!channel.category) return;
+    if (!board) return;
 
     const boardElement = document.querySelector(
       `${BOARD}, ${BOARD_IN_ARTICLE}`,
     );
     if (!boardElement) return;
 
-    setBoard(boardElement);
+    setBoardContainer(boardElement);
     const name2id = Object.fromEntries(
-      Object.entries(channel.category).map(([key, value]) => [value, key]),
+      Object.entries(board.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
     const containerElement = document.createElement('div');
     setContainer(containerElement);
-  }, [dispatch, boardLoaded, channel]);
+  }, [dispatch, boardLoaded, board]);
 
   useLayoutEffect(() => {
-    if (!board) return;
+    if (!boardContainer) return;
 
-    board.insertAdjacentElement(boardBarPos, container);
-    board.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
-  }, [board, container, boardBarPos]);
+    boardContainer.insertAdjacentElement(boardBarPos, container);
+    boardContainer.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
+  }, [boardContainer, container, boardBarPos]);
 
   // 유저, 키워드, 카테고리 뮤트처리
   useLayoutEffect(() => {
-    if (!board) return undefined;
+    if (!boardContainer) return undefined;
 
     const muteArticle = () => {
-      const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
+      const articleList = [...boardContainer.querySelectorAll(BOARD_ITEMS)];
       const articleInfo = articleList
         .filter((a) => !a.href?.includes('#c_'))
         .map((a) => ({
@@ -130,7 +130,7 @@ function BoardMuter() {
       removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
   }, [
-    board,
+    boardContainer,
     nameToIDMap,
     keyword,
     user,
@@ -142,9 +142,9 @@ function BoardMuter() {
 
   // 게시물 미리보기 뮤트
   useLayoutEffect(() => {
-    if (!board) return;
+    if (!boardContainer) return;
 
-    const images = board.querySelectorAll(
+    const images = boardContainer.querySelectorAll(
       '.vrow-preview noscript, .vrow-preview img',
     );
     images.forEach((e) => {
@@ -156,7 +156,7 @@ function BoardMuter() {
         e.parentNode.classList.add('filtered-emoticon');
       }
     });
-  }, [board, emoticionFilter]);
+  }, [boardContainer, emoticionFilter]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {
@@ -176,9 +176,9 @@ function BoardMuter() {
 
   // [핫딜 채널] 식은딜 게시물
   useLayoutEffect(() => {
-    if (!board) return;
+    if (!boardContainer) return;
 
-    const articleList = [...board.querySelectorAll(BOARD_ITEMS)];
+    const articleList = [...boardContainer.querySelectorAll(BOARD_ITEMS)];
     articleList
       .filter((a) => a.querySelector('.deal-close'))
       .forEach((a) => a.classList.add('ar-closed'));
@@ -186,13 +186,13 @@ function BoardMuter() {
       'hide-closed-deal',
       hideClosedDeal,
     );
-  }, [board, hideClosedDeal]);
+  }, [boardContainer, hideClosedDeal]);
 
   if (!container) return null;
   return (
     <CountBar
       renderContainer={container}
-      classContainer={board}
+      classContainer={boardContainer}
       count={count}
       hide={hideCountBar}
     />

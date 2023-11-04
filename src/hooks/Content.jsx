@@ -1,41 +1,85 @@
 import { useLayoutEffect } from 'react';
-import { useDispatch } from 'react-redux';
 
 import {
-  BOARD_LOADED,
-  ARTICLE_LOADED,
   ARTICLE_AUTHOR,
+  ARTICLE_LOADED,
   ARTICLE_TITLE,
   ARTICLE_URL,
+  BOARD_LOADED,
   CHANNEL_TITLE_LOADED,
 } from 'core/selector';
-import { useLoadChecker } from 'hooks';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
 
-import { setChannelInfo, setArticleInfo } from './slice';
+import useLoadChecker from './useLoadChecker';
 
-export default function ContentInfo() {
-  const dispatch = useDispatch();
+const pathToken = window.location.pathname.split('/');
+pathToken.shift(); // ''
+const pageType = pathToken.shift();
+const channelID = pathToken.shift();
+let pageTypeStr;
+switch (pageType) {
+  case 'b':
+    pageTypeStr = channelID;
+    break;
+  case 'e':
+    pageTypeStr = 'emoticon';
+    break;
+  default:
+    pageTypeStr = 'ArcaLive';
+    break;
+}
+
+const content = {
+  channel: {
+    ID: pageType === 'b' ? channelID : pageTypeStr,
+    name: undefined,
+  },
+  board: undefined,
+  article: undefined,
+};
+
+/**
+ * 게시판 및 게시물 정보를 받아옵니다.
+ * @returns {{
+ *  channel: {
+ *    ID: string,
+ *    name: string,
+ *  },
+ *  board: {
+ *    category: { id: label }
+ *  }
+ *  article: {
+ *    ID: string,
+ *    category: string,
+ *    title: string,
+ *    author: string,
+ *    url: string
+ *  }
+ * }}
+ */
+export function useContent() {
   const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
   useLayoutEffect(() => {
     if (!titleLoaded) return;
+    if (content.channel.name) return;
 
     try {
-      const { channelName } = document.querySelector(
+      const { channelName: name } = document.querySelector(
         '.board-title .title',
       ).dataset;
-      dispatch(setChannelInfo({ name: channelName }));
+      content.channel.name = name.replace(' 채널', '');
     } catch (error) {
-      console.warn('[ContentInfo] 채널 이름을 받아오지 못했습니다.');
+      console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
-  }, [dispatch, titleLoaded]);
+  }, [titleLoaded]);
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
+    if (content.board) return;
 
     try {
       const categoryEntries = [
@@ -52,16 +96,17 @@ export default function ContentInfo() {
 
       if (categoryEntries.length === 0) throw new Error();
 
-      dispatch(
-        setChannelInfo({ category: Object.fromEntries(categoryEntries) }),
-      );
+      content.board = {
+        category: Object.fromEntries(categoryEntries),
+      };
     } catch (error) {
       console.warn('[ContentInfo] 카테고리 목록을 얻어오지 못했습니다.');
     }
-  }, [boardLoaded, dispatch]);
+  }, [boardLoaded]);
 
   useLayoutEffect(() => {
     if (!articleLoaded) return;
+    if (content.article) return;
 
     const titleElement = document.querySelector(ARTICLE_TITLE);
     const category =
@@ -75,8 +120,8 @@ export default function ContentInfo() {
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
     const ID = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
 
-    dispatch(setArticleInfo({ ID, category, title, author, url }));
-  }, [articleLoaded, dispatch]);
+    content.article = { ID, category, title, author, url };
+  }, [articleLoaded]);
 
-  return null;
+  return content;
 }

@@ -6,7 +6,7 @@ import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 
 import { request } from 'func/http';
 import { format, getImageInfo } from '../func';

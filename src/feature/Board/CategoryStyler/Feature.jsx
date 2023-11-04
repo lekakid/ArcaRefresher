@@ -10,7 +10,7 @@ import {
 } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 import { getContrastYIQ } from 'func/color';
 
 import Info from './FeatureInfo';
@@ -18,35 +18,35 @@ import Info from './FeatureInfo';
 export default function CategoryStyler() {
   const [addEventListener, removeEventListener] = useEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
-  const { channel } = useContent();
+  const { channel, board } = useContent();
 
   const { color } = useSelector((state) => state[Info.ID].storage);
-  const [board, setBoard] = useState(null);
+  const [boardContainer, setBoardContainer] = useState(null);
   const [keyMap, setKeyMap] = useState(null);
 
   useLayoutEffect(() => {
     if (!boardLoaded) return;
-    setBoard(document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`));
+    setBoardContainer(document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`));
   }, [boardLoaded]);
 
   useLayoutEffect(() => {
-    if (!channel.category) return;
+    if (!board) return;
 
-    const entries = Object.values(channel.category).map((value) => [
+    const entries = Object.values(board.category).map((value) => [
       value,
       Math.random().toString(36).substring(2),
     ]);
 
     setKeyMap(Object.fromEntries(entries));
-  }, [channel]);
+  }, [board]);
 
   useLayoutEffect(() => {
-    if (!board || !keyMap) return undefined;
+    if (!boardContainer || !keyMap) return undefined;
 
-    board.classList.add('ARColor');
+    boardContainer.classList.add('ARColor');
 
     const colorize = () => {
-      board.querySelectorAll(BOARD_ITEMS).forEach((a) => {
+      boardContainer.querySelectorAll(BOARD_ITEMS).forEach((a) => {
         const badge = a.querySelector('.badge')?.textContent || '글머리없음';
         if (keyMap[badge]) a.classList.add(`color-${keyMap[badge]}`);
       });
@@ -58,13 +58,13 @@ export default function CategoryStyler() {
     return () => {
       removeEventListener(EVENT_BOARD_REFRESH, colorize);
     };
-  }, [board, keyMap, addEventListener, removeEventListener]);
+  }, [boardContainer, keyMap, addEventListener, removeEventListener]);
 
   if (!color[channel.ID]) return null;
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
-    const colorKey = keyMap?.[channel.category?.[key]];
+    const colorKey = keyMap?.[board.category?.[key]];
     if (!colorKey) return '';
 
     return `.ARColor .color-${colorKey} {

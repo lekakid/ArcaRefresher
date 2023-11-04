@@ -14,8 +14,6 @@ const featureContext = require.context(
   /^feature\/(?!_).+\/.+\/slice$/,
 );
 
-const utilContext = require.context('util/', true, /^util\/(?!_).+\/slice$/);
-
 const menuReducerEntries = menuContext
   .keys()
   .map((path) => [path.split('/')[1], menuContext(path).default]);
@@ -24,15 +22,10 @@ const featureReducerEntries = featureContext
   .keys()
   .map((path) => [path.split('/')[2], featureContext(path).default]);
 
-const utilReducerEntries = utilContext
-  .keys()
-  .map((path) => [path.split('/')[1], utilContext(path).default]);
-
 const store = configureStore({
   reducer: Object.fromEntries([
     ...menuReducerEntries,
     ...featureReducerEntries,
-    ...utilReducerEntries,
   ]),
   middleware: [
     createStateSyncMiddleware({

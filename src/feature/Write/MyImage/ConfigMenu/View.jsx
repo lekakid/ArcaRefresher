@@ -29,7 +29,8 @@ import {
   FlipToFront,
 } from '@material-ui/icons';
 
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
+
 import Info from '../FeatureInfo';
 import {
   $addFolder,

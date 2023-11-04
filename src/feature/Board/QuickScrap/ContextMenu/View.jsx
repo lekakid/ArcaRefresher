@@ -5,7 +5,7 @@ import { Bookmark } from '@material-ui/icons';
 
 import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 

@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { Add, ExpandMore } from '@material-ui/icons';
 
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 import { $addFolder, $addImage, $removeImage } from '../slice';
@@ -33,7 +33,7 @@ function FolderCheckList({ open, url, onClose }) {
         action({ folder: e.target.name, image: { url, memo: article.url } }),
       );
     },
-    [article.url, dispatch, url],
+    [article, dispatch, url],
   );
 
   const handleFolderInput = useCallback((e) => {

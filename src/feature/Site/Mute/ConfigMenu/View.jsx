@@ -18,7 +18,7 @@ import { Remove } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { TextEditor } from 'component/config';
-import { useContent } from 'util/ContentInfo';
+import { useContent } from 'hooks/Content';
 import Info from '../FeatureInfo';
 import {
   $removeEmoticonList,
@@ -56,7 +56,7 @@ function CustomOverRay() {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channel } = useContent();
+  const { channel, board } = useContent();
   const {
     mk2,
     contextRange,
@@ -316,8 +316,8 @@ const View = React.forwardRef((_props, ref) => {
           <ListItem>
             <Paper variant="outlined">
               <Grid container>
-                {channel.category &&
-                  Object.entries(channel.category).map(([id, label], index) => (
+                {board.category &&
+                  Object.entries(board.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}
                       divider={index !== 0}

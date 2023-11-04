@@ -5,8 +5,8 @@ import { Assignment, Person, Search } from '@material-ui/icons';
 
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
+import { useContent } from 'hooks/Content';
 import { getUserNick } from 'func/user';
-import { useContent } from 'util/ContentInfo';
 
 import { open } from 'func/window';
 import Info from '../FeatureInfo';
