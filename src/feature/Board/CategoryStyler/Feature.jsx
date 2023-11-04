@@ -2,14 +2,8 @@ import React, { useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import {
-  BOARD_ITEMS,
-  BOARD_LOADED,
-  BOARD,
-  BOARD_IN_ARTICLE,
-} from 'core/selector';
+import { BOARD_ITEMS, BOARD, BOARD_IN_ARTICLE } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
 import { useContent } from 'hooks/Content';
 import { getContrastYIQ } from 'func/color';
 
@@ -17,17 +11,10 @@ import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
   const [addEventListener, removeEventListener] = useEvent();
-  const boardLoaded = useLoadChecker(BOARD_LOADED);
   const { channel, board } = useContent();
 
   const { color } = useSelector((state) => state[Info.ID].storage);
-  const [boardContainer, setBoardContainer] = useState(null);
   const [keyMap, setKeyMap] = useState(null);
-
-  useLayoutEffect(() => {
-    if (!boardLoaded) return;
-    setBoardContainer(document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`));
-  }, [boardLoaded]);
 
   useLayoutEffect(() => {
     if (!board) return;
@@ -41,12 +28,13 @@ export default function CategoryStyler() {
   }, [board]);
 
   useLayoutEffect(() => {
-    if (!boardContainer || !keyMap) return undefined;
+    if (!keyMap) return undefined;
 
-    boardContainer.classList.add('ARColor');
+    const container = document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`);
+    container.classList.add('ARColor');
 
     const colorize = () => {
-      boardContainer.querySelectorAll(BOARD_ITEMS).forEach((a) => {
+      container.querySelectorAll(BOARD_ITEMS).forEach((a) => {
         const badge = a.querySelector('.badge')?.textContent || '글머리없음';
         if (keyMap[badge]) a.classList.add(`color-${keyMap[badge]}`);
       });
@@ -58,7 +46,7 @@ export default function CategoryStyler() {
     return () => {
       removeEventListener(EVENT_BOARD_REFRESH, colorize);
     };
-  }, [boardContainer, keyMap, addEventListener, removeEventListener]);
+  }, [keyMap, addEventListener, removeEventListener]);
 
   if (!color[channel.ID]) return null;
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
