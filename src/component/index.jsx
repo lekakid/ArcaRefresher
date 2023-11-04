@@ -1,4 +1,5 @@
 import AuthorTag from './AuthorTag';
+import GroupableSelect from './GroupableSelect';
 import KeyIcon from './KeyIcon';
 
-export { AuthorTag, KeyIcon };
+export { AuthorTag, GroupableSelect, KeyIcon };

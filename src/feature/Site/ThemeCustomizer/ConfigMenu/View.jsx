@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { Add, Delete, Label } from '@material-ui/icons';
 
-import { GroupableSelect } from 'component/config';
+import { GroupableSelect } from 'component';
 
 import Info from '../FeatureInfo';
 import {
