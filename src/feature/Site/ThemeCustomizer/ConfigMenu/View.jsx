@@ -200,8 +200,7 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SwitchRow
             divider
-            primary="알림 뮤트 MK.2 (실험적)"
-            secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
+            primary="사용"
             value={enabled}
             action={$toggleEnable}
           />

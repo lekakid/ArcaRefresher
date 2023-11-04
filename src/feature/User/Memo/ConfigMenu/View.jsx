@@ -124,7 +124,7 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SelectRow
             divider
-            primary="메뉴 호출 방식"
+            primary="우클릭 메뉴 호출 범위"
             value={contextRange}
             action={$setContextRange}
           >
@@ -133,7 +133,7 @@ const View = React.forwardRef((_props, ref) => {
           </SelectRow>
           <SelectRow
             divider
-            primary="모양 선택"
+            primary="메모 모양"
             value={variant}
             action={$setVariant}
           >

@@ -5,7 +5,6 @@ import {
   Grid,
   List,
   ListItem,
-  ListItemText,
   Paper,
   Typography,
 } from '@material-ui/core';
@@ -42,9 +41,6 @@ const View = React.forwardRef(({ classes }, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem>
-            <ListItemText>색상 설정</ListItemText>
-          </ListItem>
           <ListItem>
             <Paper className={classes.root} variant="outlined">
               <Grid container>

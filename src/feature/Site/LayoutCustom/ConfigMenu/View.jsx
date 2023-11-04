@@ -81,7 +81,7 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SelectRow
             divider
-            primary="메뉴 호출 방식"
+            primary="알림 위치"
             value={notifyPosition}
             action={$setNotifyPosition}
           >
@@ -93,14 +93,14 @@ const View = React.forwardRef((_props, ref) => {
           {mobile && (
             <SwitchRow
               divider
-              primary="사용상단 뉴스 헤더 표시"
+              primary="상단 뉴스 헤더 표시"
               value={topNews}
               action={$toggleTopNews}
             />
           )}
           <SelectRow
             divider
-            primary="메뉴 호출 방식"
+            primary="최근 방문 채널 위치"
             value={recentVisit}
             action={$setRecentVisit}
           >

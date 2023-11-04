@@ -130,7 +130,7 @@ const View = React.forwardRef((_props, ref) => {
             action={$toggleMK2}
           />
           <SelectRow
-            primary="메뉴 호출 방식"
+            primary="우클릭 메뉴 호출 범위"
             value={contextRange}
             action={$setContextRange}
           >
@@ -144,7 +144,7 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SelectRow
             divider
-            primary="메뉴 호출 방식"
+            primary="뮤트 카운트 바 위치"
             value={boardBarPos}
             action={$setBoardBarPos}
           >
@@ -153,7 +153,7 @@ const View = React.forwardRef((_props, ref) => {
           </SelectRow>
           <SwitchRow
             divider
-            primary="뮤트 카운터 숨김"
+            primary="뮤트 카운트 바 숨김"
             secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
             value={hideCountBar}
             action={$toggleCountBar}

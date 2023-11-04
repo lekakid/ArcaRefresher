@@ -25,7 +25,7 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SelectRow
             divider
-            primary="게시판 내 우클릭 동작 범위"
+            primary="우클릭 메뉴 호출 범위"
             value={contextRange}
             action={$setContextRange}
           >
