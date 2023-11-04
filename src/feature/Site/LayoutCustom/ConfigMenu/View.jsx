@@ -9,14 +9,13 @@ import {
   ListItemText,
   MenuItem,
   Paper,
-  Select,
   Slider,
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
 
 import { useOpacity } from 'menu/ConfigMenu';
-import { SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -81,21 +80,6 @@ const View = React.forwardRef((_props, ref) => {
   };
 
   // ------ 사이트 ------
-  const handleNotifyPosition = useCallback(
-    (e) => {
-      dispatch($setNotifyPosition(e.target.value));
-      unsafeWindow.showNotiAlert('[ArcaRefresher] 알림 위치가 변경되었습니다.');
-    },
-    [dispatch],
-  );
-
-  const handleRecentVisit = useCallback(
-    (e) => {
-      dispatch($setRecentVisit(e.target.value));
-    },
-    [dispatch],
-  );
-
   const handleUserinfoWidth = useCallback(
     (e, value) => {
       setOpacity(0.6);
@@ -147,21 +131,17 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">사이트</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider>
-            <ListItemText primary="알림창 위치 설정" />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={notifyPosition}
-                onChange={handleNotifyPosition}
-              >
-                <MenuItem value="left">왼쪽</MenuItem>
-                <MenuItem value="right">오른쪽</MenuItem>
-                <MenuItem value="lefttop">왼쪽 위</MenuItem>
-                <MenuItem value="righttop">오른쪽 위</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="메뉴 호출 방식"
+            value={notifyPosition}
+            action={$setNotifyPosition}
+          >
+            <MenuItem value="left">왼쪽</MenuItem>
+            <MenuItem value="right">오른쪽</MenuItem>
+            <MenuItem value="lefttop">왼쪽 위</MenuItem>
+            <MenuItem value="righttop">오른쪽 위</MenuItem>
+          </SelectRow>
           {mobile && (
             <SwitchRow
               divider
@@ -170,20 +150,16 @@ const View = React.forwardRef((_props, ref) => {
               action={$toggleTopNews}
             />
           )}
-          <ListItem divider>
-            <ListItemText primary="최근 방문 채널 위치" />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={recentVisit}
-                onChange={handleRecentVisit}
-              >
-                <MenuItem value="beforeAd">광고 위</MenuItem>
-                <MenuItem value="afterAd">광고 아래</MenuItem>
-                <MenuItem value="none">숨김</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="메뉴 호출 방식"
+            value={recentVisit}
+            action={$setRecentVisit}
+          >
+            <MenuItem value="beforeAd">광고 위</MenuItem>
+            <MenuItem value="afterAd">광고 아래</MenuItem>
+            <MenuItem value="none">숨김</MenuItem>
+          </SelectRow>
           {!mobile && (
             <>
               <SwitchRow

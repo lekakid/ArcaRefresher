@@ -8,7 +8,6 @@ import {
   Paper,
   Typography,
   MenuItem,
-  Select,
   Box,
   ButtonGroup,
   Button,
@@ -18,7 +17,7 @@ import { Add, Delete, Label } from '@material-ui/icons';
 
 import { GroupableSelect } from 'component';
 
-import { SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -133,13 +132,6 @@ const View = React.forwardRef((_props, ref) => {
     [editingPresetKey, theme],
   );
 
-  const handleGlobalPreset = useCallback(
-    (e) => {
-      dispatch($setCurrent(e.target.value));
-    },
-    [dispatch],
-  );
-
   const handleTargetPreset = useCallback((e) => {
     setEditingPresetKey(e.target.value);
   }, []);
@@ -213,27 +205,20 @@ const View = React.forwardRef((_props, ref) => {
             value={enabled}
             action={$toggleEnable}
           />
-          <ListItem divider>
-            <ListItemText
-              primary="전체 적용 테마"
-              secondary="모든 채널에서 사용할 프리셋입니다."
-            />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                displayEmpty
-                value={currentPresetKey}
-                onChange={handleGlobalPreset}
-              >
-                <MenuItem value="">없음</MenuItem>
-                {Object.keys(theme).map((key) => (
-                  <MenuItem key={key} value={key}>
-                    {key}
-                  </MenuItem>
-                ))}
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="전체 적용 테마"
+            secondary="모든 채널에서 사용할 프리셋입니다."
+            value={currentPresetKey}
+            action={$setCurrent}
+          >
+            <MenuItem value="">없음</MenuItem>
+            {Object.keys(theme).map((key) => (
+              <MenuItem key={key} value={key}>
+                {key}
+              </MenuItem>
+            ))}
+          </SelectRow>
           <ListItem>
             <ListItemText primary="프리셋 설정" />
             <ListItemSecondaryAction>

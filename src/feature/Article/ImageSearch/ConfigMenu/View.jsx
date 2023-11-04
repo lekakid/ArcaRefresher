@@ -1,20 +1,10 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
-} from '@material-ui/core';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Box, List, MenuItem, Paper, Typography } from '@material-ui/core';
 
 import { BACKGROUND, FOREGROUND } from 'func/window';
 
-import { SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $setOpenType,
@@ -26,40 +16,21 @@ import {
 const View = React.forwardRef((_props, ref) => {
   const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
     useSelector((state) => state[Info.ID].storage);
-  const dispatch = useDispatch();
-
-  const handleOpenType = useCallback(
-    (e) => {
-      dispatch($setOpenType(e.target.value));
-    },
-    [dispatch],
-  );
-
-  const handleGoogleMethod = useCallback(
-    (e) => {
-      dispatch($setSearchGoogleMethod(e.target.value));
-    },
-    [dispatch],
-  );
 
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider>
-            <ListItemText primary="검색 결과 창을 여는 방식" />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={openType}
-                onChange={handleOpenType}
-              >
-                <MenuItem value={FOREGROUND}>새 창으로</MenuItem>
-                <MenuItem value={BACKGROUND}>백그라운드 창으로</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="검색 결과 창을 여는 방식"
+            value={openType}
+            action={$setOpenType}
+          >
+            <MenuItem value={FOREGROUND}>새 창으로</MenuItem>
+            <MenuItem value={BACKGROUND}>백그라운드 창으로</MenuItem>
+          </SelectRow>
           <SwitchRow
             divider
             primary="원본 이미지로 검색"
@@ -67,19 +38,15 @@ const View = React.forwardRef((_props, ref) => {
             value={searchBySource}
             action={$toggleSearchBySource}
           />
-          <ListItem divider>
-            <ListItemText>구글 이미지 검색 방식</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={searchGoogleMethod}
-                onChange={handleGoogleMethod}
-              >
-                <ListItem value="lens">구글 렌즈</ListItem>
-                <ListItem value="source">소스 검색</ListItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="구글 이미지 검색 방식"
+            value={searchGoogleMethod}
+            action={$setSearchGoogleMethod}
+          >
+            <MenuItem value="lens">구글 렌즈</MenuItem>
+            <MenuItem value="source">소스 검색</MenuItem>
+          </SelectRow>
           <SwitchRow
             primary="SauceNao 바이패스 활성화"
             secondary="정상적으로 검색되지 않을 때만 사용 바랍니다."

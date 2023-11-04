@@ -9,13 +9,12 @@ import {
   ListItemText,
   MenuItem,
   Paper,
-  Select,
   Typography,
 } from '@material-ui/core';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { TableEditorRow } from 'component/config';
+import { SelectRow, TableEditorRow } from 'component/config';
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
@@ -43,20 +42,6 @@ const View = React.forwardRef((_props, ref) => {
   const memoData = useSelector((state) => state[Info.ID].storage.memo);
   const memoRows = useSelector(memoEntriesSelector);
   const inputRef = useRef();
-
-  const handleContextRange = useCallback(
-    (e) => {
-      dispatch($setContextRange(e.target.value));
-    },
-    [dispatch],
-  );
-
-  const handleVariant = useCallback(
-    (e) => {
-      dispatch($setVariant(e.target.value));
-    },
-    [dispatch],
-  );
 
   const handleImportMobile = useCallback(
     (e) => {
@@ -137,32 +122,24 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider>
-            <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={contextRange}
-                onChange={handleContextRange}
-              >
-                <MenuItem value="articleItem">게시글</MenuItem>
-                <MenuItem value="nickname">닉네임</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider>
-            <ListItemText>모양 선택</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={variant}
-                onChange={handleVariant}
-              >
-                <MenuItem value="badge">둥근 뱃지</MenuItem>
-                <MenuItem value="text">텍스트</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="메뉴 호출 방식"
+            value={contextRange}
+            action={$setContextRange}
+          >
+            <MenuItem value="articleItem">게시글</MenuItem>
+            <MenuItem value="nickname">닉네임</MenuItem>
+          </SelectRow>
+          <SelectRow
+            divider
+            primary="모양 선택"
+            value={variant}
+            action={$setVariant}
+          >
+            <MenuItem value="badge">둥근 뱃지</MenuItem>
+            <MenuItem value="text">텍스트</MenuItem>
+          </SelectRow>
           <ListItem divider>
             <input
               ref={inputRef}

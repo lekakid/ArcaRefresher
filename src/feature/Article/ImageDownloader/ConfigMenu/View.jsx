@@ -9,11 +9,10 @@ import {
   TextField,
   Typography,
   Box,
-  Select,
   MenuItem,
 } from '@material-ui/core';
 
-import { SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/config';
 
 import Info from '../FeatureInfo';
 import {
@@ -37,13 +36,6 @@ const View = React.forwardRef((_props, ref) => {
     zipExtension,
     zipImageName,
   } = useSelector((state) => state[Info.ID].storage);
-
-  const handleDownloadMethod = useCallback(
-    (e) => {
-      dispatch($setDownloadMethod(e.target.value));
-    },
-    [dispatch],
-  );
 
   const handleFileName = useCallback(
     (e) => {
@@ -72,19 +64,13 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch, zipName],
   );
 
-  const handleZipExtension = useCallback(
-    (e) => {
-      dispatch($setZipExtension(e.target.value));
-    },
-    [dispatch],
-  );
-
   const handleZipImageName = useCallback(
     (e) => {
       dispatch($setZipImageName(e.target.value));
     },
     [dispatch],
   );
+
   const handleAddFormatZipImageName = useCallback(
     (value) => {
       dispatch($setZipImageName(`${zipImageName}${value}`));
@@ -103,19 +89,15 @@ const View = React.forwardRef((_props, ref) => {
             value={enabled}
             action={$toggleEnable}
           />
-          <ListItem divider>
-            <ListItemText>다운로드 방식</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={downloadMethod}
-                onChange={handleDownloadMethod}
-              >
-                <ListItem value="fetch">fetch</ListItem>
-                <ListItem value="xhr">XHR</ListItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="다운로드 방식"
+            value={downloadMethod}
+            action={$setDownloadMethod}
+          >
+            <MenuItem value="fetch">fetch</MenuItem>
+            <MenuItem value="xhr">XHR</MenuItem>
+          </SelectRow>
           <ListItem>
             <ListItemText primary="우클릭 저장 시 이미지 이름" />
           </ListItem>
@@ -160,19 +142,15 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider>
-            <ListItemText primary="일괄 다운로드 시 압축파일 확장자" />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={zipExtension}
-                onChange={handleZipExtension}
-              >
-                <MenuItem value="zip">zip</MenuItem>
-                <MenuItem value="cbz">cbz</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="일괄 다운로드 시 압축파일 확장자"
+            value={zipExtension}
+            action={$setZipExtension}
+          >
+            <MenuItem value="zip">zip</MenuItem>
+            <MenuItem value="cbz">cbz</MenuItem>
+          </SelectRow>
           <ListItem>
             <ListItemText primary="일괄 다운로드 시 압축파일 내 이미지 이름" />
           </ListItem>

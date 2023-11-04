@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import {
   Box,
   List,
@@ -8,13 +8,13 @@ import {
   ListItemText,
   MenuItem,
   Paper,
-  Select,
   Typography,
 } from '@material-ui/core';
 
 import { KeyIcon } from 'component';
 import { $setInteraction } from 'menu/ContextMenu/slice';
 
+import { SelectRow } from 'component/config';
 import Info from '../FeatureInfo';
 
 const label = {
@@ -34,68 +34,59 @@ const label = {
 
 const View = React.forwardRef((_props, ref) => {
   const { interactionType } = useSelector((state) => state[Info.ID].storage);
-  const dispatch = useDispatch();
-
-  const handleInteraction = useCallback(
-    (e) => {
-      dispatch($setInteraction(e.target.value));
-    },
-    [dispatch],
-  );
 
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
-        <List>
+        <List disablePadding>
+          <SelectRow
+            primary="메뉴 호출 방식"
+            value={interactionType}
+            action={$setInteraction}
+          >
+            <MenuItem value="r">R Click</MenuItem>
+            <MenuItem value="sr">Shift + R Click</MenuItem>
+            <MenuItem value="cr">Ctrl + R Click</MenuItem>
+          </SelectRow>
           <ListItem>
-            <ListItemText>메뉴 호출 방식</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={interactionType}
-                onChange={handleInteraction}
-              >
-                <MenuItem value="r">R Click</MenuItem>
-                <MenuItem value="sr">Shift + R Click</MenuItem>
-                <MenuItem value="cr">Ctrl + R Click</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
+            <Box clone width="100%">
+              <Paper variant="outlined">
+                <List disablePadding>
+                  <ListItem divider>
+                    <ListItemText primary="리프레셔 메뉴" />
+                    <ListItemSecondaryAction>
+                      <Box display="flex" alignItems="center">
+                        {label[interactionType].refresher.map(
+                          (value, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <React.Fragment key={index}>
+                              {index !== 0 && '+'}
+                              <KeyIcon title={value} />
+                            </React.Fragment>
+                          ),
+                        )}
+                      </Box>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="브라우저 메뉴" />
+                    <ListItemSecondaryAction>
+                      <Box display="flex" alignItems="center">
+                        {label[interactionType].browser.map((value, index) => (
+                          // eslint-disable-next-line react/no-array-index-key
+                          <React.Fragment key={index}>
+                            {index !== 0 && '+'}
+                            <KeyIcon title={value} />
+                          </React.Fragment>
+                        ))}
+                      </Box>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </Paper>
+            </Box>
           </ListItem>
-          <Box clone mx={2} mb={2}>
-            <Paper variant="outlined">
-              <List disablePadding>
-                <ListItem divider>
-                  <ListItemText primary="리프레셔 메뉴" />
-                  <ListItemSecondaryAction>
-                    <Box display="flex" alignItems="center">
-                      {label[interactionType].refresher.map((value, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <React.Fragment key={index}>
-                          {index !== 0 && '+'}
-                          <KeyIcon title={value} />
-                        </React.Fragment>
-                      ))}
-                    </Box>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="브라우저 메뉴" />
-                  <ListItemSecondaryAction>
-                    <Box display="flex" alignItems="center">
-                      {label[interactionType].browser.map((value, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <React.Fragment key={index}>
-                          {index !== 0 && '+'}
-                          <KeyIcon title={value} />
-                        </React.Fragment>
-                      ))}
-                    </Box>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </Paper>
-          </Box>
         </List>
       </Paper>
     </Box>

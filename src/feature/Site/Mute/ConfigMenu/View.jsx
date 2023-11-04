@@ -6,17 +6,15 @@ import {
   Grid,
   List,
   ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   MenuItem,
   Paper,
-  Select,
   Typography,
 } from '@material-ui/core';
 import { Remove } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-import { SwitchRow, TextEditorRow } from 'component/config';
+import { SelectRow, SwitchRow, TextEditorRow } from 'component/config';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
@@ -75,20 +73,6 @@ const View = React.forwardRef((_props, ref) => {
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 
-  const handleContextRange = useCallback(
-    (e) => {
-      dispatch($setContextRange(e.target.value));
-    },
-    [dispatch],
-  );
-
-  const handleCountBarPos = useCallback(
-    (e) => {
-      dispatch($setBoardBarPos(e.target.value));
-    },
-    [dispatch],
-  );
-
   const onSaveUser = useCallback(
     (text) => {
       const test = text.split('\n').filter((i) => i !== '');
@@ -145,37 +129,28 @@ const View = React.forwardRef((_props, ref) => {
             value={mk2}
             action={$toggleMK2}
           />
-          <ListItem>
-            <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={contextRange}
-                onChange={handleContextRange}
-              >
-                <MenuItem value="articleItem">게시글</MenuItem>
-                <MenuItem value="nickname">닉네임</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            primary="메뉴 호출 방식"
+            value={contextRange}
+            action={$setContextRange}
+          >
+            <MenuItem value="articleItem">게시글</MenuItem>
+            <MenuItem value="nickname">닉네임</MenuItem>
+          </SelectRow>
         </List>
       </Paper>
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider>
-            <ListItemText primary="게시판 뮤트 카운터 위치" />
-            <ListItemSecondaryAction>
-              <Select
-                variant="outlined"
-                value={boardBarPos}
-                onChange={handleCountBarPos}
-              >
-                <MenuItem value="afterbegin">게시판 위</MenuItem>
-                <MenuItem value="afterend">게시판 아래</MenuItem>
-              </Select>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SelectRow
+            divider
+            primary="메뉴 호출 방식"
+            value={boardBarPos}
+            action={$setBoardBarPos}
+          >
+            <MenuItem value="afterbegin">게시판 위</MenuItem>
+            <MenuItem value="afterend">게시판 아래</MenuItem>
+          </SelectRow>
           <SwitchRow
             divider
             primary="뮤트 카운터 숨김"
