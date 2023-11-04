@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { TextEditor } from 'component/config';
+import { TextEditorRow } from 'component/config';
 
 import Info from '../FeatureInfo';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
@@ -49,13 +49,13 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <TextEditor
+          <TextEditorRow
             divider
             headerText="익명화 앞단어"
             initialValue={prefixList.join('\n')}
             onSave={onSavePrefixList}
           />
-          <TextEditor
+          <TextEditorRow
             divider
             headerText="익명화 뒷단어"
             initialValue={suffixList.join('\n')}

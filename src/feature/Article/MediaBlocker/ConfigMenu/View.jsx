@@ -1,50 +1,32 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Paper,
-  Switch,
-  Typography,
-} from '@material-ui/core';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Box, List, Paper, Typography } from '@material-ui/core';
 
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import { $toggleEnabled, $toggleDeletedOnly } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { enabled, deletedOnly },
-  } = useSelector((state) => state[Info.ID]);
-  const dispatch = useDispatch();
-
-  const handleEnabled = useCallback(() => {
-    dispatch($toggleEnabled());
-  }, [dispatch]);
-
-  const handleDeletedOnly = useCallback(() => {
-    dispatch($toggleDeletedOnly());
-  }, [dispatch]);
+  const { enabled, deletedOnly } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
 
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleEnabled}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch checked={enabled} onChange={handleEnabled} />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleDeletedOnly}>
-            <ListItemText primary="삭제된 게시물에서만 사용(채널 관리자 전용)" />
-            <ListItemSecondaryAction>
-              <Switch checked={deletedOnly} onChange={handleDeletedOnly} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="사용"
+            value={enabled}
+            action={$toggleEnabled}
+          />
+          <SwitchRow
+            primary="삭제된 게시물에서만 사용(채널 관리자 전용)"
+            value={deletedOnly}
+            action={$toggleDeletedOnly}
+          />
         </List>
       </Paper>
     </Box>

@@ -15,7 +15,7 @@ import {
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { TableEditor } from 'component/config';
+import { TableEditorRow } from 'component/config';
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
@@ -194,7 +194,7 @@ const View = React.forwardRef((_props, ref) => {
               </Button>
             </ListItemSecondaryAction>
           </ListItem>
-          <TableEditor
+          <TableEditorRow
             headerText="저장된 메모"
             columns={columns}
             rows={memoRows}

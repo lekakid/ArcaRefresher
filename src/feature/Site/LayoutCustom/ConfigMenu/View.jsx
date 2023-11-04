@@ -11,13 +11,12 @@ import {
   Paper,
   Select,
   Slider,
-  Switch,
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 
 import { useOpacity } from 'menu/ConfigMenu';
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -50,12 +49,6 @@ function emotLabelFormat(x) {
   return `${x}칸`;
 }
 
-const useStyles = makeStyles((theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
-
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const {
@@ -82,15 +75,10 @@ const View = React.forwardRef((_props, ref) => {
   } = useSelector((state) => state[Info.ID].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const setOpacity = useOpacity();
-  const classes = useStyles();
 
   const SliderCommited = () => {
     setOpacity(1);
   };
-
-  const handleEnable = useCallback(() => {
-    dispatch($toggleEnable());
-  }, [dispatch]);
 
   // ------ 사이트 ------
   const handleNotifyPosition = useCallback(
@@ -101,36 +89,12 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleTopNews = useCallback(() => {
-    dispatch($toggleTopNews());
-  }, [dispatch]);
-
   const handleRecentVisit = useCallback(
     (e) => {
       dispatch($setRecentVisit(e.target.value));
     },
     [dispatch],
   );
-
-  const handleSideMenu = useCallback(() => {
-    dispatch($toggleSideMenu());
-  }, [dispatch]);
-
-  const handleSideContents = useCallback(() => {
-    dispatch($toggleSideContents());
-  }, [dispatch]);
-
-  const handleSideBests = useCallback(() => {
-    dispatch($toggleSideBests());
-  }, [dispatch]);
-
-  const handleSideNews = useCallback(() => {
-    dispatch($toggleSideNews());
-  }, [dispatch]);
-
-  const handleAvatar = useCallback(() => {
-    dispatch($toggleAvatar());
-  }, [dispatch]);
 
   const handleUserinfoWidth = useCallback(
     (e, value) => {
@@ -157,27 +121,6 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch, setOpacity],
   );
 
-  const handleUnvote = useCallback(() => {
-    dispatch($toggleUnvote());
-  }, [dispatch]);
-
-  // ------ 댓글 ------
-  const handleUnfoldLongComment = useCallback(() => {
-    dispatch($toggleLongComment());
-  }, [dispatch]);
-
-  const handleModifiedIndicator = useCallback(() => {
-    dispatch($toggleModifiedIndicator());
-  }, [dispatch]);
-
-  const handleReverseComment = useCallback(() => {
-    dispatch($toggleReverseComment());
-  }, [dispatch]);
-
-  const handleHideVoiceComment = useCallback(() => {
-    dispatch($toggleHideVoiceComment());
-  }, [dispatch]);
-
   const handleEmoticonPalette = useCallback(
     (e, value) => {
       dispatch($setResizeEmoticonPalette(value));
@@ -193,21 +136,12 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleDarkModeWriteForm = useCallback(() => {
-    dispatch($toggleDarkModeWriteForm());
-  }, [dispatch]);
-
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem button onClick={handleEnable}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch checked={enabled} onChange={handleEnable} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow primary="사용" value={enabled} action={$toggleEnable} />
         </List>
       </Paper>
       <Typography variant="subtitle2">사이트</Typography>
@@ -229,12 +163,12 @@ const View = React.forwardRef((_props, ref) => {
             </ListItemSecondaryAction>
           </ListItem>
           {mobile && (
-            <ListItem divider button onClick={handleTopNews}>
-              <ListItemText primary="상단 뉴스 헤더 표시" />
-              <ListItemSecondaryAction>
-                <Switch checked={topNews} onChange={handleTopNews} />
-              </ListItemSecondaryAction>
-            </ListItem>
+            <SwitchRow
+              divider
+              primary="사용상단 뉴스 헤더 표시"
+              value={topNews}
+              action={$toggleTopNews}
+            />
           )}
           <ListItem divider>
             <ListItemText primary="최근 방문 채널 위치" />
@@ -252,60 +186,45 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
           {!mobile && (
             <>
-              <ListItem divider button onClick={handleSideMenu}>
-                <ListItemText primary="우측 사이드 메뉴 표시" />
-                <ListItemSecondaryAction>
-                  <Switch checked={sideMenu} onChange={handleSideMenu} />
-                </ListItemSecondaryAction>
-              </ListItem>
+              <SwitchRow
+                divider
+                primary="우측 사이드 메뉴 표시"
+                value={sideMenu}
+                action={$toggleSideMenu}
+              />
               <Collapse in={sideMenu}>
                 <List disablePadding>
-                  <ListItem
-                    className={classes.nested}
+                  <SwitchRow
                     divider
-                    button
-                    onClick={handleSideContents}
-                  >
-                    <ListItemText primary="사이드 컨텐츠 패널 표시" />
-                    <ListItemSecondaryAction>
-                      <Switch
-                        checked={sideContents}
-                        onChange={handleSideContents}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                  <ListItem
-                    className={classes.nested}
+                    nested
+                    primary="사이드 컨텐츠 패널 표시"
+                    value={sideContents}
+                    action={$toggleSideContents}
+                  />
+                  <SwitchRow
                     divider
-                    button
-                    onClick={handleSideBests}
-                  >
-                    <ListItemText primary="개념글 패널 표시" />
-                    <ListItemSecondaryAction>
-                      <Switch checked={sideBests} onChange={handleSideBests} />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                  <ListItem
-                    className={classes.nested}
+                    nested
+                    primary="개념글 패널 표시"
+                    value={sideBests}
+                    action={$toggleSideBests}
+                  />
+                  <SwitchRow
                     divider
-                    button
-                    onClick={handleSideNews}
-                  >
-                    <ListItemText primary="뉴스 패널 표시" />
-                    <ListItemSecondaryAction>
-                      <Switch checked={sideNews} onChange={handleSideNews} />
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                    nested
+                    primary="뉴스 패널 표시"
+                    value={sideNews}
+                    action={$toggleSideNews}
+                  />
                 </List>
               </Collapse>
             </>
           )}
-          <ListItem divider button onClick={handleAvatar}>
-            <ListItemText primary="이용자 아바타 표시" />
-            <ListItemSecondaryAction>
-              <Switch checked={avatar} onChange={handleAvatar} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="이용자 아바타 표시"
+            value={avatar}
+            action={$toggleAvatar}
+          />
           <ListItem>
             <ListItemText>게시판 이용자 너비</ListItemText>
             <ListItemSecondaryAction>
@@ -341,56 +260,41 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleUnvote}>
-            <ListItemText primary="비추천 버튼 숨김" />
-            <ListItemSecondaryAction>
-              <Switch checked={hideUnvote} onChange={handleUnvote} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            primary="비추천 버튼 숨김"
+            value={hideUnvote}
+            action={$toggleUnvote}
+          />
         </List>
       </Paper>
       <Typography variant="subtitle2">댓글</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleUnfoldLongComment}>
-            <ListItemText
-              primary="장문 댓글 바로보기"
-              secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={unfoldLongComment}
-                onChange={handleUnfoldLongComment}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleModifiedIndicator}>
-            <ListItemText primary="댓글 *수정됨 표시" />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={modifiedIndicator}
-                onChange={handleModifiedIndicator}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleReverseComment}>
-            <ListItemText primary="댓글 입력창을 가장 위로 올리기" />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={reverseComment}
-                onChange={handleReverseComment}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleHideVoiceComment}>
-            <ListItemText primary="음성 댓글 버튼 숨기기" />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideVoiceComment}
-                onChange={handleHideVoiceComment}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="장문 댓글 바로보기"
+            secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
+            value={unfoldLongComment}
+            action={$toggleLongComment}
+          />
+          <SwitchRow
+            divider
+            primary="댓글 *수정됨 표시"
+            value={modifiedIndicator}
+            action={$toggleModifiedIndicator}
+          />
+          <SwitchRow
+            divider
+            primary="댓글 입력창을 가장 위로 올리기"
+            value={reverseComment}
+            action={$toggleReverseComment}
+          />
+          <SwitchRow
+            divider
+            primary="음성 댓글 버튼 숨기기"
+            value={hideVoiceComment}
+            action={$toggleHideVoiceComment}
+          />
           <ListItem>
             <ListItemText>이모티콘 선택창 높이</ListItemText>
             <ListItemSecondaryAction>
@@ -427,18 +331,12 @@ const View = React.forwardRef((_props, ref) => {
               />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleDarkModeWriteForm}>
-            <ListItemText
-              primary="다크모드 글작성 배경색 강제 픽스"
-              secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={fixDarkModeWriteForm}
-                onChange={handleDarkModeWriteForm}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            primary="다크모드 글작성 배경색 강제 픽스"
+            secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
+            value={fixDarkModeWriteForm}
+            action={$toggleDarkModeWriteForm}
+          />
         </List>
       </Paper>
     </Box>

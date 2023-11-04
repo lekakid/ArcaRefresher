@@ -9,10 +9,10 @@ import {
   MenuItem,
   Paper,
   Select,
-  Switch,
   Typography,
 } from '@material-ui/core';
 
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $toggleAnimation,
@@ -40,14 +40,6 @@ const View = React.forwardRef((_props, ref) => {
     },
     [dispatch],
   );
-
-  const handleRefreshOnArticle = useCallback(() => {
-    dispatch($toggleRefreshOnArticle());
-  }, [dispatch]);
-
-  const handleAnimation = useCallback(() => {
-    dispatch($toggleAnimation());
-  }, [dispatch]);
 
   return (
     <Box ref={ref}>
@@ -90,24 +82,18 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleRefreshOnArticle}>
-            <ListItemText
-              primary="게시물 조회 중에도 갱신"
-              secondary="단, 1페이지를 확실히 보장할 수 있을 때만 동작합니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                checked={refreshOnArticle}
-                onClick={handleRefreshOnArticle}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleAnimation}>
-            <ListItemText>갱신 애니메이션 표시</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch checked={showProgress} onClick={handleAnimation} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="게시물 조회 중에도 갱신"
+            secondary="단, 1페이지를 확실히 보장할 수 있을 때만 동작합니다."
+            value={refreshOnArticle}
+            action={$toggleRefreshOnArticle}
+          />
+          <SwitchRow
+            primary="갱신 애니메이션 표시"
+            value={showProgress}
+            action={$toggleAnimation}
+          />
         </List>
       </Paper>
     </Box>

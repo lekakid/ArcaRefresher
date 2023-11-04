@@ -11,14 +11,14 @@ import {
   MenuItem,
   Paper,
   Select,
-  Switch,
   Typography,
 } from '@material-ui/core';
 import { Remove } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-import { TextEditor } from 'component/config';
+import { SwitchRow, TextEditorRow } from 'component/config';
 import { useContent } from 'hooks/Content';
+
 import Info from '../FeatureInfo';
 import {
   $removeEmoticonList,
@@ -35,8 +35,8 @@ import {
   $toggleMK2,
   $setContextRange,
 } from '../slice';
-import CategoryRow from './CategoryRow';
 import { emoticonTableSelector } from '../selector';
+import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
@@ -75,10 +75,6 @@ const View = React.forwardRef((_props, ref) => {
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 
-  const handleMK2 = useCallback(() => {
-    dispatch($toggleMK2());
-  }, [dispatch]);
-
   const handleContextRange = useCallback(
     (e) => {
       dispatch($setContextRange(e.target.value));
@@ -86,36 +82,12 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleServiceNotice = useCallback(() => {
-    dispatch($toggleHideNoticeService());
-  }, [dispatch]);
-
-  const handleNoPermission = useCallback(() => {
-    dispatch($toggleHideNoPermission());
-  }, [dispatch]);
-
-  const handleClosedDeal = useCallback(() => {
-    dispatch($toggleHideClosedDeal());
-  }, [dispatch]);
-
   const handleCountBarPos = useCallback(
     (e) => {
       dispatch($setBoardBarPos(e.target.value));
     },
     [dispatch],
   );
-
-  const handleCountBar = useCallback(() => {
-    dispatch($toggleCountBar());
-  }, [dispatch]);
-
-  const handleMutedMark = useCallback(() => {
-    dispatch($toggleMutedMark());
-  }, [dispatch]);
-
-  const handleIncludeReply = useCallback(() => {
-    dispatch($toggleIncludeReply());
-  }, [dispatch]);
 
   const onSaveUser = useCallback(
     (text) => {
@@ -166,15 +138,13 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleMK2}>
-            <ListItemText
-              primary="알림 뮤트 MK.2 (실험적)"
-              secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={mk2} onChange={handleMK2} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="알림 뮤트 MK.2 (실험적)"
+            secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
+            value={mk2}
+            action={$toggleMK2}
+          />
           <ListItem>
             <ListItemText>게시판 내 우클릭 동작 범위</ListItemText>
             <ListItemSecondaryAction>
@@ -206,75 +176,60 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleCountBar}>
-            <ListItemText
-              primary="뮤트 카운터 숨김"
-              secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={hideCountBar} onChange={handleCountBar} />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleMutedMark}>
-            <ListItemText
-              primary="[뮤트됨] 표시 숨김"
-              secondary="변경 후 새로고침 필요"
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={hideMutedMark} onChange={handleMutedMark} />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleIncludeReply}>
-            <ListItemText>댓글 뮤트 시 답글도 같이 뮤트</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch
-                checked={muteIncludeReply}
-                onChange={handleIncludeReply}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="뮤트 카운터 숨김"
+            secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
+            value={hideCountBar}
+            action={$toggleCountBar}
+          />
+          <SwitchRow
+            divider
+            primary="[뮤트됨] 표시 숨김"
+            secondary="변경 후 새로고침 필요"
+            value={hideMutedMark}
+            action={$toggleMutedMark}
+          />
+          <SwitchRow
+            primary="댓글 뮤트 시 답글도 같이 뮤트"
+            value={muteIncludeReply}
+            action={$toggleIncludeReply}
+          />
         </List>
       </Paper>
       <Typography variant="subtitle2">특정 컨텐츠</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleServiceNotice}>
-            <ListItemText>[모든 채널] 서비스 공지사항 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideServiceNotice}
-                onChange={handleServiceNotice}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleNoPermission}>
-            <ListItemText>[모든 채널] 운영 관련(권한 없음) 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch
-                checked={hideNoPermission}
-                onChange={handleNoPermission}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleClosedDeal}>
-            <ListItemText>[핫딜 채널] 식은딜 숨김</ListItemText>
-            <ListItemSecondaryAction>
-              <Switch checked={hideClosedDeal} onChange={handleClosedDeal} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="[모든 채널] 서비스 공지사항 숨김"
+            value={hideServiceNotice}
+            action={$toggleHideNoticeService}
+          />
+          <SwitchRow
+            divider
+            primary="[모든 채널] 운영 관련(권한 없음) 숨김"
+            value={hideNoPermission}
+            action={$toggleHideNoPermission}
+          />
+          <SwitchRow
+            primary="[핫딜 채널] 식은딜 숨김"
+            value={hideClosedDeal}
+            action={$toggleHideClosedDeal}
+          />
         </List>
       </Paper>
       <Typography variant="subtitle2">뮤트 조건</Typography>
       <Paper>
         <List disablePadding>
-          <TextEditor
+          <TextEditorRow
             divider
             headerText="검사할 닉네임"
             initialValue={user.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveUser}
           />
-          <TextEditor
+          <TextEditorRow
             divider
             headerText="검사할 키워드"
             initialValue={keyword.join('\n')}

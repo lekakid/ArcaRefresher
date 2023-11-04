@@ -1,4 +1,5 @@
-import TextEditor from './TextEditor';
-import TableEditor from './TableEditor';
+import SwitchRow from './SwitchRow';
+import TextEditorRow from './TextEditorRow';
+import TableEditorRow from './TableEditorRow';
 
-export { TextEditor, TableEditor };
+export { SwitchRow, TextEditorRow, TableEditorRow };

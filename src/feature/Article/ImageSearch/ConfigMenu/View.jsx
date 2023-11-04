@@ -9,12 +9,12 @@ import {
   MenuItem,
   Paper,
   Select,
-  Switch,
   Typography,
 } from '@material-ui/core';
 
 import { BACKGROUND, FOREGROUND } from 'func/window';
 
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $setOpenType,
@@ -35,20 +35,12 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
-  const handleSearchBySource = useCallback(() => {
-    dispatch($toggleSearchBySource());
-  }, [dispatch]);
-
   const handleGoogleMethod = useCallback(
     (e) => {
       dispatch($setSearchGoogleMethod(e.target.value));
     },
     [dispatch],
   );
-
-  const handleSauceNaoBypass = useCallback(() => {
-    dispatch($toggleSauceNaoBypass());
-  }, [dispatch]);
 
   return (
     <Box ref={ref}>
@@ -68,15 +60,13 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem divider button onClick={handleSearchBySource}>
-            <ListItemText
-              primary="원본 이미지로 검색"
-              secondary="검색 속도가 하락하지만 좀 더 정확한 이미지를 찾을 수도 있습니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={searchBySource} onClick={handleSearchBySource} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="원본 이미지로 검색"
+            secondary="검색 속도가 하락하지만 좀 더 정확한 이미지를 찾을 수도 있습니다."
+            value={searchBySource}
+            action={$toggleSearchBySource}
+          />
           <ListItem divider>
             <ListItemText>구글 이미지 검색 방식</ListItemText>
             <ListItemSecondaryAction>
@@ -90,15 +80,12 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleSauceNaoBypass}>
-            <ListItemText
-              primary="SauceNao 바이패스 활성화"
-              secondary="정상적으로 검색되지 않을 때만 사용 바랍니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={saucenaoBypass} onClick={handleSauceNaoBypass} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            primary="SauceNao 바이패스 활성화"
+            secondary="정상적으로 검색되지 않을 때만 사용 바랍니다."
+            value={saucenaoBypass}
+            action={$toggleSauceNaoBypass}
+          />
         </List>
       </Paper>
     </Box>

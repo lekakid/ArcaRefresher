@@ -7,11 +7,9 @@ import {
   ListItemText,
   Paper,
   Select,
-  Switch,
   Typography,
   Divider,
   Grid,
-  ListItemSecondaryAction,
   Box,
   TextField,
   Dialog,
@@ -31,6 +29,7 @@ import {
 
 import { useContent } from 'hooks/Content';
 
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $addFolder,
@@ -64,14 +63,6 @@ const View = React.forwardRef((_props, ref) => {
   const [moveInfo, setMoveInfo] = useState(undefined);
   const [selection, setSelection] = useState([]);
   const classes = useStyles();
-
-  const handleEnabled = useCallback(() => {
-    dispatch($toggleEnabled());
-  }, [dispatch]);
-
-  const handleForceLoad = useCallback(() => {
-    dispatch($toggleForceLoad());
-  }, [dispatch]);
 
   const onSelectFolder = useCallback((e) => {
     setCurrentFolder(e.target.value);
@@ -167,21 +158,19 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleEnabled}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch checked={enabled} onChange={handleEnabled} />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleForceLoad}>
-            <ListItemText
-              primary="자짤 강제로 덮어쓰기"
-              secondary="작성하던 글이 있으면 강제로 덮어씁니다."
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={forceLoad} onChange={handleForceLoad} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="사용"
+            value={enabled}
+            action={$toggleEnabled}
+          />
+          <SwitchRow
+            divider
+            primary="자짤 강제로 덮어쓰기"
+            secondary="작성하던 글이 있으면 강제로 덮어씁니다."
+            value={forceLoad}
+            action={$toggleForceLoad}
+          />
           <ListItem>
             <ListItemText
               primary="자짤 목록"

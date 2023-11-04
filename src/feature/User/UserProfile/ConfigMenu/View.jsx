@@ -7,7 +7,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Paper,
-  Switch,
   Typography,
   MenuItem,
   Select,
@@ -15,6 +14,7 @@ import {
 
 import { BACKGROUND, CURRENT, FOREGROUND } from 'func/window';
 
+import { SwitchRow } from 'component/config';
 import { $setContextRange, $setOpenType, $toggleIdVisible } from '../slice';
 import Info from '../FeatureInfo';
 
@@ -37,10 +37,6 @@ const View = React.forwardRef((_props, ref) => {
     },
     [dispatch],
   );
-
-  const handleVisible = useCallback(() => {
-    dispatch($toggleIdVisible());
-  }, [dispatch]);
 
   return (
     <Box ref={ref}>
@@ -74,15 +70,12 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button onClick={handleVisible}>
-            <ListItemText
-              primary="반고닉 이용자 고유아이디 표시"
-              secondary="로그인 상태에서 정상동작합니다"
-            />
-            <ListItemSecondaryAction>
-              <Switch checked={showId} onChange={handleVisible} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            primary="반고닉 이용자 고유아이디 표시"
+            secondary="로그인 상태에서 정상동작합니다"
+            value={showId}
+            action={$toggleIdVisible}
+          />
         </List>
       </Paper>
     </Box>

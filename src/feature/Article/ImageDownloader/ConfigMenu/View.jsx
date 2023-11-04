@@ -8,11 +8,12 @@ import {
   Paper,
   TextField,
   Typography,
-  Switch,
   Box,
   Select,
   MenuItem,
 } from '@material-ui/core';
+
+import { SwitchRow } from 'component/config';
 
 import Info from '../FeatureInfo';
 import {
@@ -36,10 +37,6 @@ const View = React.forwardRef((_props, ref) => {
     zipExtension,
     zipImageName,
   } = useSelector((state) => state[Info.ID].storage);
-
-  const handleEnable = useCallback(() => {
-    dispatch($toggleEnable());
-  }, [dispatch]);
 
   const handleDownloadMethod = useCallback(
     (e) => {
@@ -100,12 +97,12 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleEnable}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch checked={enabled} onClick={handleEnable} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="사용"
+            value={enabled}
+            action={$toggleEnable}
+          />
           <ListItem divider>
             <ListItemText>다운로드 방식</ListItemText>
             <ListItemSecondaryAction>

@@ -7,7 +7,6 @@ import {
   ListItemSecondaryAction,
   Paper,
   Typography,
-  Switch,
   MenuItem,
   Select,
   Box,
@@ -19,6 +18,7 @@ import { Add, Delete, Label } from '@material-ui/icons';
 
 import { GroupableSelect } from 'component';
 
+import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -133,10 +133,6 @@ const View = React.forwardRef((_props, ref) => {
     [editingPresetKey, theme],
   );
 
-  const handleEnabled = useCallback(() => {
-    dispatch($toggleEnable());
-  }, [dispatch]);
-
   const handleGlobalPreset = useCallback(
     (e) => {
       dispatch($setCurrent(e.target.value));
@@ -210,12 +206,13 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleEnabled}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch checked={enabled} onChange={handleEnabled} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow
+            divider
+            primary="알림 뮤트 MK.2 (실험적)"
+            secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
+            value={enabled}
+            action={$toggleEnable}
+          />
           <ListItem divider>
             <ListItemText
               primary="전체 적용 테마"

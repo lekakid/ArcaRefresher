@@ -1,38 +1,21 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Paper,
-  Switch,
-  Typography,
-} from '@material-ui/core';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Box, List, Paper, Typography } from '@material-ui/core';
+
+import { SwitchRow } from 'component/config';
 
 import Info from '../FeatureInfo';
 import { $toggleEnabled } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const { enabled } = useSelector((state) => state[Info.ID].storage);
-  const dispatch = useDispatch();
-
-  const handleEnabled = useCallback(() => {
-    dispatch($toggleEnabled());
-  }, [dispatch]);
 
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem button onClick={handleEnabled}>
-            <ListItemText primary="사용" />
-            <ListItemSecondaryAction>
-              <Switch onClick={handleEnabled} checked={enabled} />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
         </List>
       </Paper>
     </Box>

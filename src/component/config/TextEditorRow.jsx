@@ -8,9 +8,9 @@ import {
 } from '@material-ui/core';
 import { Check, Save } from '@material-ui/icons';
 
-const TextEditor = React.forwardRef(
+const TextEditorRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function TextEditor(
+  function TextEditorRow(
     { divider, headerText, initialValue, errorText, onSave },
     ref,
   ) {
@@ -64,10 +64,10 @@ const TextEditor = React.forwardRef(
   },
 );
 
-TextEditor.defaultProps = {
+TextEditorRow.defaultProps = {
   headerText: '설정 이름',
   initialValue: '',
   errorText: '',
 };
 
-export default TextEditor;
+export default TextEditorRow;

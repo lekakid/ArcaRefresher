@@ -23,9 +23,9 @@ function Toolbar({ disabled, onRemove }) {
   );
 }
 
-const TableEditor = React.forwardRef(
+const TableEditorRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
-  function TableEditor(
+  function TableEditorRow(
     { divider, headerText, rows, columns, noRowsText, delimiter, onEdit },
     ref,
   ) {
@@ -144,11 +144,11 @@ const TableEditor = React.forwardRef(
   },
 );
 
-TableEditor.defaultProps = {
+TableEditorRow.defaultProps = {
   headerText: '설정 이름',
   initialRows: [],
   delimiter: '::',
   errorText: '',
 };
 
-export default TableEditor;
+export default TableEditorRow;
