@@ -1,7 +1,6 @@
 import { useLayoutEffect } from 'react';
 
 import {
-  ARTICLE_AUTHOR,
   ARTICLE_LOADED,
   ARTICLE_TITLE,
   ARTICLE_URL,
@@ -16,24 +15,26 @@ import useLoadChecker from './useLoadChecker';
 const pathToken = window.location.pathname.split('/');
 pathToken.shift(); // ''
 const pageType = pathToken.shift();
-const channelID = pathToken.shift();
-let pageTypeStr;
+let channelID = pathToken.shift();
+let channelName;
 switch (pageType) {
   case 'b':
-    pageTypeStr = channelID;
+    // Nothing
     break;
   case 'e':
-    pageTypeStr = 'emoticon';
+    channelID = 'emoticon';
+    channelName = '아카콘';
     break;
   default:
-    pageTypeStr = 'ArcaLive';
+    channelID = 'ArcaLive';
+    channelName = '아카라이브';
     break;
 }
 
 const content = {
   channel: {
-    ID: pageType === 'b' ? channelID : pageTypeStr,
-    name: undefined,
+    ID: channelID,
+    name: channelName,
   },
   board: undefined,
   article: undefined,
@@ -71,7 +72,7 @@ export function useContent() {
       const { channelName: name } = document.querySelector(
         '.board-title .title',
       ).dataset;
-      content.channel.name = name.replace(' 채널', '');
+      content.channel.name = name.replace(' 채널', '') || '';
     } catch (error) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
@@ -113,9 +114,12 @@ export function useContent() {
       titleElement?.querySelector('.badge')?.textContent || '일반';
     const title =
       convertImgToAlt([...(titleElement?.childNodes || [])].slice(2)) ||
+      titleElement.textContent.trim() ||
       '제목 없음';
     const author =
-      getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
+      getUserNick(document.querySelector(`ARTICLE_AUTHOR`)) ||
+      document.querySelector('.article-head .member-info').textContent.trim() ||
+      '익명';
     const url =
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
     const ID = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
