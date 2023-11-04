@@ -6,6 +6,7 @@ import {
   ARTICLE_URL,
   BOARD_LOADED,
   CHANNEL_TITLE_LOADED,
+  NAVIGATION_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
@@ -32,6 +33,7 @@ switch (pageType) {
 }
 
 const content = {
+  user: undefined,
   channel: {
     ID: channelID,
     name: channelName,
@@ -43,6 +45,9 @@ const content = {
 /**
  * 게시판 및 게시물 정보를 받아옵니다.
  * @returns {{
+ *  user: {
+ *    ID: string,
+ *  }
  *  channel: {
  *    ID: string,
  *    name: string,
@@ -60,9 +65,31 @@ const content = {
  * }}
  */
 export function useContent() {
+  const navLoaded = useLoadChecker(NAVIGATION_LOADED);
   const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+
+  useLayoutEffect(() => {
+    if (!navLoaded) return;
+    if (content.user) return;
+
+    try {
+      const userElement = document.querySelector('nav .username > a');
+      if (!userElement) {
+        return;
+      }
+      const token = userElement.pathname.split('@')[1].split('/');
+      let uniqueId = '';
+      if (token.length > 1) {
+        uniqueId = `#${token.pop()}`;
+      }
+      const nick = decodeURI(token.pop());
+      content.user = { ID: `${nick}${uniqueId}` };
+    } catch (error) {
+      console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
+    }
+  }, [navLoaded]);
 
   useLayoutEffect(() => {
     if (!titleLoaded) return;
