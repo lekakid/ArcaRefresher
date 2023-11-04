@@ -1,16 +1,9 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Box, List, Paper, Typography } from '@material-ui/core';
 
 import { SwitchRow } from 'component/config';
+import TextFieldRow from 'component/config/TextFieldRow';
 import Info from '../FeatureInfo';
 import {
   $setSpoofTitle,
@@ -24,7 +17,6 @@ import {
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const dispatch = useDispatch();
   const {
     spoofTitle,
     openArticleNewWindow,
@@ -36,31 +28,18 @@ const View = React.forwardRef((_props, ref) => {
     enhancedArticleManage,
   } = useSelector((state) => state[Info.ID].storage);
 
-  const handleSpoofTitle = useCallback(
-    (e) => {
-      dispatch($setSpoofTitle(e.target.value));
-    },
-    [dispatch],
-  );
-
   return (
     <Box ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem>
-            <ListItemText
-              primary="사이트 표시 제목 변경"
-              secondary="공란일 시 변경하지 않습니다."
-            />
-          </ListItem>
-          <ListItem divider>
-            <TextField
-              fullWidth
-              value={spoofTitle}
-              onChange={handleSpoofTitle}
-            />
-          </ListItem>
+          <TextFieldRow
+            divider
+            primary="사이트 표시 제목 변경"
+            secondary="공란일 시 변경하지 않습니다."
+            value={spoofTitle}
+            action={$setSpoofTitle}
+          />
           <SwitchRow
             divider
             primary="게시물 새 창에서 열기"
