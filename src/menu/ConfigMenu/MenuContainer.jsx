@@ -32,6 +32,19 @@ function MenuContainer({ classes, groupList, menuList }) {
   const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
+  // 설정이 열려있는 동안 아카 단축키 무력화
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const blocker = (e) => {
+      // 아카 단축키가 keydown 이벤트를 사용함
+      e.stopPropagation();
+    };
+
+    document.addEventListener('keydown', blocker, true);
+    return () => document.addEventListener('keydown', blocker, true);
+  }, [open]);
+
   // 전체 설정 조회 시 사용되는 스크롤 관련 옵저버
   useEffect(() => {
     if (!target) return undefined;
