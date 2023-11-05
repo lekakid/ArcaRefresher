@@ -2,14 +2,8 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import {
-  BOARD_LOADED,
-  BOARD,
-  BOARD_IN_ARTICLE,
-  BOARD_ITEMS,
-} from 'core/selector';
+import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
 import { useContent } from 'hooks/Content';
 import { getUserInfo } from 'func/user';
 
@@ -49,9 +43,8 @@ const style = {
 function BoardMuter() {
   const dispatch = useDispatch();
   const [addEventListener, removeEventListener] = useEvent();
-  const boardLoaded = useLoadChecker(BOARD_LOADED);
-
   const { channel, board } = useContent();
+
   const {
     user,
     keyword,
@@ -62,15 +55,14 @@ function BoardMuter() {
     hideNoPermission,
     hideClosedDeal,
   } = useSelector((state) => state[Info.ID].storage);
-  const [boardContainer, setBoardContainer] = useState(undefined);
+  const [controlTarget, setControlTarget] = useState(undefined);
   const [nameToIDMap, setNameToIDMap] = useState(undefined);
-  const [container, setContainer] = useState(undefined);
+  const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
   const emoticionFilter = useSelector(emoticonFilterSelector);
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
-    if (!boardLoaded) return;
     if (!board) return;
 
     const boardElement = document.querySelector(
@@ -78,29 +70,29 @@ function BoardMuter() {
     );
     if (!boardElement) return;
 
-    setBoardContainer(boardElement);
+    setControlTarget(boardElement);
     const name2id = Object.fromEntries(
       Object.entries(board.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
     const containerElement = document.createElement('div');
-    setContainer(containerElement);
-  }, [dispatch, boardLoaded, board]);
+    setCountBarContainer(containerElement);
+  }, [dispatch, board]);
 
   useLayoutEffect(() => {
-    if (!boardContainer) return;
+    if (!controlTarget) return;
 
-    boardContainer.insertAdjacentElement(boardBarPos, container);
-    boardContainer.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
-  }, [boardContainer, container, boardBarPos]);
+    controlTarget.insertAdjacentElement(boardBarPos, countBarContainer);
+    controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
+  }, [controlTarget, countBarContainer, boardBarPos]);
 
   // 유저, 키워드, 카테고리 뮤트처리
   useLayoutEffect(() => {
-    if (!boardContainer) return undefined;
+    if (!controlTarget) return undefined;
 
     const muteArticle = () => {
-      const articleList = [...boardContainer.querySelectorAll(BOARD_ITEMS)];
+      const articleList = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
       const articleInfo = articleList
         .filter((a) => !a.href?.includes('#c_'))
         .map((a) => ({
@@ -130,7 +122,7 @@ function BoardMuter() {
       removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
   }, [
-    boardContainer,
+    controlTarget,
     nameToIDMap,
     keyword,
     user,
@@ -142,9 +134,9 @@ function BoardMuter() {
 
   // 게시물 미리보기 뮤트
   useLayoutEffect(() => {
-    if (!boardContainer) return;
+    if (!controlTarget) return;
 
-    const images = boardContainer.querySelectorAll(
+    const images = controlTarget.querySelectorAll(
       '.vrow-preview noscript, .vrow-preview img',
     );
     images.forEach((e) => {
@@ -156,7 +148,7 @@ function BoardMuter() {
         e.parentNode.classList.add('filtered-emoticon');
       }
     });
-  }, [boardContainer, emoticionFilter]);
+  }, [controlTarget, emoticionFilter]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {
@@ -176,9 +168,9 @@ function BoardMuter() {
 
   // [핫딜 채널] 식은딜 게시물
   useLayoutEffect(() => {
-    if (!boardContainer) return;
+    if (!controlTarget) return;
 
-    const articleList = [...boardContainer.querySelectorAll(BOARD_ITEMS)];
+    const articleList = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
     articleList
       .filter((a) => a.querySelector('.deal-close'))
       .forEach((a) => a.classList.add('ar-closed'));
@@ -186,13 +178,13 @@ function BoardMuter() {
       'hide-closed-deal',
       hideClosedDeal,
     );
-  }, [boardContainer, hideClosedDeal]);
+  }, [controlTarget, hideClosedDeal]);
 
-  if (!container) return null;
+  if (!countBarContainer) return null;
   return (
     <CountBar
-      renderContainer={container}
-      classContainer={boardContainer}
+      renderContainer={countBarContainer}
+      controlTarget={controlTarget}
       count={count}
       hide={hideCountBar}
     />

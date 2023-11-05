@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CountBar({ renderContainer, classContainer, count, hide }) {
+function CountBar({ renderContainer, controlTarget, count, hide }) {
   const [showStates, setShowStates] = useState(undefined);
   const classes = useStyles();
 
@@ -42,14 +42,14 @@ function CountBar({ renderContainer, classContainer, count, hide }) {
       const suffix = key === 'all' ? '' : `-${key}`;
       const className = `show-filtered${suffix}`;
       setShowStates((prev) => {
-        classContainer.classList.toggle(className, !prev[key]);
+        controlTarget.classList.toggle(className, !prev[key]);
         return {
           ...prev,
           [key]: !prev[key],
         };
       });
     },
-    [classContainer],
+    [controlTarget],
   );
 
   if (count.all === 0 || (hide && count.deleted === 0)) return null;

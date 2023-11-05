@@ -65,8 +65,8 @@ function CommentMuter() {
 
   const { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply } =
     useSelector((state) => state[Info.ID].storage);
-  const [comment, setComment] = useState(undefined);
-  const [container, setContainer] = useState(undefined);
+  const [commentContainer, setCommentContainer] = useState(undefined);
+  const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
   const emoticonFilter = useSelector(emoticonFilterSelector);
 
@@ -77,16 +77,16 @@ function CommentMuter() {
     const commentElement = document.querySelector(COMMENT_INNER);
     if (!commentElement) return;
 
-    setComment(commentElement);
+    setCommentContainer(commentElement);
 
-    const countBarContainer = document.createElement('div');
-    commentElement.insertAdjacentElement('beforebegin', countBarContainer);
-    setContainer(countBarContainer);
+    const container = document.createElement('div');
+    commentElement.insertAdjacentElement('beforebegin', container);
+    setCountBarContainer(container);
 
     addEventListener(EVENT_COMMENT_REFRESH, () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
-      setComment(refreshedComment);
-      refreshedComment.insertAdjacentElement('beforebegin', countBarContainer);
+      setCommentContainer(refreshedComment);
+      refreshedComment.insertAdjacentElement('beforebegin', container);
     });
   }, [dispatch, commentLoaded, addEventListener]);
 
@@ -140,7 +140,7 @@ function CommentMuter() {
 
   // 키워드, 이용자 뮤트
   useLayoutEffect(() => {
-    if (!comment) return undefined;
+    if (!commentContainer) return undefined;
 
     const muteComment = () => {
       const commentList = [
@@ -172,7 +172,7 @@ function CommentMuter() {
       removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
   }, [
-    comment,
+    commentContainer,
     keyword,
     user,
     muteIncludeReply,
@@ -180,11 +180,11 @@ function CommentMuter() {
     removeEventListener,
   ]);
 
-  if (!container) return null;
+  if (!countBarContainer) return null;
   return (
     <CountBar
-      renderContainer={container}
-      classContainer={comment}
+      renderContainer={countBarContainer}
+      controlTarget={commentContainer}
       count={count}
       hide={hideCountBar}
     />
