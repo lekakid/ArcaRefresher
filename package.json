@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.27.1",
+  "version": "3.28.0",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
     "hotfix": "version=$(npm --no-git-tag-version version patch) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}",
     "minor": "version=$(npm --no-git-tag-version version minor) && git commit -am \"[package] ${version}\" && current=$(git branch --show-current) && git checkout master && git merge ${current} -m ${version}"
   },
@@ -40,11 +41,12 @@
     "husky": "^7.0.4",
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
-    "webpack": "5.70.0",
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0",
-    "webpack-userscript": "^2.5.8"
+    "webpack-userscript": "^3.2.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -54,15 +56,15 @@
     "@mui/x-data-grid": "^4.0.2",
     "@reduxjs/toolkit": "^1.8.1",
     "@transcend-io/conflux": "^4.0.2",
-    "caniuse-lite": "^1.0.30001420",
-    "clsx": "^1.1.1",
+    "caniuse-lite": "^1.0.30001558",
+    "clsx": "^2.0.0",
     "react": "17.0.2",
     "react-color": "^2.19.3",
     "react-dom": "17.0.2",
     "react-qr-code": "^2.0.11",
     "react-redux": "^7.2.8",
-    "redux-state-sync": "^3.1.4",
-    "streamsaver": "^2.0.6"
+    "streamsaver": "^2.0.6",
+    "uuid": "^9.0.1"
   },
   "packageManager": "npm@3.3.0"
 }

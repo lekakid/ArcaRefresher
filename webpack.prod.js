@@ -2,7 +2,7 @@ const common = require('./webpack.common.js');
 
 const path = require('path');
 const { merge } = require('webpack-merge');
-const WebpackUsersript = require('webpack-userscript');
+const { UserscriptPlugin } = require('webpack-userscript');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -10,7 +10,7 @@ module.exports = merge(common, {
     filename: 'ArcaRefresher.user.js',
   },
   plugins: [
-    new WebpackUsersript({
+    new UserscriptPlugin({
       headers: path.join(__dirname, './src/meta.json'),
     }),
   ],

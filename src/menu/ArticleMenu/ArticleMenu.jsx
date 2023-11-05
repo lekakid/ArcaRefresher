@@ -3,16 +3,18 @@ import { Grid, Portal, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { ARTICLE_HEADER_MENU, ARTICLE_LOADED } from 'core/selector';
-import { useLoadChecker } from 'util/LoadChecker';
+import { useLoadChecker } from 'hooks';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
-    '.edit-menu:empty': {
-      display: 'none',
+    '.edit-menu': {
+      borderBottom: '1px solid var(--color-bd-outer)',
+      '&:empty': {
+        display: 'none',
+      },
     },
   },
   root: {
-    borderTop: '1px solid var(--color-border-outer)',
     '& .MuiButton-root': {
       color: 'var(--color-text-color)',
     },

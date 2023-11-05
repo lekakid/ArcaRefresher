@@ -1,5 +1,13 @@
 {
-  "presets": ["@babel/env", "@babel/react"],
+  "presets": [
+    "@babel/env",
+    [
+      "@babel/react",
+      {
+        "runtime": "automatic"
+      }
+    ]
+  ],
   "plugins": [
     [
       "babel-plugin-import",

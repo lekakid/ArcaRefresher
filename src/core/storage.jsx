@@ -1,3 +1,6 @@
+import { createAction } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
+
 /**
  * 설정 값을 가져옵니다.
  * @param {string}   key            키 값
@@ -69,4 +72,66 @@ export function resetValues() {
   const values = GM_listValues();
 
   values.forEach((v) => GM_deleteValue(v));
+}
+
+const INIT_MONKEY_SYNC = '!INIT_MONKEY_SYNC';
+
+let blockedSync = false;
+export function disableStorageSync() {
+  blockedSync = true;
+}
+
+let lastActionId;
+const currentWindowId = uuid();
+export function createMonkeySyncMiddleware() {
+  const channel = new BroadcastChannel(`AR_SYNC_${GM_info.script.version}`);
+  let initialized = false;
+
+  return (store) => (next) => (action) => {
+    if (blockedSync) return next(action);
+
+    if (!initialized) {
+      channel.onmessage = ({ data: actionMessage }) => {
+        // 현재 창이랑 같은 동기화 액션 무시
+        if (actionMessage.$windowId === currentWindowId) return;
+
+        // 동기화된 액션
+        if (
+          actionMessage.$actionId &&
+          actionMessage.$actionId !== lastActionId
+        ) {
+          lastActionId = actionMessage.$actionId;
+          store.dispatch(actionMessage);
+        }
+      };
+      initialized = true;
+    }
+
+    const prevState = store.getState();
+    const result = next(action);
+
+    if (action.type.indexOf('/$') > -1 && !action.$actionId) {
+      const currentState = store.getState();
+
+      Object.entries(currentState)
+        .filter(([, value]) => !!value.storage)
+        .forEach(([key, value]) => {
+          if (prevState[key].storage !== value.storage)
+            setValue(key, value.storage);
+        });
+
+      const actionMessage = action;
+      actionMessage.$actionId = uuid();
+      actionMessage.$windowId = currentWindowId;
+      lastActionId = actionMessage.$actionId;
+      channel.postMessage(actionMessage);
+    }
+
+    return result;
+  };
+}
+
+const initMonkeySyncAction = createAction(INIT_MONKEY_SYNC);
+export function initMonkeySync({ dispatch }) {
+  dispatch(initMonkeySyncAction());
 }

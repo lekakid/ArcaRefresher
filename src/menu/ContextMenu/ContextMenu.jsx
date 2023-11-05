@@ -25,7 +25,7 @@ function getKeyCombine(event) {
   return combine;
 }
 
-export default function ContextMenu({ children }) {
+export default function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
   const {
     storage: { interactionType },
@@ -107,13 +107,9 @@ export default function ContextMenu({ children }) {
             Arca Refresher
           </MenuItem>
         </List>
-        {children.map((child, index) =>
-          React.cloneElement(child, {
-            // eslint-disable-next-line react/no-array-index-key
-            key: index,
-            targetRef,
-          }),
-        )}
+        {menuList.map(({ key, View }) => (
+          <View key={key} targetRef={targetRef} />
+        ))}
       </Menu>
       <ContextSnack />
     </>

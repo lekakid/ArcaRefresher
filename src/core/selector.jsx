@@ -43,6 +43,7 @@ export const ARTICLE_USER_INFO = '.article-wrapper .user-info';
 export const COMMENT_WRAPPERS = '#comment .comment-wrapper';
 export const COMMENT_ITEMS = '#comment .comment-item';
 export const COMMENT_TITLE = '#comment .title';
+export const COMMENT_USER_INFO = '#comment .user-info';
 export const COMMENT_SUBTITLE = '#comment .reply-form__user-info';
 export const COMMENT_INPUT = '#comment .reply-form-textarea';
 export const COMMENT_EMOTICON = '#comment .emoticon';

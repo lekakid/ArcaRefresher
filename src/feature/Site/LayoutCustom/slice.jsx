@@ -1,0 +1,155 @@
+import { createSlice } from '@reduxjs/toolkit';
+
+import { getValue } from 'core/storage';
+import Info from './FeatureInfo';
+
+const defaultStorage = {
+  version: 1,
+  enabled: true,
+  // 사이트
+  notifyPosition: 'right',
+  topNews: true,
+  recentVisit: 'afterAd',
+  sideMenu: true,
+  sideContents: true,
+  sideBests: true,
+  sideNews: true,
+  avatar: true,
+  userinfoWidth: 10,
+  // 게시물
+  resizeImage: 100,
+  resizeVideo: 100,
+  hideUnvote: false,
+  // 댓글
+  unfoldLongComment: false,
+  modifiedIndicator: false,
+  reverseComment: false,
+  hideVoiceComment: false,
+  resizeEmoticonPalette: 2,
+  // 접근성
+  fontSize: 15,
+  fixDarkModeWriteForm: true,
+};
+
+function formatUpdater(storage, defaultValue) {
+  // version 0 => 1
+  const version = storage?.version || 0;
+
+  switch (version) {
+    case 0: {
+      const updateStorage = { ...storage };
+      updateStorage.recentVisit = updateStorage.recentVisit
+        ? 'afterAd'
+        : 'none';
+      updateStorage.version = 1;
+      return updateStorage;
+    }
+    default:
+      console.warn('지원하지 않는 버전 데이터입니다.', storage);
+      return defaultValue;
+  }
+}
+
+const initialState = {
+  storage: getValue(Info.ID, defaultStorage, formatUpdater),
+};
+
+export const slice = createSlice({
+  name: Info.ID,
+  initialState,
+  reducers: {
+    $toggleEnable(state) {
+      state.storage.enabled = !state.storage.enabled;
+    },
+    // 사이트
+    $setNotifyPosition(state, action) {
+      state.storage.notifyPosition = action.payload;
+    },
+    $toggleTopNews(state) {
+      state.storage.topNews = !state.storage.topNews;
+    },
+    $setRecentVisit(state, action) {
+      state.storage.recentVisit = action.payload;
+    },
+    $toggleSideMenu(state) {
+      state.storage.sideMenu = !state.storage.sideMenu;
+    },
+    $toggleSideContents(state) {
+      state.storage.sideContents = !state.storage.sideContents;
+    },
+    $toggleSideBests(state) {
+      state.storage.sideBests = !state.storage.sideBests;
+    },
+    $toggleSideNews(state) {
+      state.storage.sideNews = !state.storage.sideNews;
+    },
+    $toggleAvatar(state) {
+      state.storage.avatar = !state.storage.avatar;
+    },
+    $setUserInfoWith(state, action) {
+      state.storage.userinfoWidth = action.payload;
+    },
+    // 게시물
+    $setResizeImage(state, action) {
+      state.storage.resizeImage = action.payload;
+    },
+    $setResizeVideo(state, action) {
+      state.storage.resizeVideo = action.payload;
+    },
+    $toggleUnvote(state) {
+      state.storage.hideUnvote = !state.storage.hideUnvote;
+    },
+    // 댓글
+    $toggleLongComment(state) {
+      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
+    },
+    $toggleModifiedIndicator(state) {
+      state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
+    },
+    $toggleReverseComment(state) {
+      state.storage.reverseComment = !state.storage.reverseComment;
+    },
+    $toggleHideVoiceComment(state) {
+      state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
+    },
+    $setResizeEmoticonPalette(state, action) {
+      state.storage.resizeEmoticonPalette = action.payload;
+    },
+    // 접근성
+    $setFontSize(state, action) {
+      state.storage.fontSize = action.payload;
+    },
+    $toggleDarkModeWriteForm(state) {
+      state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
+    },
+  },
+});
+
+export const {
+  $toggleEnable,
+  // 사이트
+  $setNotifyPosition,
+  $toggleTopNews,
+  $setRecentVisit,
+  $toggleSideMenu,
+  $toggleSideContents,
+  $toggleSideBests,
+  $toggleSideNews,
+  $toggleAvatar,
+  $setUserInfoWith,
+  // 게시물
+  $setResizeImage,
+  $setResizeVideo,
+  $toggleUnvote,
+  // 댓글
+  $toggleLongComment,
+  $toggleModifiedIndicator,
+  $toggleReverseComment,
+  $toggleHideVoiceComment,
+  $setResizeEmoticonPalette,
+  // 접근성
+  $setFontSize,
+  $toggleDarkModeWriteForm,
+} = slice.actions;
+
+export default slice.reducer;

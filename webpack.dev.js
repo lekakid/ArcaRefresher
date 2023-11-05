@@ -2,11 +2,11 @@ const common = require('./webpack.common.js');
 
 const path = require('path');
 const { merge } = require('webpack-merge');
-const WebpackUsersript = require('webpack-userscript');
+const { UserscriptPlugin } = require('webpack-userscript');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-cheap-source-map',
   output: {
     filename: 'ArcaRefresher.debug.user.js',
   },
@@ -21,8 +21,8 @@ module.exports = merge(common, {
     hot: false,
   },
   plugins: [
-    new WebpackUsersript({
-      headers: path.join(__dirname, './src/meta.json'),
+    new UserscriptPlugin({
+      headers: path.join(__dirname, './src/proxy-meta.json'),
       metajs: false,
       proxyScript: {
         filename: 'ArcaRefresher.proxy.user.js',

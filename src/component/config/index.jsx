@@ -1,5 +1,7 @@
-import GroupableSelect from './GroupableSelect';
-import TextEditor from './TextEditor';
-import TableEditor from './TableEditor';
+import SelectRow from './SelectRow';
+import SliderRow from './SliderRow';
+import SwitchRow from './SwitchRow';
+import TextEditorRow from './TextEditorRow';
+import TableEditorRow from './TableEditorRow';
 
-export { GroupableSelect, TextEditor, TableEditor };
+export { SelectRow, SliderRow, SwitchRow, TextEditorRow, TableEditorRow };
