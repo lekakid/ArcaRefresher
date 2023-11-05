@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
-import { disableStorage } from 'core/store';
+import { disableStorageSync } from 'core/storage';
 
 import Info from './FeatureInfo';
 import { $setCheckedVersion } from './slice';
@@ -33,7 +33,7 @@ export default function VersionInfo() {
 
     boradcastChannel.onmessage = ({ data }) => {
       if (data.msg === 'disable_storage') {
-        disableStorage();
+        disableStorageSync();
         setNoti({ open: true, mode: MODE_DISABLE_STOAGE });
       }
     };
