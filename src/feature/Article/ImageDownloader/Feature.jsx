@@ -25,13 +25,12 @@ const useStyles = makeStyles({
 
 export default function ImageDownloader() {
   const dispatch = useDispatch();
-  const {
-    storage: { enabled },
-    open,
-  } = useSelector((state) => state[Info.ID]);
-  const [container, setContainer] = useState(null);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const classes = useStyles();
+
+  const { enabled } = useSelector((state) => state[Info.ID].storage);
+  const { open } = useSelector((state) => state[Info.ID]);
+  const [container, setContainer] = useState(null);
 
   useEffect(() => {
     if (!enabled) return null;
@@ -67,8 +66,6 @@ export default function ImageDownloader() {
   }, [dispatch]);
 
   if (!container) return null;
-  if (!enabled) return null;
-
   return (
     <>
       <Portal container={container}>
