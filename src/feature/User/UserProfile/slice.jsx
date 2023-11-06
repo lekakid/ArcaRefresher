@@ -8,6 +8,7 @@ const defaultStorage = {
   openType: FOREGROUND,
   indicateMyComment: false,
   showId: false,
+  checkSpamAccount: false,
 };
 
 const initialState = {
@@ -30,6 +31,9 @@ export const slice = createSlice({
     $toggleIdVisible(state) {
       state.storage.showId = !state.storage.showId;
     },
+    $toggleCheckSpamAccount(state) {
+      state.storage.checkSpamAccount = !state.storage.checkSpamAccount;
+    },
   },
 });
 
@@ -38,6 +42,7 @@ export const {
   $setOpenType,
   $toggleIndicateMyComment,
   $toggleIdVisible,
+  $toggleCheckSpamAccount,
 } = slice.actions;
 
 export default slice.reducer;

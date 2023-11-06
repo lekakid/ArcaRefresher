@@ -12,7 +12,10 @@ import Info from './FeatureInfo';
  * @param {function} dataExtractor  찾은 타겟을 기준으로 데이터를 추출할 함수를 찾습니다.
  * @returns
  */
-export default function useContextMenu({ targetRef, selector, dataExtractor }) {
+export default function useContextMenu(
+  { targetRef, selector, dataExtractor },
+  deps = [],
+) {
   const dispatch = useDispatch();
   const { open } = useSelector((state) => state[Info.ID]);
   const [data, setData] = useState(undefined);
@@ -22,6 +25,9 @@ export default function useContextMenu({ targetRef, selector, dataExtractor }) {
 
     return () => dispatch(removeTrigger(selector));
   }, [dispatch, selector]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleExtractor = useCallback(dataExtractor, deps);
 
   useEffect(() => {
     if (!open) {
@@ -33,11 +39,8 @@ export default function useContextMenu({ targetRef, selector, dataExtractor }) {
     const target = targetRef.current.closest(selector);
     if (!target) return;
 
-    setData(dataExtractor(target));
-
-    // dataExtractor가 무조건 한 번 사용하므로 deps에 추가하지 않아도 됨
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, selector, targetRef]);
+    setData(handleExtractor(target));
+  }, [handleExtractor, open, selector, targetRef]);
 
   const closeMenu = useCallback(() => {
     dispatch(setOpen(false));
