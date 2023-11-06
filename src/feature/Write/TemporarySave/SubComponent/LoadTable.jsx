@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   Grid,
   Switch,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -17,7 +18,12 @@ import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { Close, Delete, Done, Edit } from '@material-ui/icons';
 
 import Info from '../FeatureInfo';
-import { $setArticleList, setCurrentSlot, $toggleImportTitle } from '../slice';
+import {
+  $setArticleList,
+  setCurrentSlot,
+  $toggleImportTitle,
+  $toggleTemplateMode,
+} from '../slice';
 
 const columns = [
   { field: 'title', headerName: '제목', flex: 3 },
@@ -43,13 +49,10 @@ function CustomNoRowsOverlay() {
 function CustomToolbar({
   selection,
   editMode,
-  importTitle,
   onClickEdit,
   onClickRemove,
   onClickDone,
-  onClickImportTitle,
 }) {
-  const classes = useStyles();
   let toolButton;
 
   if (!editMode) {
@@ -83,13 +86,6 @@ function CustomToolbar({
       </Grid>
       <Grid item xs={4}>
         <Box display="flex" justifyContent="flex-end">
-          <FormControlLabel
-            control={
-              <Switch checked={importTitle} onChange={onClickImportTitle} />
-            }
-            label="제목 포함"
-            className={classes.label}
-          />
           {toolButton}
         </Box>
       </Grid>
@@ -99,9 +95,11 @@ function CustomToolbar({
 
 export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
-  const {
-    storage: { tempArticleList, importTitle },
-  } = useSelector((state) => state[Info.ID]);
+  const classes = useStyles();
+
+  const { tempArticleList, importTitle, templateMode } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
     id: index,
     title: value.title,
@@ -126,10 +124,10 @@ export default function LoadTable({ editor, open, onClose }) {
       if (importTitle) editor.title.value = title;
 
       setSelection([]);
-      dispatch(setCurrentSlot(date));
+      if (!templateMode) dispatch(setCurrentSlot(date));
       onClose();
     },
-    [dispatch, editor, importTitle, onClose],
+    [dispatch, editor, importTitle, templateMode, onClose],
   );
 
   const handlePageSize = useCallback((currentSize) => {
@@ -141,6 +139,10 @@ export default function LoadTable({ editor, open, onClose }) {
     setEditMode(false);
     onClose();
   }, [onClose]);
+
+  const handleTemplateMode = useCallback(() => {
+    dispatch($toggleTemplateMode());
+  }, [dispatch]);
 
   const handleImportTitle = useCallback(() => {
     dispatch($toggleImportTitle());
@@ -184,11 +186,9 @@ export default function LoadTable({ editor, open, onClose }) {
             toolbar: {
               selection,
               editMode,
-              importTitle,
               onClickEdit: handleEdit,
               onClickRemove: handleRemove,
               onClickDone: handleDone,
-              onClickImportTitle: handleImportTitle,
             },
           }}
           pageSize={pageSize}
@@ -199,6 +199,25 @@ export default function LoadTable({ editor, open, onClose }) {
         />
       </DialogContent>
       <DialogActions>
+        <Tooltip
+          placement="top"
+          title="게시물을 불러올 때 기존 저장 데이터와 연결되지 않습니다."
+        >
+          <FormControlLabel
+            control={
+              <Switch checked={templateMode} onChange={handleTemplateMode} />
+            }
+            label="템플릿 모드"
+            className={classes.label}
+          />
+        </Tooltip>
+        <FormControlLabel
+          control={
+            <Switch checked={importTitle} onChange={handleImportTitle} />
+          }
+          label="제목 포함"
+          className={classes.label}
+        />
         <Button variant="outlined" startIcon={<Close />} onClick={handleClose}>
           닫기
         </Button>
