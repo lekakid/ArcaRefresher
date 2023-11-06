@@ -1,20 +1,20 @@
 import React from 'react';
 
-const context = require.context(
+const featureContext = require.context(
   'feature/',
   true,
   /^feature\/(?!_).+\/Feature$/,
 );
+const featureWrapperChildren = featureContext
+  .keys()
+  .map((path) => ({ Component: featureContext(path).default, key: path }));
 
 function FeatureWrapper() {
   return (
     <>
-      {context
-        .keys()
-        .map((path) => ({ Component: context(path).default, key: path }))
-        .map(({ Component, key }) => (
-          <Component key={key} />
-        ))}
+      {featureWrapperChildren.map(({ Component, key }) => (
+        <Component key={key} />
+      ))}
     </>
   );
 }
