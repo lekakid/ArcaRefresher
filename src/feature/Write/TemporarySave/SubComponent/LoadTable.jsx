@@ -195,6 +195,7 @@ export default function LoadTable({ editor, open, onClose }) {
           rowsPerPageOptions={[10, 20, 30]}
           onPageSizeChange={handlePageSize}
           onRowClick={editMode ? null : handleLoad}
+          selectionModel={selection}
           onSelectionModelChange={handleSelection}
         />
       </DialogContent>
