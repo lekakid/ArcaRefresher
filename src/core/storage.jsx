@@ -110,6 +110,7 @@ export function createMonkeySyncMiddleware() {
     const prevState = store.getState();
     const result = next(action);
 
+    // action.type = '{featureName}/${StorageAction}'
     if (action.type.indexOf('/$') > -1 && !action.$actionId) {
       const currentState = store.getState();
 
