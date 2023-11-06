@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import {
   ARTICLE_LOADED,
@@ -42,6 +42,8 @@ const content = {
   article: undefined,
 };
 
+const eventListener = [];
+
 /**
  * 게시판 및 게시물 정보를 받아옵니다.
  * @returns {{
@@ -69,6 +71,11 @@ export function useContent() {
   const titleLoaded = useLoadChecker(CHANNEL_TITLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+  const [, setLastUpdated] = useState();
+
+  useLayoutEffect(() => {
+    eventListener.push(setLastUpdated);
+  }, []);
 
   useLayoutEffect(() => {
     if (!navLoaded) return;
@@ -86,6 +93,7 @@ export function useContent() {
       }
       const nick = decodeURI(token.pop());
       content.user = { ID: `${nick}${uniqueId}` };
+      eventListener.forEach((callback) => callback({}));
     } catch (error) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
@@ -100,6 +108,7 @@ export function useContent() {
         '.board-title .title',
       ).dataset;
       content.channel.name = name.replace(' 채널', '') || '';
+      eventListener.forEach((callback) => callback({}));
     } catch (error) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
@@ -127,6 +136,7 @@ export function useContent() {
       content.board = {
         category: Object.fromEntries(categoryEntries),
       };
+      eventListener.forEach((callback) => callback({}));
     } catch (error) {
       console.warn('[ContentInfo] 카테고리 목록을 얻어오지 못했습니다.');
     }
@@ -152,6 +162,7 @@ export function useContent() {
     const ID = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
 
     content.article = { ID, category, title, author, url };
+    eventListener.forEach((callback) => callback({}));
   }, [articleLoaded]);
 
   return content;
