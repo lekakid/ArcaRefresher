@@ -7,7 +7,6 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.ID,
-  group: 'board',
   Icon: Bookmark,
   label: Info.name,
   View,

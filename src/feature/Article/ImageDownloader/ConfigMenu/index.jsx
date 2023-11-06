@@ -5,7 +5,6 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'article',
   Icon: GetApp,
   label: Info.name,
   View,

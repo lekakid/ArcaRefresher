@@ -40,12 +40,22 @@ const contextMenuList = contextMenuContext
 
 const groupList = groupContext
   .keys()
-  .map((path) => groupContext(path).default)
+  .map((path) => ({
+    key: path.split('/')[1],
+    ...groupContext(path).default,
+  }))
   .sort((a, b) => a.order - b.order);
 
-const configMenuChildren = configMenuContext
-  .keys()
-  .map((path) => configMenuContext(path).default);
+const configMenuChildren = configMenuContext.keys().map((path) => {
+  const group = path.split('/')[1];
+  const menuInfo = configMenuContext(path).default;
+  if (group === 'NO_GROUP') return menuInfo;
+
+  return {
+    group: path.split('/')[1],
+    ...menuInfo,
+  };
+});
 
 function MenuWrapper() {
   return (
