@@ -9,22 +9,6 @@ const articleMenuContext = require.context(
   true,
   /^feature\/(?!_).+\/.+\/ArticleMenu$/,
 );
-const configMenuContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/ConfigMenu$/,
-);
-const groupContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/GroupInfo$/,
-);
-const contextMenuContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/ContextMenu$/,
-);
-
 const articleMenuChildren = articleMenuContext
   .keys()
   .map((path) => ({
@@ -33,11 +17,21 @@ const articleMenuChildren = articleMenuContext
   }))
   .map(({ Component, key }) => <Component key={key} />);
 
+const contextMenuContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/.+\/ContextMenu$/,
+);
 const contextMenuList = contextMenuContext
   .keys()
   .map((path) => contextMenuContext(path).default)
   .sort((a, b) => a.order - b.order);
 
+const groupContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/GroupInfo$/,
+);
 const groupList = groupContext
   .keys()
   .map((path) => ({
@@ -46,6 +40,11 @@ const groupList = groupContext
   }))
   .sort((a, b) => a.order - b.order);
 
+const configMenuContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/.+\/ConfigMenu$/,
+);
 const configMenuChildren = configMenuContext.keys().map((path) => {
   const group = path.split('/')[1];
   const menuInfo = configMenuContext(path).default;
