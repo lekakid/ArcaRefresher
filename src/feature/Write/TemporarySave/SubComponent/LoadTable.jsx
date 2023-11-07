@@ -208,7 +208,7 @@ export default function LoadTable({ editor, open, onClose }) {
             control={
               <Switch checked={templateMode} onChange={handleTemplateMode} />
             }
-            label="템플릿 모드"
+            label="사본으로 불러오기"
             className={classes.label}
           />
         </Tooltip>
