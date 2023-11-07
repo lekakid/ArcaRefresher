@@ -49,7 +49,7 @@ function ToastMuter() {
       // 이모티콘 뮤트 처리
       if (noti.mediaUrl) {
         const url = trimEmotURL(noti.mediaUrl);
-        if (emotFilter.url.indexOf(url) > -1) {
+        if (emotFilter.url[url]) {
           if (hideMutedMark) return undefined;
 
           delete noti.mediaUrl;
