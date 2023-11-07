@@ -58,8 +58,8 @@ export default function TemporarySave() {
     <Portal container={container}>
       <ButtonGroup variant="outlined">
         <AutoSaver editor={editor} />
-        <SaveButton editor={editor} saveAs />
         <SaveButton editor={editor} />
+        <SaveButton editor={editor} saveAs />
         <LoadButton editor={editor} />
       </ButtonGroup>
     </Portal>
