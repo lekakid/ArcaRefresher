@@ -14,7 +14,7 @@ const observer = new MutationObserver(() => {
 
 observer.observe(document.documentElement, { childList: true, subtree: true });
 
-export default function useLoadChecker(targetSelector) {
+export function useLoadChecker(targetSelector) {
   const [loaded, setLoaded] = useState(false);
 
   useLayoutEffect(() => {

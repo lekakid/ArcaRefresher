@@ -11,7 +11,7 @@ import {
   COMMENT_LOADED,
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH, useDispatchEvent } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 import toDocument from 'func/toDocument';
 
 const style = {

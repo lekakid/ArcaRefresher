@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { ARTICLE_LOADED, BOARD_LOADED } from 'core/selector';
 import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 import { useOpenState } from 'menu/ConfigMenu';
 
 import actionTable from './actionTable';

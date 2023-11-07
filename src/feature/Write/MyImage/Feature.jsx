@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 
 import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 import { WRITE_LOADED } from 'core/selector';
 
 import Info from './FeatureInfo';

@@ -11,7 +11,7 @@ import {
 import { convertImgToAlt } from 'func/emoji';
 import { getUserNick } from 'func/user';
 
-import useLoadChecker from './useLoadChecker';
+import { useLoadChecker } from './LoadChecker';
 
 const pathToken = window.location.pathname.split('/');
 pathToken.shift(); // ''

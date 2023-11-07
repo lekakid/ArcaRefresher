@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
 
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'core/selector';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { setOpen } from './slice';
 

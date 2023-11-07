@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { TOASTBOX } from 'core/selector';
 import { useArcaSocket } from 'hooks/WebSocket';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from '../FeatureInfo';
 import { trimEmotURL } from '../func';

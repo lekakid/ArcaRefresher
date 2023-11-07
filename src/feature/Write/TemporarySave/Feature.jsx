@@ -3,7 +3,7 @@ import { ButtonGroup, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { WRITE_LOADED } from 'core/selector';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 
