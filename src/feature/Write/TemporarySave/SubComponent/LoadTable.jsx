@@ -124,7 +124,7 @@ export default function LoadTable({ editor, open, onClose }) {
       if (importTitle) editor.title.value = title;
 
       setSelection([]);
-      if (!templateMode) dispatch(setCurrentSlot(date));
+      dispatch(setCurrentSlot(templateMode ? null : date));
       onClose();
     },
     [dispatch, editor, importTitle, templateMode, onClose],
