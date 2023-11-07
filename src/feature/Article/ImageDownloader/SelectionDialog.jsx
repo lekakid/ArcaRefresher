@@ -89,33 +89,60 @@ function SelectionDialog({ classes }) {
       .filter((d) => !!d);
 
     let totalSize = 0;
-    const availableImages = await selectedImages.reduce(
-      async (promise, info) => {
-        try {
-          const response = await request(info.orig, {
-            method: 'HEAD',
-          });
-          if (response.status !== 200) throw new Error();
-          info.orig = response.finalUrl;
+    let availableImages;
+    switch (downloadMethod) {
+      case 'fetch': {
+        availableImages = await selectedImages.reduce(async (promise, info) => {
+          try {
+            const response = await fetch(info.orig, {
+              method: 'HEAD',
+            });
+            if (!response.ok) throw new Error();
 
-          const size =
-            Number(
-              response.responseHeaders
-                .split('content-length: ')[1]
-                .split('\r')[0],
-            ) || 0;
+            const size = Number(response.headers.get('content-length'));
+            totalSize += size;
+            const acc = await promise;
 
-          totalSize += size;
-          const acc = await promise;
-          acc.push(info);
-          return acc;
-        } catch (error) {
-          console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
-          return promise;
-        }
-      },
-      [],
-    );
+            acc.push(info);
+            return acc;
+          } catch (error) {
+            console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
+            return promise;
+          }
+        }, []);
+        break;
+      }
+      case 'xhr': {
+        availableImages = await selectedImages.reduce(async (promise, info) => {
+          try {
+            const response = await request(info.orig, {
+              method: 'HEAD',
+            });
+            if (response.status !== 200) throw new Error();
+
+            const size =
+              Number(
+                response.responseHeaders
+                  .split('content-length: ')[1]
+                  .split('\r')[0],
+              ) || 0;
+            totalSize += size;
+            const acc = await promise;
+
+            acc.push(info);
+            return acc;
+          } catch (error) {
+            console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
+            return promise;
+          }
+        }, []);
+        break;
+      }
+      default: {
+        console.warn('[ImageDownloader] 다운로드 방식 설정값이 이상합니다.');
+        return;
+      }
+    }
 
     const iterator = availableImages.values();
     let count = 1;

@@ -76,17 +76,9 @@ function ContextMenu({ targetRef }) {
         closeMenu();
         switch (downloadMethod) {
           case 'fetch': {
-            const response = await request(orig, {
-              method: 'HEAD',
-            });
-            const redirectedURL = response.finalUrl;
-            const size =
-              Number(
-                response.responseHeaders
-                  .split('content-length: ')[1]
-                  .split('\r')[0],
-              ) || 0;
-            const stream = await fetch(redirectedURL).then((r) => r.body);
+            const response = await fetch(orig);
+            const size = Number(response.headers.get('content-length'));
+            const stream = response.body;
             const name = format(fileName, {
               values: contentInfo,
               fileName: uploadName,
@@ -125,11 +117,10 @@ function ContextMenu({ targetRef }) {
             setSnack();
             break;
           }
-          default: {
+          default:
             throw new Error(
               '[ImageDownload] 확인할 수 없는 다운로드 방식 사용',
             );
-          }
         }
       } catch (error) {
         console.warn('다운로드 실패', orig, error);
