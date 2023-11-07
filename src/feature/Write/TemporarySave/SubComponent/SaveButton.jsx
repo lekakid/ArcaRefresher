@@ -6,7 +6,11 @@ import { Add, Save } from '@material-ui/icons';
 import { $saveArticle, setCurrentSlot } from '../slice';
 import Info from '../FeatureInfo';
 
-export default function SaveButton({ editor, saveAs = false, ...btnProps }) {
+export default function SaveButton({
+  editor,
+  saveAs = false,
+  ...btnPropsFromGroup
+}) {
   const dispatch = useDispatch();
   const { currentSlot } = useSelector((state) => state[Info.ID]);
   const [snack, setSnack] = useState(false);
@@ -29,17 +33,19 @@ export default function SaveButton({ editor, saveAs = false, ...btnProps }) {
     setSnack(false);
   }, []);
 
-  const icon = !saveAs ? <Save /> : <Add />;
-  const text = !saveAs ? '저장' : '새로 저장';
+  const startIcon = !saveAs ? <Save /> : <Add />;
+  const text = !saveAs ? '저장' : '사본으로 저장';
+  const btnProps = {
+    ...btnPropsFromGroup,
+    startIcon,
+    disabled: saveAs && !currentSlot,
+    onClick: handleClick,
+    children: text,
+  };
 
   return (
     <>
-      {React.cloneElement(
-        <Button startIcon={icon} onClick={handleClick}>
-          {text}
-        </Button>,
-        btnProps,
-      )}
+      {React.cloneElement(<Button />, btnProps)}
       <Snackbar
         open={snack}
         autoHideDuration={3000}

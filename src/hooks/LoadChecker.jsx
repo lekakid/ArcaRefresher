@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 const loadTable = {};
-// console.log(loadTable);
 const observer = new MutationObserver(() => {
   Object.keys(loadTable).forEach((selector) => {
     if (loadTable[selector].loaded) return;
@@ -15,10 +14,10 @@ const observer = new MutationObserver(() => {
 
 observer.observe(document.documentElement, { childList: true, subtree: true });
 
-export default function useLoadChecker(targetSelector) {
+export function useLoadChecker(targetSelector) {
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (loadTable[targetSelector]?.loaded) {
       setLoaded(true);
       return;

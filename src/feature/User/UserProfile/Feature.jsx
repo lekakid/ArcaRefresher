@@ -8,7 +8,7 @@ import {
   useEvent,
 } from 'hooks/Event';
 import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserNick } from 'func/user';
 
 import { withStyles } from '@material-ui/styles';

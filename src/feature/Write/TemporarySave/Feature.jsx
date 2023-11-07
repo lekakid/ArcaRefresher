@@ -3,7 +3,7 @@ import { ButtonGroup, Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { WRITE_LOADED } from 'core/selector';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 
@@ -58,8 +58,8 @@ export default function TemporarySave() {
     <Portal container={container}>
       <ButtonGroup variant="outlined">
         <AutoSaver editor={editor} />
-        <SaveButton editor={editor} saveAs />
         <SaveButton editor={editor} />
+        <SaveButton editor={editor} saveAs />
         <LoadButton editor={editor} />
       </ButtonGroup>
     </Portal>

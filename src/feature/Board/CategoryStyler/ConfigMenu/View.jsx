@@ -44,7 +44,14 @@ const View = React.forwardRef(({ classes }, ref) => {
           <ListItem>
             <Paper className={classes.root} variant="outlined">
               <Grid container>
-                {board.category &&
+                {!board?.category && (
+                  <Grid item xs={12}>
+                    <Typography align="center">
+                      카테고리를 확인할 수 없습니다.
+                    </Typography>
+                  </Grid>
+                )}
+                {board?.category &&
                   Object.entries(board.category).map(([id, label], index) => (
                     <CategoryRow
                       key={id}

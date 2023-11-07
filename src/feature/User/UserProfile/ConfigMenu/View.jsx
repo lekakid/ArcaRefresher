@@ -10,13 +10,18 @@ import {
   $setOpenType,
   $toggleIndicateMyComment,
   $toggleIdVisible,
+  $toggleCheckSpamAccount,
 } from '../slice';
 import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
-  const { contextRange, openType, indicateMyComment, showId } = useSelector(
-    (state) => state[Info.ID].storage,
-  );
+  const {
+    contextRange,
+    openType,
+    indicateMyComment,
+    showId,
+    checkSpamAccount,
+  } = useSelector((state) => state[Info.ID].storage);
 
   return (
     <Box ref={ref}>
@@ -50,10 +55,17 @@ const View = React.forwardRef((_props, ref) => {
             action={$toggleIndicateMyComment}
           />
           <SwitchRow
+            divider
             primary="반고닉 이용자 고유아이디 표시"
             secondary="로그인 상태에서 정상동작합니다"
             value={showId}
             action={$toggleIdVisible}
+          />
+          <SwitchRow
+            primary="글, 댓글 갯수 체크"
+            secondary="우클릭 메뉴에 글, 댓글 갯수를 추가합니다"
+            value={checkSpamAccount}
+            action={$toggleCheckSpamAccount}
           />
         </List>
       </Paper>

@@ -4,6 +4,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   tempArticleList: {},
+  templateMode: false,
   importTitle: true,
   autoSaveTime: 60,
 };
@@ -26,6 +27,9 @@ export const slice = createSlice({
     $setArticleList(state, action) {
       state.storage.tempArticleList = action.payload;
     },
+    $toggleTemplateMode(state) {
+      state.storage.templateMode = !state.storage.templateMode;
+    },
     $toggleImportTitle(state) {
       state.storage.importTitle = !state.storage.importTitle;
     },
@@ -44,6 +48,7 @@ export const slice = createSlice({
 export const {
   $saveArticle,
   $setArticleList,
+  $toggleTemplateMode,
   $toggleImportTitle,
   $setAutoTime,
   setCurrentSlot,

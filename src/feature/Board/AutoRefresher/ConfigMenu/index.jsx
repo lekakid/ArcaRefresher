@@ -5,7 +5,6 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.ID,
-  group: 'board',
   Icon: Refresh,
   label: Info.name,
   View,

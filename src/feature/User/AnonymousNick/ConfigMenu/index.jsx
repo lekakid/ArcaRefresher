@@ -6,7 +6,6 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.ID,
-  group: 'user',
   Icon: PeopleOutline,
   label: Info.name,
   View,

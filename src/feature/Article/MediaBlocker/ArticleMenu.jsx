@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import { ImageSearch } from '@material-ui/icons';
 
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 

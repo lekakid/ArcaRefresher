@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { GetApp } from '@material-ui/icons';
 
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import SelectionDialog from './SelectionDialog';
 import Info from './FeatureInfo';

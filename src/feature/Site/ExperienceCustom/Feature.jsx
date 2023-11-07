@@ -31,7 +31,7 @@ import {
   EVENT_COMMENT_REFRESH,
   useEvent,
 } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 import CommentButton from './CommentButton';

@@ -244,21 +244,30 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText>카테고리 설정</ListItemText>
           </ListItem>
           <ListItem>
-            <Paper variant="outlined">
-              <Grid container>
-                {board.category &&
-                  Object.entries(board.category).map(([id, label], index) => (
-                    <CategoryRow
-                      key={id}
-                      divider={index !== 0}
-                      id={id}
-                      label={label}
-                      initValue={category?.[id]}
-                      onChange={handleCategory}
-                    />
-                  ))}
-              </Grid>
-            </Paper>
+            <Box clone width="100%">
+              <Paper variant="outlined">
+                <Grid container>
+                  {!board?.category && (
+                    <Grid item xs={12}>
+                      <Typography align="center">
+                        카테고리를 확인할 수 없습니다.
+                      </Typography>
+                    </Grid>
+                  )}
+                  {board?.category &&
+                    Object.entries(board.category).map(([id, label], index) => (
+                      <CategoryRow
+                        key={id}
+                        divider={index !== 0}
+                        id={id}
+                        label={label}
+                        initValue={category?.[id]}
+                        onChange={handleCategory}
+                      />
+                    ))}
+                </Grid>
+              </Paper>
+            </Box>
           </ListItem>
         </List>
       </Paper>

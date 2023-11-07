@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { getUserInfo, getUserKey } from 'func/user';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 import Label from './Label';

@@ -1,1 +1,1 @@
-export { default as useLoadChecker } from './useLoadChecker';
+export { default as useLoadChecker } from './LoadChecker';

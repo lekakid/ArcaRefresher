@@ -9,7 +9,7 @@ import {
   EVENT_COMMENT_REFRESH,
   useEvent,
 } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { getUserID, getUserKey } from 'func/user';
 

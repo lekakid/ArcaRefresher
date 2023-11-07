@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useDispatchEvent } from 'hooks/Event';
-import { useLoadChecker } from 'hooks';
+import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
