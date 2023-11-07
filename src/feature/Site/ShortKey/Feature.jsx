@@ -42,13 +42,6 @@ export default function ShortKey() {
         .map(({ key, callback }) => [key, callback]),
     );
 
-    // 아카 단축키가 keydown 이벤트를 사용함
-    const blocker = (e) => {
-      if (e.code === 'Enter') return; // 댓글 바로 쓰기 기능
-      if (e.code.indexOf('Digit') > -1) return; // 채널 바로가기
-
-      e.stopPropagation();
-    };
     const eventListener = (e) => {
       // 검색창 등 텍스트 입력칸
       if (e.target.matches('input[type="text"], textarea, [contenteditable]'))
@@ -64,12 +57,10 @@ export default function ShortKey() {
       keyMap[e.code]?.(e, content);
     };
 
-    document.addEventListener('keydown', blocker, true);
-    document.addEventListener('keyup', eventListener, true);
+    document.addEventListener('keydown', eventListener, true);
 
     return () => {
-      document.removeEventListener('keydown', blocker, true);
-      document.removeEventListener('keyup', eventListener, true);
+      document.removeEventListener('keydown', eventListener, true);
     };
   }, [articleLoaded, boardLoaded, enabled, configOpen, keyTable, content]);
 
