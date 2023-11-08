@@ -46,6 +46,34 @@ export default [
     },
   },
   {
+    action: 'prevChannel',
+    label: '이전 구독 채널',
+    active: 'article|board',
+    defaultKey: 'KeyZ',
+    callback(_e, { content }) {
+      const { subList } = unsafeWindow.LiveConfig;
+      const currentIndex = subList.indexOf(content.channel.ID);
+      if (currentIndex < 0) return;
+
+      const prevIndex = (subList.length + currentIndex - 1) % subList.length;
+      window.location.href = `https://arca.live/b/${subList[prevIndex]}`;
+    },
+  },
+  {
+    action: 'nextChannel',
+    label: '다음 구독 채널',
+    active: 'article|board',
+    defaultKey: 'KeyX',
+    callback(_e, { content }) {
+      const { subList } = unsafeWindow.LiveConfig;
+      const currentIndex = subList.indexOf(content.channel.ID);
+      if (currentIndex < 0) return;
+
+      const nextIndex = (currentIndex + 1) % subList.length;
+      window.location.href = `https://arca.live/b/${subList[nextIndex]}`;
+    },
+  },
+  {
     action: 'prev',
     label: '이전 글/게시판 이전 페이지',
     active: 'article|board',
