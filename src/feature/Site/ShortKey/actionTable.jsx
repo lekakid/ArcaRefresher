@@ -122,8 +122,9 @@ export default [
   {
     action: 'comment',
     active: 'article',
-    callback() {
+    callback(e) {
       document.querySelector('#comment textarea').focus();
+      e.preventDefault();
     },
   },
   {
