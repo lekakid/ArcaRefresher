@@ -20,24 +20,22 @@ export default function ShortKey() {
     if (!enabled) return undefined;
     if (configOpen) return undefined;
 
-    const activeActionMap = Object.fromEntries(
-      actionTable.map(({ action, active, callback }) => [
-        action,
-        { active, callback },
-      ]),
-    );
+    const activeActionTable = actionTable.filter(({ active }) => {
+      if (content.article) return active.indexOf('article') > -1;
+      if (content.board) return active.indexOf('board') > -1;
+      return false;
+    });
     const keyMap = Object.fromEntries(
-      keyTable
-        .map(({ action, key }) => {
-          const { active, callback } = activeActionMap[action];
-          return { key, active, callback };
-        })
-        .filter(({ active }) => {
-          if (content.article) return active.indexOf('article') > -1;
-          if (content.board) return active.indexOf('board') > -1;
-          return false;
-        })
-        .map(({ key, callback }) => [key, callback]),
+      keyTable.map(({ action, key }) => [action, key]),
+    );
+
+    const activeActionMap = Object.fromEntries(
+      activeActionTable
+        .map(({ action, defaultKey, callback }) => [
+          keyMap[action] || defaultKey,
+          callback,
+        ])
+        .filter(([key]) => !!key),
     );
 
     const eventListener = (e) => {
@@ -52,7 +50,7 @@ export default function ShortKey() {
       if (keyFilter.test(e.code)) return;
 
       e.stopPropagation();
-      keyMap[e.code]?.(e, { content, setSnack });
+      activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
     document.addEventListener('keydown', eventListener, true);

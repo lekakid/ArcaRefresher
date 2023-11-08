@@ -20,27 +20,16 @@ import { Refresh } from '@material-ui/icons';
 import { SwitchRow } from 'component/config';
 import { KeyIcon } from 'component';
 
+import { createSelector } from '@reduxjs/toolkit';
 import {
   $resetKeyMap,
   $setKey,
   $toggleEnabled,
   setWaitKeyInput,
 } from '../slice';
+import actionTable from '../actionTable';
 import keyFilter from '../keyFilter';
 import Info from '../FeatureInfo';
-
-const ACTION_LABEL = {
-  write: '글 작성',
-  refresh: '새로고침',
-  moveTop: '가장 위로 스크롤',
-  prev: '이전 글/게시판 이전 페이지',
-  next: '다음 글/게시판 다음 페이지',
-  goBoard: '게시물 목록으로 이동',
-  goBest: '개념글 페이지 토글',
-  comment: '댓글 입력창으로 이동',
-  recommend: '게시물 추천',
-  scrap: '게시물 스크랩',
-};
 
 function KeyRow({ divider, inputKey, children, onClick }) {
   return (
@@ -73,9 +62,16 @@ function formatKey(keyStr) {
     .replace('DISABLED', '비활성화');
 }
 
+const keyMapSelector = createSelector(
+  (state) => state[Info.ID].storage.keyTable,
+  (keyTable) =>
+    Object.fromEntries(keyTable.map(({ action, key }) => [action, key])),
+);
+
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled, keyTable } = useSelector((state) => state[Info.ID].storage);
+  const { enabled } = useSelector((state) => state[Info.ID].storage);
+  const keyMap = useSelector(keyMapSelector);
   const { waitKeyInput } = useSelector((state) => state[Info.ID]);
   const [error, setError] = useState(undefined);
 
@@ -142,14 +138,16 @@ const View = React.forwardRef((_props, ref) => {
             <Box clone width="100%">
               <Paper variant="outlined">
                 <List disablePadding>
-                  {keyTable.map(({ action, key }, index) => (
+                  {actionTable.map(({ action, label, defaultKey }, index) => (
                     <KeyRow
                       key={action}
-                      divider={index !== keyTable.length - 1}
-                      inputKey={formatKey(key).toUpperCase()}
+                      divider={index !== actionTable.length - 1}
+                      inputKey={formatKey(
+                        keyMap[action] || defaultKey,
+                      ).toUpperCase()}
                       onClick={handleClick(action)}
                     >
-                      {ACTION_LABEL[action]}
+                      {label}
                     </KeyRow>
                   ))}
                 </List>

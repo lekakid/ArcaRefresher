@@ -20,28 +20,36 @@ function stringifyQuery(query) {
 export default [
   {
     action: 'write',
+    label: '글 작성',
     active: 'article|board',
+    defaultKey: 'KeyW',
     callback() {
       document.querySelector('.btn-arca-article-write')?.click();
     },
   },
   {
     action: 'refresh',
+    label: '새로고침',
     active: 'article|board',
+    defaultKey: 'KeyR',
     callback() {
       window.location.reload();
     },
   },
   {
     action: 'moveTop',
+    label: '가장 위로 스크롤',
     active: 'article|board',
+    defaultKey: 'KeyT',
     callback() {
       window.scrollTo(0, 0);
     },
   },
   {
     action: 'prev',
+    label: '이전 글/게시판 이전 페이지',
     active: 'article|board',
+    defaultKey: 'KeyA',
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
@@ -64,7 +72,9 @@ export default [
   },
   {
     action: 'next',
+    label: '다음 글/게시판 다음 페이지',
     active: 'article|board',
+    defaultKey: 'KeyS',
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
@@ -84,7 +94,9 @@ export default [
   },
   {
     action: 'goBoard',
+    label: '게시물 목록으로 이동',
     active: 'article',
+    defaultKey: 'KeyQ',
     callback() {
       const { host } = window.location;
       const token = window.location.pathname.split('/');
@@ -105,7 +117,9 @@ export default [
   },
   {
     action: 'goBest',
+    label: '개념글 페이지 토글',
     active: 'board',
+    defaultKey: 'KeyE',
     callback() {
       const { host } = window.location;
       const token = window.location.pathname.split('/');
@@ -121,7 +135,9 @@ export default [
   },
   {
     action: 'comment',
+    label: '댓글 입력창으로 이동',
     active: 'article',
+    defaultKey: 'KeyC',
     callback(e) {
       document.querySelector('#comment textarea').focus();
       e.preventDefault();
@@ -129,14 +145,18 @@ export default [
   },
   {
     action: 'recommend',
+    label: '게시물 추천',
     active: 'article',
+    defaultKey: 'KeyF',
     callback() {
       document.querySelector('#rateUp').click();
     },
   },
   {
     action: 'scrap',
+    label: '게시물 스크랩',
     active: 'article',
+    defaultKey: 'KeyV',
     callback(_e, { content, setSnack }) {
       const token = window.location.pathname.split('/');
       const articleId = token.pop();

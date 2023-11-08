@@ -5,18 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   enabled: true,
-  keyTable: [
-    { action: 'write', key: 'KeyW' },
-    { action: 'refresh', key: 'KeyR' },
-    { action: 'moveTop', key: 'KeyT' },
-    { action: 'prev', key: 'KeyA' },
-    { action: 'next', key: 'KeyS' },
-    { action: 'goBoard', key: 'KeyQ' },
-    { action: 'goBest', key: 'KeyE' },
-    { action: 'comment', key: 'KeyC' },
-    { action: 'recommend', key: 'KeyF' },
-    { action: 'scrap', key: 'KeyV' },
-  ],
+  keyTable: [],
 };
 
 const initialState = {
@@ -33,12 +22,17 @@ export const slice = createSlice({
     },
     $setKey(state, action) {
       const { action: updatedAction, key: updatedKey } = action.payload;
-      state.storage.keyTable = state.storage.keyTable.map((t) =>
-        t.action === updatedAction ? { action: t.action, key: updatedKey } : t,
+      const exist = state.storage.keyTable.findIndex(
+        (t) => t.action === updatedAction,
       );
+      if (exist > -1) {
+        state.storage.keyTable[exist].key = updatedKey;
+        return;
+      }
+      state.storage.keyTable.push(action.payload);
     },
     $resetKeyMap(state) {
-      state.storage.keyTable = defaultStorage.keyTable;
+      state.storage.keyTable = [];
     },
     setWaitKeyInput(state, action) {
       state.waitKeyInput = action.payload;
