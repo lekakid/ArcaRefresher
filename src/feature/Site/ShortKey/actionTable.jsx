@@ -136,8 +136,27 @@ export default [
   {
     action: 'scrap',
     active: 'article',
-    callback() {
-      document.querySelector('button.scrap-btn').click();
+    callback(_e, { content, setSnack }) {
+      const token = window.location.pathname.split('/');
+      const articleId = token.pop();
+      fetch(
+        `https://arca.live/api/scrap?slug=${content.channel.ID}&articleId=${articleId}`,
+      )
+        .then((r) => r.json())
+        .then((json) => {
+          if (!json.result) {
+            setSnack({ msg: '스크랩 실패 (서버 오류?)', time: 3000 });
+            return;
+          }
+
+          setSnack({
+            msg: `스크랩 ${json.isScrap ? '되었습니다' : '취소되었습니다'}.`,
+            time: 3000,
+          });
+
+          document.querySelector('#scrapForm .result').textContent =
+            json.isScrap ? '스크랩 됨' : '스크랩';
+        });
     },
   },
 ];

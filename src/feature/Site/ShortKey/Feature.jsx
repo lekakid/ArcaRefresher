@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { ARTICLE_LOADED, BOARD_LOADED } from 'core/selector';
-import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks/LoadChecker';
 import { useOpenState } from 'menu/ConfigMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 
+import { useContent } from 'hooks/Content';
 import actionTable from './actionTable';
 import keyFilter from './keyFilter';
 import Info from './FeatureInfo';
 
 export default function ShortKey() {
-  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const boardLoaded = useLoadChecker(BOARD_LOADED);
+  const setSnack = useSnackbarAlert();
   const content = useContent();
 
   const configOpen = useOpenState();
@@ -35,8 +33,8 @@ export default function ShortKey() {
           return { key, active, callback };
         })
         .filter(({ active }) => {
-          if (articleLoaded) return active.indexOf('article') > -1;
-          if (boardLoaded) return active.indexOf('board') > -1;
+          if (content.article) return active.indexOf('article') > -1;
+          if (content.board) return active.indexOf('board') > -1;
           return false;
         })
         .map(({ key, callback }) => [key, callback]),
@@ -54,7 +52,7 @@ export default function ShortKey() {
       if (keyFilter.test(e.code)) return;
 
       e.stopPropagation();
-      keyMap[e.code]?.(e, content);
+      keyMap[e.code]?.(e, { content, setSnack });
     };
 
     document.addEventListener('keydown', eventListener, true);
@@ -62,7 +60,15 @@ export default function ShortKey() {
     return () => {
       document.removeEventListener('keydown', eventListener, true);
     };
-  }, [articleLoaded, boardLoaded, enabled, configOpen, keyTable, content]);
+  }, [
+    content,
+    content.article,
+    content.board,
+    enabled,
+    configOpen,
+    keyTable,
+    setSnack,
+  ]);
 
   return null;
 }
