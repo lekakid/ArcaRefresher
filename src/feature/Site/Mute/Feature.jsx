@@ -1,10 +1,17 @@
 import React from 'react';
-import { BoardMuter, ArticleMuter, CommentMuter, ToastMuter } from './Muter';
+import {
+  BoardMuter,
+  SidebarMuter,
+  ArticleMuter,
+  CommentMuter,
+  ToastMuter,
+} from './Muter';
 
 export default function Mute() {
   return (
     <>
       <BoardMuter />
+      <SidebarMuter />
       <ArticleMuter />
       <CommentMuter />
       <ToastMuter />

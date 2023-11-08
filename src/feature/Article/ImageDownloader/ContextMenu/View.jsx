@@ -5,7 +5,8 @@ import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 
 import { request } from 'func/http';
@@ -18,7 +19,7 @@ function ContextMenu({ targetRef }) {
   );
   const contentInfo = useContent();
 
-  const setSnack = useContextSnack();
+  const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,

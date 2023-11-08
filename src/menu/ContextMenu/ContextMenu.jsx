@@ -4,7 +4,6 @@ import { List, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import Info from './FeatureInfo';
-import ContextSnack from './ContextSnack';
 import { setOpen } from './slice';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,11 +26,8 @@ function getKeyCombine(event) {
 
 export default function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
-  const {
-    storage: { interactionType },
-    open,
-    triggerList,
-  } = useSelector((state) => state[Info.ID]);
+  const { interactionType } = useSelector((state) => state[Info.ID].storage);
+  const { open, triggerList } = useSelector((state) => state[Info.ID]);
   const gestureTrack = useRef({ right: false, count: 0 });
   const targetRef = useRef(undefined);
   const [mousePos, setMousePos] = useState([]);
@@ -89,29 +85,26 @@ export default function ContextMenu({ menuList }) {
   const [left = 0, top = 0] = mousePos;
 
   return (
-    <>
-      <Menu
-        keepMounted
-        disableScrollLock
-        disableRestoreFocus
-        anchorReference="anchorPosition"
-        anchorPosition={{ top, left }}
-        MenuListProps={{ disablePadding: true }}
-        TransitionProps={{ exit: false }}
-        classes={{ list: classes.list }}
-        open={open}
-        onClose={handleClose}
-      >
-        <List>
-          <MenuItem dense disabled>
-            Arca Refresher
-          </MenuItem>
-        </List>
-        {menuList.map(({ key, View }) => (
-          <View key={key} targetRef={targetRef} />
-        ))}
-      </Menu>
-      <ContextSnack />
-    </>
+    <Menu
+      keepMounted
+      disableScrollLock
+      disableRestoreFocus
+      anchorReference="anchorPosition"
+      anchorPosition={{ top, left }}
+      MenuListProps={{ disablePadding: true }}
+      TransitionProps={{ exit: false }}
+      classes={{ list: classes.list }}
+      open={open}
+      onClose={handleClose}
+    >
+      <List>
+        <MenuItem dense disabled>
+          Arca Refresher
+        </MenuItem>
+      </List>
+      {menuList.map(({ key, View }) => (
+        <View key={key} targetRef={targetRef} />
+      ))}
+    </Menu>
   );
 }

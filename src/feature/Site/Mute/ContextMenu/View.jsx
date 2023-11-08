@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Block, Redo } from '@material-ui/icons';
 
-import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { getUserInfo } from 'func/user';
 
 import {
@@ -36,7 +37,7 @@ function View({ targetRef }) {
       contextSelector = USER_INFO;
   }
 
-  const setSnack = useContextSnack();
+  const setSnack = useSnackbarAlert();
   const [emotData, closeMenu] = useContextMenu({
     targetRef,
     selector:

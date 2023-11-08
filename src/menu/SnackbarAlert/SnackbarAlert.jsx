@@ -5,7 +5,7 @@ import { Snackbar } from '@material-ui/core';
 import { shiftSnack } from './slice';
 import Info from './FeatureInfo';
 
-export default function ContextSnack() {
+export default function SnackbarAlert() {
   const dispatch = useDispatch();
   const { snackBag } = useSelector((state) => state[Info.ID]);
   const [open, setOpen] = useState(false);

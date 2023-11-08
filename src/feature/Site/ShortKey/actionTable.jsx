@@ -20,28 +20,64 @@ function stringifyQuery(query) {
 export default [
   {
     action: 'write',
+    label: '글 작성',
     active: 'article|board',
+    defaultKey: 'KeyW',
     callback() {
       document.querySelector('.btn-arca-article-write')?.click();
     },
   },
   {
     action: 'refresh',
+    label: '새로고침',
     active: 'article|board',
+    defaultKey: 'KeyR',
     callback() {
       window.location.reload();
     },
   },
   {
     action: 'moveTop',
+    label: '가장 위로 스크롤',
     active: 'article|board',
+    defaultKey: 'KeyT',
     callback() {
       window.scrollTo(0, 0);
     },
   },
   {
-    action: 'prev',
+    action: 'prevChannel',
+    label: '이전 구독 채널',
     active: 'article|board',
+    defaultKey: 'KeyZ',
+    callback(_e, { content }) {
+      const { subList } = unsafeWindow.LiveConfig;
+      const currentIndex = subList.indexOf(content.channel.ID);
+      if (currentIndex < 0) return;
+
+      const prevIndex = (subList.length + currentIndex - 1) % subList.length;
+      window.location.href = `https://arca.live/b/${subList[prevIndex]}`;
+    },
+  },
+  {
+    action: 'nextChannel',
+    label: '다음 구독 채널',
+    active: 'article|board',
+    defaultKey: 'KeyX',
+    callback(_e, { content }) {
+      const { subList } = unsafeWindow.LiveConfig;
+      const currentIndex = subList.indexOf(content.channel.ID);
+      if (currentIndex < 0) return;
+
+      const nextIndex = (currentIndex + 1) % subList.length;
+      window.location.href = `https://arca.live/b/${subList[nextIndex]}`;
+    },
+  },
+  {
+    action: 'prev',
+    label: '이전 글/게시판 이전 페이지',
+    active: 'article|board',
+    defaultKey: 'KeyA',
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
@@ -64,7 +100,9 @@ export default [
   },
   {
     action: 'next',
+    label: '다음 글/게시판 다음 페이지',
     active: 'article|board',
+    defaultKey: 'KeyS',
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
@@ -84,7 +122,9 @@ export default [
   },
   {
     action: 'goBoard',
+    label: '게시물 목록으로 이동',
     active: 'article',
+    defaultKey: 'KeyQ',
     callback() {
       const { host } = window.location;
       const token = window.location.pathname.split('/');
@@ -105,7 +145,9 @@ export default [
   },
   {
     action: 'goBest',
+    label: '개념글 페이지 토글',
     active: 'board',
+    defaultKey: 'KeyE',
     callback() {
       const { host } = window.location;
       const token = window.location.pathname.split('/');
@@ -121,23 +163,49 @@ export default [
   },
   {
     action: 'comment',
+    label: '댓글 입력창으로 이동',
     active: 'article',
-    callback() {
+    defaultKey: 'KeyC',
+    callback(e) {
       document.querySelector('#comment textarea').focus();
+      e.preventDefault();
     },
   },
   {
     action: 'recommend',
+    label: '게시물 추천',
     active: 'article',
+    defaultKey: 'KeyF',
     callback() {
       document.querySelector('#rateUp').click();
     },
   },
   {
     action: 'scrap',
+    label: '게시물 스크랩',
     active: 'article',
-    callback() {
-      document.querySelector('button.scrap-btn').click();
+    defaultKey: 'KeyV',
+    callback(_e, { content, setSnack }) {
+      const token = window.location.pathname.split('/');
+      const articleId = token.pop();
+      fetch(
+        `https://arca.live/api/scrap?slug=${content.channel.ID}&articleId=${articleId}`,
+      )
+        .then((r) => r.json())
+        .then((json) => {
+          if (!json.result) {
+            setSnack({ msg: '스크랩 실패 (서버 오류?)', time: 3000 });
+            return;
+          }
+
+          setSnack({
+            msg: `스크랩 ${json.isScrap ? '되었습니다' : '취소되었습니다'}.`,
+            time: 3000,
+          });
+
+          document.querySelector('#scrapForm .result').textContent =
+            json.isScrap ? '스크랩 됨' : '스크랩';
+        });
     },
   },
 ];

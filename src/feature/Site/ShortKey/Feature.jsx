@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { ARTICLE_LOADED, BOARD_LOADED } from 'core/selector';
-import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks/LoadChecker';
 import { useOpenState } from 'menu/ConfigMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 
+import { useContent } from 'hooks/Content';
 import actionTable from './actionTable';
 import keyFilter from './keyFilter';
 import Info from './FeatureInfo';
 
 export default function ShortKey() {
-  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const boardLoaded = useLoadChecker(BOARD_LOADED);
+  const setSnack = useSnackbarAlert();
   const content = useContent();
 
   const configOpen = useOpenState();
@@ -22,33 +20,24 @@ export default function ShortKey() {
     if (!enabled) return undefined;
     if (configOpen) return undefined;
 
-    const activeActionMap = Object.fromEntries(
-      actionTable.map(({ action, active, callback }) => [
-        action,
-        { active, callback },
-      ]),
-    );
+    const activeActionTable = actionTable.filter(({ active }) => {
+      if (content.article) return active.indexOf('article') > -1;
+      if (content.board) return active.indexOf('board') > -1;
+      return false;
+    });
     const keyMap = Object.fromEntries(
-      keyTable
-        .map(({ action, key }) => {
-          const { active, callback } = activeActionMap[action];
-          return { key, active, callback };
-        })
-        .filter(({ active }) => {
-          if (articleLoaded) return active.indexOf('article') > -1;
-          if (boardLoaded) return active.indexOf('board') > -1;
-          return false;
-        })
-        .map(({ key, callback }) => [key, callback]),
+      keyTable.map(({ action, key }) => [action, key]),
     );
 
-    // 아카 단축키가 keydown 이벤트를 사용함
-    const blocker = (e) => {
-      if (e.code === 'Enter') return; // 댓글 바로 쓰기 기능
-      if (e.code.indexOf('Digit') > -1) return; // 채널 바로가기
+    const activeActionMap = Object.fromEntries(
+      activeActionTable
+        .map(({ action, defaultKey, callback }) => [
+          keyMap[action] || defaultKey,
+          callback,
+        ])
+        .filter(([key]) => !!key),
+    );
 
-      e.stopPropagation();
-    };
     const eventListener = (e) => {
       // 검색창 등 텍스트 입력칸
       if (e.target.matches('input[type="text"], textarea, [contenteditable]'))
@@ -61,17 +50,23 @@ export default function ShortKey() {
       if (keyFilter.test(e.code)) return;
 
       e.stopPropagation();
-      keyMap[e.code]?.(e, content);
+      activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
-    document.addEventListener('keydown', blocker, true);
-    document.addEventListener('keyup', eventListener, true);
+    document.addEventListener('keydown', eventListener, true);
 
     return () => {
-      document.removeEventListener('keydown', blocker, true);
-      document.removeEventListener('keyup', eventListener, true);
+      document.removeEventListener('keydown', eventListener, true);
     };
-  }, [articleLoaded, boardLoaded, enabled, configOpen, keyTable, content]);
+  }, [
+    content,
+    content.article,
+    content.board,
+    enabled,
+    configOpen,
+    keyTable,
+    setSnack,
+  ]);
 
   return null;
 }

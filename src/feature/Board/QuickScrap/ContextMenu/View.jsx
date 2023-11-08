@@ -4,7 +4,8 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Bookmark } from '@material-ui/icons';
 
 import { BOARD_ITEMS } from 'core/selector';
-import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
@@ -13,7 +14,7 @@ import Info from '../FeatureInfo';
 function ContextMenu({ targetRef }) {
   const { enabled } = useSelector((store) => store[Info.ID].storage);
   const { channel } = useContent();
-  const setSnack = useContextSnack();
+  const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: `${enabled ? BOARD_ITEMS : 'NULL'}`,
