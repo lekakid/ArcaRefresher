@@ -4,7 +4,8 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { Assignment, Person, Search } from '@material-ui/icons';
 
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
-import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { getUserNick } from 'func/user';
 
@@ -15,7 +16,7 @@ import Info from '../FeatureInfo';
 const profileUrl = 'https://arca.live/u/@';
 
 function ContextMenu({ targetRef }) {
-  const setSnack = useContextSnack();
+  const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
     (store) => store[Info.ID].storage,
   );

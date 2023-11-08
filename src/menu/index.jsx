@@ -3,6 +3,7 @@ import React from 'react';
 import ArticleMenuContainer from './ArticleMenu';
 import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
+import SnackbarAlert from './SnackbarAlert';
 
 const articleMenuContext = require.context(
   'feature/',
@@ -65,6 +66,7 @@ function MenuWrapper() {
         groupList={groupList}
         menuList={configMenuChildren}
       />
+      <SnackbarAlert />
     </>
   );
 }

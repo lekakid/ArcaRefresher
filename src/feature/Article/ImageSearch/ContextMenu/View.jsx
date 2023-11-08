@@ -4,7 +4,8 @@ import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
 import { ImageSearch, PhotoLibrary } from '@material-ui/icons';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu, useContextSnack } from 'menu/ContextMenu';
+import { useContextMenu } from 'menu/ContextMenu';
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { request } from 'func/http';
 import { open } from 'func/window';
 
@@ -17,7 +18,7 @@ function ContextMenu({ targetRef }) {
   const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
     useSelector((state) => state[Info.ID].storage);
 
-  const setSnack = useContextSnack();
+  const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu({
     targetRef,
     selector: ARTICLE_IMAGES,

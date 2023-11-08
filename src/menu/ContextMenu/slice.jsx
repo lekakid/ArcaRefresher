@@ -13,7 +13,6 @@ const initialState = {
   storage: getValue(Info.ID, defaultStorage),
   open: false,
   triggerList: [],
-  snackBag: [],
 };
 
 export const slice = createSlice({
@@ -33,22 +32,10 @@ export const slice = createSlice({
       const i = state.triggerList.findIndex((t) => t === action.payload);
       state.triggerList.splice(i, 1);
     },
-    pushSnack(state, action) {
-      state.snackBag.push(action.payload);
-    },
-    shiftSnack(state) {
-      state.snackBag.shift();
-    },
   },
 });
 
-export const {
-  $setInteraction,
-  setOpen,
-  addTrigger,
-  removeTrigger,
-  pushSnack,
-  shiftSnack,
-} = slice.actions;
+export const { $setInteraction, setOpen, addTrigger, removeTrigger } =
+  slice.actions;
 
 export default slice.reducer;
