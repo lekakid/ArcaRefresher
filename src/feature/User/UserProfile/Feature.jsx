@@ -37,9 +37,10 @@ function UserProfile() {
 
     const show = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        if (!getUserNick(e).includes('#')) return;
+        const fullNick = getUserNick(e);
+        if (!fullNick.includes('#')) return;
 
-        e.firstChild.textContent = e.firstChild.dataset.filter;
+        e.firstElementChild.textContent = fullNick;
       });
     };
     show();
@@ -48,8 +49,8 @@ function UserProfile() {
 
     return () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const [hiddenID] = e.firstChild.textContent.split('#');
-        e.firstChild.textContent = hiddenID;
+        const [nick] = e.firstElementChild.textContent.split('#');
+        e.firstElementChild.textContent = nick;
       });
       removeEventListener(EVENT_BOARD_REFRESH, show);
       removeEventListener(EVENT_COMMENT_REFRESH, show);
