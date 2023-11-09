@@ -90,9 +90,13 @@ function ContextMenu({ targetRef }) {
   }, [closeMenu, data, openType]);
 
   const handleCopyId = useCallback(async () => {
-    closeMenu();
-    await navigator.clipboard.writeText(`@${data.id}`);
-    setSnack({ msg: '아이디가 복사되었습니다.', time: 3000 });
+    try {
+      closeMenu();
+      await navigator.clipboard.writeText(`@${data.id}`);
+    } catch (error) {
+      setSnack({ msg: '클립보드 액세스 권한이 없습니다.', time: 3000 });
+      console.error(error);
+    }
   }, [closeMenu, data, setSnack]);
 
   const handleSearchAll = useCallback(async () => {
