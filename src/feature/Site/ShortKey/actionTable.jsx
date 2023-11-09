@@ -83,13 +83,15 @@ export default [
       if (token.length > 3) {
         // 게시물
         const currentArticle = document.querySelector(
-          '.article-view a.vrow.active',
+          '.article-view .vrow.active',
         );
         if (
           currentArticle.previousElementSibling &&
           !currentArticle.previousElementSibling.matches('.notice')
         ) {
-          const url = currentArticle.previousElementSibling.href;
+          const url =
+            currentArticle.previousElementSibling.href ||
+            currentArticle.previousElementSibling.querySelector('a.title').href;
           window.location = url;
           return;
         }
@@ -108,10 +110,12 @@ export default [
       if (token.length > 3) {
         // 게시물
         const currentArticle = document.querySelector(
-          '.article-view a.vrow.active',
+          '.article-view .vrow.active',
         );
         if (currentArticle.nextElementSibling) {
-          const url = currentArticle.nextElementSibling.href;
+          const url =
+            currentArticle.nextElementSibling.href ||
+            currentArticle.nextElementSibling.querySelector('a.title').href;
           window.location = url;
           return;
         }
