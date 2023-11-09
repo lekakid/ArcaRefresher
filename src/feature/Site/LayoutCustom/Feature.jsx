@@ -163,17 +163,17 @@ const useStyles = makeStyles(
       },
       ReverseComment: {
         '& #comment': {
-          display: 'grid',
-          gridTemplateAreas: '"title"\n"form"\n"comments"',
+          display: 'flex',
+          flexDirection: 'column',
         },
         '& #comment .title': {
-          gridArea: 'title',
+          order: 0,
         },
         '& #comment #commentForm': {
-          gridArea: 'form',
+          order: 1,
         },
         '& #comment .list-area': {
-          gridArea: 'comments',
+          order: 2,
         },
       },
       HideVoiceComment: {
