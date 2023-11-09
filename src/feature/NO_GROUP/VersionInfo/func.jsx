@@ -1,10 +1,14 @@
-function parse(versionString) {
+export function parse(versionString) {
   const token = versionString.split('.');
   return {
     major: Number(token[0]),
     minor: Number(token[1]),
     patch: Number(token[2]),
   };
+}
+
+export function join({ major, minor, patch }) {
+  return `${major}.${minor}.${patch}`;
 }
 
 /**
@@ -14,7 +18,7 @@ function parse(versionString) {
  * @param {string} storage  마지막으로 확인한 버전 스트링
  * @returns                 값이 양수라면 업데이트 확인 필요, 음수라면 새로고침이 필요함
  */
-function compare(script, storage) {
+export function compare(script, storage) {
   const scriptVersion = parse(script);
   const storageVersion = parse(storage);
 
@@ -26,5 +30,3 @@ function compare(script, storage) {
   }
   return scriptVersion.patch - storageVersion.patch;
 }
-
-export default compare;
