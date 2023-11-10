@@ -33,6 +33,7 @@ import {
   $setResizeVideo,
   $setResizeEmoticonPalette,
   $setFontSize,
+  $toggleDefaultImage,
 } from '../slice';
 
 function labelFormat(x) {
@@ -56,6 +57,7 @@ const View = React.forwardRef((_props, ref) => {
     sideMenu,
     avatar,
     userinfoWidth,
+    hideDefaultImage,
     resizeImage,
     resizeVideo,
     resizeEmoticonPalette,
@@ -160,6 +162,12 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">게시물</Typography>
       <Paper>
         <List disablePadding>
+          <SwitchRow
+            divider
+            primary="대문 이미지 숨김"
+            value={hideDefaultImage}
+            action={$toggleDefaultImage}
+          />
           <SliderRow
             divider
             primary="이미지 크기"
