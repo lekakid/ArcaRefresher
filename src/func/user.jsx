@@ -3,8 +3,8 @@ export function getUserInfo(infoElement) {
 }
 
 export function getUserNick(infoElement) {
-  try {
-    const data = infoElement.querySelector('[data-filter]').dataset.filter;
+  const data = infoElement.querySelector('[data-filter]')?.dataset.filter;
+  if (data) {
     const [, nick, id] = data
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
@@ -18,9 +18,11 @@ export function getUserNick(infoElement) {
     }
 
     return nick;
-  } catch {
-    return '';
   }
+
+  const anchor = infoElement.querySelector('a');
+  const nick = anchor.title || anchor.textContent.replace('@', '');
+  return nick || '';
 }
 
 export function getUserID(infoElement) {
@@ -33,8 +35,9 @@ export function getUserID(infoElement) {
     return id || nick;
   }
 
-  const nick = infoElement.firstElementChild.textContent.replace('@', '');
-  return nick;
+  const anchor = infoElement.querySelector('a');
+  const nick = anchor.title || anchor.textContent.replace('@', '');
+  return nick || '';
 }
 
 export function getUserIP(infoElement) {

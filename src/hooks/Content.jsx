@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState } from 'react';
 
 import {
+  ARTICLE_AUTHOR,
   ARTICLE_LOADED,
   ARTICLE_TITLE,
   ARTICLE_URL,
@@ -154,7 +155,7 @@ export function useContent() {
       titleElement.textContent.trim() ||
       '제목 없음';
     const author =
-      getUserNick(document.querySelector(`ARTICLE_AUTHOR`)) ||
+      getUserNick(document.querySelector(ARTICLE_AUTHOR)) ||
       document.querySelector('.article-head .member-info').textContent.trim() ||
       '익명';
     const url =

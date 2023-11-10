@@ -7,11 +7,11 @@ import { disableStorageSync } from 'core/storage';
 
 import Info from './FeatureInfo';
 import { $setCheckedVersion } from './slice';
-import { compare } from './func';
+import { parse, compare, join } from './func';
 
 const MODE_UPGRADE = 1;
 const MODE_DOWNGRADE = -1;
-const MODE_DISABLE_STOAGE = -2;
+const MODE_DISABLE_STORAGE = -2;
 
 export default function VersionInfo() {
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ export default function VersionInfo() {
     boradcastChannel.onmessage = ({ data }) => {
       if (data.msg === 'disable_storage') {
         disableStorageSync();
-        setNoti({ open: true, mode: MODE_DISABLE_STOAGE });
+        setNoti({ open: true, mode: MODE_DISABLE_STORAGE });
       }
     };
   }, [boradcastChannel, dispatch]);
@@ -58,7 +58,9 @@ export default function VersionInfo() {
   const handleChangeLog = useCallback(() => {
     const url =
       'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
-    GM_openInTab(`${url}${GM_info.script.version}`);
+    const version = parse(GM_info.script.version);
+    version.patch = '*';
+    GM_openInTab(`${url}${join(version)}`);
     setNoti({ open: false, mode: 0 });
     dispatch($setCheckedVersion(GM_info.script.version));
   }, [dispatch]);
@@ -103,7 +105,7 @@ export default function VersionInfo() {
       );
       break;
     }
-    case MODE_DISABLE_STOAGE: {
+    case MODE_DISABLE_STORAGE: {
       message = `이 탭의 스크립트 버전이 맞지 않습니다.
         이 탭에서 변경한 설정, 메모 등이 저장되지 않습니다.`;
       action = (
