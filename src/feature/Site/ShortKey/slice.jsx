@@ -5,6 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   enabled: true,
+  compatibilityMode: false,
   keyTable: [],
 };
 
@@ -19,6 +20,9 @@ export const slice = createSlice({
   reducers: {
     $toggleEnabled(state) {
       state.storage.enabled = !state.storage.enabled;
+    },
+    $toggleCompatibilityMode(state) {
+      state.storage.compatibilityMode = !state.storage.compatibilityMode;
     },
     $setKey(state, action) {
       const { action: updatedAction, key: updatedKey } = action.payload;
@@ -40,7 +44,12 @@ export const slice = createSlice({
   },
 });
 
-export const { $toggleEnabled, $setKey, $resetKeyMap, setWaitKeyInput } =
-  slice.actions;
+export const {
+  $toggleEnabled,
+  $toggleCompatibilityMode,
+  $setKey,
+  $resetKeyMap,
+  setWaitKeyInput,
+} = slice.actions;
 
 export default slice.reducer;
