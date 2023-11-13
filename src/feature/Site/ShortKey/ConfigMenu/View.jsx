@@ -24,6 +24,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import {
   $resetKeyMap,
   $setKey,
+  $toggleCompatibilityMode,
   $toggleEnabled,
   setWaitKeyInput,
 } from '../slice';
@@ -70,7 +71,9 @@ const keyMapSelector = createSelector(
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { enabled } = useSelector((state) => state[Info.ID].storage);
+  const { enabled, compatibilityMode } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const keyMap = useSelector(keyMapSelector);
   const { waitKeyInput } = useSelector((state) => state[Info.ID]);
   const [error, setError] = useState(undefined);
@@ -118,7 +121,29 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
+          <SwitchRow
+            divider
+            primary="사용"
+            value={enabled}
+            action={$toggleEnabled}
+          />
+          <SwitchRow
+            primary="호환성 모드"
+            secondary={
+              <>
+                <Typography variant="body2">
+                  ⚠️이 옵션을 사용하면 키가 겹치지 않을 때 아카라이브 단축키가
+                  동시에 동작합니다.
+                </Typography>
+                <Typography variant="body2">
+                  키 입력을 사용하는 다른 스크립트를 쓰려면 켜주세요
+                </Typography>
+                <Typography variant="body2">새로고침이 필요합니다.</Typography>
+              </>
+            }
+            value={compatibilityMode}
+            action={$toggleCompatibilityMode}
+          />
         </List>
       </Paper>
       <Typography variant="subtitle2">키 설정</Typography>

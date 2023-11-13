@@ -14,7 +14,9 @@ export default function ShortKey() {
   const content = useContent();
 
   const configOpen = useOpenState();
-  const { enabled, keyTable } = useSelector((state) => state[Info.ID].storage);
+  const { enabled, compatibilityMode, keyTable } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -48,7 +50,8 @@ export default function ShortKey() {
       // 기타 기능
       if (keyFilter.test(e.code)) return;
 
-      e.stopPropagation();
+      if ((compatibilityMode && activeActionMap[e.code]) || !compatibilityMode)
+        e.stopPropagation();
       activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
@@ -62,6 +65,7 @@ export default function ShortKey() {
     content.article,
     content.board,
     enabled,
+    compatibilityMode,
     configOpen,
     keyTable,
     setSnack,

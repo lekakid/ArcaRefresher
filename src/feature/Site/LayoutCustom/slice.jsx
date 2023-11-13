@@ -17,6 +17,7 @@ const defaultStorage = {
   avatar: true,
   userinfoWidth: 10,
   // 게시물
+  hideDefaultImage: false,
   resizeImage: 100,
   resizeVideo: 100,
   hideUnvote: false,
@@ -90,6 +91,9 @@ export const slice = createSlice({
       state.storage.userinfoWidth = action.payload;
     },
     // 게시물
+    $toggleDefaultImage(state) {
+      state.storage.hideDefaultImage = !state.storage.hideDefaultImage;
+    },
     $setResizeImage(state, action) {
       state.storage.resizeImage = action.payload;
     },
@@ -138,6 +142,7 @@ export const {
   $toggleAvatar,
   $setUserInfoWith,
   // 게시물
+  $toggleDefaultImage,
   $setResizeImage,
   $setResizeVideo,
   $toggleUnvote,

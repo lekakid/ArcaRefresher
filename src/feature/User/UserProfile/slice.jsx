@@ -4,7 +4,7 @@ import { FOREGROUND } from 'func/window';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  contextRange: 'articleItem',
+  contextRange: 'nickname',
   openType: FOREGROUND,
   indicateMyComment: false,
   showId: false,

@@ -4,7 +4,8 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  enabled: true,
+  version: 1,
+  contextMenuEnabled: true,
 };
 
 const initialState = {
@@ -15,12 +16,12 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    $toggleEnabled(state) {
-      state.storage.enabled = !state.storage.enabled;
+    $toggleContextMenu(state) {
+      state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
     },
   },
 });
 
-export const { $toggleEnabled } = slice.actions;
+export const { $toggleContextMenu } = slice.actions;
 
 export default slice.reducer;

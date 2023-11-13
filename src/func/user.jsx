@@ -21,8 +21,12 @@ export function getUserNick(infoElement) {
   }
 
   const anchor = infoElement.querySelector('a');
-  const nick = anchor.title || anchor.textContent.replace('@', '');
-  return nick || '';
+  if (anchor) {
+    const nick = anchor.title || anchor.textContent.replace('@', '');
+    return nick || '';
+  }
+
+  return infoElement.textContent.trim() || '미상';
 }
 
 export function getUserID(infoElement) {
@@ -36,8 +40,12 @@ export function getUserID(infoElement) {
   }
 
   const anchor = infoElement.querySelector('a');
-  const nick = anchor.title || anchor.textContent.replace('@', '');
-  return nick || '';
+  if (anchor) {
+    const nick = anchor.title || anchor.textContent.replace('@', '');
+    return nick || '';
+  }
+
+  return infoElement.textContent.trim() || '미상';
 }
 
 export function getUserIP(infoElement) {

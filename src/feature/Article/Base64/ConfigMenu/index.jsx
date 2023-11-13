@@ -1,10 +1,11 @@
-import 'core/types';
+import { DoubleArrow } from '@material-ui/icons';
+
 import View from './View';
 import Info from '../FeatureInfo';
 
-/** @type {ContextMenuInfo} */
 export default {
   key: Info.ID,
+  Icon: DoubleArrow,
+  label: Info.name,
   View,
-  order: 200,
 };

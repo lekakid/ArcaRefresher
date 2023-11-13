@@ -128,6 +128,11 @@ const useStyles = makeStyles(
         },
       }),
       // ------ 게시물 ------
+      HideDefaultImage: {
+        '& #defaultImage': {
+          display: 'none',
+        },
+      },
       ResizeImage: ({ resizeImage }) => ({
         '& .article-body': {
           '& img, & video:not([controls])': {
@@ -231,6 +236,7 @@ export default function LayoutCustom() {
       sideBests,
       sideNews,
       avatar,
+      hideDefaultImage,
       hideUnvote,
       unfoldLongComment,
       modifiedIndicator,
@@ -253,6 +259,7 @@ export default function LayoutCustom() {
         [classes.SideBests]: !sideBests,
         [classes.SideNews]: !sideNews,
         [classes.Avatar]: !avatar,
+        [classes.HideDefaultImage]: hideDefaultImage,
         [classes.Unvote]: hideUnvote,
         [classes.UnfoldLongComment]: unfoldLongComment,
         [classes.ModifiedIndicator]: !modifiedIndicator,

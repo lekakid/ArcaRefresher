@@ -155,9 +155,7 @@ export function useContent() {
       titleElement.textContent.trim() ||
       '제목 없음';
     const author =
-      getUserNick(document.querySelector(ARTICLE_AUTHOR)) ||
-      document.querySelector('.article-head .member-info').textContent.trim() ||
-      '익명';
+      getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
     const url =
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
     const ID = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;

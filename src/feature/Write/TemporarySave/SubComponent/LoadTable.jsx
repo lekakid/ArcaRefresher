@@ -121,6 +121,7 @@ export default function LoadTable({ editor, open, onClose }) {
       const content = params.getValue(params.id, 'content');
 
       editor.content.html.set(content);
+      editor.content.events.trigger('contentChanged');
       if (importTitle) editor.title.value = title;
 
       setSelection([]);

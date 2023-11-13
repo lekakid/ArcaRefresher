@@ -11,7 +11,7 @@ const defaultStorage = {
   keyword: [],
   emoticon: {},
   category: {},
-  contextRange: 'articleItem',
+  contextRange: 'nickname',
   hideServiceNotice: false,
   hideNoPermission: false,
   hideClosedDeal: true,

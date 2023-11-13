@@ -5,7 +5,7 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   version: 1,
-  contextRange: 'articleItem',
+  contextRange: 'nickname',
   variant: 'badge',
   memo: {},
 };
