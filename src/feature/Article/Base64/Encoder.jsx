@@ -56,6 +56,7 @@ function Cipher() {
 
         if (selection.type === 'Range') {
           if (
+            range.commonAncestorContainer.parentElement.matches('a') &&
             range.commonAncestorContainer.parentElement.textContent === content
           ) {
             range.commonAncestorContainer.parentElement.outerHTML = encoded;
