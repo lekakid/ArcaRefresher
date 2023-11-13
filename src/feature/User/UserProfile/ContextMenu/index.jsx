@@ -6,5 +6,5 @@ import Info from '../FeatureInfo';
 export default {
   key: Info.ID,
   View,
-  order: 100,
+  order: 200,
 };
