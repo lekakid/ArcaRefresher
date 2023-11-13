@@ -25,11 +25,16 @@ function Cipher() {
         let content = '';
         switch (selection.type) {
           case 'Range': {
-            content = selection.toLocaleString().trim();
+            content = selection
+              .toString()
+              .replace(/[\u200B-\u200D\uFEFF]/g, '')
+              .trim();
             break;
           }
           case 'Caret': {
-            content = (await navigator.clipboard.readText()).trim();
+            content = (await navigator.clipboard.readText())
+              .replace(/[\u200B-\u200D\uFEFF]/g, '')
+              .trim();
             break;
           }
           default:
