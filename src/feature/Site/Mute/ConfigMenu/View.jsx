@@ -199,14 +199,14 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <TextEditorRow
             divider
-            headerText="검사할 닉네임"
+            primary="검사할 닉네임"
             initialValue={user.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveUser}
           />
           <TextEditorRow
             divider
-            headerText="검사할 키워드"
+            primary="검사할 키워드"
             initialValue={keyword.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveKeyword}
