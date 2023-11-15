@@ -21,7 +21,7 @@ function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
 }
 
-function View({ targetRef }) {
+function ContextMenu({ targetRef }) {
   const dispatch = useDispatch();
   const { user, contextRange } = useSelector((state) => state[Info.ID].storage);
   let contextSelector;
@@ -269,4 +269,4 @@ function View({ targetRef }) {
   );
 }
 
-export default View;
+export default ContextMenu;

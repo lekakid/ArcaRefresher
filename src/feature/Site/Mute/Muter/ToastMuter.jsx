@@ -33,7 +33,9 @@ function ToastMuter() {
   const toastboxLoaded = useLoadChecker(TOASTBOX);
 
   const { userList, emotList } = useSelector(filterSelector);
-  const { mk2, hideMutedMark } = useSelector((state) => state[Info.ID].storage);
+  const { mk2, hideMutedMark, muteAllEmot } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
 
   useEffect(() => {
     if (!mk2) return undefined;
@@ -47,7 +49,7 @@ function ToastMuter() {
       // 이모티콘 뮤트 처리
       if (noti.mediaUrl) {
         const url = trimEmotURL(noti.mediaUrl);
-        if (emotList.url[url]) {
+        if (muteAllEmot || emotList.url[url]) {
           if (hideMutedMark) return undefined;
 
           delete noti.mediaUrl;
@@ -74,10 +76,11 @@ function ToastMuter() {
 
     return () => unsubscribeSocket(listener);
   }, [
-    mk2,
-    hideMutedMark,
     emotList,
     userList,
+    mk2,
+    hideMutedMark,
+    muteAllEmot,
     subscribeSocket,
     unsubscribeSocket,
   ]);

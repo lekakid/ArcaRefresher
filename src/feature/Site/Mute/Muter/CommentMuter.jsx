@@ -66,9 +66,8 @@ function CommentMuter() {
   const { userList, keywordList, emotList } = useSelector((state) =>
     filterSelector(state),
   );
-  const { hideCountBar, hideMutedMark, muteIncludeReply } = useSelector(
-    (state) => state[Info.ID].storage,
-  );
+  const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
+    useSelector((state) => state[Info.ID].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
@@ -105,14 +104,14 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          !!emotList.bundle[id],
+          muteAllEmot || !!emotList.bundle[id],
         );
 
-        if (!emotList.bundle[id] || hideMutedMark) return;
+        if (!(muteAllEmot || emotList.bundle[id]) || hideMutedMark) return;
         const muted = document.createElement('span');
         muted.append('[아카콘 뮤트됨]');
         muted.classList.add('muted');
-        muted.title = emotList.bundle[id];
+        muted.title = muteAllEmot ? '알 수 없음' : emotList.bundle[id];
         c.closest('.emoticon-wrapper').append(muted);
       });
     };
@@ -137,6 +136,7 @@ function CommentMuter() {
     emotList,
     hideMutedMark,
     muteIncludeReply,
+    muteAllEmot,
     addEventListener,
     removeEventListener,
   ]);

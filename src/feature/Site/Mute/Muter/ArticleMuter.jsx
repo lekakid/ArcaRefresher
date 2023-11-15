@@ -44,16 +44,18 @@ function ArticleMuter() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
   const { emotList } = useSelector(filterSelector);
-  const { hideMutedMark } = useSelector((state) => state[Info.ID].storage);
-  const [article, setArticle] = useState(null);
+  const { hideMutedMark, muteAllEmot } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
+  const [controlTarget, setControlTarget] = useState(null);
 
   useEffect(() => {
-    if (articleLoaded) setArticle(document.querySelector(ARTICLE));
+    if (articleLoaded) setControlTarget(document.querySelector(ARTICLE));
   }, [articleLoaded]);
 
   // 이모티콘 뮤트
   useEffect(() => {
-    if (!article) return undefined;
+    if (!controlTarget) return undefined;
 
     const muteArticle = () => {
       const articleImage = [...document.querySelectorAll(ARTICLE_EMOTICON)];
@@ -62,11 +64,13 @@ function ArticleMuter() {
 
         const filterFormat = trimEmotURL(src);
         const wrapper = i.closest('a');
-        if (wrapper && !!emotList.url[filterFormat]) {
+        if (wrapper && (muteAllEmot || !!emotList.url[filterFormat])) {
           wrapper.classList.add('muted');
           wrapper.dataset.href = wrapper.href;
           wrapper.removeAttribute('href');
-          wrapper.title = emotList.url[filterFormat];
+          wrapper.title = muteAllEmot
+            ? '알 수 없음'
+            : emotList.url[filterFormat];
         }
       });
     };
@@ -97,7 +101,7 @@ function ArticleMuter() {
 
     muteArticle();
     return () => unmuteArticle();
-  }, [article, emotList, hideMutedMark]);
+  }, [controlTarget, emotList, hideMutedMark, muteAllEmot]);
 
   return null;
 }

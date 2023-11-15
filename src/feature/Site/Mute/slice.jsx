@@ -7,20 +7,21 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   version: 1,
-  user: [],
-  keyword: [],
-  channel: [],
-  emoticon: {},
-  category: {},
+  mk2: true,
   contextRange: 'nickname',
-  hideServiceNotice: false,
-  hideNoPermission: false,
-  hideClosedDeal: true,
   boardBarPos: 'afterbegin',
   hideCountBar: false,
   hideMutedMark: false,
   muteIncludeReply: false,
-  mk2: true,
+  hideServiceNotice: false,
+  hideNoPermission: false,
+  hideClosedDeal: true,
+  user: [],
+  keyword: [],
+  channel: [],
+  muteAllEmot: false,
+  emoticon: {},
+  category: {},
 };
 
 function formatUpdater(storage, defaultValue) {
@@ -54,6 +55,33 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
+    $toggleMK2(state) {
+      state.storage.mk2 = !state.storage.mk2;
+    },
+    $setContextRange(state, action) {
+      state.storage.contextRange = action.payload;
+    },
+    $setBoardBarPos(state, action) {
+      state.storage.boardBarPos = action.payload;
+    },
+    $toggleCountBar(state) {
+      state.storage.hideCountBar = !state.storage.hideCountBar;
+    },
+    $toggleMutedMark(state) {
+      state.storage.hideMutedMark = !state.storage.hideMutedMark;
+    },
+    $toggleIncludeReply(state) {
+      state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
+    },
+    $toggleHideNoticeService(state) {
+      state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
+    },
+    $toggleHideNoPermission(state) {
+      state.storage.hideNoPermission = !state.storage.hideNoPermission;
+    },
+    $toggleHideClosedDeal(state) {
+      state.storage.hideClosedDeal = !state.storage.hideClosedDeal;
+    },
     $addUser(state, action) {
       state.storage.user.push(action.payload);
     },
@@ -75,6 +103,9 @@ export const slice = createSlice({
     },
     $setChannel(state, action) {
       state.storage.channel = action.payload;
+    },
+    $toggleMuteAllEmot(state) {
+      state.storage.muteAllEmot = !state.storage.muteAllEmot;
     },
     $addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
@@ -139,37 +170,19 @@ export const slice = createSlice({
         state.storage.category[channel] = {};
       state.storage.category[channel][category] = config;
     },
-    $setContextRange(state, action) {
-      state.storage.contextRange = action.payload;
-    },
-    $toggleHideNoticeService(state) {
-      state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
-    },
-    $toggleHideNoPermission(state) {
-      state.storage.hideNoPermission = !state.storage.hideNoPermission;
-    },
-    $toggleHideClosedDeal(state) {
-      state.storage.hideClosedDeal = !state.storage.hideClosedDeal;
-    },
-    $setBoardBarPos(state, action) {
-      state.storage.boardBarPos = action.payload;
-    },
-    $toggleCountBar(state) {
-      state.storage.hideCountBar = !state.storage.hideCountBar;
-    },
-    $toggleMutedMark(state) {
-      state.storage.hideMutedMark = !state.storage.hideMutedMark;
-    },
-    $toggleIncludeReply(state) {
-      state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
-    },
-    $toggleMK2(state) {
-      state.storage.mk2 = !state.storage.mk2;
-    },
   },
 });
 
 export const {
+  $toggleMK2,
+  $setContextRange,
+  $setBoardBarPos,
+  $toggleCountBar,
+  $toggleMutedMark,
+  $toggleIncludeReply,
+  $toggleHideNoticeService,
+  $toggleHideNoPermission,
+  $toggleHideClosedDeal,
   $addUser,
   $removeUser,
   $setUser,
@@ -177,19 +190,11 @@ export const {
   $removeKeyword,
   $setKeyword,
   $setChannel,
+  $toggleMuteAllEmot,
   $addEmoticon,
   $removeEmoticon,
   $removeEmoticonList,
   $setCategoryConfig,
-  $setContextRange,
-  $toggleHideNoticeService,
-  $toggleHideNoPermission,
-  $toggleHideClosedDeal,
-  $setBoardBarPos,
-  $toggleCountBar,
-  $toggleMutedMark,
-  $toggleIncludeReply,
-  $toggleMK2,
 } = slice.actions;
 
 export default slice.reducer;
