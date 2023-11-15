@@ -1,8 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Snackbar, Typography } from '@material-ui/core';
+import { Box, Button, Snackbar, Typography } from '@material-ui/core';
 
-import { ARTICLE_CONTENT, ARTICLE_LOADED, COMMENT_LOADED } from 'core/selector';
+import {
+  ARTICLE_CONTENT,
+  ARTICLE_LOADED,
+  COMMENT_INNER,
+  COMMENT_LOADED,
+} from 'core/selector';
 import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
@@ -11,11 +16,13 @@ import { decode } from './func/base64';
 import Info from './FeatureInfo';
 
 const URLBase64Regex =
-  /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?/g;
+  /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?/;
+const URLBase64withBrRegex =
+  /(aHR0|YUhS)([A-Za-z0-9+/]*(<br>|\n))+[A-Za-z0-9+/]*={0,2}/;
 const base64Regex =
   /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
 const URLRegex =
-  /^(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
+  /^(https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
 
 const LABEL = {
   url: '링크 주소 같습니다. 여시겠습니까?',
@@ -34,21 +41,43 @@ function Decoder() {
 
   // 게시물 조회 디코딩 기능
   useEffect(() => {
-    if (!enabled) return;
-    if (!autoDecode) return;
-    if (!articleLoaded) return;
+    if (!enabled) return undefined;
+    if (!autoDecode) return undefined;
+    if (!articleLoaded) return undefined;
 
     const article = document.querySelector(ARTICLE_CONTENT);
-    if (!article) return;
+    if (!article) return undefined;
 
-    let encoded = URLBase64Regex.exec(article.innerHTML)?.[0];
+    const originHTML = article.innerHTML;
+    let html = article.innerHTML;
     let count = 0;
 
+    // 개행 처리
+    const brRegex = new RegExp(URLBase64withBrRegex);
+    let breaklined = brRegex.exec(html)?.[0];
+    while (breaklined) {
+      const concatnated = breaklined
+        .replaceAll('<br>', '')
+        .replaceAll('\n', '');
+      html = html.replace(breaklined, concatnated);
+
+      breaklined = brRegex.exec(html)?.[0];
+
+      count += 1;
+      if (count > 20) {
+        console.warn('[Base64] 줄바꿈 정리 시도가 20번을 넘었습니다.');
+        break;
+      }
+    }
+
+    count = 0;
+    const regex = new RegExp(URLBase64Regex);
+    let encoded = regex.exec(html)?.[0];
     while (encoded) {
       try {
         const result = decode(encoded);
-        article.innerHTML = article.innerHTML.replace(
-          URLBase64Regex,
+        html = html.replace(
+          regex,
           result.indexOf('http') > -1
             ? `<a href=${result} target="_blank" rel="noopener noreferrer">${result}</a>`
             : result,
@@ -58,13 +87,17 @@ function Decoder() {
       }
 
       count += 1;
-      // 안전 장치
       if (count > 20) {
         console.warn('[Base64] 디코드 시도가 20번을 넘었습니다.');
         break;
       }
-      encoded = URLBase64Regex.exec(article.innerHTML)?.[0];
+      encoded = regex.exec(html)?.[0];
     }
+
+    article.innerHTML = html;
+    return () => {
+      article.innerHTML = originHTML;
+    };
   });
 
   // 댓글 조회 디코딩 기능
@@ -73,26 +106,61 @@ function Decoder() {
     if (!autoDecode) return undefined;
     if (!commentLoaded) return undefined;
 
-    const handler = () => {
-      let encoded = URLBase64Regex.exec(comment.innerHTML)?.[0];
-      const comment = document.querySelector(COMMENT_INNER);
+    const comment = document.querySelector(COMMENT_INNER);
+    const originHTML = comment.innerHTML;
 
+    const handler = () => {
+      let html = comment.innerHTML;
+      let count = 0;
+
+      // 개행 처리
+      const brRegex = new RegExp(URLBase64withBrRegex);
+      let breaklined = brRegex.exec(html)?.[0];
+      while (breaklined) {
+        const concatnated = breaklined
+          .replaceAll('<br>', '')
+          .replaceAll('\n', '');
+        html = html.replace(breaklined, concatnated);
+
+        breaklined = brRegex.exec(html)?.[0];
+
+        count += 1;
+        if (count > 20) {
+          console.warn('[Base64] 줄바꿈 정리 시도가 20번을 넘었습니다.');
+          break;
+        }
+      }
+
+      count = 0;
+      const regex = new RegExp(URLBase64Regex);
+      let encoded = regex.exec(html)?.[0];
       while (encoded) {
         const result = decode(encoded);
-        comment.innerHTML = comment.innerHTML.replace(
-          URLBase64Regex,
+        html = html.replace(
+          regex,
           result.indexOf('http') > -1
             ? `<a href=${result} target="_blank" rel="noopener noreferrer">${result}</a>`
             : result,
         );
 
-        encoded = URLBase64Regex.exec(comment.innerHTML)?.[0];
+        encoded = regex.exec(html)?.[0];
+
+        count += 1;
+        if (count > 20) {
+          console.warn('[Base64] 디코드 시도가 20번을 넘었습니다.');
+          break;
+        }
       }
+
+      comment.innerHTML = html;
     };
 
     handler();
     addEventListener(EVENT_COMMENT_REFRESH, handler);
-    return () => removeEventListener(EVENT_COMMENT_REFRESH, handler);
+    return () => {
+      comment.innerHTML = originHTML;
+      removeEventListener(EVENT_COMMENT_REFRESH, handler);
+    };
   }, [
     enabled,
     autoDecode,
@@ -140,7 +208,11 @@ function Decoder() {
     const handler = (e) => {
       if (e.target.matches('input, textarea, [contenteditable]')) return;
 
-      const data = window.getSelection().toLocaleString().trim();
+      const data = window
+        .getSelection()
+        .toLocaleString()
+        .replaceAll('\n', '')
+        .trim();
       if (!base64Regex.test(data)) return;
 
       handleDecode(data);
@@ -155,7 +227,8 @@ function Decoder() {
   };
 
   const handleUrlOpen = () => {
-    open(`https://${decodeResult.text}`, FOREGROUND);
+    const url = new URL(decodeResult.text, 'https://a');
+    open(url.href, FOREGROUND);
     setDecodeResult(undefined);
   };
 
@@ -170,13 +243,15 @@ function Decoder() {
       anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
       open={!!decodeResult}
       onClose={() => setDecodeResult(undefined)}
-      message={
-        <>
-          <Typography>{LABEL[decodeResult.type]}</Typography>
-          <Typography>{`"${decodeResult.text}"`}</Typography>
-        </>
-      }
       autoHideDuration={3000}
+      message={
+        <Box maxWidth={300}>
+          <Typography>{LABEL[decodeResult.type]}</Typography>
+          <Typography
+            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >{`"${decodeResult.text}"`}</Typography>
+        </Box>
+      }
       action={
         <>
           {decodeResult.more && (
