@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useContent } from 'hooks/Content';
-import { getUserInfo } from 'func/user';
+import { getUserID } from 'func/user';
 
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
@@ -101,7 +101,7 @@ function BoardMuter() {
         .filter((a) => !a.href?.includes('#c_'))
         .map((a) => ({
           element: a,
-          user: getUserInfo(a.querySelector('.user-info')),
+          user: getUserID(a.querySelector('.user-info')),
           content: a.querySelector('.title')?.textContent || '',
           category: a.querySelector('.badge')?.textContent || '글머리없음',
         }));

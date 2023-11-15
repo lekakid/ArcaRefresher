@@ -6,7 +6,7 @@ import { Block, Redo } from '@material-ui/icons';
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
-import { getUserInfo } from 'func/user';
+import { getUserID } from 'func/user';
 
 import {
   getEmoticonList,
@@ -72,7 +72,7 @@ function View({ targetRef }) {
       }
       if (!userElement) return undefined;
 
-      const regex = makeRegex(getUserInfo(userElement));
+      const regex = makeRegex(getUserID(userElement));
       const exist = user.includes(regex);
       return { regex, exist };
     },

@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserInfo } from 'func/user';
+import { getUserID } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
@@ -153,7 +153,7 @@ function CommentMuter() {
       ];
       const itemContents = items.map((c) => ({
         element: c,
-        user: getUserInfo(c.querySelector('.user-info')),
+        user: getUserID(c.querySelector('.user-info')),
         content: c.querySelector('.message')?.textContent || '',
         category: '',
       }));

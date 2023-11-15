@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
-import { getUserInfo, getUserKey } from 'func/user';
+import { getUserID, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
@@ -38,7 +38,7 @@ function AnonymousNick({ classes }) {
     const data = [...document.querySelectorAll(ARTICLE_USER_INFO)].map(
       (e, index) => {
         const key = getUserKey(e, index);
-        const id = getUserInfo(e);
+        const id = getUserID(e);
         const nick =
           nickTable[id] ||
           (nickTable[id] =
