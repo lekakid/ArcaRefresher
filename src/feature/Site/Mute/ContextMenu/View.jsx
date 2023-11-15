@@ -17,7 +17,7 @@ import {
 import { $addEmoticon, $addUser, $removeEmoticon, $removeUser } from '../slice';
 import Info from '../FeatureInfo';
 
-function makeRegex(id = '') {
+function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
 }
 
@@ -62,21 +62,24 @@ function View({ targetRef }) {
     },
   });
 
-  const [userData] = useContextMenu({
-    targetRef,
-    selector: contextSelector,
-    dataExtractor: (target) => {
-      let userElement = target;
-      if (target.matches('.vrow')) {
-        userElement = target.querySelector('span.user-info');
-      }
-      if (!userElement) return undefined;
+  const [userData] = useContextMenu(
+    {
+      targetRef,
+      selector: contextSelector,
+      dataExtractor: (target) => {
+        let userElement = target;
+        if (target.matches('.vrow')) {
+          userElement = target.querySelector('span.user-info');
+        }
+        if (!userElement) return undefined;
 
-      const regex = makeRegex(getUserID(userElement));
-      const exist = user.includes(regex);
-      return { regex, exist };
+        const regex = makeRegex(getUserID(userElement));
+        const exist = user.includes(regex);
+        return { regex, exist };
+      },
     },
-  });
+    [user],
+  );
 
   const handleBundleMute = useCallback(() => {
     (async () => {
