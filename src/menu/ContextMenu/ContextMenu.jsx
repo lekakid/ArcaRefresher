@@ -96,7 +96,7 @@ function ContextMenu({ classes, menuList }) {
       anchorReference="anchorPosition"
       anchorPosition={{ top, left }}
       MenuListProps={{ disablePadding: true }}
-      TransitionProps={{ exit: false }}
+      TransitionProps={{ timeout: { enter: 150, exit: 0 } }}
       classes={{ list: classes.list }}
       open={!!mousePos}
       onClose={handleClose}
