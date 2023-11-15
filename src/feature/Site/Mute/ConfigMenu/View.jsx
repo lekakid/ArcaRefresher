@@ -32,6 +32,7 @@ import {
   $toggleHideClosedDeal,
   $toggleMK2,
   $setContextRange,
+  $setChannel,
 } from '../slice';
 import { emoticonTableSelector } from '../selector';
 import CategoryRow from './CategoryRow';
@@ -67,6 +68,7 @@ const View = React.forwardRef((_props, ref) => {
     muteIncludeReply,
     user,
     keyword,
+    channel: channelList,
     category: { [channel.ID]: category },
   } = useSelector((state) => state[Info.ID].storage);
   const tableRows = useSelector(emoticonTableSelector);
@@ -87,6 +89,14 @@ const View = React.forwardRef((_props, ref) => {
       const test = text.split('\n').filter((i) => i !== '');
       RegExp(test.join('|'));
       dispatch($setKeyword(test));
+    },
+    [dispatch],
+  );
+
+  const onSaveChannel = useCallback(
+    (text) => {
+      const data = text.split('\n').filter((i) => i !== '');
+      dispatch($setChannel(data));
     },
     [dispatch],
   );
@@ -210,6 +220,14 @@ const View = React.forwardRef((_props, ref) => {
             initialValue={keyword.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveKeyword}
+          />
+          <TextEditorRow
+            divider
+            primary="검사할 채널"
+            secondary="모든 채널을 대상으로 하는 게시판(베스트 라이브 등)에서 동작합니다."
+            initialValue={channelList.join('\n')}
+            errorText="정규식 조건을 위반하는 항목이 있습니다."
+            onSave={onSaveChannel}
           />
           <ListItem>
             <ListItemText>뮤트된 아카콘 목록</ListItemText>

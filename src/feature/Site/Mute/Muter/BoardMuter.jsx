@@ -12,6 +12,8 @@ import { filterContent, trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
+const globalChannel = ['live', 'headline', 'replay', 'breaking'];
+
 const style = {
   '@global': {
     '.body .article-list': {
@@ -19,6 +21,9 @@ const style = {
         display: 'none',
       },
       '& .list-table.show-filtered-category .filtered-category': {
+        display: 'flex !important',
+      },
+      '& .list-table.show-filtered-channel .filtered-channel': {
         display: 'flex !important',
       },
       '& .block-preview .vrow-preview': {
@@ -45,9 +50,8 @@ function BoardMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const { channel: channelInfo, board: boardInfo } = useContent();
 
-  const { userList, keywordList, emotList, categoryOpt } = useSelector(
-    (state) => filterSelector(state, channelInfo.ID),
-  );
+  const { userList, keywordList, channelList, emotList, categoryOpt } =
+    useSelector((state) => filterSelector(state, channelInfo.ID));
   const {
     boardBarPos,
     hideCountBar,
@@ -87,7 +91,7 @@ function BoardMuter() {
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
   }, [controlTarget, countBarContainer, boardBarPos]);
 
-  // 유저, 키워드, 카테고리 뮤트처리
+  // 유저, 키워드, 카테고리, 채널 뮤트처리
   useLayoutEffect(() => {
     if (!controlTarget) return undefined;
 
@@ -105,8 +109,10 @@ function BoardMuter() {
       const result = filterContent(itemContents, {
         userList,
         keywordList,
+        channelList,
         categoryOpt,
         categoryNameMap: nameToIDMap,
+        global: globalChannel.includes(channelInfo.ID),
       });
       setCount(result);
     };

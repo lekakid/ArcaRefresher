@@ -1,10 +1,11 @@
 export default function filterContent(
   contents,
-  { userList, keywordList, categoryOpt, categoryNameMap },
+  { userList, keywordList, channelList, categoryOpt, categoryNameMap, global },
 ) {
   const count = {
     keyword: 0,
     user: 0,
+    channel: 0,
     category: 0,
     deleted: 0,
     all: 0,
@@ -20,6 +21,8 @@ export default function filterContent(
     mergedUser.length > 0 ? new RegExp(mergedUser.join('|')) : undefined;
   const regexKeyword =
     mergedKeyword.length > 0 ? new RegExp(mergedKeyword.join('|')) : undefined;
+  const regexChannel =
+    channelList?.length > 0 ? new RegExp(channelList.join('|')) : undefined;
 
   contents.forEach(({ element, user, content, category }) => {
     // 이용자 뮤트 처리
@@ -43,12 +46,21 @@ export default function filterContent(
     const categoryID = categoryNameMap?.[category];
 
     // [게시판 한정] 카테고리 뮤트 처리
-    if (categoryOpt?.[categoryID]?.muteArticle) {
+    if (!global && categoryOpt?.[categoryID]?.muteArticle) {
       element.classList.add('filtered-category');
       count.category += 1;
       count.all += 1;
     } else {
       element.classList.remove('filtered-category');
+    }
+
+    // [특수 게시판 한정] 특정 채널 게시물 뮤트
+    if (global && regexChannel?.test(category)) {
+      element.classList.add('filtered-channel');
+      count.channel += 1;
+      count.all += 1;
+    } else {
+      element.classList.remove('filtered-channel');
     }
 
     // [게시판 한정] 게시물 미리보기 뮤트 처리

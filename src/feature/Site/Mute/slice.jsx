@@ -9,6 +9,7 @@ const defaultStorage = {
   version: 1,
   user: [],
   keyword: [],
+  channel: [],
   emoticon: {},
   category: {},
   contextRange: 'nickname',
@@ -71,6 +72,9 @@ export const slice = createSlice({
     },
     $setKeyword(state, action) {
       state.storage.keyword = action.payload;
+    },
+    $setChannel(state, action) {
+      state.storage.channel = action.payload;
     },
     $addEmoticon(state, action) {
       const { id, emoticon } = action.payload;
@@ -172,6 +176,7 @@ export const {
   $addKeyword,
   $removeKeyword,
   $setKeyword,
+  $setChannel,
   $addEmoticon,
   $removeEmoticon,
   $removeEmoticonList,
