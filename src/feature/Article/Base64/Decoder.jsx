@@ -74,8 +74,8 @@ function Decoder() {
     if (!commentLoaded) return undefined;
 
     const handler = () => {
-      const comment = document.querySelector('#comment');
       let encoded = URLBase64Regex.exec(comment.innerHTML)?.[0];
+      const comment = document.querySelector(COMMENT_INNER);
 
       while (encoded) {
         const result = decode(encoded);
