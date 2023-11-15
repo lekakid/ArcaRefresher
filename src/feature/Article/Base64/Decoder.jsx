@@ -37,6 +37,7 @@ function Decoder() {
   const { enabled, autoDecode, clipboardDecode } = useSelector(
     (state) => state[Info.ID].storage,
   );
+  const { temporaryDisabled } = useSelector((state) => state[Info.ID]);
   const [decodeResult, setDecodeResult] = useState();
 
   // 게시물 조회 디코딩 기능
@@ -44,6 +45,7 @@ function Decoder() {
     if (!enabled) return undefined;
     if (!autoDecode) return undefined;
     if (!articleLoaded) return undefined;
+    if (temporaryDisabled) return undefined;
 
     const article = document.querySelector(ARTICLE_CONTENT);
     if (!article) return undefined;
@@ -79,7 +81,7 @@ function Decoder() {
         html = html.replace(
           regex,
           result.indexOf('http') > -1
-            ? `<a href=${result} target="_blank" rel="noopener noreferrer">${result}</a>`
+            ? `<a href=${result} class="base64" target="_blank" rel="noopener noreferrer">${result}</a>`
             : result,
         );
       } catch (error) {
@@ -105,6 +107,7 @@ function Decoder() {
     if (!enabled) return undefined;
     if (!autoDecode) return undefined;
     if (!commentLoaded) return undefined;
+    if (temporaryDisabled) return undefined;
 
     const comment = document.querySelector(COMMENT_INNER);
     const originHTML = comment.innerHTML;
@@ -139,7 +142,7 @@ function Decoder() {
         html = html.replace(
           regex,
           result.indexOf('http') > -1
-            ? `<a href=${result} target="_blank" rel="noopener noreferrer">${result}</a>`
+            ? `<a href=${result} class="base64" target="_blank" rel="noopener noreferrer">${result}</a>`
             : result,
         );
 
@@ -165,6 +168,7 @@ function Decoder() {
     enabled,
     autoDecode,
     commentLoaded,
+    temporaryDisabled,
     addEventListener,
     removeEventListener,
   ]);

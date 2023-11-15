@@ -12,6 +12,7 @@ const defaultStorage = {
 
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
+  temporaryDisabled: false,
 };
 
 export const slice = createSlice({
@@ -27,10 +28,17 @@ export const slice = createSlice({
     $toggleClipboardDecode(state) {
       state.storage.clipboardDecode = !state.storage.clipboardDecode;
     },
+    toggleTemporaryDisabled(state) {
+      state.temporaryDisabled = !state.temporaryDisabled;
+    },
   },
 });
 
-export const { $toggleEnabled, $toggleAutoDecode, $toggleClipboardDecode } =
-  slice.actions;
+export const {
+  $toggleEnabled,
+  $toggleAutoDecode,
+  $toggleClipboardDecode,
+  toggleTemporaryDisabled,
+} = slice.actions;
 
 export default slice.reducer;
