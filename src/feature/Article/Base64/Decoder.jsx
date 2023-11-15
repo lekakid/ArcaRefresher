@@ -109,10 +109,12 @@ function Decoder() {
     if (!commentLoaded) return undefined;
     if (temporaryDisabled) return undefined;
 
-    const comment = document.querySelector(COMMENT_INNER);
-    const originHTML = comment.innerHTML;
+    let comment;
+    let originHTML;
 
     const handler = () => {
+      comment = document.querySelector(COMMENT_INNER);
+      originHTML = comment.innerHTML;
       let html = comment.innerHTML;
       let count = 0;
 
