@@ -98,7 +98,7 @@ function Decoder() {
     return () => {
       article.innerHTML = originHTML;
     };
-  });
+  }, [articleLoaded, autoDecode, enabled, temporaryDisabled]);
 
   // 댓글 조회 디코딩 기능
   useEffect(() => {
