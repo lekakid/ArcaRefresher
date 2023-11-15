@@ -11,7 +11,7 @@ const defaultStorage = {
 
 const initialState = {
   storage: getValue(Info.ID, defaultStorage),
-  open: false,
+  mousePos: null,
   triggerList: [],
 };
 
@@ -23,7 +23,7 @@ export const slice = createSlice({
       state.storage.interactionType = action.payload;
     },
     setOpen(state, action) {
-      state.open = action.payload;
+      state.mousePos = action.payload;
     },
     addTrigger(state, action) {
       state.triggerList.push(action.payload);

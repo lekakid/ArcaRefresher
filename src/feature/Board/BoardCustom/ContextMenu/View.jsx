@@ -12,30 +12,35 @@ import { BACKGROUND, open } from 'func/window';
 import Info from '../FeatureInfo';
 
 // 우클릭 메뉴
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const { contextMenuEnabled } = useSelector((store) => store[Info.ID].storage);
   const { channel } = useContent();
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
-    dataExtractor: (target) => {
-      // 로그인 체크
-      if (!unsafeWindow.LiveConfig?.nickname) return undefined;
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
+      dataExtractor: () => {
+        if (!target) return undefined;
 
-      if (!target.matches('a')) {
-        const articleId = target
-          .querySelector('a.title')
-          .pathname.split('/')
-          .pop();
-        return articleId;
-      }
+        // 로그인 체크
+        if (!unsafeWindow.LiveConfig?.nickname) return undefined;
 
-      const articleId = target.pathname.split('/').pop();
-      const url = target.href;
-      return { articleId, url };
+        if (!target.matches('a')) {
+          const articleId = target
+            .querySelector('a.title')
+            .pathname.split('/')
+            .pop();
+          return articleId;
+        }
+
+        const articleId = target.pathname.split('/').pop();
+        const url = target.href;
+        return { articleId, url };
+      },
     },
-  });
+    [target],
+  );
 
   const handleOpen = useCallback(() => {
     open(data.url, BACKGROUND);

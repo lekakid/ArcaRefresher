@@ -15,7 +15,7 @@ import Info from '../FeatureInfo';
 
 const profileUrl = 'https://arca.live/u/@';
 
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
     (store) => store[Info.ID].storage,
@@ -38,9 +38,11 @@ function ContextMenu({ targetRef }) {
 
   const [data, closeMenu] = useContextMenu(
     {
-      targetRef,
+      key: Info.ID,
       selector: contextSelector,
-      dataExtractor: (target) => {
+      dataExtractor: () => {
+        if (!target) return undefined;
+
         let userElement = target;
         if (target.matches('.vrow')) {
           userElement = target.querySelector('span.user-info');
@@ -81,7 +83,7 @@ function ContextMenu({ targetRef }) {
         return { id, url };
       },
     },
-    [checkSpamAccount],
+    [target, checkSpamAccount],
   );
 
   const handleProfile = useCallback(() => {

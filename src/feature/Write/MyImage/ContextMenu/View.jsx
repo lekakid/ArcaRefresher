@@ -5,17 +5,23 @@ import { PhotoLibrary } from '@material-ui/icons';
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 
+import Info from '../FeatureInfo';
 import FolderCheckList from './FolderCheckList';
 
-function ContextMenu({ targetRef }) {
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
-    dataExtractor: (target) => {
-      const url = target.src.split('?')[0];
-      return { url };
+function ContextMenu({ target }) {
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      dataExtractor: () => {
+        if (!target) return undefined;
+
+        const url = target.src.split('?')[0];
+        return { url };
+      },
     },
-  });
+    [target],
+  );
 
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');

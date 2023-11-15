@@ -11,7 +11,7 @@ import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const dispatch = useDispatch();
   const { memo, contextRange } = useSelector((state) => state[Info.ID].storage);
   const [user, setUser] = useState(undefined);
@@ -28,19 +28,24 @@ function ContextMenu({ targetRef }) {
       contextSelector = USER_INFO;
   }
 
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: contextSelector,
-    dataExtractor: (target) => {
-      let userElement = target;
-      if (target.matches('.vrow')) {
-        userElement = target.querySelector('span.user-info');
-      }
-      if (!userElement) return undefined;
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: contextSelector,
+      dataExtractor: () => {
+        if (!target) return undefined;
 
-      return getUserID(userElement);
+        let userElement = target;
+        if (target.matches('.vrow')) {
+          userElement = target.querySelector('span.user-info');
+        }
+        if (!userElement) return undefined;
+
+        return getUserID(userElement);
+      },
     },
-  });
+    [target],
+  );
 
   const handleClick = useCallback(() => {
     setUser(data);

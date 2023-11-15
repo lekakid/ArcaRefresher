@@ -5,13 +5,18 @@ import { Person } from '@material-ui/icons';
 import { USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 
+import Info from '../FeatureInfo';
+
 // 우클릭 메뉴
-function ContextMenu({ targetRef }) {
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: USER_INFO,
-    dataExtractor: (target) => target.src.split('?')[0],
-  });
+function ContextMenu({ target }) {
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: USER_INFO,
+      dataExtractor: () => target.src.split('?')[0],
+    },
+    [target],
+  );
 
   const handleClick = useCallback(() => {
     // 클릭 시 동작 작성

@@ -13,18 +13,25 @@ import { request } from 'func/http';
 import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const { downloadMethod, fileName } = useSelector(
     (state) => state[Info.ID].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
-    dataExtractor: (target) => getImageInfo(target),
-  });
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      dataExtractor: () => {
+        if (!target) return undefined;
+
+        return getImageInfo(target);
+      },
+    },
+    [target],
+  );
 
   const handleClipboard = useCallback(() => {
     (async () => {
