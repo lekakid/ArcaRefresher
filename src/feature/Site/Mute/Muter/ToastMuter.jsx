@@ -91,7 +91,7 @@ function ToastMuter() {
       // 이모티콘 뮤트 처리
       toastbox.querySelectorAll('img').forEach((img) => {
         const url = trimEmotURL(img.src);
-        if (emotList.url.indexOf(url) > -1) {
+        if (emotList.url[url] > -1) {
           img.parentNode.classList.add('filtered-emoticon');
         }
       });
