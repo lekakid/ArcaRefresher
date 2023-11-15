@@ -6,7 +6,7 @@ import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { trimEmotURL } from '../func';
-import { emoticonFilterSelector } from '../selector';
+import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
 const style = {
@@ -41,10 +41,11 @@ const style = {
 };
 
 function ArticleMuter() {
-  const { hideMutedMark } = useSelector((state) => state[Info.ID].storage);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+
+  const { emotList } = useSelector(filterSelector);
+  const { hideMutedMark } = useSelector((state) => state[Info.ID].storage);
   const [article, setArticle] = useState(null);
-  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   useEffect(() => {
     if (articleLoaded) setArticle(document.querySelector(ARTICLE));
@@ -61,11 +62,11 @@ function ArticleMuter() {
 
         const filterFormat = trimEmotURL(src);
         const wrapper = i.closest('a');
-        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+        if (wrapper && !!emotList.url[filterFormat]) {
           wrapper.classList.add('muted');
           wrapper.dataset.href = wrapper.href;
           wrapper.removeAttribute('href');
-          wrapper.title = emoticonFilter.url[filterFormat];
+          wrapper.title = emotList.url[filterFormat];
         }
       });
     };
@@ -77,7 +78,7 @@ function ArticleMuter() {
 
         const filterFormat = trimEmotURL(src);
         const wrapper = i.closest('a');
-        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+        if (wrapper && !!emotList.url[filterFormat]) {
           wrapper.classList.remove('muted');
           wrapper.href = wrapper.dataset.href;
           delete wrapper.dataset.href;
@@ -96,7 +97,7 @@ function ArticleMuter() {
 
     muteArticle();
     return () => unmuteArticle();
-  }, [article, emoticonFilter, hideMutedMark]);
+  }, [article, emotList, hideMutedMark]);
 
   return null;
 }

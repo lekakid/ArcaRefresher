@@ -1,10 +1,7 @@
-export default function filterContent({
+export default function filterContent(
   contents,
-  userList,
-  keywordList,
-  categoryList = {},
-  categoryMap = {},
-}) {
+  { userList, keywordList, categoryOpt, categoryNameMap },
+) {
   const count = {
     keyword: 0,
     user: 0,
@@ -13,18 +10,20 @@ export default function filterContent({
     all: 0,
   };
 
-  const { mute: { users: arcaUser = [], keywords: arcaKeyword = [] } = {} } =
-    unsafeWindow.LiveConfig || {};
-  const filter = {
-    user: Boolean(arcaUser.length + userList.length),
-    userRegex: new RegExp([...arcaUser, ...userList].join('|')),
-    keyword: Boolean(arcaKeyword.length + keywordList.length),
-    keywordRegex: new RegExp([...arcaKeyword, ...keywordList].join('|')),
-    category: categoryList,
-  };
+  const arcaUser = unsafeWindow.LiveConfig?.mute?.users || [];
+  const arcaKeyword = unsafeWindow.LiveConfig?.mute?.keywords || [];
+
+  const mergedUser = [...arcaUser, ...userList];
+  const mergedKeyword = [...arcaKeyword, ...keywordList];
+
+  const regexUser =
+    mergedUser.length > 0 ? new RegExp(mergedUser.join('|')) : undefined;
+  const regexKeyword =
+    mergedKeyword.length > 0 ? new RegExp(mergedKeyword.join('|')) : undefined;
 
   contents.forEach(({ element, user, content, category }) => {
-    if (filter.user && filter.userRegex.test(user)) {
+    // 이용자 뮤트 처리
+    if (regexUser?.test(user)) {
       element.classList.add('filtered-user');
       count.user += 1;
       count.all += 1;
@@ -32,7 +31,8 @@ export default function filterContent({
       element.classList.remove('filtered-user');
     }
 
-    if (filter.keyword && filter.keywordRegex.test(content)) {
+    // 키워드 뮤트 처리
+    if (regexKeyword?.test(content)) {
       element.classList.add('filtered-keyword');
       count.keyword += 1;
       count.all += 1;
@@ -40,8 +40,10 @@ export default function filterContent({
       element.classList.remove('filtered-keyword');
     }
 
-    const categoryID = categoryMap[category];
-    if (filter.category[categoryID]?.muteArticle) {
+    const categoryID = categoryNameMap?.[category];
+
+    // [게시판 한정] 카테고리 뮤트 처리
+    if (categoryOpt?.[categoryID]?.muteArticle) {
       element.classList.add('filtered-category');
       count.category += 1;
       count.all += 1;
@@ -49,12 +51,14 @@ export default function filterContent({
       element.classList.remove('filtered-category');
     }
 
-    if (filter.category[categoryID]?.mutePreview) {
+    // [게시판 한정] 게시물 미리보기 뮤트 처리
+    if (categoryOpt?.[categoryID]?.mutePreview) {
       element.classList.add('block-preview');
     } else {
       element.classList.remove('block-preview');
     }
 
+    // [댓글 한정] 삭제된 댓글 뮤트 처리
     const commentTarget = element.matches('.comment-wrapper')
       ? element.firstElementChild
       : element;

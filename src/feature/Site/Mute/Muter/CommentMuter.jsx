@@ -15,8 +15,8 @@ import { getUserInfo } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
-import { emoticonFilterSelector } from '../selector';
 import CountBar from './CountBar';
+import { filterSelector } from '../selector';
 
 const style = {
   '@global': {
@@ -63,12 +63,15 @@ function CommentMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
-  const { user, keyword, hideCountBar, hideMutedMark, muteIncludeReply } =
-    useSelector((state) => state[Info.ID].storage);
-  const [commentContainer, setCommentContainer] = useState(undefined);
+  const { userList, keywordList, emotList } = useSelector((state) =>
+    filterSelector(state),
+  );
+  const { hideCountBar, hideMutedMark, muteIncludeReply } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
+  const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticonFilter = useSelector(emoticonFilterSelector);
 
   // 댓글 창 로드 검사 및 컨테이너 생성
   useLayoutEffect(() => {
@@ -77,7 +80,7 @@ function CommentMuter() {
     const commentElement = document.querySelector(COMMENT_INNER);
     if (!commentElement) return;
 
-    setCommentContainer(commentElement);
+    setControlTarget(commentElement);
 
     const container = document.createElement('div');
     commentElement.insertAdjacentElement('beforebegin', container);
@@ -85,7 +88,7 @@ function CommentMuter() {
 
     addEventListener(EVENT_COMMENT_REFRESH, () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
-      setCommentContainer(refreshedComment);
+      setControlTarget(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', container);
     });
   }, [dispatch, commentLoaded, addEventListener]);
@@ -102,14 +105,14 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          !!emoticonFilter.bundle[id],
+          !!emotList.bundle[id],
         );
 
-        if (!emoticonFilter.bundle[id] || hideMutedMark) return;
+        if (!emotList.bundle[id] || hideMutedMark) return;
         const muted = document.createElement('span');
         muted.append('[아카콘 뮤트됨]');
         muted.classList.add('muted');
-        muted.title = emoticonFilter.bundle[id];
+        muted.title = emotList.bundle[id];
         c.closest('.emoticon-wrapper').append(muted);
       });
     };
@@ -131,7 +134,7 @@ function CommentMuter() {
     };
   }, [
     commentLoaded,
-    emoticonFilter,
+    emotList,
     hideMutedMark,
     muteIncludeReply,
     addEventListener,
@@ -140,25 +143,24 @@ function CommentMuter() {
 
   // 키워드, 이용자 뮤트
   useLayoutEffect(() => {
-    if (!commentContainer) return undefined;
+    if (!controlTarget) return undefined;
 
     const muteComment = () => {
-      const commentList = [
+      const items = [
         ...document.querySelectorAll(
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ),
       ];
-      const commentInfo = commentList.map((c) => ({
+      const itemContents = items.map((c) => ({
         element: c,
         user: getUserInfo(c.querySelector('.user-info')),
         content: c.querySelector('.message')?.textContent || '',
         category: '',
       }));
 
-      const result = filterContent({
-        contents: commentInfo,
-        userList: user,
-        keywordList: keyword,
+      const result = filterContent(itemContents, {
+        userList,
+        keywordList,
       });
       setCount(result);
     };
@@ -172,9 +174,9 @@ function CommentMuter() {
       removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
   }, [
-    commentContainer,
-    keyword,
-    user,
+    controlTarget,
+    userList,
+    keywordList,
     muteIncludeReply,
     addEventListener,
     removeEventListener,
@@ -184,7 +186,7 @@ function CommentMuter() {
   return (
     <CountBar
       renderContainer={countBarContainer}
-      controlTarget={commentContainer}
+      controlTarget={controlTarget}
       count={count}
       hide={hideCountBar}
     />
