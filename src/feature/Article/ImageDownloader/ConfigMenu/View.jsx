@@ -44,6 +44,7 @@ const View = React.forwardRef((_props, ref) => {
             action={$setDownloadMethod}
           >
             <MenuItem value="fetch">fetch</MenuItem>
+            <MenuItem value="xhr+fetch">XHR+fetch</MenuItem>
             <MenuItem value="xhr">XHR</MenuItem>
           </SelectRow>
           <FormatTextFieldRow

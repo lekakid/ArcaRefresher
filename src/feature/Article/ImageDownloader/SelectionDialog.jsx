@@ -89,60 +89,55 @@ function SelectionDialog({ classes }) {
       .filter((d) => !!d);
 
     let totalSize = 0;
-    let availableImages;
-    switch (downloadMethod) {
-      case 'fetch': {
-        availableImages = await selectedImages.reduce(async (promise, info) => {
-          try {
-            const response = await fetch(info.orig, {
-              method: 'HEAD',
-            });
-            if (!response.ok) throw new Error();
+    const availableImages = await selectedImages.reduce(
+      async (promise, info) => {
+        try {
+          switch (downloadMethod) {
+            case 'fetch': {
+              const response = await fetch(info.orig, {
+                method: 'HEAD',
+              });
+              if (!response.ok) throw new Error('서버 접속 실패');
 
-            const size = Number(response.headers.get('content-length'));
-            totalSize += size;
-            const acc = await promise;
+              const size = Number(response.headers.get('content-length'));
+              totalSize += size;
+              const acc = await promise;
 
-            acc.push(info);
-            return acc;
-          } catch (error) {
-            console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
-            return promise;
+              acc.push(info);
+              return acc;
+            }
+            case 'xhr+fetch':
+            case 'xhr': {
+              const response = await request(info.orig, {
+                method: 'HEAD',
+              });
+              if (response.status !== 200) throw new Error('서버 접속 실패');
+
+              const size =
+                Number(
+                  response.responseHeaders
+                    .split('content-length: ')[1]
+                    .split('\r')[0],
+                ) || 0;
+              totalSize += size;
+
+              info.orig = response.finalUrl;
+              const acc = await promise;
+
+              acc.push(info);
+              return acc;
+            }
+            default: {
+              throw new Error('다운로드 방식 설정값이 이상합니다.');
+            }
           }
-        }, []);
-        break;
-      }
-      case 'xhr': {
-        availableImages = await selectedImages.reduce(async (promise, info) => {
-          try {
-            const response = await request(info.orig, {
-              method: 'HEAD',
-            });
-            if (response.status !== 200) throw new Error();
-
-            const size =
-              Number(
-                response.responseHeaders
-                  .split('content-length: ')[1]
-                  .split('\r')[0],
-              ) || 0;
-            totalSize += size;
-            const acc = await promise;
-
-            acc.push(info);
-            return acc;
-          } catch (error) {
-            console.warn(`이미지 파일을 찾지 못함 (${info.orig})`);
-            return promise;
-          }
-        }, []);
-        break;
-      }
-      default: {
-        console.warn('[ImageDownloader] 다운로드 방식 설정값이 이상합니다.');
-        return;
-      }
-    }
+        } catch (error) {
+          console.warn('[ImageDownloader] 이미지를 찾지 못했습니다.', error);
+          return promise;
+        }
+      },
+      [],
+    );
 
     const iterator = availableImages.values();
     let count = 1;
@@ -177,7 +172,8 @@ function SelectionDialog({ classes }) {
 
         count += 1;
         switch (downloadMethod) {
-          case 'fetch': {
+          case 'fetch':
+          case 'xhr+fetch': {
             const stream = await fetch(orig).then((response) => response.body);
             return controller.enqueue({
               name: `/${name}.${ext}`,

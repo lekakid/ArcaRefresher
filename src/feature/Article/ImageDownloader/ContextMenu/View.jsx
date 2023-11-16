@@ -79,18 +79,42 @@ function ContextMenu({ target }) {
 
   const handleDownload = useCallback(() => {
     (async () => {
-      const { orig, ext, uploadName } = data;
+      let { orig } = data;
+      const { ext, uploadName } = data;
       try {
         closeMenu();
+        const name = format(fileName, {
+          values: contentInfo,
+          fileName: uploadName,
+        });
         switch (downloadMethod) {
           case 'fetch': {
             const response = await fetch(orig);
             const size = Number(response.headers.get('content-length'));
             const stream = response.body;
-            const name = format(fileName, {
-              values: contentInfo,
-              fileName: uploadName,
+
+            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+              size,
             });
+            stream.pipeTo(filestream);
+            break;
+          }
+          case 'xhr+fetch': {
+            const headResponse = await request(orig, {
+              responseType: 'blob',
+            });
+
+            const size =
+              Number(
+                headResponse.responseHeaders
+                  .split('content-length: ')[1]
+                  .split('\r')[0],
+              ) || 0;
+
+            orig = headResponse.finalUrl;
+
+            const response = await fetch(orig);
+            const stream = response.body;
 
             const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
               size,
@@ -113,10 +137,6 @@ function ContextMenu({ target }) {
                   .split('\r')[0],
               ) || 0;
             const stream = response.response.stream();
-            const name = format(fileName, {
-              values: contentInfo,
-              fileName: uploadName,
-            });
 
             const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
               size,
@@ -126,12 +146,10 @@ function ContextMenu({ target }) {
             break;
           }
           default:
-            throw new Error(
-              '[ImageDownload] 확인할 수 없는 다운로드 방식 사용',
-            );
+            throw new Error('확인할 수 없는 다운로드 방식 사용');
         }
       } catch (error) {
-        console.warn('다운로드 실패', orig, error);
+        console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({
           msg: '이미지 다운로드에 실패했습니다.',
           time: 3000,
