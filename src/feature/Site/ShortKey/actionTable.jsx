@@ -133,10 +133,15 @@ export default [
       const { host } = window.location;
       const token = window.location.pathname.split('/');
       if (token.length < 4) {
-        if (!window.location.search) return;
+        const query = parseQuery(window.location.search);
+        const keys = Object.keys(query);
+
+        if (keys.length === 0) return;
+        if (keys.length === 1 && query.mode === 'best') return;
 
         const pathname = token.slice(0, 3).join('/');
-        window.location = `https://${host}${pathname}`;
+        const search = query.mode === 'best' ? '?mode=best' : '';
+        window.location = `https://${host}${pathname}${search}`;
         return;
       }
       const pathname = token.slice(0, 3).join('/');
