@@ -126,12 +126,19 @@ export default [
   },
   {
     action: 'goBoard',
-    label: '게시물 목록으로 이동',
-    active: 'article',
+    label: '게시물 목록으로 이동/첫 페이지로 이동',
+    active: 'article|board',
     defaultKey: 'KeyQ',
     callback() {
       const { host } = window.location;
       const token = window.location.pathname.split('/');
+      if (token.length < 4) {
+        if (!window.location.search) return;
+
+        const pathname = token.slice(0, 3).join('/');
+        window.location = `https://${host}${pathname}`;
+        return;
+      }
       const pathname = token.slice(0, 3).join('/');
       const { mode, before, after, near, tz, p } = parseQuery(
         window.location.search,
@@ -142,7 +149,7 @@ export default [
       if (after) query.after = after;
       if (near) query.near = near;
       if (tz) query.tz = tz;
-      if (p) query.p = p;
+      if (p && p !== '1') query.p = p;
       const search = stringifyQuery(query);
       window.location = `https://${host}${pathname}${search}`;
     },
