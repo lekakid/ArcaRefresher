@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Portal, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
-import { ARTICLE_HEADER_MENU, ARTICLE_LOADED } from 'core/selector';
+import { ARTICLE_HEADER_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ArticleMenu({ children }) {
   const [container, setContainer] = useState(null);
-  const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+  const articleLoaded = useLoadChecker(ARTICLE_HEADER_MENU);
 
   useEffect(() => {
     if (!articleLoaded) return;
