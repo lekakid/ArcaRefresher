@@ -1,7 +1,3 @@
-export function getUserInfo(infoElement) {
-  return infoElement.querySelector('[data-filter]')?.dataset.filter || '';
-}
-
 export function getUserNick(infoElement) {
   const data = infoElement.querySelector('[data-filter]')?.dataset.filter;
   if (data) {

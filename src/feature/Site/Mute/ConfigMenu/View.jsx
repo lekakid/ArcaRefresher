@@ -11,7 +11,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import { Remove } from '@material-ui/icons';
+import { Remove, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { SelectRow, SwitchRow, TextEditorRow } from 'component/config';
@@ -32,15 +32,29 @@ import {
   $toggleHideClosedDeal,
   $toggleMK2,
   $setContextRange,
+  $setChannel,
+  $toggleMuteAllEmot,
 } from '../slice';
 import { emoticonTableSelector } from '../selector';
 import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
-function ConfigToolbar({ disabled, onRemove }) {
+function ConfigToolbar({ disabled, muteAll, actionMuteAll, onRemove }) {
+  const dispatch = useDispatch();
+
+  const handleAllMute = useCallback(() => {
+    dispatch(actionMuteAll());
+  }, [dispatch, actionMuteAll]);
+
   return (
-    <Box display="flex" justifyContent="flex-end">
+    <Box display="flex" justifyContent="space-between">
+      <Button
+        startIcon={muteAll ? <VolumeOff /> : <VolumeUp />}
+        onClick={handleAllMute}
+      >
+        전부 뮤트
+      </Button>
       <Button startIcon={<Remove />} disabled={disabled} onClick={onRemove}>
         삭제
       </Button>
@@ -54,20 +68,22 @@ function CustomOverRay() {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channel, board } = useContent();
+  const { channel: channelInfo, board: boardInfo } = useContent();
   const {
     mk2,
     contextRange,
-    hideServiceNotice,
-    hideNoPermission,
-    hideClosedDeal,
     boardBarPos,
     hideCountBar,
     hideMutedMark,
     muteIncludeReply,
-    user,
-    keyword,
-    category: { [channel.ID]: category },
+    hideServiceNotice,
+    hideNoPermission,
+    hideClosedDeal,
+    user: userList,
+    keyword: keywordList,
+    channel: channelList,
+    muteAllEmot,
+    category: { [channelInfo.ID]: category },
   } = useSelector((state) => state[Info.ID].storage);
   const tableRows = useSelector(emoticonTableSelector);
   const [selection, setSelection] = useState([]);
@@ -91,6 +107,14 @@ const View = React.forwardRef((_props, ref) => {
     [dispatch],
   );
 
+  const onSaveChannel = useCallback(
+    (text) => {
+      const data = text.split('\n').filter((i) => i !== '');
+      dispatch($setChannel(data));
+    },
+    [dispatch],
+  );
+
   const handlePageSize = useCallback((currentSize) => {
     setPageSize(currentSize);
   }, []);
@@ -108,13 +132,13 @@ const View = React.forwardRef((_props, ref) => {
     (id, value) => {
       dispatch(
         $setCategoryConfig({
-          channel: channel.ID,
+          channel: channelInfo.ID,
           category: id,
           config: value,
         }),
       );
     },
-    [channel, dispatch],
+    [channelInfo, dispatch],
   );
 
   return (
@@ -199,17 +223,25 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <TextEditorRow
             divider
-            headerText="검사할 닉네임"
-            initialValue={user.join('\n')}
+            primary="검사할 닉네임"
+            initialValue={userList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveUser}
           />
           <TextEditorRow
             divider
-            headerText="검사할 키워드"
-            initialValue={keyword.join('\n')}
+            primary="검사할 키워드"
+            initialValue={keywordList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
             onSave={onSaveKeyword}
+          />
+          <TextEditorRow
+            divider
+            primary="검사할 채널"
+            secondary="모든 채널을 대상으로 하는 게시판(베스트 라이브 등)에서 동작합니다."
+            initialValue={channelList.join('\n')}
+            errorText="정규식 조건을 위반하는 항목이 있습니다."
+            onSave={onSaveChannel}
           />
           <ListItem>
             <ListItemText>뮤트된 아카콘 목록</ListItemText>
@@ -231,6 +263,8 @@ const View = React.forwardRef((_props, ref) => {
               componentsProps={{
                 toolbar: {
                   disabled: selection.length === 0,
+                  muteAll: muteAllEmot,
+                  actionMuteAll: $toggleMuteAllEmot,
                   onRemove: handleRemove,
                 },
               }}
@@ -247,24 +281,26 @@ const View = React.forwardRef((_props, ref) => {
             <Box clone width="100%">
               <Paper variant="outlined">
                 <Grid container>
-                  {!board?.category && (
+                  {!boardInfo?.category && (
                     <Grid item xs={12}>
                       <Typography align="center">
                         카테고리를 확인할 수 없습니다.
                       </Typography>
                     </Grid>
                   )}
-                  {board?.category &&
-                    Object.entries(board.category).map(([id, label], index) => (
-                      <CategoryRow
-                        key={id}
-                        divider={index !== 0}
-                        id={id}
-                        label={label}
-                        initValue={category?.[id]}
-                        onChange={handleCategory}
-                      />
-                    ))}
+                  {boardInfo?.category &&
+                    Object.entries(boardInfo.category).map(
+                      ([id, label], index) => (
+                        <CategoryRow
+                          key={id}
+                          divider={index !== 0}
+                          id={id}
+                          label={label}
+                          initValue={category?.[id]}
+                          onChange={handleCategory}
+                        />
+                      ),
+                    )}
                 </Grid>
               </Paper>
             </Box>

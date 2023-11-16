@@ -11,10 +11,10 @@ import { Check, Save } from '@material-ui/icons';
 const TextEditorRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function TextEditorRow(
-    { divider, headerText, initialValue, errorText, onSave },
+    { divider, primary, secondary, initialValue, errorText, onSave },
     ref,
   ) {
-    const [text, setText] = useState(() => initialValue);
+    const [text, setText] = useState(() => initialValue || '');
     const [textChanged, setTextChanged] = useState(false);
     const [error, setError] = useState(false);
 
@@ -36,7 +36,7 @@ const TextEditorRow = React.forwardRef(
     return (
       <>
         <ListItem ref={ref}>
-          <ListItemText>{headerText}</ListItemText>
+          <ListItemText primary={primary} secondary={secondary} />
           <ListItemSecondaryAction>
             <IconButton
               color="primary"

@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, Menu, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   list: {
     '& > *:not(:first-child)': {
       borderTop: `1px solid ${theme.palette.divider}`,
     },
   },
-}));
+});
 
 function getKeyCombine(event) {
   let combine = '';
@@ -24,14 +24,12 @@ function getKeyCombine(event) {
   return combine;
 }
 
-export default function ContextMenu({ menuList }) {
+function ContextMenu({ classes, menuList }) {
   const dispatch = useDispatch();
   const { interactionType } = useSelector((state) => state[Info.ID].storage);
-  const { open, triggerList } = useSelector((state) => state[Info.ID]);
+  const { mousePos, triggerList } = useSelector((state) => state[Info.ID]);
   const gestureTrack = useRef({ right: false, count: 0 });
-  const targetRef = useRef(undefined);
-  const [mousePos, setMousePos] = useState([]);
-  const classes = useStyles();
+  const [targetTable, setTargetTable] = useState(undefined);
 
   useEffect(() => {
     const handleDown = ({ button }) => {
@@ -47,7 +45,7 @@ export default function ContextMenu({ menuList }) {
       if (gestureTrack.current.right) gestureTrack.current.count += 1;
     };
     const handleScroll = () => {
-      dispatch(setOpen(false));
+      dispatch(setOpen(null));
     };
     const handleContext = (e) => {
       const { count: trackCount } = gestureTrack.current;
@@ -55,13 +53,19 @@ export default function ContextMenu({ menuList }) {
 
       if (trackCount > 20) return;
       if (getKeyCombine(e) !== interactionType) return;
-      if (!triggerList.some((selector) => !!e.target.closest(selector))) return;
+      let triggered = false;
+      const entries = triggerList.map(({ key, selector }) => {
+        const target = e.target.closest(selector);
+
+        if (target) triggered = true;
+        return [key, target];
+      });
+
+      if (!triggered) return;
 
       e.preventDefault();
-
-      setMousePos([e.clientX, e.clientY]);
-      targetRef.current = e.target;
-      dispatch(setOpen(true));
+      setTargetTable(Object.fromEntries(entries));
+      dispatch(setOpen([e.clientX, e.clientY]));
     };
 
     document.addEventListener('mousedown', handleDown);
@@ -79,10 +83,10 @@ export default function ContextMenu({ menuList }) {
   }, [dispatch, interactionType, triggerList]);
 
   const handleClose = useCallback(() => {
-    dispatch(setOpen(false));
+    dispatch(setOpen(null));
   }, [dispatch]);
 
-  const [left = 0, top = 0] = mousePos;
+  const [left, top] = mousePos || [0, 0];
 
   return (
     <Menu
@@ -92,9 +96,9 @@ export default function ContextMenu({ menuList }) {
       anchorReference="anchorPosition"
       anchorPosition={{ top, left }}
       MenuListProps={{ disablePadding: true }}
-      TransitionProps={{ exit: false }}
+      TransitionProps={{ timeout: { enter: 150, exit: 0 } }}
       classes={{ list: classes.list }}
-      open={open}
+      open={!!mousePos}
       onClose={handleClose}
     >
       <List>
@@ -103,8 +107,10 @@ export default function ContextMenu({ menuList }) {
         </MenuItem>
       </List>
       {menuList.map(({ key, View }) => (
-        <View key={key} targetRef={targetRef} />
+        <View key={key} target={targetTable?.[key]} />
       ))}
     </Menu>
   );
 }
+
+export default withStyles(styles)(ContextMenu);

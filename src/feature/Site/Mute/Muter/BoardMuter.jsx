@@ -5,12 +5,14 @@ import { withStyles } from '@material-ui/styles';
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
 import { useContent } from 'hooks/Content';
-import { getUserInfo } from 'func/user';
+import { getUserID } from 'func/user';
 
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
-import { emoticonFilterSelector } from '../selector';
+import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
+
+const globalChannel = ['live', 'headline', 'replay', 'breaking'];
 
 const style = {
   '@global': {
@@ -19,6 +21,9 @@ const style = {
         display: 'none',
       },
       '& .list-table.show-filtered-category .filtered-category': {
+        display: 'flex !important',
+      },
+      '& .list-table.show-filtered-channel .filtered-channel': {
         display: 'flex !important',
       },
       '& .block-preview .vrow-preview': {
@@ -43,27 +48,26 @@ const style = {
 function BoardMuter() {
   const dispatch = useDispatch();
   const [addEventListener, removeEventListener] = useEvent();
-  const { channel, board } = useContent();
+  const { channel: channelInfo, board: boardInfo } = useContent();
 
+  const { userList, keywordList, channelList, emotList, categoryOpt } =
+    useSelector((state) => filterSelector(state, channelInfo.ID));
   const {
-    user,
-    keyword,
-    category,
     boardBarPos,
     hideCountBar,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
   } = useSelector((state) => state[Info.ID].storage);
+
   const [controlTarget, setControlTarget] = useState(undefined);
-  const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
+  const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [count, setCount] = useState(undefined);
-  const emoticionFilter = useSelector(emoticonFilterSelector);
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
-    if (!board) return;
+    if (!boardInfo) return;
 
     const boardElement = document.querySelector(
       `${BOARD}, ${BOARD_IN_ARTICLE}`,
@@ -72,13 +76,13 @@ function BoardMuter() {
 
     setControlTarget(boardElement);
     const name2id = Object.fromEntries(
-      Object.entries(board.category).map(([key, value]) => [value, key]),
+      Object.entries(boardInfo.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
     const containerElement = document.createElement('div');
     setCountBarContainer(containerElement);
-  }, [dispatch, board]);
+  }, [dispatch, boardInfo]);
 
   useLayoutEffect(() => {
     if (!controlTarget) return;
@@ -87,28 +91,28 @@ function BoardMuter() {
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
   }, [controlTarget, countBarContainer, boardBarPos]);
 
-  // 유저, 키워드, 카테고리 뮤트처리
+  // 유저, 키워드, 카테고리, 채널 뮤트처리
   useLayoutEffect(() => {
     if (!controlTarget) return undefined;
 
     const muteArticle = () => {
-      const articleList = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
-      const articleInfo = articleList
+      const items = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
+      const itemContents = items
         .filter((a) => !a.href?.includes('#c_'))
         .map((a) => ({
           element: a,
-          user: getUserInfo(a.querySelector('.user-info')),
+          user: getUserID(a.querySelector('.user-info')),
           content: a.querySelector('.title')?.textContent || '',
           category: a.querySelector('.badge')?.textContent || '글머리없음',
         }));
-      const channelCategory = category[channel.ID] || {};
 
-      const result = filterContent({
-        contents: articleInfo,
-        userList: user,
-        keywordList: keyword,
-        categoryList: channelCategory,
-        categoryMap: nameToIDMap,
+      const result = filterContent(itemContents, {
+        userList,
+        keywordList,
+        channelList,
+        categoryOpt,
+        categoryNameMap: nameToIDMap,
+        global: globalChannel.includes(channelInfo.ID),
       });
       setCount(result);
     };
@@ -122,12 +126,13 @@ function BoardMuter() {
       removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
   }, [
+    userList,
+    keywordList,
+    categoryOpt,
     controlTarget,
     nameToIDMap,
-    keyword,
-    user,
-    channel,
-    category,
+    channelList,
+    channelInfo,
     addEventListener,
     removeEventListener,
   ]);
@@ -144,11 +149,11 @@ function BoardMuter() {
         ? trimEmotURL(e.src)
         : trimEmotURL(e.textContent.match(/(\/\/.+)type=list/g)[0]);
 
-      if (emoticionFilter.url[url]) {
+      if (emotList.url[url]) {
         e.parentNode.classList.add('filtered-emoticon');
       }
     });
-  }, [controlTarget, emoticionFilter]);
+  }, [controlTarget, emotList]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {

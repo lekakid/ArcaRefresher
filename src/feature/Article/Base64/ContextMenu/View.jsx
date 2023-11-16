@@ -1,36 +1,37 @@
 import React, { useCallback } from 'react';
 import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Person } from '@material-ui/icons';
+import { FastRewind } from '@material-ui/icons';
 
-import { USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 
+import { useDispatch } from 'react-redux';
 import Info from '../FeatureInfo';
+import { toggleTemporaryDisabled } from '../slice';
 
 // 우클릭 메뉴
 function ContextMenu({ target }) {
-  const [data, closeMenu] = useContextMenu(
-    {
-      key: Info.ID,
-      selector: USER_INFO,
-      dataExtractor: () => target.src.split('?')[0],
-    },
-    [target],
-  );
+  const dispatch = useDispatch();
+
+  const [data, closeMenu] = useContextMenu({
+    key: Info.ID,
+    selector: 'a.base64',
+    dataExtractor: () => target,
+  });
 
   const handleClick = useCallback(() => {
-    // 클릭 시 동작 작성
+    dispatch(toggleTemporaryDisabled());
+
     closeMenu();
-  }, [closeMenu]);
+  }, [dispatch, closeMenu]);
 
   if (!data) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>
         <ListItemIcon>
-          <Person />
+          <FastRewind />
         </ListItemIcon>
-        <Typography>MENU_NAME</Typography>
+        <Typography>복호화 임시해제</Typography>
       </MenuItem>
     </List>
   );

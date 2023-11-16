@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 const TypeString = {
   keyword: '키워드',
   user: '사용자',
+  channel: '채널',
   category: '카테고리',
   deleted: '삭제됨',
   all: '전체',
@@ -89,6 +90,7 @@ CountBar.defaultProps = {
   count: {
     keyword: 0,
     user: 0,
+    channel: 0,
     category: 0,
     deleted: 0,
     all: 0,

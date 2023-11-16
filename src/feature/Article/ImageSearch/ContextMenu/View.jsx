@@ -14,17 +14,23 @@ import Info from '../FeatureInfo';
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
 
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
     useSelector((state) => state[Info.ID].storage);
 
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: ARTICLE_IMAGES,
-    dataExtractor: (target) =>
-      `${target.src}${searchBySource ? '&type=orig' : ''}`,
-  });
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: ARTICLE_IMAGES,
+      dataExtractor: () => {
+        if (!target) return undefined;
+
+        return `${target.src}${searchBySource ? '&type=orig' : ''}`;
+      },
+    },
+    [target, searchBySource],
+  );
 
   const handleGoogle = useCallback(() => {
     const url = {

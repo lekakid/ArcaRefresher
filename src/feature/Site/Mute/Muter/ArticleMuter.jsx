@@ -6,7 +6,7 @@ import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { trimEmotURL } from '../func';
-import { emoticonFilterSelector } from '../selector';
+import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
 const style = {
@@ -41,18 +41,21 @@ const style = {
 };
 
 function ArticleMuter() {
-  const { hideMutedMark } = useSelector((state) => state[Info.ID].storage);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const [article, setArticle] = useState(null);
-  const emoticonFilter = useSelector(emoticonFilterSelector);
+
+  const { emotList } = useSelector(filterSelector);
+  const { hideMutedMark, muteAllEmot } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
+  const [controlTarget, setControlTarget] = useState(null);
 
   useEffect(() => {
-    if (articleLoaded) setArticle(document.querySelector(ARTICLE));
+    if (articleLoaded) setControlTarget(document.querySelector(ARTICLE));
   }, [articleLoaded]);
 
   // 이모티콘 뮤트
   useEffect(() => {
-    if (!article) return undefined;
+    if (!controlTarget) return undefined;
 
     const muteArticle = () => {
       const articleImage = [...document.querySelectorAll(ARTICLE_EMOTICON)];
@@ -61,11 +64,13 @@ function ArticleMuter() {
 
         const filterFormat = trimEmotURL(src);
         const wrapper = i.closest('a');
-        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+        if (wrapper && (muteAllEmot || !!emotList.url[filterFormat])) {
           wrapper.classList.add('muted');
           wrapper.dataset.href = wrapper.href;
           wrapper.removeAttribute('href');
-          wrapper.title = emoticonFilter.url[filterFormat];
+          wrapper.title = muteAllEmot
+            ? '알 수 없음'
+            : emotList.url[filterFormat];
         }
       });
     };
@@ -77,7 +82,7 @@ function ArticleMuter() {
 
         const filterFormat = trimEmotURL(src);
         const wrapper = i.closest('a');
-        if (wrapper && !!emoticonFilter.url[filterFormat]) {
+        if (wrapper && !!emotList.url[filterFormat]) {
           wrapper.classList.remove('muted');
           wrapper.href = wrapper.dataset.href;
           delete wrapper.dataset.href;
@@ -96,7 +101,7 @@ function ArticleMuter() {
 
     muteArticle();
     return () => unmuteArticle();
-  }, [article, emoticonFilter, hideMutedMark]);
+  }, [controlTarget, emotList, hideMutedMark, muteAllEmot]);
 
   return null;
 }

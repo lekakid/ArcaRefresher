@@ -16,9 +16,9 @@ import Info from '../FeatureInfo';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const {
-    storage: { prefixList, suffixList, extraPrefix },
-  } = useSelector((state) => state[Info.ID]);
+  const { prefixList, suffixList, extraPrefix } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const dispatch = useDispatch();
 
   const onSavePrefixList = useCallback(
@@ -51,13 +51,13 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <TextEditorRow
             divider
-            headerText="익명화 앞단어"
+            primary="익명화 앞단어"
             initialValue={prefixList.join('\n')}
             onSave={onSavePrefixList}
           />
           <TextEditorRow
             divider
-            headerText="익명화 뒷단어"
+            primary="익명화 뒷단어"
             initialValue={suffixList.join('\n')}
             onSave={onSaveSuffixList}
           />

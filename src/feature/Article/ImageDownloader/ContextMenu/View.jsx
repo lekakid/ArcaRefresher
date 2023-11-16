@@ -13,18 +13,25 @@ import { request } from 'func/http';
 import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
-function ContextMenu({ targetRef }) {
+function ContextMenu({ target }) {
   const { downloadMethod, fileName } = useSelector(
     (state) => state[Info.ID].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu({
-    targetRef,
-    selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
-    dataExtractor: (target) => getImageInfo(target),
-  });
+  const [data, closeMenu] = useContextMenu(
+    {
+      key: Info.ID,
+      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      dataExtractor: () => {
+        if (!target) return undefined;
+
+        return getImageInfo(target);
+      },
+    },
+    [target],
+  );
 
   const handleClipboard = useCallback(() => {
     (async () => {
@@ -72,18 +79,42 @@ function ContextMenu({ targetRef }) {
 
   const handleDownload = useCallback(() => {
     (async () => {
-      const { orig, ext, uploadName } = data;
+      let { orig } = data;
+      const { ext, uploadName } = data;
       try {
         closeMenu();
+        const name = format(fileName, {
+          values: contentInfo,
+          fileName: uploadName,
+        });
         switch (downloadMethod) {
           case 'fetch': {
             const response = await fetch(orig);
             const size = Number(response.headers.get('content-length'));
             const stream = response.body;
-            const name = format(fileName, {
-              values: contentInfo,
-              fileName: uploadName,
+
+            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+              size,
             });
+            stream.pipeTo(filestream);
+            break;
+          }
+          case 'xhr+fetch': {
+            const headResponse = await request(orig, {
+              responseType: 'blob',
+            });
+
+            const size =
+              Number(
+                headResponse.responseHeaders
+                  .split('content-length: ')[1]
+                  .split('\r')[0],
+              ) || 0;
+
+            orig = headResponse.finalUrl;
+
+            const response = await fetch(orig);
+            const stream = response.body;
 
             const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
               size,
@@ -106,10 +137,6 @@ function ContextMenu({ targetRef }) {
                   .split('\r')[0],
               ) || 0;
             const stream = response.response.stream();
-            const name = format(fileName, {
-              values: contentInfo,
-              fileName: uploadName,
-            });
 
             const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
               size,
@@ -119,12 +146,10 @@ function ContextMenu({ targetRef }) {
             break;
           }
           default:
-            throw new Error(
-              '[ImageDownload] 확인할 수 없는 다운로드 방식 사용',
-            );
+            throw new Error('확인할 수 없는 다운로드 방식 사용');
         }
       } catch (error) {
-        console.warn('다운로드 실패', orig, error);
+        console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({
           msg: '이미지 다운로드에 실패했습니다.',
           time: 3000,

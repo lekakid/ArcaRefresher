@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { createMonkeySyncMiddleware, initMonkeySync } from 'core/storage';
+import { LoadCheckerReducerEntrie } from 'hooks/LoadChecker';
 
 const menuContext = require.context('menu/', true, /^menu\/.+\/slice$/);
 const menuReducerEntries = menuContext
@@ -20,6 +21,7 @@ const featureReducerEntries = featureContext
 
 const store = configureStore({
   reducer: Object.fromEntries([
+    LoadCheckerReducerEntrie,
     ...menuReducerEntries,
     ...featureReducerEntries,
   ]),
