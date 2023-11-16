@@ -4,8 +4,6 @@ const callbackList = [];
 
 const OriginWebSocket = unsafeWindow.WebSocket;
 function WrappedWebSocket(...contructorArguments) {
-  console.info('[ArcaRefresher] WebSocket Wrapped');
-
   const ws = new OriginWebSocket(...contructorArguments);
 
   const originAddEventListener = ws.addEventListener;
@@ -33,6 +31,7 @@ function WrappedWebSocket(...contructorArguments) {
     },
   });
 
+  console.info('[ArcaRefresher] WebSocket Wrapped');
   return ws;
 }
 unsafeWindow.WebSocket = WrappedWebSocket;
