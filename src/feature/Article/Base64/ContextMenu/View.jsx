@@ -31,7 +31,7 @@ function ContextMenu({ target }) {
         <ListItemIcon>
           <FastRewind />
         </ListItemIcon>
-        <Typography>디코드 임시해제</Typography>
+        <Typography>복호화 임시해제</Typography>
       </MenuItem>
     </List>
   );

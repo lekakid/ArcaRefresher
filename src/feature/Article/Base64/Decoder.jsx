@@ -193,6 +193,7 @@ function Decoder() {
       setDecodeResult((prev) => ({
         ...prev,
         text: decoded,
+        more: false,
         type: 'url',
       }));
       return;
