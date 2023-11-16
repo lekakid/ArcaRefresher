@@ -14,12 +14,13 @@ function WrappedWebSocket(...contructorArguments) {
       const callback = propertyArguments[1];
       propertyArguments[1] = (e) => {
         let result = e;
-        callbackList?.forEach((c) => {
-          result = c(e);
+        callbackList.forEach((c) => {
+          if (!result) return; // 폐기됨
+          result = c(result);
         });
 
         if (!result) return undefined;
-        return callback.apply(this, [e]);
+        return callback.apply(this, [result]);
       };
     }
     return originAddEventListener.apply(this, propertyArguments);
