@@ -5,10 +5,11 @@
   "author": "LeKAKiD",
   "license": "MIT",
   "private": true,
-  "husky": {
-    "hooks": {
-      "pre-push": "eslint . --ext jsx"
-    }
+  "lint-staged": {
+    "*.jsx": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "scripts": {
     "postinstall": "husky install",
@@ -40,6 +41,7 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.4",
+    "lint-staged": "^15.1.0",
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
     "webpack": "^5.89.0",
