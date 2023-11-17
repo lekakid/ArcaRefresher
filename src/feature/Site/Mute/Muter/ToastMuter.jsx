@@ -42,7 +42,7 @@ function ToastMuter() {
 
     const listener = (e) => {
       const data = e.data.split('|');
-      if (data[0] !== 'n') return e;
+      if (data[0] !== 'n') return true;
 
       const noti = JSON.parse(data[1]);
 
@@ -50,7 +50,7 @@ function ToastMuter() {
       if (noti.mediaUrl) {
         const url = trimEmotURL(noti.mediaUrl);
         if (muteAllEmot || emotList.url[url]) {
-          if (hideMutedMark) return undefined;
+          if (hideMutedMark) return false;
 
           delete noti.mediaUrl;
           noti.title = 'Arca Refresher';
@@ -59,9 +59,10 @@ function ToastMuter() {
       }
 
       // 사용자 뮤트
-      const regex = userList.length > 0 && new RegExp(userList.join('|'));
+      const regex =
+        userList.length > 0 ? new RegExp(userList.join('|')) : undefined;
       if (regex?.test(noti.username)) {
-        if (hideMutedMark) return undefined;
+        if (hideMutedMark) return false;
 
         if (noti.mediaUrl) delete noti.mediaUrl;
         noti.title = 'Arca Refresher';
@@ -70,7 +71,7 @@ function ToastMuter() {
 
       const injectedData = `${data[0]}|${JSON.stringify(noti)}`;
       Object.defineProperty(e, 'data', { value: injectedData });
-      return e;
+      return true;
     };
     subscribeSocket(listener);
 
