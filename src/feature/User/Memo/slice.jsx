@@ -54,11 +54,12 @@ export const slice = createSlice({
     },
     $setMemo(state, action) {
       const { user, memo } = action.payload;
-      if (memo) {
-        state.storage.memo[user] = memo;
-      } else {
+      if (!memo.msg && !memo.color) {
         delete state.storage.memo[user];
+        return;
       }
+
+      state.storage.memo[user] = memo;
     },
     $setMemoList(state, action) {
       state.storage.memo = action.payload;
