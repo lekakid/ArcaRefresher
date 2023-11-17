@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "postinstall": "husky install",
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
