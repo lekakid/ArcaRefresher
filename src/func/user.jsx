@@ -44,6 +44,21 @@ export function getUserID(infoElement) {
   return infoElement.textContent.trim() || '미상';
 }
 
+export function getUserFilter(infoElement) {
+  const data = infoElement.querySelector('[data-filter]');
+  if (data) {
+    return data.dataset.filter;
+  }
+
+  const anchor = infoElement.querySelector('a');
+  if (anchor) {
+    const nick = anchor.title || anchor.textContent.replace('@', '');
+    return nick || '';
+  }
+
+  return infoElement.textContent.trim() || '미상';
+}
+
 export function getUserIP(infoElement) {
   try {
     const data = infoElement.querySelector('[data-filter]').dataset.filter;
