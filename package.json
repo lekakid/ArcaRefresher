@@ -1,16 +1,18 @@
 {
   "name": "arcarefresher",
-  "version": "3.31.1",
+  "version": "3.31.2",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
   "private": true,
-  "husky": {
-    "hooks": {
-      "pre-push": "eslint . --ext jsx"
-    }
+  "lint-staged": {
+    "*.jsx": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "scripts": {
+    "postinstall": "husky install",
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
@@ -39,6 +41,7 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.4",
+    "lint-staged": "^15.1.0",
     "prettier": "^2.6.2",
     "prop-types": "^15.8.1",
     "webpack": "^5.89.0",
