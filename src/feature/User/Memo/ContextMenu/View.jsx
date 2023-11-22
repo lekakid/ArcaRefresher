@@ -71,7 +71,9 @@ function ContextMenu({ target }) {
             <ListItemIcon>
               <Comment />
             </ListItemIcon>
-            <Typography>메모</Typography>
+            <Typography>{`메모 ${
+              memo[data]?.msg ? `(${memo[data].msg})` : ''
+            }`}</Typography>
           </MenuItem>
         </List>
       )}

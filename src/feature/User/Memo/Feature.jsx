@@ -84,6 +84,7 @@ function MemoList() {
     };
   }, [memo, loaded, addEventListener, removeEventListener]);
 
+  if (variant === 'none') return null;
   return (
     <>
       {infoList.map(({ key, id, container }) => (

@@ -139,6 +139,7 @@ const View = React.forwardRef((_props, ref) => {
           >
             <MenuItem value="badge">둥근 뱃지</MenuItem>
             <MenuItem value="text">텍스트</MenuItem>
+            <MenuItem value="none">없음</MenuItem>
           </SelectRow>
           <ListItem divider>
             <input
