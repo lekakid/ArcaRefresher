@@ -56,6 +56,7 @@ function AutoRefresher({ classes }) {
   const [pause, setPause] = useState({
     management: false,
     unfocus: false,
+    api: false,
   });
   const refreshData = useRef({
     newArticle: 0, // 반영 안 된 새 게시물 수
@@ -200,8 +201,17 @@ function AutoRefresher({ classes }) {
       if (!document.hidden) tryRefresh();
     };
 
+    const apiPause = () => {
+      setPause((prev) => ({
+        ...prev,
+        api: !prev.api,
+      }));
+    };
+
     board.addEventListener('click', onManageArticle);
     document.addEventListener('visibilitychange', onFocusOut);
+    unsafeWindow.ArcaRefresher ??= {};
+    unsafeWindow.ArcaRefresher.toggleRefresh = apiPause;
 
     return () => {
       board.removeEventListener('click', onManageArticle);
@@ -211,7 +221,7 @@ function AutoRefresher({ classes }) {
 
   useEffect(() => {
     if (!enabled) return undefined;
-    if (pause.management || pause.unfocus) return undefined;
+    if (pause.management || pause.unfocus || pause.api) return undefined;
 
     const timer = setInterval(tryRefresh, countdown * 1000);
 
@@ -223,7 +233,7 @@ function AutoRefresher({ classes }) {
       <div>
         <RefreshProgress
           count={enabled ? countdown : 0}
-          animate={!(pause.management || pause.unfocus)}
+          animate={!(pause.management || pause.unfocus || pause.api)}
         />
       </div>
     </Fade>
