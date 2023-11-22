@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Portal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
@@ -38,6 +38,7 @@ export default function IPInfo() {
   const loaded = useLoadChecker(FULL_LOADED);
   const classes = useStyles();
 
+  const infoContainer = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {
@@ -53,11 +54,12 @@ export default function IPInfo() {
           ) || { label: '고정', color: 'green' };
 
           const container =
-            e.querySelector('.ip-info') || document.createElement('span');
-          if (!container.parentNode) {
+            infoContainer.current[index] || document.createElement('span');
+          if (!container.classList.contains('ip-info')) {
             container.classList.add('ip-info');
-            e.append(container);
+            infoContainer.current.push(container);
           }
+          e.append(container);
 
           return { key, label, color, container };
         })
