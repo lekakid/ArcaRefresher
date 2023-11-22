@@ -15,7 +15,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 import RefreshProgress from './RefreshProgress';
-import { getNewArticle, swapArticle } from './article';
+import { getNewArticle, updateBoard } from './article';
 
 const styles = {
   refreshed: {
@@ -105,9 +105,9 @@ function AutoRefresher({ classes }) {
     if (refreshData.current.mouseTimer) return;
 
     // 게시물 갱신
-    const newArticle = await getNewArticle();
-    if (newArticle.length === 0) return;
-    swapArticle(board, newArticle, classes.refreshed);
+    const newArticles = await getNewArticle();
+    if (!newArticles) return;
+    updateBoard(board, newArticles, classes.refreshed);
     dispatchEvent(EVENT_BOARD_REFRESH);
 
     // 리셋
@@ -199,6 +199,7 @@ function AutoRefresher({ classes }) {
       }));
       if (!document.hidden) tryRefresh();
     };
+
     board.addEventListener('click', onManageArticle);
     document.addEventListener('visibilitychange', onFocusOut);
 
@@ -206,7 +207,7 @@ function AutoRefresher({ classes }) {
       board.removeEventListener('click', onManageArticle);
       document.removeEventListener('visibilitychange', onFocusOut);
     };
-  }, [board, countdown, enabled, tryRefresh]);
+  }, [board, enabled, tryRefresh]);
 
   useEffect(() => {
     if (!enabled) return undefined;

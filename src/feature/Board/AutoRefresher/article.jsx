@@ -1,4 +1,4 @@
-import { BOARD_NOTICES, BOARD_ITEMS, BOARD, USER_INFO } from 'core/selector';
+import { BOARD_NOTICES, BOARD_ITEMS } from 'core/selector';
 import toDocument from 'func/toDocument';
 
 export async function getNewArticle() {
@@ -6,55 +6,45 @@ export async function getNewArticle() {
     const response = await fetch(window.location.href);
     if (!response.ok) throw new Error('[AutoRefresher] 연결 거부');
 
-    const updateDocument = toDocument(await response.text());
-    const newArticles = updateDocument
-      .querySelector(BOARD)
-      .querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`);
+    const refreshedDocument = toDocument(await response.text());
+    const notices = [...refreshedDocument.querySelectorAll(BOARD_NOTICES)];
+    const articles = [...refreshedDocument.querySelectorAll(BOARD_ITEMS)];
 
-    return [...newArticles];
+    return { notices, articles };
   } catch (error) {
     console.error(error);
-    return [];
+    return null;
   }
 }
 
-export function swapArticle(
-  articleContainer,
-  refreshedArticles,
-  animationClass,
-) {
-  const insertedArticles = [
-    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
-  ];
-
-  // Filtering new articles, swap exist articles to new thing
-  const newArticles = refreshedArticles.filter((a) => {
-    const exist = insertedArticles.some((o) => {
-      if (o.pathname === a.pathname) {
-        const userInfoOnOld = o.querySelector(USER_INFO);
-        // eslint-disable-next-line no-unused-expressions
-        a.querySelector(USER_INFO)?.replaceWith(userInfoOnOld);
-        o.replaceWith(a);
-        return true;
-      }
-      return false;
-    });
-
-    return !exist;
+export function updateBoard(board, newArticles, animationClass) {
+  // 공지사항 새로고침
+  const noticeInsertPivot = board.querySelector('.head');
+  [...board.querySelectorAll(BOARD_NOTICES)].forEach((o) => o.remove());
+  newArticles.notices.reverse();
+  newArticles.notices.forEach((n) => {
+    noticeInsertPivot.insertAdjacentElement('afterend', n);
   });
 
-  const insertPos = articleContainer.querySelector(BOARD_ITEMS);
-  newArticles.forEach((a) => {
-    a.classList.add(animationClass);
-    articleContainer.insertBefore(a, insertPos);
-    articleContainer.removeChild(articleContainer.lastChild);
+  // 새 일반 게시물 확인 및 애니메이션 처리
+  const oldPathnames = [...board.querySelectorAll(BOARD_ITEMS)].map(
+    (o) => o.pathname || o.querySelector('a.title').pathname,
+  );
+  newArticles.articles.forEach((n) => {
+    const pathname = n.pathname || n.querySelector('a.title').pathname;
+    if (!oldPathnames.includes(pathname)) {
+      n.classList.add(animationClass);
+    }
   });
 
-  // calibrate preview image
-  const calibrateArticles = [
-    ...articleContainer.querySelectorAll(`${BOARD_NOTICES}, ${BOARD_ITEMS}`),
-  ];
-  calibrateArticles.forEach((a) => {
+  // 일반 게시물 새로고침
+  [...board.querySelectorAll(BOARD_ITEMS)].forEach((o) => o.remove());
+  newArticles.articles.forEach((n) => {
+    board.append(n);
+  });
+
+  // 미리보기 수정
+  newArticles.articles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
     lazyWrapper?.replaceWith(lazyWrapper.firstElementChild);
   });
