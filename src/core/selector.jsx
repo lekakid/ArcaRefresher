@@ -1,6 +1,6 @@
 // 게시판 등 컨테이너 요소의 내용물이 100% 로드 됐는지 체크하는 용도
 export const NAVIGATION_LOADED = '.content-wrapper';
-export const CHANNEL_TITLE_LOADED = '.btns-board';
+export const CHANNEL_TITLE_LOADED = '.board-title ~ .btns-board';
 export const BOARD_LOADED = '.article-list + .btns-board';
 export const DELETED_ALERT_LOADED = '.board-title + .alert-danger';
 export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';

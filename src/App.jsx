@@ -5,6 +5,7 @@ import { useMediaQuery } from '@material-ui/core';
 
 import store from 'core/store';
 import { light, dark } from 'core/theme';
+import { ContentCollector } from 'hooks/Content';
 
 import Menu from 'menu';
 import Feature from 'feature';
@@ -27,6 +28,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
+        <ContentCollector />
         <Feature />
         <Menu />
       </ThemeProvider>
