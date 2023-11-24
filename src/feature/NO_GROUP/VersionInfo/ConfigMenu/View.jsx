@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import {
   List,
   ListItem,
@@ -10,8 +10,8 @@ import {
   Dialog,
   DialogContent,
   useMediaQuery,
-} from '@material-ui/core';
-import { GitHub, Help, OpenInNew } from '@material-ui/icons';
+} from '@mui/material';
+import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
 
 import Info from '../FeatureInfo';
@@ -20,7 +20,7 @@ const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 
 const View = React.forwardRef((_props, ref) => {
   const [open, setOpen] = useState(false);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const handleVisitChannel = useCallback(() => {
     GM_openInTab('https://arca.live/b/namurefresher');
@@ -43,7 +43,7 @@ const View = React.forwardRef((_props, ref) => {
   }, [mobile]);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -89,12 +89,12 @@ const View = React.forwardRef((_props, ref) => {
           <Typography style={{ textAlign: 'center' }}>
             아래의 QR코드로 방문해주세요
           </Typography>
-          <Box padding={2}>
+          <Box sx={{ padding: 2 }}>
             <QRCode value={DONATION_TOSS_URL} />
           </Box>
         </DialogContent>
       </Dialog>
-    </Box>
+    </Fragment>
   );
 });
 

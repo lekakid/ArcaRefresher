@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, IconButton, Snackbar } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { Box, Button, IconButton, Snackbar } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 import { disableStorageSync } from 'core/storage';
 
@@ -87,7 +87,7 @@ export default function VersionInfo() {
       action = (
         <>
           <Button size="small" color="inherit" onClick={handleChangeLog}>
-            <Box fontWeight="fontWeightBold">업데이트 내역</Box>
+            <Box sx={{ fontWeight: 'bold' }}>업데이트 내역</Box>
           </Button>
           <IconButton size="small" color="inherit" onClick={handleClose}>
             <Close fontSize="small" />
@@ -100,7 +100,7 @@ export default function VersionInfo() {
       message = '리프레셔를 다운그레이드 하셨나요?';
       action = (
         <Button size="small" color="inherit" onClick={handleDowngrade}>
-          <Box fontWeight="fontWeightBold">예</Box>
+          <Box sx={{ fontWeight: 'bold' }}>예</Box>
         </Button>
       );
       break;
@@ -110,7 +110,7 @@ export default function VersionInfo() {
         이 탭에서 변경한 설정, 메모 등이 저장되지 않습니다.`;
       action = (
         <Button size="small" color="inherit" onClick={handleRefresh}>
-          <Box fontWeight="fontWeightBold">새로고침</Box>
+          <Box sx={{ fontWeight: 'bold' }}>새로고침</Box>
         </Button>
       );
       break;

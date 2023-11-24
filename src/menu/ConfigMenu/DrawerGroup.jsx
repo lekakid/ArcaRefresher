@@ -6,7 +6,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 import { setGroup } from './slice';
 
 export default function DrawerGroup({

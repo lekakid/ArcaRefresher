@@ -1,14 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  Grid,
-  List,
-  ListItem,
-  Paper,
-  Typography,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
 import { useContent } from 'hooks/Content';
 
@@ -16,13 +8,7 @@ import Info from '../FeatureInfo';
 import { $setCategoryStyle } from '../slice';
 import CategoryRow from './CategoryRow';
 
-const styles = {
-  root: {
-    width: '100%',
-  },
-};
-
-const View = React.forwardRef(({ classes }, ref) => {
+const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel, board } = useContent();
   const color = useSelector(
@@ -37,12 +23,12 @@ const View = React.forwardRef(({ classes }, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
           <ListItem>
-            <Paper className={classes.root} variant="outlined">
+            <Paper sx={{ width: '100%' }} variant="outlined">
               <Grid container>
                 {!board?.category && (
                   <Grid item xs={12}>
@@ -67,9 +53,9 @@ const View = React.forwardRef(({ classes }, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 
 View.displayName = `ConfigMenuView(${Info.ID})`;
-export default withStyles(styles)(View);
+export default View;

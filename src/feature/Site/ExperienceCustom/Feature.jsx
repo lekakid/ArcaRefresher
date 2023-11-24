@@ -6,12 +6,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  GlobalStyles,
   IconButton,
   Portal,
   Tooltip,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { ZoomIn } from '@material-ui/icons';
+} from '@mui/material';
+import { ZoomIn } from '@mui/icons-material';
 
 import {
   ARTICLE_GIFS,
@@ -34,28 +34,25 @@ import {
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
-import CommentButton from './CommentButton';
 
 const PREVIEW_SELECTOR =
   '.article-content img:not(.twemoji), .article-content video';
 
-const useStyles = makeStyles(() => ({
-  comment: {
-    '& #comment:not(.temp-show)': {
-      display: 'none',
-    },
-    '& #comment.temp-show + .unfold-button-container': {
-      display: 'none',
-    },
-  },
-}));
+const foldingStyles = (
+  <GlobalStyles
+    styles={{
+      '#comment:not(.temp-show)': {
+        display: 'none',
+      },
+    }}
+  />
+);
 
 export default function ExperienceCustomizer() {
   const [addEventListener, removeEventListener] = useEvent();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
-  const classes = useStyles();
 
   const {
     spoofTitle,
@@ -71,6 +68,7 @@ export default function ExperienceCustomizer() {
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);
   const [unfoldContainer, setUnfoldContainer] = useState(null);
+  const [unfold, setUnfold] = useState(false);
   const confirmRef = useRef();
   const [confirm, setConfirm] = useState(false);
   const [fakePreview, setFakePreview] = useState(null);
@@ -195,19 +193,14 @@ export default function ExperienceCustomizer() {
 
   // 댓글 접기 방지
   useEffect(() => {
-    if (!comment || !foldComment) return null;
+    if (!comment || !foldComment) return;
 
     if (!unfoldContainer) {
       const container = document.createElement('div');
-      container.classList.add('unfold-button-container');
       comment.insertAdjacentElement('afterend', container);
       setUnfoldContainer(container);
-      return null;
     }
-
-    document.documentElement.classList.add(classes.comment);
-    return () => document.documentElement.classList.remove(classes.comment);
-  }, [classes, comment, foldComment, unfoldContainer]);
+  }, [comment, foldComment, unfoldContainer]);
 
   // 넓은 답글창 열기
   useEffect(() => {
@@ -347,15 +340,18 @@ export default function ExperienceCustomizer() {
           </Button>
         </DialogActions>
       </Dialog>
-      {unfoldContainer && foldComment && (
+      {unfoldContainer && foldComment && !unfold && (
         <Portal container={unfoldContainer}>
-          <CommentButton className="unfold-comment" />
+          {foldingStyles}
+          <Button fullWidth onClick={() => setUnfold(true)}>
+            댓글 펼치기
+          </Button>
         </Portal>
       )}
       {fakePreview && (
         <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">
-            <IconButton onClick={handleFakePreview}>
+            <IconButton onClick={handleFakePreview} size="large">
               <ZoomIn />
             </IconButton>
           </Tooltip>

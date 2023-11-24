@@ -1,7 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { Fragment, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
   Button,
   List,
   ListItem,
@@ -10,7 +9,7 @@ import {
   MenuItem,
   Paper,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -118,7 +117,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -155,16 +154,14 @@ const View = React.forwardRef((_props, ref) => {
             />
             <ListItemSecondaryAction>
               <Button
-                variant="outlined"
-                style={{
-                  marginRight: 4,
+                sx={{
+                  marginRight: 0.5,
                 }}
                 onClick={() => inputRef.current.click()}
               >
                 가져오기
               </Button>
               <Button
-                variant="outlined"
                 disabled={memoRows.length === 0}
                 onClick={handleExportMobile}
               >
@@ -182,7 +179,7 @@ const View = React.forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

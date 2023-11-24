@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { getUserID, getUserKey } from 'func/user';
@@ -9,17 +9,19 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import Info from './FeatureInfo';
 import Label from './Label';
 
-const styles = {
-  AnonymousNick: {
-    '& .article-wrapper': {
-      '& .user-info, & .avatar': {
-        display: 'none !important',
+const anonymousNickStyles = (
+  <GlobalStyles
+    styles={{
+      '.article-wrapper': {
+        '& .user-info, & .avatar': {
+          display: 'none !important',
+        },
       },
-    },
-  },
-};
+    }}
+  />
+);
 
-function AnonymousNick({ classes }) {
+function AnonymousNick() {
   const { storage, show } = useSelector((state) => state[Info.ID]);
   const [nickData, setNickData] = useState([]);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
@@ -57,13 +59,10 @@ function AnonymousNick({ classes }) {
     setNickData(data);
   }, [articleLoaded, storage]);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle(classes.AnonymousNick, show);
-  }, [classes, show]);
-
   if (!show) return null;
   return (
     <>
+      {anonymousNickStyles}
       {nickData.map(({ key, nick, container }) => (
         <Label key={key} container={container}>
           {nick}
@@ -73,4 +72,4 @@ function AnonymousNick({ classes }) {
   );
 }
 
-export default withStyles(styles, { name: Info.ID })(AnonymousNick);
+export default AnonymousNick;

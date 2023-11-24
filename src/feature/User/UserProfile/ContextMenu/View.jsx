@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Assignment, Person, Search } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Assignment, Person, Search } from '@mui/icons-material';
 
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';

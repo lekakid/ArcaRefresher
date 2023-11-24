@@ -1,14 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
   List,
   ListItem,
   ListItemText,
   Paper,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { TextEditorRow } from 'component/config';
 
@@ -45,7 +44,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -69,7 +68,6 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
           <ListItem>
             <TextField
-              variant="outlined"
               fullWidth
               value={extraPrefix}
               onChange={onChangeExtraPrefix}
@@ -77,7 +75,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

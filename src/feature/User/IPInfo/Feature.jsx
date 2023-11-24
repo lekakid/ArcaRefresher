@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Portal } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Box, Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
@@ -13,30 +12,25 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
-import Info from './FeatureInfo';
 
-const useStyles = makeStyles(
-  {
-    red: {
-      backgroundColor: '#ec4545',
-      color: 'white',
-    },
-    green: {
-      backgroundColor: '#258d25',
-      color: 'white',
-    },
-    blue: {
-      backgroundColor: '#0a96f2',
-      color: 'white',
-    },
+const styles = {
+  '& .red': {
+    backgroundColor: '#ec4545',
+    color: 'white',
   },
-  { name: Info.ID },
-);
+  '& .green': {
+    backgroundColor: '#258d25',
+    color: 'white',
+  },
+  '& .blue': {
+    backgroundColor: '#0a96f2',
+    color: 'white',
+  },
+};
 
 export default function IPInfo() {
   const [addEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
-  const classes = useStyles();
 
   const infoContainer = useRef([]);
   const [infoList, setInfoList] = useState([]);
@@ -76,7 +70,9 @@ export default function IPInfo() {
     <>
       {infoList.map(({ key, label, color, container }) => (
         <Portal key={key} container={container}>
-          <AuthorTag className={classes[color]}>{label}</AuthorTag>
+          <Box sx={styles}>
+            <AuthorTag className={color}>{label}</AuthorTag>
+          </Box>
         </Portal>
       ))}
     </>

@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { GlobalStyles } from '@mui/material';
 
 import {
   COMMENT_INNER,
@@ -18,45 +18,47 @@ import { filterContent } from '../func';
 import CountBar from './CountBar';
 import { filterSelector } from '../selector';
 
-const style = {
-  '@global': {
-    '.body #comment': {
-      '& .frontend-header': {
-        display: 'none',
-      },
-      '& .list-area': {
-        '& .comment-wrapper.filtered': {
+const commentMuteStyles = (
+  <GlobalStyles
+    style={{
+      '.body #comment': {
+        '& .frontend-header': {
           display: 'none',
         },
-        '&.show-filtered .comment-wrapper.filtered': {
-          display: 'block',
-        },
-        '&.show-filtered-deleted .comment-wrapper.filtered-deleted': {
-          display: 'block',
-        },
-        '&.show-filtered-keyword .comment-wrapper.filtered-keyword': {
-          display: 'block',
-        },
-        '&.show-filtered-user .comment-wrapper.filtered-user': {
-          display: 'block',
-        },
-        '& .emoticon-muted': {
-          '& .emoticon-wrapper': {
-            width: 'auto !important',
-            height: 'auto !important',
-            textDecoration: 'none !important',
-            '& > img, & > video': {
-              display: 'none !important',
+        '& .list-area': {
+          '& .comment-wrapper.filtered': {
+            display: 'none',
+          },
+          '&.show-filtered .comment-wrapper.filtered': {
+            display: 'block',
+          },
+          '&.show-filtered-deleted .comment-wrapper.filtered-deleted': {
+            display: 'block',
+          },
+          '&.show-filtered-keyword .comment-wrapper.filtered-keyword': {
+            display: 'block',
+          },
+          '&.show-filtered-user .comment-wrapper.filtered-user': {
+            display: 'block',
+          },
+          '& .emoticon-muted': {
+            '& .emoticon-wrapper': {
+              width: 'auto !important',
+              height: 'auto !important',
+              textDecoration: 'none !important',
+              '& > img, & > video': {
+                display: 'none !important',
+              },
             },
           },
-        },
-        '& .hide-emoticon-muted': {
-          display: 'none !important',
+          '& .hide-emoticon-muted': {
+            display: 'none !important',
+          },
         },
       },
-    },
-  },
-};
+    }}
+  />
+);
 
 function CommentMuter() {
   const dispatch = useDispatch();
@@ -184,13 +186,16 @@ function CommentMuter() {
 
   if (!countBarContainer) return null;
   return (
-    <CountBar
-      renderContainer={countBarContainer}
-      controlTarget={controlTarget}
-      count={count}
-      hide={hideCountBar}
-    />
+    <>
+      {commentMuteStyles}
+      <CountBar
+        renderContainer={countBarContainer}
+        controlTarget={controlTarget}
+        count={count}
+        hide={hideCountBar}
+      />
+    </>
   );
 }
 
-export default withStyles(style)(CommentMuter);
+export default CommentMuter;

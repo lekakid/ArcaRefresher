@@ -1,13 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-} from '@material-ui/core';
+import { List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
 
 import Info from '../FeatureInfo';
 import { $setTemplate } from '../slice';
@@ -24,7 +17,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List>
@@ -33,7 +26,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

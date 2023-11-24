@@ -1,4 +1,4 @@
-import { Description } from '@material-ui/icons';
+import { Description } from '@mui/icons-material';
 import 'core/types';
 
 /** @type {GroupInfo} */

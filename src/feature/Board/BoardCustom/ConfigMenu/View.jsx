@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, List, Paper, Typography } from '@material-ui/core';
+import { List, Paper, Typography } from '@mui/material';
 
 import { SwitchRow } from 'component/config';
 
@@ -11,7 +11,7 @@ const View = React.forwardRef((_props, ref) => {
   const { contextMenuEnabled } = useSelector((state) => state[Info.ID].storage);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -22,7 +22,7 @@ const View = React.forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

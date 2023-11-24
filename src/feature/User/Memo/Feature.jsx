@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Portal } from '@material-ui/core';
+import { Portal } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { FULL_LOADED, USER_INFO } from 'core/selector';

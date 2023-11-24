@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Button, Snackbar, Typography } from '@material-ui/core';
+import { Box, Button, Snackbar, Typography } from '@mui/material';
 
 import {
   ARTICLE_CONTENT,
@@ -252,7 +252,7 @@ function Decoder() {
       onClose={() => setDecodeResult(undefined)}
       autoHideDuration={3000}
       message={
-        <Box maxWidth={300}>
+        <Box sx={{ maxWidth: 'xs' }}>
           <Typography>{LABEL[decodeResult.type]}</Typography>
           <Typography
             style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -262,16 +262,31 @@ function Decoder() {
       action={
         <>
           {decodeResult.more && (
-            <Button color="inherit" size="small" onClick={handleOneMore}>
+            <Button
+              variant="text"
+              color="secondary"
+              size="small"
+              onClick={handleOneMore}
+            >
               <Typography>복호화</Typography>
             </Button>
           )}
           {decodeResult.type === 'url' && (
-            <Button color="inherit" size="small" onClick={handleUrlOpen}>
+            <Button
+              variant="text"
+              color="secondary"
+              size="small"
+              onClick={handleUrlOpen}
+            >
               <Typography>열기</Typography>
             </Button>
           )}
-          <Button color="inherit" size="small" onClick={handleCopy}>
+          <Button
+            variant="text"
+            color="secondary"
+            size="small"
+            onClick={handleCopy}
+          >
             <Typography>복사</Typography>
           </Button>
         </>

@@ -5,8 +5,8 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   TextField,
-} from '@material-ui/core';
-import { Check, Save } from '@material-ui/icons';
+} from '@mui/material';
+import { Check, Save } from '@mui/icons-material';
 
 const TextEditorRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -42,6 +42,7 @@ const TextEditorRow = React.forwardRef(
               color="primary"
               disabled={!textChanged}
               onClick={handleSave}
+              size="large"
             >
               {textChanged ? <Save /> : <Check />}
             </IconButton>
@@ -49,7 +50,6 @@ const TextEditorRow = React.forwardRef(
         </ListItem>
         <ListItem ref={ref} divider={divider}>
           <TextField
-            variant="outlined"
             multiline
             fullWidth
             minRows={6}

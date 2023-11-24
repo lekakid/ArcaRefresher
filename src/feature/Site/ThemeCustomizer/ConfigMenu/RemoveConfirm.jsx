@@ -4,7 +4,7 @@ import {
   DialogTitle,
   DialogActions,
   Button,
-} from '@material-ui/core';
+} from '@mui/material';
 import React from 'react';
 
 export default function RemoveConfirm({ open, target, onSubmit, onClose }) {

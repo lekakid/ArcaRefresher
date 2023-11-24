@@ -1,34 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { Button, IconButton, Popover } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Button, IconButton, Popover } from '@mui/material';
 import { ChromePicker } from 'react-color';
-import { Delete } from '@material-ui/icons';
-
-const styles = (theme) => ({
-  pickerButton: {
-    width: 32,
-    height: 32,
-    minWidth: 32,
-    minHeight: 32,
-    margin: 4,
-  },
-  pickerContainer: {
-    padding: 8,
-    backgroundColor: 'unset',
-    border: 'unset',
-  },
-  removeButton: {
-    marginTop: 4,
-    backgroundColor: theme.palette.background.default,
-    boxShadow: theme.shadows[2],
-  },
-});
+import { Delete } from '@mui/icons-material';
 
 const Picker = React.forwardRef(
-  (
-    { classes, disabled, defaultColor, color, onOpen, onClose, onChange },
-    ref,
-  ) => {
+  ({ disabled, defaultColor, color, onOpen, onClose, onChange }, ref) => {
     const [innerColor, setInnerColor] = useState(defaultColor);
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -59,10 +35,16 @@ const Picker = React.forwardRef(
       <>
         <Button
           ref={ref}
-          variant="outlined"
           disabled={disabled}
-          style={{ background: color ?? innerColor }}
-          className={classes.pickerButton}
+          sx={{
+            margin: 0.5,
+            minWidth: 32,
+            minHeight: 32,
+            backgroundColor: color ?? innerColor,
+            '&:hover': {
+              backgroundColor: color ?? innerColor,
+            },
+          }}
           onClick={handleOpen}
         />
         <Popover
@@ -76,19 +58,26 @@ const Picker = React.forwardRef(
             vertical: 'top',
             horizontal: 'center',
           }}
-          PaperProps={{
-            classes: { root: classes.pickerContainer },
-            variant: 'outlined',
-          }}
-          style={{
-            zIndex: 2300,
+          slotProps={{
+            paper: {
+              elevation: 0,
+              sx: {
+                padding: 1,
+                backgroundColor: 'unset',
+                zIndex: 2300,
+              },
+            },
           }}
           onClose={handleClose}
         >
           <ChromePicker color={color ?? innerColor} onChange={handleChange} />
           <IconButton
             size="small"
-            className={classes.removeButton}
+            sx={{
+              marginTop: 0.5,
+              backgroundColor: (theme) => theme.palette.background.default,
+              boxShadow: (theme) => theme.shadows[2],
+            }}
             onClick={handleRemove}
           >
             <Delete />
@@ -103,4 +92,4 @@ Picker.defaultProps = {
   defaultcolor: '',
 };
 
-export default withStyles(styles)(Picker);
+export default Picker;

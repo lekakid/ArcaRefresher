@@ -7,23 +7,11 @@ import {
   ImageListItemBar,
   Typography,
   useMediaQuery,
-} from '@material-ui/core';
-import { withStyles, useTheme } from '@material-ui/styles';
-import { CheckCircle, CheckCircleOutline } from '@material-ui/icons';
+} from '@mui/material';
+import { CheckCircle, CheckCircleOutline } from '@mui/icons-material';
 
-const styles = (theme) => ({
-  itemBar: {
-    background:
-      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-  },
-  checkbox: {
-    color: theme.palette.grey.A100,
-  },
-});
-
-function SelectableImageList({ classes, imgList, selection, onChange }) {
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+function SelectableImageList({ imgList, selection, onChange }) {
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
   const handleSelect = useCallback(
     (index) => () => {
       const next = selection.includes(index)
@@ -37,10 +25,12 @@ function SelectableImageList({ classes, imgList, selection, onChange }) {
   if (imgList.length === 0) {
     return (
       <Box
-        display="flex"
-        minHeight={200}
-        justifyContent="center"
-        alignItems="center"
+        sx={{
+          display: 'flex',
+          minHeight: '200px',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         <Typography>이 게시물에는 이미지가 없습니다.</Typography>
       </Box>
@@ -52,16 +42,20 @@ function SelectableImageList({ classes, imgList, selection, onChange }) {
         <ImageListItem key={img} onClick={handleSelect(index)}>
           <img src={img} alt={img} />
           <ImageListItemBar
-            className={classes.itemBar}
+            sx={{
+              background:
+                'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+            }}
             position="top"
             actionPosition="left"
             actionIcon={
               <Checkbox
                 size="small"
-                color="default"
-                classes={{
-                  root: classes.checkbox,
-                  checked: classes.checkbox,
+                sx={{
+                  color: 'white',
+                  '&.Mui-checked': {
+                    color: 'white',
+                  },
                 }}
                 icon={<CheckCircleOutline />}
                 checkedIcon={<CheckCircle />}
@@ -76,4 +70,4 @@ function SelectableImageList({ classes, imgList, selection, onChange }) {
   );
 }
 
-export default withStyles(styles)(SelectableImageList);
+export default SelectableImageList;

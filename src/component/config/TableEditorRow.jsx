@@ -5,8 +5,8 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   TextField,
-} from '@material-ui/core';
-import { Remove, Subject, TableChart } from '@material-ui/icons';
+} from '@mui/material';
+import { Remove, Subject, TableChart } from '@mui/icons-material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 function NoRowsOverlay(text) {
@@ -16,7 +16,12 @@ function NoRowsOverlay(text) {
 function Toolbar({ disabled, onRemove }) {
   return (
     <div style={{ textAlign: 'right' }}>
-      <Button startIcon={<Remove />} disabled={disabled} onClick={onRemove}>
+      <Button
+        variant="text"
+        startIcon={<Remove />}
+        disabled={disabled}
+        onClick={onRemove}
+      >
         삭제
       </Button>
     </div>
@@ -91,6 +96,7 @@ const TableEditorRow = React.forwardRef(
           <ListItemText>{headerText}</ListItemText>
           <ListItemSecondaryAction>
             <Button
+              variant="text"
               startIcon={textMode ? <TableChart /> : <Subject />}
               onClick={handleMode}
             >
@@ -128,7 +134,6 @@ const TableEditorRow = React.forwardRef(
           )}
           {textMode && (
             <TextField
-              variant="outlined"
               fullWidth
               multiline
               minRows={6}

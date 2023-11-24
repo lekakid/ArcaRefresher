@@ -1,4 +1,4 @@
-import { Refresh } from '@material-ui/icons';
+import { Refresh } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

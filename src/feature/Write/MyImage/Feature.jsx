@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';

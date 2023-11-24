@@ -1,6 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -13,8 +12,8 @@ import {
   ListItemText,
   Paper,
   Typography,
-} from '@material-ui/core';
-import { Launch } from '@material-ui/icons';
+} from '@mui/material';
+import { Launch } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
@@ -70,7 +69,7 @@ const View = React.forwardRef((_props, ref) => {
   }, []);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -118,7 +117,7 @@ const View = React.forwardRef((_props, ref) => {
           <Button onClick={handleCancle}>취소</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Fragment>
   );
 });
 

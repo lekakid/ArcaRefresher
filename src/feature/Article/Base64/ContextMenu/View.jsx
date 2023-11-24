@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { FastRewind } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { FastRewind } from '@mui/icons-material';
 
 import { useContextMenu } from 'menu/ContextMenu';
 

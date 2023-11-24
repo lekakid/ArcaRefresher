@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -10,8 +10,8 @@ import {
   MenuItem,
   Paper,
   Typography,
-} from '@material-ui/core';
-import { Remove, VolumeOff, VolumeUp } from '@material-ui/icons';
+} from '@mui/material';
+import { Remove, VolumeOff, VolumeUp } from '@mui/icons-material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import { SelectRow, SwitchRow, TextEditorRow } from 'component/config';
@@ -48,14 +48,20 @@ function ConfigToolbar({ disabled, muteAll, actionMuteAll, onRemove }) {
   }, [dispatch, actionMuteAll]);
 
   return (
-    <Box display="flex" justifyContent="space-between">
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Button
+        variant="text"
         startIcon={muteAll ? <VolumeOff /> : <VolumeUp />}
         onClick={handleAllMute}
       >
         전부 뮤트
       </Button>
-      <Button startIcon={<Remove />} disabled={disabled} onClick={onRemove}>
+      <Button
+        variant="text"
+        startIcon={<Remove />}
+        disabled={disabled}
+        onClick={onRemove}
+      >
         삭제
       </Button>
     </Box>
@@ -142,7 +148,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -278,7 +284,7 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText>카테고리 설정</ListItemText>
           </ListItem>
           <ListItem>
-            <Box clone width="100%">
+            <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <Grid container>
                   {!boardInfo?.category && (
@@ -307,7 +313,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

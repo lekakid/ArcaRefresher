@@ -1,25 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { withStyles } from '@material-ui/styles';
-import { IconButton, Popper, Portal } from '@material-ui/core';
-import { ImageSearch } from '@material-ui/icons';
+import { GlobalStyles, IconButton, Popper, Portal } from '@mui/material';
+import { ImageSearch } from '@mui/icons-material';
 
-const Styles = {
-  '@global': {
-    '.article-content': {
-      '&:not(.media-blocker-unhide)': {
-        '& .media-blocker': {
-          display: 'none',
+const mediaBlockerStyles = (
+  <GlobalStyles
+    styles={{
+      '.article-content': {
+        '&:not(.media-blocker-unhide)': {
+          '& .media-blocker': {
+            display: 'none',
+          },
+          '& .media-blocker-btns.removed': {
+            display: 'none',
+          },
         },
-        '& .media-blocker-btns.removed': {
+        '&.media-blocker-unhide .media-blocker-btns': {
           display: 'none',
         },
       },
-      '&.media-blocker-unhide .media-blocker-btns': {
-        display: 'none',
-      },
-    },
-  },
-};
+    }}
+  />
+);
 
 function Blocker({ classes, referenceElement, container }) {
   const [anchor, setAnchor] = useState(null);
@@ -63,11 +64,13 @@ function Blocker({ classes, referenceElement, container }) {
 
   return (
     <>
+      {mediaBlockerStyles}
       <Portal container={container}>
         <IconButton
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
           onClick={handleClick}
+          size="large"
         >
           <ImageSearch />
         </IconButton>
@@ -79,4 +82,4 @@ function Blocker({ classes, referenceElement, container }) {
   );
 }
 
-export default withStyles(Styles)(Blocker);
+export default Blocker;

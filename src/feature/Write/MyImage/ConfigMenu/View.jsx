@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -8,16 +8,15 @@ import {
   Paper,
   Select,
   Typography,
-  Divider,
-  Grid,
-  Box,
   TextField,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+  Stack,
+  Divider,
+  MenuItem,
+} from '@mui/material';
 import {
   Add,
   Cancel,
@@ -25,7 +24,7 @@ import {
   Done,
   FileCopy,
   FlipToFront,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { useContent } from 'hooks/Content';
 
@@ -40,16 +39,6 @@ import {
 } from '../slice';
 import ImageSelector from './ImageSelector';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    width: '100%',
-  },
-  channelSelect: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-}));
-
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel } = useContent();
@@ -62,7 +51,6 @@ const View = React.forwardRef((_props, ref) => {
   const [removeFolderName, setRemoveFolderName] = useState('');
   const [moveInfo, setMoveInfo] = useState(undefined);
   const [selection, setSelection] = useState([]);
-  const classes = useStyles();
 
   const onSelectFolder = useCallback((e) => {
     setCurrentFolder(e.target.value);
@@ -154,7 +142,7 @@ const View = React.forwardRef((_props, ref) => {
 
   const folderList = Object.keys(imgList).sort();
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -178,42 +166,56 @@ const View = React.forwardRef((_props, ref) => {
             />
           </ListItem>
           <ListItem>
-            <Paper variant="outlined" classes={{ root: classes.container }}>
-              <Grid container>
-                <Grid item xs={12}>
+            <Paper variant="outlined" sx={{ width: '100%' }}>
+              <Stack>
+                <Stack direction="row">
                   {inputName === undefined && (
-                    <Select
-                      variant="outlined"
-                      fullWidth
-                      classes={{ root: classes.channelSelect }}
-                      value={currentFolder}
-                      onChange={onSelectFolder}
-                    >
-                      {folderList.map((key) => (
-                        <ListItem key={key} value={key}>
-                          {key === '_shared_' ? '공용 폴더' : key}
-                        </ListItem>
-                      ))}
-                    </Select>
+                    <>
+                      <Select
+                        sx={{ flexGrow: 1 }}
+                        value={currentFolder}
+                        onChange={onSelectFolder}
+                      >
+                        {folderList.map((key) => (
+                          <MenuItem key={key} value={key}>
+                            {key === '_shared_' ? '공용 폴더' : key}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <Button
+                        variant="text"
+                        startIcon={<Add />}
+                        onClick={() => setInputName(channel.ID)}
+                      >
+                        추가
+                      </Button>
+                      <Button
+                        variant="text"
+                        startIcon={<Delete />}
+                        disabled={!!moveInfo || currentFolder === '_shared_'}
+                        onClick={() => {
+                          setOpenDialog(true);
+                          setRemoveFolderName(currentFolder);
+                        }}
+                      >
+                        삭제
+                      </Button>
+                    </>
                   )}
-                  {inputName !== undefined && (
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      autoFocus
-                      size="small"
-                      value={inputName}
-                      error={folderList.includes(inputName)}
-                      onChange={handleInputName}
-                      onFocus={handleInputFocus}
-                      onKeyUp={handleInputEnter}
-                    />
-                  )}
-                </Grid>
-                <Grid item xs={4}>
                   {inputName !== undefined && (
                     <>
+                      <TextField
+                        fullWidth
+                        autoFocus
+                        size="small"
+                        value={inputName}
+                        error={folderList.includes(inputName)}
+                        onChange={handleInputName}
+                        onFocus={handleInputFocus}
+                        onKeyUp={handleInputEnter}
+                      />
                       <Button
+                        variant="text"
                         startIcon={<Done />}
                         disabled={
                           inputName === '' || folderList.includes(inputName)
@@ -223,6 +225,7 @@ const View = React.forwardRef((_props, ref) => {
                         확인
                       </Button>
                       <Button
+                        variant="text"
                         startIcon={<Cancel />}
                         onClick={() => setInputName(undefined)}
                       >
@@ -230,72 +233,60 @@ const View = React.forwardRef((_props, ref) => {
                       </Button>
                     </>
                   )}
-                  {inputName === undefined && (
-                    <>
-                      <Button
-                        startIcon={<Add />}
-                        onClick={() => setInputName(channel.ID)}
-                      >
-                        폴더 추가
-                      </Button>
-                      <Button
-                        startIcon={<Delete />}
-                        disabled={!!moveInfo || currentFolder === '_shared_'}
-                        onClick={() => {
-                          setOpenDialog(true);
-                          setRemoveFolderName(currentFolder);
-                        }}
-                      >
-                        폴더 삭제
-                      </Button>
-                    </>
-                  )}
-                </Grid>
-                <Grid item xs={8} style={{ textAlign: 'right' }}>
-                  {!moveInfo && (
-                    <>
-                      <Button
-                        startIcon={<FlipToFront />}
-                        disabled={selection.length === 0}
-                        onClick={setMoveMode}
-                      >
-                        이동/복사
-                      </Button>
-                      <Button
-                        startIcon={<Delete />}
-                        disabled={selection.length === 0}
-                        onClick={handleDelete}
-                      >
-                        선택 삭제
-                      </Button>
-                    </>
-                  )}
-                  {moveInfo && (
-                    <>
-                      <Button
-                        startIcon={<FlipToFront />}
-                        disabled={moveInfo.folder === currentFolder}
-                        name="move"
-                        onClick={handleMove}
-                      >
-                        이동
-                      </Button>
-                      <Button
-                        startIcon={<FileCopy />}
-                        disabled={moveInfo.folder === currentFolder}
-                        name="copy"
-                        onClick={handleCopy}
-                      >
-                        복사
-                      </Button>
-                      <Button startIcon={<Cancel />} onClick={cancelMoveMode}>
-                        취소
-                      </Button>
-                    </>
-                  )}
-                </Grid>
-              </Grid>
+                </Stack>
+              </Stack>
               <Divider />
+              <Stack direction="row" justifyContent="end">
+                {!moveInfo && (
+                  <>
+                    <Button
+                      variant="text"
+                      startIcon={<FlipToFront />}
+                      disabled={selection.length === 0}
+                      onClick={setMoveMode}
+                    >
+                      이동/복사
+                    </Button>
+                    <Button
+                      variant="text"
+                      startIcon={<Delete />}
+                      disabled={selection.length === 0}
+                      onClick={handleDelete}
+                    >
+                      선택 삭제
+                    </Button>
+                  </>
+                )}
+                {moveInfo && (
+                  <>
+                    <Button
+                      variant="text"
+                      startIcon={<FlipToFront />}
+                      disabled={moveInfo.folder === currentFolder}
+                      name="move"
+                      onClick={handleMove}
+                    >
+                      이동
+                    </Button>
+                    <Button
+                      variant="text"
+                      startIcon={<FileCopy />}
+                      disabled={moveInfo.folder === currentFolder}
+                      name="copy"
+                      onClick={handleCopy}
+                    >
+                      복사
+                    </Button>
+                    <Button
+                      variant="text"
+                      startIcon={<Cancel />}
+                      onClick={cancelMoveMode}
+                    >
+                      취소
+                    </Button>
+                  </>
+                )}
+              </Stack>
               <ImageSelector
                 rows={imgList[currentFolder]}
                 disabled={!!moveInfo}
@@ -320,7 +311,7 @@ const View = React.forwardRef((_props, ref) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Fragment>
   );
 });
 

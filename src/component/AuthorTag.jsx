@@ -1,45 +1,42 @@
-import { makeStyles } from '@material-ui/styles';
-import clsx from 'clsx';
+import { styled } from '@mui/styles';
 import React from 'react';
 
-const useStyles = makeStyles(
-  (theme) => ({
-    badge: {
-      '&:empty': {
-        display: 'none',
-      },
-      marginLeft: '4px',
-      padding: '1px 5px',
-      borderRadius: '1em',
-      backgroundColor: theme.palette.label.background,
-      color: theme.palette.label.text,
-      fontSize: '0.85em',
-    },
-    text: {
-      '&:empty': {
-        display: 'none',
-      },
-      '&::before': {
-        content: '"["',
-      },
-      '&::after': {
-        content: '"]"',
-      },
-      padding: '1px 5px',
-      color: theme.palette.text.primary,
-    },
-  }),
-  { name: 'Label' },
-);
+const Badge = styled('span')(({ theme }) => ({
+  '&:empty': {
+    display: 'none',
+  },
+  marginLeft: '4px',
+  padding: '1px 5px',
+  borderRadius: '1em',
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  fontSize: '0.85em',
+}));
+
+const Text = styled('span')(({ theme }) => ({
+  '&:empty': {
+    display: 'none',
+  },
+  '&::before': {
+    content: '"["',
+  },
+  '&::after': {
+    content: '"]"',
+  },
+  padding: '1px 5px',
+  color: theme.palette.primary.main,
+}));
 
 function AuthorTag({ variant, className, children }) {
-  const { badge, text } = useStyles();
-  const styles = clsx(className, {
-    [badge]: variant === 'badge',
-    [text]: variant === 'text',
-  });
+  if (variant === 'badge') {
+    return <Badge className={className}>{children}</Badge>;
+  }
 
-  return <span className={styles}>{children}</span>;
+  if (variant === 'text') {
+    return <Text className={className}>{children}</Text>;
+  }
+
+  return null;
 }
 
 AuthorTag.defaultProps = {

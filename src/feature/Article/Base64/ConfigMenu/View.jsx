@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -8,7 +8,8 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-} from '@material-ui/core';
+  Stack,
+} from '@mui/material';
 
 import { SwitchRow } from 'component/config';
 import { KeyIcon } from 'component';
@@ -25,7 +26,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -59,17 +60,17 @@ const View = React.forwardRef((_props, ref) => {
       <Paper>
         <List disablePadding>
           <ListItem>
-            <Box clone width="100%">
+            <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <List disablePadding>
                   <ListItem>
                     <ListItemText primary="인코딩" />
                     <ListItemSecondaryAction>
-                      <Box display="flex" alignItems="center">
+                      <Stack direction="row">
                         <KeyIcon title="Ctrl" />
                         +
                         <KeyIcon title="Space" />
-                      </Box>
+                      </Stack>
                     </ListItemSecondaryAction>
                   </ListItem>
                 </List>
@@ -78,7 +79,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Bookmark, OpenInNew } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Bookmark, OpenInNew } from '@mui/icons-material';
 
 import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';

@@ -11,8 +11,8 @@ import {
   FormGroup,
   Grid,
   TextField,
-} from '@material-ui/core';
-import { Add, ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
+import { Add, ExpandMore } from '@mui/icons-material';
 
 import { useContent } from 'hooks/Content';
 
@@ -91,7 +91,6 @@ function FolderCheckList({ open, url, onClose }) {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  variant="outlined"
                   size="small"
                   autoFocus
                   value={folderInput}

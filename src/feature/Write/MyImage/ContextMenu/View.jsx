@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { PhotoLibrary } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { PhotoLibrary } from '@mui/icons-material';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';

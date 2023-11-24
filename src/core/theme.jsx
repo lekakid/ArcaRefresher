@@ -1,62 +1,81 @@
-import { createTheme } from '@material-ui/core/styles';
-import { koKR } from '@material-ui/core/locale';
+import { createTheme } from '@mui/material/styles';
+import { koKR } from '@mui/material/locale';
 
-const overrides = {
-  MuiInputBase: {
-    input: {
-      backgroundColor: 'inherit !important',
+const components = {
+  MuiButton: {
+    defaultProps: {
+      variant: 'outlined',
     },
   },
-};
-
-const props = {
-  MuiSwitch: {
-    color: 'primary',
+  MuiSelect: {
+    defaultProps: {
+      size: 'small',
+    },
+  },
+  MuiSlider: {
+    defaultProps: {
+      size: 'small',
+    },
+  },
+  MuiTextField: {
+    defaultProps: {
+      size: 'small',
+    },
+  },
+  MuiInputBase: {
+    styleOverrides: {
+      input: {
+        backgroundColor: 'inherit !important',
+      },
+    },
+  },
+  MuiFormControlLabel: {
+    styleOverrides: {
+      root: {
+        marginBottom: 0,
+      },
+    },
+  },
+  MuiTablePagination: {
+    styleOverrides: {
+      selectLabel: {
+        marginBottom: 0,
+      },
+      displayedRows: {
+        marginBottom: 0,
+      },
+    },
   },
 };
 
 const light = createTheme(
   {
+    components,
     palette: {
-      type: 'light',
+      mode: 'light',
       primary: {
         main: '#3d414d',
       },
       secondary: {
-        main: '#3d414d',
-      },
-      label: {
-        background: '#212121',
-        text: '#fafafa',
+        main: '#00a495',
       },
     },
-    overrides,
-    props,
   },
   koKR,
 );
 
 const dark = createTheme(
   {
+    components,
     palette: {
-      type: 'dark',
+      mode: 'dark',
       primary: {
-        main: '#f8f9fa',
+        main: '#d3d3d3',
       },
       secondary: {
-        main: '#242424',
-      },
-      background: {
-        default: '#111',
-        paper: '#222',
-      },
-      label: {
-        background: '#fafafa',
-        text: '#212121',
+        main: '#00a495',
       },
     },
-    overrides,
-    props,
   },
   koKR,
 );

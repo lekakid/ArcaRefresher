@@ -1,4 +1,4 @@
-import { DoubleArrow } from '@material-ui/icons';
+import { DoubleArrow } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

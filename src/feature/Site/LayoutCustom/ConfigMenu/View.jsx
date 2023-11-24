@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  Box,
   Collapse,
   List,
   MenuItem,
   Paper,
   Typography,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { SelectRow, SwitchRow, SliderRow } from 'component/config';
 import Info from '../FeatureInfo';
@@ -47,7 +46,6 @@ function emotLabelFormat(x) {
 const View = React.forwardRef((_props, ref) => {
   const {
     enabled,
-    fontSize,
     notifyPosition,
     topNews,
     recentVisit,
@@ -60,18 +58,19 @@ const View = React.forwardRef((_props, ref) => {
     hideDefaultImage,
     resizeImage,
     resizeVideo,
-    resizeEmoticonPalette,
     hideUnvote,
+    unfoldLongComment,
     modifiedIndicator,
     reverseComment,
     hideVoiceComment,
-    unfoldLongComment,
+    resizeEmoticonPalette,
+    fontSize,
     fixDarkModeWriteForm,
   } = useSelector((state) => state[Info.ID].storage);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -253,7 +252,7 @@ const View = React.forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

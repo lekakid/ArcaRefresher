@@ -7,15 +7,8 @@ import {
   ListItemText,
   Menu,
   TextField,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { Add } from '@material-ui/icons';
-
-const useStyles = makeStyles((theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
+} from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 const FormatTextFieldRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -24,7 +17,6 @@ const FormatTextFieldRow = React.forwardRef(
     ref,
   ) {
     const dispatch = useDispatch();
-    const classes = useStyles();
 
     const inputRef = useRef(undefined);
     const cursorRef = useRef({
@@ -70,10 +62,25 @@ const FormatTextFieldRow = React.forwardRef(
 
     return (
       <>
-        <ListItem ref={ref} className={nested && classes.nested}>
+        <ListItem
+          ref={ref}
+          sx={
+            nested && {
+              paddingLeft: 4,
+            }
+          }
+        >
           <ListItemText primary={primary} secondary={secondary} />
         </ListItem>
-        <ListItem ref={ref} divider={divider}>
+        <ListItem
+          ref={ref}
+          divider={divider}
+          sx={
+            nested && {
+              paddingLeft: 4,
+            }
+          }
+        >
           <TextField
             inputRef={inputRef}
             fullWidth

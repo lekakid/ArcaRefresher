@@ -1,4 +1,4 @@
-import { Info as InfoIcon } from '@material-ui/icons';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

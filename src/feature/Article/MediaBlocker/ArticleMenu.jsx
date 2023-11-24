@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
-import { ImageSearch } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { ImageSearch } from '@mui/icons-material';
 
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';

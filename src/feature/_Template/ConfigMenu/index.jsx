@@ -1,5 +1,5 @@
 import 'core/types';
-import { Group } from '@material-ui/icons';
+import { Group } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

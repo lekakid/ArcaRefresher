@@ -1,4 +1,4 @@
-import { GetApp } from '@material-ui/icons';
+import { GetApp } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

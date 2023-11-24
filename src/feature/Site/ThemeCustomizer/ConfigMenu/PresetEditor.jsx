@@ -5,8 +5,8 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
-} from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 import ColorPicker from 'component/ColorPicker';
 import { useOpacity } from 'menu/ConfigMenu';

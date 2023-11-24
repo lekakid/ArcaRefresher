@@ -9,9 +9,8 @@ import {
   DialogTitle,
   IconButton,
   Typography,
-} from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { withStyles } from '@material-ui/styles';
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
@@ -25,18 +24,7 @@ import SelectableImageList from './SelectableImageList';
 import { setOpen } from './slice';
 import { getImageInfo } from './func';
 
-const styles = (theme) => ({
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-  },
-  progressContainer: {
-    textAlign: 'center',
-  },
-});
-
-function SelectionDialog({ classes }) {
+function SelectionDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
   const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
@@ -236,11 +224,12 @@ function SelectionDialog({ classes }) {
   if (showProgress) {
     return (
       <Dialog
+        fullWidth
         maxWidth="lg"
         open={open}
         TransitionProps={{ onExited: () => setShowProgress(false) }}
       >
-        <DialogContent classes={{ root: classes.progressContainer }}>
+        <DialogContent sx={{ textAlign: 'center' }}>
           <CircularProgress color="primary" />
         </DialogContent>
       </Dialog>
@@ -255,12 +244,18 @@ function SelectionDialog({ classes }) {
       onClose={handleClose}
       onKeyUp={handleSubmit}
     >
-      <DialogTitle>
-        <Typography>이미지 다운로더</Typography>
-        <IconButton className={classes.closeButton} onClick={handleClose}>
-          <Close />
-        </IconButton>
-      </DialogTitle>
+      <DialogTitle>이미지 다운로더</DialogTitle>
+      <IconButton
+        size="large"
+        sx={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+        }}
+        onClick={handleClose}
+      >
+        <Close />
+      </IconButton>
       <DialogContent>
         <SelectableImageList
           imgList={imgList}
@@ -270,7 +265,7 @@ function SelectionDialog({ classes }) {
       </DialogContent>
       <DialogActions>
         <Typography>{`${selection.length}/${imgList.length}`}</Typography>
-        <Button variant="outlined" onClick={handleSelectAll}>
+        <Button onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}
         </Button>
         <Button
@@ -286,4 +281,4 @@ function SelectionDialog({ classes }) {
   );
 }
 
-export default withStyles(styles)(SelectionDialog);
+export default SelectionDialog;

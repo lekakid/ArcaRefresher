@@ -1,4 +1,4 @@
-import { Mouse } from '@material-ui/icons';
+import { Mouse } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

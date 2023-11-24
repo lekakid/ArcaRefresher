@@ -1,10 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
   ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   Paper,
   Typography,
   MenuItem,
@@ -12,10 +10,10 @@ import {
   ButtonGroup,
   Button,
   Tooltip,
-} from '@material-ui/core';
-import { Add, Delete, Label } from '@material-ui/icons';
-
-import { GroupableSelect } from 'component';
+  Select,
+  Grid,
+} from '@mui/material';
+import { Add, Delete, Label } from '@mui/icons-material';
 
 import { SelectRow, SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
@@ -194,7 +192,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -219,11 +217,9 @@ const View = React.forwardRef((_props, ref) => {
             ))}
           </SelectRow>
           <ListItem>
-            <ListItemText primary="프리셋 설정" />
-            <ListItemSecondaryAction>
-              <ButtonGroup>
-                <GroupableSelect
-                  variant="outlined"
+            <Grid container>
+              <Grid item xs={6}>
+                <Select
                   displayEmpty
                   value={editingPresetKey}
                   onChange={handleTargetPreset}
@@ -234,33 +230,37 @@ const View = React.forwardRef((_props, ref) => {
                       {key}
                     </MenuItem>
                   ))}
-                </GroupableSelect>
-                <Tooltip title="추가">
-                  <Button onClick={handleAddOpen}>
-                    <Add />
-                  </Button>
-                </Tooltip>
-                <Tooltip title="이름 수정">
-                  <Button
-                    disabled={!editingPresetKey}
-                    onClick={handleRenameOpen}
-                  >
-                    <Label />
-                  </Button>
-                </Tooltip>
-                <Tooltip title="제거">
-                  <Button
-                    disabled={!editingPresetKey}
-                    onClick={handleRemoveOpen}
-                  >
-                    <Delete />
-                  </Button>
-                </Tooltip>
-              </ButtonGroup>
-            </ListItemSecondaryAction>
+                </Select>
+              </Grid>
+              <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                <ButtonGroup size="large">
+                  <Tooltip title="추가">
+                    <Button onClick={handleAddOpen}>
+                      <Add />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="이름 수정">
+                    <Button
+                      disabled={!editingPresetKey}
+                      onClick={handleRenameOpen}
+                    >
+                      <Label />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="제거">
+                    <Button
+                      disabled={!editingPresetKey}
+                      onClick={handleRemoveOpen}
+                    >
+                      <Delete />
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
+              </Grid>
+            </Grid>
           </ListItem>
           <ListItem>
-            <Box clone width="100%">
+            <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <PresetEditor
                   groupData={groups}
@@ -291,7 +291,7 @@ const View = React.forwardRef((_props, ref) => {
         onSubmit={handleRemovePreset}
         onClose={handleRemoveClose}
       />
-    </Box>
+    </Fragment>
   );
 });
 

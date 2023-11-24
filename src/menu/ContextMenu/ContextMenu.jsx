@@ -1,18 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Menu, MenuItem } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Box, List, Menu, MenuItem } from '@mui/material';
 
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
-
-const styles = (theme) => ({
-  list: {
-    '& > *:not(:first-child)': {
-      borderTop: `1px solid ${theme.palette.divider}`,
-    },
-  },
-});
 
 function getKeyCombine(event) {
   let combine = '';
@@ -24,7 +15,7 @@ function getKeyCombine(event) {
   return combine;
 }
 
-function ContextMenu({ classes, menuList }) {
+function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
   const { interactionType } = useSelector((state) => state[Info.ID].storage);
   const { mousePos, triggerList } = useSelector((state) => state[Info.ID]);
@@ -97,20 +88,32 @@ function ContextMenu({ classes, menuList }) {
       anchorPosition={{ top, left }}
       MenuListProps={{ disablePadding: true }}
       TransitionProps={{ timeout: { enter: 150, exit: 0 } }}
-      classes={{ list: classes.list }}
       open={!!mousePos}
       onClose={handleClose}
     >
-      <List>
+      <List sx={{ paddingY: 0.5 }}>
         <MenuItem dense disabled>
           Arca Refresher
         </MenuItem>
       </List>
       {menuList.map(({ key, View }) => (
-        <View key={key} target={targetTable?.[key]} />
+        <Box
+          key={key}
+          sx={{
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            '&:empty': {
+              display: 'none',
+            },
+            '& .MuiList-root': {
+              paddingY: 0.5,
+            },
+          }}
+        >
+          <View target={targetTable?.[key]} />
+        </Box>
       ))}
     </Menu>
   );
 }
 
-export default withStyles(styles)(ContextMenu);
+export default ContextMenu;

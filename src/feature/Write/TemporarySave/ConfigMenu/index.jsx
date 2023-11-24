@@ -1,4 +1,4 @@
-import { Book } from '@material-ui/icons';
+import { Book } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

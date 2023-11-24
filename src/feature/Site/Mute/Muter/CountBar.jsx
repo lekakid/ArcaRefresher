@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Chip, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Chip, Grid, Typography } from '@mui/material';
 
 const TypeString = {
   keyword: '키워드',
@@ -12,26 +11,8 @@ const TypeString = {
   all: '전체',
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    borderBottom: '1px solid var(--color-bd-outer)',
-  },
-  label: {
-    paddingLeft: theme.spacing(1),
-  },
-  buttons: {
-    paddingRight: theme.spacing(1),
-    textAlign: 'end',
-    '& *': {
-      marginLeft: theme.spacing(0.5),
-    },
-  },
-}));
-
 function CountBar({ renderContainer, controlTarget, count, hide }) {
   const [showStates, setShowStates] = useState(undefined);
-  const classes = useStyles();
-
   useEffect(() => {
     setShowStates((prev) =>
       Object.fromEntries(Object.keys(count).map((key) => [key, prev?.[key]])),
@@ -57,11 +38,28 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
   if (!showStates) return null;
 
   return ReactDOM.createPortal(
-    <Grid container alignItems="center" classes={{ root: classes.root }}>
-      <Grid item sm={4} xs={12} classes={{ root: classes.label }}>
+    <Grid
+      container
+      sx={{
+        borderBottom: '1px solid var(--color-bd-outer)',
+        alignItems: 'center',
+      }}
+    >
+      <Grid item sm={4} xs={12} sx={{ paddingLeft: 1 }}>
         <Typography variant="subtitle1">뮤트(리프레셔)</Typography>
       </Grid>
-      <Grid item sm={8} xs={12} classes={{ root: classes.buttons }}>
+      <Grid
+        item
+        sm={8}
+        xs={12}
+        sx={{
+          paddingRight: 1,
+          textAlign: 'end',
+          '& *': {
+            marginLeft: 0.5,
+          },
+        }}
+      >
         {Object.entries(count).map(([key, value]) => {
           if (hide && key !== 'deleted') return null;
           const suffix = key === 'all' ? '' : `-${key}`;

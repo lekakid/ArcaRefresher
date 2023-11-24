@@ -1,13 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { ListItem, ListItemText, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-
-const useStyles = makeStyles((theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
+import { ListItem, ListItemText, TextField } from '@mui/material';
 
 const TextFieldRow = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
@@ -16,24 +9,34 @@ const TextFieldRow = React.forwardRef(
     ref,
   ) {
     const dispatch = useDispatch();
-    const classes = useStyles();
 
     const handleChange = useCallback(
       (e) => {
         dispatch(action(e.target.value));
       },
-      [action, dispatch],
+      [dispatch, action],
     );
 
     return (
       <>
-        <ListItem ref={ref} className={nested && classes.nested}>
+        <ListItem
+          ref={ref}
+          sx={
+            nested && {
+              paddingLeft: 4,
+            }
+          }
+        >
           <ListItemText primary={primary} secondary={secondary} />
         </ListItem>
         <ListItem
           ref={ref}
           divider={divider}
-          className={nested && classes.nested}
+          sx={
+            nested && {
+              paddingLeft: 4,
+            }
+          }
         >
           <TextField fullWidth value={value} onChange={handleChange} />
         </ListItem>
