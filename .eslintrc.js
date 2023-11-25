@@ -19,7 +19,8 @@ module.exports = {
         prop: 'ignore',
       },
     ],
-    'react/prop-types': 'off',
+    'react/forbid-prop-types': 'off',
+    'react/require-default-props': 'off',
     'unused-imports/no-unused-imports': 'error',
   },
   settings: {
