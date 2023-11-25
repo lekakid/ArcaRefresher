@@ -1,21 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import {
-  IconButton,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Menu,
-  TextField,
-} from '@mui/material';
+import { Box, IconButton, ListItemText, Menu, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import { BaseRow } from 'component/ConfigMenu';
 
 const FormatTextFieldRow = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function FormatTextFieldRow(
-    { divider, nested, primary, secondary, value, action, children },
-    ref,
-  ) {
+  ({ divider, nested, primary, secondary, value, action, children }, ref) => {
     const dispatch = useDispatch();
 
     const inputRef = useRef(undefined);
@@ -61,47 +52,53 @@ const FormatTextFieldRow = React.forwardRef(
     );
 
     return (
-      <>
-        <ListItem
-          ref={ref}
-          sx={
-            nested && {
-              paddingLeft: 4,
-            }
-          }
-        >
-          <ListItemText primary={primary} secondary={secondary} />
-        </ListItem>
-        <ListItem
-          ref={ref}
-          divider={divider}
-          sx={
-            nested && {
-              paddingLeft: 4,
-            }
-          }
-        >
+      <BaseRow
+        ref={ref}
+        divider={divider}
+        nested={nested}
+        column="always"
+        header={<ListItemText primary={primary} secondary={secondary} />}
+      >
+        <Box sx={{ width: '100%' }}>
           <TextField
-            inputRef={inputRef}
             fullWidth
+            inputRef={inputRef}
+            inputProps={{
+              sx: {
+                paddingRight: 4.5,
+              },
+            }}
             value={value}
             onSelect={handleInputSelect}
             onChange={handleEdit}
           />
-          <ListItemSecondaryAction>
-            <IconButton size="small" onClick={handleOpen}>
-              <Add />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-              {React.Children.map(children, (child) =>
-                React.cloneElement(child, { onClick: handleItemSelect }),
-              )}
-            </Menu>
-          </ListItemSecondaryAction>
-        </ListItem>
-      </>
+          <IconButton
+            sx={{ position: 'absolute', bottom: 11, right: 19 }}
+            size="small"
+            onClick={handleOpen}
+          >
+            <Add />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+            {React.Children.map(children, (child) =>
+              React.cloneElement(child, { onClick: handleItemSelect }),
+            )}
+          </Menu>
+        </Box>
+      </BaseRow>
     );
   },
 );
 
+const RowPropTypes = {
+  divider: PropTypes.bool,
+  nested: PropTypes.bool,
+  primary: PropTypes.string,
+  secondary: PropTypes.string,
+  children: PropTypes.node,
+  value: PropTypes.string,
+  action: PropTypes.func,
+};
+
+FormatTextFieldRow.propTypes = RowPropTypes;
 export default FormatTextFieldRow;
