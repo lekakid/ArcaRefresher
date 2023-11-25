@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Switch } from '@mui/material';
 
-import DefaultRow from './DefaultRow';
+import BaseRow from './BaseRow';
 
 const SwitchRow = React.forwardRef(
   ({ divider, nested, primary, secondary, value, action }, ref) => {
@@ -14,7 +14,7 @@ const SwitchRow = React.forwardRef(
     }, [dispatch, action]);
 
     return (
-      <DefaultRow
+      <BaseRow
         ref={ref}
         divider={divider}
         nested={nested}
@@ -23,7 +23,7 @@ const SwitchRow = React.forwardRef(
         onClick={handleClick}
       >
         <Switch checked={value} />
-      </DefaultRow>
+      </BaseRow>
     );
   },
 );

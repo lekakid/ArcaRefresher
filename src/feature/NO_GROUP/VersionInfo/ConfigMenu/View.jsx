@@ -11,7 +11,7 @@ import {
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
 
-import { DefaultRow } from 'component/ConfigMenu';
+import { BaseRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 
@@ -46,34 +46,34 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <DefaultRow divider primary="버전">
+          <BaseRow divider primary="버전">
             <Typography>{GM_info.script.version}</Typography>
-          </DefaultRow>
-          <DefaultRow
+          </BaseRow>
+          <BaseRow
             divider
             primary="아카리프레셔 채널 (문의 접수)"
             onClick={handleVisitChannel}
           >
             <Help />
-          </DefaultRow>
-          <DefaultRow divider primary="Github" onClick={handleVisitGithub}>
+          </BaseRow>
+          <BaseRow divider primary="Github" onClick={handleVisitGithub}>
             <GitHub />
-          </DefaultRow>
+          </BaseRow>
         </List>
       </Paper>
       <Typography variant="subtitle2">후원</Typography>
       <Paper>
         <List disablePadding>
-          <DefaultRow
+          <BaseRow
             divider
             primary="Buy Me a Coffee"
             onClick={handleVisitCoffeeBuyMe}
           >
             <OpenInNew />
-          </DefaultRow>
-          <DefaultRow divider primary="토스아이디" onClick={handleVisitToss}>
+          </BaseRow>
+          <BaseRow divider primary="토스아이디" onClick={handleVisitToss}>
             <OpenInNew />
-          </DefaultRow>
+          </BaseRow>
         </List>
       </Paper>
       <Dialog open={open} onClose={() => setOpen(false)}>

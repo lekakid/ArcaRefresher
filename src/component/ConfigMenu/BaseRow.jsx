@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ListItem, ListItemButton, ListItemText, Stack } from '@mui/material';
 
-const DefaultRow = React.forwardRef(
+const BaseRow = React.forwardRef(
   (
     {
       divider,
@@ -54,5 +54,5 @@ const RowPropTypes = {
   onClick: PropTypes.func,
 };
 
-DefaultRow.propTypes = RowPropTypes;
-export default DefaultRow;
+BaseRow.propTypes = RowPropTypes;
+export default BaseRow;

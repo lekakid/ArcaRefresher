@@ -1,4 +1,4 @@
-import DefaultRow from './DefaultRow';
+import BaseRow from './BaseRow';
 import SelectRow from './SelectRow';
 import SliderRow from './SliderRow';
 import SwitchRow from './SwitchRow';
@@ -8,7 +8,7 @@ import TextEditorRow from './TextEditorRow';
 import TableEditorRow from './TableEditorRow';
 
 export {
-  DefaultRow,
+  BaseRow,
   SelectRow,
   SliderRow,
   SwitchRow,

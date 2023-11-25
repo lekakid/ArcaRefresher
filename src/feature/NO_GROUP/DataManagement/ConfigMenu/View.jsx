@@ -15,7 +15,7 @@ import { Launch } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
-import { DefaultRow } from 'component/ConfigMenu';
+import { BaseRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
@@ -72,7 +72,7 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <DefaultRow divider onRowClick={handleImport}>
+          <BaseRow divider onRowClick={handleImport}>
             <input
               ref={inputRef}
               type="file"
@@ -85,15 +85,15 @@ const View = React.forwardRef((_props, ref) => {
               secondary="⚠ 페이지가 새로고침됩니다."
             />
             <Launch />
-          </DefaultRow>
-          <DefaultRow divider onRowClick={handleExport}>
+          </BaseRow>
+          <BaseRow divider onRowClick={handleExport}>
             <ListItemText primary="설정 내보내기" />
             <Launch />
-          </DefaultRow>
-          <DefaultRow divider onRowClick={handleOpen}>
+          </BaseRow>
+          <BaseRow divider onRowClick={handleOpen}>
             <ListItemText primary="설정 초기화" />
             <Launch />
-          </DefaultRow>
+          </BaseRow>
         </List>
       </Paper>
       <Dialog open={resetConfirm}>

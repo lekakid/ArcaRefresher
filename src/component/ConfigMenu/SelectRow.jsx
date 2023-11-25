@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { FormControl, Select, useMediaQuery } from '@mui/material';
 
-import DefaultRow from './DefaultRow';
+import BaseRow from './BaseRow';
 
 const SelectRow = React.forwardRef(
   ({ divider, nested, primary, secondary, children, value, action }, ref) => {
@@ -18,7 +18,7 @@ const SelectRow = React.forwardRef(
     );
 
     return (
-      <DefaultRow
+      <BaseRow
         ref={ref}
         divider={divider}
         nested={nested}
@@ -31,7 +31,7 @@ const SelectRow = React.forwardRef(
             {children}
           </Select>
         </FormControl>
-      </DefaultRow>
+      </BaseRow>
     );
   },
 );

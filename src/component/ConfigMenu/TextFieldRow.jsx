@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { TextField } from '@mui/material';
-import DefaultRow from './DefaultRow';
+import BaseRow from './BaseRow';
 
 const TextFieldRow = React.forwardRef(
   ({ divider, nested, primary, secondary, value, action }, ref) => {
@@ -16,7 +16,7 @@ const TextFieldRow = React.forwardRef(
     );
 
     return (
-      <DefaultRow
+      <BaseRow
         ref={ref}
         divider={divider}
         nested={nested}
@@ -25,7 +25,7 @@ const TextFieldRow = React.forwardRef(
         secondary={secondary}
       >
         <TextField fullWidth value={value} onChange={handleChange} />
-      </DefaultRow>
+      </BaseRow>
     );
   },
 );

@@ -12,7 +12,7 @@ import {
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { DefaultRow, SelectRow, TableEditorRow } from 'component/ConfigMenu';
+import { BaseRow, SelectRow, TableEditorRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
@@ -142,7 +142,7 @@ const View = React.forwardRef((_props, ref) => {
             <MenuItem value="text">텍스트</MenuItem>
             <MenuItem value="none">없음</MenuItem>
           </SelectRow>
-          <DefaultRow
+          <BaseRow
             divider
             direction={mobile ? 'column' : 'row'}
             primary="공앱 메모 데이터"
@@ -174,7 +174,7 @@ const View = React.forwardRef((_props, ref) => {
                 내보내기
               </Button>
             </Stack>
-          </DefaultRow>
+          </BaseRow>
           <TableEditorRow
             headerText="저장된 메모"
             columns={columns}

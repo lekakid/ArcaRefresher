@@ -5,7 +5,7 @@ import { Slider, useMediaQuery } from '@mui/material';
 
 import { useOpacity } from 'menu/ConfigMenu';
 
-import DefaultRow from './DefaultRow';
+import BaseRow from './BaseRow';
 
 const SliderRow = React.forwardRef(
   (
@@ -34,7 +34,7 @@ const SliderRow = React.forwardRef(
     );
 
     return (
-      <DefaultRow
+      <BaseRow
         ref={ref}
         divider={divider}
         nested={nested}
@@ -50,7 +50,7 @@ const SliderRow = React.forwardRef(
           onChange={handleChange}
           onChangeCommitted={opacityOnChange ? () => setOpacity(1) : undefined}
         />
-      </DefaultRow>
+      </BaseRow>
     );
   },
 );
