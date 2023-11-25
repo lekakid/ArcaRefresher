@@ -27,8 +27,8 @@ import {
 } from '@mui/icons-material';
 
 import { useContent } from 'hooks/Content';
+import { SwitchRow } from 'component/ConfigMenu';
 
-import { SwitchRow } from 'component/config';
 import Info from '../FeatureInfo';
 import {
   $addFolder,

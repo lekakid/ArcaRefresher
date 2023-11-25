@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
 import { BACKGROUND, CURRENT, FOREGROUND } from 'func/window';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
-import { SelectRow, SwitchRow } from 'component/config';
 import {
   $setContextRange,
   $setOpenType,

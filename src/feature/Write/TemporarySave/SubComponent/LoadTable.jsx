@@ -9,9 +9,12 @@ import {
   DialogTitle,
   FormControlLabel,
   Grid,
+  IconButton,
+  Stack,
   Switch,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { Close, Delete, Done, Edit } from '@mui/icons-material';
@@ -88,6 +91,7 @@ function CustomToolbar({
 
 export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { tempArticleList, importTitle, templateMode } = useSelector(
     (state) => state[Info.ID].storage,
@@ -162,6 +166,12 @@ export default function LoadTable({ editor, open, onClose }) {
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
       <DialogTitle>불러오기</DialogTitle>
+      <IconButton
+        sx={{ position: 'absolute', right: 8, top: 8 }}
+        onClick={onClose}
+      >
+        <Close />
+      </IconButton>
       <DialogContent>
         <DataGrid
           columns={columns}
@@ -192,27 +202,26 @@ export default function LoadTable({ editor, open, onClose }) {
           onSelectionModelChange={handleSelection}
         />
       </DialogContent>
-      <DialogActions sx={{ alignItems: 'center' }}>
-        <Tooltip
-          placement="top"
-          title="게시물을 불러올 때 기존 저장 데이터와 연결되지 않습니다."
-        >
+      <DialogActions>
+        <Stack direction={mobile ? 'column' : 'row'}>
+          <Tooltip
+            placement="top"
+            title="게시물을 불러올 때 기존 저장 데이터와 연결되지 않습니다."
+          >
+            <FormControlLabel
+              control={
+                <Switch checked={templateMode} onChange={handleTemplateMode} />
+              }
+              label="사본으로 불러오기"
+            />
+          </Tooltip>
           <FormControlLabel
             control={
-              <Switch checked={templateMode} onChange={handleTemplateMode} />
+              <Switch checked={importTitle} onChange={handleImportTitle} />
             }
-            label="사본으로 불러오기"
+            label="제목 포함"
           />
-        </Tooltip>
-        <FormControlLabel
-          control={
-            <Switch checked={importTitle} onChange={handleImportTitle} />
-          }
-          label="제목 포함"
-        />
-        <Button variant="contained" startIcon={<Close />} onClick={handleClose}>
-          닫기
-        </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );

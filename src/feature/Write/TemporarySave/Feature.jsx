@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ButtonGroup, GlobalStyles, Portal } from '@mui/material';
+import {
+  ButtonGroup,
+  GlobalStyles,
+  Portal,
+  useMediaQuery,
+} from '@mui/material';
 
 import { WRITE_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -31,9 +36,25 @@ const btnsStyles = (
     }}
   />
 );
+const btnsMobileStyles = (
+  <GlobalStyles
+    styles={{
+      '.article-write .btns': {
+        gridTemplateColumns: '1fr',
+        gridTemplateAreas: `
+          'tmp'
+          'save'
+          'recapcha'
+        `,
+      },
+    }}
+  />
+);
 
 export default function TemporarySave() {
   const editorLoaded = useLoadChecker(WRITE_LOADED);
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
   const [container, setContainer] = useState(null);
   const [editor, setEditor] = useState(null);
 
@@ -55,12 +76,13 @@ export default function TemporarySave() {
   return (
     <>
       {btnsStyles}
+      {mobile && btnsMobileStyles}
       <AutoSaver editor={editor} />
       <Portal container={container}>
-        <ButtonGroup>
-          <SaveButton editor={editor} />
-          <SaveButton editor={editor} saveAs />
-          <LoadButton editor={editor} />
+        <ButtonGroup sx={mobile ? { width: '100%' } : undefined}>
+          <SaveButton sx={{ flexGrow: 1 }} editor={editor} />
+          <SaveButton sx={{ flexGrow: 2 }} editor={editor} saveAs />
+          <LoadButton sx={{ flexGrow: 1 }} editor={editor} />
         </ButtonGroup>
       </Portal>
     </>

@@ -4,7 +4,7 @@ import { List, MenuItem, Paper, Typography } from '@mui/material';
 
 import { BACKGROUND, FOREGROUND } from 'func/window';
 
-import { SelectRow, SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
   $setOpenType,

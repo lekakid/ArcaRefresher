@@ -18,8 +18,8 @@ import {
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 
-import { SwitchRow } from 'component/config';
 import { KeyIcon } from 'component';
+import { SwitchRow } from 'component/ConfigMenu';
 
 import {
   $resetKeyMap,

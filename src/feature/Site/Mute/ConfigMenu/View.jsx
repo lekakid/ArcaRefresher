@@ -14,7 +14,7 @@ import {
 import { Remove, VolumeOff, VolumeUp } from '@mui/icons-material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-import { SelectRow, SwitchRow, TextEditorRow } from 'component/config';
+import { SelectRow, SwitchRow, TextEditorRow } from 'component/ConfigMenu';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';

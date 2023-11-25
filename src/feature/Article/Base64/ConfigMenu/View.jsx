@@ -11,7 +11,7 @@ import {
   Stack,
 } from '@mui/material';
 
-import { SwitchRow } from 'component/config';
+import { SwitchRow } from 'component/ConfigMenu';
 import { KeyIcon } from 'component';
 import Info from '../FeatureInfo';
 import {

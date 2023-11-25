@@ -2,7 +2,8 @@ import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow } from 'component/config';
+import { SelectRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import { $setAutoTime } from '../slice';
 

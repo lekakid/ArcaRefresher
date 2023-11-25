@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { TextEditorRow } from 'component/config';
+import { TextEditorRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';

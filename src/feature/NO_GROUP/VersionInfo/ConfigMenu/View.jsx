@@ -1,9 +1,6 @@
 import React, { Fragment, useCallback, useState } from 'react';
 import {
   List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   Paper,
   Typography,
   Box,
@@ -13,6 +10,8 @@ import {
 } from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
+
+import { DefaultRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 
@@ -47,41 +46,34 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider>
-            <ListItemText primary="버전" />
-            <ListItemSecondaryAction>
-              <Typography>{GM_info.script.version}</Typography>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleVisitChannel}>
-            <ListItemText primary="아카리프레셔 채널 (문의 접수)" />
-            <ListItemSecondaryAction>
-              <Help />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleVisitGithub}>
-            <ListItemText primary="Github" />
-            <ListItemSecondaryAction>
-              <GitHub />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <DefaultRow divider primary="버전">
+            <Typography>{GM_info.script.version}</Typography>
+          </DefaultRow>
+          <DefaultRow
+            divider
+            primary="아카리프레셔 채널 (문의 접수)"
+            onClick={handleVisitChannel}
+          >
+            <Help />
+          </DefaultRow>
+          <DefaultRow divider primary="Github" onClick={handleVisitGithub}>
+            <GitHub />
+          </DefaultRow>
         </List>
       </Paper>
       <Typography variant="subtitle2">후원</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleVisitCoffeeBuyMe}>
-            <ListItemText primary="Buy Me a Coffee" />
-            <ListItemSecondaryAction>
-              <OpenInNew />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleVisitToss}>
-            <ListItemText primary="토스아이디" />
-            <ListItemSecondaryAction>
-              <OpenInNew />
-            </ListItemSecondaryAction>
-          </ListItem>
+          <DefaultRow
+            divider
+            primary="Buy Me a Coffee"
+            onClick={handleVisitCoffeeBuyMe}
+          >
+            <OpenInNew />
+          </DefaultRow>
+          <DefaultRow divider primary="토스아이디" onClick={handleVisitToss}>
+            <OpenInNew />
+          </DefaultRow>
         </List>
       </Paper>
       <Dialog open={open} onClose={() => setOpen(false)}>

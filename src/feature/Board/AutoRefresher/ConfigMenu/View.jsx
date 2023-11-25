@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow, SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
   $toggleAnimation,

@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 
 import { KeyIcon } from 'component';
+import { SelectRow } from 'component/ConfigMenu';
 import { $setInteraction } from 'menu/ContextMenu/slice';
 
-import { SelectRow } from 'component/config';
 import Info from '../FeatureInfo';
 
 const label = {

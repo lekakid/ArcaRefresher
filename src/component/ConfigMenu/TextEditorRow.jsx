@@ -9,11 +9,7 @@ import {
 import { Check, Save } from '@mui/icons-material';
 
 const TextEditorRow = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function TextEditorRow(
-    { divider, primary, secondary, initialValue, errorText, onSave },
-    ref,
-  ) {
+  ({ divider, primary, secondary, initialValue, errorText, onSave }, ref) => {
     const [text, setText] = useState(() => initialValue || '');
     const [textChanged, setTextChanged] = useState(false);
     const [error, setError] = useState(false);

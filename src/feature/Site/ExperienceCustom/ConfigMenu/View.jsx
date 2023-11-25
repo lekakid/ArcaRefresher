@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
-import { SwitchRow } from 'component/config';
-import TextFieldRow from 'component/config/TextFieldRow';
+import { SwitchRow, TextFieldRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import {
   $setSpoofTitle,

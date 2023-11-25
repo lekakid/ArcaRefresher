@@ -7,8 +7,6 @@ import {
   DialogContentText,
   DialogTitle,
   List,
-  ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
   Typography,
@@ -17,6 +15,7 @@ import { Launch } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
+import { DefaultRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
@@ -73,7 +72,7 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem divider button onClick={handleImport}>
+          <DefaultRow divider onRowClick={handleImport}>
             <input
               ref={inputRef}
               type="file"
@@ -85,22 +84,16 @@ const View = React.forwardRef((_props, ref) => {
               primary="설정 가져오기"
               secondary="⚠ 페이지가 새로고침됩니다."
             />
-            <ListItemSecondaryAction>
-              <Launch />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider button onClick={handleExport}>
+            <Launch />
+          </DefaultRow>
+          <DefaultRow divider onRowClick={handleExport}>
             <ListItemText primary="설정 내보내기" />
-            <ListItemSecondaryAction>
-              <Launch />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button onClick={handleOpen}>
+            <Launch />
+          </DefaultRow>
+          <DefaultRow divider onRowClick={handleOpen}>
             <ListItemText primary="설정 초기화" />
-            <ListItemSecondaryAction>
-              <Launch />
-            </ListItemSecondaryAction>
-          </ListItem>
+            <Launch />
+          </DefaultRow>
         </List>
       </Paper>
       <Dialog open={resetConfirm}>

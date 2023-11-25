@@ -29,11 +29,10 @@ function Toolbar({ disabled, onRemove }) {
 }
 
 const TableEditorRow = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function TableEditorRow(
+  (
     { divider, headerText, rows, columns, noRowsText, delimiter, onEdit },
     ref,
-  ) {
+  ) => {
     const [textMode, setTextMode] = useState(false);
     const [selection, setSelection] = useState([]);
     const [pageSize, setPageSize] = useState(10);

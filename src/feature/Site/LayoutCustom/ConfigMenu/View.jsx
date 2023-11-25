@@ -9,7 +9,8 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { SelectRow, SwitchRow, SliderRow } from 'component/config';
+import { SelectRow, SwitchRow, SliderRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,

@@ -11,11 +11,13 @@ import {
   Button,
   Tooltip,
   Select,
-  Grid,
+  useMediaQuery,
+  Stack,
 } from '@mui/material';
 import { Add, Delete, Label } from '@mui/icons-material';
 
-import { SelectRow, SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -113,6 +115,8 @@ const defaultPreset = {
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
   const {
     enabled,
     current: currentPresetKey,
@@ -217,47 +221,44 @@ const View = React.forwardRef((_props, ref) => {
             ))}
           </SelectRow>
           <ListItem>
-            <Grid container>
-              <Grid item xs={6}>
-                <Select
-                  displayEmpty
-                  value={editingPresetKey}
-                  onChange={handleTargetPreset}
-                >
-                  <MenuItem value="">프리셋 선택</MenuItem>
-                  {Object.keys(theme).map((key) => (
-                    <MenuItem key={key} value={key}>
-                      {key}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid item xs={6} sx={{ textAlign: 'end' }}>
-                <ButtonGroup size="large">
-                  <Tooltip title="추가">
-                    <Button onClick={handleAddOpen}>
-                      <Add />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="이름 수정">
-                    <Button
-                      disabled={!editingPresetKey}
-                      onClick={handleRenameOpen}
-                    >
-                      <Label />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="제거">
-                    <Button
-                      disabled={!editingPresetKey}
-                      onClick={handleRemoveOpen}
-                    >
-                      <Delete />
-                    </Button>
-                  </Tooltip>
-                </ButtonGroup>
-              </Grid>
-            </Grid>
+            <Stack direction={mobile ? 'column' : 'row'} width="100%" gap={2}>
+              <Select
+                displayEmpty
+                sx={{ flexGrow: 1 }}
+                value={editingPresetKey}
+                onChange={handleTargetPreset}
+              >
+                <MenuItem value="">프리셋 선택</MenuItem>
+                {Object.keys(theme).map((key) => (
+                  <MenuItem key={key} value={key}>
+                    {key}
+                  </MenuItem>
+                ))}
+              </Select>
+              <ButtonGroup size="large" fullWidth={mobile}>
+                <Tooltip title="추가">
+                  <Button onClick={handleAddOpen}>
+                    <Add />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="이름 수정">
+                  <Button
+                    disabled={!editingPresetKey}
+                    onClick={handleRenameOpen}
+                  >
+                    <Label />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="제거">
+                  <Button
+                    disabled={!editingPresetKey}
+                    onClick={handleRemoveOpen}
+                  >
+                    <Delete />
+                  </Button>
+                </Tooltip>
+              </ButtonGroup>
+            </Stack>
           </ListItem>
           <ListItem>
             <Box sx={{ width: '100%' }}>
