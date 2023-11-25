@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Switch } from '@mui/material';
+
 import DefaultRow from './DefaultRow';
 
 const SwitchRow = React.forwardRef(
@@ -26,4 +28,14 @@ const SwitchRow = React.forwardRef(
   },
 );
 
+const RowPropTypes = {
+  divider: PropTypes.bool,
+  nested: PropTypes.bool,
+  primary: PropTypes.node,
+  secondary: PropTypes.node,
+  value: PropTypes.bool,
+  action: PropTypes.func,
+};
+
+SwitchRow.propTypes = RowPropTypes;
 export default SwitchRow;

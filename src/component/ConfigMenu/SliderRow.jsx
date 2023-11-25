@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Slider, useMediaQuery } from '@mui/material';
 
@@ -13,15 +14,10 @@ const SliderRow = React.forwardRef(
       nested,
       primary,
       secondary,
-      min,
-      max,
-      step,
-      marks,
-      valueLabelFormat,
-      valueLabelDisplay,
+      opacityOnChange,
+      sliderProps,
       value,
       action,
-      opacityOnChange,
     },
     ref,
   ) => {
@@ -30,7 +26,7 @@ const SliderRow = React.forwardRef(
     const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
     const handleChange = useCallback(
-      (e, sliderValue) => {
+      (_e, sliderValue) => {
         if (opacityOnChange) setOpacity(opacityOnChange);
         dispatch(action(sliderValue));
       },
@@ -48,19 +44,27 @@ const SliderRow = React.forwardRef(
       >
         <Slider
           sx={{ width: mobile ? '100%' : '160px' }}
-          min={min}
-          max={max}
-          step={step}
-          marks={marks}
-          valueLabelFormat={valueLabelFormat}
-          valueLabelDisplay={valueLabelDisplay}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...sliderProps}
           value={value}
           onChange={handleChange}
-          onChangeCommitted={() => setOpacity(1)}
+          onChangeCommitted={opacityOnChange ? () => setOpacity(1) : undefined}
         />
       </DefaultRow>
     );
   },
 );
 
+const RowPropTypes = {
+  divider: PropTypes.bool,
+  nested: PropTypes.bool,
+  primary: PropTypes.node,
+  secondary: PropTypes.node,
+  opacityOnChange: PropTypes.number,
+  sliderProps: PropTypes.object,
+  value: PropTypes.number,
+  action: PropTypes.func,
+};
+
+SliderRow.propTypes = RowPropTypes;
 export default SliderRow;

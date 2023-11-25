@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { FormControl, Select, useMediaQuery } from '@mui/material';
 
@@ -35,4 +36,15 @@ const SelectRow = React.forwardRef(
   },
 );
 
+const RowPropTypes = {
+  divider: PropTypes.bool,
+  nested: PropTypes.bool,
+  primary: PropTypes.node,
+  secondary: PropTypes.node,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  action: PropTypes.func,
+  children: PropTypes.node,
+};
+
+SelectRow.propTypes = RowPropTypes;
 export default SelectRow;

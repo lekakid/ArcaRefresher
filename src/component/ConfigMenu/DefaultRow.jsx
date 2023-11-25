@@ -1,9 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ListItem, ListItemButton, ListItemText, Stack } from '@mui/material';
 
 const DefaultRow = React.forwardRef(
   (
-    { divider, nested, direction, primary, secondary, children, onClick },
+    {
+      divider,
+      nested,
+      direction = 'row',
+      primary,
+      secondary,
+      children,
+      onClick,
+    },
     ref,
   ) => {
     const stack = (
@@ -35,8 +44,15 @@ const DefaultRow = React.forwardRef(
   },
 );
 
-DefaultRow.defaultProps = {
-  direction: 'row',
+const RowPropTypes = {
+  divider: PropTypes.bool,
+  nested: PropTypes.bool,
+  direction: PropTypes.oneOf(['row', 'column']),
+  primary: PropTypes.node,
+  secondary: PropTypes.node,
+  children: PropTypes.node,
+  onClick: PropTypes.func,
 };
 
+DefaultRow.propTypes = RowPropTypes;
 export default DefaultRow;
