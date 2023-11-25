@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Slider, useMediaQuery } from '@mui/material';
+import { ListItemText, Slider } from '@mui/material';
 
 import { useOpacity } from 'menu/ConfigMenu';
 
@@ -23,7 +23,6 @@ const SliderRow = React.forwardRef(
   ) => {
     const dispatch = useDispatch();
     const setOpacity = useOpacity();
-    const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
     const handleChange = useCallback(
       (_e, sliderValue) => {
@@ -38,12 +37,11 @@ const SliderRow = React.forwardRef(
         ref={ref}
         divider={divider}
         nested={nested}
-        direction={mobile ? 'column' : 'row'}
-        primary={primary}
-        secondary={secondary}
+        column="lg"
+        header={<ListItemText primary={primary} secondary={secondary} />}
       >
         <Slider
-          sx={{ width: mobile ? '100%' : '160px' }}
+          sx={{ minWidth: 160, width: '100%' }}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...sliderProps}
           value={value}

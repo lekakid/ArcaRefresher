@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   useMediaQuery,
+  ListItemText,
 } from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
@@ -46,17 +47,21 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <BaseRow divider primary="버전">
+          <BaseRow divider header={<ListItemText primary="버전" />}>
             <Typography>{GM_info.script.version}</Typography>
           </BaseRow>
           <BaseRow
             divider
-            primary="아카리프레셔 채널 (문의 접수)"
+            header={<ListItemText primary="아카리프레셔 채널 (문의 접수)" />}
             onClick={handleVisitChannel}
           >
             <Help />
           </BaseRow>
-          <BaseRow divider primary="Github" onClick={handleVisitGithub}>
+          <BaseRow
+            divider
+            header={<ListItemText primary="Github" />}
+            onClick={handleVisitGithub}
+          >
             <GitHub />
           </BaseRow>
         </List>
@@ -66,12 +71,16 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <BaseRow
             divider
-            primary="Buy Me a Coffee"
+            header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
           >
             <OpenInNew />
           </BaseRow>
-          <BaseRow divider primary="토스아이디" onClick={handleVisitToss}>
+          <BaseRow
+            divider
+            header={<ListItemText primary="토스아이디" />}
+            onClick={handleVisitToss}
+          >
             <OpenInNew />
           </BaseRow>
         </List>

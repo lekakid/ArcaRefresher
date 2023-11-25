@@ -72,7 +72,17 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <BaseRow divider onRowClick={handleImport}>
+          <BaseRow
+            divider
+            header={
+              <ListItemText
+                primary="설정 가져오기"
+                secondary="⚠ 페이지가 새로고침됩니다."
+              />
+            }
+            onRowClick={handleImport}
+          >
+            <Launch />
             <input
               ref={inputRef}
               type="file"
@@ -80,18 +90,19 @@ const View = React.forwardRef((_props, ref) => {
               onChange={handleFileSelect}
               style={{ display: 'none' }}
             />
-            <ListItemText
-              primary="설정 가져오기"
-              secondary="⚠ 페이지가 새로고침됩니다."
-            />
+          </BaseRow>
+          <BaseRow
+            divider
+            header={<ListItemText primary="설정 내보내기" />}
+            onRowClick={handleExport}
+          >
             <Launch />
           </BaseRow>
-          <BaseRow divider onRowClick={handleExport}>
-            <ListItemText primary="설정 내보내기" />
-            <Launch />
-          </BaseRow>
-          <BaseRow divider onRowClick={handleOpen}>
-            <ListItemText primary="설정 초기화" />
+          <BaseRow
+            divider
+            header={<ListItemText primary="설정 초기화" />}
+            onRowClick={handleOpen}
+          >
             <Launch />
           </BaseRow>
         </List>

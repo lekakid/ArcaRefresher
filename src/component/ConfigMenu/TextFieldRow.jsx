@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { TextField } from '@mui/material';
+import { ListItemText, TextField } from '@mui/material';
 import BaseRow from './BaseRow';
 
 const TextFieldRow = React.forwardRef(
@@ -20,9 +20,8 @@ const TextFieldRow = React.forwardRef(
         ref={ref}
         divider={divider}
         nested={nested}
-        direction="column"
-        primary={primary}
-        secondary={secondary}
+        column="always"
+        header={<ListItemText primary={primary} secondary={secondary} />}
       >
         <TextField fullWidth value={value} onChange={handleChange} />
       </BaseRow>

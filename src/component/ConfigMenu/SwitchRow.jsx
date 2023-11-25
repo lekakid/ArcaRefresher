@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Switch } from '@mui/material';
+import { ListItemText, Switch } from '@mui/material';
 
 import BaseRow from './BaseRow';
 
@@ -18,8 +18,7 @@ const SwitchRow = React.forwardRef(
         ref={ref}
         divider={divider}
         nested={nested}
-        primary={primary}
-        secondary={secondary}
+        header={<ListItemText primary={primary} secondary={secondary} />}
         onClick={handleClick}
       >
         <Switch checked={value} />

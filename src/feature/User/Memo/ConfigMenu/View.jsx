@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   List,
+  ListItemText,
   MenuItem,
   Paper,
   Stack,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
@@ -35,7 +35,6 @@ const memoEntriesSelector = createSelector(
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { variant, contextRange } = useSelector(
     (state) => state[Info.ID].storage,
@@ -144,10 +143,33 @@ const View = React.forwardRef((_props, ref) => {
           </SelectRow>
           <BaseRow
             divider
-            direction={mobile ? 'column' : 'row'}
-            primary="공앱 메모 데이터"
-            secondary="공앱 포맷에 맞는 파일로 내보내거나 가져옵니다."
+            column="lg"
+            header={
+              <ListItemText
+                primary="공앱 메모 데이터"
+                secondary="공앱 포맷에 맞는 파일로 내보내거나 가져옵니다."
+              />
+            }
           >
+            <Stack
+              sx={{ minWidth: 180, width: '100%' }}
+              direction="row"
+              gap={1}
+            >
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => inputRef.current.click()}
+              >
+                가져오기
+              </Button>
+              <Button
+                sx={{ width: '100%' }}
+                disabled={memoRows.length === 0}
+                onClick={handleExportMobile}
+              >
+                내보내기
+              </Button>
+            </Stack>
             <input
               ref={inputRef}
               type="file"
@@ -155,25 +177,6 @@ const View = React.forwardRef((_props, ref) => {
               onChange={handleImportMobile}
               style={{ display: 'none' }}
             />
-            <Stack
-              direction="row"
-              gap={1}
-              sx={mobile ? { width: '100%' } : undefined}
-            >
-              <Button
-                sx={{ flexGrow: 1 }}
-                onClick={() => inputRef.current.click()}
-              >
-                가져오기
-              </Button>
-              <Button
-                sx={{ flexGrow: 1 }}
-                disabled={memoRows.length === 0}
-                onClick={handleExportMobile}
-              >
-                내보내기
-              </Button>
-            </Stack>
           </BaseRow>
           <TableEditorRow
             headerText="저장된 메모"

@@ -1,28 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, ListItemButton, ListItemText, Stack } from '@mui/material';
+import { ListItem, ListItemButton, Stack, useMediaQuery } from '@mui/material';
 
 const BaseRow = React.forwardRef(
-  (
-    {
-      divider,
-      nested,
-      direction = 'row',
-      primary,
-      secondary,
-      children,
-      onClick,
-    },
-    ref,
-  ) => {
-    const stack = (
+  ({ divider, nested, column, header, children, onClick }, ref) => {
+    const isColumn = useMediaQuery((theme) => {
+      let value = column;
+      if (!column) value = 1;
+      if (column === 'always') value = 99999;
+      return theme.breakpoints.down(value);
+    });
+
+    const content = (
       <Stack
         sx={{ width: '100%' }}
-        direction={direction}
-        alignItems={direction === 'column' ? 'flex-start' : 'center'}
+        direction={isColumn ? 'column' : 'row'}
+        alignItems={isColumn ? 'flex-start' : 'center'}
       >
-        {primary && <ListItemText primary={primary} secondary={secondary} />}
-        {children}
+        <Stack
+          sx={{ width: '100%' }}
+          direction="row"
+          justifyContent="space-between"
+        >
+          {header}
+        </Stack>
+        <Stack
+          sx={isColumn ? { width: '100%' } : undefined}
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+        >
+          {children}
+        </Stack>
       </Stack>
     );
 
@@ -37,8 +46,11 @@ const BaseRow = React.forwardRef(
           }
         }
       >
-        {onClick && <ListItemButton onClick={onClick}>{stack}</ListItemButton>}
-        {!onClick && stack}
+        {onClick ? (
+          <ListItemButton onClick={onClick}>{content}</ListItemButton>
+        ) : (
+          content
+        )}
       </ListItem>
     );
   },
@@ -47,9 +59,8 @@ const BaseRow = React.forwardRef(
 const RowPropTypes = {
   divider: PropTypes.bool,
   nested: PropTypes.bool,
-  direction: PropTypes.oneOf(['row', 'column']),
-  primary: PropTypes.node,
-  secondary: PropTypes.node,
+  column: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', 'always']),
+  header: PropTypes.element,
   children: PropTypes.node,
   onClick: PropTypes.func,
 };
