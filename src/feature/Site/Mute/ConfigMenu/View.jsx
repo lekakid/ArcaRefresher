@@ -14,7 +14,7 @@ import {
 import { Remove, VolumeOff, VolumeUp } from '@mui/icons-material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-import { SelectRow, SwitchRow, TextEditorRow } from 'component/ConfigMenu';
+import { SelectRow, SwitchRow, TextFieldRow } from 'component/ConfigMenu';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
@@ -40,6 +40,7 @@ import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
 
+// eslint-disable-next-line react/prop-types
 function ConfigToolbar({ disabled, muteAll, actionMuteAll, onRemove }) {
   const dispatch = useDispatch();
 
@@ -95,31 +96,11 @@ const View = React.forwardRef((_props, ref) => {
   const [selection, setSelection] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 
-  const onSaveUser = useCallback(
-    (text) => {
-      const test = text.split('\n').filter((i) => i !== '');
-      RegExp(test.join('|'));
-      dispatch($setUser(test));
-    },
-    [dispatch],
-  );
-
-  const onSaveKeyword = useCallback(
-    (text) => {
-      const test = text.split('\n').filter((i) => i !== '');
-      RegExp(test.join('|'));
-      dispatch($setKeyword(test));
-    },
-    [dispatch],
-  );
-
-  const onSaveChannel = useCallback(
-    (text) => {
-      const data = text.split('\n').filter((i) => i !== '');
-      dispatch($setChannel(data));
-    },
-    [dispatch],
-  );
+  const handleSaveFormat = useCallback((value) => {
+    const result = value.split('\n').filter((i) => i);
+    RegExp(result.join('|'));
+    return result;
+  }, []);
 
   const handlePageSize = useCallback((currentSize) => {
     setPageSize(currentSize);
@@ -227,27 +208,36 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">뮤트 조건</Typography>
       <Paper>
         <List disablePadding>
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 닉네임"
-            initialValue={userList.join('\n')}
+            multiline
+            manualSave
+            value={userList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveUser}
+            action={$setUser}
+            saveFormat={handleSaveFormat}
           />
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 키워드"
-            initialValue={keywordList.join('\n')}
+            multiline
+            manualSave
+            value={keywordList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveKeyword}
+            action={$setKeyword}
+            saveFormat={handleSaveFormat}
           />
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 채널"
             secondary="모든 채널을 대상으로 하는 게시판(베스트 라이브 등)에서 동작합니다."
-            initialValue={channelList.join('\n')}
+            multiline
+            manualSave
+            value={channelList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveChannel}
+            action={$setChannel}
+            saveFormat={handleSaveFormat}
           />
           <ListItem>
             <ListItemText>뮤트된 아카콘 목록</ListItemText>

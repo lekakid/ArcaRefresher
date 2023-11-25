@@ -4,7 +4,6 @@ import SliderRow from './SliderRow';
 import SwitchRow from './SwitchRow';
 import TextFieldRow from './TextFieldRow';
 
-import TextEditorRow from './TextEditorRow';
 import TableEditorRow from './TableEditorRow';
 
 export {
@@ -13,6 +12,5 @@ export {
   SliderRow,
   SwitchRow,
   TextFieldRow,
-  TextEditorRow,
   TableEditorRow,
 };
