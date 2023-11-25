@@ -237,25 +237,31 @@ const View = React.forwardRef((_props, ref) => {
               </Select>
               <ButtonGroup size="large" fullWidth={mobile}>
                 <Tooltip title="추가">
-                  <Button onClick={handleAddOpen}>
-                    <Add />
-                  </Button>
+                  <span>
+                    <Button onClick={handleAddOpen}>
+                      <Add />
+                    </Button>
+                  </span>
                 </Tooltip>
                 <Tooltip title="이름 수정">
-                  <Button
-                    disabled={!editingPresetKey}
-                    onClick={handleRenameOpen}
-                  >
-                    <Label />
-                  </Button>
+                  <span>
+                    <Button
+                      disabled={!editingPresetKey}
+                      onClick={handleRenameOpen}
+                    >
+                      <Label />
+                    </Button>
+                  </span>
                 </Tooltip>
                 <Tooltip title="제거">
-                  <Button
-                    disabled={!editingPresetKey}
-                    onClick={handleRemoveOpen}
-                  >
-                    <Delete />
-                  </Button>
+                  <span>
+                    <Button
+                      disabled={!editingPresetKey}
+                      onClick={handleRemoveOpen}
+                    >
+                      <Delete />
+                    </Button>
+                  </span>
                 </Tooltip>
               </ButtonGroup>
             </Stack>
