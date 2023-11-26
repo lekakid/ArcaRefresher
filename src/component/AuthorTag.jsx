@@ -1,7 +1,10 @@
-import { styled } from '@mui/styles';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 
-const Badge = styled('span')(({ theme }) => ({
+const BadgeTag = styled('span', {
+  name: 'BadgeTag',
+})(({ theme }) => ({
   '&:empty': {
     display: 'none',
   },
@@ -13,7 +16,9 @@ const Badge = styled('span')(({ theme }) => ({
   fontSize: '0.85em',
 }));
 
-const Text = styled('span')(({ theme }) => ({
+const Text = styled('span', {
+  name: 'BadgeText',
+})(({ theme }) => ({
   '&:empty': {
     display: 'none',
   },
@@ -27,20 +32,30 @@ const Text = styled('span')(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-function AuthorTag({ variant, className, children }) {
+const colorTable = {
+  red: '#ec4545',
+  green: '#258d25',
+  blue: '#0a96f2',
+};
+
+function AuthorTag({ variant = 'badge', color, children }) {
   if (variant === 'badge') {
-    return <Badge className={className}>{children}</Badge>;
+    return (
+      <BadgeTag sx={{ background: colorTable[color] }}>{children}</BadgeTag>
+    );
   }
 
   if (variant === 'text') {
-    return <Text className={className}>{children}</Text>;
+    return <Text sx={{ color: colorTable[color] }}>{children}</Text>;
   }
 
   return null;
 }
 
-AuthorTag.defaultProps = {
-  variant: 'badge',
+AuthorTag.propTypes = {
+  variant: PropTypes.oneOf(['badge', 'text']),
+  color: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export default React.memo(AuthorTag);

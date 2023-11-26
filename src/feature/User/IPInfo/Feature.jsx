@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Portal } from '@mui/material';
+import { Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
@@ -12,21 +12,6 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
-
-const styles = {
-  '& .red': {
-    backgroundColor: '#ec4545',
-    color: 'white',
-  },
-  '& .green': {
-    backgroundColor: '#258d25',
-    color: 'white',
-  },
-  '& .blue': {
-    backgroundColor: '#0a96f2',
-    color: 'white',
-  },
-};
 
 export default function IPInfo() {
   const [addEventListener] = useEvent();
@@ -70,9 +55,7 @@ export default function IPInfo() {
     <>
       {infoList.map(({ key, label, color, container }) => (
         <Portal key={key} container={container}>
-          <Box sx={styles}>
-            <AuthorTag className={color}>{label}</AuthorTag>
-          </Box>
+          <AuthorTag color={color}>{label}</AuthorTag>
         </Portal>
       ))}
     </>
