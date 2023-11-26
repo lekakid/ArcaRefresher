@@ -58,6 +58,10 @@ export const slice = createSlice({
         (i) => i.url !== image.url,
       );
     },
+    $setImageList(state, action) {
+      const { folder, list } = action.payload;
+      state.storage.imgList[folder] = list;
+    },
     $editImage(state, action) {
       const { folder, image } = action.payload;
       state.storage.imgList[folder] = state.storage.imgList[folder].map((i) =>
@@ -84,6 +88,7 @@ export const {
   $toggleForceLoad,
   $addImage,
   $removeImage,
+  $setImageList,
   $addFolder,
   $removeFolder,
   $setFolderData,
