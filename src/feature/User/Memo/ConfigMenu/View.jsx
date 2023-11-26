@@ -12,7 +12,7 @@ import {
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { BaseRow, SelectRow, TableEditorRow } from 'component/ConfigMenu';
+import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
@@ -23,7 +23,7 @@ const columns = [
   { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
 ];
 
-const memoEntriesSelector = createSelector(
+const memoRowsSelector = createSelector(
   (state) => state[Info.ID].storage.memo,
   (memo) =>
     Object.entries(memo).map(([key, { msg = '', color = '' }]) => ({
@@ -40,7 +40,7 @@ const View = React.forwardRef((_props, ref) => {
     (state) => state[Info.ID].storage,
   );
   const memoData = useSelector((state) => state[Info.ID].storage.memo);
-  const memoRows = useSelector(memoEntriesSelector);
+  const memoRows = useSelector(memoRowsSelector);
   const inputRef = useRef();
 
   const handleImportMobile = useCallback(
@@ -106,7 +106,7 @@ const View = React.forwardRef((_props, ref) => {
     return rs.pipeTo(filestream);
   }, [memoRows]);
 
-  const handleEdit = useCallback(
+  const handleMemoRowsChange = useCallback(
     (updatedRows) => {
       const entries = updatedRows.map(({ id, msg, color }) => [
         id,
@@ -178,13 +178,13 @@ const View = React.forwardRef((_props, ref) => {
               style={{ display: 'none' }}
             />
           </BaseRow>
-          <TableEditorRow
-            headerText="저장된 메모"
+          <DataGridRow
+            primary="저장된 메모"
             columns={columns}
             rows={memoRows}
+            textEditable
             noRowsText="저장된 메모가 없습니다."
-            delimiter="::"
-            onEdit={handleEdit}
+            onChange={handleMemoRowsChange}
           />
         </List>
       </Paper>

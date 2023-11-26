@@ -1,8 +1,8 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
-  Button,
+  Collapse,
   Grid,
   List,
   ListItem,
@@ -11,15 +11,17 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { Remove, VolumeOff, VolumeUp } from '@mui/icons-material';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
-import { SelectRow, SwitchRow, TextFieldRow } from 'component/ConfigMenu';
+import {
+  DataGridRow,
+  SelectRow,
+  SwitchRow,
+  TextFieldRow,
+} from 'component/ConfigMenu';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 import {
-  $removeEmoticonList,
   $setKeyword,
   $setUser,
   $toggleHideNoPermission,
@@ -33,49 +35,18 @@ import {
   $toggleMK2,
   $setContextRange,
   $setChannel,
+  $setEmoticonList,
   $toggleMuteAllEmot,
 } from '../slice';
 import { emoticonTableSelector } from '../selector';
 import CategoryRow from './CategoryRow';
 
-const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
-
-// eslint-disable-next-line react/prop-types
-function ConfigToolbar({ disabled, muteAll, actionMuteAll, onRemove }) {
-  const dispatch = useDispatch();
-
-  const handleAllMute = useCallback(() => {
-    dispatch(actionMuteAll());
-  }, [dispatch, actionMuteAll]);
-
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Button
-        variant="text"
-        startIcon={muteAll ? <VolumeOff /> : <VolumeUp />}
-        onClick={handleAllMute}
-      >
-        전부 뮤트
-      </Button>
-      <Button
-        variant="text"
-        startIcon={<Remove />}
-        disabled={disabled}
-        onClick={onRemove}
-      >
-        삭제
-      </Button>
-    </Box>
-  );
-}
-
-function CustomOverRay() {
-  return <GridOverlay>뮤트된 아카콘이 없습니다.</GridOverlay>;
-}
+const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel: channelInfo, board: boardInfo } = useContent();
+
   const {
     mk2,
     contextRange,
@@ -92,9 +63,7 @@ const View = React.forwardRef((_props, ref) => {
     muteAllEmot,
     category: { [channelInfo.ID]: category },
   } = useSelector((state) => state[Info.ID].storage);
-  const tableRows = useSelector(emoticonTableSelector);
-  const [selection, setSelection] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
+  const emotRows = useSelector(emoticonTableSelector);
 
   const handleSaveFormat = useCallback((value) => {
     const result = value.split('\n').filter((i) => i);
@@ -102,18 +71,16 @@ const View = React.forwardRef((_props, ref) => {
     return result;
   }, []);
 
-  const handlePageSize = useCallback((currentSize) => {
-    setPageSize(currentSize);
-  }, []);
-
-  const handleRemove = useCallback(() => {
-    dispatch($removeEmoticonList(selection));
-    setSelection([]);
-  }, [dispatch, selection]);
-
-  const handleSelection = useCallback((current) => {
-    setSelection(current);
-  }, []);
+  const handleMutedEmotChange = useCallback(
+    (rows) => {
+      const entries = rows.map(({ id, name, bundle, url }) => [
+        id,
+        { name, bundle, url },
+      ]);
+      dispatch($setEmoticonList(Object.fromEntries(entries)));
+    },
+    [dispatch],
+  );
 
   const handleCategory = useCallback(
     (id, value) => {
@@ -239,37 +206,22 @@ const View = React.forwardRef((_props, ref) => {
             action={$setChannel}
             saveFormat={handleSaveFormat}
           />
-          <ListItem>
-            <ListItemText>뮤트된 아카콘 목록</ListItemText>
-          </ListItem>
-          <ListItem divider>
-            <DataGrid
-              rows={tableRows}
+          <SwitchRow
+            divider
+            primary="모든 아카콘 뮤트"
+            value={muteAllEmot}
+            action={$toggleMuteAllEmot}
+          />
+          <Collapse in={!muteAllEmot}>
+            <DataGridRow
+              primary="뮤트한 아카콘"
               columns={columns}
-              autoHeight
-              rowHeight={40}
-              pagination
-              checkboxSelection
-              disableColumnMenu
-              disableSelectionOnClick
-              components={{
-                Toolbar: ConfigToolbar,
-                NoRowsOverlay: CustomOverRay,
-              }}
-              componentsProps={{
-                toolbar: {
-                  disabled: selection.length === 0,
-                  muteAll: muteAllEmot,
-                  actionMuteAll: $toggleMuteAllEmot,
-                  onRemove: handleRemove,
-                },
-              }}
-              pageSize={pageSize}
-              rowsPerPageOptions={[10, 25, 50, 100]}
-              onPageSizeChange={handlePageSize}
-              onSelectionModelChange={handleSelection}
+              rows={emotRows}
+              noRowsText="뮤트된 아카콘이 없습니다."
+              onChange={handleMutedEmotChange}
             />
-          </ListItem>
+          </Collapse>
+
           <ListItem>
             <ListItemText>카테고리 설정</ListItemText>
           </ListItem>
