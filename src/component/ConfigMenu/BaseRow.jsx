@@ -26,8 +26,6 @@ const BaseRow = React.forwardRef(
         </Stack>
         <Stack
           sx={isColumn ? { width: '100%' } : undefined}
-          direction="row"
-          justifyContent="flex-end"
           alignItems="center"
         >
           {children}

@@ -88,6 +88,9 @@ function TableView({
       checkboxSelection
       disableColumnMenu
       disableSelectionOnClick
+      sx={{
+        width: '100%',
+      }}
       components={{
         Toolbar,
         NoRowsOverlay,
