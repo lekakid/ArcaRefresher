@@ -4,6 +4,8 @@ import { GlobalStyles } from '@mui/material';
 
 import Info from './FeatureInfo';
 
+/* eslint-disable react/prop-types */
+
 // ------------- 사이트 -------------
 function NotifyPositionStyles({ value }) {
   return (
@@ -99,10 +101,10 @@ function SideMenuStyles({ value }) {
           {
             '& .body .content-wrapper': {
               [theme.breakpoints.up(w + 400)]: {
-                gridTemplateColumns: 'auto 1fr',
+                gridTemplateColumns: 'auto 1fr !important',
               },
               [theme.breakpoints.down(w + 400)]: {
-                gridTemplateColumns: '1fr',
+                gridTemplateColumns: '1fr !important',
               },
             },
           },
@@ -112,7 +114,7 @@ function SideMenuStyles({ value }) {
           ...Object.fromEntries(widthEntries),
           'html:not([class*=width])': {
             '& .body .content-wrapper': {
-              gridTemplateColumns: '1fr',
+              gridTemplateColumns: '1fr !important',
             },
           },
           'html .board-article': {
@@ -380,6 +382,8 @@ function FixDarkModeWriteFormStyles({ value }) {
     />
   );
 }
+
+/* eslint-enable react/prop-types */
 
 export default function LayoutCustom() {
   const {
