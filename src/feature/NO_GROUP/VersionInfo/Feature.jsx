@@ -86,7 +86,12 @@ export default function VersionInfo() {
       message = '리프레셔가 업데이트 되었습니다.';
       action = (
         <>
-          <Button size="small" color="inherit" onClick={handleChangeLog}>
+          <Button
+            size="small"
+            variant="text"
+            color="inherit"
+            onClick={handleChangeLog}
+          >
             <Box sx={{ fontWeight: 'bold' }}>업데이트 내역</Box>
           </Button>
           <IconButton size="small" color="inherit" onClick={handleClose}>
@@ -99,7 +104,12 @@ export default function VersionInfo() {
     case MODE_DOWNGRADE: {
       message = '리프레셔를 다운그레이드 하셨나요?';
       action = (
-        <Button size="small" color="inherit" onClick={handleDowngrade}>
+        <Button
+          size="small"
+          variant="text"
+          color="inherit"
+          onClick={handleDowngrade}
+        >
           <Box sx={{ fontWeight: 'bold' }}>예</Box>
         </Button>
       );
@@ -109,7 +119,12 @@ export default function VersionInfo() {
       message = `이 탭의 스크립트 버전이 맞지 않습니다.
         이 탭에서 변경한 설정, 메모 등이 저장되지 않습니다.`;
       action = (
-        <Button size="small" color="inherit" onClick={handleRefresh}>
+        <Button
+          size="small"
+          variant="text"
+          color="inherit"
+          onClick={handleRefresh}
+        >
           <Box sx={{ fontWeight: 'bold' }}>새로고침</Box>
         </Button>
       );
@@ -121,6 +136,7 @@ export default function VersionInfo() {
 
   return (
     <Snackbar
+      anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
       open={noti.open}
       message={message}
       ClickAwayListenerProps={{
