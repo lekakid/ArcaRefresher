@@ -5,7 +5,7 @@ import { Box, Button, Snackbar, Typography } from '@mui/material';
 import {
   ARTICLE_CONTENT,
   ARTICLE_LOADED,
-  COMMENT_INNER,
+  COMMENT_ITEMS,
   COMMENT_LOADED,
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
@@ -29,6 +29,55 @@ const LABEL = {
   normal: '복호화 되었습니다.',
 };
 
+function tryDecodeAll(html, max = 20) {
+  let count = 0;
+  let result = html;
+
+  // 개행 처리
+  const brRegex = new RegExp(URLBase64withBrRegex);
+  let breaklined = brRegex.exec(result)?.[0];
+  while (breaklined) {
+    const concatnated = breaklined.replaceAll('<br>', '').replaceAll('\n', '');
+    result = result.replace(breaklined, concatnated);
+
+    breaklined = brRegex.exec(result)?.[0];
+
+    count += 1;
+    if (count > max) {
+      console.warn(`[tryDecodeAll] 줄바꿈 정리 시도가 ${max}번을 넘었습니다.`);
+      break;
+    }
+  }
+
+  count = 0;
+  const regex = new RegExp(URLBase64Regex);
+  let encoded = regex.exec(result)?.[0];
+  while (encoded) {
+    try {
+      const decodedString = decode(encoded);
+      result = result.replace(
+        regex,
+        decodedString.indexOf('http') > -1
+          ? `<a href=${decodedString} class="base64" target="_blank" rel="noopener noreferrer">${decodedString}</a>`
+          : decodedString,
+      );
+    } catch (error) {
+      console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
+      break;
+    }
+
+    encoded = regex.exec(result)?.[0];
+
+    count += 1;
+    if (count > max) {
+      console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
+      break;
+    }
+  }
+
+  return result;
+}
+
 function Decoder() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
@@ -51,52 +100,7 @@ function Decoder() {
     if (!article) return undefined;
 
     const originHTML = article.innerHTML;
-    let html = article.innerHTML;
-    let count = 0;
-
-    // 개행 처리
-    const brRegex = new RegExp(URLBase64withBrRegex);
-    let breaklined = brRegex.exec(html)?.[0];
-    while (breaklined) {
-      const concatnated = breaklined
-        .replaceAll('<br>', '')
-        .replaceAll('\n', '');
-      html = html.replace(breaklined, concatnated);
-
-      breaklined = brRegex.exec(html)?.[0];
-
-      count += 1;
-      if (count > 20) {
-        console.warn('[Base64] 줄바꿈 정리 시도가 20번을 넘었습니다.');
-        break;
-      }
-    }
-
-    count = 0;
-    const regex = new RegExp(URLBase64Regex);
-    let encoded = regex.exec(html)?.[0];
-    while (encoded) {
-      try {
-        const result = decode(encoded);
-        html = html.replace(
-          regex,
-          result.indexOf('http') > -1
-            ? `<a href=${result} class="base64" target="_blank" rel="noopener noreferrer">${result}</a>`
-            : result,
-        );
-      } catch (error) {
-        console.warn(error);
-      }
-
-      count += 1;
-      if (count > 20) {
-        console.warn('[Base64] 디코드 시도가 20번을 넘었습니다.');
-        break;
-      }
-      encoded = regex.exec(html)?.[0];
-    }
-
-    article.innerHTML = html;
+    article.innerHTML = tryDecodeAll(article.innerHTML);
     return () => {
       article.innerHTML = originHTML;
     };
@@ -109,61 +113,28 @@ function Decoder() {
     if (!commentLoaded) return undefined;
     if (temporaryDisabled) return undefined;
 
-    let comment;
-    let originHTML;
-
+    const comments = document.querySelectorAll(COMMENT_ITEMS);
     const handler = () => {
-      comment = document.querySelector(COMMENT_INNER);
-      originHTML = comment.innerHTML;
-      let html = comment.innerHTML;
-      let count = 0;
+      comments.forEach((c) => {
+        const target = c.querySelector('.message pre');
+        if (!target) return;
 
-      // 개행 처리
-      const brRegex = new RegExp(URLBase64withBrRegex);
-      let breaklined = brRegex.exec(html)?.[0];
-      while (breaklined) {
-        const concatnated = breaklined
-          .replaceAll('<br>', '')
-          .replaceAll('\n', '');
-        html = html.replace(breaklined, concatnated);
-
-        breaklined = brRegex.exec(html)?.[0];
-
-        count += 1;
-        if (count > 20) {
-          console.warn('[Base64] 줄바꿈 정리 시도가 20번을 넘었습니다.');
-          break;
-        }
-      }
-
-      count = 0;
-      const regex = new RegExp(URLBase64Regex);
-      let encoded = regex.exec(html)?.[0];
-      while (encoded) {
-        const result = decode(encoded);
-        html = html.replace(
-          regex,
-          result.indexOf('http') > -1
-            ? `<a href=${result} class="base64" target="_blank" rel="noopener noreferrer">${result}</a>`
-            : result,
-        );
-
-        encoded = regex.exec(html)?.[0];
-
-        count += 1;
-        if (count > 20) {
-          console.warn('[Base64] 디코드 시도가 20번을 넘었습니다.');
-          break;
-        }
-      }
-
-      comment.innerHTML = html;
+        const content = target.innerHTML;
+        target.dataset.orig = content;
+        target.innerHTML = tryDecodeAll(content, 5);
+      });
     };
 
     handler();
     addEventListener(EVENT_COMMENT_REFRESH, handler);
+
     return () => {
-      comment.innerHTML = originHTML;
+      comments.forEach((c) => {
+        const target = c.querySelector('.message pre');
+        if (!target) return;
+
+        target.innerHTML = target.dataset.orig;
+      });
       removeEventListener(EVENT_COMMENT_REFRESH, handler);
     };
   }, [
@@ -255,7 +226,7 @@ function Decoder() {
         <Box sx={{ maxWidth: 'xs' }}>
           <Typography>{LABEL[decodeResult.type]}</Typography>
           <Typography
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
           >{`"${decodeResult.text}"`}</Typography>
         </Box>
       }
