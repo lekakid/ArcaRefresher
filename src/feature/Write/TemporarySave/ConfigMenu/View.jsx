@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, List, MenuItem, Paper, Typography } from '@material-ui/core';
+import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow } from 'component/config';
+import { SelectRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import { $setAutoTime } from '../slice';
 
@@ -10,7 +11,7 @@ const View = React.forwardRef((_props, ref) => {
   const { autoSaveTime } = useSelector((state) => state[Info.ID].storage);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -27,7 +28,7 @@ const View = React.forwardRef((_props, ref) => {
           </SelectRow>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

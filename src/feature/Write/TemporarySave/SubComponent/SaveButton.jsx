@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Snackbar } from '@material-ui/core';
-import { Add, Save } from '@material-ui/icons';
+import { Button, Snackbar } from '@mui/material';
+import { Add, Save } from '@mui/icons-material';
 
 import { $saveArticle, setCurrentSlot } from '../slice';
 import Info from '../FeatureInfo';

@@ -1,4 +1,4 @@
-import { Web } from '@material-ui/icons';
+import { Web } from '@mui/icons-material';
 import 'core/types';
 
 /** @type {GroupInfo} */

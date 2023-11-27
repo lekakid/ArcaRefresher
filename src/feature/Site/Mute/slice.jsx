@@ -159,10 +159,8 @@ export const slice = createSlice({
 
       console.warn(`[Mute] $removeEmoticon Payload 오류`);
     },
-    $removeEmoticonList(state, action) {
-      action.payload.forEach((id) => {
-        delete state.storage.emoticon[id];
-      });
+    $setEmoticonList(state, action) {
+      state.storage.emoticon = action.payload;
     },
     $setCategoryConfig(state, action) {
       const { channel, category, config } = action.payload;
@@ -193,7 +191,7 @@ export const {
   $toggleMuteAllEmot,
   $addEmoticon,
   $removeEmoticon,
-  $removeEmoticonList,
+  $setEmoticonList,
   $setCategoryConfig,
 } = slice.actions;
 

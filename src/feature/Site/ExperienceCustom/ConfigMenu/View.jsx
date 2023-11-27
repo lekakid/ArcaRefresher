@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, List, Paper, Typography } from '@material-ui/core';
+import { List, Paper, Typography } from '@mui/material';
 
-import { SwitchRow } from 'component/config';
-import TextFieldRow from 'component/config/TextFieldRow';
+import { SwitchRow, TextFieldRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import {
   $setSpoofTitle,
@@ -29,7 +29,7 @@ const View = React.forwardRef((_props, ref) => {
   } = useSelector((state) => state[Info.ID].storage);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -90,7 +90,7 @@ const View = React.forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { Portal } from '@material-ui/core';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { Portal } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { FULL_LOADED, USER_INFO } from 'core/selector';
@@ -20,26 +20,30 @@ function MemoList() {
   const loaded = useLoadChecker(FULL_LOADED);
 
   const { variant, memo } = useSelector((state) => state[Info.ID].storage);
+  const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
   useLayoutEffect(() => {
+    if (!loaded) return undefined;
+
     const appendMemo = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getUserKey(e, index);
         const id = getUserID(e);
         const container =
-          e.querySelector('.memo') || document.createElement('span');
-        if (!container.parentNode) {
+          memoContainers.current[index] || document.createElement('span');
+        if (!container.classList.contains('memo')) {
           container.classList.add('memo');
-          e.append(container);
+          memoContainers.current.push(container);
         }
+        e.append(container);
 
         return { key, id, container };
       });
 
       setInfoList(list);
     };
-    if (loaded) appendMemo();
+    appendMemo();
     addEventListener(EVENT_BOARD_REFRESH, appendMemo);
     addEventListener(EVENT_COMMENT_REFRESH, appendMemo);
 
@@ -80,6 +84,7 @@ function MemoList() {
     };
   }, [memo, loaded, addEventListener, removeEventListener]);
 
+  if (variant === 'none') return null;
   return (
     <>
       {infoList.map(({ key, id, container }) => (

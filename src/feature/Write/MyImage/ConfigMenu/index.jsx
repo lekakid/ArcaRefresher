@@ -1,4 +1,4 @@
-import { Image } from '@material-ui/icons';
+import { Image } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

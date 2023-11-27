@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -9,18 +9,18 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
   Paper,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Refresh } from '@material-ui/icons';
+} from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 
-import { SwitchRow } from 'component/config';
 import { KeyIcon } from 'component';
+import { SwitchRow } from 'component/ConfigMenu';
 
-import { createSelector } from '@reduxjs/toolkit';
 import {
   $resetKeyMap,
   $setKey,
@@ -34,11 +34,13 @@ import Info from '../FeatureInfo';
 
 function KeyRow({ divider, inputKey, children, onClick }) {
   return (
-    <ListItem divider={divider} button onClick={onClick}>
-      <ListItemText>{children}</ListItemText>
-      <ListItemSecondaryAction>
-        <KeyIcon title={inputKey} />
-      </ListItemSecondaryAction>
+    <ListItem disablePadding divider={divider}>
+      <ListItemButton onClick={onClick}>
+        <ListItemText>{children}</ListItemText>
+        <ListItemSecondaryAction>
+          <KeyIcon title={inputKey} />
+        </ListItemSecondaryAction>
+      </ListItemButton>
     </ListItem>
   );
 }
@@ -117,7 +119,7 @@ const View = React.forwardRef((_props, ref) => {
   };
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -131,14 +133,12 @@ const View = React.forwardRef((_props, ref) => {
             primary="호환성 모드"
             secondary={
               <>
-                <Typography variant="body2">
-                  ⚠️이 옵션을 사용하면 키가 겹치지 않을 때 아카라이브 단축키가
-                  동시에 동작합니다.
-                </Typography>
-                <Typography variant="body2">
-                  키 입력을 사용하는 다른 스크립트를 쓰려면 켜주세요
-                </Typography>
-                <Typography variant="body2">새로고침이 필요합니다.</Typography>
+                ⚠️이 옵션을 사용하면 키가 겹치지 않을 때 아카라이브 단축키가
+                동시에 동작합니다.
+                <br />
+                키 입력을 사용하는 다른 스크립트를 쓰려면 켜주세요
+                <br />
+                새로고침이 필요합니다.
               </>
             }
             value={compatibilityMode}
@@ -153,31 +153,29 @@ const View = React.forwardRef((_props, ref) => {
             <ListItemText>단축키 목록</ListItemText>
             <ListItemSecondaryAction>
               <Tooltip title="초기화">
-                <IconButton onClick={handleReset}>
+                <IconButton onClick={handleReset} size="large">
                   <Refresh />
                 </IconButton>
               </Tooltip>
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
-            <Box clone width="100%">
-              <Paper variant="outlined">
-                <List disablePadding>
-                  {actionTable.map(({ action, label, defaultKey }, index) => (
-                    <KeyRow
-                      key={action}
-                      divider={index !== actionTable.length - 1}
-                      inputKey={formatKey(
-                        keyMap[action] || defaultKey,
-                      ).toUpperCase()}
-                      onClick={handleClick(action)}
-                    >
-                      {label}
-                    </KeyRow>
-                  ))}
-                </List>
-              </Paper>
-            </Box>
+            <Paper variant="outlined" sx={{ width: '100%' }}>
+              <List disablePadding>
+                {actionTable.map(({ action, label, defaultKey }, index) => (
+                  <KeyRow
+                    key={action}
+                    divider={index !== actionTable.length - 1}
+                    inputKey={formatKey(
+                      keyMap[action] || defaultKey,
+                    ).toUpperCase()}
+                    onClick={handleClick(action)}
+                  >
+                    {label}
+                  </KeyRow>
+                ))}
+              </List>
+            </Paper>
           </ListItem>
         </List>
       </Paper>
@@ -194,7 +192,7 @@ const View = React.forwardRef((_props, ref) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-    </Box>
+    </Fragment>
   );
 });
 

@@ -6,31 +6,34 @@ import React, {
   useMemo,
 } from 'react';
 import { useSelector } from 'react-redux';
-import { Fade } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Fade, GlobalStyles } from '@mui/material';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useDispatchEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
-import RefreshProgress from './RefreshProgress';
-import { getNewArticle, swapArticle } from './article';
+import RefreshIndicator from './RefreshProgress';
+import { getNewArticle, updateBoard } from './article';
 
-const styles = {
-  refreshed: {
-    animationName: '$light',
-    animationDuration: 500,
-  },
-  '@keyframes light': {
-    '0%': {
-      backgroundColor: 'var(--color-bg-focus)',
-    },
-    '100%': {
-      backgroundColor: 'transparent',
-    },
-  },
-};
+const refreshStyles = (
+  <GlobalStyles
+    styles={{
+      '.refreshed': {
+        animationName: 'refreshed-animate',
+        animationDuration: '0.5s',
+      },
+      '@keyframes refreshed-animate': {
+        '0%': {
+          backgroundColor: 'var(--color-bg-focus)',
+        },
+        '100%': {
+          backgroundColor: 'transparent',
+        },
+      },
+    }}
+  />
+);
 
 /**
  * 주소 끝 search string을 Object로 반환
@@ -45,7 +48,7 @@ function parseSearch(searchString) {
   return Object.fromEntries(entries);
 }
 
-function AutoRefresher({ classes }) {
+function AutoRefresher() {
   const dispatchEvent = useDispatchEvent();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
@@ -56,6 +59,7 @@ function AutoRefresher({ classes }) {
   const [pause, setPause] = useState({
     management: false,
     unfocus: false,
+    api: false,
   });
   const refreshData = useRef({
     newArticle: 0, // 반영 안 된 새 게시물 수
@@ -105,15 +109,15 @@ function AutoRefresher({ classes }) {
     if (refreshData.current.mouseTimer) return;
 
     // 게시물 갱신
-    const newArticle = await getNewArticle();
-    if (newArticle.length === 0) return;
-    swapArticle(board, newArticle, classes.refreshed);
+    const newArticles = await getNewArticle();
+    if (!newArticles) return;
+    updateBoard(board, newArticles, 'refreshed');
     dispatchEvent(EVENT_BOARD_REFRESH);
 
     // 리셋
     refreshData.current.newArticle = 0;
     refreshData.current.accTime = 0;
-  }, [board, classes, countdown, maxTime, dispatchEvent]);
+  }, [board, countdown, maxTime, dispatchEvent]);
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -199,18 +203,28 @@ function AutoRefresher({ classes }) {
       }));
       if (!document.hidden) tryRefresh();
     };
+
+    const apiPause = () => {
+      setPause((prev) => ({
+        ...prev,
+        api: !prev.api,
+      }));
+    };
+
     board.addEventListener('click', onManageArticle);
     document.addEventListener('visibilitychange', onFocusOut);
+    unsafeWindow.ArcaRefresher ??= {};
+    unsafeWindow.ArcaRefresher.toggleRefresh = apiPause;
 
     return () => {
       board.removeEventListener('click', onManageArticle);
       document.removeEventListener('visibilitychange', onFocusOut);
     };
-  }, [board, countdown, enabled, tryRefresh]);
+  }, [board, enabled, tryRefresh]);
 
   useEffect(() => {
     if (!enabled) return undefined;
-    if (pause.management || pause.unfocus) return undefined;
+    if (pause.management || pause.unfocus || pause.api) return undefined;
 
     const timer = setInterval(tryRefresh, countdown * 1000);
 
@@ -218,15 +232,18 @@ function AutoRefresher({ classes }) {
   }, [countdown, enabled, pause, tryRefresh]);
 
   return (
-    <Fade in={enabled && showProgress}>
-      <div>
-        <RefreshProgress
-          count={enabled ? countdown : 0}
-          animate={!(pause.management || pause.unfocus)}
-        />
-      </div>
-    </Fade>
+    <>
+      {refreshStyles}
+      <Fade in={enabled && showProgress}>
+        <div>
+          <RefreshIndicator
+            count={enabled ? countdown : 0}
+            animate={!(pause.management || pause.unfocus || pause.api)}
+          />
+        </div>
+      </Fade>
+    </>
   );
 }
 
-export default withStyles(styles)(AutoRefresher);
+export default AutoRefresher;

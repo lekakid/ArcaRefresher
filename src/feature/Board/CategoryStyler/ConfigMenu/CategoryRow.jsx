@@ -1,19 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import {
-  Box,
-  Divider,
-  Grid,
-  IconButton,
-  Tooltip,
-  useMediaQuery,
-} from '@material-ui/core';
+import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import {
   FormatBold,
   FormatStrikethrough,
   MeetingRoom,
   NoMeetingRoom,
   Replay,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import ColorPicker from 'component/ColorPicker';
 import { getContrastYIQ } from 'func/color';
@@ -27,7 +20,6 @@ const DEFAULT_CATEGORY_CONFIG = {
 };
 
 function CategoryRow({ divider, id, label, initValue, onChange }) {
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const [value, setValue] = useState({
     ...DEFAULT_CATEGORY_CONFIG,
     ...initValue,
@@ -89,12 +81,14 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
       )}
       <Grid item sm={6} xs={12}>
         <Box
-          display="flex"
-          height="100%"
-          minHeight="48px"
-          width="100%"
-          alignItems="center"
-          style={backgroundStyle}
+          sx={{
+            display: 'flex',
+            height: '100%',
+            minHeight: '48px',
+            width: '100%',
+            alignItems: 'center',
+            ...backgroundStyle,
+          }}
         >
           <span className="badge badge-success" style={badgeStyle}>
             {label}
@@ -103,11 +97,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
         </Box>
       </Grid>
       <Grid item sm={6} xs={12}>
-        <Box
-          display="flex"
-          justifyContent={mobile ? null : 'flex-end'}
-          alignItems="center"
-        >
+        <Stack direction="row" sx={{ alignItems: 'center' }}>
           <Tooltip title="카테고리 색">
             <span>
               <ColorPicker color={badge} onChange={handleColor('badge')} />
@@ -119,26 +109,26 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
             </span>
           </Tooltip>
           <Tooltip title="굵게">
-            <IconButton onClick={handleBool('bold')}>
+            <IconButton onClick={handleBool('bold')} size="large">
               <FormatBold />
             </IconButton>
           </Tooltip>
           <Tooltip title="취소선">
-            <IconButton onClick={handleBool('through')}>
+            <IconButton onClick={handleBool('through')} size="large">
               <FormatStrikethrough />
             </IconButton>
           </Tooltip>
           <Tooltip title={disableVisited ? '방문 표시 안함' : '방문 표시'}>
-            <IconButton onClick={handleBool('disableVisited')}>
+            <IconButton onClick={handleBool('disableVisited')} size="large">
               {disableVisited ? <NoMeetingRoom /> : <MeetingRoom />}
             </IconButton>
           </Tooltip>
           <Tooltip title="리셋">
-            <IconButton onClick={handleResetStyle}>
+            <IconButton onClick={handleResetStyle} size="large">
               <Replay />
             </IconButton>
           </Tooltip>
-        </Box>
+        </Stack>
       </Grid>
     </>
   );

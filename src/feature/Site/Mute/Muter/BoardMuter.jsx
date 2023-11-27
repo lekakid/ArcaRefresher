@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { GlobalStyles } from '@mui/material';
 
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
@@ -14,36 +14,38 @@ import Info from '../FeatureInfo';
 
 const globalChannel = ['live', 'headline', 'replay', 'breaking'];
 
-const style = {
-  '@global': {
-    '.body .article-list': {
-      '& .frontend-header': {
-        display: 'none',
+const boardMuteStyles = (
+  <GlobalStyles
+    styles={{
+      '.body .article-list': {
+        '& .frontend-header': {
+          display: 'none',
+        },
+        '& .list-table.show-filtered-category .filtered-category': {
+          display: 'flex !important',
+        },
+        '& .list-table.show-filtered-channel .filtered-channel': {
+          display: 'flex !important',
+        },
+        '& .block-preview .vrow-preview': {
+          display: 'none !important',
+        },
+        '& .filtered-emoticon': {
+          display: 'none !important',
+        },
       },
-      '& .list-table.show-filtered-category .filtered-category': {
-        display: 'flex !important',
-      },
-      '& .list-table.show-filtered-channel .filtered-channel': {
-        display: 'flex !important',
-      },
-      '& .block-preview .vrow-preview': {
+      '.hide-service-notice .notice-service': {
         display: 'none !important',
       },
-      '& .filtered-emoticon': {
+      '.hide-no-permission .vrow[href$="#c_"]': {
         display: 'none !important',
       },
-    },
-    '.hide-service-notice .notice-service': {
-      display: 'none !important',
-    },
-    '.hide-no-permission .vrow[href$="#c_"]': {
-      display: 'none !important',
-    },
-    '.hide-closed-deal .vrow.ar-closed': {
-      display: 'none !important',
-    },
-  },
-};
+      '.hide-closed-deal .vrow.ar-closed': {
+        display: 'none !important',
+      },
+    }}
+  />
+);
 
 function BoardMuter() {
   const dispatch = useDispatch();
@@ -187,13 +189,16 @@ function BoardMuter() {
 
   if (!countBarContainer) return null;
   return (
-    <CountBar
-      renderContainer={countBarContainer}
-      controlTarget={controlTarget}
-      count={count}
-      hide={hideCountBar}
-    />
+    <>
+      {boardMuteStyles}
+      <CountBar
+        renderContainer={countBarContainer}
+        controlTarget={controlTarget}
+        count={count}
+        hide={hideCountBar}
+      />
+    </>
   );
 }
 
-export default withStyles(style)(BoardMuter);
+export default BoardMuter;

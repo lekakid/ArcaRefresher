@@ -1,20 +1,19 @@
-import React, { useCallback, useRef } from 'react';
+import React, { Fragment, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
   Button,
   List,
-  ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   MenuItem,
   Paper,
+  Stack,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { SelectRow, TableEditorRow } from 'component/config';
+import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
@@ -24,7 +23,7 @@ const columns = [
   { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
 ];
 
-const memoEntriesSelector = createSelector(
+const memoRowsSelector = createSelector(
   (state) => state[Info.ID].storage.memo,
   (memo) =>
     Object.entries(memo).map(([key, { msg = '', color = '' }]) => ({
@@ -36,11 +35,12 @@ const memoEntriesSelector = createSelector(
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
+
   const { variant, contextRange } = useSelector(
     (state) => state[Info.ID].storage,
   );
   const memoData = useSelector((state) => state[Info.ID].storage.memo);
-  const memoRows = useSelector(memoEntriesSelector);
+  const memoRows = useSelector(memoRowsSelector);
   const inputRef = useRef();
 
   const handleImportMobile = useCallback(
@@ -106,7 +106,7 @@ const View = React.forwardRef((_props, ref) => {
     return rs.pipeTo(filestream);
   }, [memoRows]);
 
-  const handleEdit = useCallback(
+  const handleMemoRowsChange = useCallback(
     (updatedRows) => {
       const entries = updatedRows.map(({ id, msg, color }) => [
         id,
@@ -118,7 +118,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -139,8 +139,37 @@ const View = React.forwardRef((_props, ref) => {
           >
             <MenuItem value="badge">둥근 뱃지</MenuItem>
             <MenuItem value="text">텍스트</MenuItem>
+            <MenuItem value="none">없음</MenuItem>
           </SelectRow>
-          <ListItem divider>
+          <BaseRow
+            divider
+            column="lg"
+            header={
+              <ListItemText
+                primary="공앱 메모 데이터"
+                secondary="공앱 포맷에 맞는 파일로 내보내거나 가져옵니다."
+              />
+            }
+          >
+            <Stack
+              sx={{ minWidth: 180, width: '100%' }}
+              direction="row"
+              gap={1}
+            >
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => inputRef.current.click()}
+              >
+                가져오기
+              </Button>
+              <Button
+                sx={{ width: '100%' }}
+                disabled={memoRows.length === 0}
+                onClick={handleExportMobile}
+              >
+                내보내기
+              </Button>
+            </Stack>
             <input
               ref={inputRef}
               type="file"
@@ -148,40 +177,18 @@ const View = React.forwardRef((_props, ref) => {
               onChange={handleImportMobile}
               style={{ display: 'none' }}
             />
-            <ListItemText
-              primary="공앱 메모 데이터"
-              secondary="공앱 포맷에 맞는 파일로 내보내거나 가져옵니다."
-            />
-            <ListItemSecondaryAction>
-              <Button
-                variant="outlined"
-                style={{
-                  marginRight: 4,
-                }}
-                onClick={() => inputRef.current.click()}
-              >
-                가져오기
-              </Button>
-              <Button
-                variant="outlined"
-                disabled={memoRows.length === 0}
-                onClick={handleExportMobile}
-              >
-                내보내기
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <TableEditorRow
-            headerText="저장된 메모"
+          </BaseRow>
+          <DataGridRow
+            primary="저장된 메모"
             columns={columns}
             rows={memoRows}
+            textEditable
             noRowsText="저장된 메모가 없습니다."
-            delimiter="::"
-            onEdit={handleEdit}
+            onChange={handleMemoRowsChange}
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

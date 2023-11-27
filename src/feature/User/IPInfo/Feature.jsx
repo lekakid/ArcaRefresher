@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Portal } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import React, { useEffect, useRef, useState } from 'react';
+import { Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
@@ -13,31 +12,12 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
-import Info from './FeatureInfo';
-
-const useStyles = makeStyles(
-  {
-    red: {
-      backgroundColor: '#ec4545',
-      color: 'white',
-    },
-    green: {
-      backgroundColor: '#258d25',
-      color: 'white',
-    },
-    blue: {
-      backgroundColor: '#0a96f2',
-      color: 'white',
-    },
-  },
-  { name: Info.ID },
-);
 
 export default function IPInfo() {
   const [addEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
-  const classes = useStyles();
 
+  const infoContainer = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {
@@ -53,11 +33,12 @@ export default function IPInfo() {
           ) || { label: '고정', color: 'green' };
 
           const container =
-            e.querySelector('.ip-info') || document.createElement('span');
-          if (!container.parentNode) {
+            infoContainer.current[index] || document.createElement('span');
+          if (!container.classList.contains('ip-info')) {
             container.classList.add('ip-info');
-            e.append(container);
+            infoContainer.current.push(container);
           }
+          e.append(container);
 
           return { key, label, color, container };
         })
@@ -74,7 +55,7 @@ export default function IPInfo() {
     <>
       {infoList.map(({ key, label, color, container }) => (
         <Portal key={key} container={container}>
-          <AuthorTag className={classes[color]}>{label}</AuthorTag>
+          <AuthorTag color={color}>{label}</AuthorTag>
         </Portal>
       ))}
     </>

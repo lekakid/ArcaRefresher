@@ -1,4 +1,4 @@
-import { AssignmentInd } from '@material-ui/icons';
+import { AssignmentInd } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

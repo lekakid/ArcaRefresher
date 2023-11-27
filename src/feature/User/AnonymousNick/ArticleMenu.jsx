@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
-import { PeopleAltOutlined } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { PeopleAltOutlined } from '@mui/icons-material';
 
 import Info from './FeatureInfo';
 import { toggleShow } from './slice';
@@ -17,6 +17,7 @@ export default function ArticleMenu() {
   return (
     <Button
       size="small"
+      variant="text"
       startIcon={<PeopleAltOutlined />}
       onClick={handleToggle}
     >

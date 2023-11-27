@@ -1,8 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
-  Button,
+  Collapse,
   Grid,
   List,
   ListItem,
@@ -10,16 +10,18 @@ import {
   MenuItem,
   Paper,
   Typography,
-} from '@material-ui/core';
-import { Remove, VolumeOff, VolumeUp } from '@material-ui/icons';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+} from '@mui/material';
 
-import { SelectRow, SwitchRow, TextEditorRow } from 'component/config';
+import {
+  DataGridRow,
+  SelectRow,
+  SwitchRow,
+  TextFieldRow,
+} from 'component/ConfigMenu';
 import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 import {
-  $removeEmoticonList,
   $setKeyword,
   $setUser,
   $toggleHideNoPermission,
@@ -33,42 +35,18 @@ import {
   $toggleMK2,
   $setContextRange,
   $setChannel,
+  $setEmoticonList,
   $toggleMuteAllEmot,
 } from '../slice';
 import { emoticonTableSelector } from '../selector';
 import CategoryRow from './CategoryRow';
 
-const columns = [{ field: 'name', headerName: '이용자', flex: 1 }];
-
-function ConfigToolbar({ disabled, muteAll, actionMuteAll, onRemove }) {
-  const dispatch = useDispatch();
-
-  const handleAllMute = useCallback(() => {
-    dispatch(actionMuteAll());
-  }, [dispatch, actionMuteAll]);
-
-  return (
-    <Box display="flex" justifyContent="space-between">
-      <Button
-        startIcon={muteAll ? <VolumeOff /> : <VolumeUp />}
-        onClick={handleAllMute}
-      >
-        전부 뮤트
-      </Button>
-      <Button startIcon={<Remove />} disabled={disabled} onClick={onRemove}>
-        삭제
-      </Button>
-    </Box>
-  );
-}
-
-function CustomOverRay() {
-  return <GridOverlay>뮤트된 아카콘이 없습니다.</GridOverlay>;
-}
+const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel: channelInfo, board: boardInfo } = useContent();
+
   const {
     mk2,
     contextRange,
@@ -85,48 +63,24 @@ const View = React.forwardRef((_props, ref) => {
     muteAllEmot,
     category: { [channelInfo.ID]: category },
   } = useSelector((state) => state[Info.ID].storage);
-  const tableRows = useSelector(emoticonTableSelector);
-  const [selection, setSelection] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
+  const emotRows = useSelector(emoticonTableSelector);
 
-  const onSaveUser = useCallback(
-    (text) => {
-      const test = text.split('\n').filter((i) => i !== '');
-      RegExp(test.join('|'));
-      dispatch($setUser(test));
-    },
-    [dispatch],
-  );
-
-  const onSaveKeyword = useCallback(
-    (text) => {
-      const test = text.split('\n').filter((i) => i !== '');
-      RegExp(test.join('|'));
-      dispatch($setKeyword(test));
-    },
-    [dispatch],
-  );
-
-  const onSaveChannel = useCallback(
-    (text) => {
-      const data = text.split('\n').filter((i) => i !== '');
-      dispatch($setChannel(data));
-    },
-    [dispatch],
-  );
-
-  const handlePageSize = useCallback((currentSize) => {
-    setPageSize(currentSize);
+  const handleSaveFormat = useCallback((value) => {
+    const result = value.split('\n').filter((i) => i);
+    RegExp(result.join('|'));
+    return result;
   }, []);
 
-  const handleRemove = useCallback(() => {
-    dispatch($removeEmoticonList(selection));
-    setSelection([]);
-  }, [dispatch, selection]);
-
-  const handleSelection = useCallback((current) => {
-    setSelection(current);
-  }, []);
+  const handleMutedEmotChange = useCallback(
+    (rows) => {
+      const entries = rows.map(({ id, name, bundle, url }) => [
+        id,
+        { name, bundle, url },
+      ]);
+      dispatch($setEmoticonList(Object.fromEntries(entries)));
+    },
+    [dispatch],
+  );
 
   const handleCategory = useCallback(
     (id, value) => {
@@ -142,7 +96,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -221,64 +175,58 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">뮤트 조건</Typography>
       <Paper>
         <List disablePadding>
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 닉네임"
-            initialValue={userList.join('\n')}
+            multiline
+            manualSave
+            value={userList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveUser}
+            action={$setUser}
+            saveFormat={handleSaveFormat}
           />
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 키워드"
-            initialValue={keywordList.join('\n')}
+            multiline
+            manualSave
+            value={keywordList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveKeyword}
+            action={$setKeyword}
+            saveFormat={handleSaveFormat}
           />
-          <TextEditorRow
+          <TextFieldRow
             divider
             primary="검사할 채널"
             secondary="모든 채널을 대상으로 하는 게시판(베스트 라이브 등)에서 동작합니다."
-            initialValue={channelList.join('\n')}
+            multiline
+            manualSave
+            value={channelList.join('\n')}
             errorText="정규식 조건을 위반하는 항목이 있습니다."
-            onSave={onSaveChannel}
+            action={$setChannel}
+            saveFormat={handleSaveFormat}
           />
-          <ListItem>
-            <ListItemText>뮤트된 아카콘 목록</ListItemText>
-          </ListItem>
-          <ListItem divider>
-            <DataGrid
-              rows={tableRows}
+          <SwitchRow
+            divider
+            primary="모든 아카콘 뮤트"
+            value={muteAllEmot}
+            action={$toggleMuteAllEmot}
+          />
+          <Collapse in={!muteAllEmot}>
+            <DataGridRow
+              primary="뮤트한 아카콘"
               columns={columns}
-              autoHeight
-              rowHeight={40}
-              pagination
-              checkboxSelection
-              disableColumnMenu
-              disableSelectionOnClick
-              components={{
-                Toolbar: ConfigToolbar,
-                NoRowsOverlay: CustomOverRay,
-              }}
-              componentsProps={{
-                toolbar: {
-                  disabled: selection.length === 0,
-                  muteAll: muteAllEmot,
-                  actionMuteAll: $toggleMuteAllEmot,
-                  onRemove: handleRemove,
-                },
-              }}
-              pageSize={pageSize}
-              rowsPerPageOptions={[10, 25, 50, 100]}
-              onPageSizeChange={handlePageSize}
-              onSelectionModelChange={handleSelection}
+              rows={emotRows}
+              noRowsText="뮤트된 아카콘이 없습니다."
+              onChange={handleMutedEmotChange}
             />
-          </ListItem>
+          </Collapse>
+
           <ListItem>
             <ListItemText>카테고리 설정</ListItemText>
           </ListItem>
           <ListItem>
-            <Box clone width="100%">
+            <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <Grid container>
                   {!boardInfo?.category && (
@@ -307,7 +255,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

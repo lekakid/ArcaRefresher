@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { GlobalStyles } from '@mui/material';
 
 import { TOASTBOX } from 'core/selector';
 import { useArcaSocket } from 'hooks/WebSocket';
@@ -10,23 +10,25 @@ import Info from '../FeatureInfo';
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
 
-const style = {
-  '@global': {
-    '#toastbox': {
-      '& .filtered-emoticon': {
-        width: 'auto !important',
-        height: 'auto !important',
-        textDecoration: 'none !important',
-        '&::after': {
-          content: '"[아카콘 뮤트됨]"',
-        },
-        '& > img, & > video': {
-          display: 'none !important',
+const toastMuteStyles = (
+  <GlobalStyles
+    styles={{
+      '#toastbox': {
+        '& .filtered-emoticon': {
+          width: 'auto !important',
+          height: 'auto !important',
+          textDecoration: 'none !important',
+          '&::after': {
+            content: '"[아카콘 뮤트됨]"',
+          },
+          '& > img, & > video': {
+            display: 'none !important',
+          },
         },
       },
-    },
-  },
-};
+    }}
+  />
+);
 
 function ToastMuter() {
   const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
@@ -132,7 +134,7 @@ function ToastMuter() {
     return () => observer.disconnect();
   }, [mk2, hideMutedMark, toastboxLoaded, userList, emotList]);
 
-  return null;
+  return toastMuteStyles;
 }
 
-export default withStyles(style)(ToastMuter);
+export default ToastMuter;

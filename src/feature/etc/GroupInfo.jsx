@@ -1,4 +1,4 @@
-import { MoreHoriz } from '@material-ui/icons';
+import { MoreHoriz } from '@mui/icons-material';
 import 'core/types';
 
 /** @type {GroupInfo} */

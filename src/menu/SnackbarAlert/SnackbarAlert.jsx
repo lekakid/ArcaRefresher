@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Snackbar } from '@material-ui/core';
+import { Snackbar } from '@mui/material';
 
 import { shiftSnack } from './slice';
 import Info from './FeatureInfo';
@@ -38,11 +38,15 @@ export default function SnackbarAlert() {
 
   return (
     <Snackbar
-      open={open}
+      anchorOrigin={{
+        horizontal: 'center',
+        vertical: 'bottom',
+      }}
       autoHideDuration={snack?.time}
       onClose={snack?.time && handleSnackClose}
       message={snack?.msg}
       TransitionProps={{ onExited: handleExit }}
+      open={open}
     />
   );
 }

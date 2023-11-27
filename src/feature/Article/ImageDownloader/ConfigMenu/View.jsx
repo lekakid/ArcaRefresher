@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { List, Paper, Typography, Box, MenuItem } from '@material-ui/core';
+import { List, Paper, Typography, MenuItem } from '@mui/material';
 
-import { SelectRow, SwitchRow } from 'component/config';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import {
@@ -27,7 +27,7 @@ const View = React.forwardRef((_props, ref) => {
   } = useSelector((state) => state[Info.ID].storage);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -118,7 +118,7 @@ const View = React.forwardRef((_props, ref) => {
           </FormatTextFieldRow>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

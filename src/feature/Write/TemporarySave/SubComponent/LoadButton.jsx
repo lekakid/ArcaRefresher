@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Button } from '@material-ui/core';
-import { Publish } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Publish } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoadOpen } from '../slice';

@@ -1,4 +1,4 @@
-import { Layers } from '@material-ui/icons';
+import { Layers } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

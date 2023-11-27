@@ -1,4 +1,4 @@
-import { Comment } from '@material-ui/icons';
+import { Comment } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  Box,
   Collapse,
   List,
   MenuItem,
   Paper,
   Typography,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 
-import { SelectRow, SwitchRow, SliderRow } from 'component/config';
+import { SelectRow, SwitchRow, SliderRow } from 'component/ConfigMenu';
+
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -47,7 +47,6 @@ function emotLabelFormat(x) {
 const View = React.forwardRef((_props, ref) => {
   const {
     enabled,
-    fontSize,
     notifyPosition,
     topNews,
     recentVisit,
@@ -60,18 +59,19 @@ const View = React.forwardRef((_props, ref) => {
     hideDefaultImage,
     resizeImage,
     resizeVideo,
-    resizeEmoticonPalette,
     hideUnvote,
+    unfoldLongComment,
     modifiedIndicator,
     reverseComment,
     hideVoiceComment,
-    unfoldLongComment,
+    resizeEmoticonPalette,
+    fontSize,
     fixDarkModeWriteForm,
   } = useSelector((state) => state[Info.ID].storage);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -153,9 +153,9 @@ const View = React.forwardRef((_props, ref) => {
           />
           <SliderRow
             primary="게시판 이용자 너비"
+            opacityOnChange={0.6}
             value={userinfoWidth}
             action={$setUserInfoWith}
-            opacityOnChange={0.6}
           />
         </List>
       </Paper>
@@ -171,16 +171,16 @@ const View = React.forwardRef((_props, ref) => {
           <SliderRow
             divider
             primary="이미지 크기"
+            opacityOnChange={0.6}
             value={resizeImage}
             action={$setResizeImage}
-            opacityOnChange={0.6}
           />
           <SliderRow
             divider
             primary="동영상 크기"
+            opacityOnChange={0.6}
             value={resizeVideo}
             action={$setResizeVideo}
-            opacityOnChange={0.6}
           />
           <SwitchRow
             primary="비추천 버튼 숨김"
@@ -219,12 +219,14 @@ const View = React.forwardRef((_props, ref) => {
           />
           <SliderRow
             primary="이모티콘 선택창 높이"
-            min={2}
-            max={5}
-            step={1}
-            marks
-            valueLabelFormat={emotLabelFormat}
-            valueLabelDisplay="auto"
+            sliderProps={{
+              min: 2,
+              max: 5,
+              step: 1,
+              marks: true,
+              valueLabelFormat: emotLabelFormat,
+              valueLabelDisplay: 'auto',
+            }}
             value={resizeEmoticonPalette}
             action={$setResizeEmoticonPalette}
           />
@@ -237,10 +239,13 @@ const View = React.forwardRef((_props, ref) => {
             divider
             primary="사이트 전체 폰트 크기"
             secondary="표시 설정에서 글자 크기 브라우저 기본 설정 필요"
-            min={8}
-            max={30}
-            valueLabelFormat={labelFormat}
-            valueLabelDisplay="auto"
+            sliderProps={{
+              min: 8,
+              max: 30,
+              step: 1,
+              valueLabelFormat: labelFormat,
+              valueLabelDisplay: 'auto',
+            }}
             value={fontSize}
             action={$setFontSize}
             opacityOnChange={0.6}
@@ -253,7 +258,7 @@ const View = React.forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

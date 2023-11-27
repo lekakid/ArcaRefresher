@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Person } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Person } from '@mui/icons-material';
 
 import { USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';

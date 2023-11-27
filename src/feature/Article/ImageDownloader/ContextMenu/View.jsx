@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Assignment, GetApp, Image as ImageIcon } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Assignment, GetApp, Image as ImageIcon } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';

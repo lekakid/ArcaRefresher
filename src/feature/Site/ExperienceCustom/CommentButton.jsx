@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import React, { useCallback } from 'react';
 
 export default function CommentButton() {
@@ -7,7 +7,7 @@ export default function CommentButton() {
   }, []);
 
   return (
-    <Button fullWidth variant="outlined" onClick={handleClick}>
+    <Button fullWidth onClick={handleClick}>
       댓글 펼치기
     </Button>
   );

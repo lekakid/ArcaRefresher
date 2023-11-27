@@ -1,4 +1,4 @@
-import { Search } from '@material-ui/icons';
+import { Search } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

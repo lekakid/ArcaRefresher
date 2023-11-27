@@ -1,49 +1,61 @@
-import { makeStyles } from '@material-ui/styles';
-import clsx from 'clsx';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-  (theme) => ({
-    badge: {
-      '&:empty': {
-        display: 'none',
-      },
-      marginLeft: '4px',
-      padding: '1px 5px',
-      borderRadius: '1em',
-      backgroundColor: theme.palette.label.background,
-      color: theme.palette.label.text,
-      fontSize: '0.85em',
-    },
-    text: {
-      '&:empty': {
-        display: 'none',
-      },
-      '&::before': {
-        content: '"["',
-      },
-      '&::after': {
-        content: '"]"',
-      },
-      padding: '1px 5px',
-      color: theme.palette.text.primary,
-    },
-  }),
-  { name: 'Label' },
-);
+const BadgeTag = styled('span', {
+  name: 'BadgeTag',
+})(({ theme }) => ({
+  '&:empty': {
+    display: 'none',
+  },
+  marginLeft: '4px',
+  padding: '1px 5px',
+  borderRadius: '1em',
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  fontSize: '0.85em',
+}));
 
-function AuthorTag({ variant, className, children }) {
-  const { badge, text } = useStyles();
-  const styles = clsx(className, {
-    [badge]: variant === 'badge',
-    [text]: variant === 'text',
-  });
+const Text = styled('span', {
+  name: 'BadgeText',
+})(({ theme }) => ({
+  '&:empty': {
+    display: 'none',
+  },
+  '&::before': {
+    content: '"["',
+  },
+  '&::after': {
+    content: '"]"',
+  },
+  padding: '1px 5px',
+  color: theme.palette.primary.main,
+}));
 
-  return <span className={styles}>{children}</span>;
+const colorTable = {
+  red: '#ec4545',
+  green: '#258d25',
+  blue: '#0a96f2',
+};
+
+function AuthorTag({ variant = 'badge', color, children }) {
+  if (variant === 'badge') {
+    return (
+      <BadgeTag sx={{ background: colorTable[color] }}>{children}</BadgeTag>
+    );
+  }
+
+  if (variant === 'text') {
+    return <Text sx={{ color: colorTable[color] }}>{children}</Text>;
+  }
+
+  return null;
 }
 
-AuthorTag.defaultProps = {
-  variant: 'badge',
+AuthorTag.propTypes = {
+  variant: PropTypes.oneOf(['badge', 'text']),
+  color: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export default React.memo(AuthorTag);

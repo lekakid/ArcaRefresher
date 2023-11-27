@@ -1,32 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Portal, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { GlobalStyles, Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEADER_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    '.edit-menu': {
-      borderBottom: '1px solid var(--color-bd-outer)',
-      '&:empty': {
-        display: 'none',
-      },
-    },
-  },
-  root: {
-    '& .MuiButton-root': {
-      color: 'var(--color-text-color)',
-    },
-  },
-  label: {
-    paddingLeft: theme.spacing(1),
-  },
-  buttons: {
-    paddingRight: theme.spacing(1),
-    textAlign: 'end',
-  },
-}));
+function EditMenuStyles() {
+  return (
+    <GlobalStyles
+      styles={{
+        '.edit-menu': {
+          borderBottom: '1px solid var(--color-bd-outer)',
+          '&:empty': {
+            display: 'none',
+          },
+        },
+      }}
+    />
+  );
+}
 
 export default function ArticleMenu({ children }) {
   const [container, setContainer] = useState(null);
@@ -44,19 +35,20 @@ export default function ArticleMenu({ children }) {
     setContainer(menuContainer);
   }, [articleLoaded]);
 
-  const classes = useStyles();
-
   if (!container) return null;
   return (
-    <Portal container={container}>
-      <Grid container alignItems="center" classes={{ root: classes.root }}>
-        <Grid item xs={12} sm={3} classes={{ root: classes.label }}>
-          <Typography variant="subtitle1">리프레셔 메뉴</Typography>
+    <>
+      <EditMenuStyles />
+      <Portal container={container}>
+        <Grid container alignItems="center">
+          <Grid item xs={12} sm={3} sx={{ paddingLeft: 1 }}>
+            <Typography variant="subtitle1">리프레셔 메뉴</Typography>
+          </Grid>
+          <Grid item xs={12} sm={9} sx={{ paddingRight: 1, textAlign: 'end' }}>
+            {children}
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={9} classes={{ root: classes.buttons }}>
-          {children}
-        </Grid>
-      </Grid>
-    </Portal>
+      </Portal>
+    </>
   );
 }

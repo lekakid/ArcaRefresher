@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Button } from '@material-ui/core';
-import { PeopleAltOutlined } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { PeopleAltOutlined } from '@mui/icons-material';
 
 // import Info from './FeatureInfo';
 
@@ -13,6 +13,7 @@ export default function ArticleMenu() {
   return (
     <Button
       size="small"
+      variant="text"
       startIcon={<PeopleAltOutlined />}
       onClick={handleToggle}
     >

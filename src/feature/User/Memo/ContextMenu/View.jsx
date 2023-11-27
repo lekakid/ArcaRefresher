@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Comment } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Comment } from '@mui/icons-material';
 
 import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -71,7 +71,9 @@ function ContextMenu({ target }) {
             <ListItemIcon>
               <Comment />
             </ListItemIcon>
-            <Typography>메모</Typography>
+            <Typography>{`메모 ${
+              memo[data]?.msg ? `(${memo[data].msg})` : ''
+            }`}</Typography>
           </MenuItem>
         </List>
       )}

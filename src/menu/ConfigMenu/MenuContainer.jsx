@@ -9,28 +9,27 @@ import {
   Drawer,
   IconButton,
   List,
+  Stack,
   Toolbar,
   Typography,
   useMediaQuery,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { Close, Menu } from '@material-ui/icons';
+} from '@mui/material';
+import { Close, Menu } from '@mui/icons-material';
 
 import Info from './FeatureInfo';
 import { setOpen, setDrawer } from './slice';
-import Styles from './Styles';
 import HeaderButton from './HeaderButton';
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
 
-function MenuContainer({ classes, groupList, menuList }) {
+function MenuContainer({ groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, opacity, drawer, group, selection } = useSelector(
     (state) => state[Info.ID],
   );
   const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   // 설정이 열려있는 동안 아카 단축키 무력화
   useEffect(() => {
@@ -90,7 +89,9 @@ function MenuContainer({ classes, groupList, menuList }) {
           .map(({ key: menuKey, label: menuLabel, Icon }) => (
             <DrawerItem
               key={menuKey}
-              className={classes.nested}
+              sx={{
+                paddingLeft: 4,
+              }}
               configKey={menuKey}
               icon={<Icon />}
             >
@@ -132,45 +133,60 @@ function MenuContainer({ classes, groupList, menuList }) {
         fullScreen={mobile}
         fullWidth
         maxWidth="md"
-        className={classes.root}
         PaperProps={{
-          className: classes.bg,
-          style: { opacity },
+          sx: {
+            aspectRatio: '9/7',
+            opacity,
+          },
           square: true,
-        }}
-        BackdropProps={{
-          invisible: opacity !== 1,
+          elevation: 0,
         }}
         TransitionProps={{
           mountOnEnter: true,
         }}
+        slotProps={{
+          backdrop: {
+            invisible: opacity !== 1,
+          },
+        }}
         open={open}
         onClose={handleConfigClose}
       >
-        <AppBar color="secondary" position="relative">
+        <AppBar color="primary" position="relative">
           <Toolbar>
             {mobile && (
               <IconButton
-                edge="start"
+                size="large"
                 color="inherit"
-                className={classes.menuButton}
                 onClick={handleDrawerToggle}
               >
                 <Menu />
               </IconButton>
             )}
-            <Typography variant="h5" noWrap className={classes.title}>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               {`Arca Refresher ${GM_info.script.version}`}
             </Typography>
-            <IconButton color="inherit" onClick={handleConfigClose}>
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={handleConfigClose}
+            >
               <Close />
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box display="flex" minHeight={0} flexGrow={1}>
+        <Stack direction="row" sx={{ minHeight: 0, height: '100%' }}>
           <Drawer
             variant={mobile ? 'temporary' : 'permanent'}
-            classes={{ paper: classes.drawer }}
+            PaperProps={{
+              sx: {
+                position: 'relative',
+                width: 240,
+                sm: {
+                  zIndex: (theme) => theme.zIndex.appBar - 1,
+                },
+              },
+            }}
             ModalProps={{ disablePortal: true, keepMounted: true }}
             open={!mobile || drawer}
             onClose={handleDrawerToggle}
@@ -183,20 +199,29 @@ function MenuContainer({ classes, groupList, menuList }) {
               {navi}
             </List>
           </Drawer>
-          <main className={classes.content}>
+          <Stack
+            sx={{
+              width: '100%',
+              padding: 3,
+              overflowY: 'auto',
+              gap: 1,
+            }}
+          >
             {content}
             {selection === 'all' && loadCount < menuList.length && (
               <Box
                 ref={setTarget}
-                display="flex"
-                justifyContent="center"
-                marginTop={4}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '32px',
+                }}
               >
                 <CircularProgress />
               </Box>
             )}
-          </main>
-        </Box>
+          </Stack>
+        </Stack>
       </Dialog>
       <HeaderButton />
     </>
@@ -205,4 +230,4 @@ function MenuContainer({ classes, groupList, menuList }) {
 
 MenuContainer.displayName = 'ConfigMenuContainer';
 
-export default withStyles(Styles)(MenuContainer);
+export default MenuContainer;

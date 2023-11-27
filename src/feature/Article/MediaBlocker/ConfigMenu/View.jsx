@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, List, Paper, Typography } from '@material-ui/core';
+import { List, Paper, Typography } from '@mui/material';
 
-import { SwitchRow } from 'component/config';
+import { SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import { $toggleEnabled, $toggleDeletedOnly } from '../slice';
 
@@ -12,7 +12,7 @@ const View = React.forwardRef((_props, ref) => {
   );
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -23,13 +23,14 @@ const View = React.forwardRef((_props, ref) => {
             action={$toggleEnabled}
           />
           <SwitchRow
-            primary="삭제된 게시물에서만 사용(채널 관리자 전용)"
+            primary="삭제된 게시물에서만 사용"
+            secondary="채널 관리자 전용 기능입니다."
             value={deletedOnly}
             action={$toggleDeletedOnly}
           />
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

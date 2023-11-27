@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Divider, Grid, IconButton, Tooltip } from '@material-ui/core';
-import { BrokenImage, Image, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import { BrokenImage, Image, VolumeOff, VolumeUp } from '@mui/icons-material';
 
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 
@@ -33,11 +33,13 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
       )}
       <Grid item xs={6}>
         <Box
-          display="flex"
-          height="100%"
-          minHeight="48px"
-          width="100%"
-          alignItems="center"
+          sx={{
+            display: 'flex',
+            height: '100%',
+            minHeight: '48px',
+            width: '100%',
+            alignItems: 'center',
+          }}
         >
           <span className="badge badge-success" style={{ margin: '0.25rem' }}>
             {label}
@@ -45,14 +47,20 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
         </Box>
       </Grid>
       <Grid item xs={6}>
-        <Box display="flex" justifyContent="flex-end" alignItems="center">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
           <Tooltip title="미리보기 뮤트">
-            <IconButton onClick={handleBool('mutePreview')}>
+            <IconButton onClick={handleBool('mutePreview')} size="large">
               {mutePreview ? <BrokenImage /> : <Image />}
             </IconButton>
           </Tooltip>
           <Tooltip title="게시물 뮤트">
-            <IconButton onClick={handleBool('muteArticle')}>
+            <IconButton onClick={handleBool('muteArticle')} size="large">
               {muteArticle ? <VolumeOff /> : <VolumeUp />}
             </IconButton>
           </Tooltip>

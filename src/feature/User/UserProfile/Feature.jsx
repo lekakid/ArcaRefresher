@@ -1,5 +1,6 @@
-import { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { GlobalStyles } from '@mui/material';
 
 import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'core/selector';
 import {
@@ -11,16 +12,17 @@ import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserNick } from 'func/user';
 
-import { withStyles } from '@material-ui/styles';
 import Info from './FeatureInfo';
 
-const styles = {
-  '@global': {
-    '& .mynick': {
-      fontWeight: 'bold',
-    },
-  },
-};
+const profileStyles = (
+  <GlobalStyles
+    styles={{
+      '.mynick': {
+        fontWeight: 'bold',
+      },
+    }}
+  />
+);
 
 function UserProfile() {
   const [addEventListener, removeEventListener] = useEvent();
@@ -80,7 +82,7 @@ function UserProfile() {
     };
   }, [user, indicateMyComment, addEventListener, removeEventListener]);
 
-  return null;
+  return profileStyles;
 }
 
-export default withStyles(styles)(UserProfile);
+export default UserProfile;

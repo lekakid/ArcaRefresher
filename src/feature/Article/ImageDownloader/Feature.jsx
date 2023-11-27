@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Portal } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { GetApp } from '@material-ui/icons';
+import { Button, GlobalStyles, Portal } from '@mui/material';
+import { GetApp } from '@mui/icons-material';
 
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -11,30 +10,27 @@ import SelectionDialog from './SelectionDialog';
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
 
-const useStyles = makeStyles({
-  root: {
-    '& #imageToZipBtn': {
-      display: 'none',
-    },
-  },
-  btn: {
-    borderColor: 'var(--color-border-outer)',
-    color: 'var(--color-text-color)',
-  },
-});
+const hideButtonStyles = (
+  <GlobalStyles
+    styles={{
+      '#imageToZipBtn': {
+        display: 'none',
+      },
+    }}
+  />
+);
 
 export default function ImageDownloader() {
   const dispatch = useDispatch();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const classes = useStyles();
 
   const { enabled } = useSelector((state) => state[Info.ID].storage);
   const { open } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
 
   useEffect(() => {
-    if (!enabled) return null;
-    if (!articleLoaded) return null;
+    if (!enabled) return;
+    if (!articleLoaded) return;
 
     const menu = document.querySelector(ARTICLE_MENU);
     if (!menu) {
@@ -45,34 +41,32 @@ export default function ImageDownloader() {
             .insertAdjacentElement('afterend', document.createElement('div')),
         );
       }
-      return null;
+      return;
     }
 
-    menu.classList.add(classes.root);
     if (!container) {
       const tmp = document.createElement('span');
       tmp.classList.add('float-left');
       menu.insertAdjacentElement('afterbegin', tmp);
       setContainer(tmp);
     }
-
-    return () => {
-      menu.classList.remove(classes.root);
-    };
-  }, [articleLoaded, classes, container, enabled]);
+  }, [articleLoaded, container, enabled]);
 
   const handleOpen = useCallback(() => {
     dispatch(setOpen(true));
   }, [dispatch]);
 
   if (!container) return null;
+  if (!enabled) return null;
   return (
     <>
+      {hideButtonStyles}
       <Portal container={container}>
         <Button
-          variant="outlined"
-          classes={{ root: classes.btn }}
-          size="small"
+          sx={{
+            borderColor: 'var(--color-border-outer)',
+            color: 'var(--color-text-color)',
+          }}
           startIcon={<GetApp />}
           disabled={open}
           onClick={handleOpen}

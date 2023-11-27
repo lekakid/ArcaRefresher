@@ -9,13 +9,15 @@ import {
   DialogTitle,
   FormControlLabel,
   Grid,
+  IconButton,
+  Stack,
   Switch,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+  useMediaQuery,
+} from '@mui/material';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
-import { Close, Delete, Done, Edit } from '@material-ui/icons';
+import { Close, Delete, Done, Edit } from '@mui/icons-material';
 
 import Info from '../FeatureInfo';
 import {
@@ -36,12 +38,6 @@ const columns = [
   },
 ];
 
-const useStyles = makeStyles({
-  label: {
-    marginBottom: 0,
-  },
-});
-
 function CustomNoRowsOverlay() {
   return <GridOverlay>임시 저장된 게시물이 없습니다.</GridOverlay>;
 }
@@ -57,19 +53,19 @@ function CustomToolbar({
 
   if (!editMode) {
     toolButton = (
-      <Button startIcon={<Edit />} onClick={onClickEdit}>
+      <Button variant="text" startIcon={<Edit />} onClick={onClickEdit}>
         편집
       </Button>
     );
   } else if (selection.length > 0) {
     toolButton = (
-      <Button startIcon={<Delete />} onClick={onClickRemove}>
+      <Button variant="text" startIcon={<Delete />} onClick={onClickRemove}>
         삭제
       </Button>
     );
   } else {
     toolButton = (
-      <Button startIcon={<Done />} onClick={onClickDone}>
+      <Button variant="text" startIcon={<Done />} onClick={onClickDone}>
         완료
       </Button>
     );
@@ -78,14 +74,14 @@ function CustomToolbar({
   return (
     <Grid container alignItems="center">
       <Grid item xs={8}>
-        <Box display="flex" px={1}>
+        <Box sx={{ display: 'flex', px: '8px' }}>
           <Typography variant="caption">
             100개 이상 저장 시 전체적인 속도 저하가 있을 수 있습니다.
           </Typography>
         </Box>
       </Grid>
       <Grid item xs={4}>
-        <Box display="flex" justifyContent="flex-end">
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           {toolButton}
         </Box>
       </Grid>
@@ -95,7 +91,7 @@ function CustomToolbar({
 
 export default function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
-  const classes = useStyles();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { tempArticleList, importTitle, templateMode } = useSelector(
     (state) => state[Info.ID].storage,
@@ -170,6 +166,12 @@ export default function LoadTable({ editor, open, onClose }) {
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
       <DialogTitle>불러오기</DialogTitle>
+      <IconButton
+        sx={{ position: 'absolute', right: 8, top: 8 }}
+        onClick={onClose}
+      >
+        <Close />
+      </IconButton>
       <DialogContent>
         <DataGrid
           columns={columns}
@@ -201,28 +203,25 @@ export default function LoadTable({ editor, open, onClose }) {
         />
       </DialogContent>
       <DialogActions>
-        <Tooltip
-          placement="top"
-          title="게시물을 불러올 때 기존 저장 데이터와 연결되지 않습니다."
-        >
+        <Stack direction={mobile ? 'column' : 'row'}>
+          <Tooltip
+            placement="top"
+            title="게시물을 불러올 때 기존 저장 데이터와 연결되지 않습니다."
+          >
+            <FormControlLabel
+              control={
+                <Switch checked={templateMode} onChange={handleTemplateMode} />
+              }
+              label="사본으로 불러오기"
+            />
+          </Tooltip>
           <FormControlLabel
             control={
-              <Switch checked={templateMode} onChange={handleTemplateMode} />
+              <Switch checked={importTitle} onChange={handleImportTitle} />
             }
-            label="사본으로 불러오기"
-            className={classes.label}
+            label="제목 포함"
           />
-        </Tooltip>
-        <FormControlLabel
-          control={
-            <Switch checked={importTitle} onChange={handleImportTitle} />
-          }
-          label="제목 포함"
-          className={classes.label}
-        />
-        <Button variant="outlined" startIcon={<Close />} onClick={handleClose}>
-          닫기
-        </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -9,12 +9,12 @@ import {
   MenuItem,
   Paper,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { KeyIcon } from 'component';
+import { SelectRow } from 'component/ConfigMenu';
 import { $setInteraction } from 'menu/ContextMenu/slice';
 
-import { SelectRow } from 'component/config';
 import Info from '../FeatureInfo';
 
 const label = {
@@ -36,7 +36,7 @@ const View = React.forwardRef((_props, ref) => {
   const { interactionType } = useSelector((state) => state[Info.ID].storage);
 
   return (
-    <Box ref={ref}>
+    <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -50,13 +50,13 @@ const View = React.forwardRef((_props, ref) => {
             <MenuItem value="cr">Ctrl + R Click</MenuItem>
           </SelectRow>
           <ListItem>
-            <Box clone width="100%">
+            <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <List disablePadding>
                   <ListItem divider>
                     <ListItemText primary="리프레셔 메뉴" />
                     <ListItemSecondaryAction>
-                      <Box display="flex" alignItems="center">
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].refresher.map(
                           (value, index) => (
                             // eslint-disable-next-line react/no-array-index-key
@@ -72,7 +72,7 @@ const View = React.forwardRef((_props, ref) => {
                   <ListItem>
                     <ListItemText primary="브라우저 메뉴" />
                     <ListItemSecondaryAction>
-                      <Box display="flex" alignItems="center">
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].browser.map((value, index) => (
                           // eslint-disable-next-line react/no-array-index-key
                           <React.Fragment key={index}>
@@ -89,7 +89,7 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Box>
+    </Fragment>
   );
 });
 

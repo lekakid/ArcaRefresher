@@ -1,6 +1,6 @@
 // 게시판 등 컨테이너 요소의 내용물이 100% 로드 됐는지 체크하는 용도
 export const NAVIGATION_LOADED = '.content-wrapper';
-export const CHANNEL_TITLE_LOADED = '.btns-board';
+export const CHANNEL_TITLE_LOADED = '.board-title ~ .btns-board';
 export const BOARD_LOADED = '.article-list + .btns-board';
 export const DELETED_ALERT_LOADED = '.board-title + .alert-danger';
 export const ARTICLE_LOADED = 'div.included-article-list:not(:first-child)';
@@ -21,10 +21,11 @@ export const AUDIT = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
 // 컨테이너 내에 있는 아이템
-export const BOARD_NOTICES = 'a.vrow.notice:not(.notice-unfilter)';
+export const BOARD_NOTICES = '.vrow.notice:not(.notice-unfilter)';
 export const BOARD_ITEMS = '.vrow.column:not(.notice):not(.head), .vrow.hybrid';
 export const BOARD_ITEMS_WITH_NOTICE =
   '.vrow.column:not(.notice-unfilter):not(.head), .vrow.hybrid';
+export const BOARD_SITE_NOTICES = '.vrow.notice-service';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR =
   '.article-head .user-info, .article-head .member-info';

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@material-ui/styles';
-import { useMediaQuery } from '@material-ui/core';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 import store from 'core/store';
 import { light, dark } from 'core/theme';
+import { ContentCollector } from 'hooks/Content';
 
 import Menu from 'menu';
 import Feature from 'feature';
@@ -26,10 +27,13 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
-        <Feature />
-        <Menu />
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
+          <ContentCollector />
+          <Feature />
+          <Menu />
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Provider>
   );
 }

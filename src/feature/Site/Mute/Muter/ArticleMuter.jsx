@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_EMOTICON, ARTICLE_LOADED, ARTICLE } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -9,36 +9,30 @@ import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
-const style = {
-  '@global': {
-    '.article-content': {
-      '& .muted:not(.deleted)': {
-        '& img, & video': {
-          display: 'none !important',
-        },
-        '&::after': {
-          position: 'inherit !important',
-          bottom: 'unset !important',
-          right: 'unset !important',
-          content: '"[아카콘 뮤트됨]" !important',
-          fontSize: 'inherit !important',
-          background: 'unset !important',
-          color: 'inherit !important',
-          fontWeight: 'inherit !important',
-          padding: 'unset !important',
-        },
-      },
-      '& .deleted': {
-        '& img, & video': {
-          display: 'none !important',
-        },
-        '&::after': {
-          content: 'none !important',
+const articleMuteStyles = (
+  <GlobalStyles
+    styles={{
+      '.article-content': {
+        '& .muted': {
+          '& img, & video': {
+            display: 'none',
+          },
+          '&::after': {
+            position: 'inherit',
+            bottom: 'unset',
+            right: 'unset',
+            content: '"[아카콘 뮤트됨]"',
+            fontSize: 'inherit',
+            background: 'unset',
+            color: 'inherit',
+            fontWeight: 'inherit',
+            padding: 'unset',
+          },
         },
       },
-    },
-  },
-};
+    }}
+  />
+);
 
 function ArticleMuter() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
@@ -103,7 +97,7 @@ function ArticleMuter() {
     return () => unmuteArticle();
   }, [controlTarget, emotList, hideMutedMark, muteAllEmot]);
 
-  return null;
+  return articleMuteStyles;
 }
 
-export default withStyles(style)(ArticleMuter);
+export default ArticleMuter;

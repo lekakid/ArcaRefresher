@@ -1,4 +1,4 @@
-import { Colorize } from '@material-ui/icons';
+import { Colorize } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';

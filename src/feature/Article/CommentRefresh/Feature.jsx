@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { IconButton, Portal } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { Refresh } from '@material-ui/icons';
+import { GlobalStyles, IconButton, Portal } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 
 import {
   COMMENT,
@@ -14,24 +13,17 @@ import { EVENT_COMMENT_REFRESH, useDispatchEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import toDocument from 'func/toDocument';
 
-const style = {
-  '@global': {
-    '#comment .list-area:empty': {
-      display: 'none',
-    },
-    '#comment .list-area:empty + .write-area': {
-      borderTop: 'inherit',
-    },
-    '.refresh-container': {
-      display: 'relative',
-    },
-  },
-  root: {
-    color: 'var(--color-text-muted)',
-  },
-};
+const commentRefreshStyles = (
+  <GlobalStyles
+    styles={{
+      '.reply-form__user-info': {
+        alignItems: 'center',
+      },
+    }}
+  />
+);
 
-function CommentRefresh({ classes }) {
+function CommentRefresh() {
   const dispatchEvent = useDispatchEvent(EVENT_COMMENT_REFRESH);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
@@ -88,16 +80,25 @@ function CommentRefresh({ classes }) {
 
   return (
     <>
+      {commentRefreshStyles}
       {title.top && (
         <Portal container={title.top}>
-          <IconButton classes={classes} size="small" onClick={handleClick}>
+          <IconButton
+            size="small"
+            sx={{ color: 'var(--color-text-muted)' }}
+            onClick={handleClick}
+          >
             <Refresh />
           </IconButton>
         </Portal>
       )}
       {title.bottom && (
         <Portal container={title.bottom}>
-          <IconButton classes={classes} size="small" onClick={handleClick}>
+          <IconButton
+            size="small"
+            sx={{ color: 'var(--color-text-muted)' }}
+            onClick={handleClick}
+          >
             <Refresh />
           </IconButton>
         </Portal>
@@ -106,4 +107,4 @@ function CommentRefresh({ classes }) {
   );
 }
 
-export default withStyles(style)(CommentRefresh);
+export default CommentRefresh;

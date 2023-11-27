@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { List, ListItemIcon, MenuItem, Typography } from '@material-ui/core';
-import { Bookmark, OpenInNew } from '@material-ui/icons';
+import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { Bookmark, OpenInNew } from '@mui/icons-material';
 
 import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -14,7 +14,7 @@ import Info from '../FeatureInfo';
 // 우클릭 메뉴
 function ContextMenu({ target }) {
   const { contextMenuEnabled } = useSelector((store) => store[Info.ID].storage);
-  const { channel } = useContent();
+  const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu(
     {
@@ -23,20 +23,13 @@ function ContextMenu({ target }) {
       dataExtractor: () => {
         if (!target) return undefined;
 
-        // 로그인 체크
-        if (!unsafeWindow.LiveConfig?.nickname) return undefined;
+        const url = target.href || target.querySelector('a.title').href;
+        const articleId = url.split('/').pop().split('?')[0];
 
-        if (!target.matches('a')) {
-          const articleId = target
-            .querySelector('a.title')
-            .pathname.split('/')
-            .pop();
-          return articleId;
-        }
-
-        const articleId = target.pathname.split('/').pop();
-        const url = target.href;
-        return { articleId, url };
+        return {
+          articleId,
+          url,
+        };
       },
     },
     [target],
@@ -73,12 +66,14 @@ function ContextMenu({ target }) {
         </ListItemIcon>
         <Typography>새 창으로 열기</Typography>
       </MenuItem>
-      <MenuItem onClick={handleScrap}>
-        <ListItemIcon>
-          <Bookmark />
-        </ListItemIcon>
-        <Typography>게시물 스크랩</Typography>
-      </MenuItem>
+      {user && (
+        <MenuItem onClick={handleScrap}>
+          <ListItemIcon>
+            <Bookmark />
+          </ListItemIcon>
+          <Typography>게시물 스크랩</Typography>
+        </MenuItem>
+      )}
     </List>
   );
 }

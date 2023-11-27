@@ -8,21 +8,11 @@ import {
   IconButton,
   TextField,
   Typography,
-} from '@material-ui/core';
-import { Close, FormatColorReset } from '@material-ui/icons';
-import { withStyles } from '@material-ui/styles';
-
+} from '@mui/material';
+import { Close, FormatColorReset } from '@mui/icons-material';
 import { TwitterPicker } from 'react-color';
 
-const styles = (theme) => ({
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-  },
-});
-
-function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
+function MemoDialog({ open, onClose, onSubmit, defaultValue }) {
   const [msg, setMsg] = useState('');
   const [color, setColor] = useState('');
 
@@ -60,20 +50,25 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
   );
 
   return (
-    <Dialog maxWidth="xs" open={open} onClose={handleDialogClose}>
-      <DialogTitle disableTypography>
-        <Typography variant="h6">메모 작성</Typography>
-        <IconButton className={classes.closeButton} onClick={handleDialogClose}>
-          <Close />
-        </IconButton>
-      </DialogTitle>
+    <Dialog sx={{ maxWidth: 'xs' }} open={open} onClose={handleDialogClose}>
+      <DialogTitle>메모 작성</DialogTitle>
+      <IconButton
+        size="large"
+        sx={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+        }}
+        onClick={handleDialogClose}
+      >
+        <Close />
+      </IconButton>
       <DialogContent dividers>
         <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
         <TextField
           autoFocus
           fullWidth
           size="small"
-          variant="outlined"
           margin="normal"
           label="메세지"
           value={msg}
@@ -88,7 +83,7 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={() => setColor('')}>
+        <Button onClick={() => setColor('')}>
           <FormatColorReset />
         </Button>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -102,4 +97,4 @@ function MemoDialog({ classes, open, onClose, onSubmit, defaultValue }) {
 MemoDialog.defaultProps = {
   defaultValue: { msg: '', color: '' },
 };
-export default withStyles(styles)(MemoDialog);
+export default MemoDialog;
