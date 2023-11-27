@@ -12,7 +12,7 @@ import { filterSelector } from '../selector';
 
 const toastMuteStyles = (
   <GlobalStyles
-    style={{
+    styles={{
       '#toastbox': {
         '& .filtered-emoticon': {
           width: 'auto !important',

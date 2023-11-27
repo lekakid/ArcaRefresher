@@ -20,7 +20,7 @@ import { filterSelector } from '../selector';
 
 const commentMuteStyles = (
   <GlobalStyles
-    style={{
+    styles={{
       '.body #comment': {
         '& .frontend-header': {
           display: 'none',

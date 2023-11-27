@@ -16,7 +16,7 @@ const globalChannel = ['live', 'headline', 'replay', 'breaking'];
 
 const boardMuteStyles = (
   <GlobalStyles
-    style={{
+    styles={{
       '.body .article-list': {
         '& .frontend-header': {
           display: 'none',
