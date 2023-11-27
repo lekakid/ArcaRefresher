@@ -235,7 +235,7 @@ function Decoder() {
           {decodeResult.more && (
             <Button
               variant="text"
-              color="secondary"
+              color="inherit"
               size="small"
               onClick={handleOneMore}
             >
@@ -245,7 +245,7 @@ function Decoder() {
           {decodeResult.type === 'url' && (
             <Button
               variant="text"
-              color="secondary"
+              color="inherit"
               size="small"
               onClick={handleUrlOpen}
             >
@@ -254,7 +254,7 @@ function Decoder() {
           )}
           <Button
             variant="text"
-            color="secondary"
+            color="inherit"
             size="small"
             onClick={handleCopy}
           >
