@@ -67,6 +67,7 @@ export default function ImageDownloader() {
             borderColor: 'var(--color-border-outer)',
             color: 'var(--color-text-color)',
           }}
+          size="small"
           startIcon={<GetApp />}
           disabled={open}
           onClick={handleOpen}
