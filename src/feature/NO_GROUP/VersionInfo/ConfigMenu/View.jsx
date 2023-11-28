@@ -8,19 +8,25 @@ import {
   DialogContent,
   useMediaQuery,
   ListItemText,
+  MenuItem,
 } from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 import QRCode from 'react-qr-code';
 
-import { BaseRow } from 'component/ConfigMenu';
+import { BaseRow, SelectRow } from 'component/ConfigMenu';
 
+import { useSelector } from 'react-redux';
 import Info from '../FeatureInfo';
+import { $setNotiLevel } from '../slice';
+import { TYPE_MINOR, TYPE_PATCH } from '../func';
 
 const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 
 const View = React.forwardRef((_props, ref) => {
-  const [open, setOpen] = useState(false);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
+  const { notiLevel } = useSelector((state) => state[Info.ID].storage);
+  const [open, setOpen] = useState(false);
 
   const handleVisitChannel = useCallback(() => {
     GM_openInTab('https://arca.live/b/namurefresher');
@@ -50,6 +56,19 @@ const View = React.forwardRef((_props, ref) => {
           <BaseRow divider header={<ListItemText primary="버전" />}>
             <Typography>{GM_info.script.version}</Typography>
           </BaseRow>
+          <SelectRow
+            primary="업데이트 알림 수준"
+            value={notiLevel}
+            action={$setNotiLevel}
+          >
+            <MenuItem value={TYPE_MINOR}>기능 업데이트 마다</MenuItem>
+            <MenuItem value={TYPE_PATCH}>핫픽스 업데이트 마다</MenuItem>
+          </SelectRow>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">문의</Typography>
+      <Paper>
+        <List disablePadding>
           <BaseRow
             divider
             header={<ListItemText primary="아카리프레셔 채널 (문의 접수)" />}
@@ -58,7 +77,6 @@ const View = React.forwardRef((_props, ref) => {
             <Help />
           </BaseRow>
           <BaseRow
-            divider
             header={<ListItemText primary="Github" />}
             onClick={handleVisitGithub}
           >
@@ -77,7 +95,6 @@ const View = React.forwardRef((_props, ref) => {
             <OpenInNew />
           </BaseRow>
           <BaseRow
-            divider
             header={<ListItemText primary="토스아이디" />}
             onClick={handleVisitToss}
           >

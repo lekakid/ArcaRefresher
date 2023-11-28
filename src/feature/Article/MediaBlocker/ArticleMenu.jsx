@@ -10,9 +10,9 @@ import Info from './FeatureInfo';
 
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
-  const {
-    storage: { enabled, deletedOnly },
-  } = useSelector((state) => state[Info.ID]);
+  const { enabled, deletedOnly } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
 
   const handleClick = useCallback(() => {
@@ -23,7 +23,12 @@ export default function ArticleMenu() {
   if (!enabled || (deletedOnly && !alertLoaded)) return null;
 
   return (
-    <Button size="small" startIcon={<ImageSearch />} onClick={handleClick}>
+    <Button
+      size="small"
+      variant="text"
+      startIcon={<ImageSearch />}
+      onClick={handleClick}
+    >
       이미지 숨기기 해제
     </Button>
   );

@@ -15,7 +15,9 @@ const MODE_DISABLE_STORAGE = -2;
 
 export default function VersionInfo() {
   const dispatch = useDispatch();
-  const { checkedVersion } = useSelector((state) => state[Info.ID].storage);
+  const { checkedVersion, notiLevel } = useSelector(
+    (state) => state[Info.ID].storage,
+  );
   const [boradcastChannel, setBroadcastChannel] = useState(null);
   const [noti, setNoti] = useState({
     open: false,
@@ -42,18 +44,22 @@ export default function VersionInfo() {
   useEffect(() => {
     if (!boradcastChannel) return;
 
-    const diff = compare(GM_info.script.version, checkedVersion);
+    const { type, diff } = compare(GM_info.script.version, checkedVersion);
     if (diff < 0) {
       setNoti({ open: true, mode: MODE_DOWNGRADE });
     }
     if (diff > 0) {
-      setNoti({ open: true, mode: MODE_UPGRADE });
+      if (type >= notiLevel) {
+        setNoti({ open: true, mode: MODE_UPGRADE });
+      } else {
+        dispatch($setCheckedVersion(GM_info.script.version));
+      }
     }
     if (diff !== 0) {
       // 다른 탭들의 데이터 저장 방지
       boradcastChannel.postMessage({ msg: 'disable_storage' });
     }
-  }, [boradcastChannel, checkedVersion, dispatch]);
+  }, [boradcastChannel, checkedVersion, notiLevel, dispatch]);
 
   const handleChangeLog = useCallback(() => {
     const url =
@@ -95,7 +101,7 @@ export default function VersionInfo() {
             <Box sx={{ fontWeight: 'bold' }}>업데이트 내역</Box>
           </Button>
           <IconButton size="small" color="inherit" onClick={handleClose}>
-            <Close fontSize="small" />
+            <Close />
           </IconButton>
         </>
       );
