@@ -80,7 +80,7 @@ const View = React.forwardRef((_props, ref) => {
                 secondary="⚠ 페이지가 새로고침됩니다."
               />
             }
-            onRowClick={handleImport}
+            onClick={handleImport}
           >
             <Launch />
             <input
@@ -94,14 +94,14 @@ const View = React.forwardRef((_props, ref) => {
           <BaseRow
             divider
             header={<ListItemText primary="설정 내보내기" />}
-            onRowClick={handleExport}
+            onClick={handleExport}
           >
             <Launch />
           </BaseRow>
           <BaseRow
             divider
             header={<ListItemText primary="설정 초기화" />}
-            onRowClick={handleOpen}
+            onClick={handleOpen}
           >
             <Launch />
           </BaseRow>
@@ -115,10 +115,10 @@ const View = React.forwardRef((_props, ref) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleReset}>
-            확인
+          <Button onClick={handleReset}>확인</Button>
+          <Button variant="contained" onClick={handleCancle}>
+            취소
           </Button>
-          <Button onClick={handleCancle}>취소</Button>
         </DialogActions>
       </Dialog>
     </Fragment>
