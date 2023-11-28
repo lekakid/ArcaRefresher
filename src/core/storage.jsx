@@ -10,14 +10,15 @@ import { v4 as uuid } from 'uuid';
  */
 export function getValue(key, defaultValue, formatUpdater) {
   let value = GM_getValue(key);
-  if (!value) return defaultValue ? { ...defaultValue } : null;
 
-  const recentVersion = defaultValue?.version || 0;
-  const valueVersion = value?.version || 0;
-  if (formatUpdater && recentVersion > valueVersion) {
-    GM_setValue(`${key}_v${valueVersion}`, value);
-    value = formatUpdater(value, defaultValue);
-    GM_setValue(key, value);
+  const targetVersion = defaultValue?.version || 0;
+  const currentVersion = value?.version || 0;
+  if (formatUpdater && targetVersion > currentVersion) {
+    if (value) {
+      GM_setValue(`${key}_v${currentVersion}`, value);
+      value = formatUpdater(value, defaultValue);
+      GM_setValue(key, value);
+    }
   }
 
   return { ...defaultValue, ...value };
