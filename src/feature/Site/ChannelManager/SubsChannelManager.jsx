@@ -28,6 +28,7 @@ import {
   Input,
 } from '@mui/icons-material';
 
+import { useConfirm } from 'component';
 import { $addGroup, $removeGroup, $setChannelInfo } from './slice';
 import Info from './FeatureInfo';
 
@@ -122,6 +123,7 @@ const columns = [
 function SubsChannelManager({ subs, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+  const [confirm, ConfirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
     (state) => state[Info.ID].storage,
@@ -143,10 +145,16 @@ function SubsChannelManager({ subs, open, onClose }) {
     setCreateGroup(false);
   }, [dispatch, groupInput]);
 
-  const handleRemoveGroup = useCallback(() => {
+  const handleRemoveGroup = useCallback(async () => {
+    const result = await confirm({
+      title: '삭제',
+      content: '정말 삭제하시겠습니까?',
+    });
+    if (!result) return;
+
     setGroupSelection('');
     dispatch($removeGroup({ name: groupSelection }));
-  }, [dispatch, groupSelection]);
+  }, [dispatch, confirm, groupSelection]);
 
   const handleAddGroupAll = useCallback(() => {
     selection.forEach((id) => {
@@ -240,76 +248,79 @@ function SubsChannelManager({ subs, open, onClose }) {
   );
 
   return (
-    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
-      <DialogTitle>구독 그룹 편집</DialogTitle>
-      <IconButton
-        size="large"
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-        }}
-        onClick={onClose}
-      >
-        <Close />
-      </IconButton>
-      <DialogContent>
-        <Stack
-          sx={{ marginBottom: 1 }}
-          direction={mobile ? 'column' : 'row'}
-          gap={1}
+    <>
+      <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
+        <DialogTitle>구독 그룹 편집</DialogTitle>
+        <IconButton
+          size="large"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+          }}
+          onClick={onClose}
         >
-          {createGroup ? (
-            <TextField
-              sx={{ width: mobile ? '100%' : 200 }}
-              value={groupInput}
-              onChange={(e) => setGroupInput(e.target.value)}
-            />
-          ) : (
-            <Select
-              displayEmpty
-              sx={{
-                width: mobile ? '100%' : 200,
-                color: groupSelection === '' ? 'grey' : undefined,
-              }}
-              value={groupSelection}
-              onChange={(e) => setGroupSelection(e.target.value)}
-            >
-              <MenuItem sx={{ color: 'grey' }} value="">
-                그룹 선택
-              </MenuItem>
-              {groupList.map((group) => (
-                <MenuItem key={group} value={group}>
-                  {group}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
+          <Close />
+        </IconButton>
+        <DialogContent>
           <Stack
-            sx={{ width: '100%' }}
+            sx={{ marginBottom: 1 }}
             direction={mobile ? 'column' : 'row'}
-            justifyContent="space-between"
             gap={1}
           >
-            {groupBtns}
-            {channelBtns}
+            {createGroup ? (
+              <TextField
+                sx={{ width: mobile ? '100%' : 200 }}
+                value={groupInput}
+                onChange={(e) => setGroupInput(e.target.value)}
+              />
+            ) : (
+              <Select
+                displayEmpty
+                sx={{
+                  width: mobile ? '100%' : 200,
+                  color: groupSelection === '' ? 'grey' : undefined,
+                }}
+                value={groupSelection}
+                onChange={(e) => setGroupSelection(e.target.value)}
+              >
+                <MenuItem sx={{ color: 'grey' }} value="">
+                  그룹 선택
+                </MenuItem>
+                {groupList.map((group) => (
+                  <MenuItem key={group} value={group}>
+                    {group}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+            <Stack
+              sx={{ width: '100%' }}
+              direction={mobile ? 'column' : 'row'}
+              justifyContent="space-between"
+              gap={2}
+            >
+              {groupBtns}
+              {channelBtns}
+            </Stack>
           </Stack>
-        </Stack>
-        <DataGrid
-          autoHeight
-          disableColumnMenu
-          disableSelectionOnClick
-          checkboxSelection
-          selectionModel={selection}
-          onSelectionModelChange={(s) => setSelection(s)}
-          rowsPerPageOptions={[10]}
-          pageSize={10}
-          columns={columns}
-          rows={rows}
-          onCellEditCommit={handleCellEdit}
-        />
-      </DialogContent>
-    </Dialog>
+          <DataGrid
+            autoHeight
+            disableColumnMenu
+            disableSelectionOnClick
+            checkboxSelection
+            selectionModel={selection}
+            onSelectionModelChange={(s) => setSelection(s)}
+            rowsPerPageOptions={[10]}
+            pageSize={10}
+            columns={columns}
+            rows={rows}
+            onCellEditCommit={handleCellEdit}
+          />
+        </DialogContent>
+      </Dialog>
+      <ConfirmDialog />
+    </>
   );
 }
 
