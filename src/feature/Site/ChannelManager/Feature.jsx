@@ -69,7 +69,9 @@ export default function ChannelManager() {
 
     subsElement.style.display = 'none';
     const subs = [
-      ...subsElement.querySelectorAll('a.dropdown-item:not([href="/b/my"])'),
+      ...subsElement.querySelectorAll(
+        'a.dropdown-item:not([href="/b/my"]):not([href="#"])',
+      ),
     ].map((a) => ({
       label: a.firstElementChild.textContent,
       id: a.pathname.split('/').pop(),
