@@ -85,7 +85,12 @@ const View = React.forwardRef((_props, ref) => {
             divider
             primary="알림 위치"
             value={notifyPosition}
-            action={$setNotifyPosition}
+            action={(payload) => {
+              unsafeWindow.showNotiAlert(
+                '[ArcaRefresher] 알림 위치가 변경되었습니다.',
+              );
+              return $setNotifyPosition(payload);
+            }}
           >
             <MenuItem value="left">왼쪽</MenuItem>
             <MenuItem value="right">오른쪽</MenuItem>
