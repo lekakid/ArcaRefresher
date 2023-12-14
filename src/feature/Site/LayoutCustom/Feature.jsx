@@ -12,7 +12,7 @@ function NotifyPositionStyles({ value }) {
     <GlobalStyles
       styles={{
         '.body #toastbox': {
-          right: value.indexOf('left') > -1 ? 'initial' : 0,
+          right: value.indexOf('left') > -1 ? 'initial !important' : undefined,
           height:
             value.indexOf('top') > -1 ? 'calc(100% - 4rem - 52px)' : undefined,
         },
