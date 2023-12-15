@@ -49,3 +49,12 @@ export function getQuery() {
     .map((e) => e.split('='));
   return Object.fromEntries(entries);
 }
+
+export function stringifyQuery(query) {
+  let search = `?${Object.entries(query)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`;
+  if (search === '?') search = '';
+
+  return search;
+}
