@@ -63,6 +63,7 @@ export default function ExperienceCustomizer() {
     ratedownGuard,
     foldComment,
     wideClickArea,
+    alternativeSubmitKey,
     enhancedArticleManage,
   } = useSelector((state) => state[Info.ID].storage);
   const titleRef = useRef(document.title);
@@ -222,6 +223,29 @@ export default function ExperienceCustomizer() {
     comment.addEventListener('click', handleClick);
     return () => comment.removeEventListener('click', handleClick);
   }, [comment, wideClickArea]);
+
+  // 댓글 키 입력 변경
+  useEffect(() => {
+    if (!comment) return undefined;
+    if (!alternativeSubmitKey) return undefined;
+
+    const handler = (e) => {
+      if (!e.target.matches('[name="content"]')) return;
+
+      if (e.key === 'Enter') {
+        e.stopPropagation();
+        if (e[alternativeSubmitKey]) {
+          e.preventDefault();
+          e.target.closest('form').querySelector('[type="submit"]').click();
+        }
+      }
+    };
+
+    document.body.addEventListener('keydown', handler, true);
+    return () => {
+      document.body.removeEventListener('keydown', handler, true);
+    };
+  }, [alternativeSubmitKey, comment]);
 
   // 미리보기 훼이크 걷어내기
   useEffect(() => {

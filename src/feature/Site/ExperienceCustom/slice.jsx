@@ -11,6 +11,7 @@ const defaultStorage = {
   ratedownGuard: false,
   foldComment: false,
   wideClickArea: true,
+  alternativeSubmitKey: '',
   enhancedArticleManage: true,
 };
 
@@ -44,6 +45,9 @@ export const slice = createSlice({
     $toggleWideArea(state) {
       state.storage.wideClickArea = !state.storage.wideClickArea;
     },
+    $setAlternativeSubmitKey(state, action) {
+      state.storage.alternativeSubmitKey = action.payload;
+    },
     $toggleEnhancedArticleManage(state) {
       state.storage.enhancedArticleManage =
         !state.storage.enhancedArticleManage;
@@ -59,6 +63,7 @@ export const {
   $toggleRateDownGuard,
   $toggleComment,
   $toggleWideArea,
+  $setAlternativeSubmitKey,
   $toggleEnhancedArticleManage,
 } = slice.actions;
 

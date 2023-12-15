@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { List, Paper, Typography } from '@mui/material';
+import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SwitchRow, TextFieldRow } from 'component/ConfigMenu';
+import { SelectRow, SwitchRow, TextFieldRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import {
@@ -14,6 +14,7 @@ import {
   $toggleWideArea,
   $toggleIgnoreExternalLinkWarning,
   $toggleEnhancedArticleManage,
+  $setAlternativeSubmitKey,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
@@ -25,6 +26,7 @@ const View = React.forwardRef((_props, ref) => {
     ratedownGuard,
     foldComment,
     wideClickArea,
+    alternativeSubmitKey,
     enhancedArticleManage,
   } = useSelector((state) => state[Info.ID].storage);
 
@@ -82,6 +84,17 @@ const View = React.forwardRef((_props, ref) => {
             value={wideClickArea}
             action={$toggleWideArea}
           />
+          <SelectRow
+            divider
+            primary="댓글 작성키 변경"
+            secondary="댓글 입력키를 변경합니다.(새로고침 필요)"
+            value={alternativeSubmitKey}
+            action={$setAlternativeSubmitKey}
+          >
+            <MenuItem value="">Enter</MenuItem>
+            <MenuItem value="ctrlKey">Ctrl+Enter</MenuItem>
+            <MenuItem value="shiftKey">Shift+Enter</MenuItem>
+          </SelectRow>
           <SwitchRow
             primary="개선된 게시물 관리 사용"
             secondary="체크박스의 클릭 범위를 여유롭게 만들고 드래그로 한번에 선택할 수 있습니다."
