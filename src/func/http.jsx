@@ -40,3 +40,12 @@ export function request(
     });
   });
 }
+
+export function getQuery() {
+  const entries = window.location.search
+    .substring(1)
+    .split('&')
+    .filter((e) => e)
+    .map((e) => e.split('='));
+  return Object.fromEntries(entries);
+}
