@@ -1,21 +1,4 @@
-function parseQuery(query) {
-  return Object.fromEntries(
-    query
-      .substring(1)
-      .split('&')
-      .filter((e) => e)
-      .map((e) => e.split('=')),
-  );
-}
-
-function stringifyQuery(query) {
-  let search = `?${Object.entries(query)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`;
-  if (search === '?') search = '';
-
-  return search;
-}
+import { getQuery, stringifyQuery } from 'func/http';
 
 export default [
   {
@@ -133,7 +116,7 @@ export default [
       const { host } = window.location;
       const token = window.location.pathname.split('/');
       if (token.length < 4) {
-        const query = parseQuery(window.location.search);
+        const query = getQuery();
         const keys = Object.keys(query);
 
         if (keys.length === 0) return;
@@ -145,9 +128,7 @@ export default [
         return;
       }
       const pathname = token.slice(0, 3).join('/');
-      const { mode, before, after, near, tz, p } = parseQuery(
-        window.location.search,
-      );
+      const { mode, before, after, near, tz, p } = getQuery();
       const query = {};
       if (mode) query.mode = mode;
       if (before) query.before = before;
@@ -168,7 +149,7 @@ export default [
       const { host } = window.location;
       const token = window.location.pathname.split('/');
       const pathname = token.slice(0, 3).join('/');
-      const query = parseQuery(window.location.search);
+      const query = getQuery();
       if (query.mode === 'best') {
         window.location = `https://${host}${pathname}`;
         return;
