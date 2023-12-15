@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Checkbox,
@@ -40,7 +41,12 @@ function SelectableImageList({ imgList, selection, onChange }) {
     <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
       {imgList.map((img, index) => (
         <ImageListItem key={img} onClick={handleSelect(index)}>
-          <img src={img} alt={img} />
+          <img
+            style={{ overflow: 'hidden' }}
+            src={img}
+            alt={img}
+            loading="lazy"
+          />
           <ImageListItemBar
             sx={{
               background:
@@ -69,5 +75,11 @@ function SelectableImageList({ imgList, selection, onChange }) {
     </ImageList>
   );
 }
+
+SelectableImageList.propTypes = {
+  imgList: PropTypes.array.isRequired,
+  selection: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default SelectableImageList;
