@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ import { setLoadOpen } from '../slice';
 import Info from '../FeatureInfo';
 import LoadTable from './LoadTable';
 
-export default function LoadButton({ editor, ...btnProps }) {
+function LoadButton({ editor, ...btnProps }) {
   const dispatch = useDispatch();
   const { loadOpen } = useSelector((state) => state[Info.ID]);
 
@@ -31,3 +32,9 @@ export default function LoadButton({ editor, ...btnProps }) {
     </>
   );
 }
+
+LoadButton.propTypes = {
+  editor: PropTypes.object,
+};
+
+export default LoadButton;

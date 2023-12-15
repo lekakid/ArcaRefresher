@@ -6,6 +6,7 @@ const defaultStorage = {
   tempArticleList: {},
   templateMode: false,
   importTitle: true,
+  deleteOnCommit: true,
   autoSaveTime: 60,
 };
 
@@ -19,10 +20,15 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    $saveArticle(state, action) {
+    $addArticle(state, action) {
       const { slot, title, content } = action.payload;
 
       state.storage.tempArticleList[slot] = { title, content };
+    },
+    $removeArticle(state, action) {
+      const { slot } = action.payload;
+
+      delete state.storage.tempArticleList[slot];
     },
     $setArticleList(state, action) {
       state.storage.tempArticleList = action.payload;
@@ -32,6 +38,9 @@ export const slice = createSlice({
     },
     $toggleImportTitle(state) {
       state.storage.importTitle = !state.storage.importTitle;
+    },
+    $toggleDeleteOnCommit(state) {
+      state.storage.deleteOnCommit = !state.storage.deleteOnCommit;
     },
     $setAutoTime(state, action) {
       state.storage.autoSaveTime = action.payload;
@@ -46,10 +55,12 @@ export const slice = createSlice({
 });
 
 export const {
-  $saveArticle,
+  $addArticle,
+  $removeArticle,
   $setArticleList,
   $toggleTemplateMode,
   $toggleImportTitle,
+  $toggleDeleteOnCommit,
   $setAutoTime,
   setCurrentSlot,
   setLoadOpen,

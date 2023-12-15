@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -89,7 +90,15 @@ function CustomToolbar({
   );
 }
 
-export default function LoadTable({ editor, open, onClose }) {
+CustomToolbar.propTypes = {
+  selection: PropTypes.array.isRequired,
+  editMode: PropTypes.bool.isRequired,
+  onClickEdit: PropTypes.func.isRequired,
+  onClickRemove: PropTypes.func.isRequired,
+  onClickDone: PropTypes.func.isRequired,
+};
+
+function LoadTable({ editor, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
@@ -111,10 +120,8 @@ export default function LoadTable({ editor, open, onClose }) {
   }, []);
 
   const handleLoad = useCallback(
-    (params) => {
-      const date = params.getValue(params.id, 'date');
-      const title = params.getValue(params.id, 'title');
-      const content = params.getValue(params.id, 'content');
+    ({ row }) => {
+      const { date, title, content } = row;
 
       editor.content.html.set(content);
       editor.content.events.trigger('contentChanged');
@@ -226,3 +233,11 @@ export default function LoadTable({ editor, open, onClose }) {
     </Dialog>
   );
 }
+
+LoadTable.propTypes = {
+  editor: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default LoadTable;

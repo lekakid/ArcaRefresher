@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  Button,
   ButtonGroup,
   GlobalStyles,
   Portal,
+  Stack,
   useMediaQuery,
 } from '@mui/material';
 
@@ -10,16 +13,18 @@ import { WRITE_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
+import Info from './FeatureInfo';
+import { $removeArticle } from './slice';
 
 const btnsStyles = (
   <GlobalStyles
     styles={{
       '.article-write .btns': {
         display: 'grid',
-        gridTemplateColumns: '1fr 7rem',
+        gridTemplateColumns: '1fr',
         gridTemplateAreas: `
-          'tmp save'
-          'recapcha recapcha'
+          'tmp'
+          'recapcha'
         `,
         rowGap: '1rem',
         '& > .tmpBtn': {
@@ -27,7 +32,7 @@ const btnsStyles = (
           textAlign: 'left',
         },
         '& > #submitBtn': {
-          gridArea: 'save',
+          display: 'none',
         },
         '& > div': {
           gridArea: 'recapcha',
@@ -36,28 +41,18 @@ const btnsStyles = (
     }}
   />
 );
-const btnsMobileStyles = (
-  <GlobalStyles
-    styles={{
-      '.article-write .btns': {
-        gridTemplateColumns: '1fr',
-        gridTemplateAreas: `
-          'tmp'
-          'save'
-          'recapcha'
-        `,
-      },
-    }}
-  />
-);
 
 export default function TemporarySave() {
+  const dispatch = useDispatch();
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
+  const { deleteOnCommit } = useSelector((state) => state[Info.ID].storage);
+  const { currentSlot } = useSelector((state) => state[Info.ID]);
   const [container, setContainer] = useState(null);
   const [editor, setEditor] = useState(null);
 
+  // 렌더 컨테이너 생성
   useEffect(() => {
     if (!editorLoaded) return;
 
@@ -72,18 +67,33 @@ export default function TemporarySave() {
     setContainer(tempButton);
   }, [editorLoaded]);
 
+  const handleCommit = useCallback(() => {
+    if (deleteOnCommit) dispatch($removeArticle({ slot: currentSlot }));
+
+    const submitBtn = document.querySelector('#submitBtn');
+    submitBtn.click();
+  }, [currentSlot, deleteOnCommit, dispatch]);
+
   if (!container) return null;
   return (
     <>
       {btnsStyles}
-      {mobile && btnsMobileStyles}
       <AutoSaver editor={editor} />
       <Portal container={container}>
-        <ButtonGroup sx={mobile ? { width: '100%' } : undefined}>
-          <SaveButton sx={{ flexGrow: 1 }} editor={editor} />
-          <SaveButton sx={{ flexGrow: 2 }} editor={editor} saveAs />
-          <LoadButton sx={{ flexGrow: 1 }} editor={editor} />
-        </ButtonGroup>
+        <Stack
+          direction={mobile ? 'column' : 'row'}
+          justifyContent="space-between"
+          gap={1}
+        >
+          <ButtonGroup sx={mobile ? { width: '100%' } : undefined}>
+            <SaveButton sx={{ flexGrow: 1 }} editor={editor} />
+            <SaveButton sx={{ flexGrow: 2 }} editor={editor} saveAs />
+            <LoadButton sx={{ flexGrow: 1 }} editor={editor} />
+          </ButtonGroup>
+          <Button fullWidth={mobile} onClick={handleCommit}>
+            작성
+          </Button>
+        </Stack>
       </Portal>
     </>
   );

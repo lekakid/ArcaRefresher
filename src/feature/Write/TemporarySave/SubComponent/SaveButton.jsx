@@ -1,16 +1,13 @@
 import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Snackbar } from '@mui/material';
 import { Add, Save } from '@mui/icons-material';
 
-import { $saveArticle, setCurrentSlot } from '../slice';
+import { $addArticle, setCurrentSlot } from '../slice';
 import Info from '../FeatureInfo';
 
-export default function SaveButton({
-  editor,
-  saveAs = false,
-  ...btnPropsFromGroup
-}) {
+function SaveButton({ editor, saveAs = false, ...btnPropsFromGroup }) {
   const dispatch = useDispatch();
   const { currentSlot } = useSelector((state) => state[Info.ID]);
   const [snack, setSnack] = useState(false);
@@ -25,7 +22,7 @@ export default function SaveButton({
 
     const slot = saveAs ? timestamp : currentSlot || timestamp;
     if (!currentSlot) dispatch(setCurrentSlot(slot));
-    dispatch($saveArticle({ slot, title, content }));
+    dispatch($addArticle({ slot, title, content }));
     setSnack(true);
   }, [currentSlot, dispatch, editor, saveAs]);
 
@@ -55,3 +52,10 @@ export default function SaveButton({
     </>
   );
 }
+
+SaveButton.propTypes = {
+  editor: PropTypes.object.isRequired,
+  saveAs: PropTypes.bool,
+};
+
+export default SaveButton;
