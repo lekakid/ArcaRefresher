@@ -33,6 +33,7 @@ import {
 } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
+import { getQuery } from 'func/http';
 import Info from './FeatureInfo';
 
 const PREVIEW_SELECTOR =
@@ -191,9 +192,10 @@ export default function ExperienceCustomizer() {
     removeEventListener,
   ]);
 
-  // 댓글 접기 방지
+  // 댓글란 접어두기
   useEffect(() => {
     if (!comment || !foldComment) return;
+    if (Object.keys(getQuery()).includes('cp')) return;
 
     if (!unfoldContainer) {
       const container = document.createElement('div');
