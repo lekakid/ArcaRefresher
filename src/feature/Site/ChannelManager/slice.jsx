@@ -4,7 +4,7 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  enabled: true,
+  enabled: false,
   groupList: [],
   channelInfoTable: {},
 };
