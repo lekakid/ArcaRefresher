@@ -35,32 +35,38 @@ const LABEL = {
 };
 
 function tryDecodeAll(html, max = 200) {
-  let count = 0;
   let result = html;
 
   // 개행 처리
   const brRegex = new RegExp(Base64Regex.includeBreakLine);
-  let breaklined = brRegex.exec(result)?.[0];
-  while (breaklined) {
+  for (
+    let count = 0, breaklined = brRegex.exec(result)?.[0];
+    count <= max && breaklined;
+    count += 1, breaklined = brRegex.exec(result)?.[0]
+  ) {
+    if (count === max) {
+      console.warn(`[tryDecodeAll] 줄바꿈 정리 시도가 ${max}번을 넘었습니다.`);
+      break;
+    }
+
     const concatnated = breaklined
       .replaceAll('<br>', '')
       .replaceAll('\n', '')
       .replaceAll(/<\/[a-z]+><[a-z]+( [a-z]+(="[^"]*")?)*>/g, '');
     result = result.replace(breaklined, concatnated);
-
-    breaklined = brRegex.exec(result)?.[0];
-
-    count += 1;
-    if (count > max) {
-      console.warn(`[tryDecodeAll] 줄바꿈 정리 시도가 ${max}번을 넘었습니다.`);
-      break;
-    }
   }
 
-  count = 0;
   const regex = new RegExp(Base64Regex.url);
-  let encoded = regex.exec(result)?.[0];
-  while (encoded) {
+  for (
+    let count = 0, encoded = regex.exec(result)?.[0];
+    count <= max && encoded;
+    count += 1, encoded = regex.exec(result)?.[0]
+  ) {
+    if (count === max) {
+      console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
+      break;
+    }
+
     try {
       if (encoded.length % 4 !== 0) {
         const c = 4 - (encoded.length % 4);
@@ -75,14 +81,6 @@ function tryDecodeAll(html, max = 200) {
       );
     } catch (error) {
       console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
-      break;
-    }
-
-    encoded = regex.exec(result)?.[0];
-
-    count += 1;
-    if (count > max) {
-      console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
       break;
     }
   }
