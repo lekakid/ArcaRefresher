@@ -68,11 +68,30 @@ export default function TemporarySave() {
   }, [editorLoaded]);
 
   const handleCommit = useCallback(() => {
-    if (deleteOnCommit) dispatch($removeArticle({ slot: currentSlot }));
+    if (deleteOnCommit) {
+      dispatch($removeArticle({ slot: currentSlot }));
+    }
 
     const submitBtn = document.querySelector('#submitBtn');
     submitBtn.click();
   }, [currentSlot, deleteOnCommit, dispatch]);
+
+  useEffect(() => {
+    if (!editor) return undefined;
+    const handler = (e) => {
+      if (e.key !== 'Enter') return;
+
+      if (deleteOnCommit) {
+        e.preventDefault();
+        dispatch($removeArticle({ slot: currentSlot }));
+      }
+
+      const submitBtn = document.querySelector('#submitBtn');
+      submitBtn.click();
+    };
+    editor.title.addEventListener('keydown', handler);
+    return () => editor.title.removeEventListener('keydown', handler);
+  }, [currentSlot, deleteOnCommit, dispatch, editor]);
 
   if (!container) return null;
   return (
