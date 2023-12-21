@@ -160,12 +160,21 @@ export default [
   },
   {
     action: 'comment',
-    label: '댓글 입력창으로 이동',
+    label: '댓글 목록/입력창으로 이동',
     active: 'article',
     defaultKey: 'KeyC',
     callback(e) {
-      document.querySelector('#comment textarea').focus();
       e.preventDefault();
+
+      const comment = document.querySelector('#comment');
+      const nav = document.querySelector('nav.navbar');
+      const targetY = comment.offsetTop - nav.clientHeight;
+
+      if (window.scrollY < comment.offsetTop - window.innerHeight) {
+        window.scrollTo({ top: targetY });
+      } else {
+        document.querySelector('#comment textarea').focus();
+      }
     },
   },
   {
