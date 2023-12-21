@@ -17,8 +17,9 @@ import Info from './FeatureInfo';
 
 const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
-  url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?/,
-  includeBreakLine: /(aHR0|YUhS)([A-Za-z0-9+/]*(<br>|\n))+[A-Za-z0-9+/]*={0,2}/,
+  url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
+  includeBreakLine:
+    /(aHR0|YUhS)([A-Za-z0-9+/]*(<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n))+[A-Za-z0-9+/]*={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
 };
@@ -33,7 +34,7 @@ const LABEL = {
   final: '복호화 되었습니다.',
 };
 
-function tryDecodeAll(html, max = 20) {
+function tryDecodeAll(html, max = 200) {
   let count = 0;
   let result = html;
 
@@ -41,7 +42,10 @@ function tryDecodeAll(html, max = 20) {
   const brRegex = new RegExp(Base64Regex.includeBreakLine);
   let breaklined = brRegex.exec(result)?.[0];
   while (breaklined) {
-    const concatnated = breaklined.replaceAll('<br>', '').replaceAll('\n', '');
+    const concatnated = breaklined
+      .replaceAll('<br>', '')
+      .replaceAll('\n', '')
+      .replaceAll(/<\/[a-z]+><[a-z]+( [a-z]+(="[^"]*")?)*>/g, '');
     result = result.replace(breaklined, concatnated);
 
     breaklined = brRegex.exec(result)?.[0];
@@ -58,6 +62,10 @@ function tryDecodeAll(html, max = 20) {
   let encoded = regex.exec(result)?.[0];
   while (encoded) {
     try {
+      if (encoded.length % 4 !== 0) {
+        const c = 4 - (encoded.length % 4);
+        encoded = `${encoded}${'='.repeat(c)}`;
+      }
       const decodedString = decode(encoded);
       result = result.replace(
         regex,
