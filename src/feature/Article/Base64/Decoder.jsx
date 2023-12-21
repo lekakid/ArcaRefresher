@@ -223,7 +223,7 @@ function Decoder() {
       onClose={() => setDecodeResult(undefined)}
       autoHideDuration={3000}
       message={
-        <Box sx={{ maxWidth: 'xs' }}>
+        <Box sx={{ maxWidth: 300 }}>
           <Typography>{LABEL[decodeResult.type]}</Typography>
           <Typography
             sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
