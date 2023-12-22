@@ -12,7 +12,7 @@ function NotifyPositionStyles({ value }) {
     <GlobalStyles
       styles={{
         '.body #toastbox': {
-          right: value.indexOf('left') > -1 ? 'initial' : 0,
+          right: value.indexOf('left') > -1 ? 'initial !important' : undefined,
           height:
             value.indexOf('top') > -1 ? 'calc(100% - 4rem - 52px)' : undefined,
         },
@@ -99,7 +99,7 @@ function SideMenuStyles({ value }) {
         const widthEntries = [1100, 1200, 1300, 1500, 1600].map((w) => [
           `html.width-${w}`,
           {
-            '& .body .content-wrapper': {
+            '& .body .content-wrapper:not(.no-sidebar)': {
               [theme.breakpoints.up(w + 400)]: {
                 gridTemplateColumns: 'auto 1fr !important',
               },

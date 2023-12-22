@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -16,15 +16,14 @@ import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
-
 import { request } from 'func/http';
-import format from './func/format';
-import Info from './FeatureInfo';
-import SelectableImageList from './SelectableImageList';
-import { setOpen } from './slice';
-import { getImageInfo } from './func';
 
-function SelectionDialog() {
+import SelectableImageList from './SelectableImageList';
+import { format, getImageInfo } from './func';
+import { setOpen } from './slice';
+import Info from './FeatureInfo';
+
+function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
   const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
@@ -50,6 +49,12 @@ function SelectionDialog() {
   }, []);
   const [selection, setSelection] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setSelection([...new Array(data.length).keys()]);
+    }
+  }, [data, open]);
 
   const handleSelection = useCallback((sel) => {
     setSelection(sel);
@@ -281,4 +286,4 @@ function SelectionDialog() {
   );
 }
 
-export default SelectionDialog;
+export default DownloadDialog;

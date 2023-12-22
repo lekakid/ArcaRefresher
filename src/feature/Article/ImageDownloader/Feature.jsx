@@ -6,7 +6,7 @@ import { GetApp } from '@mui/icons-material';
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import SelectionDialog from './SelectionDialog';
+import DownloadDialog from './DownloadDialog';
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
 
@@ -75,7 +75,7 @@ export default function ImageDownloader() {
           이미지 다운로더
         </Button>
       </Portal>
-      <SelectionDialog />
+      <DownloadDialog />
     </>
   );
 }

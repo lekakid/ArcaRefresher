@@ -1,21 +1,4 @@
-function parseQuery(query) {
-  return Object.fromEntries(
-    query
-      .substring(1)
-      .split('&')
-      .filter((e) => e)
-      .map((e) => e.split('=')),
-  );
-}
-
-function stringifyQuery(query) {
-  let search = `?${Object.entries(query)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`;
-  if (search === '?') search = '';
-
-  return search;
-}
+import { getQuery, stringifyQuery } from 'func/http';
 
 export default [
   {
@@ -85,6 +68,14 @@ export default [
         const currentArticle = document.querySelector(
           '.article-view .vrow.active',
         );
+        if (!currentArticle) {
+          const lastArticle = document.querySelector(
+            '.article-view .vrow:last-child',
+          );
+          const url =
+            lastArticle.href || lastArticle.querySelector('a.title').href;
+          window.location = url;
+        }
         if (
           currentArticle.previousElementSibling &&
           !currentArticle.previousElementSibling.matches('.notice')
@@ -112,6 +103,14 @@ export default [
         const currentArticle = document.querySelector(
           '.article-view .vrow.active',
         );
+        if (!currentArticle) {
+          // 마지막 게시물이 다음 페이지로 넘어갔으므로 페이지 이동
+          const currentPage = document.querySelector(
+            '.pagination-wrapper .active',
+          );
+          currentPage.nextElementSibling?.querySelector('a').click();
+          return;
+        }
         if (currentArticle.nextElementSibling) {
           const url =
             currentArticle.nextElementSibling.href ||
@@ -133,7 +132,7 @@ export default [
       const { host } = window.location;
       const token = window.location.pathname.split('/');
       if (token.length < 4) {
-        const query = parseQuery(window.location.search);
+        const query = getQuery();
         const keys = Object.keys(query);
 
         if (keys.length === 0) return;
@@ -145,9 +144,7 @@ export default [
         return;
       }
       const pathname = token.slice(0, 3).join('/');
-      const { mode, before, after, near, tz, p } = parseQuery(
-        window.location.search,
-      );
+      const { mode, before, after, near, tz, p } = getQuery();
       const query = {};
       if (mode) query.mode = mode;
       if (before) query.before = before;
@@ -168,7 +165,7 @@ export default [
       const { host } = window.location;
       const token = window.location.pathname.split('/');
       const pathname = token.slice(0, 3).join('/');
-      const query = parseQuery(window.location.search);
+      const query = getQuery();
       if (query.mode === 'best') {
         window.location = `https://${host}${pathname}`;
         return;
@@ -179,12 +176,21 @@ export default [
   },
   {
     action: 'comment',
-    label: '댓글 입력창으로 이동',
+    label: '댓글 목록/입력창으로 이동',
     active: 'article',
     defaultKey: 'KeyC',
     callback(e) {
-      document.querySelector('#comment textarea').focus();
       e.preventDefault();
+
+      const comment = document.querySelector('#comment');
+      const nav = document.querySelector('nav.navbar');
+      const targetY = comment.offsetTop - nav.clientHeight;
+
+      if (window.scrollY < comment.offsetTop - window.innerHeight) {
+        window.scrollTo({ top: targetY });
+      } else {
+        document.querySelector('#comment textarea').focus();
+      }
     },
   },
   {

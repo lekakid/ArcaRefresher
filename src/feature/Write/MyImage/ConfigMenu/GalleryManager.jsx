@@ -42,9 +42,10 @@ function FolderNameSelect({
   onRemove,
 }) {
   return (
-    <Stack direction="row" gap={1}>
+    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
       <Select
-        sx={{ flexGrow: 1, border: 0 }}
+        // 왜 인진 모르겠고 width값을 잡아주기만 하면 flexGrow를 통한 크기 조절 문제가 해결됨
+        sx={{ flexGrow: 1, width: 0 }}
         value={currentFolder}
         onChange={onSelect}
       >
@@ -90,9 +91,9 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
   };
 
   return (
-    <Stack direction="row" gap={1}>
+    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
       <TextField
-        sx={{ flexGrow: 1, border: 0 }}
+        sx={{ flexGrow: 1, width: 0 }}
         autoFocus
         size="small"
         value={text}

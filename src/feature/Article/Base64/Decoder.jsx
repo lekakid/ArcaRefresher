@@ -15,45 +15,63 @@ import { FOREGROUND, open } from 'func/window';
 import { decode } from './func/base64';
 import Info from './FeatureInfo';
 
-const URLBase64Regex =
-  /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?/;
-const URLBase64withBrRegex =
-  /(aHR0|YUhS)([A-Za-z0-9+/]*(<br>|\n))+[A-Za-z0-9+/]*={0,2}/;
-const base64Regex =
-  /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
+const Base64Regex = {
+  normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
+  url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
+  includeBreakLine:
+    /(aHR0|YUhS)([A-Za-z0-9+/]*(<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n))+[A-Za-z0-9+/]*={0,2}/,
+  excludePaddingChar:
+    /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
+};
+
 const URLRegex =
   /^(https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
 
 const LABEL = {
+  fix: '패딩 부호(=)가 빠진것 같습니다. 복원 후 복호화하시겠습니까?',
   url: '링크 주소 같습니다. 여시겠습니까?',
-  normal: '복호화 되었습니다.',
+  more: '추가로 복호화할 수 있습니다.',
+  final: '복호화 되었습니다.',
 };
 
-function tryDecodeAll(html, max = 20) {
-  let count = 0;
+function tryDecodeAll(html, max = 200) {
   let result = html;
 
   // 개행 처리
-  const brRegex = new RegExp(URLBase64withBrRegex);
-  let breaklined = brRegex.exec(result)?.[0];
-  while (breaklined) {
-    const concatnated = breaklined.replaceAll('<br>', '').replaceAll('\n', '');
-    result = result.replace(breaklined, concatnated);
-
-    breaklined = brRegex.exec(result)?.[0];
-
-    count += 1;
-    if (count > max) {
+  const brRegex = new RegExp(Base64Regex.includeBreakLine);
+  for (
+    let count = 0, breaklined = brRegex.exec(result)?.[0];
+    count <= max && breaklined;
+    count += 1, breaklined = brRegex.exec(result)?.[0]
+  ) {
+    if (count === max) {
       console.warn(`[tryDecodeAll] 줄바꿈 정리 시도가 ${max}번을 넘었습니다.`);
       break;
     }
+
+    const concatnated = breaklined
+      .replaceAll('<br>', '')
+      .replaceAll('\n', '')
+      .replaceAll(/<\/[a-z]+><[a-z]+( [a-z]+(="[^"]*")?)*>/g, '');
+    result = result.replace(breaklined, concatnated);
   }
 
-  count = 0;
-  const regex = new RegExp(URLBase64Regex);
-  let encoded = regex.exec(result)?.[0];
-  while (encoded) {
+  const regex = new RegExp(Base64Regex.url);
+  for (
+    let count = 0, encoded = regex.exec(result)?.[0];
+    count <= max && encoded;
+    count += 1, encoded = regex.exec(result)?.[0]
+  ) {
+    if (count === max) {
+      console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
+      break;
+    }
+
     try {
+      if (encoded.length % 4 !== 0) {
+        const c = 4 - (encoded.length % 4);
+        encoded = `${encoded}${'='.repeat(c)}`;
+      }
       const decodedString = decode(encoded);
       result = result.replace(
         regex,
@@ -63,14 +81,6 @@ function tryDecodeAll(html, max = 20) {
       );
     } catch (error) {
       console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
-      break;
-    }
-
-    encoded = regex.exec(result)?.[0];
-
-    count += 1;
-    if (count > max) {
-      console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
       break;
     }
   }
@@ -155,8 +165,7 @@ function Decoder() {
       setDecodeResult((prev) => ({
         ...prev,
         text: decoded,
-        more: false,
-        type: 'normal',
+        type: 'final',
       }));
     }
 
@@ -164,7 +173,6 @@ function Decoder() {
       setDecodeResult((prev) => ({
         ...prev,
         text: decoded,
-        more: false,
         type: 'url',
       }));
       return;
@@ -173,8 +181,7 @@ function Decoder() {
     setDecodeResult((prev) => ({
       ...prev,
       text: decoded,
-      more: base64Regex.test(decoded),
-      type: 'normal',
+      type: Base64Regex.normal.test(decoded) ? 'more' : 'final',
     }));
   }, []);
 
@@ -186,14 +193,26 @@ function Decoder() {
     const handler = (e) => {
       if (e.target.matches('input, textarea, [contenteditable]')) return;
 
+      // 복사한 스트링
       const data = window
         .getSelection()
         .toLocaleString()
         .replaceAll('\n', '')
         .trim();
-      if (!base64Regex.test(data)) return;
 
-      handleDecode(data);
+      // 패딩 부호가 빠진건지 검사
+      if (Base64Regex.excludePaddingChar.test(data)) {
+        setDecodeResult((prev) => ({
+          ...prev,
+          text: data,
+          type: 'fix',
+        }));
+      }
+
+      // base64가 맞다면 복호화
+      if (Base64Regex.normal.test(data)) {
+        handleDecode(data);
+      }
     };
 
     document.addEventListener('copy', handler);
@@ -202,6 +221,12 @@ function Decoder() {
 
   const handleOneMore = () => {
     handleDecode(decodeResult.text);
+  };
+
+  const handleFix = () => {
+    const count = 4 - (decodeResult.text.length % 4);
+    const fixed = `${decodeResult.text}${'='.repeat(count)}`;
+    handleDecode(fixed);
   };
 
   const handleUrlOpen = () => {
@@ -223,8 +248,10 @@ function Decoder() {
       onClose={() => setDecodeResult(undefined)}
       autoHideDuration={3000}
       message={
-        <Box sx={{ maxWidth: 'xs' }}>
-          <Typography>{LABEL[decodeResult.type]}</Typography>
+        <Box sx={{ maxWidth: 300 }}>
+          <Typography>
+            {LABEL[decodeResult.type] || '알 수 없는 타입'}
+          </Typography>
           <Typography
             sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
           >{`"${decodeResult.text}"`}</Typography>
@@ -232,7 +259,7 @@ function Decoder() {
       }
       action={
         <>
-          {decodeResult.more && (
+          {decodeResult.type === 'more' && (
             <Button
               variant="text"
               color="inherit"
@@ -240,6 +267,16 @@ function Decoder() {
               onClick={handleOneMore}
             >
               <Typography>복호화</Typography>
+            </Button>
+          )}
+          {decodeResult.type === 'fix' && (
+            <Button
+              variant="text"
+              color="inherit"
+              size="small"
+              onClick={handleFix}
+            >
+              <Typography>복원</Typography>
             </Button>
           )}
           {decodeResult.type === 'url' && (

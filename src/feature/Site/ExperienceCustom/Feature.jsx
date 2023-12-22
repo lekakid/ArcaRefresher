@@ -33,6 +33,7 @@ import {
 } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
+import { getQuery } from 'func/http';
 import Info from './FeatureInfo';
 
 const PREVIEW_SELECTOR =
@@ -62,6 +63,7 @@ export default function ExperienceCustomizer() {
     ratedownGuard,
     foldComment,
     wideClickArea,
+    alternativeSubmitKey,
     enhancedArticleManage,
   } = useSelector((state) => state[Info.ID].storage);
   const titleRef = useRef(document.title);
@@ -191,9 +193,10 @@ export default function ExperienceCustomizer() {
     removeEventListener,
   ]);
 
-  // 댓글 접기 방지
+  // 댓글란 접어두기
   useEffect(() => {
     if (!comment || !foldComment) return;
+    if (Object.keys(getQuery()).includes('cp')) return;
 
     if (!unfoldContainer) {
       const container = document.createElement('div');
@@ -220,6 +223,29 @@ export default function ExperienceCustomizer() {
     comment.addEventListener('click', handleClick);
     return () => comment.removeEventListener('click', handleClick);
   }, [comment, wideClickArea]);
+
+  // 댓글 키 입력 변경
+  useEffect(() => {
+    if (!comment) return undefined;
+    if (!alternativeSubmitKey) return undefined;
+
+    const handler = (e) => {
+      if (!e.target.matches('[name="content"]')) return;
+
+      if (e.key === 'Enter') {
+        e.stopPropagation();
+        if (e[alternativeSubmitKey]) {
+          e.preventDefault();
+          e.target.closest('form').querySelector('[type="submit"]').click();
+        }
+      }
+    };
+
+    document.body.addEventListener('keydown', handler, true);
+    return () => {
+      document.body.removeEventListener('keydown', handler, true);
+    };
+  }, [alternativeSubmitKey, comment]);
 
   // 미리보기 훼이크 걷어내기
   useEffect(() => {
