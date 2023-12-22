@@ -68,6 +68,14 @@ export default [
         const currentArticle = document.querySelector(
           '.article-view .vrow.active',
         );
+        if (!currentArticle) {
+          const lastArticle = document.querySelector(
+            '.article-view .vrow:last-child',
+          );
+          const url =
+            lastArticle.href || lastArticle.querySelector('a.title').href;
+          window.location = url;
+        }
         if (
           currentArticle.previousElementSibling &&
           !currentArticle.previousElementSibling.matches('.notice')
@@ -95,6 +103,14 @@ export default [
         const currentArticle = document.querySelector(
           '.article-view .vrow.active',
         );
+        if (!currentArticle) {
+          // 마지막 게시물이 다음 페이지로 넘어갔으므로 페이지 이동
+          const currentPage = document.querySelector(
+            '.pagination-wrapper .active',
+          );
+          currentPage.nextElementSibling?.querySelector('a').click();
+          return;
+        }
         if (currentArticle.nextElementSibling) {
           const url =
             currentArticle.nextElementSibling.href ||
