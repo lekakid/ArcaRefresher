@@ -9,15 +9,21 @@ function WrappedWebSocket(...contructorArguments) {
   const originAddEventListener = ws.addEventListener;
   function wrappedAddEventListener(...propertyArguments) {
     if (propertyArguments[0] === 'message') {
-      const callback = propertyArguments[1];
+      const originalCallback = propertyArguments[1];
       propertyArguments[1] = (e) => {
-        let passed = true;
-        callbackList.forEach((c) => {
-          passed = c(e);
-        });
+        callbackList
+          .filter(({ type }) => type === 'before')
+          .forEach(({ callback }) => {
+            callback(e);
+          });
 
-        if (!passed) return undefined;
-        return callback.apply(this, [e]);
+        originalCallback.apply(this, [e]);
+
+        callbackList
+          .filter(({ type }) => type === 'after')
+          .forEach(({ callback }) => {
+            callback(e);
+          });
       };
     }
     return originAddEventListener.apply(this, propertyArguments);
@@ -30,18 +36,18 @@ function WrappedWebSocket(...contructorArguments) {
     },
   });
 
-  console.info('[ArcaRefresher] WebSocket Wrapped');
+  console.info('[ArcaRefresher] WebSocket Hooked');
   return ws;
 }
 unsafeWindow.WebSocket = WrappedWebSocket;
 
 export function useArcaSocket() {
-  const subscribe = useCallback((callback) => {
-    callbackList.push(callback);
+  const subscribe = useCallback((subscriber) => {
+    callbackList.push(subscriber);
   }, []);
 
-  const unsubscribe = useCallback((callback) => {
-    callbackList.splice(callbackList.indexOf(callback), 1);
+  const unsubscribe = useCallback((subscriber) => {
+    callbackList.splice(callbackList.indexOf(subscriber), 1);
   }, []);
 
   return [subscribe, unsubscribe];

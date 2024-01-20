@@ -42,9 +42,9 @@ function ToastMuter() {
   useEffect(() => {
     if (!mk2) return undefined;
 
-    const listener = (e) => {
+    const callback = (e) => {
       const data = e.data.split('|');
-      if (data[0] !== 'n') return true;
+      if (data[0] !== 'n') return;
 
       const noti = JSON.parse(data[1]);
 
@@ -52,7 +52,10 @@ function ToastMuter() {
       if (noti.mediaUrl) {
         const url = trimEmotURL(noti.mediaUrl);
         if (muteAllEmot || emotList.url[url]) {
-          if (hideMutedMark) return false;
+          if (hideMutedMark) {
+            Object.defineProperty(e, 'data', { value: '' });
+            return;
+          }
 
           delete noti.mediaUrl;
           noti.title = 'Arca Refresher';
@@ -64,7 +67,10 @@ function ToastMuter() {
       const regex =
         userList.length > 0 ? new RegExp(userList.join('|')) : undefined;
       if (regex?.test(noti.username)) {
-        if (hideMutedMark) return false;
+        if (hideMutedMark) {
+          Object.defineProperty(e, 'data', { value: '' });
+          return;
+        }
 
         if (noti.mediaUrl) delete noti.mediaUrl;
         noti.title = 'Arca Refresher';
@@ -73,11 +79,11 @@ function ToastMuter() {
 
       const injectedData = `${data[0]}|${JSON.stringify(noti)}`;
       Object.defineProperty(e, 'data', { value: injectedData });
-      return true;
     };
-    subscribeSocket(listener);
+    const subscriber = { callback, type: 'before' };
+    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(listener);
+    return () => unsubscribeSocket(subscriber);
   }, [
     emotList,
     userList,
