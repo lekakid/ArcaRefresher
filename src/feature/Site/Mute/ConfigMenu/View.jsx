@@ -32,7 +32,6 @@ import {
   $setBoardBarPos,
   $toggleHideNoticeService,
   $toggleHideClosedDeal,
-  $toggleMK2,
   $setContextRange,
   $setChannel,
   $setEmoticonList,
@@ -48,7 +47,6 @@ const View = React.forwardRef((_props, ref) => {
   const { channel: channelInfo, board: boardInfo } = useContent();
 
   const {
-    mk2,
     contextRange,
     boardBarPos,
     hideCountBar,
@@ -100,13 +98,6 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <SwitchRow
-            divider
-            primary="알림 뮤트 MK.2 (실험적)"
-            secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
-            value={mk2}
-            action={$toggleMK2}
-          />
           <SelectRow
             primary="우클릭 메뉴 호출 범위"
             value={contextRange}
