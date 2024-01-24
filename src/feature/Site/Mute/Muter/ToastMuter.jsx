@@ -48,7 +48,7 @@ function ToastMuter() {
         const url = trimEmotURL(noti.mediaUrl);
         if (muteAllEmot || emotList.url[url]) {
           if (hideMutedMark) {
-            Object.defineProperty(e, 'data', { value: '' });
+            Object.defineProperty(e, 'ignore', { value: true });
             return;
           }
 
@@ -63,7 +63,7 @@ function ToastMuter() {
         userList.length > 0 ? new RegExp(userList.join('|')) : undefined;
       if (regex?.test(noti.username)) {
         if (hideMutedMark) {
-          Object.defineProperty(e, 'data', { value: '' });
+          Object.defineProperty(e, 'ignore', { value: true });
           return;
         }
 

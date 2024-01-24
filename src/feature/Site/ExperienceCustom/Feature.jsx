@@ -123,10 +123,10 @@ export default function ExperienceCustomizer() {
     });
 
     const subscriber = {
-      type: 'after',
+      type: 'before',
       callback(e) {
-        if (e.data.split('|').shift()[0] === 'n') {
-          changeFavicon(spoofFavicon);
+        if (e.data.split('|').shift() === 'na') {
+          Object.defineProperty(e, 'ignore', { value: true });
         }
       },
     };

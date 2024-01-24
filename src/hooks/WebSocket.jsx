@@ -17,7 +17,9 @@ function WrappedWebSocket(...contructorArguments) {
             callback(e);
           });
 
-        originalCallback.apply(this, [e]);
+        if (!e.ignore) {
+          originalCallback.apply(this, [e]);
+        }
 
         callbackList
           .filter(({ type }) => type === 'after')
