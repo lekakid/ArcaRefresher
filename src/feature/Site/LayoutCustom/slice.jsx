@@ -9,6 +9,7 @@ const defaultStorage = {
   // 사이트
   notifyPosition: 'right',
   topNews: true,
+  searchBar: true,
   recentVisit: 'afterAd',
   sideMenu: true,
   sideContents: true,
@@ -68,6 +69,9 @@ export const slice = createSlice({
     },
     $toggleTopNews(state) {
       state.storage.topNews = !state.storage.topNews;
+    },
+    $toggleSearchBar(state) {
+      state.storage.searchBar = !state.storage.searchBar;
     },
     $setRecentVisit(state, action) {
       state.storage.recentVisit = action.payload;
@@ -134,6 +138,7 @@ export const {
   // 사이트
   $setNotifyPosition,
   $toggleTopNews,
+  $toggleSearchBar,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,

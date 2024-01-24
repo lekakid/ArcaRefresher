@@ -34,6 +34,7 @@ import {
   $setResizeEmoticonPalette,
   $setFontSize,
   $toggleDefaultImage,
+  $toggleSearchBar,
 } from '../slice';
 
 function labelFormat(x) {
@@ -49,6 +50,7 @@ const View = React.forwardRef((_props, ref) => {
     enabled,
     notifyPosition,
     topNews,
+    searchBar,
     recentVisit,
     sideContents,
     sideBests,
@@ -105,6 +107,12 @@ const View = React.forwardRef((_props, ref) => {
               action={$toggleTopNews}
             />
           )}
+          <SwitchRow
+            divider
+            primary="검색창 표시"
+            value={searchBar}
+            action={$toggleSearchBar}
+          />
           <SelectRow
             divider
             primary="최근 방문 채널 위치"

@@ -27,7 +27,21 @@ function TopNewsStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        '.topbar-area': {
+        'li.topbar-area': {
+          display: 'none !important',
+        },
+      }}
+    />
+  );
+}
+
+function SearchBarStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        'html li.nav-channel-search-wrapper': {
           display: 'none !important',
         },
       }}
@@ -390,6 +404,7 @@ export default function LayoutCustom() {
     enabled,
     notifyPosition,
     topNews,
+    searchBar,
     recentVisit,
     sideMenu,
     sideContents,
@@ -416,6 +431,7 @@ export default function LayoutCustom() {
     <>
       <NotifyPositionStyles value={notifyPosition} />
       <TopNewsStyles value={topNews} />
+      <SearchBarStyles value={searchBar} />
       <RecentVisitStyles value={recentVisit} />
       <SideMenuStyles value={sideMenu} />
       <SideContentsStyles value={sideContents} />
