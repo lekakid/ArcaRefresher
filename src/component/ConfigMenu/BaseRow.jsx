@@ -39,13 +39,24 @@ const BaseRow = React.forwardRef(
         disablePadding={!!onClick}
         divider={divider}
         sx={
+          !onClick &&
           nested && {
             paddingLeft: 4,
           }
         }
       >
         {onClick ? (
-          <ListItemButton onClick={onClick}>{content}</ListItemButton>
+          <ListItemButton
+            sx={
+              onClick &&
+              nested && {
+                paddingLeft: 4,
+              }
+            }
+            onClick={onClick}
+          >
+            {content}
+          </ListItemButton>
         ) : (
           content
         )}
