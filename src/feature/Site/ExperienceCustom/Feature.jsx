@@ -32,6 +32,7 @@ import {
   useEvent,
 } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
+import { useArcaSocket } from 'hooks/WebSocket';
 
 import { getQuery } from 'func/http';
 import Info from './FeatureInfo';
@@ -51,12 +52,14 @@ const foldingStyles = (
 
 export default function ExperienceCustomizer() {
   const [addEventListener, removeEventListener] = useEvent();
+  const [subscribeWS, unsubscribeWS] = useArcaSocket();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const {
     spoofTitle,
+    spoofFavicon,
     openArticleNewWindow,
     blockMediaNewWindow,
     ignoreExternalLinkWarning,
@@ -96,6 +99,44 @@ export default function ExperienceCustomizer() {
   useEffect(() => {
     document.title = spoofTitle || titleRef.current;
   }, [spoofTitle]);
+
+  // 사이트 파비콘 변경
+  useEffect(() => {
+    if (!spoofFavicon) return undefined;
+
+    const defaultUrl = document.querySelector('#dynamic-favicon').href;
+    const changeFavicon = (url) => {
+      const faviconEl = document.querySelector('#dynamic-favicon');
+      faviconEl.href = url;
+    };
+
+    // 글 알림 비활성화
+    Object.defineProperty(unsafeWindow, 'notificationBadge', {
+      get() {
+        return 'default';
+      },
+      set() {},
+    });
+    changeFavicon(spoofFavicon);
+    window.addEventListener('load', () => {
+      changeFavicon(spoofFavicon);
+    });
+
+    const subscriber = {
+      type: 'after',
+      callback(e) {
+        if (e.data.split('|').shift()[0] === 'n') {
+          changeFavicon(spoofFavicon);
+        }
+      },
+    };
+    subscribeWS(subscriber);
+    return () => {
+      changeFavicon(defaultUrl);
+      unsubscribeWS(subscriber);
+      window.removeEventListener('load', changeFavicon);
+    };
+  }, [spoofFavicon, subscribeWS, unsubscribeWS]);
 
   // 이미지, 영상 새 창에서 열기 방지
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { List, MenuItem, Paper, Typography } from '@mui/material';
+import { Collapse, List, MenuItem, Paper, Typography } from '@mui/material';
 
 import { SelectRow, SwitchRow, TextFieldRow } from 'component/ConfigMenu';
 
@@ -15,11 +15,15 @@ import {
   $toggleIgnoreExternalLinkWarning,
   $toggleEnhancedArticleManage,
   $setAlternativeSubmitKey,
+  $setSpoofFavicon,
+  $setPresetFavicon,
 } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const {
     spoofTitle,
+    presetFavicon,
+    spoofFavicon,
     openArticleNewWindow,
     blockMediaNewWindow,
     ignoreExternalLinkWarning,
@@ -42,6 +46,28 @@ const View = React.forwardRef((_props, ref) => {
             value={spoofTitle}
             action={$setSpoofTitle}
           />
+          <SelectRow
+            divider
+            primary="사이트 파비콘 변경"
+            secondary="사이트 대표 아이콘을 다른 사이트로 변경합니다."
+            value={presetFavicon}
+            action={$setPresetFavicon}
+          >
+            <MenuItem value="">사용 안 함</MenuItem>
+            <MenuItem value="google">구글</MenuItem>
+            <MenuItem value="gmail">G Mail</MenuItem>
+            <MenuItem value="naver">네이버</MenuItem>
+            <MenuItem value="custom">커스텀</MenuItem>
+          </SelectRow>
+          <Collapse in={presetFavicon === 'custom'}>
+            <TextFieldRow
+              divider
+              primary="커스텀 파비콘 URL"
+              manualSave
+              value={spoofFavicon}
+              action={$setSpoofFavicon}
+            />
+          </Collapse>
           <SwitchRow
             divider
             primary="게시물 새 창에서 열기"
