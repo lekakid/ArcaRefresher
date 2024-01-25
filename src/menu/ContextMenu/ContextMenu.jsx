@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Box, List, Menu, MenuItem } from '@mui/material';
 
 import Info from './FeatureInfo';
@@ -26,7 +27,7 @@ function ContextMenu({ menuList }) {
     const handleDown = ({ button }) => {
       if (button === 2) {
         gestureTrack.current.right = true;
-        dispatch(setOpen(false));
+        dispatch(setOpen(null));
       }
     };
     const handleUp = ({ button }) => {
@@ -115,5 +116,9 @@ function ContextMenu({ menuList }) {
     </Menu>
   );
 }
+
+ContextMenu.propTypes = {
+  menuList: PropTypes.array,
+};
 
 export default ContextMenu;
