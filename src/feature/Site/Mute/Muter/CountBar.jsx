@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Chip, Grid, Typography } from '@mui/material';
 
 const TypeString = {
@@ -13,6 +14,7 @@ const TypeString = {
 
 function CountBar({ renderContainer, controlTarget, count, hide }) {
   const [showStates, setShowStates] = useState(undefined);
+
   useEffect(() => {
     setShowStates((prev) =>
       Object.fromEntries(Object.keys(count).map((key) => [key, prev?.[key]])),
@@ -61,6 +63,7 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
         }}
       >
         {Object.entries(count).map(([key, value]) => {
+          if (key === 'preview') return null;
           if (hide && key !== 'deleted') return null;
           const suffix = key === 'all' ? '' : `-${key}`;
           const className = `show-filtered${suffix}`;
@@ -83,6 +86,13 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
     renderContainer,
   );
 }
+
+CountBar.propTypes = {
+  renderContainer: PropTypes.object,
+  controlTarget: PropTypes.object,
+  count: PropTypes.object,
+  hide: PropTypes.bool,
+};
 
 CountBar.defaultProps = {
   count: {

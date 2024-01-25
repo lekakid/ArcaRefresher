@@ -65,9 +65,7 @@ function CommentMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
-  const { userList, keywordList, emotList } = useSelector((state) =>
-    filterSelector(state),
-  );
+  const filter = useSelector((state) => filterSelector(state));
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
     useSelector((state) => state[Info.ID].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
@@ -106,14 +104,15 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          muteAllEmot || !!emotList.bundle[id],
+          muteAllEmot || !!filter.emoticon.bundle[id],
         );
 
-        if (!(muteAllEmot || emotList.bundle[id]) || hideMutedMark) return;
+        if (!(muteAllEmot || filter.emoticon.bundle[id]) || hideMutedMark)
+          return;
         const muted = document.createElement('span');
         muted.append('[아카콘 뮤트됨]');
         muted.classList.add('muted');
-        muted.title = muteAllEmot ? '알 수 없음' : emotList.bundle[id];
+        muted.title = muteAllEmot ? '알 수 없음' : filter.emoticon.bundle[id];
         c.closest('.emoticon-wrapper').append(muted);
       });
     };
@@ -135,7 +134,7 @@ function CommentMuter() {
     };
   }, [
     commentLoaded,
-    emotList,
+    filter.emoticon,
     hideMutedMark,
     muteIncludeReply,
     muteAllEmot,
@@ -148,22 +147,37 @@ function CommentMuter() {
     if (!controlTarget) return undefined;
 
     const muteComment = () => {
-      const items = [
+      const comments = [
         ...document.querySelectorAll(
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ),
       ];
-      const itemContents = items.map((c) => ({
-        element: c,
-        user: getUserFilter(c.querySelector('.user-info')),
-        content: c.querySelector('.message')?.textContent || '',
-        category: '',
-      }));
-
-      const result = filterContent(itemContents, {
-        userList,
-        keywordList,
+      const commentInfos = comments.map((comment) => {
+        [...comment.classList].forEach((c) => {
+          if (c.includes('filtered')) {
+            comment.classList.toggle(c, false);
+          }
+        });
+        return {
+          element: comment,
+          user: getUserFilter(comment.querySelector('.user-info')),
+          content: comment.querySelector('.message')?.textContent || '',
+        };
       });
+
+      const filteredList = filterContent(commentInfos, filter);
+      const result = Object.fromEntries(
+        Object.entries(filteredList).map(([key, value]) => {
+          if (key !== 'all') {
+            value.forEach((e) => {
+              e.classList.add('filtered');
+              e.classList.add(`filtered-${key}`);
+            });
+          }
+
+          return [key, value.length];
+        }),
+      );
       setCount(result);
     };
 
@@ -177,8 +191,7 @@ function CommentMuter() {
     };
   }, [
     controlTarget,
-    userList,
-    keywordList,
+    filter,
     muteIncludeReply,
     addEventListener,
     removeEventListener,

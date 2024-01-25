@@ -27,7 +27,7 @@ const boardMuteStyles = (
         '& .list-table.show-filtered-channel .filtered-channel': {
           display: 'flex !important',
         },
-        '& .block-preview .vrow-preview': {
+        '& .filtered-preview .vrow-preview': {
           display: 'none !important',
         },
         '& .filtered-emoticon': {
@@ -52,8 +52,7 @@ function BoardMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const { channel, category } = useContent();
 
-  const { userList, keywordList, channelList, emotList, categoryOpt } =
-    useSelector((state) => filterSelector(state, channel.ID));
+  const filter = useSelector((state) => filterSelector(state, channel.ID));
   const {
     boardBarPos,
     hideCountBar,
@@ -64,10 +63,9 @@ function BoardMuter() {
 
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
-  const [nameToIDMap, setNameToIDMap] = useState(undefined);
   const [count, setCount] = useState(undefined);
 
-  // 카테고리 매핑 테이블
+  // 컨테이너 생성
   useLayoutEffect(() => {
     if (!category) return;
 
@@ -75,12 +73,7 @@ function BoardMuter() {
       `${BOARD}, ${BOARD_IN_ARTICLE}`,
     );
     if (!boardElement) return;
-
     setControlTarget(boardElement);
-    const name2id = Object.fromEntries(
-      Object.entries(category.category).map(([key, value]) => [value, key]),
-    );
-    setNameToIDMap(name2id);
 
     const containerElement = document.createElement('div');
     setCountBarContainer(containerElement);
@@ -97,25 +90,48 @@ function BoardMuter() {
   useLayoutEffect(() => {
     if (!controlTarget) return undefined;
 
-    const muteArticle = () => {
-      const items = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
-      const itemContents = items
-        .filter((a) => !a.href?.includes('#c_'))
-        .map((a) => ({
-          element: a,
-          user: getUserFilter(a.querySelector('.user-info')),
-          content: a.querySelector('.title')?.textContent || '',
-          category: a.querySelector('.badge')?.textContent || '글머리없음',
-        }));
+    const isGlogal = globalChannel.includes(channel.ID);
 
-      const result = filterContent(itemContents, {
-        userList,
-        keywordList,
-        channelList,
-        categoryOpt,
-        categoryNameMap: nameToIDMap,
-        global: globalChannel.includes(channel.ID),
-      });
+    const muteArticle = () => {
+      const articles = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
+      const articleInfos = articles
+        .filter((article) => !article.href?.includes('#c_'))
+        .map((article) => {
+          [...article.classList].forEach((c) => {
+            if (c.includes('filtered')) {
+              article.classList.toggle(c, false);
+            }
+          });
+          return {
+            element: article,
+            user: getUserFilter(article.querySelector('.user-info')),
+            content: article.querySelector('.title')?.textContent || '',
+            channel: isGlogal
+              ? article.querySelector('.badge')?.textContent
+              : undefined,
+            category: !isGlogal
+              ? category.name2IdMap[
+                  article.querySelector('.badge')?.textContent
+                ] || '글머리없음'
+              : undefined,
+          };
+        });
+
+      const filteredList = filterContent(articleInfos, filter);
+      const result = Object.fromEntries(
+        Object.entries(filteredList)
+          .map(([key, value]) => {
+            if (key !== 'all') {
+              value.forEach((e) => {
+                if (key !== 'preview') e.classList.add('filtered');
+                e.classList.add(`filtered-${key}`);
+              });
+            }
+
+            return [key, value.length];
+          })
+          .filter((a) => a),
+      );
       setCount(result);
     };
 
@@ -128,13 +144,10 @@ function BoardMuter() {
       removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
   }, [
-    userList,
-    keywordList,
-    categoryOpt,
-    controlTarget,
-    nameToIDMap,
-    channelList,
     channel,
+    category,
+    filter,
+    controlTarget,
     addEventListener,
     removeEventListener,
   ]);
@@ -151,11 +164,11 @@ function BoardMuter() {
         ? trimEmotURL(e.src)
         : trimEmotURL(e.textContent.match(/(\/\/.+)type=list/g)[0]);
 
-      if (emotList.url[url]) {
+      if (filter.emoticon.url[url]) {
         e.parentNode.classList.add('filtered-emoticon');
       }
     });
-  }, [controlTarget, emotList]);
+  }, [controlTarget, filter.emoticon]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {
