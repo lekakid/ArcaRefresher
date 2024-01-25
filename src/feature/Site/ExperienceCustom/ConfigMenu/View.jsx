@@ -49,7 +49,13 @@ const View = React.forwardRef((_props, ref) => {
           <SelectRow
             divider
             primary="사이트 파비콘 변경"
-            secondary="사이트 대표 아이콘을 다른 사이트로 변경합니다."
+            secondary={
+              <>
+                사이트 대표 아이콘을 다른 사이트로 변경합니다.
+                <br />
+                사용 시 새 알림 기능이 비활성화됩니다.
+              </>
+            }
             value={presetFavicon}
             action={$setPresetFavicon}
           >
