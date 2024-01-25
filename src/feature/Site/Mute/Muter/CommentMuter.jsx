@@ -65,7 +65,7 @@ function CommentMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
-  const filter = useSelector((state) => filterSelector(state));
+  const filter = useSelector(filterSelector);
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
     useSelector((state) => state[Info.ID].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
