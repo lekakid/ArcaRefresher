@@ -50,10 +50,10 @@ const boardMuteStyles = (
 function BoardMuter() {
   const dispatch = useDispatch();
   const [addEventListener, removeEventListener] = useEvent();
-  const { channel: channelInfo, board: boardInfo } = useContent();
+  const { channel, category } = useContent();
 
   const { userList, keywordList, channelList, emotList, categoryOpt } =
-    useSelector((state) => filterSelector(state, channelInfo.ID));
+    useSelector((state) => filterSelector(state, channel.ID));
   const {
     boardBarPos,
     hideCountBar,
@@ -69,7 +69,7 @@ function BoardMuter() {
 
   // 카테고리 매핑 테이블
   useLayoutEffect(() => {
-    if (!boardInfo) return;
+    if (!category) return;
 
     const boardElement = document.querySelector(
       `${BOARD}, ${BOARD_IN_ARTICLE}`,
@@ -78,13 +78,13 @@ function BoardMuter() {
 
     setControlTarget(boardElement);
     const name2id = Object.fromEntries(
-      Object.entries(boardInfo.category).map(([key, value]) => [value, key]),
+      Object.entries(category.category).map(([key, value]) => [value, key]),
     );
     setNameToIDMap(name2id);
 
     const containerElement = document.createElement('div');
     setCountBarContainer(containerElement);
-  }, [dispatch, boardInfo]);
+  }, [dispatch, category]);
 
   useLayoutEffect(() => {
     if (!controlTarget) return;
@@ -114,7 +114,7 @@ function BoardMuter() {
         channelList,
         categoryOpt,
         categoryNameMap: nameToIDMap,
-        global: globalChannel.includes(channelInfo.ID),
+        global: globalChannel.includes(channel.ID),
       });
       setCount(result);
     };
@@ -134,7 +134,7 @@ function BoardMuter() {
     controlTarget,
     nameToIDMap,
     channelList,
-    channelInfo,
+    channel,
     addEventListener,
     removeEventListener,
   ]);

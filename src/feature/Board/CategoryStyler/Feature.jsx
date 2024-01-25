@@ -11,21 +11,21 @@ import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
   const [addEventListener, removeEventListener] = useEvent();
-  const { channel, board } = useContent();
+  const { channel, category } = useContent();
 
   const { color } = useSelector((state) => state[Info.ID].storage);
   const [keyMap, setKeyMap] = useState(null);
 
   useLayoutEffect(() => {
-    if (!board) return;
+    if (!category) return;
 
-    const entries = Object.values(board.category).map((value) => [
+    const entries = Object.values(category.id2NameMap).map((value) => [
       value,
       Math.random().toString(36).substring(2),
     ]);
 
     setKeyMap(Object.fromEntries(entries));
-  }, [board]);
+  }, [category]);
 
   useLayoutEffect(() => {
     if (!keyMap) return undefined;
@@ -52,7 +52,7 @@ export default function CategoryStyler() {
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
-    const colorKey = keyMap?.[board.category?.[key]];
+    const colorKey = keyMap?.[category.id2NameMap?.[key]];
     if (!colorKey) return '';
 
     return `.ARColor .color-${colorKey} {

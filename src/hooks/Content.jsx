@@ -41,7 +41,7 @@ const initialState = {
     ID: channelID,
     name: channelName,
   },
-  board: undefined,
+  category: undefined,
   article: undefined,
 };
 
@@ -56,15 +56,15 @@ const slice = createSlice({
     setChannel(state, action) {
       state.channel = action.payload;
     },
-    setBoard(state, action) {
-      state.board = action.payload;
+    setCategory(state, action) {
+      state.category = action.payload;
     },
     setArticle(state, action) {
       state.article = action.payload;
     },
   },
 });
-const { setUser, setChannel, setBoard, setArticle } = slice.actions;
+const { setUser, setChannel, setCategory, setArticle } = slice.actions;
 export const ContentReducerEntrie = [HOOK_NAME, slice.reducer];
 
 export function ContentCollector() {
@@ -114,7 +114,7 @@ export function ContentCollector() {
     if (!boardLoaded) return;
 
     try {
-      const categoryEntries = [
+      const id2NameMapEntries = [
         ...document.querySelectorAll('.board-category a'),
       ].map((element) => {
         if (!element.href.includes('category='))
@@ -126,11 +126,16 @@ export function ContentCollector() {
         return [id, text];
       });
 
-      if (categoryEntries.length === 0) throw new Error();
+      if (id2NameMapEntries.length === 0) throw new Error();
 
+      const name2IdMapEntries = id2NameMapEntries.map(([key, value]) => [
+        value,
+        key,
+      ]);
       dispatch(
-        setBoard({
-          category: Object.fromEntries(categoryEntries),
+        setCategory({
+          id2NameMap: Object.fromEntries(id2NameMapEntries),
+          name2IdMap: Object.fromEntries(name2IdMapEntries),
         }),
       );
     } catch (error) {

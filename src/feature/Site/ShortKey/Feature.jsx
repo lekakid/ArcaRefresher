@@ -24,7 +24,7 @@ export default function ShortKey() {
 
     const activeActionTable = actionTable.filter(({ active }) => {
       if (content.article) return active.indexOf('article') > -1;
-      if (content.board) return active.indexOf('board') > -1;
+      if (content.category) return active.indexOf('board') > -1;
       return false;
     });
     const keyMap = Object.fromEntries(

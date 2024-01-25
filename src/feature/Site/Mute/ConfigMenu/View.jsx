@@ -44,7 +44,7 @@ const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channel: channelInfo, board: boardInfo } = useContent();
+  const { channel, category } = useContent();
 
   const {
     contextRange,
@@ -59,7 +59,7 @@ const View = React.forwardRef((_props, ref) => {
     keyword: keywordList,
     channel: channelList,
     muteAllEmot,
-    category: { [channelInfo.ID]: category },
+    category: { [channel.ID]: categoryConfig },
   } = useSelector((state) => state[Info.ID].storage);
   const emotRows = useSelector(emoticonTableSelector);
 
@@ -84,13 +84,13 @@ const View = React.forwardRef((_props, ref) => {
     (id, value) => {
       dispatch(
         $setCategoryConfig({
-          channel: channelInfo.ID,
+          channel: channel.ID,
           category: id,
           config: value,
         }),
       );
     },
-    [channelInfo, dispatch],
+    [channel, dispatch],
   );
 
   return (
@@ -220,26 +220,26 @@ const View = React.forwardRef((_props, ref) => {
             <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <Grid container>
-                  {!boardInfo?.category && (
-                    <Grid item xs={12}>
-                      <Typography align="center">
-                        카테고리를 확인할 수 없습니다.
-                      </Typography>
-                    </Grid>
-                  )}
-                  {boardInfo?.category &&
-                    Object.entries(boardInfo.category).map(
+                  {category?.id2NameMap ? (
+                    Object.entries(category.id2NameMap).map(
                       ([id, label], index) => (
                         <CategoryRow
                           key={id}
                           divider={index !== 0}
                           id={id}
                           label={label}
-                          initValue={category?.[id]}
+                          initValue={categoryConfig?.[id]}
                           onChange={handleCategory}
                         />
                       ),
-                    )}
+                    )
+                  ) : (
+                    <Grid item xs={12}>
+                      <Typography align="center">
+                        카테고리를 확인할 수 없습니다.
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </Paper>
             </Box>
