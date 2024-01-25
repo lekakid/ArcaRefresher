@@ -3,7 +3,6 @@ import { GlobalStyles, IconButton, Portal } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 
 import {
-  COMMENT,
   COMMENT_TITLE,
   COMMENT_SUBTITLE,
   COMMENT_INNER,
@@ -33,50 +32,50 @@ function CommentRefresh() {
   });
   const comment = useRef(undefined);
 
+  const handleClick = useCallback(
+    async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      const response = await fetch(window.location.href);
+      if (!response.ok) {
+        console.warn('[CommentRefresh] 네트워크 오류');
+        return;
+      }
+
+      const text = await response.text();
+      const resultDocument = toDocument(text);
+      const newComments = resultDocument.querySelector(COMMENT_INNER);
+      if (!newComments) return;
+
+      comment.current.replaceWith(newComments);
+      comment.current = newComments;
+      newComments
+        .querySelector('.fetch-comment')
+        .addEventListener('click', handleClick);
+      unsafeWindow.applyLocalTimeFix();
+      dispatchEvent(EVENT_COMMENT_REFRESH);
+    },
+    [dispatchEvent],
+  );
+
   // 초기화
   useEffect(() => {
     if (!commentLoaded) return;
 
     const initComment = document.querySelector(COMMENT_INNER);
     comment.current = initComment;
+    initComment
+      .querySelector('.fetch-comment')
+      .addEventListener('click', handleClick);
+
     const top = document.createElement('span');
     const bottom = document.createElement('span');
     document.querySelector(COMMENT_TITLE)?.append(top);
     document.querySelector(COMMENT_SUBTITLE)?.prepend(bottom);
 
     setTitle({ top, bottom });
-  }, [commentLoaded]);
-
-  useEffect(() => {
-    if (!commentLoaded) return;
-
-    const observer = new MutationObserver(() => {
-      if (comment.current.parentElement) return;
-
-      comment.current = document.querySelector(COMMENT_INNER);
-      dispatchEvent(EVENT_COMMENT_REFRESH);
-    });
-    observer.observe(comment.current.closest(COMMENT), {
-      childList: true,
-      subtree: true,
-    });
-  }, [commentLoaded, dispatchEvent]);
-
-  const handleClick = useCallback(async () => {
-    const response = await fetch(window.location.href);
-    if (!response.ok) {
-      console.warn('[CommentRefresh] 네트워크 오류');
-      return;
-    }
-
-    const text = await response.text();
-    const resultDocument = toDocument(text);
-    const newComments = resultDocument.querySelector(COMMENT_INNER);
-    if (!newComments) return;
-
-    comment.current.replaceWith(newComments);
-    unsafeWindow.applyLocalTimeFix();
-  }, []);
+  }, [commentLoaded, handleClick]);
 
   return (
     <>
