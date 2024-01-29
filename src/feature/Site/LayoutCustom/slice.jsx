@@ -17,6 +17,7 @@ const defaultStorage = {
   sideNews: true,
   avatar: true,
   userinfoWidth: 10,
+  rateCount: true,
   // 게시물
   hideDefaultImage: false,
   resizeImage: 100,
@@ -91,8 +92,12 @@ export const slice = createSlice({
     $toggleAvatar(state) {
       state.storage.avatar = !state.storage.avatar;
     },
+    // 게시판
     $setUserInfoWith(state, action) {
       state.storage.userinfoWidth = action.payload;
+    },
+    $toggleRateCount(state) {
+      state.storage.rateCount = !state.storage.rateCount;
     },
     // 게시물
     $toggleDefaultImage(state) {
@@ -146,6 +151,7 @@ export const {
   $toggleSideNews,
   $toggleAvatar,
   $setUserInfoWith,
+  $toggleRateCount,
   // 게시물
   $toggleDefaultImage,
   $setResizeImage,

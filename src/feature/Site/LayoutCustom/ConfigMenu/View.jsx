@@ -21,6 +21,7 @@ import {
   $toggleSideMenu,
   $toggleAvatar,
   $setUserInfoWith,
+  $toggleRateCount,
   $toggleUnvote,
   $toggleModifiedIndicator,
   $toggleLongComment,
@@ -58,6 +59,7 @@ const View = React.forwardRef((_props, ref) => {
     sideMenu,
     avatar,
     userinfoWidth,
+    rateCount,
     hideDefaultImage,
     resizeImage,
     resizeVideo,
@@ -159,16 +161,26 @@ const View = React.forwardRef((_props, ref) => {
             </>
           )}
           <SwitchRow
-            divider
             primary="이용자 아바타 표시"
             value={avatar}
             action={$toggleAvatar}
           />
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">게시판</Typography>
+      <Paper>
+        <List disablePadding>
           <SliderRow
+            divider
             primary="게시판 이용자 너비"
             opacityOnChange={0.6}
             value={userinfoWidth}
             action={$setUserInfoWith}
+          />
+          <SwitchRow
+            primary="추천 수 표시"
+            value={rateCount}
+            action={$toggleRateCount}
           />
         </List>
       </Paper>
