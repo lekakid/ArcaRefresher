@@ -41,6 +41,45 @@ const commentMuteStyles = (
           '&.show-filtered-user .comment-wrapper.filtered-user': {
             display: 'block',
           },
+          '& .comment-item.muted-keyword': {
+            '& .text pre': {
+              color: 'var(--color-text-muted) !important',
+            },
+            color: 'var(--color-text-muted) !important',
+          },
+          '&:not(.show-filtered):not(.show-filtered-keyword) .comment-item.muted-keyword':
+            {
+              '& .text pre': {
+                display: 'none',
+              },
+              '& .text:after': {
+                content: '"[키워드 뮤트됨]"',
+              },
+            },
+          '& .comment-item.muted-user': {
+            '& .text pre': {
+              color: 'var(--color-text-muted) !important',
+            },
+            color: 'var(--color-text-muted) !important',
+          },
+          '&:not(.show-filtered):not(.show-filtered-user) .comment-item.muted-user':
+            {
+              '& .text pre': {
+                display: 'none',
+              },
+              '& .text:after': {
+                content: '"[이용자 뮤트됨]"',
+              },
+              '& .emoticon-wrapper': {
+                '& .emoticon': {
+                  display: 'none',
+                },
+                '&:after': {
+                  content: '"[이용자 뮤트됨]"',
+                },
+                height: 0,
+              },
+            },
           '& .emoticon-muted': {
             '& .emoticon-wrapper': {
               width: 'auto !important',
@@ -152,26 +191,23 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ),
       ];
-      const commentInfos = comments.map((comment) => {
-        [...comment.classList].forEach((c) => {
-          if (c.includes('filtered')) {
-            comment.classList.toggle(c, false);
-          }
-        });
-        return {
-          element: comment,
-          user: getUserFilter(comment.querySelector('.user-info')),
-          content: comment.querySelector('.message')?.textContent || '',
-        };
-      });
+      const commentInfos = comments.map((comment) => ({
+        element: comment,
+        user: getUserFilter(comment.querySelector('.user-info')),
+        content: comment.querySelector('.message')?.textContent || '',
+      }));
 
       const filteredList = filterContent(commentInfos, filter);
       const result = Object.fromEntries(
         Object.entries(filteredList).map(([key, value]) => {
           if (key !== 'all') {
             value.forEach((e) => {
-              e.classList.add('filtered');
-              e.classList.add(`filtered-${key}`);
+              if (hideMutedMark || e.matches('.comment-wrapper')) {
+                e.classList.add('filtered');
+                e.classList.add(`filtered-${key}`);
+              } else {
+                e.classList.add(`muted-${key}`);
+              }
             });
           }
 
@@ -181,17 +217,33 @@ function CommentMuter() {
       setCount(result);
     };
 
-    if (document.readyState === 'complete') muteComment();
-    window.addEventListener('load', muteComment);
+    if (document.readyState === 'complete') {
+      muteComment();
+    } else {
+      window.addEventListener('load', muteComment);
+    }
     addEventListener(EVENT_COMMENT_REFRESH, muteComment);
 
     return () => {
+      [
+        ...document.querySelectorAll(
+          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+        ),
+      ].forEach((comment) => {
+        [...comment.classList].forEach((c) => {
+          if (c.includes('filtered') || c.includes('muted')) {
+            comment.classList.remove(c);
+          }
+        });
+      });
+
       window.removeEventListener('load', muteComment);
       removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
   }, [
     controlTarget,
     filter,
+    hideMutedMark,
     muteIncludeReply,
     addEventListener,
     removeEventListener,

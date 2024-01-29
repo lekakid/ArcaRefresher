@@ -111,9 +111,23 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
         <List disablePadding>
+          <SwitchRow
+            divider
+            primary="[공통] 뮤트 카운트 바 숨김"
+            secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
+            value={hideCountBar}
+            action={$toggleCountBar}
+          />
+          <SwitchRow
+            divider
+            primary="[공통] 뮤트 표시 숨김"
+            secondary="변경 후 새로고침 필요"
+            value={hideMutedMark}
+            action={$toggleMutedMark}
+          />
           <SelectRow
             divider
-            primary="뮤트 카운트 바 위치"
+            primary="[게시판] 뮤트 카운트 바 위치"
             value={boardBarPos}
             action={$setBoardBarPos}
           >
@@ -121,21 +135,7 @@ const View = React.forwardRef((_props, ref) => {
             <MenuItem value="afterend">게시판 아래</MenuItem>
           </SelectRow>
           <SwitchRow
-            divider
-            primary="뮤트 카운트 바 숨김"
-            secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
-            value={hideCountBar}
-            action={$toggleCountBar}
-          />
-          <SwitchRow
-            divider
-            primary="[뮤트됨] 표시 숨김"
-            secondary="변경 후 새로고침 필요"
-            value={hideMutedMark}
-            action={$toggleMutedMark}
-          />
-          <SwitchRow
-            primary="댓글 뮤트 시 답글도 같이 뮤트"
+            primary="[댓글] 답글도 같이 뮤트"
             value={muteIncludeReply}
             action={$toggleIncludeReply}
           />
