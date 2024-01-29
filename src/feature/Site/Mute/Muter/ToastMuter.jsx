@@ -31,7 +31,7 @@ const toastMuteStyles = (
 function ToastMuter() {
   const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
 
-  const { userList, emotList } = useSelector(filterSelector);
+  const filter = useSelector(filterSelector);
   const { hideMutedMark, muteAllEmot } = useSelector(
     (state) => state[Info.ID].storage,
   );
@@ -46,7 +46,7 @@ function ToastMuter() {
       // 이모티콘 뮤트 처리
       if (noti.mediaUrl) {
         const url = trimEmotURL(noti.mediaUrl);
-        if (muteAllEmot || emotList.url[url]) {
+        if (muteAllEmot || filter.emoticon.url[url]) {
           if (hideMutedMark) {
             Object.defineProperty(e, 'ignore', { value: true });
             return;
@@ -60,7 +60,7 @@ function ToastMuter() {
 
       // 사용자 뮤트
       const regex =
-        userList.length > 0 ? new RegExp(userList.join('|')) : undefined;
+        filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
       if (regex?.test(noti.username)) {
         if (hideMutedMark) {
           Object.defineProperty(e, 'ignore', { value: true });
@@ -79,14 +79,7 @@ function ToastMuter() {
     subscribeSocket(subscriber);
 
     return () => unsubscribeSocket(subscriber);
-  }, [
-    emotList,
-    userList,
-    hideMutedMark,
-    muteAllEmot,
-    subscribeSocket,
-    unsubscribeSocket,
-  ]);
+  }, [filter, hideMutedMark, muteAllEmot, subscribeSocket, unsubscribeSocket]);
 
   return toastMuteStyles;
 }
