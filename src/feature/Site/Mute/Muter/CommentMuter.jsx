@@ -195,6 +195,9 @@ function CommentMuter() {
         element: comment,
         user: getUserFilter(comment.querySelector('.user-info')),
         content: comment.querySelector('.message')?.textContent || '',
+        deleted: muteIncludeReply
+          ? comment.querySelector('.comment-item').classList.contains('deleted')
+          : comment.classList.contains('deleted'),
       }));
 
       const filteredList = filterContent(commentInfos, filter);
@@ -202,7 +205,11 @@ function CommentMuter() {
         Object.entries(filteredList).map(([key, value]) => {
           if (key !== 'all') {
             value.forEach((e) => {
-              if (hideMutedMark || e.matches('.comment-wrapper')) {
+              if (
+                key === 'deleted' ||
+                hideMutedMark ||
+                e.matches('.comment-wrapper')
+              ) {
                 e.classList.add('filtered');
                 e.classList.add(`filtered-${key}`);
               } else {
