@@ -11,6 +11,7 @@ import { Fade, GlobalStyles } from '@mui/material';
 import { BOARD_LOADED, BOARD } from 'core/selector';
 import { EVENT_BOARD_REFRESH, useDispatchEvent } from 'hooks/Event';
 import { useLoadChecker } from 'hooks/LoadChecker';
+import { useArcaSocket } from 'hooks/WebSocket';
 
 import Info from './FeatureInfo';
 import RefreshIndicator from './RefreshProgress';
@@ -50,6 +51,7 @@ function parseSearch(searchString) {
 
 function AutoRefresher() {
   const dispatchEvent = useDispatchEvent();
+  const [subscribe, unsubscribe] = useArcaSocket();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
   const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
@@ -143,35 +145,17 @@ function AutoRefresher() {
 
   // 웹 소켓 셋업
   useEffect(() => {
-    if (!boardLoaded) return;
+    if (!boardLoaded) return undefined;
 
-    const { host, pathname, search } = window.location;
-
-    const connect = () => {
-      // 아카라이브 WebSocket 연결
-      const sock = new WebSocket(`wss://${host}/arcalive`, 'arcalive');
-      const path = pathname.split('/').slice(0, 3).join('/');
-
-      sock.onopen = () => {
-        sock.send('hello');
-        // 최신 게시물 페이지 일정 범위 이내라면 검색 조건에 관계 없이 항상 새글 알림이 옴
-        sock.send(`c|${path}${search}`);
-      };
-      sock.onmessage = (e) => {
-        // 새 게시물이 있음
-        if (e.data === 'na') refreshData.current.newArticle += 1;
-      };
-      // 연결을 닫은 경우 1초 대기 후 재연결
-      sock.onclose = () => {
-        setTimeout(connect, 1000);
-      };
-      // 오류로 끊긴 경우 1초 대기 후 재연결
-      sock.onerror = () => {
-        setTimeout(connect, 1000);
-      };
+    const onmessage = (e) => {
+      if (e.data === 'na') refreshData.current.newArticle += 1;
     };
-    connect();
-  }, [boardLoaded]);
+
+    const subscriber = { callback: onmessage, type: 'after' };
+    subscribe(subscriber);
+
+    return () => unsubscribe(subscriber);
+  }, [boardLoaded, subscribe, unsubscribe]);
 
   useEffect(() => {
     if (!enabled) return undefined;

@@ -16,7 +16,9 @@ export function getUserNick(infoElement) {
     return nick;
   }
 
-  const anchor = infoElement.querySelector('a');
+  const anchor = infoElement.matches('a')
+    ? infoElement
+    : infoElement.querySelector('a');
   if (anchor) {
     const nick = anchor.title || anchor.textContent.replace('@', '');
     return nick || '';
@@ -35,7 +37,9 @@ export function getUserID(infoElement) {
     return id || nick;
   }
 
-  const anchor = infoElement.querySelector('a');
+  const anchor = infoElement.matches('a')
+    ? infoElement
+    : infoElement.querySelector('a');
   if (anchor) {
     const nick = anchor.title || anchor.textContent.replace('@', '');
     return nick || '';

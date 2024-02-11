@@ -87,7 +87,9 @@ export default [
           return;
         }
       }
-      const currentPage = document.querySelector('.pagination-wrapper .active');
+      const currentPage = document.querySelector(
+        '.article-list~.pagination-wrapper .active',
+      );
       currentPage.previousElementSibling?.querySelector('a').click();
     },
   },
@@ -119,7 +121,9 @@ export default [
           return;
         }
       }
-      const currentPage = document.querySelector('.pagination-wrapper .active');
+      const currentPage = document.querySelector(
+        '.article-list~.pagination-wrapper .active',
+      );
       currentPage.nextElementSibling?.querySelector('a').click();
     },
   },

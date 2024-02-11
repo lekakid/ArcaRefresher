@@ -41,6 +41,45 @@ const commentMuteStyles = (
           '&.show-filtered-user .comment-wrapper.filtered-user': {
             display: 'block',
           },
+          '& .comment-item.muted-keyword': {
+            '& .text pre': {
+              color: 'var(--color-text-muted) !important',
+            },
+            color: 'var(--color-text-muted) !important',
+          },
+          '&:not(.show-filtered):not(.show-filtered-keyword) .comment-item.muted-keyword':
+            {
+              '& .text pre': {
+                display: 'none',
+              },
+              '& .text:after': {
+                content: '"[키워드 뮤트됨]"',
+              },
+            },
+          '& .comment-item.muted-user': {
+            '& .text pre': {
+              color: 'var(--color-text-muted) !important',
+            },
+            color: 'var(--color-text-muted) !important',
+          },
+          '&:not(.show-filtered):not(.show-filtered-user) .comment-item.muted-user':
+            {
+              '& .text pre': {
+                display: 'none',
+              },
+              '& .text:after': {
+                content: '"[이용자 뮤트됨]"',
+              },
+              '& .emoticon-wrapper': {
+                '& .emoticon': {
+                  display: 'none',
+                },
+                '&:after': {
+                  content: '"[이용자 뮤트됨]"',
+                },
+                height: 0,
+              },
+            },
           '& .emoticon-muted': {
             '& .emoticon-wrapper': {
               width: 'auto !important',
@@ -65,9 +104,7 @@ function CommentMuter() {
   const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
-  const { userList, keywordList, emotList } = useSelector((state) =>
-    filterSelector(state),
-  );
+  const filter = useSelector(filterSelector);
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
     useSelector((state) => state[Info.ID].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
@@ -106,14 +143,15 @@ function CommentMuter() {
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ).classList.toggle(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          muteAllEmot || !!emotList.bundle[id],
+          muteAllEmot || !!filter.emoticon.bundle[id],
         );
 
-        if (!(muteAllEmot || emotList.bundle[id]) || hideMutedMark) return;
+        if (!(muteAllEmot || filter.emoticon.bundle[id]) || hideMutedMark)
+          return;
         const muted = document.createElement('span');
         muted.append('[아카콘 뮤트됨]');
         muted.classList.add('muted');
-        muted.title = muteAllEmot ? '알 수 없음' : emotList.bundle[id];
+        muted.title = muteAllEmot ? '알 수 없음' : filter.emoticon.bundle[id];
         c.closest('.emoticon-wrapper').append(muted);
       });
     };
@@ -135,7 +173,7 @@ function CommentMuter() {
     };
   }, [
     commentLoaded,
-    emotList,
+    filter.emoticon,
     hideMutedMark,
     muteIncludeReply,
     muteAllEmot,
@@ -148,37 +186,71 @@ function CommentMuter() {
     if (!controlTarget) return undefined;
 
     const muteComment = () => {
-      const items = [
+      const comments = [
         ...document.querySelectorAll(
           muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
         ),
       ];
-      const itemContents = items.map((c) => ({
-        element: c,
-        user: getUserFilter(c.querySelector('.user-info')),
-        content: c.querySelector('.message')?.textContent || '',
-        category: '',
+      const commentInfos = comments.map((comment) => ({
+        element: comment,
+        user: getUserFilter(comment.querySelector('.user-info')),
+        content: comment.querySelector('.message')?.textContent || '',
+        deleted: muteIncludeReply
+          ? comment.querySelector('.comment-item').classList.contains('deleted')
+          : comment.classList.contains('deleted'),
       }));
 
-      const result = filterContent(itemContents, {
-        userList,
-        keywordList,
-      });
+      const filteredList = filterContent(commentInfos, filter);
+      const result = Object.fromEntries(
+        Object.entries(filteredList).map(([key, value]) => {
+          if (key !== 'all') {
+            value.forEach((e) => {
+              if (
+                key === 'deleted' ||
+                hideMutedMark ||
+                e.matches('.comment-wrapper')
+              ) {
+                e.classList.add('filtered');
+                e.classList.add(`filtered-${key}`);
+              } else {
+                e.classList.add(`muted-${key}`);
+              }
+            });
+          }
+
+          return [key, value.length];
+        }),
+      );
       setCount(result);
     };
 
-    if (document.readyState === 'complete') muteComment();
-    window.addEventListener('load', muteComment);
+    if (document.readyState === 'complete') {
+      muteComment();
+    } else {
+      window.addEventListener('load', muteComment);
+    }
     addEventListener(EVENT_COMMENT_REFRESH, muteComment);
 
     return () => {
+      [
+        ...document.querySelectorAll(
+          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+        ),
+      ].forEach((comment) => {
+        [...comment.classList].forEach((c) => {
+          if (c.includes('filtered') || c.includes('muted')) {
+            comment.classList.remove(c);
+          }
+        });
+      });
+
       window.removeEventListener('load', muteComment);
       removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
   }, [
     controlTarget,
-    userList,
-    keywordList,
+    filter,
+    hideMutedMark,
     muteIncludeReply,
     addEventListener,
     removeEventListener,

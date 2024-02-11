@@ -9,14 +9,16 @@ import { setOpen } from './slice';
 
 export default function HeaderButton() {
   const dispatch = useDispatch();
-  const [nav, setNav] = useState(null);
+  const [navEl, setNavEl] = useState(null);
   const navigationLoaded = useLoadChecker(NAVIGATION_LOADED);
 
   useEffect(() => {
     if (navigationLoaded) {
       const container = document.createElement('div');
-      document.querySelector(NAVIGATION_MENU).appendChild(container);
-      setNav(container);
+      const nav = document.querySelector(NAVIGATION_MENU);
+      const searchbarEl = nav.querySelector('.nav-channel-search-wrapper');
+      nav.insertBefore(container, searchbarEl);
+      setNavEl(container);
       return undefined;
     }
 
@@ -38,7 +40,7 @@ export default function HeaderButton() {
     [dispatch],
   );
 
-  if (!nav) return null;
+  if (!navEl) return null;
 
   return ReactDOM.createPortal(
     <li className="nav-item dropdown">
@@ -51,6 +53,6 @@ export default function HeaderButton() {
         </span>
       </a>
     </li>,
-    nav,
+    navEl,
   );
 }

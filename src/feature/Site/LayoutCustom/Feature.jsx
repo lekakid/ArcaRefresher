@@ -27,7 +27,21 @@ function TopNewsStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        '.topbar-area': {
+        'li.topbar-area': {
+          display: 'none !important',
+        },
+      }}
+    />
+  );
+}
+
+function SearchBarStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        'html li.nav-channel-search-wrapper': {
           display: 'none !important',
         },
       }}
@@ -188,12 +202,36 @@ function AvatarStyles({ value }) {
   );
 }
 
+// ------------- 게시판 -------------
 function UserInfoWidthStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
         '.vcol.col-author': {
           width: `calc(7rem * (1 + ${value * 0.01})) !important`,
+        },
+      }}
+    />
+  );
+}
+
+function RateCount({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        'html body.body .board-article .article-list .list-table': {
+          '& .vrow-inner .vrow-bottom .vcol.col-view': {
+            '&::after': {
+              content: '""',
+              margin: 0,
+            },
+            marginRight: 0,
+          },
+          '& .vcol.col-rate': {
+            display: 'none !important',
+          },
         },
       }}
     />
@@ -390,6 +428,7 @@ export default function LayoutCustom() {
     enabled,
     notifyPosition,
     topNews,
+    searchBar,
     recentVisit,
     sideMenu,
     sideContents,
@@ -397,6 +436,7 @@ export default function LayoutCustom() {
     sideNews,
     avatar,
     userinfoWidth,
+    rateCount,
     hideDefaultImage,
     resizeImage,
     resizeVideo,
@@ -416,6 +456,7 @@ export default function LayoutCustom() {
     <>
       <NotifyPositionStyles value={notifyPosition} />
       <TopNewsStyles value={topNews} />
+      <SearchBarStyles value={searchBar} />
       <RecentVisitStyles value={recentVisit} />
       <SideMenuStyles value={sideMenu} />
       <SideContentsStyles value={sideContents} />
@@ -423,6 +464,7 @@ export default function LayoutCustom() {
       <SideNewsStyles value={sideNews} />
       <AvatarStyles value={avatar} />
       <UserInfoWidthStyles value={userinfoWidth} />
+      <RateCount value={rateCount} />
       <HideDefaultImageStyles value={hideDefaultImage} />
       <ResizeImageStyles value={resizeImage} />
       <ResizeVideoStyles value={resizeVideo} />

@@ -32,7 +32,6 @@ import {
   $setBoardBarPos,
   $toggleHideNoticeService,
   $toggleHideClosedDeal,
-  $toggleMK2,
   $setContextRange,
   $setChannel,
   $setEmoticonList,
@@ -45,10 +44,9 @@ const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
-  const { channel: channelInfo, board: boardInfo } = useContent();
+  const { channel, category } = useContent();
 
   const {
-    mk2,
     contextRange,
     boardBarPos,
     hideCountBar,
@@ -61,7 +59,7 @@ const View = React.forwardRef((_props, ref) => {
     keyword: keywordList,
     channel: channelList,
     muteAllEmot,
-    category: { [channelInfo.ID]: category },
+    category: { [channel.ID]: categoryConfig },
   } = useSelector((state) => state[Info.ID].storage);
   const emotRows = useSelector(emoticonTableSelector);
 
@@ -86,13 +84,13 @@ const View = React.forwardRef((_props, ref) => {
     (id, value) => {
       dispatch(
         $setCategoryConfig({
-          channel: channelInfo.ID,
+          channel: channel.ID,
           category: id,
           config: value,
         }),
       );
     },
-    [channelInfo, dispatch],
+    [channel, dispatch],
   );
 
   return (
@@ -100,13 +98,6 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <SwitchRow
-            divider
-            primary="알림 뮤트 MK.2 (실험적)"
-            secondary="뮤트 기능을 소켓 단계에서 막는 걸로 변경합니다."
-            value={mk2}
-            action={$toggleMK2}
-          />
           <SelectRow
             primary="우클릭 메뉴 호출 범위"
             value={contextRange}
@@ -120,9 +111,23 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
         <List disablePadding>
+          <SwitchRow
+            divider
+            primary="[공통] 뮤트 카운트 바 숨김"
+            secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
+            value={hideCountBar}
+            action={$toggleCountBar}
+          />
+          <SwitchRow
+            divider
+            primary="[공통] 뮤트 표시 숨김"
+            secondary="변경 후 새로고침 필요"
+            value={hideMutedMark}
+            action={$toggleMutedMark}
+          />
           <SelectRow
             divider
-            primary="뮤트 카운트 바 위치"
+            primary="[게시판] 뮤트 카운트 바 위치"
             value={boardBarPos}
             action={$setBoardBarPos}
           >
@@ -130,21 +135,7 @@ const View = React.forwardRef((_props, ref) => {
             <MenuItem value="afterend">게시판 아래</MenuItem>
           </SelectRow>
           <SwitchRow
-            divider
-            primary="뮤트 카운트 바 숨김"
-            secondary="뮤트된 게시물이 몇개인지 표시되는 바를 제거합니다."
-            value={hideCountBar}
-            action={$toggleCountBar}
-          />
-          <SwitchRow
-            divider
-            primary="[뮤트됨] 표시 숨김"
-            secondary="변경 후 새로고침 필요"
-            value={hideMutedMark}
-            action={$toggleMutedMark}
-          />
-          <SwitchRow
-            primary="댓글 뮤트 시 답글도 같이 뮤트"
+            primary="[댓글] 답글도 같이 뮤트"
             value={muteIncludeReply}
             action={$toggleIncludeReply}
           />
@@ -229,26 +220,26 @@ const View = React.forwardRef((_props, ref) => {
             <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <Grid container>
-                  {!boardInfo?.category && (
-                    <Grid item xs={12}>
-                      <Typography align="center">
-                        카테고리를 확인할 수 없습니다.
-                      </Typography>
-                    </Grid>
-                  )}
-                  {boardInfo?.category &&
-                    Object.entries(boardInfo.category).map(
+                  {category?.id2NameMap ? (
+                    Object.entries(category.id2NameMap).map(
                       ([id, label], index) => (
                         <CategoryRow
                           key={id}
                           divider={index !== 0}
                           id={id}
                           label={label}
-                          initValue={category?.[id]}
+                          initValue={categoryConfig?.[id]}
                           onChange={handleCategory}
                         />
                       ),
-                    )}
+                    )
+                  ) : (
+                    <Grid item xs={12}>
+                      <Typography align="center">
+                        카테고리를 확인할 수 없습니다.
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </Paper>
             </Box>

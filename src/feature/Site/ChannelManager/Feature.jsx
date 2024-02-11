@@ -18,6 +18,7 @@ import { Folder } from '@mui/icons-material';
 import { NAVIGATION_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
+import { stringifyQuery } from 'func/http';
 import SubsChannelManager from './SubsChannelManager';
 import { setNavChannelInfo } from './slice';
 import Info from './FeatureInfo';
@@ -45,6 +46,32 @@ function ListFolder({ group, children }) {
 ListFolder.propTypes = {
   group: PropTypes.string,
   children: PropTypes.node,
+};
+
+function ChannelItem({ id, label, memo, best }) {
+  const search = {};
+  if (best) search.mode = 'best';
+
+  return (
+    <ListItem dense disablePadding>
+      <ListItemButton
+        component={Link}
+        href={`/b/${id}${stringifyQuery(search)}`}
+      >
+        <ListItemText
+          disableTypography
+          primary={`${label}${memo ? ` - ${memo}` : ''}`}
+        />
+      </ListItemButton>
+    </ListItem>
+  );
+}
+
+ChannelItem.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  memo: PropTypes.string,
+  best: PropTypes.bool,
 };
 
 export default function ChannelManager() {
@@ -110,6 +137,71 @@ export default function ChannelManager() {
   }, []);
 
   if (!enabled) return null;
+
+  let groupChildren;
+  if (groupList.length > 0) {
+    groupChildren = (
+      <>
+        <Divider />
+        <List>
+          {groupList.map((group) => {
+            const filteredChannel = navChannelInfo.subs.filter(({ id }) =>
+              channelInfoTable[id]?.groups.includes(group),
+            );
+
+            return (
+              <ListFolder key={group} group={group}>
+                {filteredChannel.length === 0 && (
+                  <ListItem dense>이 그룹은 비어있습니다.</ListItem>
+                )}
+                {filteredChannel.map(({ label, id }) => (
+                  <ChannelItem
+                    id={id}
+                    label={label}
+                    memo={channelInfoTable[id]?.memo || ''}
+                    best={channelInfoTable[id]?.best}
+                  />
+                ))}
+              </ListFolder>
+            );
+          })}
+        </List>
+      </>
+    );
+  }
+
+  const remainChannels = navChannelInfo.subs.filter(
+    ({ id }) => !(channelInfoTable[id]?.groups.length > 0),
+  );
+
+  let remainChannelChildren;
+  if (remainChannels.length > 0) {
+    remainChannelChildren = (
+      <>
+        <Divider />
+        <List>
+          {remainChannels.map(({ label, id }) => (
+            <ChannelItem
+              id={id}
+              label={label}
+              memo={channelInfoTable[id]?.memo || ''}
+              best={channelInfoTable[id]?.best}
+            />
+          ))}{' '}
+        </List>
+      </>
+    );
+  } else if (groupList.length === 0) {
+    remainChannelChildren = (
+      <>
+        <Divider />
+        <List>
+          <ListItem>구독 채널이 없습니다.</ListItem>
+        </List>
+      </>
+    );
+  }
+
   return (
     <>
       <Portal container={container?.subs}>
@@ -151,59 +243,8 @@ export default function ChannelManager() {
               </ListItemButton>
             </ListItem>
           </List>
-          {groupList.length > 0 && (
-            <>
-              <Divider />
-              <List>
-                {groupList.map((group) => {
-                  const filteredChannel = navChannelInfo.subs.filter(({ id }) =>
-                    channelInfoTable[id]?.groups.includes(group),
-                  );
-
-                  return (
-                    <ListFolder key={group} group={group}>
-                      {filteredChannel.length === 0 && (
-                        <ListItem dense>이 그룹은 비어있습니다.</ListItem>
-                      )}
-                      {filteredChannel.map(({ label, id }) => (
-                        <ListItem key={id} dense disablePadding>
-                          <ListItemButton component={Link} href={`/b/${id}`}>
-                            <ListItemText
-                              disableTypography
-                              primary={`${label}${
-                                channelInfoTable[id]?.memo
-                                  ? ` - ${channelInfoTable[id]?.memo}`
-                                  : ''
-                              }`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      ))}
-                    </ListFolder>
-                  );
-                })}
-              </List>
-            </>
-          )}
-          <Divider />
-          <List>
-            {navChannelInfo.subs
-              .filter(({ id }) => !(channelInfoTable[id]?.groups.length > 0))
-              .map(({ label, id }) => (
-                <ListItem key={id} dense disablePadding>
-                  <ListItemButton component={Link} href={`/b/${id}`}>
-                    <ListItemText
-                      disableTypography
-                      primary={`${label}${
-                        channelInfoTable[id]?.memo
-                          ? ` - ${channelInfoTable[id]?.memo}`
-                          : ''
-                      }`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-          </List>
+          {groupChildren}
+          {remainChannelChildren}
         </Popover>
       </Portal>
       <SubsChannelManager

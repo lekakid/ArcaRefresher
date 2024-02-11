@@ -3,8 +3,18 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
+const defaultFavicon = {
+  '': '',
+  google: 'https://www.google.com/s2/favicons?sz=64&domain=google.com',
+  gmail: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico',
+  naver: 'https://www.google.com/s2/favicons?sz=64&domain=naver.com',
+  custom: '',
+};
+
 const defaultStorage = {
   spoofTitle: '',
+  presetFavicon: '',
+  spoofFavicon: '',
   openArticleNewWindow: false,
   blockMediaNewWindow: false,
   ignoreExternalLinkWarning: false,
@@ -25,6 +35,13 @@ export const slice = createSlice({
   reducers: {
     $setSpoofTitle(state, action) {
       state.storage.spoofTitle = action.payload;
+    },
+    $setPresetFavicon(state, action) {
+      state.storage.presetFavicon = action.payload;
+      state.storage.spoofFavicon = defaultFavicon[action.payload];
+    },
+    $setSpoofFavicon(state, action) {
+      state.storage.spoofFavicon = action.payload;
     },
     $toggleArticleNewWindow(state) {
       state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
@@ -57,6 +74,8 @@ export const slice = createSlice({
 
 export const {
   $setSpoofTitle,
+  $setPresetFavicon,
+  $setSpoofFavicon,
   $toggleArticleNewWindow,
   $toggleBlockMediaNewWindow,
   $toggleIgnoreExternalLinkWarning,

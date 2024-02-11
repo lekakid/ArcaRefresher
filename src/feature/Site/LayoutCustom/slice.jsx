@@ -9,6 +9,7 @@ const defaultStorage = {
   // 사이트
   notifyPosition: 'right',
   topNews: true,
+  searchBar: true,
   recentVisit: 'afterAd',
   sideMenu: true,
   sideContents: true,
@@ -16,6 +17,7 @@ const defaultStorage = {
   sideNews: true,
   avatar: true,
   userinfoWidth: 10,
+  rateCount: true,
   // 게시물
   hideDefaultImage: false,
   resizeImage: 100,
@@ -69,6 +71,9 @@ export const slice = createSlice({
     $toggleTopNews(state) {
       state.storage.topNews = !state.storage.topNews;
     },
+    $toggleSearchBar(state) {
+      state.storage.searchBar = !state.storage.searchBar;
+    },
     $setRecentVisit(state, action) {
       state.storage.recentVisit = action.payload;
     },
@@ -87,8 +92,12 @@ export const slice = createSlice({
     $toggleAvatar(state) {
       state.storage.avatar = !state.storage.avatar;
     },
+    // 게시판
     $setUserInfoWith(state, action) {
       state.storage.userinfoWidth = action.payload;
+    },
+    $toggleRateCount(state) {
+      state.storage.rateCount = !state.storage.rateCount;
     },
     // 게시물
     $toggleDefaultImage(state) {
@@ -134,6 +143,7 @@ export const {
   // 사이트
   $setNotifyPosition,
   $toggleTopNews,
+  $toggleSearchBar,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,
@@ -141,6 +151,7 @@ export const {
   $toggleSideNews,
   $toggleAvatar,
   $setUserInfoWith,
+  $toggleRateCount,
   // 게시물
   $toggleDefaultImage,
   $setResizeImage,

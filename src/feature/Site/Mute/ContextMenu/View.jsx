@@ -1,9 +1,14 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { Block, Redo } from '@mui/icons-material';
 
-import { BOARD_ITEMS_WITH_NOTICE, USER_INFO } from 'core/selector';
+import {
+  BOARD_ITEMS_WITH_NOTICE,
+  USER_INFO,
+  USER_MENTION,
+} from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { getUserID } from 'func/user';
@@ -27,14 +32,15 @@ function ContextMenu({ target }) {
   let contextSelector;
   switch (contextRange) {
     case 'articleItem':
-      contextSelector = `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}`;
+      contextSelector = `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}, ${USER_MENTION}`;
       break;
     case 'nickname':
-      contextSelector = USER_INFO;
+      contextSelector = `${USER_INFO}, ${USER_MENTION}`;
       break;
     default:
       console.warn('[Mute] contextRange 값이 올바르지 않음');
-      contextSelector = USER_INFO;
+      contextSelector = `${USER_INFO}, ${USER_MENTION}`;
+      break;
   }
 
   const setSnack = useSnackbarAlert();
@@ -279,5 +285,9 @@ function ContextMenu({ target }) {
 
   return null;
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

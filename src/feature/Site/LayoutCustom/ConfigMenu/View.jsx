@@ -21,6 +21,7 @@ import {
   $toggleSideMenu,
   $toggleAvatar,
   $setUserInfoWith,
+  $toggleRateCount,
   $toggleUnvote,
   $toggleModifiedIndicator,
   $toggleLongComment,
@@ -34,6 +35,7 @@ import {
   $setResizeEmoticonPalette,
   $setFontSize,
   $toggleDefaultImage,
+  $toggleSearchBar,
 } from '../slice';
 
 function labelFormat(x) {
@@ -49,6 +51,7 @@ const View = React.forwardRef((_props, ref) => {
     enabled,
     notifyPosition,
     topNews,
+    searchBar,
     recentVisit,
     sideContents,
     sideBests,
@@ -56,6 +59,7 @@ const View = React.forwardRef((_props, ref) => {
     sideMenu,
     avatar,
     userinfoWidth,
+    rateCount,
     hideDefaultImage,
     resizeImage,
     resizeVideo,
@@ -105,6 +109,12 @@ const View = React.forwardRef((_props, ref) => {
               action={$toggleTopNews}
             />
           )}
+          <SwitchRow
+            divider
+            primary="검색창 표시"
+            value={searchBar}
+            action={$toggleSearchBar}
+          />
           <SelectRow
             divider
             primary="최근 방문 채널 위치"
@@ -151,16 +161,26 @@ const View = React.forwardRef((_props, ref) => {
             </>
           )}
           <SwitchRow
-            divider
             primary="이용자 아바타 표시"
             value={avatar}
             action={$toggleAvatar}
           />
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">게시판</Typography>
+      <Paper>
+        <List disablePadding>
           <SliderRow
+            divider
             primary="게시판 이용자 너비"
             opacityOnChange={0.6}
             value={userinfoWidth}
             action={$setUserInfoWith}
+          />
+          <SwitchRow
+            primary="추천 수 표시"
+            value={rateCount}
+            action={$toggleRateCount}
           />
         </List>
       </Paper>

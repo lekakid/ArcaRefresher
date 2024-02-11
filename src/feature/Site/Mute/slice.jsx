@@ -7,7 +7,6 @@ import Info from './FeatureInfo';
 
 const defaultStorage = {
   version: 1,
-  mk2: true,
   contextRange: 'nickname',
   boardBarPos: 'afterbegin',
   hideCountBar: false,
@@ -55,9 +54,6 @@ export const slice = createSlice({
   name: Info.ID,
   initialState,
   reducers: {
-    $toggleMK2(state) {
-      state.storage.mk2 = !state.storage.mk2;
-    },
     $setContextRange(state, action) {
       state.storage.contextRange = action.payload;
     },
@@ -172,7 +168,6 @@ export const slice = createSlice({
 });
 
 export const {
-  $toggleMK2,
   $setContextRange,
   $setBoardBarPos,
   $toggleCountBar,
