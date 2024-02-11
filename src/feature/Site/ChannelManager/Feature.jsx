@@ -156,6 +156,7 @@ export default function ChannelManager() {
                 )}
                 {filteredChannel.map(({ label, id }) => (
                   <ChannelItem
+                    key={id}
                     id={id}
                     label={label}
                     memo={channelInfoTable[id]?.memo || ''}
@@ -182,6 +183,7 @@ export default function ChannelManager() {
         <List>
           {remainChannels.map(({ label, id }) => (
             <ChannelItem
+              key={id}
               id={id}
               label={label}
               memo={channelInfoTable[id]?.memo || ''}
