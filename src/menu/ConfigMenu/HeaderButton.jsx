@@ -16,11 +16,8 @@ export default function HeaderButton() {
     if (navigationLoaded) {
       const container = document.createElement('div');
       const nav = document.querySelector(NAVIGATION_MENU);
-      try {
-        nav.insertBefore(container, nav.children[2]);
-      } catch (error) {
-        nav.append(container);
-      }
+      const searchbarEl = nav.querySelector('.nav-channel-search-wrapper');
+      nav.insertBefore(container, searchbarEl);
       setNavEl(container);
       return undefined;
     }
