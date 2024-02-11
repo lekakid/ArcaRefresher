@@ -18,6 +18,7 @@ import { Folder } from '@mui/icons-material';
 import { NAVIGATION_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
+import { stringifyQuery } from 'func/http';
 import SubsChannelManager from './SubsChannelManager';
 import { setNavChannelInfo } from './slice';
 import Info from './FeatureInfo';
@@ -45,6 +46,32 @@ function ListFolder({ group, children }) {
 ListFolder.propTypes = {
   group: PropTypes.string,
   children: PropTypes.node,
+};
+
+function ChannelItem({ id, label, memo, best }) {
+  const search = {};
+  if (best) search.mode = 'best';
+
+  return (
+    <ListItem dense disablePadding>
+      <ListItemButton
+        component={Link}
+        href={`/b/${id}${stringifyQuery(search)}`}
+      >
+        <ListItemText
+          disableTypography
+          primary={`${label}${memo ? ` - ${memo}` : ''}`}
+        />
+      </ListItemButton>
+    </ListItem>
+  );
+}
+
+ChannelItem.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  memo: PropTypes.string,
+  best: PropTypes.bool,
 };
 
 export default function ChannelManager() {
@@ -128,18 +155,12 @@ export default function ChannelManager() {
                   <ListItem dense>이 그룹은 비어있습니다.</ListItem>
                 )}
                 {filteredChannel.map(({ label, id }) => (
-                  <ListItem key={id} dense disablePadding>
-                    <ListItemButton component={Link} href={`/b/${id}`}>
-                      <ListItemText
-                        disableTypography
-                        primary={`${label}${
-                          channelInfoTable[id]?.memo
-                            ? ` - ${channelInfoTable[id]?.memo}`
-                            : ''
-                        }`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
+                  <ChannelItem
+                    id={id}
+                    label={label}
+                    memo={channelInfoTable[id]?.memo || ''}
+                    best={channelInfoTable[id]?.best}
+                  />
                 ))}
               </ListFolder>
             );
@@ -160,18 +181,12 @@ export default function ChannelManager() {
         <Divider />
         <List>
           {remainChannels.map(({ label, id }) => (
-            <ListItem key={id} dense disablePadding>
-              <ListItemButton component={Link} href={`/b/${id}`}>
-                <ListItemText
-                  disableTypography
-                  primary={`${label}${
-                    channelInfoTable[id]?.memo
-                      ? ` - ${channelInfoTable[id]?.memo}`
-                      : ''
-                  }`}
-                />
-              </ListItemButton>
-            </ListItem>
+            <ChannelItem
+              id={id}
+              label={label}
+              memo={channelInfoTable[id]?.memo || ''}
+              best={channelInfoTable[id]?.best}
+            />
           ))}{' '}
         </List>
       </>

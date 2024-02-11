@@ -14,6 +14,8 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -26,13 +28,52 @@ import {
   Done,
   FolderDelete,
   Input,
+  Star,
+  StarBorder,
 } from '@mui/icons-material';
 
 import { useConfirm } from 'component';
 import { $addGroup, $removeGroup, $setChannelInfo } from './slice';
 import Info from './FeatureInfo';
 
-const defaultChannelInfo = { memo: '', groups: [] };
+const defaultChannelInfo = { memo: '', groups: [], best: false };
+
+function ChannelTitleRenderer({ id, value }) {
+  const dispatch = useDispatch();
+  const { channelInfoTable } = useSelector((state) => state[Info.ID].storage);
+
+  const handleBestToggle = useCallback(() => {
+    const channelInfo = {
+      ...channelInfoTable[id],
+      best: !channelInfoTable[id].best,
+    };
+    dispatch($setChannelInfo({ id, info: channelInfo }));
+  }, [id, channelInfoTable, dispatch]);
+
+  return (
+    <Stack
+      sx={{ width: '100%' }}
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Typography>{value}</Typography>
+      <Tooltip title="개념글로 바로 이동">
+        <IconButton
+          sx={channelInfoTable[id].best ? { color: 'orange' } : undefined}
+          onClick={handleBestToggle}
+        >
+          {channelInfoTable[id].best ? <Star /> : <StarBorder />}
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+}
+
+ChannelTitleRenderer.propTypes = {
+  id: PropTypes.string,
+  value: PropTypes.string,
+};
 
 function GroupRenderer({ id, value }) {
   const dispatch = useDispatch();
@@ -103,6 +144,7 @@ const columns = [
     headerName: '채널',
     flex: 1,
     minWidth: 200,
+    renderCell: ChannelTitleRenderer,
   },
   {
     field: 'memo',
