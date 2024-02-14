@@ -44,8 +44,9 @@ function ChannelTitleRenderer({ id, value }) {
 
   const handleBestToggle = useCallback(() => {
     const channelInfo = {
+      ...defaultChannelInfo,
       ...channelInfoTable[id],
-      best: !channelInfoTable[id].best,
+      best: !channelInfoTable[id]?.best,
     };
     dispatch($setChannelInfo({ id, info: channelInfo }));
   }, [id, channelInfoTable, dispatch]);
@@ -60,10 +61,10 @@ function ChannelTitleRenderer({ id, value }) {
       <Typography>{value}</Typography>
       <Tooltip title="개념글로 바로 이동">
         <IconButton
-          sx={channelInfoTable[id].best ? { color: 'orange' } : undefined}
+          sx={channelInfoTable[id]?.best ? { color: 'orange' } : undefined}
           onClick={handleBestToggle}
         >
-          {channelInfoTable[id].best ? <Star /> : <StarBorder />}
+          {channelInfoTable[id]?.best ? <Star /> : <StarBorder />}
         </IconButton>
       </Tooltip>
     </Stack>
