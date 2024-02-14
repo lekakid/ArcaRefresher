@@ -4,11 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { FULL_LOADED, USER_INFO } from 'core/selector';
 import { AuthorTag } from 'component';
-import {
-  EVENT_BOARD_REFRESH,
-  EVENT_COMMENT_REFRESH,
-  useEvent,
-} from 'hooks/Event';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { getUserID, getUserKey } from 'func/user';
@@ -16,7 +12,6 @@ import { getUserID, getUserKey } from 'func/user';
 import Info from './FeatureInfo';
 
 function MemoList() {
-  const [addEventListener, removeEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
 
   const { variant, memo } = useSelector((state) => state[Info.ID].storage);
@@ -44,14 +39,14 @@ function MemoList() {
       setInfoList(list);
     };
     appendMemo();
-    addEventListener(EVENT_BOARD_REFRESH, appendMemo);
-    addEventListener(EVENT_COMMENT_REFRESH, appendMemo);
+    window.addEventListener(EVENT_BOARD_REFRESH, appendMemo);
+    window.addEventListener(EVENT_COMMENT_REFRESH, appendMemo);
 
     return () => {
-      removeEventListener(EVENT_BOARD_REFRESH, appendMemo);
-      removeEventListener(EVENT_COMMENT_REFRESH, appendMemo);
+      window.removeEventListener(EVENT_BOARD_REFRESH, appendMemo);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, appendMemo);
     };
-  }, [loaded, addEventListener, removeEventListener]);
+  }, [loaded]);
 
   useLayoutEffect(() => {
     const colorizeUser = () => {
@@ -75,14 +70,14 @@ function MemoList() {
       });
     };
     if (loaded) colorizeUser();
-    addEventListener(EVENT_BOARD_REFRESH, colorizeUser);
-    addEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
+    window.addEventListener(EVENT_BOARD_REFRESH, colorizeUser);
+    window.addEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
 
     return () => {
-      removeEventListener(EVENT_BOARD_REFRESH, colorizeUser);
-      removeEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
+      window.removeEventListener(EVENT_BOARD_REFRESH, colorizeUser);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, colorizeUser);
     };
-  }, [memo, loaded, addEventListener, removeEventListener]);
+  }, [memo, loaded]);
 
   if (variant === 'none') return null;
   return (

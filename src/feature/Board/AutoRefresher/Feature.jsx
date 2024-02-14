@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { Fade, GlobalStyles } from '@mui/material';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
-import { EVENT_BOARD_REFRESH, useDispatchEvent } from 'hooks/Event';
+import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { useArcaSocket } from 'hooks/WebSocket';
 
@@ -50,7 +50,6 @@ function parseSearch(searchString) {
 }
 
 function AutoRefresher() {
-  const dispatchEvent = useDispatchEvent();
   const [subscribe, unsubscribe] = useArcaSocket();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
@@ -114,12 +113,12 @@ function AutoRefresher() {
     const newArticles = await getNewArticle();
     if (!newArticles) return;
     updateBoard(board, newArticles, 'refreshed');
-    dispatchEvent(EVENT_BOARD_REFRESH);
+    window.dispatchEvent(new Event(EVENT_BOARD_REFRESH));
 
     // 리셋
     refreshData.current.newArticle = 0;
     refreshData.current.accTime = 0;
-  }, [board, countdown, maxTime, dispatchEvent]);
+  }, [board, countdown, maxTime]);
 
   useEffect(() => {
     if (!enabled) return undefined;

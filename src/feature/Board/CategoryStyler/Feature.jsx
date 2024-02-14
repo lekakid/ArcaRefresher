@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
 import { BOARD_ITEMS, BOARD, BOARD_IN_ARTICLE } from 'core/selector';
-import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
+import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { getContrastYIQ } from 'func/color';
 
 import Info from './FeatureInfo';
 
 export default function CategoryStyler() {
-  const [addEventListener, removeEventListener] = useEvent();
   const { channel, category } = useContent();
 
   const { color } = useSelector((state) => state[Info.ID].storage);
@@ -41,12 +40,12 @@ export default function CategoryStyler() {
     };
 
     colorize();
-    addEventListener(EVENT_BOARD_REFRESH, colorize);
+    window.addEventListener(EVENT_BOARD_REFRESH, colorize);
 
     return () => {
-      removeEventListener(EVENT_BOARD_REFRESH, colorize);
+      window.removeEventListener(EVENT_BOARD_REFRESH, colorize);
     };
-  }, [keyMap, addEventListener, removeEventListener]);
+  }, [keyMap]);
 
   if (!color[channel.ID]) return null;
   const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {

@@ -7,8 +7,9 @@ import {
   COMMENT_SUBTITLE,
   COMMENT_INNER,
   COMMENT_LOADED,
+  COMMENT,
 } from 'core/selector';
-import { EVENT_COMMENT_REFRESH, useDispatchEvent } from 'hooks/Event';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import toDocument from 'func/toDocument';
 
@@ -23,7 +24,6 @@ const commentRefreshStyles = (
 );
 
 function CommentRefresh() {
-  const dispatchEvent = useDispatchEvent(EVENT_COMMENT_REFRESH);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const [title, setTitle] = useState({
@@ -32,42 +32,21 @@ function CommentRefresh() {
   });
   const comment = useRef(undefined);
 
-  const handleClick = useCallback(
-    async (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-
-      const response = await fetch(window.location.href);
-      if (!response.ok) {
-        console.warn('[CommentRefresh] 네트워크 오류');
-        return;
-      }
-
-      const text = await response.text();
-      const resultDocument = toDocument(text);
-      const newComments = resultDocument.querySelector(COMMENT_INNER);
-      if (!newComments) return;
-
-      comment.current.replaceWith(newComments);
-      comment.current = newComments;
-      newComments
-        .querySelector('.fetch-comment')
-        .addEventListener('click', handleClick);
-      unsafeWindow.applyLocalTimeFix();
-      dispatchEvent(EVENT_COMMENT_REFRESH);
-    },
-    [dispatchEvent],
-  );
-
   // 초기화
   useEffect(() => {
     if (!commentLoaded) return;
 
-    const initComment = document.querySelector(COMMENT_INNER);
-    comment.current = initComment;
-    initComment
-      .querySelector('.fetch-comment')
-      .addEventListener('click', handleClick);
+    comment.current = document.querySelector(COMMENT_INNER);
+    const observer = new MutationObserver(() => {
+      if (comment.current.parentElement) return;
+
+      comment.current = document.querySelector(COMMENT_INNER);
+      window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
+    });
+    observer.observe(document.querySelector(COMMENT), {
+      childList: true,
+      subtree: true,
+    });
 
     const top = document.createElement('span');
     const bottom = document.createElement('span');
@@ -75,7 +54,28 @@ function CommentRefresh() {
     document.querySelector(COMMENT_SUBTITLE)?.prepend(bottom);
 
     setTitle({ top, bottom });
-  }, [commentLoaded, handleClick]);
+  }, [commentLoaded]);
+
+  const handleClick = useCallback(async () => {
+    const response = await fetch(window.location.href);
+    if (!response.ok) {
+      console.warn('[CommentRefresh] 네트워크 오류');
+      return;
+    }
+
+    const text = await response.text();
+    const resultDocument = toDocument(text);
+    const newComments = resultDocument.querySelector(COMMENT_INNER);
+    if (!newComments) return;
+
+    comment.current.replaceWith(newComments);
+    comment.current = newComments;
+    newComments
+      .querySelector('.fetch-comment')
+      .addEventListener('click', handleClick);
+    unsafeWindow.applyLocalTimeFix();
+    window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
+  }, []);
 
   return (
     <>

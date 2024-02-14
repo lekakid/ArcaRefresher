@@ -8,7 +8,7 @@ import {
   COMMENT_ITEMS,
   COMMENT_LOADED,
 } from 'core/selector';
-import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { FOREGROUND, open } from 'func/window';
@@ -91,7 +91,6 @@ function tryDecodeAll(html, max = 200) {
 function Decoder() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
-  const [addEventListener, removeEventListener] = useEvent();
 
   const { enabled, autoDecode, clipboardDecode } = useSelector(
     (state) => state[Info.ID].storage,
@@ -136,7 +135,7 @@ function Decoder() {
     };
 
     handler();
-    addEventListener(EVENT_COMMENT_REFRESH, handler);
+    window.addEventListener(EVENT_COMMENT_REFRESH, handler);
 
     return () => {
       comments.forEach((c) => {
@@ -145,16 +144,9 @@ function Decoder() {
 
         target.innerHTML = target.dataset.orig;
       });
-      removeEventListener(EVENT_COMMENT_REFRESH, handler);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, handler);
     };
-  }, [
-    enabled,
-    autoDecode,
-    commentLoaded,
-    temporaryDisabled,
-    addEventListener,
-    removeEventListener,
-  ]);
+  }, [enabled, autoDecode, commentLoaded, temporaryDisabled]);
 
   const handleDecode = useCallback((data) => {
     let decoded;
