@@ -9,7 +9,7 @@ import {
   COMMENT_EMOTICON,
   COMMENT_LOADED,
 } from 'core/selector';
-import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserFilter } from 'func/user';
 
@@ -101,7 +101,6 @@ const commentMuteStyles = (
 
 function CommentMuter() {
   const dispatch = useDispatch();
-  const [addEventListener, removeEventListener] = useEvent();
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const filter = useSelector(filterSelector);
@@ -124,12 +123,14 @@ function CommentMuter() {
     commentElement.insertAdjacentElement('beforebegin', container);
     setCountBarContainer(container);
 
-    addEventListener(EVENT_COMMENT_REFRESH, () => {
+    const changeTarget = () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
       setControlTarget(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', container);
-    });
-  }, [dispatch, commentLoaded, addEventListener]);
+    };
+
+    window.addEventListener(EVENT_COMMENT_REFRESH, changeTarget);
+  }, [dispatch, commentLoaded]);
 
   // 이모티콘 뮤트
   useLayoutEffect(() => {
@@ -157,7 +158,7 @@ function CommentMuter() {
     };
 
     muteEmoticon();
-    addEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
+    window.addEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
 
     return () => {
       const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
@@ -169,7 +170,7 @@ function CommentMuter() {
         );
         c.closest('.emoticon-wrapper').querySelector('span')?.remove();
       });
-      removeEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
   }, [
     commentLoaded,
@@ -177,8 +178,6 @@ function CommentMuter() {
     hideMutedMark,
     muteIncludeReply,
     muteAllEmot,
-    addEventListener,
-    removeEventListener,
   ]);
 
   // 키워드, 이용자 뮤트
@@ -229,7 +228,7 @@ function CommentMuter() {
     } else {
       window.addEventListener('load', muteComment);
     }
-    addEventListener(EVENT_COMMENT_REFRESH, muteComment);
+    window.addEventListener(EVENT_COMMENT_REFRESH, muteComment);
 
     return () => {
       [
@@ -245,16 +244,9 @@ function CommentMuter() {
       });
 
       window.removeEventListener('load', muteComment);
-      removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, muteComment);
     };
-  }, [
-    controlTarget,
-    filter,
-    hideMutedMark,
-    muteIncludeReply,
-    addEventListener,
-    removeEventListener,
-  ]);
+  }, [controlTarget, filter, hideMutedMark, muteIncludeReply]);
 
   if (!countBarContainer) return null;
   return (

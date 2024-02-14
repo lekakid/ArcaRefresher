@@ -3,11 +3,7 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'core/selector';
-import {
-  EVENT_BOARD_REFRESH,
-  EVENT_COMMENT_REFRESH,
-  useEvent,
-} from 'hooks/Event';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserNick } from 'func/user';
@@ -25,7 +21,6 @@ const profileStyles = (
 );
 
 function UserProfile() {
-  const [addEventListener, removeEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
   const { user } = useContent();
 
@@ -46,18 +41,18 @@ function UserProfile() {
       });
     };
     show();
-    addEventListener(EVENT_BOARD_REFRESH, show);
-    addEventListener(EVENT_COMMENT_REFRESH, show);
+    window.addEventListener(EVENT_BOARD_REFRESH, show);
+    window.addEventListener(EVENT_COMMENT_REFRESH, show);
 
     return () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
         const [nick] = e.firstElementChild.textContent.split('#');
         e.firstElementChild.textContent = nick;
       });
-      removeEventListener(EVENT_BOARD_REFRESH, show);
-      removeEventListener(EVENT_COMMENT_REFRESH, show);
+      window.removeEventListener(EVENT_BOARD_REFRESH, show);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, show);
     };
-  }, [loaded, showId, addEventListener, removeEventListener]);
+  }, [loaded, showId]);
 
   useEffect(() => {
     if (!indicateMyComment) return undefined;
@@ -72,15 +67,15 @@ function UserProfile() {
     };
 
     apply();
-    addEventListener(EVENT_COMMENT_REFRESH, apply);
+    window.addEventListener(EVENT_COMMENT_REFRESH, apply);
 
     return () => {
       [...document.querySelectorAll(COMMENT_USER_INFO)].forEach((e) => {
         e.classList.remove('mynick');
       });
-      removeEventListener(EVENT_COMMENT_REFRESH, apply);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, apply);
     };
-  }, [user, indicateMyComment, addEventListener, removeEventListener]);
+  }, [user, indicateMyComment]);
 
   return profileStyles;
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
-import { EVENT_BOARD_REFRESH, useEvent } from 'hooks/Event';
+import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { getUserFilter } from 'func/user';
 
@@ -49,7 +49,6 @@ const boardMuteStyles = (
 
 function BoardMuter() {
   const dispatch = useDispatch();
-  const [addEventListener, removeEventListener] = useEvent();
   const { channel, category } = useContent();
 
   const filter = useSelector((state) => filterSelector(state, channel.ID));
@@ -137,20 +136,13 @@ function BoardMuter() {
 
     if (document.readyState === 'complete') muteArticle();
     window.addEventListener('load', muteArticle);
-    addEventListener(EVENT_BOARD_REFRESH, muteArticle);
+    window.addEventListener(EVENT_BOARD_REFRESH, muteArticle);
 
     return () => {
       window.removeEventListener('load', muteArticle);
-      removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
+      window.removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
-  }, [
-    channel,
-    category,
-    filter,
-    controlTarget,
-    addEventListener,
-    removeEventListener,
-  ]);
+  }, [channel, category, filter, controlTarget]);
 
   // 게시물 미리보기 뮤트
   useLayoutEffect(() => {

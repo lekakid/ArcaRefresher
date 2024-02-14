@@ -26,11 +26,7 @@ import {
   COMMENT_LOADED,
   COMMENT,
 } from 'core/selector';
-import {
-  EVENT_BOARD_REFRESH,
-  EVENT_COMMENT_REFRESH,
-  useEvent,
-} from 'hooks/Event';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { useArcaSocket } from 'hooks/WebSocket';
 
@@ -51,7 +47,6 @@ const foldingStyles = (
 );
 
 export default function ExperienceCustomizer() {
-  const [addEventListener, removeEventListener] = useEvent();
   const [subscribeWS, unsubscribeWS] = useArcaSocket();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const boardLoaded = useLoadChecker(BOARD_LOADED);
@@ -89,11 +84,13 @@ export default function ExperienceCustomizer() {
   useEffect(() => {
     if (!commentLoaded) return;
 
-    setComment(document.querySelector(COMMENT));
-    addEventListener(EVENT_COMMENT_REFRESH, () => {
+    const changeComment = () => {
       setComment(document.querySelector(COMMENT));
-    });
-  }, [commentLoaded, addEventListener]);
+    };
+    changeComment();
+
+    window.addEventListener(EVENT_COMMENT_REFRESH, changeComment);
+  }, [commentLoaded]);
 
   // 사이트 표시 제목 변경
   useEffect(() => {
@@ -216,7 +213,7 @@ export default function ExperienceCustomizer() {
     };
 
     applyNewWindow();
-    addEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
+    window.addEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
     return () => {
       const articles = board.querySelectorAll(
         `${BOARD_NOTICES}, ${BOARD_ITEMS}`,
@@ -225,14 +222,9 @@ export default function ExperienceCustomizer() {
         a.setAttribute('target', '');
       });
 
-      removeEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
+      window.removeEventListener(EVENT_BOARD_REFRESH, applyNewWindow);
     };
-  }, [
-    boardLoaded,
-    openArticleNewWindow,
-    addEventListener,
-    removeEventListener,
-  ]);
+  }, [boardLoaded, openArticleNewWindow]);
 
   // 댓글란 접어두기
   useEffect(() => {

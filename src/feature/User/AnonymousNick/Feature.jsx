@@ -6,7 +6,7 @@ import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
 import { getUserID, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { EVENT_COMMENT_REFRESH, useEvent } from 'hooks/Event';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import Info from './FeatureInfo';
 import Label from './Label';
 
@@ -24,7 +24,6 @@ const anonymousNickStyles = (
 
 function AnonymousNick() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const [addEventListener, removeEventListener] = useEvent();
 
   const { storage, show } = useSelector((state) => state[Info.ID]);
   const nickContainer = useRef([]);
@@ -65,9 +64,12 @@ function AnonymousNick() {
       setNickData(data);
     };
     handler();
-    addEventListener(EVENT_COMMENT_REFRESH, handler);
-    return () => removeEventListener(EVENT_COMMENT_REFRESH, handler);
-  }, [articleLoaded, storage, addEventListener, removeEventListener]);
+    window.addEventListener(EVENT_COMMENT_REFRESH, handler);
+
+    return () => {
+      window.removeEventListener(EVENT_COMMENT_REFRESH, handler);
+    };
+  }, [articleLoaded, storage]);
 
   if (!show) return null;
   return (

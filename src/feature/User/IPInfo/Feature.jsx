@@ -3,18 +3,13 @@ import { Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
-import {
-  EVENT_BOARD_REFRESH,
-  EVENT_COMMENT_REFRESH,
-  useEvent,
-} from 'hooks/Event';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { getUserIP, getUserKey } from 'func/user';
 
 import DB from './ip';
 
 export default function IPInfo() {
-  const [addEventListener] = useEvent();
   const loaded = useLoadChecker(FULL_LOADED);
 
   const infoContainer = useRef([]);
@@ -47,9 +42,9 @@ export default function IPInfo() {
       setInfoList(list);
     };
     if (loaded) refreshUserInfo();
-    addEventListener(EVENT_BOARD_REFRESH, refreshUserInfo);
-    addEventListener(EVENT_COMMENT_REFRESH, refreshUserInfo);
-  }, [loaded, addEventListener]);
+    window.addEventListener(EVENT_BOARD_REFRESH, refreshUserInfo);
+    window.addEventListener(EVENT_COMMENT_REFRESH, refreshUserInfo);
+  }, [loaded]);
 
   return (
     <>
