@@ -223,11 +223,8 @@ function CommentMuter() {
       setCount(result);
     };
 
-    if (document.readyState === 'complete') {
-      muteComment();
-    } else {
-      window.addEventListener('load', muteComment);
-    }
+    if (document.readyState === 'complete') muteComment();
+    window.addEventListener('load', muteComment);
     window.addEventListener(EVENT_COMMENT_REFRESH, muteComment);
 
     return () => {
