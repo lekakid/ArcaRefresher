@@ -1,14 +1,34 @@
+function getFilterFromData(infoElement) {
+  return (
+    infoElement.matches('[data-filter]')
+      ? infoElement
+      : infoElement.querySelector('[data-filter]')
+  )?.dataset.filter;
+}
+
+function getFilterFromAnchor(infoElement) {
+  const anchor = infoElement.matches('a')
+    ? infoElement
+    : infoElement.querySelector('a');
+  if (!anchor) return undefined;
+
+  return anchor.title || anchor.textContent.replace('@', '');
+}
+
 export function getUserNick(infoElement) {
-  const data = infoElement.querySelector('[data-filter]')?.dataset.filter;
-  if (data) {
-    const [, nick, id] = data
+  const filter =
+    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
+  if (filter) {
+    const [, nick, id] = filter
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
 
+    // 반고닉
     if (id?.includes('#')) {
       return `${nick}${id}`;
     }
 
+    // 유동
     if (id?.includes('.')) {
       return `${nick}(${id})`;
     }
@@ -16,61 +36,39 @@ export function getUserNick(infoElement) {
     return nick;
   }
 
-  const anchor = infoElement.matches('a')
-    ? infoElement
-    : infoElement.querySelector('a');
-  if (anchor) {
-    const nick = anchor.title || anchor.textContent.replace('@', '');
-    return nick || '';
-  }
-
-  return infoElement.textContent.trim() || '미상';
+  return infoElement.textContent.trim() || '알 수 없음';
 }
 
 export function getUserID(infoElement) {
-  const data = infoElement.querySelector('[data-filter]');
-  if (data) {
-    const [, nick, id] = data.dataset.filter
+  const filter =
+    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
+  if (filter) {
+    const [, nick, id] = filter
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
 
     return id || nick;
   }
 
-  const anchor = infoElement.matches('a')
-    ? infoElement
-    : infoElement.querySelector('a');
-  if (anchor) {
-    const nick = anchor.title || anchor.textContent.replace('@', '');
-    return nick || '';
-  }
-
-  return infoElement.textContent.trim() || '미상';
+  return infoElement.textContent.trim() || '알 수 없음';
 }
 
 export function getUserFilter(infoElement) {
-  const data = infoElement.querySelector('[data-filter]');
-  if (data) {
-    return data.dataset.filter;
-  }
-
-  const anchor = infoElement.querySelector('a');
-  if (anchor) {
-    const nick = anchor.title || anchor.textContent.replace('@', '');
-    return nick || '';
+  const filter =
+    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
+  if (filter) {
+    return filter;
   }
 
   return infoElement.textContent.trim() || '미상';
 }
 
 export function getUserIP(infoElement) {
-  try {
-    const data = infoElement.querySelector('[data-filter]').dataset.filter;
-    const id = data.match(/[0-9]{1,3}\.[0-9]{1,3}$/g)[0];
-    return id;
-  } catch {
-    return '';
-  }
+  const filter =
+    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
+  if (!filter) return '';
+
+  return filter.match(/[0-9]{1,3}\.[0-9]{1,3}$/g)?.[0];
 }
 
 export function getUserKey(element, index) {
