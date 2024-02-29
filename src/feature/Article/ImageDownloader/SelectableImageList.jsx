@@ -40,7 +40,8 @@ function SelectableImageList({ imgList, selection, onChange }) {
   return (
     <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
       {imgList.map((img, index) => (
-        <ImageListItem key={img} onClick={handleSelect(index)}>
+        // eslint-disable-next-line react/no-array-index-key
+        <ImageListItem key={`${img}_${index}`} onClick={handleSelect(index)}>
           <img
             style={{ overflow: 'hidden' }}
             src={img}
