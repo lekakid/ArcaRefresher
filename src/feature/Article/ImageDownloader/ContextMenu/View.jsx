@@ -85,7 +85,7 @@ function ContextMenu({ target }) {
       try {
         closeMenu();
         const name = format(fileName, {
-          values: contentInfo,
+          content: contentInfo,
           fileName: uploadName,
         });
         switch (downloadMethod) {

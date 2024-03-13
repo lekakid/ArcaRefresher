@@ -157,7 +157,7 @@ function DownloadDialog() {
 
         const { orig, ext, uploadName } = value;
         const name = format(zipImageName, {
-          values: contentInfo,
+          content: contentInfo,
           index: count,
           fileName: uploadName,
         });
@@ -194,7 +194,7 @@ function DownloadDialog() {
       },
     });
 
-    const zipFileName = format(zipName, { values: contentInfo });
+    const zipFileName = format(zipName, { content: contentInfo });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.${zipExtension}`, {
