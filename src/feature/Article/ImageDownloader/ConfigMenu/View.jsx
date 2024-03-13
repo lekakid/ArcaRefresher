@@ -24,7 +24,7 @@ const View = React.forwardRef((_props, ref) => {
     zipName,
     zipExtension,
     zipImageName,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
 
   return (
     <Fragment ref={ref}>
@@ -122,5 +122,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

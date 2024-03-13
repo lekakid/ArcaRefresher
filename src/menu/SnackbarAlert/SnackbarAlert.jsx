@@ -7,7 +7,7 @@ import Info from './FeatureInfo';
 
 export default function SnackbarAlert() {
   const dispatch = useDispatch();
-  const { snackBag } = useSelector((state) => state[Info.ID]);
+  const { snackBag } = useSelector((state) => state[Info.id]);
   const [open, setOpen] = useState(false);
   const [snack, setSnack] = useState(undefined);
 

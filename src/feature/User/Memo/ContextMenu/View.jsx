@@ -10,7 +10,7 @@ import {
   USER_MENTION,
 } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
-import { getUserID } from 'func/user';
+import { getUserId } from 'func/user';
 
 import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
@@ -18,7 +18,7 @@ import MemoInput from './MemoInput';
 
 function ContextMenu({ target }) {
   const dispatch = useDispatch();
-  const { memo, contextRange } = useSelector((state) => state[Info.ID].storage);
+  const { memo, contextRange } = useSelector((state) => state[Info.id].storage);
   const [user, setUser] = useState(undefined);
   let contextSelector;
   switch (contextRange) {
@@ -36,7 +36,7 @@ function ContextMenu({ target }) {
 
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -47,7 +47,7 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        return getUserID(userElement);
+        return getUserId(userElement);
       },
     },
     [target],

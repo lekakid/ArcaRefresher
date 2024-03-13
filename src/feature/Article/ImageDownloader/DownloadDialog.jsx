@@ -27,9 +27,9 @@ function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
   const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
-  const { open } = useSelector((state) => state[Info.ID]);
+  const { open } = useSelector((state) => state[Info.id]);
   const data = useMemo(() => {
     const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
     const query = isEmotShop

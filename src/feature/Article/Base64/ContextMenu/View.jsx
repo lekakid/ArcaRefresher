@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { FastRewind } from '@mui/icons-material';
 
 import { useContextMenu } from 'menu/ContextMenu';
 
-import { useDispatch } from 'react-redux';
 import Info from '../FeatureInfo';
 import { toggleTemporaryDisabled } from '../slice';
 
@@ -13,7 +14,7 @@ function ContextMenu({ target }) {
   const dispatch = useDispatch();
 
   const [data, closeMenu] = useContextMenu({
-    key: Info.ID,
+    key: Info.id,
     selector: 'a.base64',
     dataExtractor: () => target,
   });
@@ -36,5 +37,9 @@ function ContextMenu({ target }) {
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

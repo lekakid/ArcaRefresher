@@ -51,14 +51,14 @@ function BoardMuter() {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
 
-  const filter = useSelector((state) => filterSelector(state, channel.ID));
+  const filter = useSelector((state) => filterSelector(state, channel.id));
   const {
     boardBarPos,
     hideCountBar,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
 
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
@@ -89,7 +89,7 @@ function BoardMuter() {
   useLayoutEffect(() => {
     if (!controlTarget) return undefined;
 
-    const isGlogal = globalChannel.includes(channel.ID);
+    const isGlogal = globalChannel.includes(channel.id);
 
     const muteArticle = () => {
       const articles = [...controlTarget.querySelectorAll(BOARD_ITEMS)];

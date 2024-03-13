@@ -8,8 +8,8 @@ import { $addArticle } from '../slice';
 function AutoSaver({ editor }) {
   const dispatch = useDispatch();
 
-  const { autoSaveTime } = useSelector((state) => state[Info.ID].storage);
-  const { currentSlot, loadOpen } = useSelector((state) => state[Info.ID]);
+  const { autoSaveTime } = useSelector((state) => state[Info.id].storage);
+  const { currentSlot, loadOpen } = useSelector((state) => state[Info.id]);
 
   useEffect(() => {
     if (autoSaveTime === 0 || loadOpen) return undefined;

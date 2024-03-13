@@ -105,7 +105,7 @@ function CommentMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
-    useSelector((state) => state[Info.ID].storage);
+    useSelector((state) => state[Info.id].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);

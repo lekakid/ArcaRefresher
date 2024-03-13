@@ -25,7 +25,7 @@ const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 const View = React.forwardRef((_props, ref) => {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-  const { notiLevel } = useSelector((state) => state[Info.ID].storage);
+  const { notiLevel } = useSelector((state) => state[Info.id].storage);
   const [open, setOpen] = useState(false);
 
   const handleVisitChannel = useCallback(() => {
@@ -116,5 +116,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

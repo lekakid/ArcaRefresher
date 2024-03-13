@@ -9,7 +9,7 @@ import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const { prefixList, suffixList, extraPrefix } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   const handleSaveFormat = useCallback(
@@ -52,5 +52,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

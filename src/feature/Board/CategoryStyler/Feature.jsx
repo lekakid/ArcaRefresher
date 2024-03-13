@@ -12,7 +12,7 @@ import Info from './FeatureInfo';
 export default function CategoryStyler() {
   const { channel, category } = useContent();
 
-  const { color } = useSelector((state) => state[Info.ID].storage);
+  const { color } = useSelector((state) => state[Info.id].storage);
   const [keyMap, setKeyMap] = useState(null);
 
   useLayoutEffect(() => {
@@ -47,8 +47,8 @@ export default function CategoryStyler() {
     };
   }, [keyMap]);
 
-  if (!color[channel.ID]) return null;
-  const stylesheet = Object.entries(color[channel.ID]).map(([key, value]) => {
+  if (!color[channel.id]) return null;
+  const stylesheet = Object.entries(color[channel.id]).map(([key, value]) => {
     const { badge, bgcolor, bold, through, disableVisited } = value;
 
     const colorKey = keyMap?.[category.id2NameMap?.[key]];

@@ -319,7 +319,7 @@ function GalleryManager({ gallery }) {
         <Paper elevation={0} sx={{ marginBottom: 1 }}>
           {createFolder ? (
             <FolderNameInput
-              initialValue={channelInfo.ID}
+              initialValue={channelInfo.id}
               validate={(input) => input === '' || folderList.includes(input)}
               onDone={handleCreateFolder}
               onCancel={() => setCreateFolder(false)}

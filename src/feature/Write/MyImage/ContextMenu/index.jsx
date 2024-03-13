@@ -4,7 +4,7 @@ import Info from '../FeatureInfo';
 
 /** @type {ContextMenuInfo} */
 export default {
-  key: Info.ID,
+  key: Info.id,
   View,
   order: 903,
 };

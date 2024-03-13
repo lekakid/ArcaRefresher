@@ -47,11 +47,11 @@ function formatUpdater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage, formatUpdater),
+  storage: getValue(Info.id, defaultStorage, formatUpdater),
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $setContextRange(state, action) {
@@ -123,15 +123,15 @@ export const slice = createSlice({
       }
     },
     $removeEmoticon(state, action) {
-      const { id, emotID, url } = action.payload;
+      const { id, emotId, url } = action.payload;
 
-      if (id && (emotID || url)) {
+      if (id && (emotId || url)) {
         if (!state.storage.emoticon[id]) {
           console.warn(`[Mute] 없는 이모티콘 삭제 시도 (${id})`);
           return;
         }
 
-        let index = state.storage.emoticon[id].bundle.indexOf(emotID);
+        let index = state.storage.emoticon[id].bundle.indexOf(emotId);
         if (index === -1) index = state.storage.emoticon[id].url.indexOf(url);
 
         state.storage.emoticon[id].bundle = state.storage.emoticon[

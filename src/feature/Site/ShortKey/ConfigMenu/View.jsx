@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
 import {
   Dialog,
@@ -45,6 +46,13 @@ function KeyRow({ divider, inputKey, children, onClick }) {
   );
 }
 
+KeyRow.propTypes = {
+  divider: PropTypes.bool,
+  inputKey: PropTypes.string,
+  children: PropTypes.node,
+  onClick: PropTypes.func,
+};
+
 function formatKey(keyStr) {
   return keyStr
     .replace('Key', '')
@@ -66,7 +74,7 @@ function formatKey(keyStr) {
 }
 
 const keyMapSelector = createSelector(
-  (state) => state[Info.ID].storage.keyTable,
+  (state) => state[Info.id].storage.keyTable,
   (keyTable) =>
     Object.fromEntries(keyTable.map(({ action, key }) => [action, key])),
 );
@@ -74,10 +82,10 @@ const keyMapSelector = createSelector(
 const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { enabled, compatibilityMode } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const keyMap = useSelector(keyMapSelector);
-  const { waitKeyInput } = useSelector((state) => state[Info.ID]);
+  const { waitKeyInput } = useSelector((state) => state[Info.id]);
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
@@ -196,5 +204,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

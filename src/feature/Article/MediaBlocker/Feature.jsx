@@ -18,7 +18,7 @@ function generateInfo(element, container) {
 export default function MediaBlocker() {
   const {
     storage: { enabled, deletedOnly },
-  } = useSelector((state) => state[Info.ID]);
+  } = useSelector((state) => state[Info.id]);
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
   const [infoList, setInfoList] = useState([]);

@@ -8,7 +8,7 @@ import { setOpen } from './slice';
 
 export default function ArticleMenu() {
   const dispatch = useDispatch();
-  const { open } = useSelector((state) => state[Info.ID]);
+  const { open } = useSelector((state) => state[Info.id]);
 
   const handleOpen = useCallback(() => {
     dispatch(setOpen(true));

@@ -40,7 +40,7 @@ const defaultChannelInfo = { memo: '', groups: [], best: false };
 
 function ChannelTitleRenderer({ id, value }) {
   const dispatch = useDispatch();
-  const { channelInfoTable } = useSelector((state) => state[Info.ID].storage);
+  const { channelInfoTable } = useSelector((state) => state[Info.id].storage);
 
   const handleBestToggle = useCallback(() => {
     const channelInfo = {
@@ -80,7 +80,7 @@ function GroupRenderer({ id, value }) {
   const dispatch = useDispatch();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [anchorEl, setAnchorEl] = useState(false);
 
@@ -169,7 +169,7 @@ function SubsChannelManager({ subs, open, onClose }) {
   const [confirm, ConfirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [createGroup, setCreateGroup] = useState(false);
   const [groupInput, setGroupInput] = useState('');

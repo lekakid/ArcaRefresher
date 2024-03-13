@@ -19,18 +19,18 @@ import { useLoadChecker } from './LoadChecker';
 const pathToken = window.location.pathname.split('/');
 pathToken.shift(); // ''
 const pageType = pathToken.shift();
-let channelID = pathToken.shift();
+let channelId = pathToken.shift();
 let channelName;
 switch (pageType) {
   case 'b':
     // Nothing
     break;
   case 'e':
-    channelID = 'emoticon';
+    channelId = 'emoticon';
     channelName = '아카콘';
     break;
   default:
-    channelID = 'ArcaLive';
+    channelId = 'ArcaLive';
     channelName = '아카라이브';
     break;
 }
@@ -38,7 +38,7 @@ switch (pageType) {
 const initialState = {
   user: undefined,
   channel: {
-    ID: channelID,
+    id: channelId,
     name: channelName,
   },
   category: undefined,
@@ -89,7 +89,7 @@ export function ContentCollector() {
         uniqueId = `#${token.pop()}`;
       }
       const nick = decodeURI(token.pop());
-      dispatch(setUser({ ID: `${nick}${uniqueId}` }));
+      dispatch(setUser({ id: `${nick}${uniqueId}` }));
     } catch (error) {
       console.warn('[ContentInfo] 이용자 정보를 받아오지 못했습니다.');
     }
@@ -103,7 +103,7 @@ export function ContentCollector() {
         '.board-title .title',
       ).dataset;
       dispatch(
-        setChannel({ ID: channelID, name: name.replace(' 채널', '') || '' }),
+        setChannel({ id: channelId, name: name.replace(' 채널', '') || '' }),
       );
     } catch (error) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
@@ -157,9 +157,9 @@ export function ContentCollector() {
       getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
     const url =
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
-    const ID = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
+    const id = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
 
-    dispatch(setArticle({ ID, category, title, author, url }));
+    dispatch(setArticle({ id, category, title, author, url }));
   }, [dispatch, articleLoaded]);
 
   return null;
@@ -169,17 +169,17 @@ export function ContentCollector() {
  * 게시판 및 게시물 정보를 받아옵니다.
  * @returns {{
  *  user: {
- *    ID: string,
+ *    id: string,
  *  }
  *  channel: {
- *    ID: string,
+ *    id: string,
  *    name: string,
  *  },
  *  board: {
  *    category: { id: label }
  *  }
  *  article: {
- *    ID: string,
+ *    id: string,
  *    category: string,
  *    title: string,
  *    author: string,

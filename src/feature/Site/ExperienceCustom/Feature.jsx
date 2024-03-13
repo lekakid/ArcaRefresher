@@ -63,7 +63,7 @@ export default function ExperienceCustomizer() {
     wideClickArea,
     alternativeSubmitKey,
     enhancedArticleManage,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
   const titleRef = useRef(document.title);
   const [article, setArticle] = useState(null);
   const [comment, setComment] = useState(null);

@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 import { $setTemplate } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { template } = useSelector((state) => state[Info.ID].storage);
+  const { template } = useSelector((state) => state[Info.id].storage);
   const dispatch = useDispatch();
 
   const handler = useCallback(
@@ -30,5 +30,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

@@ -18,8 +18,8 @@ function getKeyCombine(event) {
 
 function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
-  const { interactionType } = useSelector((state) => state[Info.ID].storage);
-  const { mousePos, triggerList } = useSelector((state) => state[Info.ID]);
+  const { interactionType } = useSelector((state) => state[Info.id].storage);
+  const { mousePos, triggerList } = useSelector((state) => state[Info.id]);
   const gestureTrack = useRef({ right: false, count: 0 });
   const [targetTable, setTargetTable] = useState(undefined);
 

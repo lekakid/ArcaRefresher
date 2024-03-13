@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.ID,
+  key: Info.id,
   Icon: Group,
   label: Info.name,
   View,

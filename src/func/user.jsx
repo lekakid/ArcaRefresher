@@ -39,7 +39,7 @@ export function getUserNick(infoElement) {
   return infoElement.textContent.trim() || '알 수 없음';
 }
 
-export function getUserID(infoElement) {
+export function getUserId(infoElement) {
   const filter =
     getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
   if (filter) {

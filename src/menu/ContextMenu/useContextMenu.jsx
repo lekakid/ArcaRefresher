@@ -5,7 +5,7 @@ import { addTrigger, removeTrigger, setOpen } from './slice';
 /**
  * 컨텍스트 메뉴를 등록함
  *
- * @param {string} key              구분 키(보통 FeatureInfo.ID)
+ * @param {string} key              구분 키(보통 FeatureInfo.id)
  * @param {string} selector         클릭된 엘리먼트를 기준으로 실제로 찾을 엘리먼트
  * @returns
  */

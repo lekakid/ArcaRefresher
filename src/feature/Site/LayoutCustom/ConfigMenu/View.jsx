@@ -71,7 +71,7 @@ const View = React.forwardRef((_props, ref) => {
     resizeEmoticonPalette,
     fontSize,
     fixDarkModeWriteForm,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
@@ -287,5 +287,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

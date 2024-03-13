@@ -8,7 +8,7 @@ import { $toggleEnabled, $toggleDeletedOnly } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
   const { enabled, deletedOnly } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   return (
@@ -34,5 +34,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

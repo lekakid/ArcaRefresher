@@ -8,7 +8,7 @@ import { toggleShow } from './slice';
 
 export default function ArticleMenu() {
   const dispatch = useDispatch();
-  const { show } = useSelector((state) => state[Info.ID]);
+  const { show } = useSelector((state) => state[Info.id]);
 
   const handleToggle = useCallback(() => {
     dispatch(toggleShow());

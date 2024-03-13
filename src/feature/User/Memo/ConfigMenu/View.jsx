@@ -24,7 +24,7 @@ const columns = [
 ];
 
 const memoRowsSelector = createSelector(
-  (state) => state[Info.ID].storage.memo,
+  (state) => state[Info.id].storage.memo,
   (memo) =>
     Object.entries(memo).map(([key, { msg = '', color = '' }]) => ({
       id: key,
@@ -37,9 +37,9 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
 
   const { variant, contextRange } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
-  const memoData = useSelector((state) => state[Info.ID].storage.memo);
+  const memoData = useSelector((state) => state[Info.id].storage.memo);
   const memoRows = useSelector(memoRowsSelector);
   const inputRef = useRef();
 
@@ -192,5 +192,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

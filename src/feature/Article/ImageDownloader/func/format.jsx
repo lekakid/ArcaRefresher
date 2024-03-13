@@ -49,11 +49,11 @@ export default function format(string, { values, index = 0, fileName = '' }) {
 
   return string
     .replace(REGEX.CHANNEL, channel.name)
-    .replace(REGEX.CHANNEL_ID, channel.ID)
+    .replace(REGEX.CHANNEL_ID, channel.id)
     .replace(REGEX.TITLE, article.title)
     .replace(REGEX.CATEGORY, article.category)
     .replace(REGEX.AUTHOR, article.author)
-    .replace(REGEX.ARTICLE_ID, article.ID)
+    .replace(REGEX.ARTICLE_ID, article.id)
     .replace(REGEX.URL, article.url)
     .replace(REGEX.UPLOAD_NAME, fileName)
     .replace(REGEX.NUMBER, `${index}`.padStart(3, '0'));

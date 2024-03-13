@@ -59,8 +59,8 @@ const View = React.forwardRef((_props, ref) => {
     keyword: keywordList,
     channel: channelList,
     muteAllEmot,
-    category: { [channel.ID]: categoryConfig },
-  } = useSelector((state) => state[Info.ID].storage);
+    category: { [channel.id]: categoryConfig },
+  } = useSelector((state) => state[Info.id].storage);
   const emotRows = useSelector(emoticonTableSelector);
 
   const handleSaveFormat = useCallback((value) => {
@@ -84,7 +84,7 @@ const View = React.forwardRef((_props, ref) => {
     (id, value) => {
       dispatch(
         $setCategoryConfig({
-          channel: channel.ID,
+          channel: channel.id,
           category: id,
           config: value,
         }),
@@ -250,5 +250,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

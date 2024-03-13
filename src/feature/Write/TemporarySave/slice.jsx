@@ -11,13 +11,13 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage),
+  storage: getValue(Info.id, defaultStorage),
   currentSlot: null,
   loadOpen: false,
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $addArticle(state, action) {

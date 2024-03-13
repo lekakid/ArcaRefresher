@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { ImageSearch, PhotoLibrary } from '@mui/icons-material';
 
@@ -16,12 +17,12 @@ const ERROR_MSG =
 
 function ContextMenu({ target }) {
   const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
-    useSelector((state) => state[Info.ID].storage);
+    useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: ARTICLE_IMAGES,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -198,5 +199,9 @@ function ContextMenu({ target }) {
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

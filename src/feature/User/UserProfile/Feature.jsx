@@ -25,7 +25,7 @@ function UserProfile() {
   const { user } = useContent();
 
   const { indicateMyComment, showId } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   useLayoutEffect(() => {
@@ -60,7 +60,7 @@ function UserProfile() {
 
     const apply = () => {
       [...document.querySelectorAll(COMMENT_USER_INFO)].forEach((e) => {
-        if (getUserNick(e) === user.ID) {
+        if (getUserNick(e) === user.id) {
           e.classList.add('mynick');
         }
       });

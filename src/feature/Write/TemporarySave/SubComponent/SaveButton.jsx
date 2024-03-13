@@ -9,7 +9,7 @@ import Info from '../FeatureInfo';
 
 function SaveButton({ editor, saveAs = false, ...btnPropsFromGroup }) {
   const dispatch = useDispatch();
-  const { currentSlot } = useSelector((state) => state[Info.ID]);
+  const { currentSlot } = useSelector((state) => state[Info.id]);
   const [snack, setSnack] = useState(false);
 
   const handleClick = useCallback(() => {

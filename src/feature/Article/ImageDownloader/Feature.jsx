@@ -24,8 +24,8 @@ export default function ImageDownloader() {
   const dispatch = useDispatch();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
-  const { enabled } = useSelector((state) => state[Info.ID].storage);
-  const { open } = useSelector((state) => state[Info.ID]);
+  const { enabled } = useSelector((state) => state[Info.id].storage);
+  const { open } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState(null);
 
   useEffect(() => {

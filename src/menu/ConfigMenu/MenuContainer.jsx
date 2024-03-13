@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
@@ -25,7 +26,7 @@ import DrawerItem from './DrawerItem';
 function MenuContainer({ groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, opacity, drawer, group, selection } = useSelector(
-    (state) => state[Info.ID],
+    (state) => state[Info.id],
   );
   const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);
@@ -229,5 +230,9 @@ function MenuContainer({ groupList, menuList }) {
 }
 
 MenuContainer.displayName = 'ConfigMenuContainer';
+MenuContainer.propTypes = {
+  groupList: PropTypes.array,
+  menuList: PropTypes.array,
+};
 
 export default MenuContainer;

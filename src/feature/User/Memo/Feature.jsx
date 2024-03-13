@@ -7,14 +7,14 @@ import { AuthorTag } from 'component';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { getUserID, getUserKey } from 'func/user';
+import { getUserId, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
 
 function MemoList() {
   const loaded = useLoadChecker(FULL_LOADED);
 
-  const { variant, memo } = useSelector((state) => state[Info.ID].storage);
+  const { variant, memo } = useSelector((state) => state[Info.id].storage);
   const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
@@ -24,7 +24,7 @@ function MemoList() {
     const appendMemo = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getUserKey(e, index);
-        const id = getUserID(e);
+        const id = getUserId(e);
         const container =
           memoContainers.current[index] || document.createElement('span');
         if (!container.classList.contains('memo')) {
@@ -51,7 +51,7 @@ function MemoList() {
   useLayoutEffect(() => {
     const colorizeUser = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const id = getUserID(e);
+        const id = getUserId(e);
 
         if (memo[id]?.color) {
           e.style.setProperty('color', memo[id].color, 'important');

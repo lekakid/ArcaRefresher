@@ -15,7 +15,7 @@
  *
  * 각 기능 모듈들에 대한 string 정보를 담고 있습니다.
  *
- * @property {string} ID            기능의 ID, 폴더 이름과 일치해야합니다.
+ * @property {string} id            기능의 ID, 폴더 이름과 일치해야합니다.
  * @property {string} name          기능의 이름
  * @property {string} description   기능의 설명
  */

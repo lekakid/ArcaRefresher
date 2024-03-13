@@ -8,10 +8,10 @@ import Info from './FeatureInfo';
 export default function ThemeCustomizer() {
   const { channel } = useContent();
   const { enabled, current, theme } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
-  const currentTheme = theme[channel.ID] || theme[current];
+  const currentTheme = theme[channel.id] || theme[current];
   useLayoutEffect(() => {
     if (!enabled || !currentTheme) return undefined;
 

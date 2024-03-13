@@ -9,7 +9,7 @@ import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
   const { autoSaveTime, deleteOnCommit } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   return (
@@ -40,5 +40,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

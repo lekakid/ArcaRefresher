@@ -54,7 +54,7 @@ function AutoRefresher() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
   const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [board, setBoard] = useState(null);
   const [pause, setPause] = useState({

@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     pushSnack(state, action) {

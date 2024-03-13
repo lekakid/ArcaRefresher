@@ -35,11 +35,11 @@ function formatUpdater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage, formatUpdater),
+  storage: getValue(Info.id, defaultStorage, formatUpdater),
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $toggleEnabled(state) {

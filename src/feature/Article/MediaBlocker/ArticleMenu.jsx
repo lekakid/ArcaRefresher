@@ -11,7 +11,7 @@ import Info from './FeatureInfo';
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
   const { enabled, deletedOnly } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
 

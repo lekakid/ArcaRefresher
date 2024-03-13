@@ -10,7 +10,7 @@ import LoadTable from './LoadTable';
 
 function LoadButton({ editor, ...btnProps }) {
   const dispatch = useDispatch();
-  const { loadOpen } = useSelector((state) => state[Info.ID]);
+  const { loadOpen } = useSelector((state) => state[Info.id]);
 
   const handleClick = useCallback(() => {
     dispatch(setLoadOpen(true));

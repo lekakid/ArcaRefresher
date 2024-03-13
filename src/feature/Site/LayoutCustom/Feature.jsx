@@ -448,7 +448,7 @@ export default function LayoutCustom() {
     resizeEmoticonPalette,
     fontSize,
     fixDarkModeWriteForm,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
 
   if (!enabled) return null;
 

@@ -12,12 +12,12 @@ const View = React.forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
   const color = useSelector(
-    (state) => state[Info.ID].storage.color[channel.ID],
+    (state) => state[Info.id].storage.color[channel.id],
   );
 
   const handleChange = useCallback(
     (id, value) => {
-      dispatch($setCategoryStyle({ channel: channel.ID, category: id, value }));
+      dispatch($setCategoryStyle({ channel: channel.id, category: id, value }));
     },
     [channel, dispatch],
   );
@@ -59,5 +59,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Button,
   Checkbox,
@@ -22,7 +23,7 @@ import { $addFolder, $addImage, $removeImage } from '../slice';
 function FolderCheckList({ open, url, onClose }) {
   const dispatch = useDispatch();
   const { channel, article } = useContent();
-  const { imgList } = useSelector((state) => state[Info.ID].storage);
+  const { imgList } = useSelector((state) => state[Info.id].storage);
   const [openFolderInput, setOpenFolderInput] = useState(false);
   const [folderInput, setFolderInput] = useState('');
 
@@ -120,7 +121,7 @@ function FolderCheckList({ open, url, onClose }) {
                 fullWidth
                 startIcon={<ExpandMore />}
                 onClick={() => {
-                  setFolderInput(channel.ID);
+                  setFolderInput(channel.id);
                   setOpenFolderInput(true);
                 }}
               >
@@ -133,5 +134,11 @@ function FolderCheckList({ open, url, onClose }) {
     </Dialog>
   );
 }
+
+FolderCheckList.propTypes = {
+  open: PropTypes.bool,
+  url: PropTypes.string,
+  onClose: PropTypes.func,
+};
 
 export default FolderCheckList;

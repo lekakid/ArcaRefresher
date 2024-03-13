@@ -35,7 +35,7 @@ export default [
     defaultKey: 'KeyZ',
     callback(_e, { content }) {
       const { subList } = unsafeWindow.LiveConfig;
-      const currentIndex = subList.indexOf(content.channel.ID);
+      const currentIndex = subList.indexOf(content.channel.id);
       if (currentIndex < 0) return;
 
       const prevIndex = (subList.length + currentIndex - 1) % subList.length;
@@ -49,7 +49,7 @@ export default [
     defaultKey: 'KeyX',
     callback(_e, { content }) {
       const { subList } = unsafeWindow.LiveConfig;
-      const currentIndex = subList.indexOf(content.channel.ID);
+      const currentIndex = subList.indexOf(content.channel.id);
       if (currentIndex < 0) return;
 
       const nextIndex = (currentIndex + 1) % subList.length;
@@ -215,7 +215,7 @@ export default [
       const token = window.location.pathname.split('/');
       const articleId = token.pop();
       fetch(
-        `https://arca.live/api/scrap?slug=${content.channel.ID}&articleId=${articleId}`,
+        `https://arca.live/api/scrap?slug=${content.channel.id}&articleId=${articleId}`,
       )
         .then((r) => r.json())
         .then((json) => {

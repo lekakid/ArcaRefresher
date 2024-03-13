@@ -79,9 +79,9 @@ export default function ChannelManager() {
   const navLoaded = useLoadChecker(NAVIGATION_LOADED);
 
   const { enabled, groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
-  const { navChannelInfo } = useSelector((state) => state[Info.ID]);
+  const { navChannelInfo } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState();
   const subRef = useRef(undefined);
   const [open, setOpen] = useState({ subs: false, main: false, editor: false });

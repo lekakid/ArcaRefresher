@@ -23,7 +23,7 @@ const profileUrl = 'https://arca.live/u/@';
 function ContextMenu({ target }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
-    (store) => store[Info.ID].storage,
+    (store) => store[Info.id].storage,
   );
   const { channel } = useContent();
   let contextSelector;
@@ -44,7 +44,7 @@ function ContextMenu({ target }) {
 
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -119,7 +119,7 @@ function ContextMenu({ target }) {
 
   const handleSearchChannel = useCallback(async () => {
     open(
-      `https://arca.live/b/${channel.ID}?target=nickname&keyword=${
+      `https://arca.live/b/${channel.id}?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
       openType,
