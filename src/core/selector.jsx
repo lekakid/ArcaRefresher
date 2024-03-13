@@ -29,6 +29,7 @@ export const BOARD_SITE_NOTICES = '.vrow.notice-service';
 export const ARTICLE_TITLE = '.article-head .title';
 export const ARTICLE_AUTHOR =
   '.article-head .user-info, .article-head .member-info';
+export const ARTICLE_INFO = '.article-info';
 export const ARTICLE_IMAGES =
   '.article-content img:not([class$="emoticon"]):not(.twemoji)';
 export const ARTICLE_GIFS =

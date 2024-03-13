@@ -35,6 +35,18 @@ export const FORMAT = {
     LABEL: '게시물 번호',
     getValue: (args) => args.content.article.id,
   },
+  DATE: {
+    STRING: '%date%',
+    REGEX: /%date%/,
+    LABEL: '게시물 작성일',
+    getValue: (args) => args.content.article.date,
+  },
+  TIME: {
+    STRING: '%time%',
+    REGEX: /%time%/,
+    LABEL: '게시물 작성 시간',
+    getValue: (args) => args.content.article.time,
+  },
   URL: {
     STRING: '%url%',
     REGEX: /%url%/,

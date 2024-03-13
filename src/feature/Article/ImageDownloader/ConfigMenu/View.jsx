@@ -56,6 +56,8 @@ const View = React.forwardRef((_props, ref) => {
               'CATEGORY',
               'AUTHOR',
               'ARTICLE_ID',
+              'DATE',
+              'TIME',
               'URL',
               'ORIG',
             ]}
@@ -72,6 +74,8 @@ const View = React.forwardRef((_props, ref) => {
               'CATEGORY',
               'AUTHOR',
               'ARTICLE_ID',
+              'DATE',
+              'TIME',
               'URL',
             ]}
             value={zipName}
@@ -95,6 +99,8 @@ const View = React.forwardRef((_props, ref) => {
               'CATEGORY',
               'AUTHOR',
               'ARTICLE_ID',
+              'DATE',
+              'TIME',
               'URL',
               'ORIG',
               'NUMBER',

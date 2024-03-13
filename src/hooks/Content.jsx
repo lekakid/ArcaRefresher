@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import {
   ARTICLE_AUTHOR,
+  ARTICLE_INFO,
   ARTICLE_LOADED,
   ARTICLE_TITLE,
   ARTICLE_URL,
@@ -147,6 +148,9 @@ export function ContentCollector() {
     if (!articleLoaded) return;
 
     const titleElement = document.querySelector(ARTICLE_TITLE);
+    const infoElement = document.querySelector(ARTICLE_INFO);
+    const timeElement = infoElement.querySelector('.date time');
+
     const category =
       titleElement?.querySelector('.badge')?.textContent || '일반';
     const title =
@@ -155,11 +159,14 @@ export function ContentCollector() {
       '제목 없음';
     const author =
       getUserNick(document.querySelector(ARTICLE_AUTHOR)) || '익명';
+    const date = timeElement?.textContent.split(' ')[0] || '';
+    const time =
+      timeElement?.textContent.split(' ')[1]?.replace(/:/g, '') || '';
     const url =
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
     const id = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
 
-    dispatch(setArticle({ id, category, title, author, url }));
+    dispatch(setArticle({ id, category, title, author, date, time, url }));
   }, [dispatch, articleLoaded]);
 
   return null;
@@ -183,7 +190,8 @@ export function ContentCollector() {
  *    category: string,
  *    title: string,
  *    author: string,
- *    url: string
+ *    date: string,
+ *    url: string,
  *  }
  * }}
  */
