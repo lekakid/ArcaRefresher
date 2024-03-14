@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { List, Paper, Typography } from '@mui/material';
+import { Collapse, List, Paper, Typography } from '@mui/material';
 
 import { SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
-import { $toggleEnabled, $toggleDeletedOnly } from '../slice';
+import { $toggleBlockAll, $toggleBlockDeleted } from '../slice';
 
 const View = React.forwardRef((_props, ref) => {
-  const { enabled, deletedOnly } = useSelector(
+  const { blockAll, blockDeleted } = useSelector(
     (state) => state[Info.id].storage,
   );
 
@@ -18,16 +18,18 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <SwitchRow
             divider
-            primary="사용"
-            value={enabled}
-            action={$toggleEnabled}
+            primary="모든 게시물의 이미지 차단"
+            value={blockAll}
+            action={$toggleBlockAll}
           />
-          <SwitchRow
-            primary="삭제된 게시물에서만 사용"
-            secondary="채널 관리자 전용 기능입니다."
-            value={deletedOnly}
-            action={$toggleDeletedOnly}
-          />
+          <Collapse in={!blockAll}>
+            <SwitchRow
+              primary="삭제된 게시물 이미지 차단"
+              secondary="채널 관리자 전용"
+              value={blockDeleted}
+              action={$toggleBlockDeleted}
+            />
+          </Collapse>
         </List>
       </Paper>
     </Fragment>

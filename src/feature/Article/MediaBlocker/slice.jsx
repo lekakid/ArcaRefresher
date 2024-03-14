@@ -4,8 +4,8 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  enabled: true,
-  deletedOnly: true,
+  blockAll: false,
+  blockDeleted: true,
 };
 
 const initialState = {
@@ -16,15 +16,15 @@ export const slice = createSlice({
   name: Info.id,
   initialState,
   reducers: {
-    $toggleEnabled(state) {
-      state.storage.enabled = !state.storage.enabled;
+    $toggleBlockAll(state) {
+      state.storage.blockAll = !state.storage.blockAll;
     },
-    $toggleDeletedOnly(state) {
-      state.storage.deletedOnly = !state.storage.deletedOnly;
+    $toggleBlockDeleted(state) {
+      state.storage.blockDeleted = !state.storage.blockDeleted;
     },
   },
 });
 
-export const { $toggleEnabled, $toggleDeletedOnly } = slice.actions;
+export const { $toggleBlockAll, $toggleBlockDeleted } = slice.actions;
 
 export default slice.reducer;
