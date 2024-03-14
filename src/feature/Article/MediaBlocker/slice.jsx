@@ -6,6 +6,7 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   blockAll: false,
   blockDeleted: true,
+  blockReported: true,
 };
 
 const initialState = {
@@ -22,9 +23,13 @@ export const slice = createSlice({
     $toggleBlockDeleted(state) {
       state.storage.blockDeleted = !state.storage.blockDeleted;
     },
+    $toggleBlockReported(state) {
+      state.storage.blockReported = !state.storage.blockReported;
+    },
   },
 });
 
-export const { $toggleBlockAll, $toggleBlockDeleted } = slice.actions;
+export const { $toggleBlockAll, $toggleBlockDeleted, $toggleBlockReported } =
+  slice.actions;
 
 export default slice.reducer;

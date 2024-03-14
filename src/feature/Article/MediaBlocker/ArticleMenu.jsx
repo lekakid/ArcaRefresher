@@ -10,7 +10,7 @@ import Info from './FeatureInfo';
 
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
-  const { enabled, deletedOnly } = useSelector(
+  const { blockAll, blockDeleted, blockReported } = useSelector(
     (state) => state[Info.id].storage,
   );
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
@@ -20,7 +20,14 @@ export default function ArticleMenu() {
     body.classList.add('media-blocker-unhide');
   }, []);
 
-  if (!enabled || (deletedOnly && !alertLoaded)) return null;
+  if (
+    !(
+      blockAll ||
+      (alertLoaded && blockDeleted) ||
+      (document.referrer.includes('/reports/') && blockReported)
+    )
+  )
+    return null;
 
   return (
     <Button

@@ -12,7 +12,7 @@ import Blocker from './Blocker';
 import Info from './FeatureInfo';
 
 export default function MediaBlocker() {
-  const { blockAll, blockDeleted } = useSelector(
+  const { blockAll, blockDeleted, blockReported } = useSelector(
     (state) => state[Info.id].storage,
   );
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
@@ -20,11 +20,15 @@ export default function MediaBlocker() {
   const [blockImgList, setBlockImgList] = useState([]);
 
   useEffect(() => {
-    if (!articleLoaded) return;
-    if (!(blockAll || (alertLoaded && blockDeleted))) {
-      setBlockImgList([]);
-      return;
-    }
+    if (!articleLoaded) return undefined;
+    if (
+      !(
+        blockAll ||
+        (alertLoaded && blockDeleted) ||
+        (document.referrer.includes('/reports/') && blockReported)
+      )
+    )
+      return undefined;
 
     const images = [...document.querySelectorAll(ARTICLE_MEDIA)];
     const info = images.map((e) => {
@@ -34,7 +38,8 @@ export default function MediaBlocker() {
       return { element: e, container };
     });
     setBlockImgList(info);
-  }, [alertLoaded, articleLoaded, blockAll, blockDeleted]);
+    return () => setBlockImgList([]);
+  }, [alertLoaded, articleLoaded, blockAll, blockDeleted, blockReported]);
 
   if (blockImgList.length === 0) return null;
 
