@@ -287,7 +287,14 @@ export default function ExperienceCustomizer() {
     const preview = article.querySelector(PREVIEW_SELECTOR);
     if (!preview) return;
 
-    if (preview.clientWidth < 10 && preview.clientHeight < 10) {
+    const computedStyle = window.getComputedStyle(preview);
+    const display = computedStyle.getPropertyValue('display');
+    if (display === 'none') return;
+
+    const width = parseInt(computedStyle.getPropertyValue('width'), 10);
+    const height = parseInt(computedStyle.getPropertyValue('height'), 10);
+
+    if (width < 10 && height < 10) {
       const alterParent = document.createElement('span');
       preview.parentElement.insertAdjacentElement('afterbegin', alterParent);
       alterParent.append(preview);
