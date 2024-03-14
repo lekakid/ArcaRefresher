@@ -5,7 +5,7 @@ import { GlobalStyles } from '@mui/material';
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
-import { User } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
@@ -103,7 +103,7 @@ function BoardMuter() {
           });
           return {
             element: article,
-            user: new User(article.querySelector('.user-info')).toUID(),
+            user: new ArcaUser(article.querySelector('.user-info')).toUID(),
             content: article.querySelector('.title')?.textContent || '',
             channel: isGlogal
               ? article.querySelector('.badge')?.textContent

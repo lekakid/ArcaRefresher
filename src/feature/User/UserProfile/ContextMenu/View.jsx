@@ -12,7 +12,7 @@ import {
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-import { User } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
 import toDocument from 'func/toDocument';
@@ -55,9 +55,9 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        const user = new User(userElement);
+        const user = new ArcaUser(userElement);
         // 유동 제외
-        if (user.type === User.TYPE_IP) return undefined;
+        if (user.type === ArcaUser.TYPE_IP) return undefined;
 
         const id = user.toString();
         const url = id.replace('#', '/');

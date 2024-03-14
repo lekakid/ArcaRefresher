@@ -13,7 +13,7 @@ import {
   NAVIGATION_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
-import { User } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import { useLoadChecker } from './LoadChecker';
 
@@ -158,7 +158,7 @@ export function ContentCollector() {
       titleElement.textContent.trim() ||
       '제목 없음';
     const author =
-      new User(document.querySelector(ARTICLE_AUTHOR)).toString() || '익명';
+      new ArcaUser(document.querySelector(ARTICLE_AUTHOR)).toString() || '익명';
     const date = timeElement?.textContent.split(' ')[0] || '';
     const time =
       timeElement?.textContent.split(' ')[1]?.replace(/:/g, '') || '';

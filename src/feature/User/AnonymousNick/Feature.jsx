@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
-import { User, getUserKey } from 'func/user';
+import { ArcaUser, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { EVENT_COMMENT_REFRESH } from 'core/event';
@@ -44,7 +44,7 @@ function AnonymousNick() {
       const data = [...document.querySelectorAll(ARTICLE_USER_INFO)].map(
         (e, index) => {
           const key = getUserKey(e, index);
-          const id = new User(e).toUID();
+          const id = new ArcaUser(e).toUID();
           const anonymousNick =
             nickTable[id] ||
             (nickTable[id] =

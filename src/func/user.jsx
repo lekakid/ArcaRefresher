@@ -1,4 +1,4 @@
-export class User {
+export class ArcaUser {
   static TYPE_FIXED = 'FIXED';
   static TYPE_HALF = 'HALF';
   static TYPE_IP = 'IP';
@@ -24,16 +24,16 @@ export class User {
       .filter((e) => e);
 
     // 고정닉
-    this.type = User.TYPE_FIXED;
+    this.type = ArcaUser.TYPE_FIXED;
 
     // 반고닉
     if (id?.includes('#')) {
-      this.type = User.TYPE_HALF;
+      this.type = ArcaUser.TYPE_HALF;
     }
 
     // 유동
     if (id?.includes('.')) {
-      this.type = User.TYPE_IP;
+      this.type = ArcaUser.TYPE_IP;
     }
 
     this.nick = nick;
@@ -42,11 +42,11 @@ export class User {
 
   toString() {
     switch (this.type) {
-      case User.TYPE_FIXED:
+      case ArcaUser.TYPE_FIXED:
         return this.nick;
-      case User.TYPE_HALF:
+      case ArcaUser.TYPE_HALF:
         return `${this.nick}${this.id}`;
-      case User.TYPE_IP:
+      case ArcaUser.TYPE_IP:
         return `${this.nick}(${this.id})`;
       default:
         return '';
@@ -55,10 +55,10 @@ export class User {
 
   toUID() {
     switch (this.type) {
-      case User.TYPE_FIXED:
+      case ArcaUser.TYPE_FIXED:
         return this.nick;
-      case User.TYPE_HALF:
-      case User.TYPE_IP:
+      case ArcaUser.TYPE_HALF:
+      case ArcaUser.TYPE_IP:
         return this.id;
       default:
         return '';
