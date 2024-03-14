@@ -1,74 +1,69 @@
-function getFilterFromData(infoElement) {
-  return (
-    infoElement.matches('[data-filter]')
-      ? infoElement
-      : infoElement.querySelector('[data-filter]')
-  )?.dataset.filter;
-}
+export class User {
+  static TYPE_FIXED = 'FIXED';
+  static TYPE_HALF = 'HALF';
+  static TYPE_IP = 'IP';
 
-function getFilterFromAnchor(infoElement) {
-  const anchor = infoElement.matches('a')
-    ? infoElement
-    : infoElement.querySelector('a');
-  if (!anchor) return undefined;
+  constructor(containerEl) {
+    let filter;
+    const infoEl = containerEl.matches('[data-filter]')
+      ? containerEl
+      : containerEl.querySelector('[data-filter]');
+    filter = infoEl?.dataset.filter;
 
-  return anchor.title || anchor.textContent.replace('@', '');
-}
+    if (!filter) {
+      const anchorEl = containerEl.matches('a')
+        ? containerEl
+        : containerEl.querySelector('a');
+      filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
+    }
 
-export function getUserNick(infoElement) {
-  const filter =
-    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
-  if (filter) {
+    if (!filter) throw new Error('[User] 이용자 정보를 찾을 수 없음');
+
     const [, nick, id] = filter
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
       .filter((e) => e);
 
+    // 고정닉
+    this.type = User.TYPE_FIXED;
+
     // 반고닉
     if (id?.includes('#')) {
-      return `${nick}${id}`;
+      this.type = User.TYPE_HALF;
     }
 
     // 유동
     if (id?.includes('.')) {
-      return `${nick}(${id})`;
+      this.type = User.TYPE_IP;
     }
 
-    return nick;
+    this.nick = nick;
+    this.id = id;
   }
 
-  return infoElement.textContent.trim() || '알 수 없음';
-}
-
-export function getUserId(infoElement) {
-  const filter =
-    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
-  if (filter) {
-    const [, nick, id] = filter
-      .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
-      .filter((e) => e);
-
-    return id || nick;
+  toString() {
+    switch (this.type) {
+      case User.TYPE_FIXED:
+        return this.nick;
+      case User.TYPE_HALF:
+        return `${this.nick}${this.id}`;
+      case User.TYPE_IP:
+        return `${this.nick}(${this.id})`;
+      default:
+        return '';
+    }
   }
 
-  return infoElement.textContent.trim() || '알 수 없음';
-}
-
-export function getUserFilter(infoElement) {
-  const filter =
-    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
-  if (filter) {
-    return filter;
+  toUID() {
+    switch (this.type) {
+      case User.TYPE_FIXED:
+        return this.nick;
+      case User.TYPE_HALF:
+      case User.TYPE_IP:
+        return this.id;
+      default:
+        return '';
+    }
   }
-
-  return infoElement.textContent.trim() || '미상';
-}
-
-export function getUserIP(infoElement) {
-  const filter =
-    getFilterFromData(infoElement) || getFilterFromAnchor(infoElement);
-  if (!filter) return '';
-
-  return filter.match(/[0-9]{1,3}\.[0-9]{1,3}$/g)?.[0];
 }
 
 export function getUserKey(element, index) {

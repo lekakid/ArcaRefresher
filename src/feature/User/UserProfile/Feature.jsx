@@ -6,7 +6,7 @@ import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'core/selector';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserNick } from 'func/user';
+import { User } from 'func/user';
 
 import Info from './FeatureInfo';
 
@@ -34,10 +34,10 @@ function UserProfile() {
 
     const show = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const fullNick = getUserNick(e);
-        if (!fullNick.includes('#')) return;
+        const u = new User(e);
+        if (u.type !== User.TYPE_HALF) return;
 
-        e.firstElementChild.textContent = fullNick;
+        e.firstElementChild.textContent = u.toString();
       });
     };
     show();
@@ -60,7 +60,7 @@ function UserProfile() {
 
     const apply = () => {
       [...document.querySelectorAll(COMMENT_USER_INFO)].forEach((e) => {
-        if (getUserNick(e) === user.id) {
+        if (new User(e).id === user.id) {
           e.classList.add('mynick');
         }
       });

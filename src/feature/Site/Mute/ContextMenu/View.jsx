@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
-import { getUserId } from 'func/user';
+import { User } from 'func/user';
 
 import {
   getEmoticonList,
@@ -60,7 +60,7 @@ function ContextMenu({ target }) {
           }
           if (!userElement) return undefined;
 
-          const regex = makeRegex(getUserId(userElement));
+          const regex = makeRegex(new User(userElement).toUID());
           const exist = user.includes(regex);
           return { type: 'user', regex, exist };
         }

@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserFilter } from 'func/user';
+import { User } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
@@ -192,7 +192,7 @@ function CommentMuter() {
       ];
       const commentInfos = comments.map((comment) => ({
         element: comment,
-        user: getUserFilter(comment.querySelector('.user-info')),
+        user: new User(comment.querySelector('.user-info')).toUID(),
         content: comment.querySelector('.message')?.textContent || '',
         deleted: muteIncludeReply
           ? comment.querySelector('.comment-item').classList.contains('deleted')

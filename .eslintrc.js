@@ -12,6 +12,7 @@ module.exports = {
       },
     ],
     'no-param-reassign': ['error', { props: false }],
+    'lines-between-class-members': 'off',
     'import/prefer-default-export': 'off',
     'react/jsx-wrap-multilines': [
       'error',

@@ -10,7 +10,7 @@ import {
   USER_MENTION,
 } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
-import { getUserId } from 'func/user';
+import { User } from 'func/user';
 
 import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
@@ -47,7 +47,7 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        return getUserId(userElement);
+        return new User(userElement).toUID();
       },
     },
     [target],

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
-import { getUserId, getUserKey } from 'func/user';
+import { User, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { EVENT_COMMENT_REFRESH } from 'core/event';
@@ -44,8 +44,8 @@ function AnonymousNick() {
       const data = [...document.querySelectorAll(ARTICLE_USER_INFO)].map(
         (e, index) => {
           const key = getUserKey(e, index);
-          const id = getUserId(e);
-          const nick =
+          const id = new User(e).toUID();
+          const anonymousNick =
             nickTable[id] ||
             (nickTable[id] =
               nickList.pop() ||
@@ -58,7 +58,7 @@ function AnonymousNick() {
           }
           e.insertAdjacentElement('afterend', container);
 
-          return { key, nick, container };
+          return { key, nick: anonymousNick, container };
         },
       );
       setNickData(data);

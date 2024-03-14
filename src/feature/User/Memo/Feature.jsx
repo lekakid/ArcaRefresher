@@ -7,7 +7,7 @@ import { AuthorTag } from 'component';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { getUserId, getUserKey } from 'func/user';
+import { User, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
 
@@ -24,7 +24,7 @@ function MemoList() {
     const appendMemo = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getUserKey(e, index);
-        const id = getUserId(e);
+        const id = new User(e).toUID();
         const container =
           memoContainers.current[index] || document.createElement('span');
         if (!container.classList.contains('memo')) {
@@ -51,7 +51,7 @@ function MemoList() {
   useLayoutEffect(() => {
     const colorizeUser = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const id = getUserId(e);
+        const { id } = new User(e);
 
         if (memo[id]?.color) {
           e.style.setProperty('color', memo[id].color, 'important');

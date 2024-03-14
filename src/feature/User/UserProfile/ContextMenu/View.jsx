@@ -12,7 +12,7 @@ import {
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-import { getUserNick } from 'func/user';
+import { User } from 'func/user';
 
 import { open } from 'func/window';
 import toDocument from 'func/toDocument';
@@ -55,9 +55,11 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        const id = getUserNick(userElement);
+        const user = new User(userElement);
         // 유동 제외
-        if (id.includes('.')) return undefined;
+        if (user.type === User.TYPE_IP) return undefined;
+
+        const id = user.toString();
         const url = id.replace('#', '/');
 
         if (checkSpamAccount) {
