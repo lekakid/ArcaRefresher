@@ -63,9 +63,9 @@ function MemoList() {
             'important',
           );
         } else {
-          e.style.setProperty('color', '');
-          e.style.setProperty('font-weight', '');
-          e.querySelector('a')?.style.setProperty('color', '');
+          e.style.removeProperty('color');
+          e.style.removeProperty('font-weight');
+          e.querySelector('a')?.style.removeProperty('color');
         }
       });
     };
