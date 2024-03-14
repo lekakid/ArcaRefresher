@@ -37,7 +37,9 @@ function UserProfile() {
         const u = new User(e);
         if (u.type !== User.TYPE_HALF) return;
 
-        e.firstElementChild.textContent = u.toString();
+        e.firstElementChild.textContent = `${
+          e.firstElementChild.textContent.includes('@') ? '@' : ''
+        }${u.toString()}`;
       });
     };
     show();
