@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Portal } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FULL_LOADED, USER_INFO } from 'core/selector';
 import { AuthorTag } from 'component';
@@ -10,21 +10,25 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser, getUserKey } from 'func/user';
 
 import Info from './FeatureInfo';
+import { $updateMemoNick } from './slice';
 
 function MemoList() {
+  const dispatch = useDispatch();
   const loaded = useLoadChecker(FULL_LOADED);
 
   const { variant, memo } = useSelector((state) => state[Info.id].storage);
+
   const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
   useLayoutEffect(() => {
     if (!loaded) return undefined;
 
-    const appendMemo = () => {
+    const parse = () => {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getUserKey(e, index);
-        const id = new ArcaUser(e).toUID();
+        const user = new ArcaUser(e);
+        const id = user.toUID();
         const container =
           memoContainers.current[index] || document.createElement('span');
         if (!container.classList.contains('memo')) {
@@ -38,15 +42,29 @@ function MemoList() {
 
       setInfoList(list);
     };
-    appendMemo();
-    window.addEventListener(EVENT_BOARD_REFRESH, appendMemo);
-    window.addEventListener(EVENT_COMMENT_REFRESH, appendMemo);
+    parse();
+    window.addEventListener(EVENT_BOARD_REFRESH, parse);
+    window.addEventListener(EVENT_COMMENT_REFRESH, parse);
 
     return () => {
-      window.removeEventListener(EVENT_BOARD_REFRESH, appendMemo);
-      window.removeEventListener(EVENT_COMMENT_REFRESH, appendMemo);
+      window.removeEventListener(EVENT_BOARD_REFRESH, parse);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, parse);
     };
   }, [loaded]);
+
+  useLayoutEffect(() => {
+    if (!loaded) return;
+
+    [...document.querySelectorAll(USER_INFO)].forEach((e) => {
+      const user = new ArcaUser(e);
+      const { nick } = user;
+      const id = user.toUID();
+
+      if (memo[id]) {
+        dispatch($updateMemoNick({ user: id, nick }));
+      }
+    });
+  }, [loaded, memo, dispatch]);
 
   useLayoutEffect(() => {
     const colorizeUser = () => {

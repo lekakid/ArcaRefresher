@@ -11,25 +11,73 @@ import {
 } from '@mui/material';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
+import { OpenInNew } from '@mui/icons-material';
 
 import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
 
+import { FOREGROUND, open } from 'func/window';
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
+function userRenderrer(params) {
+  let uid = params.row.id;
+  let hideBtn = false;
+  if (uid.includes('#')) {
+    uid = `${params.row.nick}${params.row.id}`;
+  }
+  if (uid.includes('.')) {
+    uid = `${params.row.nick}(${params.row.id})`;
+    hideBtn = true;
+  }
+
+  return (
+    <Stack
+      sx={{ width: '100%' }}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Typography
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+        variant="body2"
+      >
+        {uid}
+      </Typography>
+      {!hideBtn && (
+        <Button
+          sx={{ minWidth: 40, px: '3px' }}
+          size="small"
+          onClick={() =>
+            open(`https://arca.live/u/@${uid.replace('#', '/')}`, FOREGROUND)
+          }
+        >
+          <OpenInNew />
+        </Button>
+      )}
+    </Stack>
+  );
+}
+
 const columns = [
-  { field: 'id', headerName: '이용자', flex: 1 },
-  { field: 'msg', headerName: '메모 메세지', flex: 1, editable: true },
+  {
+    field: 'id',
+    headerName: '이용자',
+    flex: 2,
+    renderCell: userRenderrer,
+  },
+  { field: 'msg', headerName: '메모 메세지', flex: 2, editable: true },
   { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
+  { field: 'nick', hide: true },
 ];
 
 const memoRowsSelector = createSelector(
   (state) => state[Info.id].storage.memo,
   (memo) =>
-    Object.entries(memo).map(([key, { msg = '', color = '' }]) => ({
+    Object.entries(memo).map(([key, { msg = '', color = '', nick = '' }]) => ({
       id: key,
       msg,
       color,
+      nick,
     })),
 );
 
@@ -108,9 +156,9 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleMemoRowsChange = useCallback(
     (updatedRows) => {
-      const entries = updatedRows.map(({ id, msg, color }) => [
+      const entries = updatedRows.map(({ id, msg, color, nick }) => [
         id,
-        { msg, color },
+        { msg, color, nick },
       ]);
       dispatch($setMemoList(Object.fromEntries(entries)));
     },

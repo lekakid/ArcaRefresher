@@ -61,13 +61,22 @@ export const slice = createSlice({
 
       state.storage.memo[user] = memo;
     },
+    $updateMemoNick(state, action) {
+      const { user, nick } = action.payload;
+      state.storage.memo[user].nick = nick;
+    },
     $setMemoList(state, action) {
       state.storage.memo = action.payload;
     },
   },
 });
 
-export const { $setContextRange, $setVariant, $setMemo, $setMemoList } =
-  slice.actions;
+export const {
+  $setContextRange,
+  $setVariant,
+  $setMemo,
+  $updateMemoNick,
+  $setMemoList,
+} = slice.actions;
 
 export default slice.reducer;
