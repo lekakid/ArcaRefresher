@@ -7,7 +7,7 @@ const defaultStorage = {
   countdown: 5,
   maxTime: -1,
   refreshOnArticle: false,
-  showProgress: true,
+  progressPos: 'bottom left',
 };
 
 const initialState = {
@@ -27,8 +27,8 @@ export const slice = createSlice({
     $toggleRefreshOnArticle(state) {
       state.storage.refreshOnArticle = !state.storage.refreshOnArticle;
     },
-    $toggleAnimation(state) {
-      state.storage.showProgress = !state.storage.showProgress;
+    $setProgressPos(state, action) {
+      state.storage.progressPos = action.payload;
     },
   },
 });
@@ -37,7 +37,7 @@ export const {
   $setTimeLimit,
   $setMaxTime,
   $toggleRefreshOnArticle,
-  $toggleAnimation,
+  $setProgressPos,
 } = slice.actions;
 
 export default slice.reducer;

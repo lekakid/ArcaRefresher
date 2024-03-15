@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import { useSelector } from 'react-redux';
-import { Fade, GlobalStyles } from '@mui/material';
+import { Box, Fade, GlobalStyles } from '@mui/material';
 
 import { BOARD_LOADED, BOARD } from 'core/selector';
 import { EVENT_BOARD_REFRESH } from 'core/event';
@@ -53,10 +53,10 @@ function AutoRefresher() {
   const [subscribe, unsubscribe] = useArcaSocket();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
-  const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
+  const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
     (state) => state[Info.id].storage,
   );
-  const [board, setBoard] = useState(null);
+  const [board, setBoard] = useState();
   const [pause, setPause] = useState({
     management: false,
     unfocus: false,
@@ -217,13 +217,14 @@ function AutoRefresher() {
   return (
     <>
       {refreshStyles}
-      <Fade in={enabled && showProgress}>
-        <div>
+      <Fade in={enabled && progressPos !== 'hidden'}>
+        <Box>
           <RefreshIndicator
+            pos={progressPos.split(' ')}
             count={enabled ? countdown : 0}
             animate={!(pause.management || pause.unfocus || pause.api)}
           />
-        </div>
+        </Box>
       </Fade>
     </>
   );
