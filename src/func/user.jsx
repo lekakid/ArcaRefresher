@@ -2,6 +2,7 @@ export class ArcaUser {
   static TYPE_FIXED = 'FIXED';
   static TYPE_HALF = 'HALF';
   static TYPE_IP = 'IP';
+  static TYPE_ERROR = 'ERROR';
 
   constructor(containerEl) {
     let filter;
@@ -17,7 +18,9 @@ export class ArcaUser {
       filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
     }
 
-    if (!filter) throw new Error('[User] 이용자 정보를 찾을 수 없음');
+    if (!filter) {
+      filter = containerEl.textContent.trim();
+    }
 
     const [, nick, id] = filter
       .match(/(.*)(#[0-9]{8})$|(.*), ([0-9]{1,3}\.[0-9]{1,3})$|(.*)/)
