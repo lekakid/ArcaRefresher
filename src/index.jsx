@@ -16,19 +16,23 @@ const appendAppContainer = () => {
   ReactDOM.render(<App />, appContainer);
 };
 
-if(!document.body) { //@run-at document-start은 document.body가 없을 때 실행될 수 있음
+if (!document.body) {
+  // @run-at document-start은 document.body가 없을 때 실행될 수 있음
   // MutationObserver로 body가 추가되는 것을 감지하여 appendAppContainer를 실행
-  const mutationObserver = new MutationObserver((mutations) => {
+  const mutationObserver = new MutationObserver((mutations, obs) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
-        if(node.nodeName.toLocaleUpperCase() === 'BODY') {
+        if (node.nodeName.toLocaleUpperCase() === 'BODY') {
           appendAppContainer();
-          mutationObserver.disconnect();
+          obs.disconnect();
         }
-      })
+      });
     });
-  }); 
-}
-else {
+  });
+  mutationObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
+} else {
   appendAppContainer();
 }
