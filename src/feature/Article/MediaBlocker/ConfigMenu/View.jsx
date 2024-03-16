@@ -28,6 +28,7 @@ const View = React.forwardRef((_props, ref) => {
           />
           <Collapse in={!blockAll}>
             <SwitchRow
+              divider
               primary="삭제된 게시물 이미지 차단"
               secondary="채널 관리자 전용"
               value={blockDeleted}
