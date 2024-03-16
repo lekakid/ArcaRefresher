@@ -36,6 +36,10 @@ const View = React.forwardRef((_props, ref) => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
+  const handleVisitGithubSponsors = useCallback(() => {
+    GM_openInTab('https://github.com/sponsors/lekakid');
+  }, []);
+
   const handleVisitCoffeeBuyMe = useCallback(() => {
     GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
   }, []);
@@ -87,6 +91,13 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle2">후원</Typography>
       <Paper>
         <List disablePadding>
+          <BaseRow
+            divider
+            header={<ListItemText primary="Github Sponsors" />}
+            onClick={handleVisitGithubSponsors}
+          >
+            <OpenInNew />
+          </BaseRow>
           <BaseRow
             divider
             header={<ListItemText primary="Buy Me a Coffee" />}
