@@ -9,7 +9,26 @@ import App from './App';
  */
 window.console = unsafeWindow.console;
 
-const appContainer = document.createElement('div');
-document.body.append(appContainer);
+const appendAppContainer = () => {
+  const appContainer = document.createElement('div');
+  document.body.append(appContainer);
 
-ReactDOM.render(<App />, appContainer);
+  ReactDOM.render(<App />, appContainer);
+};
+
+if(!document.body) { //@run-at document-start은 document.body가 없을 때 실행될 수 있음
+  // MutationObserver로 body가 추가되는 것을 감지하여 appendAppContainer를 실행
+  const mutationObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if(node.nodeName.toLocaleUpperCase() === 'BODY') {
+          appendAppContainer();
+          mutationObserver.disconnect();
+        }
+      })
+    });
+  }); 
+}
+else {
+  appendAppContainer();
+}
