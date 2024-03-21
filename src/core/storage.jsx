@@ -16,9 +16,9 @@ export function getValue(key, defaultValue, updater) {
   if (updater && targetVersion > currentVersion) {
     if (value) {
       GM_setValue(`${key}_v${currentVersion}`, value);
-      value = updater(value, defaultValue);
-      GM_setValue(key, value);
     }
+    value = updater(value, defaultValue);
+    GM_setValue(key, value);
   }
 
   return { ...defaultValue, ...value };
