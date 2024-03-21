@@ -21,12 +21,17 @@ function ConfirmDialogRenderer({
   content,
   buttonList = defaultButtonList,
 }) {
+  const dialogContent =
+    typeof content === 'string' ? (
+      <DialogContentText>{content}</DialogContentText>
+    ) : (
+      content
+    );
+
   return (
     <Dialog open={open}>
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{content}</DialogContentText>
-      </DialogContent>
+      <DialogContent>{dialogContent}</DialogContent>
       <DialogActions>
         {buttonList.map(({ variant, label, value }) => (
           <Button
@@ -46,7 +51,7 @@ ConfirmDialogRenderer.propTypes = {
   open: PropTypes.bool.isRequired,
   confirmRef: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   buttonList: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
