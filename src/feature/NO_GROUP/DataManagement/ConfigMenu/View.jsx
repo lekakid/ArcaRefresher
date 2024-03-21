@@ -1,26 +1,17 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  List,
-  ListItemText,
-  Paper,
-  Typography,
-} from '@mui/material';
+import React, { Fragment, useCallback, useRef } from 'react';
+import { List, ListItemText, Paper, Typography } from '@mui/material';
 import { Launch } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
 import { BaseRow } from 'component/ConfigMenu';
+import { useConfirm } from 'component';
+
 import Info from '../FeatureInfo';
 
 const View = React.forwardRef((_props, ref) => {
   const inputRef = useRef();
-  const [resetConfirm, setResetConfirm] = useState(false);
+  const [confirm, ConfirmDialog] = useConfirm();
 
   const handleImport = useCallback(() => {
     inputRef.current.click();
@@ -54,18 +45,16 @@ const View = React.forwardRef((_props, ref) => {
     return rs.pipeTo(filestream);
   }, []);
 
-  const handleOpen = useCallback(() => {
-    setResetConfirm(true);
-  }, []);
+  const handleReset = useCallback(async () => {
+    const result = await confirm({
+      title: '초기화 재확인',
+      content: '모든 설정을 초기화하시겠습니까?',
+    });
+    if (!result) return;
 
-  const handleReset = useCallback(() => {
     resetValues();
     window.location.reload();
-  }, []);
-
-  const handleCancle = useCallback(() => {
-    setResetConfirm(false);
-  }, []);
+  }, [confirm]);
 
   return (
     <Fragment ref={ref}>
@@ -101,26 +90,13 @@ const View = React.forwardRef((_props, ref) => {
           <BaseRow
             divider
             header={<ListItemText primary="설정 초기화" />}
-            onClick={handleOpen}
+            onClick={handleReset}
           >
             <Launch />
           </BaseRow>
         </List>
       </Paper>
-      <Dialog open={resetConfirm}>
-        <DialogTitle>초기화 재확인</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            확인을 누르면 모든 설정이 초기화됩니다.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleReset}>확인</Button>
-          <Button variant="contained" onClick={handleCancle}>
-            취소
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog />
     </Fragment>
   );
 });
