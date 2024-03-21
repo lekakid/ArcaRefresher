@@ -6,13 +6,15 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   version: 1,
   // 모양
-  userinfoWidth: 10,
-  rateCount: true,
+  unfoldLongComment: false,
+  modifiedIndicator: false,
+  reverseComment: false,
+  hideVoiceComment: false,
+  resizeEmoticonPalette: 2,
   // 동작
-  openArticleNewWindow: false,
-  enhancedArticleManage: true,
-  // 우클릭
-  contextMenuEnabled: true,
+  foldComment: false,
+  wideClickArea: true,
+  alternativeSubmitKey: '',
 };
 
 function updater(storage, defaultValue) {
@@ -57,36 +59,45 @@ export const slice = createSlice({
   initialState,
   reducers: {
     // 모양
-    $setUserInfoWith(state, action) {
-      state.storage.userinfoWidth = action.payload;
+    $toggleLongComment(state) {
+      state.storage.unfoldLongComment = !state.storage.unfoldLongComment;
     },
-    $toggleRateCount(state) {
-      state.storage.rateCount = !state.storage.rateCount;
+    $toggleModifiedIndicator(state) {
+      state.storage.modifiedIndicator = !state.storage.modifiedIndicator;
+    },
+    $toggleReverseComment(state) {
+      state.storage.reverseComment = !state.storage.reverseComment;
+    },
+    $toggleHideVoiceComment(state) {
+      state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
+    },
+    $setResizeEmoticonPalette(state, action) {
+      state.storage.resizeEmoticonPalette = action.payload;
     },
     // 동작
-    $toggleArticleNewWindow(state) {
-      state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
+    $toggleFold(state) {
+      state.storage.foldComment = !state.storage.foldComment;
     },
-    $toggleEnhancedArticleManage(state) {
-      state.storage.enhancedArticleManage =
-        !state.storage.enhancedArticleManage;
+    $toggleWideArea(state) {
+      state.storage.wideClickArea = !state.storage.wideClickArea;
     },
-    // 우클릭
-    $toggleContextMenu(state) {
-      state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
+    $setAlternativeSubmitKey(state, action) {
+      state.storage.alternativeSubmitKey = action.payload;
     },
   },
 });
 
 export const {
   // 모양
-  $setUserInfoWith,
-  $toggleRateCount,
+  $toggleLongComment,
+  $toggleModifiedIndicator,
+  $toggleReverseComment,
+  $toggleHideVoiceComment,
+  $setResizeEmoticonPalette,
   // 동작
-  $toggleArticleNewWindow,
-  $toggleEnhancedArticleManage,
-  // 우클릭 메뉴
-  $toggleContextMenu,
+  $toggleFold,
+  $toggleWideArea,
+  $setAlternativeSubmitKey,
 } = slice.actions;
 
 export default slice.reducer;

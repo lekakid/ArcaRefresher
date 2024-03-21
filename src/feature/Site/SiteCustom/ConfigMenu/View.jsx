@@ -9,46 +9,40 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { SelectRow, SwitchRow, SliderRow } from 'component/ConfigMenu';
-
+import {
+  SelectRow,
+  SliderRow,
+  SwitchRow,
+  TextFieldRow,
+} from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
-  $toggleEnable,
+  // 모양
   $setNotifyPosition,
   $toggleTopNews,
-  $setRecentVisit,
-  $toggleSideNews,
-  $toggleSideMenu,
-  $toggleAvatar,
-  $setUserInfoWith,
-  $toggleRateCount,
-  $toggleUnvote,
-  $toggleModifiedIndicator,
-  $toggleLongComment,
-  $toggleSideContents,
-  $toggleHideVoiceComment,
-  $toggleSideBests,
-  $toggleDarkModeWriteForm,
-  $toggleReverseComment,
-  $setResizeImage,
-  $setResizeVideo,
-  $setResizeEmoticonPalette,
-  $setFontSize,
-  $toggleDefaultImage,
   $toggleSearchBar,
+  $setRecentVisit,
+  $toggleSideMenu,
+  $toggleSideContents,
+  $toggleSideBests,
+  $toggleSideNews,
+  $setFontSize,
+  $toggleDarkModeWriteForm,
+  // 동작
+  $setSpoofTitle,
+  $setSpoofFavicon,
+  $setPresetFavicon,
 } from '../slice';
 
 function labelFormat(x) {
   return `${x}px`;
 }
 
-function emotLabelFormat(x) {
-  return `${x}칸`;
-}
-
 const View = React.forwardRef((_props, ref) => {
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
   const {
-    enabled,
+    // 모양
     notifyPosition,
     topNews,
     searchBar,
@@ -57,32 +51,18 @@ const View = React.forwardRef((_props, ref) => {
     sideBests,
     sideNews,
     sideMenu,
-    avatar,
-    userinfoWidth,
-    rateCount,
-    hideDefaultImage,
-    resizeImage,
-    resizeVideo,
-    hideUnvote,
-    unfoldLongComment,
-    modifiedIndicator,
-    reverseComment,
-    hideVoiceComment,
-    resizeEmoticonPalette,
     fontSize,
     fixDarkModeWriteForm,
+    // 동작
+    spoofTitle,
+    presetFavicon,
+    spoofFavicon,
   } = useSelector((state) => state[Info.id].storage);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
     <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
-      <Paper>
-        <List disablePadding>
-          <SwitchRow primary="사용" value={enabled} action={$toggleEnable} />
-        </List>
-      </Paper>
-      <Typography variant="subtitle2">사이트</Typography>
+      <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -160,106 +140,6 @@ const View = React.forwardRef((_props, ref) => {
               </Collapse>
             </>
           )}
-          <SwitchRow
-            primary="이용자 아바타 표시"
-            value={avatar}
-            action={$toggleAvatar}
-          />
-        </List>
-      </Paper>
-      <Typography variant="subtitle2">게시판</Typography>
-      <Paper>
-        <List disablePadding>
-          <SliderRow
-            divider
-            primary="게시판 이용자 너비"
-            opacityOnChange={0.6}
-            value={userinfoWidth}
-            action={$setUserInfoWith}
-          />
-          <SwitchRow
-            primary="추천 수 표시"
-            value={rateCount}
-            action={$toggleRateCount}
-          />
-        </List>
-      </Paper>
-      <Typography variant="subtitle2">게시물</Typography>
-      <Paper>
-        <List disablePadding>
-          <SwitchRow
-            divider
-            primary="대문 이미지 숨김"
-            value={hideDefaultImage}
-            action={$toggleDefaultImage}
-          />
-          <SliderRow
-            divider
-            primary="이미지 크기"
-            opacityOnChange={0.6}
-            value={resizeImage}
-            action={$setResizeImage}
-          />
-          <SliderRow
-            divider
-            primary="동영상 크기"
-            opacityOnChange={0.6}
-            value={resizeVideo}
-            action={$setResizeVideo}
-          />
-          <SwitchRow
-            primary="비추천 버튼 숨김"
-            value={hideUnvote}
-            action={$toggleUnvote}
-          />
-        </List>
-      </Paper>
-      <Typography variant="subtitle2">댓글</Typography>
-      <Paper>
-        <List disablePadding>
-          <SwitchRow
-            divider
-            primary="장문 댓글 바로보기"
-            secondary="4줄 이상 작성된 댓글을 바로 펼쳐봅니다."
-            value={unfoldLongComment}
-            action={$toggleLongComment}
-          />
-          <SwitchRow
-            divider
-            primary="댓글 *수정됨 표시"
-            value={modifiedIndicator}
-            action={$toggleModifiedIndicator}
-          />
-          <SwitchRow
-            divider
-            primary="댓글 입력창을 가장 위로 올리기"
-            value={reverseComment}
-            action={$toggleReverseComment}
-          />
-          <SwitchRow
-            divider
-            primary="음성 댓글 버튼 숨기기"
-            value={hideVoiceComment}
-            action={$toggleHideVoiceComment}
-          />
-          <SliderRow
-            primary="이모티콘 선택창 높이"
-            sliderProps={{
-              min: 2,
-              max: 5,
-              step: 1,
-              marks: true,
-              valueLabelFormat: emotLabelFormat,
-              valueLabelDisplay: 'auto',
-            }}
-            value={resizeEmoticonPalette}
-            action={$setResizeEmoticonPalette}
-          />
-        </List>
-      </Paper>
-      <Typography variant="subtitle2">접근성</Typography>
-      <Paper>
-        <List disablePadding>
           <SliderRow
             divider
             primary="사이트 전체 폰트 크기"
@@ -276,11 +156,51 @@ const View = React.forwardRef((_props, ref) => {
             opacityOnChange={0.6}
           />
           <SwitchRow
+            divider
             primary="다크모드 글작성 배경색 강제 픽스"
             secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
             value={fixDarkModeWriteForm}
             action={$toggleDarkModeWriteForm}
           />
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">동작 설정</Typography>
+      <Paper>
+        <List disablePadding>
+          <TextFieldRow
+            divider
+            primary="사이트 표시 제목 변경"
+            secondary="공란일 시 변경하지 않습니다."
+            value={spoofTitle}
+            action={$setSpoofTitle}
+          />
+          <SelectRow
+            divider
+            primary="사이트 파비콘 변경"
+            secondary={
+              <>
+                사이트 대표 아이콘을 다른 사이트로 변경합니다.
+                <br />
+                사용 시 새 알림 기능이 비활성화됩니다.
+              </>
+            }
+            value={presetFavicon}
+            action={$setPresetFavicon}
+          >
+            <MenuItem value="">사용 안 함</MenuItem>
+            <MenuItem value="google">구글</MenuItem>
+            <MenuItem value="gmail">G Mail</MenuItem>
+            <MenuItem value="naver">네이버</MenuItem>
+            <MenuItem value="custom">커스텀</MenuItem>
+          </SelectRow>
+          <Collapse in={presetFavicon === 'custom'}>
+            <TextFieldRow
+              primary="커스텀 파비콘 URL"
+              manualSave
+              value={spoofFavicon}
+              action={$setSpoofFavicon}
+            />
+          </Collapse>
         </List>
       </Paper>
     </Fragment>

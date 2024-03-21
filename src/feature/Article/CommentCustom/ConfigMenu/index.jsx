@@ -1,4 +1,4 @@
-import { DirectionsRun } from '@mui/icons-material';
+import { ViewQuilt } from '@mui/icons-material';
 
 import View from './View';
 import Info from '../FeatureInfo';
@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.id,
-  Icon: DirectionsRun,
+  Icon: ViewQuilt,
   label: Info.name,
   View,
 };

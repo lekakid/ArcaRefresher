@@ -6,13 +6,14 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   version: 1,
   // 모양
-  userinfoWidth: 10,
-  rateCount: true,
+  hideDefaultImage: false,
+  resizeImage: 100,
+  resizeVideo: 100,
+  hideUnvote: false,
   // 동작
-  openArticleNewWindow: false,
-  enhancedArticleManage: true,
-  // 우클릭
-  contextMenuEnabled: true,
+  blockMediaNewWindow: false,
+  ignoreExternalLinkWarning: false,
+  ratedownGuard: false,
 };
 
 function updater(storage, defaultValue) {
@@ -57,36 +58,42 @@ export const slice = createSlice({
   initialState,
   reducers: {
     // 모양
-    $setUserInfoWith(state, action) {
-      state.storage.userinfoWidth = action.payload;
+    $toggleDefaultImage(state) {
+      state.storage.hideDefaultImage = !state.storage.hideDefaultImage;
     },
-    $toggleRateCount(state) {
-      state.storage.rateCount = !state.storage.rateCount;
+    $setResizeImage(state, action) {
+      state.storage.resizeImage = action.payload;
+    },
+    $setResizeVideo(state, action) {
+      state.storage.resizeVideo = action.payload;
+    },
+    $toggleUnvote(state) {
+      state.storage.hideUnvote = !state.storage.hideUnvote;
     },
     // 동작
-    $toggleArticleNewWindow(state) {
-      state.storage.openArticleNewWindow = !state.storage.openArticleNewWindow;
+    $toggleBlockMediaNewWindow(state) {
+      state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
-    $toggleEnhancedArticleManage(state) {
-      state.storage.enhancedArticleManage =
-        !state.storage.enhancedArticleManage;
+    $toggleIgnoreExternalLinkWarning(state) {
+      state.storage.ignoreExternalLinkWarning =
+        !state.storage.ignoreExternalLinkWarning;
     },
-    // 우클릭
-    $toggleContextMenu(state) {
-      state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
+    $toggleRateDownGuard(state) {
+      state.storage.ratedownGuard = !state.storage.ratedownGuard;
     },
   },
 });
 
 export const {
   // 모양
-  $setUserInfoWith,
-  $toggleRateCount,
+  $toggleDefaultImage,
+  $setResizeImage,
+  $setResizeVideo,
+  $toggleUnvote,
   // 동작
-  $toggleArticleNewWindow,
-  $toggleEnhancedArticleManage,
-  // 우클릭 메뉴
-  $toggleContextMenu,
+  $toggleBlockMediaNewWindow,
+  $toggleIgnoreExternalLinkWarning,
+  $toggleRateDownGuard,
 } = slice.actions;
 
 export default slice.reducer;

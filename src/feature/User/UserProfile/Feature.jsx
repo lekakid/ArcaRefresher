@@ -10,6 +10,27 @@ import { ArcaUser } from 'func/user';
 
 import Info from './FeatureInfo';
 
+/* eslint-disable react/prop-types */
+
+function AvatarStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        '.avatar': {
+          display: 'none !important',
+        },
+        '.input-wrapper > .input': {
+          width: 'calc(100% - 5rem) !important',
+        },
+      }}
+    />
+  );
+}
+
+/* eslint-enable react/prop-types */
+
 const profileStyles = (
   <GlobalStyles
     styles={{
@@ -24,7 +45,7 @@ function UserProfile() {
   const loaded = useLoadChecker(FULL_LOADED);
   const { user } = useContent();
 
-  const { indicateMyComment, showId } = useSelector(
+  const { showId, avatar, indicateMyComment } = useSelector(
     (state) => state[Info.id].storage,
   );
 
@@ -79,7 +100,12 @@ function UserProfile() {
     };
   }, [user, indicateMyComment]);
 
-  return profileStyles;
+  return (
+    <>
+      {profileStyles}
+      <AvatarStyles value={avatar} />
+    </>
+  );
 }
 
 export default UserProfile;
