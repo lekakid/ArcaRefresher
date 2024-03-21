@@ -11,6 +11,8 @@ const defaultStorage = {
 };
 
 function formatUpdater(storage, defaultValue) {
+  if (!storage) return defaultValue;
+
   // version 0 => 1
   const version = storage?.version || 0;
 
