@@ -41,7 +41,7 @@ function updater(storage, defaultValue) {
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
-      updatedStorage.version = 1;
+      updatedStorage.version = 2;
 
       return updatedStorage;
     }
