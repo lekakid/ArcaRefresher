@@ -27,7 +27,6 @@ import {
   $toggleSideBests,
   $toggleSideNews,
   $setFontSize,
-  $toggleDarkModeWriteForm,
   // 동작
   $setSpoofTitle,
   $setSpoofFavicon,
@@ -52,7 +51,6 @@ const View = React.forwardRef((_props, ref) => {
     sideNews,
     sideMenu,
     fontSize,
-    fixDarkModeWriteForm,
     // 동작
     spoofTitle,
     presetFavicon,
@@ -154,13 +152,6 @@ const View = React.forwardRef((_props, ref) => {
             value={fontSize}
             action={$setFontSize}
             opacityOnChange={0.6}
-          />
-          <SwitchRow
-            divider
-            primary="다크모드 글작성 배경색 강제 픽스"
-            secondary="다크모드에서 글작성 배경색이 흰색으로 뜨는 문제를 수정합니다."
-            value={fixDarkModeWriteForm}
-            action={$toggleDarkModeWriteForm}
           />
         </List>
       </Paper>

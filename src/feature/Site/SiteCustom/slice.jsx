@@ -23,7 +23,6 @@ const defaultStorage = {
   sideBests: true,
   sideNews: true,
   fontSize: 15,
-  fixDarkModeWriteForm: true,
   // 동작
   spoofTitle: '',
   presetFavicon: '',
@@ -99,9 +98,6 @@ export const slice = createSlice({
     $setFontSize(state, action) {
       state.storage.fontSize = action.payload;
     },
-    $toggleDarkModeWriteForm(state) {
-      state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
-    },
     // 동작
     $setSpoofTitle(state, action) {
       state.storage.spoofTitle = action.payload;
@@ -127,7 +123,6 @@ export const {
   $toggleSideBests,
   $toggleSideNews,
   $setFontSize,
-  $toggleDarkModeWriteForm,
   // 동작
   $setSpoofTitle,
   $setPresetFavicon,
