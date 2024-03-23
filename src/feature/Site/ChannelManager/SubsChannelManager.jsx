@@ -62,7 +62,7 @@ function ChannelTitleRenderer({ id, value }) {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Typography>{value}</Typography>
+      <Typography variant="body2">{value}</Typography>
       <Tooltip title="개념글로 바로 이동">
         <IconButton
           sx={channelInfoTable[id]?.best ? { color: 'orange' } : undefined}
