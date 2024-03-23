@@ -15,7 +15,12 @@ const View = React.forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
+          <SwitchRow
+            primary="사용"
+            secondary="구독 채널 목록을 그룹화 할 수 있습니다."
+            value={enabled}
+            action={$toggleEnabled}
+          />
         </List>
       </Paper>
     </Fragment>
