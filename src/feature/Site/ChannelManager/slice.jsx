@@ -29,6 +29,24 @@ export const slice = createSlice({
       state.storage.groupList.push(name);
       state.storage.groupList = state.storage.groupList.sort();
     },
+    $renameGroup(state, action) {
+      const { prev, next } = action.payload;
+      const index = state.storage.groupList.indexOf(prev);
+      if (index === -1) return; // ?
+
+      state.storage.groupList.splice(index, 1, next);
+      state.storage.channelInfoTable = Object.fromEntries(
+        Object.entries(state.storage.channelInfoTable).map(
+          ([channel, data]) => {
+            const cIndex = data.groups.indexOf(prev);
+            if (cIndex === -1) return [channel, data];
+
+            data.groups.splice(cIndex, 1, next);
+            return [channel, data];
+          },
+        ),
+      );
+    },
     $removeGroup(state, action) {
       const { name } = action.payload;
       state.storage.groupList = state.storage.groupList.filter(
@@ -56,6 +74,7 @@ export const slice = createSlice({
 export const {
   $toggleEnabled,
   $addGroup,
+  $renameGroup,
   $removeGroup,
   $setChannelInfo,
   setNavChannelInfo,

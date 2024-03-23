@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -21,11 +21,10 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import {
   Add,
-  Cancel,
   Close,
   CreateNewFolder,
   Delete,
-  Done,
+  DriveFileMove,
   FolderDelete,
   Input,
   Star,
@@ -33,7 +32,12 @@ import {
 } from '@mui/icons-material';
 
 import { useConfirm } from 'component';
-import { $addGroup, $removeGroup, $setChannelInfo } from './slice';
+import {
+  $addGroup,
+  $removeGroup,
+  $renameGroup,
+  $setChannelInfo,
+} from './slice';
 import Info from './FeatureInfo';
 
 const defaultChannelInfo = { memo: '', groups: [], best: false };
@@ -171,8 +175,7 @@ function SubsChannelManager({ subs, open, onClose }) {
   const { groupList, channelInfoTable } = useSelector(
     (state) => state[Info.id].storage,
   );
-  const [createGroup, setCreateGroup] = useState(false);
-  const [groupInput, setGroupInput] = useState('');
+  const groupInput = useRef(undefined);
   const [groupSelection, setGroupSelection] = useState('');
   const [selection, setSelection] = useState([]);
   const rows =
@@ -183,10 +186,19 @@ function SubsChannelManager({ subs, open, onClose }) {
       groups: channelInfoTable[id]?.groups,
     })) || [];
 
-  const handleAddGroup = useCallback(() => {
-    dispatch($addGroup({ name: groupInput }));
-    setCreateGroup(false);
-  }, [dispatch, groupInput]);
+  const handleAddGroup = useCallback(async () => {
+    const result = await confirm({
+      title: '이름 입력',
+      content: <TextField inputRef={groupInput} />,
+      buttonList: [
+        { label: '예', value: () => groupInput.current.value },
+        { label: '아니오', value: false, variant: 'contained' },
+      ],
+    });
+    if (!result) return;
+
+    dispatch($addGroup({ name: result }));
+  }, [confirm, dispatch, groupInput]);
 
   const handleRemoveGroup = useCallback(async () => {
     const result = await confirm({
@@ -198,6 +210,24 @@ function SubsChannelManager({ subs, open, onClose }) {
     setGroupSelection('');
     dispatch($removeGroup({ name: groupSelection }));
   }, [dispatch, confirm, groupSelection]);
+
+  const handleRenameGroup = useCallback(async () => {
+    const result = await confirm({
+      title: '이름 입력',
+      content: (
+        <TextField inputRef={groupInput} defaultValue={groupSelection} />
+      ),
+      buttonList: [
+        { label: '예', value: () => groupInput.current.value },
+        { label: '아니오', value: false, variant: 'contained' },
+      ],
+    });
+    if (!result) return;
+    if (groupSelection === result) return;
+
+    dispatch($renameGroup({ prev: groupSelection, next: result }));
+    setGroupSelection(result);
+  }, [groupSelection, groupInput, confirm, dispatch]);
 
   const handleAddGroupAll = useCallback(() => {
     selection.forEach((id) => {
@@ -235,40 +265,6 @@ function SubsChannelManager({ subs, open, onClose }) {
       dispatch($setChannelInfo({ id, info: channelInfo }));
     },
     [channelInfoTable, dispatch],
-  );
-
-  const groupBtns = createGroup ? (
-    <ButtonGroup fullWidth={mobile}>
-      <Button
-        startIcon={<Done />}
-        disabled={!groupInput || groupList.includes(groupInput)}
-        onClick={handleAddGroup}
-      >
-        확인
-      </Button>
-      <Button startIcon={<Cancel />} onClick={() => setCreateGroup(false)}>
-        취소
-      </Button>
-    </ButtonGroup>
-  ) : (
-    <ButtonGroup fullWidth={mobile}>
-      <Button
-        startIcon={<CreateNewFolder />}
-        onClick={() => {
-          setCreateGroup(true);
-          setGroupInput('');
-        }}
-      >
-        추가
-      </Button>
-      <Button
-        startIcon={<FolderDelete />}
-        disabled={!groupSelection}
-        onClick={handleRemoveGroup}
-      >
-        제거
-      </Button>
-    </ButtonGroup>
   );
 
   const channelBtns = (
@@ -311,39 +307,52 @@ function SubsChannelManager({ subs, open, onClose }) {
             direction={mobile ? 'column' : 'row'}
             gap={1}
           >
-            {createGroup ? (
-              <TextField
-                sx={{ width: mobile ? '100%' : 200 }}
-                value={groupInput}
-                onChange={(e) => setGroupInput(e.target.value)}
-              />
-            ) : (
-              <Select
-                displayEmpty
-                sx={{
-                  width: mobile ? '100%' : 200,
-                  color: groupSelection === '' ? 'grey' : undefined,
-                }}
-                value={groupSelection}
-                onChange={(e) => setGroupSelection(e.target.value)}
-              >
-                <MenuItem sx={{ color: 'grey' }} value="">
-                  그룹 선택
+            <Select
+              displayEmpty
+              sx={{
+                width: mobile ? '100%' : 200,
+                color: groupSelection === '' ? 'grey' : undefined,
+              }}
+              value={groupSelection}
+              onChange={(e) => setGroupSelection(e.target.value)}
+            >
+              <MenuItem sx={{ color: 'grey' }} value="">
+                그룹 선택
+              </MenuItem>
+              {groupList.map((group) => (
+                <MenuItem key={group} value={group}>
+                  {group}
                 </MenuItem>
-                {groupList.map((group) => (
-                  <MenuItem key={group} value={group}>
-                    {group}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
+              ))}
+            </Select>
             <Stack
               sx={{ width: '100%' }}
               direction={mobile ? 'column' : 'row'}
               justifyContent="space-between"
               gap={2}
             >
-              {groupBtns}
+              <ButtonGroup fullWidth={mobile}>
+                <Button
+                  startIcon={<CreateNewFolder />}
+                  onClick={handleAddGroup}
+                >
+                  추가
+                </Button>
+                <Button
+                  startIcon={<FolderDelete />}
+                  disabled={!groupSelection}
+                  onClick={handleRemoveGroup}
+                >
+                  제거
+                </Button>
+                <Button
+                  startIcon={<DriveFileMove />}
+                  disabled={!groupSelection}
+                  onClick={handleRenameGroup}
+                >
+                  이름 편집
+                </Button>
+              </ButtonGroup>
               {channelBtns}
             </Stack>
           </Stack>
