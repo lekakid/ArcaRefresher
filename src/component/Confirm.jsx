@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -68,15 +68,18 @@ function useConfirm() {
   const [open, setOpen] = useState(false);
   const [props, setProps] = useState(undefined);
 
-  const confirm = (p) =>
-    new Promise((resolve) => {
-      setProps(p);
-      confirmRef.current = (value) => {
-        resolve(value);
-        setOpen(false);
-      };
-      setOpen(true);
-    });
+  const confirm = useCallback(
+    (p) =>
+      new Promise((resolve) => {
+        setProps(p);
+        confirmRef.current = (value) => {
+          resolve(value);
+          setOpen(false);
+        };
+        setOpen(true);
+      }),
+    [],
+  );
   const ConfirmDialog = () =>
     ConfirmDialogRenderer({ ...props, open, confirmRef });
 
