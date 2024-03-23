@@ -5,6 +5,7 @@ import Info from '../FeatureInfo';
 
 export default {
   key: Info.id,
+  order: -1,
   Icon: AssignmentInd,
   label: Info.name,
   View,
