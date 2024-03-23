@@ -37,7 +37,9 @@ function ConfirmDialogRenderer({
           <Button
             key={label}
             variant={variant}
-            onClick={() => confirmRef.current(value)}
+            onClick={() =>
+              confirmRef.current(typeof value === 'function' ? value() : value)
+            }
           >
             {label}
           </Button>
