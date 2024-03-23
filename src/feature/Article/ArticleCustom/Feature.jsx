@@ -1,16 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  GlobalStyles,
-  IconButton,
-  Portal,
-  Tooltip,
-} from '@mui/material';
+import { GlobalStyles, IconButton, Portal, Tooltip } from '@mui/material';
 import { ZoomIn } from '@mui/icons-material';
 
 import {
@@ -21,6 +11,7 @@ import {
 } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
+import { useConfirm } from 'component';
 import Info from './FeatureInfo';
 
 const PREVIEW_SELECTOR =
@@ -87,6 +78,7 @@ function HideUnvoteStyles({ value }) {
 
 export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
+  const [confirm, ConfirmDialog] = useConfirm();
 
   const {
     // 모양
@@ -100,8 +92,6 @@ export default function ArticleCustom() {
     ratedownGuard,
   } = useSelector((state) => state[Info.id].storage);
   const [article, setArticle] = useState(null);
-  const confirmRef = useRef();
-  const [confirm, setConfirm] = useState(false);
   const [fakePreview, setFakePreview] = useState(null);
 
   // 게시물 로드 확인 및 엘리먼트 저장
@@ -135,15 +125,6 @@ export default function ArticleCustom() {
   }, [article, ignoreExternalLinkWarning]);
 
   // 비추천 방지
-  const handleConfirm = useCallback(
-    (value) => async () => {
-      if (!confirmRef.current) return; // ?
-      setConfirm(false);
-      confirmRef.current(value);
-    },
-    [],
-  );
-
   useEffect(() => {
     if (!article || !ratedownGuard) return null;
 
@@ -151,28 +132,20 @@ export default function ArticleCustom() {
     if (!ratedownButton) return null;
 
     const ratedownClick = async (e) => {
-      if (confirmRef.current) {
-        // 이미 비추천 막고 있음
-        confirmRef.current = undefined;
-        return;
-      }
-
       e.preventDefault();
-      setConfirm(true);
-      const value = await new Promise((resolve) => {
-        confirmRef.current = resolve;
+      const value = await confirm({
+        title: '비추천 재확인',
+        content: '정말 비추천하시겠습니까?',
       });
+      if (!value) return;
 
-      if (value) {
-        ratedownButton.click();
-        return;
-      }
-      confirmRef.current = undefined;
+      ratedownButton.removeEventListener('click', ratedownClick);
+      ratedownButton.click();
     };
 
     ratedownButton.addEventListener('click', ratedownClick);
     return () => ratedownButton.removeEventListener('click', ratedownClick);
-  }, [article, handleConfirm, ratedownGuard]);
+  }, [article, ratedownGuard, confirm]);
 
   // 미리보기 훼이크 걷어내기
   useEffect(() => {
@@ -212,22 +185,8 @@ export default function ArticleCustom() {
       <ResizeImageStyles value={resizeImage} />
       <ResizeVideoStyles value={resizeVideo} />
       <HideUnvoteStyles value={hideUnvote} />
-      <Dialog open={confirm} onClose={handleConfirm(false)}>
-        <DialogTitle>비추천 재확인</DialogTitle>
-        <DialogContent>
-          비추천을 누르셨습니다. 진짜 비추천하시겠습니까?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConfirm(true)}>예</Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleConfirm(false)}
-          >
-            아니오
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+      <ConfirmDialog />
       {fakePreview && (
         <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">
