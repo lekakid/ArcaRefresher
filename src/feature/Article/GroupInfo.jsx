@@ -5,5 +5,5 @@ import 'core/types';
 export default {
   Icon: Description,
   label: '게시물',
-  order: 3,
+  order: 2,
 };

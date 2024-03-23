@@ -5,5 +5,5 @@ import 'core/types';
 export default {
   Icon: Web,
   label: '글작성',
-  order: 4,
+  order: 3,
 };

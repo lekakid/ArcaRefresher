@@ -5,5 +5,5 @@ import 'core/types';
 export default {
   Icon: People,
   label: '이용자',
-  order: 1,
+  order: 4,
 };
