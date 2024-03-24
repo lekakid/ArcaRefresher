@@ -155,7 +155,7 @@ export default function CommentCustom() {
 
   // 넓은 답글창 열기
   useEffect(() => {
-    if (!comment || !wideClickArea) return null;
+    if (!comment || !wideClickArea) return undefined;
 
     const handleClick = (e) => {
       if (e.target.closest('form')) return;

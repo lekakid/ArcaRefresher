@@ -126,10 +126,10 @@ export default function ArticleCustom() {
 
   // 비추천 방지
   useEffect(() => {
-    if (!article || !ratedownGuard) return null;
+    if (!article || !ratedownGuard) return undefined;
 
     const ratedownButton = article.querySelector('#rateDown');
-    if (!ratedownButton) return null;
+    if (!ratedownButton) return undefined;
 
     const ratedownClick = async (e) => {
       e.preventDefault();

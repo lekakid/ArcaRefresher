@@ -65,7 +65,7 @@ export default function BoardCustom() {
 
   // 게시판 새 창 열기 방지
   useEffect(() => {
-    if (!boardLoaded || !openArticleNewWindow) return null;
+    if (!boardLoaded || !openArticleNewWindow) return undefined;
 
     const board = document.querySelector(`${BOARD}, ${BOARD_IN_ARTICLE}`);
     const applyNewWindow = () => {
