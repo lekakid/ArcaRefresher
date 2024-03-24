@@ -59,7 +59,7 @@ function MenuContainer({ groupList, menuList }) {
     };
 
     document.addEventListener('keydown', blocker, true);
-    return () => document.addEventListener('keydown', blocker, true);
+    return () => document.removeEventListener('keydown', blocker, true);
   }, [open]);
 
   // 전체 설정 조회 시 사용되는 스크롤 관련 옵저버
