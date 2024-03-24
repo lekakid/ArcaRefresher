@@ -75,7 +75,7 @@ function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
           value={msg}
           inputProps={{ style: { color } }}
           onChange={handleMsgChange}
-          onKeyPress={handleSubmit}
+          onKeyDown={handleSubmit}
         />
         <TwitterPicker
           triangle="hide"
