@@ -27,7 +27,8 @@ const store = configureStore({
     ...menuReducerEntries,
     ...featureReducerEntries,
   ]),
-  middleware: [createMonkeySyncMiddleware()],
+  middleware: (getDefaultMiddleWare) =>
+    getDefaultMiddleWare().concat(createMonkeySyncMiddleware()),
 });
 
 initMonkeySync(store);
