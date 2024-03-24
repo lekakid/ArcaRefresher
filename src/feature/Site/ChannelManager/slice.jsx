@@ -26,6 +26,8 @@ export const slice = createSlice({
     },
     $addGroup(state, action) {
       const { name } = action.payload;
+      if (state.storage.groupList.includes(name)) return;
+
       state.storage.groupList.push(name);
       state.storage.groupList = state.storage.groupList.sort();
     },
@@ -34,14 +36,17 @@ export const slice = createSlice({
       const index = state.storage.groupList.indexOf(prev);
       if (index === -1) return; // ?
 
-      state.storage.groupList.splice(index, 1, next);
+      if (state.storage.groupList.includes(next))
+        state.storage.groupList.splice(index, 1);
+      else state.storage.groupList.splice(index, 1, next);
       state.storage.channelInfoTable = Object.fromEntries(
         Object.entries(state.storage.channelInfoTable).map(
           ([channel, data]) => {
             const cIndex = data.groups.indexOf(prev);
             if (cIndex === -1) return [channel, data];
 
-            data.groups.splice(cIndex, 1, next);
+            if (data.groups.includes(next)) data.groups.splice(cIndex, 1);
+            else data.groups.splice(cIndex, 1, next);
             return [channel, data];
           },
         ),
