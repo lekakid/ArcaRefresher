@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
@@ -79,7 +79,7 @@ const keyMapSelector = createSelector(
     Object.fromEntries(keyTable.map(({ action, key }) => [action, key])),
 );
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { enabled, compatibilityMode } = useSelector(
     (state) => state[Info.id].storage,

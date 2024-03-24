@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ArticleMenuContainer from './ArticleMenu';
 import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';

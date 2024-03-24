@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { cloneElement, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Snackbar } from '@mui/material';
@@ -42,7 +42,7 @@ function SaveButton({ editor, saveAs = false, ...btnPropsFromGroup }) {
 
   return (
     <>
-      {React.cloneElement(<Button />, btnProps)}
+      {cloneElement(<Button />, btnProps)}
       <Snackbar
         open={snack}
         autoHideDuration={3000}

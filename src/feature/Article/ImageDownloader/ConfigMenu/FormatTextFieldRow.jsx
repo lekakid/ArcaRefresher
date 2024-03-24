@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { forwardRef, useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -15,7 +15,7 @@ import { BaseRow } from 'component/ConfigMenu';
 
 import { FORMAT } from '../func/format';
 
-const FormatTextFieldRow = React.forwardRef(
+const FormatTextFieldRow = forwardRef(
   (
     { divider, nested, primary, secondary, selectableList, value, action },
     ref,

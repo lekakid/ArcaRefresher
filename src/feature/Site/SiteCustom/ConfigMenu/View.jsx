@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Collapse,
@@ -37,7 +37,7 @@ function labelFormat(x) {
   return `${x}px`;
 }
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {

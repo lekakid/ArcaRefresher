@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
@@ -8,7 +8,7 @@ import Info from '../FeatureInfo';
 import { $setCategoryStyle } from '../slice';
 import CategoryRow from './CategoryRow';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
   const color = useSelector(

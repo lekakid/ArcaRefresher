@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -20,7 +20,7 @@ import {
   $toggleEnabled,
 } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { enabled, autoDecode, clipboardDecode } = useSelector(
     (state) => state[Info.id].storage,
   );

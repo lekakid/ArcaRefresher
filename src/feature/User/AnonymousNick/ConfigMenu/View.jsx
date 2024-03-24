@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import { forwardRef, Fragment, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -7,7 +7,7 @@ import { TextFieldRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { prefixList, suffixList, extraPrefix } = useSelector(
     (state) => state[Info.id].storage,
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -66,7 +66,7 @@ const StyledIndicator = styled('div')(({ pos, animate, count }) => ({
   },
 }));
 
-const RefreshIndicator = React.forwardRef(({ pos, count, animate }, ref) => {
+const RefreshIndicator = forwardRef(({ pos, count, animate }, ref) => {
   const [lastPos, setLastPos] = useState(['bottom', 'left']);
 
   useEffect(() => {

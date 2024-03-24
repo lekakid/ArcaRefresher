@@ -1,4 +1,11 @@
-import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  Fragment,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
@@ -113,7 +120,7 @@ const defaultPreset = {
   'text-color-reverse': '#d3d3d3',
 };
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));

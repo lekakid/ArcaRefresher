@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button, IconButton, Popover } from '@mui/material';
 import { ChromePicker } from 'react-color';
 import { Delete } from '@mui/icons-material';
 
-const Picker = React.forwardRef(
+const Picker = forwardRef(
   ({ disabled, defaultColor, color, onOpen, onClose, onChange }, ref) => {
     const [innerColor, setInnerColor] = useState(defaultColor);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -89,7 +90,16 @@ const Picker = React.forwardRef(
 );
 
 Picker.defaultProps = {
-  defaultcolor: '',
+  defaultColor: '',
+};
+
+Picker.propTypes = {
+  disabled: PropTypes.bool,
+  defaultColor: PropTypes.string,
+  color: PropTypes.string,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 export default Picker;

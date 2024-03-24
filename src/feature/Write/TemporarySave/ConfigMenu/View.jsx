@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -7,7 +7,7 @@ import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import { $setAutoTime, $toggleDeleteOnCommit } from '../slice';
 import Info from '../FeatureInfo';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { autoSaveTime, deleteOnCommit } = useSelector(
     (state) => state[Info.id].storage,
   );

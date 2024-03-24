@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse,
@@ -13,7 +13,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ColorPicker from 'component/ColorPicker';
 import { useOpacity } from 'menu/ConfigMenu';
 
-const PresetEditor = React.forwardRef(
+const PresetEditor = forwardRef(
   ({ disabled, groupData, defaultPreset, preset, onChange }, ref) => {
     const [openGroup, setOpenGroup] = useState(() => ({}));
     const setOpacity = useOpacity();
@@ -37,7 +37,7 @@ const PresetEditor = React.forwardRef(
     return (
       <List ref={ref} disablePadding>
         {groupData.map(({ key: groupKey, text, rows }, groupIndex) => (
-          <React.Fragment key={groupKey}>
+          <Fragment key={groupKey}>
             <ListItem
               disablePadding
               divider={
@@ -84,7 +84,7 @@ const PresetEditor = React.forwardRef(
                 ))}
               </List>
             </Collapse>
-          </React.Fragment>
+          </Fragment>
         ))}
       </List>
     );

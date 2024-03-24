@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useRef } from 'react';
+import { forwardRef, Fragment, useCallback, useRef } from 'react';
 import {
   List,
   ListItemText,
@@ -25,7 +25,7 @@ const idList = featureContext
   .keys()
   .map((path) => featureContext(path).default.id);
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const inputRef = useRef();
   const [confirm, ConfirmDialog] = useConfirm();
 

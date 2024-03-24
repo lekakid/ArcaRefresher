@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@mui/icons-material';
 
@@ -70,4 +71,12 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   );
 }
 
-export default React.memo(CategoryRow);
+CategoryRow.propTypes = {
+  divider: PropTypes.bool,
+  id: PropTypes.string,
+  label: PropTypes.string,
+  initValue: PropTypes.object,
+  onChange: PropTypes.func,
+};
+
+export default memo(CategoryRow);

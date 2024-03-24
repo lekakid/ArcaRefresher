@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { Collapse, List, Paper, Typography } from '@mui/material';
 
@@ -10,7 +10,7 @@ import {
   $toggleBlockReported,
 } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { blockAll, blockDeleted, blockReported } = useSelector(
     (state) => state[Info.id].storage,
   );

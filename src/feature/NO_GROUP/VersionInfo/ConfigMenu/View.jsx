@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState } from 'react';
 import {
   List,
   Paper,
@@ -22,7 +22,7 @@ import { TYPE_MINOR, TYPE_PATCH } from '../func';
 
 const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { notiLevel } = useSelector((state) => state[Info.id].storage);

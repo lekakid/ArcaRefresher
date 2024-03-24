@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalStyles, IconButton, Popper, Portal } from '@mui/material';
 import { ImageSearch } from '@mui/icons-material';

@@ -1,11 +1,11 @@
-import React, { Fragment, useCallback } from 'react';
+import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
 
 import Info from '../FeatureInfo';
 import { $setTemplate } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { template } = useSelector((state) => state[Info.id].storage);
   const dispatch = useDispatch();
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -42,7 +42,7 @@ import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
 

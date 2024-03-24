@@ -1,7 +1,7 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import { Paper } from '@mui/material';
 
-export default function KeyIcon({ title }) {
+function KeyIcon({ title }) {
   return (
     <Paper
       sx={{
@@ -20,3 +20,9 @@ export default function KeyIcon({ title }) {
     </Paper>
   );
 }
+
+KeyIcon.propTypes = {
+  title: PropTypes.string,
+};
+
+export default KeyIcon;

@@ -1,8 +1,8 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { ListItem, ListItemButton, Stack, useMediaQuery } from '@mui/material';
 
-const BaseRow = React.forwardRef(
+const BaseRow = forwardRef(
   ({ divider, nested, column, header, children, onClick }, ref) => {
     const isColumn = useMediaQuery((theme) => {
       let value = column;

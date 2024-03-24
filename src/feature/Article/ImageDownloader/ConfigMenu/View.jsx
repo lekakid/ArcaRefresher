@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
@@ -15,7 +15,7 @@ import {
 } from '../slice';
 import FormatTextFieldRow from './FormatTextFieldRow';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const {
     enabled,
     downloadMethod,

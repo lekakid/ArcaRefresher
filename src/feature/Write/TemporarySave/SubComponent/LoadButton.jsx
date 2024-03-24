@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { cloneElement, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
@@ -22,7 +22,7 @@ function LoadButton({ editor, ...btnProps }) {
 
   return (
     <>
-      {React.cloneElement(
+      {cloneElement(
         <Button startIcon={<Publish />} onClick={handleClick}>
           불러오기
         </Button>,

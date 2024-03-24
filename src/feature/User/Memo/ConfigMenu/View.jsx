@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useRef } from 'react';
+import { forwardRef, Fragment, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -81,7 +81,7 @@ const memoRowsSelector = createSelector(
     })),
 );
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
 
   const { variant, contextRange } = useSelector(

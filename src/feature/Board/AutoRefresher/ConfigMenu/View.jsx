@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -11,7 +11,7 @@ import {
   $setProgressPos,
 } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
     (state) => state[Info.id].storage,
   );

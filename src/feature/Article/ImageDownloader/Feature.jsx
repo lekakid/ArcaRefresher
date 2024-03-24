@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, GlobalStyles, Portal } from '@mui/material';
 import { GetApp } from '@mui/icons-material';
