@@ -156,8 +156,17 @@ const View = forwardRef((_props, ref) => {
         </>
       ),
       buttonList: [
-        { label: '확인', value: () => confirmInputRef.current.value },
-        { label: '취소', value: false, variant: 'contained' },
+        {
+          label: '확인',
+          value: () => confirmInputRef.current.value,
+          key: 'Enter',
+        },
+        {
+          label: '취소',
+          value: false,
+          key: 'Escape',
+          variant: 'contained',
+        },
       ],
     });
     if (!result) return;
@@ -182,8 +191,12 @@ const View = forwardRef((_props, ref) => {
         </>
       ),
       buttonList: [
-        { label: '확인', value: () => confirmInputRef.current.value },
-        { label: '취소', value: false, variant: 'contained' },
+        {
+          label: '확인',
+          value: () => confirmInputRef.current.value,
+          key: 'Enter',
+        },
+        { label: '취소', value: false, key: 'Escape', variant: 'contained' },
       ],
     });
     if (!result) return;

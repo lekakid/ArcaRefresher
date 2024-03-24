@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 
 const defaultButtonList = [
-  { label: '예', value: true },
-  { label: '아니오', value: false, variant: 'contained' },
+  { label: '예', value: true, key: 'Enter' },
+  { label: '아니오', value: false, key: 'Escape', variant: 'contained' },
 ];
 
 function ConfirmDialogRenderer({
@@ -21,6 +21,27 @@ function ConfirmDialogRenderer({
   content,
   buttonList = defaultButtonList,
 }) {
+  const handleBtnDown = useCallback(
+    (value) => {
+      confirmRef.current(typeof value === 'function' ? value() : value);
+    },
+    [confirmRef],
+  );
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const keyUpEvent = (e) => {
+      const value = buttonList.find((btn) => btn.key === e.key)?.value;
+      if (value === undefined) return;
+
+      handleBtnDown(value);
+    };
+
+    document.addEventListener('keyup', keyUpEvent);
+    return () => document.removeEventListener('keyup', keyUpEvent);
+  }, [open, buttonList, handleBtnDown]);
+
   const dialogContent =
     typeof content === 'string' ? (
       <DialogContentText>{content}</DialogContentText>
@@ -37,9 +58,7 @@ function ConfirmDialogRenderer({
           <Button
             key={label}
             variant={variant}
-            onClick={() =>
-              confirmRef.current(typeof value === 'function' ? value() : value)
-            }
+            onClick={() => handleBtnDown(value)}
           >
             {label}
           </Button>

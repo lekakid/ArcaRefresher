@@ -191,8 +191,17 @@ function SubsChannelManager({ subs, open, onClose }) {
       title: '이름 입력',
       content: <TextField inputRef={groupInput} />,
       buttonList: [
-        { label: '예', value: () => groupInput.current.value },
-        { label: '아니오', value: false, variant: 'contained' },
+        {
+          label: '확인',
+          value: () => groupInput.current.value,
+          key: 'Enter',
+        },
+        {
+          label: '취소',
+          value: false,
+          key: 'Escape',
+          variant: 'contained',
+        },
       ],
     });
     if (!result) return;
@@ -218,8 +227,17 @@ function SubsChannelManager({ subs, open, onClose }) {
         <TextField inputRef={groupInput} defaultValue={groupSelection} />
       ),
       buttonList: [
-        { label: '예', value: () => groupInput.current.value },
-        { label: '아니오', value: false, variant: 'contained' },
+        {
+          label: '확인',
+          value: () => groupInput.current.value,
+          key: 'Enter',
+        },
+        {
+          label: '취소',
+          value: false,
+          key: 'Escape',
+          variant: 'contained',
+        },
       ],
     });
     if (!result) return;
