@@ -18,15 +18,11 @@ const appendAppContainer = () => {
 if (!document.body) {
   // @run-at document-start은 document.body가 없을 때 실행될 수 있음
   // MutationObserver로 body가 추가되는 것을 감지하여 appendAppContainer를 실행
-  const mutationObserver = new MutationObserver((mutations, obs) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node.nodeName.toLocaleUpperCase() === 'BODY') {
-          appendAppContainer();
-          obs.disconnect();
-        }
-      });
-    });
+  const mutationObserver = new MutationObserver((_, obs) => {
+    if (document.body) {
+      appendAppContainer();
+      obs.disconnect();
+    }
   });
   mutationObserver.observe(document.documentElement, {
     childList: true,
