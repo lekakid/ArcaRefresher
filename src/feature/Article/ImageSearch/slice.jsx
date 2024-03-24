@@ -8,6 +8,7 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   // 사이트
   showGoogle: true,
+  showBing: true,
   showYandex: true,
   showSauceNao: true,
   showIqdb: true,
@@ -29,6 +30,9 @@ export const slice = createSlice({
   reducers: {
     $toggleShowGoogle(state) {
       state.storage.showGoogle = !state.storage.showGoogle;
+    },
+    $toggleShowBing(state) {
+      state.storage.showBing = !state.storage.showBing;
     },
     $toggleShowYandex(state) {
       state.storage.showYandex = !state.storage.showYandex;
@@ -61,6 +65,7 @@ export const slice = createSlice({
 export const {
   // 사이트
   $toggleShowGoogle,
+  $toggleShowBing,
   $toggleShowYandex,
   $toggleShowSauceNao,
   $toggleShowIqdb,

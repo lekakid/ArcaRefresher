@@ -7,22 +7,25 @@ import { BACKGROUND, FOREGROUND } from 'func/window';
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
+  // 사이트
+  $toggleShowGoogle,
+  $toggleShowBing,
+  $toggleShowYandex,
+  $toggleShowSauceNao,
+  $toggleShowIqdb,
+  $toggleShowAscii2D,
   // 동작
   $setOpenType,
   $setSearchGoogleMethod,
   $toggleSauceNaoBypass,
   $toggleSearchBySource,
-  $toggleShowAscii2D,
-  $toggleShowGoogle,
-  $toggleShowIqdb,
-  $toggleShowSauceNao,
-  $toggleShowYandex,
 } from '../slice';
 
 const View = forwardRef((_props, ref) => {
   const {
     // 사이트
     showGoogle,
+    showBing,
     showYandex,
     showSauceNao,
     showIqdb,
@@ -45,6 +48,12 @@ const View = forwardRef((_props, ref) => {
             primary="Google"
             value={showGoogle}
             action={$toggleShowGoogle}
+          />
+          <SwitchRow
+            divider
+            primary="Bing"
+            value={showBing}
+            action={$toggleShowBing}
           />
           <SwitchRow
             divider

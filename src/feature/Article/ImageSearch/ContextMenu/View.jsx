@@ -19,6 +19,7 @@ function ContextMenu({ target }) {
   const {
     // 사이트
     showGoogle,
+    showBing,
     showYandex,
     showSauceNao,
     showIqdb,
@@ -54,6 +55,18 @@ function ContextMenu({ target }) {
     open(`${url[searchGoogleMethod]}${encodeURIComponent(data)}`, openType);
     closeMenu();
   }, [showGoogle, data, searchGoogleMethod, openType, closeMenu]);
+
+  const handleBing = useCallback(() => {
+    if (!showBing) return;
+
+    open(
+      `https://www.bing.com/images/search?view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste&idpbck=1&q=imgurl:${encodeURIComponent(
+        data,
+      )}`,
+      openType,
+    );
+    closeMenu();
+  }, [showBing, data, openType, closeMenu]);
 
   const handleYandex = useCallback(() => {
     if (!showYandex) return;
@@ -191,6 +204,14 @@ function ContextMenu({ target }) {
             <ImageSearch />
           </ListItemIcon>
           <Typography>Google 검색</Typography>
+        </MenuItem>
+      )}
+      {showBing && (
+        <MenuItem onClick={handleBing}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Bing 검색</Typography>
         </MenuItem>
       )}
       {showYandex && (
