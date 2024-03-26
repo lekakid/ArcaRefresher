@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { IconButton, ListItemText, TextField } from '@mui/material';
 import { Check, Save } from '@mui/icons-material';
 import BaseRow from './BaseRow';
 
-const TextFieldRow = React.forwardRef(
+const TextFieldRow = forwardRef(
   (
     {
       divider,

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserFilter } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import Info from '../FeatureInfo';
 import { filterContent } from '../func';
@@ -105,7 +105,7 @@ function CommentMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
-    useSelector((state) => state[Info.ID].storage);
+    useSelector((state) => state[Info.id].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
@@ -192,7 +192,7 @@ function CommentMuter() {
       ];
       const commentInfos = comments.map((comment) => ({
         element: comment,
-        user: getUserFilter(comment.querySelector('.user-info')),
+        user: new ArcaUser(comment.querySelector('.user-info')).toUID(),
         content: comment.querySelector('.message')?.textContent || '',
         deleted: muteIncludeReply
           ? comment.querySelector('.comment-item').classList.contains('deleted')

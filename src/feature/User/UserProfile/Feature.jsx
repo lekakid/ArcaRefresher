@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
@@ -6,9 +6,30 @@ import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'core/selector';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserNick } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import Info from './FeatureInfo';
+
+/* eslint-disable react/prop-types */
+
+function AvatarStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        '.avatar': {
+          display: 'none !important',
+        },
+        '.input-wrapper > .input': {
+          width: 'calc(100% - 5rem) !important',
+        },
+      }}
+    />
+  );
+}
+
+/* eslint-enable react/prop-types */
 
 const profileStyles = (
   <GlobalStyles
@@ -24,8 +45,8 @@ function UserProfile() {
   const loaded = useLoadChecker(FULL_LOADED);
   const { user } = useContent();
 
-  const { indicateMyComment, showId } = useSelector(
-    (state) => state[Info.ID].storage,
+  const { showId, avatar, indicateMyComment } = useSelector(
+    (state) => state[Info.id].storage,
   );
 
   useLayoutEffect(() => {
@@ -34,10 +55,12 @@ function UserProfile() {
 
     const show = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const fullNick = getUserNick(e);
-        if (!fullNick.includes('#')) return;
+        const u = new ArcaUser(e);
+        if (u.type !== ArcaUser.TYPE_HALF) return;
 
-        e.firstElementChild.textContent = fullNick;
+        e.firstElementChild.textContent = `${
+          e.firstElementChild.textContent.includes('@') ? '@' : ''
+        }${u.toString()}`;
       });
     };
     show();
@@ -60,7 +83,7 @@ function UserProfile() {
 
     const apply = () => {
       [...document.querySelectorAll(COMMENT_USER_INFO)].forEach((e) => {
-        if (getUserNick(e) === user.ID) {
+        if (new ArcaUser(e).id === user.id) {
           e.classList.add('mynick');
         }
       });
@@ -77,7 +100,12 @@ function UserProfile() {
     };
   }, [user, indicateMyComment]);
 
-  return profileStyles;
+  return (
+    <>
+      {profileStyles}
+      <AvatarStyles value={avatar} />
+    </>
+  );
 }
 
 export default UserProfile;

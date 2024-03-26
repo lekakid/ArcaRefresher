@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Button, Snackbar, Typography } from '@mui/material';
 
@@ -93,9 +93,9 @@ function Decoder() {
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const { enabled, autoDecode, clipboardDecode } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
-  const { temporaryDisabled } = useSelector((state) => state[Info.ID]);
+  const { temporaryDisabled } = useSelector((state) => state[Info.id]);
   const [decodeResult, setDecodeResult] = useState();
 
   // 게시물 조회 디코딩 기능

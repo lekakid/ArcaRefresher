@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'core/selector';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { getUserIP, getUserKey } from 'func/user';
+import { ArcaUser, getUserKey } from 'func/user';
 
 import DB from './ip';
 
@@ -19,9 +19,11 @@ export default function IPInfo() {
     const refreshUserInfo = () => {
       const list = [...document.querySelectorAll(USER_INFO)]
         .map((e, index) => {
+          const user = new ArcaUser(e);
+          if (user.type !== ArcaUser.TYPE_IP) return null;
+
           const key = getUserKey(e, index);
-          const ip = getUserIP(e);
-          if (!ip) return null;
+          const ip = new ArcaUser(e).id;
 
           const { label, color } = Object.values(DB).find(({ list: ipList }) =>
             ipList.includes(ip),

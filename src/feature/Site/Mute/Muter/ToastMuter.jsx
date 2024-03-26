@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
@@ -33,7 +33,7 @@ function ToastMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   useEffect(() => {

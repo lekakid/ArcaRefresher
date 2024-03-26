@@ -1,5 +1,5 @@
-import React from 'react';
 import {
+  NavigationMuter,
   BoardMuter,
   SidebarMuter,
   ArticleMuter,
@@ -10,6 +10,7 @@ import {
 export default function Mute() {
   return (
     <>
+      <NavigationMuter />
       <BoardMuter />
       <SidebarMuter />
       <ArticleMuter />

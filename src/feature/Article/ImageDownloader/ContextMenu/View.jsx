@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { Assignment, GetApp, Image as ImageIcon } from '@mui/icons-material';
 import streamSaver from 'streamsaver';
@@ -8,21 +9,21 @@ import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-
 import { request } from 'func/http';
+
 import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
 function ContextMenu({ target }) {
   const { downloadMethod, fileName } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -84,7 +85,7 @@ function ContextMenu({ target }) {
       try {
         closeMenu();
         const name = format(fileName, {
-          values: contentInfo,
+          content: contentInfo,
           fileName: uploadName,
         });
         switch (downloadMethod) {
@@ -187,5 +188,9 @@ function ContextMenu({ target }) {
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

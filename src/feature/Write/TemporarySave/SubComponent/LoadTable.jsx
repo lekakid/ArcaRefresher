@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -103,7 +103,7 @@ function LoadTable({ editor, open, onClose }) {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { tempArticleList, importTitle, templateMode } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
     id: index,

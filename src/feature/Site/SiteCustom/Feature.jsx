@@ -1,12 +1,13 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
+
+import { useArcaSocket } from 'hooks/WebSocket';
 
 import Info from './FeatureInfo';
 
 /* eslint-disable react/prop-types */
 
-// ------------- 사이트 -------------
 function NotifyPositionStyles({ value }) {
   return (
     <GlobalStyles
@@ -185,206 +186,6 @@ function SideNewsStyles({ value }) {
   );
 }
 
-function AvatarStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.avatar': {
-          display: 'none !important',
-        },
-        '.input-wrapper > .input': {
-          width: 'calc(100% - 5rem) !important',
-        },
-      }}
-    />
-  );
-}
-
-// ------------- 게시판 -------------
-function UserInfoWidthStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.vcol.col-author': {
-          width: `calc(7rem * (1 + ${value * 0.01})) !important`,
-        },
-      }}
-    />
-  );
-}
-
-function RateCount({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        'html body.body .board-article .article-list .list-table': {
-          '& .vrow-inner .vrow-bottom .vcol.col-view': {
-            '&::after': {
-              content: '""',
-              margin: 0,
-            },
-            marginRight: 0,
-          },
-          '& .vcol.col-rate': {
-            display: 'none !important',
-          },
-        },
-      }}
-    />
-  );
-}
-
-// ------------- 게시물 -------------
-function HideDefaultImageStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#defaultImage': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
-
-function ResizeImageStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.article-body': {
-          '& img, & video:not([controls])': {
-            '&:not([class$="emoticon"])': {
-              maxWidth: `${value}% !important`,
-            },
-          },
-        },
-      }}
-    />
-  );
-}
-
-function ResizeVideoStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.article-body video[controls]': {
-          maxWidth: `${value}% !important`,
-        },
-      }}
-    />
-  );
-}
-
-function HideUnvoteStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#rateDownForm': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
-
-// ------------- 댓글 -------------
-function UnfoldLongCommentStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#comment': {
-          '& .message': {
-            maxHeight: 'none !important',
-          },
-          '& .btn-more': {
-            display: ' none !important',
-          },
-        },
-      }}
-    />
-  );
-}
-
-function ModifiedIndicatorStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        'b.modified': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
-
-function ReverseCommentStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#comment': {
-          display: 'flex',
-          flexDirection: 'column',
-          '& .title': {
-            order: 0,
-          },
-          '& #commentForm': {
-            order: 1,
-          },
-          '& .list-area': {
-            order: 2,
-          },
-        },
-      }}
-    />
-  );
-}
-
-function HideVoiceComment({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#comment .btn-voicecmt': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
-
-function ResizeEmoticonPalette({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.namlacon': {
-          height: 'auto !important',
-          '& .emoticons': {
-            maxHeight: `${value * 100}px !important`,
-          },
-        },
-      }}
-    />
-  );
-}
-
-// ------------- 접근성 -------------
 function FontSizeStyles({ value }) {
   return (
     <GlobalStyles
@@ -423,34 +224,69 @@ function FixDarkModeWriteFormStyles({ value }) {
 
 /* eslint-enable react/prop-types */
 
-export default function LayoutCustom() {
+export default function SiteCustom() {
+  const [subscribeWS, unsubscribeWS] = useArcaSocket();
+
   const {
-    enabled,
+    // 모양
     notifyPosition,
     topNews,
     searchBar,
     recentVisit,
-    sideMenu,
     sideContents,
     sideBests,
     sideNews,
-    avatar,
-    userinfoWidth,
-    rateCount,
-    hideDefaultImage,
-    resizeImage,
-    resizeVideo,
-    hideUnvote,
-    unfoldLongComment,
-    modifiedIndicator,
-    reverseComment,
-    hideVoiceComment,
-    resizeEmoticonPalette,
+    sideMenu,
     fontSize,
     fixDarkModeWriteForm,
-  } = useSelector((state) => state[Info.ID].storage);
+    // 동작
+    spoofTitle,
+    spoofFavicon,
+  } = useSelector((state) => state[Info.id].storage);
+  const titleRef = useRef(document.title);
 
-  if (!enabled) return null;
+  // 사이트 표시 제목 변경
+  useEffect(() => {
+    document.title = spoofTitle || titleRef.current;
+  }, [spoofTitle]);
+
+  // 사이트 파비콘 변경
+  useEffect(() => {
+    if (!spoofFavicon) return undefined;
+
+    const defaultUrl = document.querySelector('#dynamic-favicon').href;
+    const changeFavicon = (url) => {
+      const faviconEl = document.querySelector('#dynamic-favicon');
+      faviconEl.href = url;
+    };
+
+    // 글 알림 비활성화
+    Object.defineProperty(unsafeWindow, 'notificationBadge', {
+      get() {
+        return 'default';
+      },
+      set() {},
+    });
+    changeFavicon(spoofFavicon);
+    window.addEventListener('load', () => {
+      changeFavicon(spoofFavicon);
+    });
+
+    const subscriber = {
+      type: 'before',
+      callback(e) {
+        if (e.data.split('|').shift() === 'na') {
+          Object.defineProperty(e, 'ignore', { value: true });
+        }
+      },
+    };
+    subscribeWS(subscriber);
+    return () => {
+      changeFavicon(defaultUrl);
+      unsubscribeWS(subscriber);
+      window.removeEventListener('load', changeFavicon);
+    };
+  }, [spoofFavicon, subscribeWS, unsubscribeWS]);
 
   return (
     <>
@@ -462,18 +298,6 @@ export default function LayoutCustom() {
       <SideContentsStyles value={sideContents} />
       <SideBestsStyles value={sideBests} />
       <SideNewsStyles value={sideNews} />
-      <AvatarStyles value={avatar} />
-      <UserInfoWidthStyles value={userinfoWidth} />
-      <RateCount value={rateCount} />
-      <HideDefaultImageStyles value={hideDefaultImage} />
-      <ResizeImageStyles value={resizeImage} />
-      <ResizeVideoStyles value={resizeVideo} />
-      <HideUnvoteStyles value={hideUnvote} />
-      <UnfoldLongCommentStyles value={unfoldLongComment} />
-      <ModifiedIndicatorStyles value={modifiedIndicator} />
-      <ReverseCommentStyles value={reverseComment} />
-      <HideVoiceComment value={hideVoiceComment} />
-      <ResizeEmoticonPalette value={resizeEmoticonPalette} />
       <FontSizeStyles value={fontSize} />
       <FixDarkModeWriteFormStyles value={fixDarkModeWriteForm} />
     </>

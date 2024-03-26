@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
-import { getUserID, getUserKey } from 'func/user';
+import { ArcaUser, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { EVENT_COMMENT_REFRESH } from 'core/event';
@@ -25,7 +25,7 @@ const anonymousNickStyles = (
 function AnonymousNick() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
-  const { storage, show } = useSelector((state) => state[Info.ID]);
+  const { storage, show } = useSelector((state) => state[Info.id]);
   const nickContainer = useRef([]);
   const [nickData, setNickData] = useState([]);
 
@@ -44,8 +44,8 @@ function AnonymousNick() {
       const data = [...document.querySelectorAll(ARTICLE_USER_INFO)].map(
         (e, index) => {
           const key = getUserKey(e, index);
-          const id = getUserID(e);
-          const nick =
+          const id = new ArcaUser(e).toUID();
+          const anonymousNick =
             nickTable[id] ||
             (nickTable[id] =
               nickList.pop() ||
@@ -58,7 +58,7 @@ function AnonymousNick() {
           }
           e.insertAdjacentElement('afterend', container);
 
-          return { key, nick, container };
+          return { key, nick: anonymousNick, container };
         },
       );
       setNickData(data);

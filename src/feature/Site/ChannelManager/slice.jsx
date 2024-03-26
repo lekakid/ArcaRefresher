@@ -10,7 +10,7 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage),
+  storage: getValue(Info.id, defaultStorage),
   navChannelInfo: {
     subs: [],
     main: [],
@@ -18,7 +18,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $toggleEnabled(state) {
@@ -26,8 +26,31 @@ export const slice = createSlice({
     },
     $addGroup(state, action) {
       const { name } = action.payload;
+      if (state.storage.groupList.includes(name)) return;
+
       state.storage.groupList.push(name);
       state.storage.groupList = state.storage.groupList.sort();
+    },
+    $renameGroup(state, action) {
+      const { prev, next } = action.payload;
+      const index = state.storage.groupList.indexOf(prev);
+      if (index === -1) return; // ?
+
+      if (state.storage.groupList.includes(next))
+        state.storage.groupList.splice(index, 1);
+      else state.storage.groupList.splice(index, 1, next);
+      state.storage.channelInfoTable = Object.fromEntries(
+        Object.entries(state.storage.channelInfoTable).map(
+          ([channel, data]) => {
+            const cIndex = data.groups.indexOf(prev);
+            if (cIndex === -1) return [channel, data];
+
+            if (data.groups.includes(next)) data.groups.splice(cIndex, 1);
+            else data.groups.splice(cIndex, 1, next);
+            return [channel, data];
+          },
+        ),
+      );
     },
     $removeGroup(state, action) {
       const { name } = action.payload;
@@ -56,6 +79,7 @@ export const slice = createSlice({
 export const {
   $toggleEnabled,
   $addGroup,
+  $renameGroup,
   $removeGroup,
   $setChannelInfo,
   setNavChannelInfo,

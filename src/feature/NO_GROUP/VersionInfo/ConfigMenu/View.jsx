@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState } from 'react';
 import {
   List,
   Paper,
@@ -22,10 +22,10 @@ import { TYPE_MINOR, TYPE_PATCH } from '../func';
 
 const DONATION_TOSS_URL = 'https://toss.me/lekakid';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-  const { notiLevel } = useSelector((state) => state[Info.ID].storage);
+  const { notiLevel } = useSelector((state) => state[Info.id].storage);
   const [open, setOpen] = useState(false);
 
   const handleVisitChannel = useCallback(() => {
@@ -34,6 +34,10 @@ const View = React.forwardRef((_props, ref) => {
 
   const handleVisitGithub = useCallback(() => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
+  }, []);
+
+  const handleVisitGithubSponsors = useCallback(() => {
+    GM_openInTab('https://github.com/sponsors/lekakid');
   }, []);
 
   const handleVisitCoffeeBuyMe = useCallback(() => {
@@ -89,6 +93,13 @@ const View = React.forwardRef((_props, ref) => {
         <List disablePadding>
           <BaseRow
             divider
+            header={<ListItemText primary="Github Sponsors" />}
+            onClick={handleVisitGithubSponsors}
+          >
+            <OpenInNew />
+          </BaseRow>
+          <BaseRow
+            divider
             header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
           >
@@ -116,5 +127,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

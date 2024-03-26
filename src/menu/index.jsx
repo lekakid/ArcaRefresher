@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ArticleMenuContainer from './ArticleMenu';
 import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
@@ -40,6 +38,7 @@ const groupList = groupContext
     ...groupContext(path).default,
   }))
   .sort((a, b) => a.order - b.order);
+groupList.push(null);
 
 const configMenuContext = require.context(
   'feature/',
@@ -49,10 +48,9 @@ const configMenuContext = require.context(
 const configMenuChildren = configMenuContext.keys().map((path) => {
   const group = path.split('/')[1];
   const menuInfo = configMenuContext(path).default;
-  if (group === 'NO_GROUP') return menuInfo;
 
   return {
-    group: path.split('/')[1],
+    group: group === 'NO_GROUP' ? '' : group,
     ...menuInfo,
   };
 });

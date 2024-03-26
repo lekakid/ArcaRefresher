@@ -10,7 +10,9 @@ const defaultStorage = {
   theme: {},
 };
 
-function formatUpdater(storage, defaultValue) {
+function updater(storage, defaultValue) {
+  if (!storage) return defaultValue;
+
   // version 0 => 2
   const version = storage?.version || 0;
 
@@ -39,7 +41,7 @@ function formatUpdater(storage, defaultValue) {
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
-      updatedStorage.version = 1;
+      updatedStorage.version = 2;
 
       return updatedStorage;
     }
@@ -50,11 +52,11 @@ function formatUpdater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage, formatUpdater),
+  storage: getValue(Info.id, defaultStorage, updater),
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $toggleEnable(state) {

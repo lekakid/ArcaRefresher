@@ -8,13 +8,13 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage),
+  storage: getValue(Info.id, defaultStorage),
   // 이 아래에 인터페이스 제어용 state 추가
   show: true,
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     // storage 내부 제어 리듀서는 맨앞에 $를 추가하여 구분합니다.

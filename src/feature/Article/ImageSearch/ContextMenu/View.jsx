@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { ImageSearch, PhotoLibrary } from '@mui/icons-material';
 
@@ -15,13 +16,25 @@ const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
 
 function ContextMenu({ target }) {
-  const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
-    useSelector((state) => state[Info.ID].storage);
+  const {
+    // 사이트
+    showGoogle,
+    showBing,
+    showYandex,
+    showSauceNao,
+    showIqdb,
+    showAscii2D,
+    // 동작
+    openType,
+    searchBySource,
+    searchGoogleMethod,
+    saucenaoBypass,
+  } = useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: ARTICLE_IMAGES,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -33,24 +46,42 @@ function ContextMenu({ target }) {
   );
 
   const handleGoogle = useCallback(() => {
+    if (!showGoogle) return;
+
     const url = {
       lens: 'https://lens.google.com/uploadbyurl?hl=ko&re=df&st=1668437351496&ep=gsbubu&url=',
       source: 'https://www.google.com/searchbyimage?client=app&image_url=',
     };
     open(`${url[searchGoogleMethod]}${encodeURIComponent(data)}`, openType);
     closeMenu();
-  }, [closeMenu, data, searchGoogleMethod, openType]);
+  }, [showGoogle, data, searchGoogleMethod, openType, closeMenu]);
+
+  const handleBing = useCallback(() => {
+    if (!showBing) return;
+
+    open(
+      `https://www.bing.com/images/search?view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste&idpbck=1&q=imgurl:${encodeURIComponent(
+        data,
+      )}`,
+      openType,
+    );
+    closeMenu();
+  }, [showBing, data, openType, closeMenu]);
 
   const handleYandex = useCallback(() => {
+    if (!showYandex) return;
+
     GM_openInTab(
       `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
         data,
       )}`,
     );
     closeMenu();
-  }, [closeMenu, data]);
+  }, [showYandex, closeMenu, data]);
 
   const handleSauceNao = useCallback(() => {
+    if (!showSauceNao) return;
+
     if (!saucenaoBypass) {
       open(
         `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
@@ -108,45 +139,47 @@ function ContextMenu({ target }) {
         console.error(error);
       }
     })();
-  }, [saucenaoBypass, openType, data, closeMenu, setSnack]);
+  }, [showSauceNao, saucenaoBypass, openType, data, closeMenu, setSnack]);
 
   const handleIqdb = useCallback(() => {
+    if (!showIqdb) return;
+
     GM_openInTab(`https://iqdb.org/?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
-  }, [closeMenu, data, openType]);
+  }, [showIqdb, closeMenu, data, openType]);
 
-  const handleAscii2D = useCallback(() => {
-    (async () => {
-      try {
-        closeMenu();
-        setSnack({ msg: 'Ascii2D에서 검색 중...' });
+  const handleAscii2D = useCallback(async () => {
+    if (!showAscii2D) return;
 
-        const token = await request('https://ascii2d.net').then(
-          ({ response }) =>
-            response.querySelector('input[name="authenticity_token"]')?.value,
-        );
-        if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
+    try {
+      closeMenu();
+      setSnack({ msg: 'Ascii2D에서 검색 중...' });
 
-        const formdata = new FormData();
-        formdata.append('utf8', '✓');
-        formdata.append('authenticity_token', token);
-        formdata.append('uri', data);
+      const token = await request('https://ascii2d.net').then(
+        ({ response }) =>
+          response.querySelector('input[name="authenticity_token"]')?.value,
+      );
+      if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
 
-        const resultURL = await request('https://ascii2d.net/search/uri', {
-          method: 'POST',
-          data: formdata,
-        }).then(({ finalUrl }) => finalUrl);
-        setSnack();
-        open(resultURL, openType);
-      } catch (error) {
-        setSnack({
-          msg: ERROR_MSG,
-          time: 3000,
-        });
-        console.error(error);
-      }
-    })();
-  }, [closeMenu, data, openType, setSnack]);
+      const formdata = new FormData();
+      formdata.append('utf8', '✓');
+      formdata.append('authenticity_token', token);
+      formdata.append('uri', data);
+
+      const resultURL = await request('https://ascii2d.net/search/uri', {
+        method: 'POST',
+        data: formdata,
+      }).then(({ finalUrl }) => finalUrl);
+      setSnack();
+      open(resultURL, openType);
+    } catch (error) {
+      setSnack({
+        msg: ERROR_MSG,
+        time: 3000,
+      });
+      console.error(error);
+    }
+  }, [showAscii2D, closeMenu, data, openType, setSnack]);
 
   const handleAllOpen = useCallback(() => {
     handleGoogle();
@@ -165,38 +198,60 @@ function ContextMenu({ target }) {
         </ListItemIcon>
         <Typography>모든 사이트로 검색</Typography>
       </MenuItem>
-      <MenuItem onClick={handleGoogle}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>Google 검색</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleYandex}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>Yandex 검색</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleSauceNao}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>SauceNao 검색</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleIqdb}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>IQDB 검색</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleAscii2D}>
-        <ListItemIcon>
-          <ImageSearch />
-        </ListItemIcon>
-        <Typography>Ascii2D 검색</Typography>
-      </MenuItem>
+      {showGoogle && (
+        <MenuItem onClick={handleGoogle}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Google 검색</Typography>
+        </MenuItem>
+      )}
+      {showBing && (
+        <MenuItem onClick={handleBing}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Bing 검색</Typography>
+        </MenuItem>
+      )}
+      {showYandex && (
+        <MenuItem onClick={handleYandex}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Yandex 검색</Typography>
+        </MenuItem>
+      )}
+      {showSauceNao && (
+        <MenuItem onClick={handleSauceNao}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>SauceNao 검색</Typography>
+        </MenuItem>
+      )}
+      {showIqdb && (
+        <MenuItem onClick={handleIqdb}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>IQDB 검색</Typography>
+        </MenuItem>
+      )}
+      {showAscii2D && (
+        <MenuItem onClick={handleAscii2D}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Ascii2D 검색</Typography>
+        </MenuItem>
+      )}
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

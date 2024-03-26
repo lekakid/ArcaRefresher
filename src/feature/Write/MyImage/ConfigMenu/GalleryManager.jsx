@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -319,7 +313,7 @@ function GalleryManager({ gallery }) {
         <Paper elevation={0} sx={{ marginBottom: 1 }}>
           {createFolder ? (
             <FolderNameInput
-              initialValue={channelInfo.ID}
+              initialValue={channelInfo.id}
               validate={(input) => input === '' || folderList.includes(input)}
               onDone={handleCreateFolder}
               onCancel={() => setCreateFolder(false)}

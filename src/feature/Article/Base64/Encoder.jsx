@@ -6,7 +6,7 @@ import Info from './FeatureInfo';
 
 function Cipher() {
   const { enabled, encodeType } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   // 글작성 인코딩 기능

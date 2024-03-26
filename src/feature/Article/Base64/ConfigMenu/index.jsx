@@ -4,7 +4,7 @@ import View from './View';
 import Info from '../FeatureInfo';
 
 export default {
-  key: Info.ID,
+  key: Info.id,
   Icon: DoubleArrow,
   label: Info.name,
   View,

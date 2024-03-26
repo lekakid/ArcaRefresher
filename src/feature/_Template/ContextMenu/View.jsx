@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { Person } from '@mui/icons-material';
 
@@ -11,7 +12,7 @@ import Info from '../FeatureInfo';
 function ContextMenu({ target }) {
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: USER_INFO,
       dataExtractor: () => target.src.split('?')[0],
     },
@@ -35,5 +36,9 @@ function ContextMenu({ target }) {
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

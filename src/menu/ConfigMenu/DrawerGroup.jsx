@@ -1,31 +1,33 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Collapse,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { setGroup } from './slice';
 
-export default function DrawerGroup({
-  groupKey,
-  groupIcon,
-  groupText,
-  open,
-  children,
-}) {
+import { setGroup } from './slice';
+import Info from './FeatureInfo';
+
+function DrawerGroup({ groupKey, groupIcon, groupText, open, children }) {
   const dispatch = useDispatch();
+  const { group } = useSelector((state) => state[Info.id]);
+
   const handleClick = useCallback(() => {
     dispatch(setGroup(groupKey));
   }, [dispatch, groupKey]);
 
   return (
     <>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>{groupIcon}</ListItemIcon>
-        <ListItemText>{groupText}</ListItemText>
+      <ListItem disablePadding>
+        <ListItemButton selected={group === groupKey} onClick={handleClick}>
+          <ListItemIcon>{groupIcon}</ListItemIcon>
+          <ListItemText>{groupText}</ListItemText>
+        </ListItemButton>
       </ListItem>
       <Collapse in={open}>
         <List disablePadding>{children}</List>
@@ -33,3 +35,13 @@ export default function DrawerGroup({
     </>
   );
 }
+
+DrawerGroup.propTypes = {
+  groupKey: PropTypes.string,
+  groupIcon: PropTypes.element,
+  groupText: PropTypes.string,
+  open: PropTypes.bool,
+  children: PropTypes.node,
+};
+
+export default DrawerGroup;

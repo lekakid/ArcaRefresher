@@ -10,7 +10,7 @@ function SidebarMuter() {
   const fullLoaded = useLoadChecker(FULL_LOADED);
 
   const { keyword, hideMutedMark } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   useLayoutEffect(() => {

@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   Dialog,
@@ -12,7 +13,7 @@ import {
 import { Close, FormatColorReset } from '@mui/icons-material';
 import { TwitterPicker } from 'react-color';
 
-function MemoDialog({ open, onClose, onSubmit, defaultValue }) {
+function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
   const [msg, setMsg] = useState('');
   const [color, setColor] = useState('');
 
@@ -74,7 +75,7 @@ function MemoDialog({ open, onClose, onSubmit, defaultValue }) {
           value={msg}
           inputProps={{ style: { color } }}
           onChange={handleMsgChange}
-          onKeyPress={handleSubmit}
+          onKeyDown={handleSubmit}
         />
         <TwitterPicker
           triangle="hide"
@@ -97,4 +98,11 @@ function MemoDialog({ open, onClose, onSubmit, defaultValue }) {
 MemoDialog.defaultProps = {
   defaultValue: { msg: '', color: '' },
 };
+MemoDialog.propTypes = {
+  open: PropTypes.bool,
+  defaultValue: PropTypes.object,
+  onClose: PropTypes.func,
+  onSubmit: PropTypes.func,
+};
+
 export default MemoDialog;

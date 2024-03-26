@@ -42,12 +42,12 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.ID, defaultStorage),
+  storage: getValue(Info.id, defaultStorage),
   show: false,
 };
 
 export const slice = createSlice({
-  name: Info.ID,
+  name: Info.id,
   initialState,
   reducers: {
     $setPrefixList(state, action) {

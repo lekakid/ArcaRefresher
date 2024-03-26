@@ -1,4 +1,11 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react';
+import {
+  forwardRef,
+  Fragment,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
@@ -13,11 +20,13 @@ import {
   Select,
   useMediaQuery,
   Stack,
+  TextField,
 } from '@mui/material';
 import { Add, Delete, Label } from '@mui/icons-material';
 
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
+import { useConfirm } from 'component';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
@@ -25,8 +34,6 @@ import {
   $setPreset,
   $renamePreset,
 } from '../slice';
-import PresetNameInput from './PresetNameInput';
-import RemoveConfirm from './RemoveConfirm';
 import PresetEditor from './PresetEditor';
 
 const createRow = (key, primary, secondary = '') => ({
@@ -113,19 +120,18 @@ const defaultPreset = {
   'text-color-reverse': '#d3d3d3',
 };
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
+  const [confirm, ConfirmDialog] = useConfirm();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
     enabled,
     current: currentPresetKey,
     theme,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
   const [editingPresetKey, setEditingPresetKey] = useState('');
-  const [createOpen, setCreateOpen] = useState(false);
-  const [renameOpen, setRenameOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const confirmInputRef = useRef('');
   const editingPreset = useMemo(
     () => ({
       ...defaultPreset,
@@ -138,55 +144,79 @@ const View = React.forwardRef((_props, ref) => {
     setEditingPresetKey(e.target.value);
   }, []);
 
-  const handleAddOpen = useCallback(() => {
-    setCreateOpen(true);
-  }, []);
+  const handleAdd = useCallback(async () => {
+    const result = await confirm({
+      title: '추가할 프리셋 이름',
+      content: (
+        <>
+          <Typography variant="body2">
+            채널 slug로 지정 시 해당 채널에 항상 적용되는 테마가 됩니다.
+          </Typography>
+          <TextField fullWidth inputRef={confirmInputRef} />
+        </>
+      ),
+      buttonList: [
+        {
+          label: '확인',
+          value: () => confirmInputRef.current.value,
+          key: 'Enter',
+        },
+        {
+          label: '취소',
+          value: false,
+          key: 'Escape',
+          variant: 'contained',
+        },
+      ],
+    });
+    if (!result) return;
 
-  const handleAddClose = useCallback(() => {
-    setCreateOpen(false);
-  }, []);
+    dispatch($setPreset({ key: result, preset: { ...defaultPreset } }));
+    setEditingPresetKey(result);
+  }, [confirm, dispatch]);
 
-  const handleAddPreset = useCallback(
-    (value) => {
-      dispatch($setPreset({ key: value, preset: { ...defaultPreset } }));
-      setEditingPresetKey(value);
-      setCreateOpen(false);
-    },
-    [dispatch],
-  );
+  const handleRename = useCallback(async () => {
+    const result = await confirm({
+      title: '프리셋 이름 변경',
+      content: (
+        <>
+          <Typography variant="body2">
+            채널 slug로 지정 시 해당 채널에 항상 적용되는 테마가 됩니다.
+          </Typography>
+          <TextField
+            fullWidth
+            inputRef={confirmInputRef}
+            defaultValue={editingPresetKey}
+          />
+        </>
+      ),
+      buttonList: [
+        {
+          label: '확인',
+          value: () => confirmInputRef.current.value,
+          key: 'Enter',
+        },
+        { label: '취소', value: false, key: 'Escape', variant: 'contained' },
+      ],
+    });
+    if (!result) return;
+    if (editingPresetKey === result) return;
 
-  const handleRenameOpen = useCallback(() => {
-    setRenameOpen(true);
-  }, []);
+    dispatch($renamePreset({ prev: editingPresetKey, next: result }));
+    setEditingPresetKey(result);
+  }, [editingPresetKey, confirm, dispatch]);
 
-  const handleRenameClose = useCallback(() => {
-    setRenameOpen(false);
-  }, []);
+  const handleRemove = useCallback(async () => {
+    const result = await confirm({
+      title: '프리셋 삭제',
+      content: `"${editingPresetKey}" 프리셋을 삭제합니다.`,
+    });
+    if (!result) return;
 
-  const handleRenamePreset = useCallback(
-    (value) => {
-      dispatch($renamePreset({ prev: editingPresetKey, next: value }));
-      setEditingPresetKey(value);
-      setRenameOpen(false);
-      if (editingPresetKey === currentPresetKey) dispatch($setCurrent(value));
-    },
-    [currentPresetKey, dispatch, editingPresetKey],
-  );
-
-  const handleRemoveOpen = useCallback(() => {
-    setConfirmOpen(true);
-  }, []);
-
-  const handleRemoveClose = useCallback(() => {
-    setConfirmOpen(false);
-  }, []);
-
-  const handleRemovePreset = useCallback(() => {
     dispatch($setPreset({ key: editingPresetKey, preset: null }));
-    setConfirmOpen(false);
-    setEditingPresetKey('');
     if (editingPresetKey === currentPresetKey) dispatch($setCurrent(''));
-  }, [currentPresetKey, dispatch, editingPresetKey]);
+    setEditingPresetKey('');
+  }, [editingPresetKey, currentPresetKey, confirm, dispatch]);
 
   const handlePresetChange = useCallback(
     (nextPreset) => {
@@ -238,27 +268,21 @@ const View = React.forwardRef((_props, ref) => {
               <ButtonGroup size="large" fullWidth={mobile}>
                 <Tooltip title="추가">
                   <span>
-                    <Button onClick={handleAddOpen}>
+                    <Button onClick={handleAdd}>
                       <Add />
                     </Button>
                   </span>
                 </Tooltip>
                 <Tooltip title="이름 수정">
                   <span>
-                    <Button
-                      disabled={!editingPresetKey}
-                      onClick={handleRenameOpen}
-                    >
+                    <Button disabled={!editingPresetKey} onClick={handleRename}>
                       <Label />
                     </Button>
                   </span>
                 </Tooltip>
                 <Tooltip title="제거">
                   <span>
-                    <Button
-                      disabled={!editingPresetKey}
-                      onClick={handleRemoveOpen}
-                    >
+                    <Button disabled={!editingPresetKey} onClick={handleRemove}>
                       <Delete />
                     </Button>
                   </span>
@@ -281,26 +305,10 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-      <PresetNameInput
-        open={createOpen}
-        onSubmit={handleAddPreset}
-        onClose={handleAddClose}
-      />
-      <PresetNameInput
-        open={renameOpen}
-        initialValue={editingPresetKey}
-        onSubmit={handleRenamePreset}
-        onClose={handleRenameClose}
-      />
-      <RemoveConfirm
-        open={confirmOpen}
-        target={editingPresetKey}
-        onSubmit={handleRemovePreset}
-        onClose={handleRemoveClose}
-      />
+      <ConfirmDialog />
     </Fragment>
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

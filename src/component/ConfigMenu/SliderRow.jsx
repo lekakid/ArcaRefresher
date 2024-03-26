@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { ListItemText, Slider } from '@mui/material';
@@ -7,7 +7,7 @@ import { useOpacity } from 'menu/ConfigMenu';
 
 import BaseRow from './BaseRow';
 
-const SliderRow = React.forwardRef(
+const SliderRow = forwardRef(
   (
     {
       divider,

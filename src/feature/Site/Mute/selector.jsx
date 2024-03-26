@@ -2,11 +2,11 @@ import { createSelector } from '@reduxjs/toolkit';
 import Info from './FeatureInfo';
 
 export const filterSelector = createSelector(
-  (state) => state[Info.ID].storage.user,
-  (state) => state[Info.ID].storage.keyword,
-  (state) => state[Info.ID].storage.channel,
-  (state) => state[Info.ID].storage.emoticon,
-  (state, channelID) => state[Info.ID].storage.category[channelID],
+  (state) => state[Info.id].storage.user,
+  (state) => state[Info.id].storage.keyword,
+  (state) => state[Info.id].storage.channel,
+  (state) => state[Info.id].storage.emoticon,
+  (state, channelId) => state[Info.id].storage.category[channelId],
   (user, keyword, channel, emotBundleList, category) => {
     const entries = Object.values(emotBundleList).reduce(
       (acc, { name, bundle, url }) => {
@@ -27,7 +27,7 @@ export const filterSelector = createSelector(
 );
 
 export const emoticonTableSelector = createSelector(
-  [(state) => state[Info.ID].storage.emoticon],
+  [(state) => state[Info.id].storage.emoticon],
   (emoticon) =>
     Object.entries(emoticon).map(([key, { name, bundle, url }]) => ({
       id: key,

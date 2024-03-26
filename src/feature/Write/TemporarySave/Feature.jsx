@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -47,8 +47,8 @@ export default function TemporarySave() {
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-  const { deleteOnCommit } = useSelector((state) => state[Info.ID].storage);
-  const { currentSlot } = useSelector((state) => state[Info.ID]);
+  const { deleteOnCommit } = useSelector((state) => state[Info.id].storage);
+  const { currentSlot } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState(null);
   const [editor, setEditor] = useState(null);
 

@@ -1,19 +1,19 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
-  $toggleAnimation,
   $setTimeLimit,
   $setMaxTime,
   $toggleRefreshOnArticle,
+  $setProgressPos,
 } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
-  const { countdown, maxTime, refreshOnArticle, showProgress } = useSelector(
-    (state) => state[Info.ID].storage,
+const View = forwardRef((_props, ref) => {
+  const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
+    (state) => state[Info.id].storage,
   );
 
   return (
@@ -54,16 +54,22 @@ const View = React.forwardRef((_props, ref) => {
             value={refreshOnArticle}
             action={$toggleRefreshOnArticle}
           />
-          <SwitchRow
-            primary="갱신 애니메이션 표시"
-            value={showProgress}
-            action={$toggleAnimation}
-          />
+          <SelectRow
+            primary="갱신 애니메이션 위치"
+            value={progressPos}
+            action={$setProgressPos}
+          >
+            <MenuItem value="hidden">숨김</MenuItem>
+            <MenuItem value="bottom left">왼쪽 아래</MenuItem>
+            <MenuItem value="bottom right">오른쪽 아래</MenuItem>
+            <MenuItem value="top left">왼쪽 위</MenuItem>
+            <MenuItem value="top right">오른쪽 위</MenuItem>
+          </SelectRow>
         </List>
       </Paper>
     </Fragment>
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

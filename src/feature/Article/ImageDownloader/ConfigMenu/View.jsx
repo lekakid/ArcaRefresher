@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
@@ -13,10 +13,9 @@ import {
   $setZipImageName,
   $setZipExtension,
 } from '../slice';
-import { FORMAT_STRING, LABEL } from '../func/format';
 import FormatTextFieldRow from './FormatTextFieldRow';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const {
     enabled,
     downloadMethod,
@@ -24,7 +23,7 @@ const View = React.forwardRef((_props, ref) => {
     zipName,
     zipExtension,
     zipImageName,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
 
   return (
     <Fragment ref={ref}>
@@ -50,42 +49,38 @@ const View = React.forwardRef((_props, ref) => {
           <FormatTextFieldRow
             divider
             primary="우클릭 저장 시 이미지 이름"
+            selectableList={[
+              'CHANNEL',
+              'CHANNEL_ID',
+              'TITLE',
+              'CATEGORY',
+              'AUTHOR',
+              'ARTICLE_ID',
+              'DATE',
+              'TIME',
+              'URL',
+              'ORIG',
+            ]}
             value={fileName}
             action={$setFileName}
-          >
-            <MenuItem value={FORMAT_STRING.CHANNEL}>{LABEL.CHANNEL}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CHANNEL_ID}>
-              {LABEL.CHANNEL_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.TITLE}>{LABEL.TITLE}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CATEGORY}>{LABEL.CATEGORY}</MenuItem>
-            <MenuItem value={FORMAT_STRING.AUTHOR}>{LABEL.AUTHOR}</MenuItem>
-            <MenuItem value={FORMAT_STRING.ARTICLE_ID}>
-              {LABEL.ARTICLE_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.URL}>{LABEL.URL}</MenuItem>
-            <MenuItem value={FORMAT_STRING.UPLOAD_NAME}>
-              {LABEL.UPLOAD_NAME}
-            </MenuItem>
-          </FormatTextFieldRow>
+          />
           <FormatTextFieldRow
             divider
             primary="일괄 다운로드 시 압축파일 이름"
+            selectableList={[
+              'CHANNEL',
+              'CHANNEL_ID',
+              'TITLE',
+              'CATEGORY',
+              'AUTHOR',
+              'ARTICLE_ID',
+              'DATE',
+              'TIME',
+              'URL',
+            ]}
             value={zipName}
             action={$setZipName}
-          >
-            <MenuItem value={FORMAT_STRING.CHANNEL}>{LABEL.CHANNEL}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CHANNEL_ID}>
-              {LABEL.CHANNEL_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.TITLE}>{LABEL.TITLE}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CATEGORY}>{LABEL.CATEGORY}</MenuItem>
-            <MenuItem value={FORMAT_STRING.AUTHOR}>{LABEL.AUTHOR}</MenuItem>
-            <MenuItem value={FORMAT_STRING.ARTICLE_ID}>
-              {LABEL.ARTICLE_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.URL}>{LABEL.URL}</MenuItem>
-          </FormatTextFieldRow>
+          />
           <SelectRow
             divider
             primary="일괄 다운로드 시 압축파일 확장자"
@@ -97,30 +92,27 @@ const View = React.forwardRef((_props, ref) => {
           </SelectRow>
           <FormatTextFieldRow
             primary="일괄 다운로드 시 압축파일 내 이미지 이름"
+            selectableList={[
+              'CHANNEL',
+              'CHANNEL_ID',
+              'TITLE',
+              'CATEGORY',
+              'AUTHOR',
+              'ARTICLE_ID',
+              'DATE',
+              'TIME',
+              'URL',
+              'ORIG',
+              'NUMBER',
+            ]}
             value={zipImageName}
             action={$setZipImageName}
-          >
-            <MenuItem value={FORMAT_STRING.CHANNEL}>{LABEL.CHANNEL}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CHANNEL_ID}>
-              {LABEL.CHANNEL_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.TITLE}>{LABEL.TITLE}</MenuItem>
-            <MenuItem value={FORMAT_STRING.CATEGORY}>{LABEL.CATEGORY}</MenuItem>
-            <MenuItem value={FORMAT_STRING.AUTHOR}>{LABEL.AUTHOR}</MenuItem>
-            <MenuItem value={FORMAT_STRING.ARTICLE_ID}>
-              {LABEL.ARTICLE_ID}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.URL}>{LABEL.URL}</MenuItem>
-            <MenuItem value={FORMAT_STRING.UPLOAD_NAME}>
-              {LABEL.UPLOAD_NAME}
-            </MenuItem>
-            <MenuItem value={FORMAT_STRING.NUMBER}>{LABEL.NUMBER}</MenuItem>
-          </FormatTextFieldRow>
+          />
         </List>
       </Paper>
     </Fragment>
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

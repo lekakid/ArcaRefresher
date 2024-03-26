@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { GlobalStyles, IconButton, Portal } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 

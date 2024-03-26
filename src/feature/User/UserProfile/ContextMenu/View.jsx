@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -12,7 +12,7 @@ import {
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-import { getUserNick } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
 import toDocument from 'func/toDocument';
@@ -23,7 +23,7 @@ const profileUrl = 'https://arca.live/u/@';
 function ContextMenu({ target }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
-    (store) => store[Info.ID].storage,
+    (store) => store[Info.id].storage,
   );
   const { channel } = useContent();
   let contextSelector;
@@ -44,7 +44,7 @@ function ContextMenu({ target }) {
 
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -55,9 +55,11 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        const id = getUserNick(userElement);
+        const user = new ArcaUser(userElement);
         // 유동 제외
-        if (id.includes('.')) return undefined;
+        if (user.type === ArcaUser.TYPE_IP) return undefined;
+
+        const id = user.toString();
         const url = id.replace('#', '/');
 
         if (checkSpamAccount) {
@@ -119,7 +121,7 @@ function ContextMenu({ target }) {
 
   const handleSearchChannel = useCallback(async () => {
     open(
-      `https://arca.live/b/${channel.ID}?target=nickname&keyword=${
+      `https://arca.live/b/${channel.id}?target=nickname&keyword=${
         data.id.split('#')[0]
       }`,
       openType,

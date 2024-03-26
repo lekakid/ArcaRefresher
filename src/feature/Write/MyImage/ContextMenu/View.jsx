@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { PhotoLibrary } from '@mui/icons-material';
 
@@ -11,7 +12,7 @@ import FolderCheckList from './FolderCheckList';
 function ContextMenu({ target }) {
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -47,5 +48,9 @@ function ContextMenu({ target }) {
     </>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

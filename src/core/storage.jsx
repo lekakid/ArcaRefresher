@@ -5,20 +5,20 @@ import { v4 as uuid } from 'uuid';
  * 설정 값을 가져옵니다.
  * @param {string}   key            키 값
  * @param {Object}   defaultValue   값이 없을 시 사용할 기본값
- * @param {function} formatUpdater  데이터 포맷 업데이트 함수
+ * @param {function} updater        데이터 업데이트 함수
  * @return {Object}                 저장된 설정 값
  */
-export function getValue(key, defaultValue, formatUpdater) {
+export function getValue(key, defaultValue, updater) {
   let value = GM_getValue(key);
 
   const targetVersion = defaultValue?.version || 0;
   const currentVersion = value?.version || 0;
-  if (formatUpdater && targetVersion > currentVersion) {
+  if (updater && targetVersion > currentVersion) {
     if (value) {
       GM_setValue(`${key}_v${currentVersion}`, value);
-      value = formatUpdater(value, defaultValue);
-      GM_setValue(key, value);
     }
+    value = updater(value, defaultValue);
+    GM_setValue(key, value);
   }
 
   return { ...defaultValue, ...value };

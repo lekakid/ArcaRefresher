@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Box, List, Menu, MenuItem } from '@mui/material';
@@ -18,8 +18,8 @@ function getKeyCombine(event) {
 
 function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
-  const { interactionType } = useSelector((state) => state[Info.ID].storage);
-  const { mousePos, triggerList } = useSelector((state) => state[Info.ID]);
+  const { interactionType } = useSelector((state) => state[Info.id].storage);
+  const { mousePos, triggerList } = useSelector((state) => state[Info.id]);
   const gestureTrack = useRef({ right: false, count: 0 });
   const [targetTable, setTargetTable] = useState(undefined);
 

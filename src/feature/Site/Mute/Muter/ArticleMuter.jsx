@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
@@ -39,7 +39,7 @@ function ArticleMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [controlTarget, setControlTarget] = useState(null);
 

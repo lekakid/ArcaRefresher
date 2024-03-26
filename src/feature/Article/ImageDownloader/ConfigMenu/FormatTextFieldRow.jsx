@@ -1,12 +1,25 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { forwardRef, useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Box, IconButton, ListItemText, Menu, TextField } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  ListItemText,
+  Menu,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import { Add } from '@mui/icons-material';
+
 import { BaseRow } from 'component/ConfigMenu';
 
-const FormatTextFieldRow = React.forwardRef(
-  ({ divider, nested, primary, secondary, value, action, children }, ref) => {
+import { FORMAT } from '../func/format';
+
+const FormatTextFieldRow = forwardRef(
+  (
+    { divider, nested, primary, secondary, selectableList, value, action },
+    ref,
+  ) => {
     const dispatch = useDispatch();
 
     const inputRef = useRef(undefined);
@@ -80,9 +93,15 @@ const FormatTextFieldRow = React.forwardRef(
             <Add />
           </IconButton>
           <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-            {React.Children.map(children, (child) =>
-              React.cloneElement(child, { onClick: handleItemSelect }),
-            )}
+            {selectableList.map((s) => (
+              <MenuItem
+                key={s}
+                value={FORMAT[s].STRING}
+                onClick={handleItemSelect}
+              >
+                {FORMAT[s].LABEL}
+              </MenuItem>
+            ))}
           </Menu>
         </Box>
       </BaseRow>
@@ -95,7 +114,7 @@ const RowPropTypes = {
   nested: PropTypes.bool,
   primary: PropTypes.string,
   secondary: PropTypes.string,
-  children: PropTypes.node,
+  selectableList: PropTypes.array,
   value: PropTypes.string,
   action: PropTypes.func,
 };

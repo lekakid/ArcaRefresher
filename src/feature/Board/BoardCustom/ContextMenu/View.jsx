@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import { Bookmark, OpenInNew } from '@mui/icons-material';
 
@@ -13,12 +14,12 @@ import Info from '../FeatureInfo';
 
 // 우클릭 메뉴
 function ContextMenu({ target }) {
-  const { contextMenuEnabled } = useSelector((store) => store[Info.ID].storage);
+  const { contextMenuEnabled } = useSelector((store) => store[Info.id].storage);
   const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -44,7 +45,7 @@ function ContextMenu({ target }) {
     closeMenu();
 
     const response = await fetch(
-      `https://arca.live/api/scrap?slug=${channel.ID}&articleId=${data.articleId}`,
+      `https://arca.live/api/scrap?slug=${channel.id}&articleId=${data.articleId}`,
     ).then((r) => r.json());
     if (!response.result) {
       setSnack({ msg: '스크랩 실패 (서버 오류?)', time: 3000 });
@@ -77,5 +78,9 @@ function ContextMenu({ target }) {
     </List>
   );
 }
+
+ContextMenu.propTypes = {
+  target: PropTypes.object,
+};
 
 export default ContextMenu;

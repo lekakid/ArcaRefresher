@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { PeopleAltOutlined } from '@mui/icons-material';
@@ -8,7 +8,7 @@ import { toggleShow } from './slice';
 
 export default function ArticleMenu() {
   const dispatch = useDispatch();
-  const { show } = useSelector((state) => state[Info.ID]);
+  const { show } = useSelector((state) => state[Info.id]);
 
   const handleToggle = useCallback(() => {
     dispatch(toggleShow());

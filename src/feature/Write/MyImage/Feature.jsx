@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -21,14 +21,14 @@ export default function MyImage() {
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const { channel } = useContent();
   const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [open, setOpen] = useState(false);
   const [editor, setEditor] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   const targetImgList = useMemo(
-    () => [...(imgList[SHARED] || []), ...(imgList[channel.ID] || [])],
+    () => [...(imgList[SHARED] || []), ...(imgList[channel.id] || [])],
     [channel, imgList],
   );
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { cloneElement, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
@@ -10,7 +10,7 @@ import LoadTable from './LoadTable';
 
 function LoadButton({ editor, ...btnProps }) {
   const dispatch = useDispatch();
-  const { loadOpen } = useSelector((state) => state[Info.ID]);
+  const { loadOpen } = useSelector((state) => state[Info.id]);
 
   const handleClick = useCallback(() => {
     dispatch(setLoadOpen(true));
@@ -22,7 +22,7 @@ function LoadButton({ editor, ...btnProps }) {
 
   return (
     <>
-      {React.cloneElement(
+      {cloneElement(
         <Button startIcon={<Publish />} onClick={handleClick}>
           불러오기
         </Button>,

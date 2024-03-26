@@ -1,60 +1,88 @@
-export const FORMAT_STRING = {
-  CHANNEL: '%channel%',
-  CHANNEL_ID: '%channelID%',
-  TITLE: '%title%',
-  CATEGORY: '%category%',
-  AUTHOR: '%author%',
-  ARTICLE_ID: '%articleID%',
-  URL: '%url%',
-  UPLOAD_NAME: '%orig%',
-  NUMBER: '%num%',
-};
-
-export const REGEX = {
-  CHANNEL: /%channel%/,
-  CHANNEL_ID: /%channelID%/,
-  TITLE: /%title%/,
-  CATEGORY: /%category%/,
-  AUTHOR: /%author%/,
-  ARTICLE_ID: /%articleID%/,
-  URL: /%url%/,
-  UPLOAD_NAME: /%orig%/,
-  NUMBER: /%num%/,
-};
-
-export const LABEL = {
-  CHANNEL: '채널 이름',
-  CHANNEL_ID: '채널 SLUG',
-  TITLE: '게시물 제목',
-  CATEGORY: '게시물 글머리',
-  AUTHOR: '게시물 작성자',
-  ARTICLE_ID: '게시물 번호',
-  URL: '게시물 URL',
-  UPLOAD_NAME: '이미지 업로드 명',
-  NUMBER: '이미지 번호',
+export const FORMAT = {
+  CHANNEL: {
+    STRING: '%channel%',
+    REGEX: /%channel%/,
+    LABEL: '채널 이름',
+    getValue: (args) => args.content.channel.name,
+  },
+  CHANNEL_ID: {
+    STRING: '%channelId%',
+    REGEX: /%channelI(D|d)%/,
+    LABEL: '채널 SLUG',
+    getValue: (args) => args.content.channel.id,
+  },
+  TITLE: {
+    STRING: '%title%',
+    REGEX: /%title%/,
+    LABEL: '게시물 제목',
+    getValue: (args) => args.content.article.title,
+  },
+  CATEGORY: {
+    STRING: '%category%',
+    REGEX: /%category%/,
+    LABEL: '게시물 글머리',
+    getValue: (args) => args.content.article.category,
+  },
+  AUTHOR: {
+    STRING: '%author%',
+    REGEX: /%author%/,
+    LABEL: '게시물 작성자',
+    getValue: (args) => args.content.article.author,
+  },
+  ARTICLE_ID: {
+    STRING: '%articleId%',
+    REGEX: /%articleI(D|d)%/,
+    LABEL: '게시물 번호',
+    getValue: (args) => args.content.article.id,
+  },
+  DATE: {
+    STRING: '%date%',
+    REGEX: /%date%/,
+    LABEL: '게시물 작성일',
+    getValue: (args) => args.content.article.date,
+  },
+  TIME: {
+    STRING: '%time%',
+    REGEX: /%time%/,
+    LABEL: '게시물 작성 시간',
+    getValue: (args) => args.content.article.time,
+  },
+  URL: {
+    STRING: '%url%',
+    REGEX: /%url%/,
+    LABEL: '게시물 URL',
+    getValue: (args) => args.content.article.url,
+  },
+  ORIG: {
+    STRING: '%orig%',
+    REGEX: /%orig%/,
+    LABEL: '이미지 업로드 명',
+    getValue: (args) => args.fileName || '',
+  },
+  NUMBER: {
+    STRING: '%num%',
+    REGEX: /%num%/,
+    LABEL: '이미지 번호',
+    getValue: (args) => `${args.index}`.padStart(3, '0'),
+  },
 };
 
 /**
  * 패턴이 일치하는 string을 변환합니다.
  *
- * @param {string} string             변환을 시도할 문자열
- * @param {Object} option             변환 옵션
- * @param {Object} option.values      util/Parser/useParser()으로 받은 값
- * @param {Number} option.index       인덱스 번호
- * @param {string} option.fileName    업로드 된 파일의 실제 이름
+ * @param {string} formatStr             포맷 스트링을 포함한 문자열
+ * @param {Object} args             치환할 문자열
+ * @param {Object} args.content     util/Content/useContent()으로 받은 값
+ * @param {Number} args.index       인덱스 번호
+ * @param {string} args.fileName    업로드 된 파일의 실제 이름
  * @returns
  */
-export default function format(string, { values, index = 0, fileName = '' }) {
-  const { channel, article } = values;
 
-  return string
-    .replace(REGEX.CHANNEL, channel.name)
-    .replace(REGEX.CHANNEL_ID, channel.ID)
-    .replace(REGEX.TITLE, article.title)
-    .replace(REGEX.CATEGORY, article.category)
-    .replace(REGEX.AUTHOR, article.author)
-    .replace(REGEX.ARTICLE_ID, article.ID)
-    .replace(REGEX.URL, article.url)
-    .replace(REGEX.UPLOAD_NAME, fileName)
-    .replace(REGEX.NUMBER, `${index}`.padStart(3, '0'));
+export default function format(formatStr, args) {
+  let result = formatStr;
+  Object.values(FORMAT).forEach(({ REGEX, getValue }) => {
+    result = result.replace(REGEX, getValue(args));
+  });
+
+  return result;
 }

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { ImageSearch } from '@mui/icons-material';
@@ -10,8 +10,8 @@ import Info from './FeatureInfo';
 
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
-  const { enabled, deletedOnly } = useSelector(
-    (state) => state[Info.ID].storage,
+  const { blockAll, blockDeleted, blockReported } = useSelector(
+    (state) => state[Info.id].storage,
   );
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
 
@@ -20,7 +20,14 @@ export default function ArticleMenu() {
     body.classList.add('media-blocker-unhide');
   }, []);
 
-  if (!enabled || (deletedOnly && !alertLoaded)) return null;
+  if (
+    !(
+      blockAll ||
+      (alertLoaded && blockDeleted) ||
+      (document.referrer.includes('/reports/') && blockReported)
+    )
+  )
+    return null;
 
   return (
     <Button

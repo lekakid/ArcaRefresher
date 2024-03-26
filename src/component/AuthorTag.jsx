@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -58,4 +58,4 @@ AuthorTag.propTypes = {
   children: PropTypes.node,
 };
 
-export default React.memo(AuthorTag);
+export default memo(AuthorTag);

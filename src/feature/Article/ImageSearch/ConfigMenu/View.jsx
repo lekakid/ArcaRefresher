@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -7,19 +7,81 @@ import { BACKGROUND, FOREGROUND } from 'func/window';
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
+  // 사이트
+  $toggleShowGoogle,
+  $toggleShowBing,
+  $toggleShowYandex,
+  $toggleShowSauceNao,
+  $toggleShowIqdb,
+  $toggleShowAscii2D,
+  // 동작
   $setOpenType,
   $setSearchGoogleMethod,
   $toggleSauceNaoBypass,
   $toggleSearchBySource,
 } from '../slice';
 
-const View = React.forwardRef((_props, ref) => {
-  const { openType, searchBySource, searchGoogleMethod, saucenaoBypass } =
-    useSelector((state) => state[Info.ID].storage);
+const View = forwardRef((_props, ref) => {
+  const {
+    // 사이트
+    showGoogle,
+    showBing,
+    showYandex,
+    showSauceNao,
+    showIqdb,
+    showAscii2D,
+    // 동작
+    openType,
+    searchBySource,
+    searchGoogleMethod,
+    saucenaoBypass,
+  } = useSelector((state) => state[Info.id].storage);
 
   return (
     <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle2">사용할 검색 사이트</Typography>
+      <Paper>
+        <List disablePadding>
+          <SwitchRow
+            divider
+            primary="Google"
+            value={showGoogle}
+            action={$toggleShowGoogle}
+          />
+          <SwitchRow
+            divider
+            primary="Bing"
+            value={showBing}
+            action={$toggleShowBing}
+          />
+          <SwitchRow
+            divider
+            primary="Yandex"
+            value={showYandex}
+            action={$toggleShowYandex}
+          />
+          <SwitchRow
+            divider
+            primary="SauceNao"
+            value={showSauceNao}
+            action={$toggleShowSauceNao}
+          />
+          <SwitchRow
+            divider
+            primary="IQDB"
+            value={showIqdb}
+            action={$toggleShowIqdb}
+          />
+          <SwitchRow
+            divider
+            primary="Ascii2D"
+            value={showAscii2D}
+            action={$toggleShowAscii2D}
+          />
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">동작 설정</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -59,5 +121,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

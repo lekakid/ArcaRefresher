@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -11,11 +11,11 @@ import {
 } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
-import { getUserID } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import {
   getEmoticonList,
-  getBundleID,
+  getBundleId,
   getBundleName,
   trimEmotURL,
 } from '../func';
@@ -28,7 +28,7 @@ function makeRegex(id) {
 
 function ContextMenu({ target }) {
   const dispatch = useDispatch();
-  const { user, contextRange } = useSelector((state) => state[Info.ID].storage);
+  const { user, contextRange } = useSelector((state) => state[Info.id].storage);
   let contextSelector;
   switch (contextRange) {
     case 'articleItem':
@@ -48,7 +48,7 @@ function ContextMenu({ target }) {
     '[class$="emoticon"], .emoticon-wrapper > span, .article-body a.muted';
   const [data, closeMenu] = useContextMenu(
     {
-      key: Info.ID,
+      key: Info.id,
       selector: `${contextSelector}, ${emotSelector}`,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -60,7 +60,7 @@ function ContextMenu({ target }) {
           }
           if (!userElement) return undefined;
 
-          const regex = makeRegex(getUserID(userElement));
+          const regex = makeRegex(new ArcaUser(userElement).toUID());
           const exist = user.includes(regex);
           return { type: 'user', regex, exist };
         }
@@ -79,8 +79,8 @@ function ContextMenu({ target }) {
           return {
             type: 'emoticon',
             muted,
-            bundleID: emotElement.dataset.storeId,
-            emotID: parseInt(emotElement.dataset.id, 10),
+            bundleId: emotElement.dataset.storeId,
+            emotId: parseInt(emotElement.dataset.id, 10),
             url: trimEmotURL(emotElement.src),
           };
         }
@@ -94,21 +94,21 @@ function ContextMenu({ target }) {
   const handleBundleMute = useCallback(() => {
     (async () => {
       try {
-        let { bundleID } = data;
-        const { emotID, url } = data;
-        if (!bundleID) {
-          bundleID = await getBundleID(emotID);
+        let { bundleId } = data;
+        const { emotId, url } = data;
+        if (!bundleId) {
+          bundleId = await getBundleId(emotId);
         }
-        const bundleName = await getBundleName(bundleID);
-        const { idList, urlList } = await getEmoticonList(bundleID);
+        const bundleName = await getBundleName(bundleId);
+        const { idList, urlList } = await getEmoticonList(bundleId);
 
         if (idList.length === 0) {
           dispatch(
             $addEmoticon({
-              id: bundleID,
+              id: bundleId,
               emoticon: {
                 name: bundleName,
-                bundle: [parseInt(emotID, 10)],
+                bundle: [parseInt(emotId, 10)],
                 url: [trimEmotURL(url)],
               },
             }),
@@ -116,7 +116,7 @@ function ContextMenu({ target }) {
         } else {
           dispatch(
             $addEmoticon({
-              id: bundleID,
+              id: bundleId,
               emoticon: { name: bundleName, bundle: idList, url: urlList },
             }),
           );
@@ -136,24 +136,24 @@ function ContextMenu({ target }) {
   const handleSingleMute = useCallback(() => {
     (async () => {
       try {
-        let { bundleID, emotID } = data;
+        let { bundleId, emotId } = data;
         const { url } = data;
-        if (!bundleID) {
-          bundleID = await getBundleID(emotID);
+        if (!bundleId) {
+          bundleId = await getBundleId(emotId);
         }
-        if (!emotID) {
-          const bundle = await getEmoticonList(bundleID);
+        if (!emotId) {
+          const bundle = await getEmoticonList(bundleId);
           const index = bundle.urlList.indexOf(url);
-          emotID = bundle.idList[index];
+          emotId = bundle.idList[index];
         }
-        const bundleName = await getBundleName(bundleID);
+        const bundleName = await getBundleName(bundleId);
 
         dispatch(
           $addEmoticon({
-            id: bundleID,
+            id: bundleId,
             emoticon: {
               name: bundleName,
-              bundle: [emotID || -1],
+              bundle: [emotId || -1],
               url: [url],
             },
           }),
@@ -173,15 +173,15 @@ function ContextMenu({ target }) {
   const handleBundleUnmute = useCallback(() => {
     (async () => {
       try {
-        let { bundleID } = data;
-        const { emotID } = data;
-        if (!bundleID) {
-          bundleID = await getBundleID(emotID);
+        let { bundleId } = data;
+        const { emotId } = data;
+        if (!bundleId) {
+          bundleId = await getBundleId(emotId);
         }
 
         dispatch(
           $removeEmoticon({
-            id: bundleID,
+            id: bundleId,
           }),
         );
       } catch (e) {
@@ -199,16 +199,16 @@ function ContextMenu({ target }) {
   const handleSingleUnmute = useCallback(() => {
     (async () => {
       try {
-        let { bundleID } = data;
-        const { emotID, url } = data;
-        if (!bundleID) {
-          bundleID = await getBundleID(emotID);
+        let { bundleId } = data;
+        const { emotId, url } = data;
+        if (!bundleId) {
+          bundleId = await getBundleId(emotId);
         }
 
         dispatch(
           $removeEmoticon({
-            id: bundleID,
-            emotID,
+            id: bundleId,
+            emotId,
             url,
           }),
         );

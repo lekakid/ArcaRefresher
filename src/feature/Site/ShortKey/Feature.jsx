@@ -15,7 +15,7 @@ export default function ShortKey() {
 
   const configOpen = useOpenState();
   const { enabled, compatibilityMode, keyTable } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   useEffect(() => {

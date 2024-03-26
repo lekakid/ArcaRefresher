@@ -5,5 +5,5 @@ import 'core/types';
 export default {
   Icon: List,
   label: '게시판',
-  order: 2,
+  order: 1,
 };

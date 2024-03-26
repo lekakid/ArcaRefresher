@@ -1,14 +1,9 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useRef } from 'react';
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   List,
   ListItemText,
   Paper,
+  TextField,
   Typography,
 } from '@mui/material';
 import { Launch } from '@mui/icons-material';
@@ -16,11 +11,56 @@ import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
 import { BaseRow } from 'component/ConfigMenu';
+import { useConfirm } from 'component';
+
 import Info from '../FeatureInfo';
 
-const View = React.forwardRef((_props, ref) => {
+const featureContext = require.context(
+  'feature/',
+  true,
+  /^feature\/(?!_).+\/.+\/FeatureInfo$/,
+);
+
+const idList = featureContext
+  .keys()
+  .map((path) => featureContext(path).default.id);
+
+const View = forwardRef((_props, ref) => {
   const inputRef = useRef();
-  const [resetConfirm, setResetConfirm] = useState(false);
+  const [confirm, ConfirmDialog] = useConfirm();
+
+  const handleCleaner = useCallback(async () => {
+    const keys = GM_listValues();
+    const uselessKeys = keys.filter((key) => !idList.includes(key));
+    const uselessData = uselessKeys.reduce(
+      (acc, key) => ({ ...acc, [key]: GM_getValue(key) }),
+      {},
+    );
+
+    const result = await confirm({
+      title: '정리하기 전에...',
+      content: (
+        <>
+          <Typography>다음 데이터들을 삭제합니다.</Typography>
+          <Typography variant="caption">
+            _v0, _v1 등의 이름을 가진 데이터는 백업데이터로 삭제해도 문제되지
+            않습니다.
+          </Typography>
+          <TextField
+            sx={{ my: 2 }}
+            fullWidth
+            multiline
+            minRows={6}
+            maxRows={6}
+            value={JSON.stringify(uselessData)}
+          />
+        </>
+      ),
+    });
+    if (!result) return;
+
+    uselessKeys.forEach((key) => GM_deleteValue(key));
+  }, [confirm]);
 
   const handleImport = useCallback(() => {
     inputRef.current.click();
@@ -54,22 +94,32 @@ const View = React.forwardRef((_props, ref) => {
     return rs.pipeTo(filestream);
   }, []);
 
-  const handleOpen = useCallback(() => {
-    setResetConfirm(true);
-  }, []);
+  const handleReset = useCallback(async () => {
+    const result = await confirm({
+      title: '초기화 재확인',
+      content: '모든 설정을 초기화하시겠습니까?',
+    });
+    if (!result) return;
 
-  const handleReset = useCallback(() => {
     resetValues();
     window.location.reload();
-  }, []);
-
-  const handleCancle = useCallback(() => {
-    setResetConfirm(false);
-  }, []);
+  }, [confirm]);
 
   return (
     <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle2">데이터 정리</Typography>
+      <Paper>
+        <List disablePadding>
+          <BaseRow
+            header={<ListItemText primary="데이터 정리" />}
+            onClick={handleCleaner}
+          >
+            <Launch />
+          </BaseRow>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">설정 관리</Typography>
       <Paper>
         <List disablePadding>
           <BaseRow
@@ -101,29 +151,16 @@ const View = React.forwardRef((_props, ref) => {
           <BaseRow
             divider
             header={<ListItemText primary="설정 초기화" />}
-            onClick={handleOpen}
+            onClick={handleReset}
           >
             <Launch />
           </BaseRow>
         </List>
       </Paper>
-      <Dialog open={resetConfirm}>
-        <DialogTitle>초기화 재확인</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            확인을 누르면 모든 설정이 초기화됩니다.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleReset}>확인</Button>
-          <Button variant="contained" onClick={handleCancle}>
-            취소
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog />
     </Fragment>
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

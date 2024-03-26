@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { GlobalStyles, Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEADER_MENU } from 'core/selector';
@@ -19,7 +20,7 @@ function EditMenuStyles() {
   );
 }
 
-export default function ArticleMenu({ children }) {
+function ArticleMenu({ children }) {
   const [container, setContainer] = useState(null);
   const articleLoaded = useLoadChecker(ARTICLE_HEADER_MENU);
 
@@ -52,3 +53,9 @@ export default function ArticleMenu({ children }) {
     </>
   );
 }
+
+ArticleMenu.propTypes = {
+  children: PropTypes.node,
+};
+
+export default ArticleMenu;

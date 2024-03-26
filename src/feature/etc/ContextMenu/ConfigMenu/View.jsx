@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -33,7 +34,7 @@ const label = {
 };
 
 const View = React.forwardRef((_props, ref) => {
-  const { interactionType } = useSelector((state) => state[Info.ID].storage);
+  const { interactionType } = useSelector((state) => state[Info.id].storage);
 
   return (
     <Fragment ref={ref}>
@@ -93,5 +94,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

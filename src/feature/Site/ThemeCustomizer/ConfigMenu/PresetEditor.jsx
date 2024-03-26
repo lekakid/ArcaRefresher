@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Collapse,
   List,
   ListItem,
+  ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
@@ -11,12 +13,8 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ColorPicker from 'component/ColorPicker';
 import { useOpacity } from 'menu/ConfigMenu';
 
-const PresetEditor = React.forwardRef(
-  // eslint-disable-next-line prefer-arrow-callback
-  function PresetEditor(
-    { groupData, defaultPreset, preset, disabled, onChange },
-    ref,
-  ) {
+const PresetEditor = forwardRef(
+  ({ disabled, groupData, defaultPreset, preset, onChange }, ref) => {
     const [openGroup, setOpenGroup] = useState(() => ({}));
     const setOpacity = useOpacity();
 
@@ -39,30 +37,37 @@ const PresetEditor = React.forwardRef(
     return (
       <List ref={ref} disablePadding>
         {groupData.map(({ key: groupKey, text, rows }, groupIndex) => (
-          <React.Fragment key={groupKey}>
+          <Fragment key={groupKey}>
             <ListItem
-              button
+              disablePadding
               divider={
                 groupIndex < groupData.length - 1 ||
                 (groupIndex === groupData.length - 1 && openGroup[groupKey])
               }
-              onClick={handleOpen(groupKey)}
             >
-              <ListItemText>{text}</ListItemText>
-              <ListItemSecondaryAction>
-                {openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />}
-              </ListItemSecondaryAction>
+              <ListItemButton onClick={handleOpen(groupKey)}>
+                <ListItemText>{text}</ListItemText>
+                <ListItemSecondaryAction>
+                  {openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />}
+                </ListItemSecondaryAction>
+              </ListItemButton>
             </ListItem>
             <Collapse in={openGroup[groupKey]}>
               <List disablePadding>
                 {rows.map(({ key, primary, secondary }, colorIndex) => (
                   <ListItem
                     key={key}
+                    sx={
+                      disabled
+                        ? (theme) => ({
+                            opacity: theme.palette.action.disabledOpacity,
+                          })
+                        : undefined
+                    }
                     divider={
                       groupIndex < groupData.length - 1 ||
                       colorIndex < rows.length - 1
                     }
-                    disabled={disabled}
                   >
                     <ListItemText primary={primary} secondary={secondary} />
                     <ListItemSecondaryAction>
@@ -79,11 +84,19 @@ const PresetEditor = React.forwardRef(
                 ))}
               </List>
             </Collapse>
-          </React.Fragment>
+          </Fragment>
         ))}
       </List>
     );
   },
 );
+
+PresetEditor.propTypes = {
+  disabled: PropTypes.bool,
+  groupData: PropTypes.array,
+  defaultPreset: PropTypes.object,
+  preset: PropTypes.object,
+  onChange: PropTypes.func,
+};
 
 export default PresetEditor;

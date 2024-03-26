@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { ListItemText, Select } from '@mui/material';
 
 import BaseRow from './BaseRow';
 
-const SelectRow = React.forwardRef(
+const SelectRow = forwardRef(
   ({ divider, nested, primary, secondary, children, value, action }, ref) => {
     const dispatch = useDispatch();
 

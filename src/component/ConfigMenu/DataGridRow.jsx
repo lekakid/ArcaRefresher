@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -172,7 +172,7 @@ function TextView({ rows, columns, onChange, onModeChange }) {
 }
 /* eslint-enable react/prop-types */
 
-const DataGridRow = React.forwardRef(
+const DataGridRow = forwardRef(
   (
     {
       divider,

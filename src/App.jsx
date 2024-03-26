@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';

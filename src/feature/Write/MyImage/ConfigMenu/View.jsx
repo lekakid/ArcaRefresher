@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemText, Paper, Typography } from '@mui/material';
 
@@ -8,9 +8,9 @@ import Info from '../FeatureInfo';
 import { $toggleEnabled, $toggleForceLoad } from '../slice';
 import GalleryManager from './GalleryManager';
 
-const View = React.forwardRef((_props, ref) => {
+const View = forwardRef((_props, ref) => {
   const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
 
   return (
@@ -48,5 +48,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.ID})`;
+View.displayName = `ConfigMenuView(${Info.id})`;
 export default View;

@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
   ListItem,
@@ -10,7 +11,7 @@ import {
 
 import { setSelection, setDrawer } from './slice';
 
-export default function DrawerItem({ sx, configKey, icon, children }) {
+function DrawerItem({ sx, divider, configKey, icon, children }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
@@ -20,7 +21,7 @@ export default function DrawerItem({ sx, configKey, icon, children }) {
   }, [configKey, dispatch, mobile]);
 
   return (
-    <ListItem disablePadding>
+    <ListItem disablePadding divider={divider}>
       <ListItemButton sx={sx} onClick={handleClick}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText>{children}</ListItemText>
@@ -28,3 +29,13 @@ export default function DrawerItem({ sx, configKey, icon, children }) {
     </ListItem>
   );
 }
+
+DrawerItem.propTypes = {
+  sx: PropTypes.object,
+  divider: PropTypes.bool,
+  configKey: PropTypes.string,
+  icon: PropTypes.element,
+  children: PropTypes.node,
+};
+
+export default DrawerItem;

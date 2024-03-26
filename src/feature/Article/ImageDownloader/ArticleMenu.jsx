@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { GetApp } from '@mui/icons-material';
@@ -8,7 +8,7 @@ import { setOpen } from './slice';
 
 export default function ArticleMenu() {
   const dispatch = useDispatch();
-  const { open } = useSelector((state) => state[Info.ID]);
+  const { open } = useSelector((state) => state[Info.id]);
 
   const handleOpen = useCallback(() => {
     dispatch(setOpen(true));

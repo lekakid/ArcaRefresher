@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import {
   FormatBold,
@@ -134,6 +135,14 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   );
 }
 
+CategoryRow.propTypes = {
+  divider: PropTypes.bool,
+  id: PropTypes.string,
+  label: PropTypes.string,
+  initValue: PropTypes.object,
+  onChange: PropTypes.func,
+};
+
 function compare(prev, next) {
   return (
     prev.badge === next.badge &&
@@ -143,4 +152,4 @@ function compare(prev, next) {
     prev.disableVisited === next.disableVisited
   );
 }
-export default React.memo(CategoryRow, compare);
+export default memo(CategoryRow, compare);

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -27,9 +27,9 @@ function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
   const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
-  const { open } = useSelector((state) => state[Info.ID]);
+  const { open } = useSelector((state) => state[Info.id]);
   const data = useMemo(() => {
     const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
     const query = isEmotShop
@@ -94,10 +94,8 @@ function DownloadDialog() {
 
               const size = Number(response.headers.get('content-length'));
               totalSize += size;
-              const acc = await promise;
 
-              acc.push(info);
-              return acc;
+              break;
             }
             case 'xhr+fetch':
             case 'xhr': {
@@ -113,19 +111,20 @@ function DownloadDialog() {
                     .split('\r')[0],
                 ) || 0;
               totalSize += size;
-
               info.orig = response.finalUrl;
-              const acc = await promise;
 
-              acc.push(info);
-              return acc;
+              break;
             }
             default: {
               throw new Error('다운로드 방식 설정값이 이상합니다.');
             }
           }
+          const acc = await promise;
+          acc.push(info);
+
+          return acc;
         } catch (error) {
-          console.warn('[ImageDownloader] 이미지를 찾지 못했습니다.', error);
+          console.warn('[ImageDownloader] 이미지를 처리할 수 없습니다.', error);
           return promise;
         }
       },
@@ -133,7 +132,6 @@ function DownloadDialog() {
     );
 
     const iterator = availableImages.values();
-    let count = 1;
 
     const confirm = (event) => {
       event.preventDefault();
@@ -143,6 +141,8 @@ function DownloadDialog() {
       return message;
     };
 
+    let count = 1;
+    const dupCount = {};
     const myReadable = new ReadableStream({
       start() {
         setOpen(false);
@@ -156,12 +156,14 @@ function DownloadDialog() {
         }
 
         const { orig, ext, uploadName } = value;
-
         const name = format(zipImageName, {
-          values: contentInfo,
+          content: contentInfo,
           index: count,
           fileName: uploadName,
         });
+        const finalName =
+          dupCount[name] > 0 ? `${name}(${dupCount[name]})` : name;
+        dupCount[name] = dupCount[name] > 0 ? dupCount[name] + 1 : 1;
 
         count += 1;
         switch (downloadMethod) {
@@ -169,7 +171,7 @@ function DownloadDialog() {
           case 'xhr+fetch': {
             const stream = await fetch(orig).then((response) => response.body);
             return controller.enqueue({
-              name: `/${name}.${ext}`,
+              name: `${finalName}.${ext}`,
               stream: () => stream,
             });
           }
@@ -178,7 +180,7 @@ function DownloadDialog() {
               ({ response }) => response.stream(),
             );
             return controller.enqueue({
-              name: `/${name}.${ext}`,
+              name: `${finalName}.${ext}`,
               stream: () => stream,
             });
           }
@@ -192,7 +194,7 @@ function DownloadDialog() {
       },
     });
 
-    const zipFileName = format(zipName, { values: contentInfo });
+    const zipFileName = format(zipName, { content: contentInfo });
 
     myReadable.pipeThrough(new Writer()).pipeTo(
       streamSaver.createWriteStream(`${zipFileName}.${zipExtension}`, {

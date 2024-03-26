@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -11,40 +11,41 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import Blocker from './Blocker';
 import Info from './FeatureInfo';
 
-function generateInfo(element, container) {
-  return { element, container };
-}
-
 export default function MediaBlocker() {
-  const {
-    storage: { enabled, deletedOnly },
-  } = useSelector((state) => state[Info.ID]);
+  const { blockAll, blockDeleted, blockReported } = useSelector(
+    (state) => state[Info.id].storage,
+  );
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
-  const [infoList, setInfoList] = useState([]);
+  const [blockImgList, setBlockImgList] = useState([]);
 
   useEffect(() => {
-    if (!enabled || (deletedOnly && !alertLoaded)) {
-      setInfoList([]);
-      return;
-    }
-    if (!articleLoaded) return;
+    if (!articleLoaded) return undefined;
+    if (
+      !(
+        blockAll ||
+        (alertLoaded && blockDeleted) ||
+        (document.referrer.includes('/reports/') && blockReported)
+      )
+    )
+      return undefined;
 
     const images = [...document.querySelectorAll(ARTICLE_MEDIA)];
     const info = images.map((e) => {
       const container = document.createElement('div');
       e.insertAdjacentElement('afterend', container);
 
-      return generateInfo(e, container);
+      return { element: e, container };
     });
-    setInfoList(info);
-  }, [alertLoaded, articleLoaded, deletedOnly, enabled]);
+    setBlockImgList(info);
+    return () => setBlockImgList([]);
+  }, [alertLoaded, articleLoaded, blockAll, blockDeleted, blockReported]);
 
-  if (infoList.length === 0) return null;
+  if (blockImgList.length === 0) return null;
 
   return (
     <>
-      {infoList.map(({ element, container }) => (
+      {blockImgList.map(({ element, container }) => (
         <Blocker
           key={element.src}
           referenceElement={element}

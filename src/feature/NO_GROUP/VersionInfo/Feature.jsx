@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -16,7 +16,7 @@ const MODE_DISABLE_STORAGE = -2;
 export default function VersionInfo() {
   const dispatch = useDispatch();
   const { checkedVersion, notiLevel } = useSelector(
-    (state) => state[Info.ID].storage,
+    (state) => state[Info.id].storage,
   );
   const [boradcastChannel, setBroadcastChannel] = useState(null);
   const [noti, setNoti] = useState({
@@ -26,7 +26,7 @@ export default function VersionInfo() {
 
   // 브로드캐스트 채널 생성
   useEffect(() => {
-    const bc = new BroadcastChannel(`AR_${Info.ID}`);
+    const bc = new BroadcastChannel(`AR_${Info.id}`);
     setBroadcastChannel(bc);
   }, []);
 

@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { GlobalStyles, IconButton, Popper, Portal } from '@mui/material';
 import { ImageSearch } from '@mui/icons-material';
 
@@ -22,13 +23,13 @@ const mediaBlockerStyles = (
   />
 );
 
-function Blocker({ classes, referenceElement, container }) {
+function Blocker({ referenceElement, container }) {
   const [anchor, setAnchor] = useState(null);
 
   useEffect(() => {
     container.classList.add('media-blocker-btns');
     referenceElement.classList.add('media-blocker');
-  }, [classes, container, referenceElement]);
+  }, [container, referenceElement]);
 
   const handleEnter = useCallback((e) => {
     setAnchor(e.currentTarget);
@@ -49,7 +50,7 @@ function Blocker({ classes, referenceElement, container }) {
 
   let thumb = '';
   if (referenceElement.nodeName === 'IMG') {
-    thumb = `${referenceElement.src}?type=list`;
+    thumb = `${referenceElement.src}&type=list`;
   } else if (
     referenceElement.nodeName === 'VIDEO' &&
     referenceElement.dataset.version === 'v1'
@@ -81,5 +82,10 @@ function Blocker({ classes, referenceElement, container }) {
     </>
   );
 }
+
+Blocker.propTypes = {
+  referenceElement: PropTypes.object,
+  container: PropTypes.object,
+};
 
 export default Blocker;

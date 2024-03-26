@@ -1,11 +1,11 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
-import { getUserFilter } from 'func/user';
+import { ArcaUser } from 'func/user';
 
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
@@ -51,14 +51,14 @@ function BoardMuter() {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
 
-  const filter = useSelector((state) => filterSelector(state, channel.ID));
+  const filter = useSelector((state) => filterSelector(state, channel.id));
   const {
     boardBarPos,
     hideCountBar,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
-  } = useSelector((state) => state[Info.ID].storage);
+  } = useSelector((state) => state[Info.id].storage);
 
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
@@ -89,7 +89,7 @@ function BoardMuter() {
   useLayoutEffect(() => {
     if (!controlTarget) return undefined;
 
-    const isGlogal = globalChannel.includes(channel.ID);
+    const isGlogal = globalChannel.includes(channel.id);
 
     const muteArticle = () => {
       const articles = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
@@ -103,7 +103,7 @@ function BoardMuter() {
           });
           return {
             element: article,
-            user: getUserFilter(article.querySelector('.user-info')),
+            user: new ArcaUser(article.querySelector('.user-info')).toUID(),
             content: article.querySelector('.title')?.textContent || '',
             channel: isGlogal
               ? article.querySelector('.badge')?.textContent
