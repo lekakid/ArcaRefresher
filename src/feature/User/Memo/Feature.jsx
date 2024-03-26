@@ -69,7 +69,7 @@ function MemoList() {
   useLayoutEffect(() => {
     const colorizeUser = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
-        const { id } = new ArcaUser(e);
+        const id = new ArcaUser(e).toUID();
 
         if (memo[id]?.color) {
           e.style.setProperty('color', memo[id].color, 'important');
