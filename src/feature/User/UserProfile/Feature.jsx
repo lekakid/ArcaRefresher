@@ -8,6 +8,7 @@ import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser } from 'func/user';
 
+import { useArcaSocket } from 'hooks/WebSocket';
 import Info from './FeatureInfo';
 
 /* eslint-disable react/prop-types */
@@ -42,6 +43,7 @@ const profileStyles = (
 );
 
 function UserProfile() {
+  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
   const loaded = useLoadChecker(FULL_LOADED);
   const { user } = useContent();
 
@@ -49,6 +51,7 @@ function UserProfile() {
     (state) => state[Info.id].storage,
   );
 
+  // 반고닉 고유번호 표시
   useLayoutEffect(() => {
     if (!loaded) return undefined;
     if (!showId) return undefined;
@@ -77,6 +80,33 @@ function UserProfile() {
     };
   }, [loaded, showId]);
 
+  // 알림 반고닉 표기 처리
+  useEffect(() => {
+    if (!showId) return undefined;
+
+    const callback = (e) => {
+      const data = e.data.split('|');
+      if (data[0] !== 'n') return;
+
+      const noti = JSON.parse(data[1]);
+
+      const [nick, id] = noti.username.split('#');
+      if (id) {
+        if (noti.mediaUrl) {
+          noti.title = noti.title.replace(nick, noti.username);
+        }
+        noti.message = noti.message.replace(nick, noti.username);
+      }
+
+      e.data = `${data[0]}|${JSON.stringify(noti)}`;
+    };
+    const subscriber = { callback, type: 'before' };
+    subscribeSocket(subscriber);
+
+    return () => unsubscribeSocket(subscriber);
+  }, [showId, subscribeSocket, unsubscribeSocket]);
+
+  // 자신이 작성한 댓글 표시
   useEffect(() => {
     if (!indicateMyComment) return undefined;
     if (!user) return undefined;
