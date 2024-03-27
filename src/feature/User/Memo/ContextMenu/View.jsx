@@ -19,7 +19,7 @@ import MemoInput from './MemoInput';
 function ContextMenu({ target }) {
   const dispatch = useDispatch();
   const { memo, contextRange } = useSelector((state) => state[Info.id].storage);
-  const [user, setUser] = useState(undefined);
+  const [open, setOpen] = useState(false);
   let contextSelector;
   switch (contextRange) {
     case 'articleItem':
@@ -47,45 +47,47 @@ function ContextMenu({ target }) {
         }
         if (!userElement) return undefined;
 
-        return new ArcaUser(userElement).toUID();
+        return new ArcaUser(userElement);
       },
     },
     [target],
   );
 
   const handleClick = useCallback(() => {
-    setUser(data);
+    setOpen(true);
     closeMenu();
-  }, [closeMenu, data]);
+  }, [closeMenu]);
 
   const handleInputClose = useCallback(() => {
-    setUser(undefined);
+    setOpen(undefined);
   }, []);
 
   const handleInputSubmit = useCallback(
-    (value) => {
-      dispatch($setMemo({ user, memo: value }));
+    ({ msg, color }) => {
+      dispatch(
+        $setMemo({ user: data.toUID(), memo: { msg, color, nick: data.nick } }),
+      );
     },
-    [user, dispatch],
+    [data, dispatch],
   );
 
+  if (!data) return null;
+
+  const uid = data.toUID();
+  const label = `메모 ${memo[uid]?.msg ? `(${memo[uid].msg})` : ''}`;
   return (
     <>
-      {data && (
-        <List>
-          <MenuItem onClick={handleClick}>
-            <ListItemIcon>
-              <Comment />
-            </ListItemIcon>
-            <Typography>{`메모 ${
-              memo[data]?.msg ? `(${memo[data].msg})` : ''
-            }`}</Typography>
-          </MenuItem>
-        </List>
-      )}
+      <List>
+        <MenuItem onClick={handleClick}>
+          <ListItemIcon>
+            <Comment />
+          </ListItemIcon>
+          <Typography>{label}</Typography>
+        </MenuItem>
+      </List>
       <MemoInput
-        open={!!user}
-        defaultValue={memo[user]}
+        open={open}
+        defaultValue={memo[uid]}
         onClose={handleInputClose}
         onSubmit={handleInputSubmit}
       />

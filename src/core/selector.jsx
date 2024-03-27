@@ -51,4 +51,6 @@ export const COMMENT_SUBTITLE = '#comment .reply-form__user-info';
 export const COMMENT_INPUT = '#comment .reply-form-textarea';
 export const COMMENT_EMOTICON = '#comment .emoticon';
 export const USER_INFO = 'span.user-info';
+export const USER_INFO_WITHOUT_NOTICE =
+  '.board-title span.user-info, .vrow:not(.notice) span.user-info';
 export const USER_MENTION = 'a[href^="/u/@"]';
