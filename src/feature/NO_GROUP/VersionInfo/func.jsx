@@ -1,6 +1,7 @@
 export const TYPE_MAJOR = 2;
 export const TYPE_MINOR = 1;
 export const TYPE_PATCH = 0;
+export const TYPE_NONE = 99;
 
 export function parse(versionString) {
   const token = versionString.split('.');
