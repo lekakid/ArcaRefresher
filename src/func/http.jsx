@@ -41,8 +41,8 @@ export function request(
   });
 }
 
-export function getQuery() {
-  const entries = window.location.search
+export function getQuery(search) {
+  const entries = (search || window.location.search)
     .substring(1)
     .split('&')
     .filter((e) => e)
