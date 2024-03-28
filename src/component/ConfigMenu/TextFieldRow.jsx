@@ -18,6 +18,7 @@ const TextFieldRow = forwardRef(
       errorText,
       action,
       saveFormat,
+      onChange,
     },
     ref,
   ) => {
@@ -72,7 +73,7 @@ const TextFieldRow = forwardRef(
           error={showError}
           value={baseValue}
           helperText={showError ? errorText : ''}
-          onChange={handleChange}
+          onChange={onChange || handleChange}
         />
       </BaseRow>
     );
@@ -90,6 +91,7 @@ const RowPropTypes = {
   errorText: PropTypes.string,
   action: PropTypes.func,
   saveFormat: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 TextFieldRow.propTypes = RowPropTypes;

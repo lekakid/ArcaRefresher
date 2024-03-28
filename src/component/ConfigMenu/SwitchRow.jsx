@@ -6,7 +6,7 @@ import { ListItemText, Switch } from '@mui/material';
 import BaseRow from './BaseRow';
 
 const SwitchRow = forwardRef(
-  ({ divider, nested, primary, secondary, value, action }, ref) => {
+  ({ divider, nested, primary, secondary, value, action, onChange }, ref) => {
     const dispatch = useDispatch();
 
     const handleClick = useCallback(() => {
@@ -19,7 +19,7 @@ const SwitchRow = forwardRef(
         divider={divider}
         nested={nested}
         header={<ListItemText primary={primary} secondary={secondary} />}
-        onClick={handleClick}
+        onClick={onChange || handleClick}
       >
         <Switch checked={value} />
       </BaseRow>
@@ -34,6 +34,7 @@ const RowPropTypes = {
   secondary: PropTypes.node,
   value: PropTypes.bool,
   action: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 SwitchRow.propTypes = RowPropTypes;

@@ -6,7 +6,10 @@ import { ListItemText, Select } from '@mui/material';
 import BaseRow from './BaseRow';
 
 const SelectRow = forwardRef(
-  ({ divider, nested, primary, secondary, children, value, action }, ref) => {
+  (
+    { divider, nested, primary, secondary, children, value, action, onChange },
+    ref,
+  ) => {
     const dispatch = useDispatch();
 
     const handleChange = useCallback(
@@ -28,7 +31,7 @@ const SelectRow = forwardRef(
           sx={{ minWidth: 160, width: '100%' }}
           displayEmpty
           value={value}
-          onChange={handleChange}
+          onChange={onChange || handleChange}
         >
           {children}
         </Select>
@@ -44,6 +47,7 @@ const RowPropTypes = {
   secondary: PropTypes.node,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   action: PropTypes.func,
+  onChange: PropTypes.func,
   children: PropTypes.node,
 };
 
