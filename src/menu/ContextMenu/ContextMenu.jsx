@@ -21,6 +21,7 @@ function ContextMenu({ menuList }) {
   const { interactionType } = useSelector((state) => state[Info.id].storage);
   const { mousePos, triggerList } = useSelector((state) => state[Info.id]);
   const gestureTrack = useRef({ right: false, count: 0 });
+  const dblClickTack = useRef(false);
   const [targetTable, setTargetTable] = useState(undefined);
 
   useEffect(() => {
@@ -44,6 +45,10 @@ function ContextMenu({ menuList }) {
       gestureTrack.current.count = 0;
 
       if (trackCount > 20) return;
+      if (dblClickTack.current) {
+        dblClickTack.current = false;
+        return;
+      }
       if (getKeyCombine(e) !== interactionType) return;
       let triggered = false;
       const entries = triggerList.map(({ key, selector }) => {
@@ -56,6 +61,7 @@ function ContextMenu({ menuList }) {
       if (!triggered) return;
 
       e.preventDefault();
+      if (interactionType === 'r') dblClickTack.current = true;
       setTargetTable(Object.fromEntries(entries));
       dispatch(setOpen([e.clientX, e.clientY]));
     };
@@ -72,7 +78,7 @@ function ContextMenu({ menuList }) {
       document.removeEventListener('scroll', handleScroll);
       document.removeEventListener('contextmenu', handleContext);
     };
-  }, [dispatch, interactionType, triggerList]);
+  }, [interactionType, triggerList, dispatch]);
 
   const handleClose = useCallback(() => {
     dispatch(setOpen(null));
