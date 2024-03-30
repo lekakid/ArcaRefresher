@@ -81,6 +81,7 @@ function ContextMenu({ menuList }) {
   }, [interactionType, triggerList, dispatch]);
 
   const handleClose = useCallback(() => {
+    dblClickTack.current = false;
     dispatch(setOpen(null));
   }, [dispatch]);
 
