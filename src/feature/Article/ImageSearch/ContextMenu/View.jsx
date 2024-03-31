@@ -15,7 +15,7 @@ import Info from '../FeatureInfo';
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
 
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const {
     // 사이트
     showGoogle,
@@ -32,7 +32,7 @@ function ContextMenu({ target }) {
   } = useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: ARTICLE_IMAGES,
@@ -252,6 +252,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

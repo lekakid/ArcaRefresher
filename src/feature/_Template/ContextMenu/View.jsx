@@ -9,8 +9,8 @@ import { useContextMenu } from 'menu/ContextMenu';
 import Info from '../FeatureInfo';
 
 // 우클릭 메뉴
-function ContextMenu({ target }) {
-  const [data, closeMenu] = useContextMenu(
+function ContextMenu({ target, closeMenu }) {
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: USER_INFO,
@@ -39,6 +39,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

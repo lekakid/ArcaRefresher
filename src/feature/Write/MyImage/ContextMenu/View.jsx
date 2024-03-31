@@ -9,8 +9,8 @@ import { useContextMenu } from 'menu/ContextMenu';
 import Info from '../FeatureInfo';
 import FolderCheckList from './FolderCheckList';
 
-function ContextMenu({ target }) {
-  const [data, closeMenu] = useContextMenu(
+function ContextMenu({ target, closeMenu }) {
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
@@ -51,6 +51,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

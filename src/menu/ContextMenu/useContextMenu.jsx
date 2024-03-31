@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTrigger, removeTrigger, setOpen } from './slice';
+import { addTrigger, removeTrigger } from './slice';
 
 /**
  * 컨텍스트 메뉴를 등록함
@@ -21,9 +21,5 @@ export default function useContextMenu({ key, selector, dataExtractor }, deps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const data = useMemo(dataExtractor, deps);
 
-  const closeMenu = useCallback(() => {
-    dispatch(setOpen(null));
-  }, [dispatch]);
-
-  return [data, closeMenu];
+  return data;
 }

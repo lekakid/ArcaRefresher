@@ -44,26 +44,27 @@ function ContextMenu({ menuList }) {
       const { count: trackCount } = gestureTrack.current;
       gestureTrack.current.count = 0;
 
-      if (trackCount > 20) return;
-      if (dblClickTack.current) {
+      try {
+        if (trackCount > 20) throw Error;
+        if (dblClickTack.current) throw Error;
+        if (getKeyCombine(e) !== interactionType) throw Error;
+        let triggered = false;
+        const entries = triggerList.map(({ key, selector }) => {
+          const target = e.target.closest(selector);
+
+          if (target) triggered = true;
+          return [key, target];
+        });
+
+        if (!triggered) return;
+
+        e.preventDefault();
+        if (interactionType === 'r') dblClickTack.current = true;
+        setTargetTable(Object.fromEntries(entries));
+        dispatch(setOpen([e.clientX, e.clientY]));
+      } catch (_) {
         dblClickTack.current = false;
-        return;
       }
-      if (getKeyCombine(e) !== interactionType) return;
-      let triggered = false;
-      const entries = triggerList.map(({ key, selector }) => {
-        const target = e.target.closest(selector);
-
-        if (target) triggered = true;
-        return [key, target];
-      });
-
-      if (!triggered) return;
-
-      e.preventDefault();
-      if (interactionType === 'r') dblClickTack.current = true;
-      setTargetTable(Object.fromEntries(entries));
-      dispatch(setOpen([e.clientX, e.clientY]));
     };
 
     document.addEventListener('mousedown', handleDown);
@@ -117,7 +118,7 @@ function ContextMenu({ menuList }) {
             },
           }}
         >
-          <View target={targetTable?.[key]} />
+          <View target={targetTable?.[key]} closeMenu={handleClose} />
         </Box>
       ))}
     </Menu>

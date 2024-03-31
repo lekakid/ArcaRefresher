@@ -34,7 +34,7 @@ function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
 }
 
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { channel } = useContent();
   const {
@@ -60,7 +60,7 @@ function ContextMenu({ target }) {
   const emotSelector =
     '[class$="emoticon"], .emoticon-wrapper > span, .article-body a.muted';
   const categorySelector = '.board-category .item a';
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: `${userSelector}, ${emotSelector}, ${categorySelector}`,
@@ -362,6 +362,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;
