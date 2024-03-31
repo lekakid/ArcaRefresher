@@ -183,11 +183,19 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleAllOpen = useCallback(() => {
     handleGoogle();
+    handleBing();
     handleYandex();
     handleSauceNao();
     handleIqdb();
     handleAscii2D();
-  }, [handleAscii2D, handleGoogle, handleIqdb, handleSauceNao, handleYandex]);
+  }, [
+    handleGoogle,
+    handleBing,
+    handleYandex,
+    handleSauceNao,
+    handleIqdb,
+    handleAscii2D,
+  ]);
 
   if (!data) return null;
   return (
