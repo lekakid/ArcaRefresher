@@ -15,7 +15,7 @@ import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
-import toDocument from 'func/toDocument';
+import { getDocument } from 'func/http';
 import Info from '../FeatureInfo';
 
 const profileUrl = 'https://arca.live/u/@';
@@ -71,7 +71,7 @@ function ContextMenu({ target, closeMenu }) {
               return response.text();
             })
             .then((text) => {
-              const doc = toDocument(text);
+              const doc = getDocument(text);
               if (doc.querySelector('.error-page')) {
                 setProfileData({ article: -1, comment: -1 });
                 return;

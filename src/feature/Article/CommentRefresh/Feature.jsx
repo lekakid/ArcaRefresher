@@ -11,7 +11,7 @@ import {
 } from 'core/selector';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import toDocument from 'func/toDocument';
+import { getDocument } from 'func/http';
 
 const commentRefreshStyles = (
   <GlobalStyles
@@ -64,7 +64,7 @@ function CommentRefresh() {
     }
 
     const text = await response.text();
-    const resultDocument = toDocument(text);
+    const resultDocument = getDocument(text);
     const newComments = resultDocument.querySelector(COMMENT_INNER);
     if (!newComments) return;
 

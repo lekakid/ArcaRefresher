@@ -1,12 +1,12 @@
 import { BOARD_NOTICES, BOARD_ITEMS } from 'core/selector';
-import toDocument from 'func/toDocument';
+import { getDocument } from 'func/http';
 
 export async function getNewArticle() {
   try {
     const response = await fetch(window.location.href);
     if (!response.ok) throw new Error('[AutoRefresher] 연결 거부');
 
-    const refreshedDocument = toDocument(await response.text());
+    const refreshedDocument = getDocument(await response.text());
     const notices = [...refreshedDocument.querySelectorAll(BOARD_NOTICES)];
     const articles = [...refreshedDocument.querySelectorAll(BOARD_ITEMS)];
 

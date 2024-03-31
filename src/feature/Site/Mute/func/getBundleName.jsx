@@ -1,4 +1,4 @@
-import toDocument from 'func/toDocument';
+import { getDocument } from 'func/http';
 
 export default async function getBundleName(bundleId) {
   const response = await fetch(`/e/${bundleId}`);
@@ -7,7 +7,7 @@ export default async function getBundleName(bundleId) {
   }
 
   const text = await response.text();
-  const bundleDocument = toDocument(text);
+  const bundleDocument = getDocument(text);
 
   return bundleDocument.title;
 }
