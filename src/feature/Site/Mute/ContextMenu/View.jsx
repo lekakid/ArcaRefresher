@@ -318,7 +318,7 @@ function ContextMenu({ target, closeMenu }) {
   }
 
   if (data?.type === 'user') {
-    const exist = user.includes(data.uid);
+    const exist = user.includes(makeRegex(data.uid));
     return (
       <List>
         <MenuItem onClick={handleUser}>
