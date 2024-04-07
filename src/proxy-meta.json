@@ -4,6 +4,8 @@
   "author": "LeKAKiD",
   "description": "Arca Live Extension",
   "icon": "https://github.com/lekakid/ArcaRefresher/blob/develop/icon.png?raw=true",
+  "downloadURL": "https://github.com/lekakid/ArcaRefresher/releases/latest/download/ArcaRefresher.user.js",
+  "updateURL": "https://github.com/lekakid/ArcaRefresher/releases/latest/download/ArcaRefresher.meta.js",
   "homepageURL": "https://github.com/lekakid/ArcaRefresher",
   "supportURL": "https://arca.live/b/namurefresher",
   "match": ["https://*.arca.live/*"],
