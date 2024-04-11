@@ -6,6 +6,12 @@ import { BACKGROUND } from 'func/window';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  // 동작
+  contextMenuEnabled: true,
+  openType: BACKGROUND,
+  searchBySource: false,
+  searchGoogleMethod: 'lens',
+  saucenaoBypass: false,
   // 사이트
   showGoogle: true,
   showBing: true,
@@ -13,11 +19,6 @@ const defaultStorage = {
   showSauceNao: true,
   showIqdb: true,
   showAscii2D: true,
-  // 동작
-  openType: BACKGROUND,
-  searchBySource: false,
-  searchGoogleMethod: 'lens',
-  saucenaoBypass: false,
 };
 
 const initialState = {
@@ -28,6 +29,23 @@ export const slice = createSlice({
   name: Info.id,
   initialState,
   reducers: {
+    // 동작
+    $toggleContextMenu(state) {
+      state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
+    },
+    $setOpenType(state, action) {
+      state.storage.openType = action.payload;
+    },
+    $toggleSearchBySource(state) {
+      state.storage.searchBySource = !state.storage.searchBySource;
+    },
+    $setSearchGoogleMethod(state, action) {
+      state.storage.searchGoogleMethod = action.payload;
+    },
+    $toggleSauceNaoBypass(state) {
+      state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
+    },
+    // 사이트
     $toggleShowGoogle(state) {
       state.storage.showGoogle = !state.storage.showGoogle;
     },
@@ -46,23 +64,16 @@ export const slice = createSlice({
     $toggleShowAscii2D(state) {
       state.storage.showAscii2D = !state.storage.showAscii2D;
     },
-    // 동작
-    $setOpenType(state, action) {
-      state.storage.openType = action.payload;
-    },
-    $toggleSearchBySource(state) {
-      state.storage.searchBySource = !state.storage.searchBySource;
-    },
-    $setSearchGoogleMethod(state, action) {
-      state.storage.searchGoogleMethod = action.payload;
-    },
-    $toggleSauceNaoBypass(state) {
-      state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
-    },
   },
 });
 
 export const {
+  // 동작
+  $toggleContextMenu,
+  $setOpenType,
+  $toggleSearchBySource,
+  $setSearchGoogleMethod,
+  $toggleSauceNaoBypass,
   // 사이트
   $toggleShowGoogle,
   $toggleShowBing,
@@ -70,11 +81,6 @@ export const {
   $toggleShowSauceNao,
   $toggleShowIqdb,
   $toggleShowAscii2D,
-  // 동작
-  $setOpenType,
-  $toggleSearchBySource,
-  $setSearchGoogleMethod,
-  $toggleSauceNaoBypass,
 } = slice.actions;
 
 export default slice.reducer;

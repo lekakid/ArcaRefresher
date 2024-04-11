@@ -17,6 +17,12 @@ const ERROR_MSG =
 
 function ContextMenu({ target, closeMenu }) {
   const {
+    // 동작
+    contextMenuEnabled,
+    openType,
+    searchBySource,
+    searchGoogleMethod,
+    saucenaoBypass,
     // 사이트
     showGoogle,
     showBing,
@@ -24,18 +30,13 @@ function ContextMenu({ target, closeMenu }) {
     showSauceNao,
     showIqdb,
     showAscii2D,
-    // 동작
-    openType,
-    searchBySource,
-    searchGoogleMethod,
-    saucenaoBypass,
   } = useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
       key: Info.id,
-      selector: ARTICLE_IMAGES,
+      selector: contextMenuEnabled ? ARTICLE_IMAGES : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
 
