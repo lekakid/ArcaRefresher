@@ -12,12 +12,14 @@ import {
   $setZipName,
   $setZipImageName,
   $setZipExtension,
+  $toggleContextMenu,
 } from '../slice';
 import FormatTextFieldRow from './FormatTextFieldRow';
 
 const View = forwardRef((_props, ref) => {
   const {
     enabled,
+    contextMenuEnabled,
     downloadMethod,
     fileName,
     zipName,
@@ -28,13 +30,21 @@ const View = forwardRef((_props, ref) => {
   return (
     <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle2">동작 설정</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
             divider
-            primary="사용"
+            primary="다운로더 사용"
+            secondary="사이트에서 제공하는 다운로드 기능을 대체합니다."
             value={enabled}
             action={$toggleEnable}
+          />
+          <SwitchRow
+            divider
+            primary="우클릭 메뉴 사용"
+            value={contextMenuEnabled}
+            action={$toggleContextMenu}
           />
           <SelectRow
             divider
@@ -46,6 +56,11 @@ const View = forwardRef((_props, ref) => {
             <MenuItem value="xhr+fetch">XHR+fetch</MenuItem>
             <MenuItem value="xhr">XHR</MenuItem>
           </SelectRow>
+        </List>
+      </Paper>
+      <Typography variant="subtitle2">저장될 이름 설정</Typography>
+      <Paper>
+        <List disablePadding>
           <FormatTextFieldRow
             divider
             primary="우클릭 저장 시 이미지 이름"

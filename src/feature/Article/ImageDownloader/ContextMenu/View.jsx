@@ -15,7 +15,7 @@ import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
 function ContextMenu({ target, closeMenu }) {
-  const { downloadMethod, fileName } = useSelector(
+  const { contextMenuEnabled, downloadMethod, fileName } = useSelector(
     (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
@@ -24,7 +24,9 @@ function ContextMenu({ target, closeMenu }) {
   const data = useContextMenu(
     {
       key: Info.id,
-      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      selector: contextMenuEnabled
+        ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
+        : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
 
