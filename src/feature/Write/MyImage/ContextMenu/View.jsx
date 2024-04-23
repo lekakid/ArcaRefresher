@@ -43,10 +43,7 @@ function ContextMenu({ target, closeMenu }) {
             <ListItemIcon>
               <PhotoLibrary />
             </ListItemIcon>
-            <ListItemText
-              primary="자짤 관리"
-              secondary="이미지의 오른쪽 클릭 메뉴가 활성화됩니다."
-            />
+            <ListItemText primary="자짤 관리" />
           </MenuItem>
         </List>
       )}
