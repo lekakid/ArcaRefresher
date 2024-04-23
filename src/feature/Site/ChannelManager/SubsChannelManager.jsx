@@ -9,10 +9,17 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemSecondaryAction,
+  ListItemText,
   Menu,
   MenuItem,
+  Paper,
   Select,
   Stack,
+  Switch,
   TextField,
   Tooltip,
   Typography,
@@ -27,8 +34,7 @@ import {
   DriveFileMove,
   FolderDelete,
   Input,
-  Star,
-  StarBorder,
+  Settings,
 } from '@mui/icons-material';
 
 import { useConfirm } from 'component';
@@ -45,6 +51,7 @@ const defaultChannelInfo = { memo: '', groups: [], best: false };
 function ChannelTitleRenderer({ id, value }) {
   const dispatch = useDispatch();
   const { channelInfoTable } = useSelector((state) => state[Info.id].storage);
+  const [open, setOpen] = useState(false);
 
   const handleBestToggle = useCallback(() => {
     const channelInfo = {
@@ -55,23 +62,83 @@ function ChannelTitleRenderer({ id, value }) {
     dispatch($setChannelInfo({ id, info: channelInfo }));
   }, [id, channelInfoTable, dispatch]);
 
+  const handleEditBestCut = useCallback(
+    (e) => {
+      const regex = /^[0-9]*$/;
+      if (!regex.test(e.target.value)) {
+        e.preventDefault();
+        return;
+      }
+
+      const channelInfo = {
+        ...defaultChannelInfo,
+        ...channelInfoTable[id],
+        cut: parseInt(e.target.value, 10),
+      };
+      dispatch($setChannelInfo({ id, info: channelInfo }));
+    },
+    [id, channelInfoTable, dispatch],
+  );
+
   return (
-    <Stack
-      sx={{ width: '100%' }}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <Typography variant="body2">{value}</Typography>
-      <Tooltip title="개념글로 바로 이동">
+    <>
+      <Stack
+        sx={{ width: '100%' }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography variant="body2">{value}</Typography>
+        <Tooltip title="상세 편집">
+          <Button
+            sx={{ minWidth: 40, px: '3px' }}
+            size="small"
+            onClick={() => setOpen(true)}
+          >
+            <Settings />
+          </Button>
+        </Tooltip>
+      </Stack>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{value} 설정</DialogTitle>
         <IconButton
-          sx={channelInfoTable[id]?.best ? { color: 'orange' } : undefined}
-          onClick={handleBestToggle}
+          size="large"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+          }}
+          onClick={() => setOpen(false)}
         >
-          {channelInfoTable[id]?.best ? <Star /> : <StarBorder />}
+          <Close />
         </IconButton>
-      </Tooltip>
-    </Stack>
+        <DialogContent>
+          <Paper variant="outlined">
+            <List disablePadding>
+              <ListItem divider disablePadding>
+                <ListItemButton onClick={handleBestToggle}>
+                  <ListItemText primary="개념글 페이지로" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      checked={channelInfoTable[id]?.best || false}
+                      onClick={handleBestToggle}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItemButton>
+              </ListItem>
+              <ListItem>
+                <TextField
+                  sx={{ my: 1 }}
+                  label="추천 컷"
+                  onChange={handleEditBestCut}
+                  value={channelInfoTable[id]?.cut || 0}
+                />
+              </ListItem>
+            </List>
+          </Paper>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
