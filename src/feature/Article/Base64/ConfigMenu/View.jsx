@@ -30,12 +30,7 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <SwitchRow
-            primary="사용"
-            seconday="변경 시 적용에 새로고침 필요"
-            value={enabled}
-            action={$toggleEnabled}
-          />
+          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
         </List>
       </Paper>
       <Typography variant="subtitle2">디코딩</Typography>
