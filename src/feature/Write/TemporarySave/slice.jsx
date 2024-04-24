@@ -3,6 +3,7 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  enabled: true,
   tempArticleList: {},
   templateMode: false,
   importTitle: true,
@@ -20,6 +21,9 @@ export const slice = createSlice({
   name: Info.id,
   initialState,
   reducers: {
+    $toggleEnabled(state) {
+      state.storage.enabled = !state.storage.enabled;
+    },
     $addArticle(state, action) {
       const { slot, title, content } = action.payload;
 
@@ -55,6 +59,7 @@ export const slice = createSlice({
 });
 
 export const {
+  $toggleEnabled,
   $addArticle,
   $removeArticle,
   $setArticleList,

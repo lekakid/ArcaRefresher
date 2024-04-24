@@ -48,9 +48,10 @@ ListFolder.propTypes = {
   children: PropTypes.node,
 };
 
-function ChannelItem({ id, label, memo, best }) {
+function ChannelItem({ id, label, info }) {
   const search = {};
-  if (best) search.mode = 'best';
+  if (info?.best) search.mode = 'best';
+  if (info?.cut > 0) search.cut = info.cut;
 
   return (
     <ListItem dense disablePadding>
@@ -60,7 +61,7 @@ function ChannelItem({ id, label, memo, best }) {
       >
         <ListItemText
           disableTypography
-          primary={`${label}${memo ? ` - ${memo}` : ''}`}
+          primary={`${label}${info?.memo ? ` - ${info.memo}` : ''}`}
         />
       </ListItemButton>
     </ListItem>
@@ -70,8 +71,7 @@ function ChannelItem({ id, label, memo, best }) {
 ChannelItem.propTypes = {
   id: PropTypes.string,
   label: PropTypes.string,
-  memo: PropTypes.string,
-  best: PropTypes.bool,
+  info: PropTypes.object,
 };
 
 export default function ChannelManager() {
@@ -159,8 +159,7 @@ export default function ChannelManager() {
                     key={id}
                     id={id}
                     label={label}
-                    memo={channelInfoTable[id]?.memo || ''}
-                    best={channelInfoTable[id]?.best}
+                    info={channelInfoTable[id]}
                   />
                 ))}
               </ListFolder>

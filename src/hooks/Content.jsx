@@ -159,9 +159,20 @@ export function ContentCollector() {
       '제목 없음';
     const author =
       new ArcaUser(document.querySelector(ARTICLE_AUTHOR)).toString() || '익명';
-    const date = timeElement?.textContent.split(' ')[0] || '';
-    const time =
-      timeElement?.textContent.split(' ')[1]?.replace(/:/g, '') || '';
+    const datetime = new Date(
+      timeElement?.getAttribute('datetime') || Date.now(),
+    );
+    const formatter = Intl.DateTimeFormat('en-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hourCycle: 'h24',
+    });
+    const datetimeString = formatter.format(datetime).replace(/:/g, '');
+    const [date, time] = datetimeString.split(', ');
     const url =
       document.querySelector(ARTICLE_URL)?.href || window.location.href;
     const id = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;

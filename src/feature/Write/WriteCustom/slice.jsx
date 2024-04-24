@@ -6,6 +6,7 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   version: 1,
   // 모양
+  categoryAlign: true,
   fixDarkModeWriteForm: true,
 };
 
@@ -51,6 +52,9 @@ export const slice = createSlice({
   initialState,
   reducers: {
     // 모양
+    $toggleCategoryAlign(state) {
+      state.storage.categoryAlign = !state.storage.categoryAlign;
+    },
     $toggleDarkModeWriteForm(state) {
       state.storage.fixDarkModeWriteForm = !state.storage.fixDarkModeWriteForm;
     },
@@ -59,6 +63,7 @@ export const slice = createSlice({
 
 export const {
   // 모양
+  $toggleCategoryAlign,
   $toggleDarkModeWriteForm,
 } = slice.actions;
 

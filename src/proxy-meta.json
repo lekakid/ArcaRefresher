@@ -12,7 +12,7 @@
   "exclude": ["https://*.arca.live/api/*"],
   "connect": ["namu.la", "saucenao.com", "ascii2d.net"],
   "noframes": true,
-  "run-at": "document-start",
+  "run-at": "document-body",
   "grant": [
     "GM_info",
     "GM_openInTab",

@@ -15,12 +15,12 @@ import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
-import toDocument from 'func/toDocument';
+import { getDocument } from 'func/http';
 import Info from '../FeatureInfo';
 
 const profileUrl = 'https://arca.live/u/@';
 
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
     (store) => store[Info.id].storage,
@@ -42,7 +42,7 @@ function ContextMenu({ target }) {
 
   const [profileData, setProfileData] = useState(undefined);
 
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: contextSelector,
@@ -71,7 +71,7 @@ function ContextMenu({ target }) {
               return response.text();
             })
             .then((text) => {
-              const doc = toDocument(text);
+              const doc = getDocument(text);
               if (doc.querySelector('.error-page')) {
                 setProfileData({ article: -1, comment: -1 });
                 return;
@@ -191,6 +191,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

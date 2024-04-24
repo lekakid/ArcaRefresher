@@ -16,7 +16,7 @@ import { $setMemo } from '../slice';
 import Info from '../FeatureInfo';
 import MemoInput from './MemoInput';
 
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { memo, contextRange } = useSelector((state) => state[Info.id].storage);
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ function ContextMenu({ target }) {
       break;
   }
 
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: contextSelector,
@@ -97,6 +97,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

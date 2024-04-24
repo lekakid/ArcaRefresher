@@ -10,14 +10,17 @@ import Info from '../FeatureInfo';
 import { toggleTemporaryDisabled } from '../slice';
 
 // 우클릭 메뉴
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
 
-  const [data, closeMenu] = useContextMenu({
-    key: Info.id,
-    selector: 'a.base64',
-    dataExtractor: () => target,
-  });
+  const data = useContextMenu(
+    {
+      key: Info.id,
+      selector: 'a.base64',
+      dataExtractor: () => target,
+    },
+    [target],
+  );
 
   const handleClick = useCallback(() => {
     dispatch(toggleTemporaryDisabled());
@@ -40,6 +43,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

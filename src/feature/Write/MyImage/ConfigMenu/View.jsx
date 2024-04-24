@@ -21,6 +21,7 @@ const View = forwardRef((_props, ref) => {
           <SwitchRow
             divider
             primary="사용"
+            secondary="이미지에서 우클릭 메뉴가 활성화됩니다."
             value={enabled}
             action={$toggleEnabled}
           />

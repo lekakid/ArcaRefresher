@@ -101,7 +101,6 @@ const View = forwardRef((_props, ref) => {
           />
           <SelectRow
             primary="댓글 작성키 변경"
-            secondary="댓글 입력키를 변경합니다.(새로고침 필요)"
             value={alternativeSubmitKey}
             action={$setAlternativeSubmitKey}
           >

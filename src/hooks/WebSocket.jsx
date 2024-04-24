@@ -11,6 +11,9 @@ function WrappedWebSocket(...contructorArguments) {
     if (propertyArguments[0] === 'message') {
       const originalCallback = propertyArguments[1];
       propertyArguments[1] = (e) => {
+        Object.defineProperty(e, 'data', { value: e.data, writable: true });
+        Object.defineProperty(e, 'ignore', { value: false, writable: true });
+
         callbackList
           .filter(({ type }) => type === 'before')
           .forEach(({ callback }) => {

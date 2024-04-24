@@ -47,13 +47,16 @@ export default function TemporarySave() {
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-  const { deleteOnCommit } = useSelector((state) => state[Info.id].storage);
+  const { enabled, deleteOnCommit } = useSelector(
+    (state) => state[Info.id].storage,
+  );
   const { currentSlot } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState(null);
   const [editor, setEditor] = useState(null);
 
   // 렌더 컨테이너 생성
   useEffect(() => {
+    if (!enabled) return;
     if (!editorLoaded) return;
 
     const title = document.querySelector('#inputTitle');
@@ -65,7 +68,7 @@ export default function TemporarySave() {
     const btns = document.querySelector('.article-write .btns');
     btns.append(tempButton);
     setContainer(tempButton);
-  }, [editorLoaded]);
+  }, [enabled, editorLoaded]);
 
   const handleCommit = useCallback(() => {
     if (deleteOnCommit) {
@@ -93,6 +96,7 @@ export default function TemporarySave() {
     return () => editor.title.removeEventListener('keydown', handler);
   }, [currentSlot, deleteOnCommit, dispatch, editor]);
 
+  if (!enabled) return null;
   if (!container) return null;
   return (
     <>

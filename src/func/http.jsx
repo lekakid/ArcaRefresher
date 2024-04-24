@@ -1,4 +1,8 @@
-import toDocument from './toDocument';
+const parser = new DOMParser();
+
+export function getDocument(source) {
+  return parser.parseFromString(source, 'text/html');
+}
 
 /**
  * CORS 우회 용도 외엔 최소한으로 사용할 것
@@ -25,7 +29,7 @@ export function request(
         if (responseType === 'document') {
           resolve({
             ...response,
-            response: toDocument(response.responseText),
+            response: getDocument(response.responseText),
           });
           return;
         }
@@ -41,8 +45,8 @@ export function request(
   });
 }
 
-export function getQuery() {
-  const entries = window.location.search
+export function getQuery(search) {
+  const entries = (search || window.location.search)
     .substring(1)
     .split('&')
     .filter((e) => e)

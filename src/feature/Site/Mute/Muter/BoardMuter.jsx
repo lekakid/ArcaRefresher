@@ -19,7 +19,7 @@ const boardMuteStyles = (
     styles={{
       '.body .article-list': {
         '& .frontend-header': {
-          display: 'none',
+          display: 'none !important',
         },
         '& .list-table.show-filtered-category .filtered-category': {
           display: 'flex !important',

@@ -13,11 +13,11 @@ import { BACKGROUND, open } from 'func/window';
 import Info from '../FeatureInfo';
 
 // 우클릭 메뉴
-function ContextMenu({ target }) {
+function ContextMenu({ target, closeMenu }) {
   const { contextMenuEnabled } = useSelector((store) => store[Info.id].storage);
   const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
       selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
@@ -81,6 +81,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

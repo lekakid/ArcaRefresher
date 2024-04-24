@@ -14,17 +14,19 @@ import { request } from 'func/http';
 import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
-function ContextMenu({ target }) {
-  const { downloadMethod, fileName } = useSelector(
+function ContextMenu({ target, closeMenu }) {
+  const { contextMenuEnabled, downloadMethod, fileName } = useSelector(
     (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
-  const [data, closeMenu] = useContextMenu(
+  const data = useContextMenu(
     {
       key: Info.id,
-      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      selector: contextMenuEnabled
+        ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
+        : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
 
@@ -191,6 +193,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

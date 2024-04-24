@@ -48,7 +48,7 @@ function ToastMuter() {
         const url = trimEmotURL(noti.mediaUrl);
         if (muteAllEmot || filter.emoticon.url[url]) {
           if (hideMutedMark) {
-            Object.defineProperty(e, 'ignore', { value: true });
+            e.ignore = true;
             return;
           }
 
@@ -63,7 +63,7 @@ function ToastMuter() {
         filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
       if (regex?.test(noti.username)) {
         if (hideMutedMark) {
-          Object.defineProperty(e, 'ignore', { value: true });
+          e.ignore = true;
           return;
         }
 
@@ -72,8 +72,7 @@ function ToastMuter() {
         noti.message = '[뮤트된 이용자의 알림]';
       }
 
-      const injectedData = `${data[0]}|${JSON.stringify(noti)}`;
-      Object.defineProperty(e, 'data', { value: injectedData });
+      e.data = `${data[0]}|${JSON.stringify(noti)}`;
     };
     const subscriber = { callback, type: 'before' };
     subscribeSocket(subscriber);

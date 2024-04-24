@@ -1,19 +1,22 @@
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
+import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import { PhotoLibrary } from '@mui/icons-material';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
 
+import { useSelector } from 'react-redux';
 import Info from '../FeatureInfo';
 import FolderCheckList from './FolderCheckList';
 
-function ContextMenu({ target }) {
-  const [data, closeMenu] = useContextMenu(
+function ContextMenu({ target, closeMenu }) {
+  const { enabled } = useSelector((state) => state[Info.id].storage);
+
+  const data = useContextMenu(
     {
       key: Info.id,
-      selector: `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`,
+      selector: enabled ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}` : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
 
@@ -40,7 +43,7 @@ function ContextMenu({ target }) {
             <ListItemIcon>
               <PhotoLibrary />
             </ListItemIcon>
-            <Typography>자짤 관리</Typography>
+            <ListItemText primary="자짤 관리" />
           </MenuItem>
         </List>
       )}
@@ -51,6 +54,7 @@ function ContextMenu({ target }) {
 
 ContextMenu.propTypes = {
   target: PropTypes.object,
+  closeMenu: PropTypes.func,
 };
 
 export default ContextMenu;

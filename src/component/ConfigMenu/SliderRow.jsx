@@ -18,6 +18,7 @@ const SliderRow = forwardRef(
       sliderProps,
       value,
       action,
+      onChange,
     },
     ref,
   ) => {
@@ -45,7 +46,7 @@ const SliderRow = forwardRef(
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...sliderProps}
           value={value}
-          onChange={handleChange}
+          onChange={onChange || handleChange}
           onChangeCommitted={opacityOnChange ? () => setOpacity(1) : undefined}
         />
       </BaseRow>
@@ -62,6 +63,7 @@ const RowPropTypes = {
   sliderProps: PropTypes.object,
   value: PropTypes.number,
   action: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 SliderRow.propTypes = RowPropTypes;

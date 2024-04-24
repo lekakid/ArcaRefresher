@@ -21,6 +21,7 @@ function ContextMenu({ menuList }) {
   const { interactionType } = useSelector((state) => state[Info.id].storage);
   const { mousePos, triggerList } = useSelector((state) => state[Info.id]);
   const gestureTrack = useRef({ right: false, count: 0 });
+  const dblClickTack = useRef(false);
   const [targetTable, setTargetTable] = useState(undefined);
 
   useEffect(() => {
@@ -43,21 +44,27 @@ function ContextMenu({ menuList }) {
       const { count: trackCount } = gestureTrack.current;
       gestureTrack.current.count = 0;
 
-      if (trackCount > 20) return;
-      if (getKeyCombine(e) !== interactionType) return;
-      let triggered = false;
-      const entries = triggerList.map(({ key, selector }) => {
-        const target = e.target.closest(selector);
+      try {
+        if (trackCount > 20) throw Error;
+        if (dblClickTack.current) throw Error;
+        if (getKeyCombine(e) !== interactionType) throw Error;
+        let triggered = false;
+        const entries = triggerList.map(({ key, selector }) => {
+          const target = e.target.closest(selector);
 
-        if (target) triggered = true;
-        return [key, target];
-      });
+          if (target) triggered = true;
+          return [key, target];
+        });
 
-      if (!triggered) return;
+        if (!triggered) return;
 
-      e.preventDefault();
-      setTargetTable(Object.fromEntries(entries));
-      dispatch(setOpen([e.clientX, e.clientY]));
+        e.preventDefault();
+        if (interactionType === 'r') dblClickTack.current = true;
+        setTargetTable(Object.fromEntries(entries));
+        dispatch(setOpen([e.clientX, e.clientY]));
+      } catch (_) {
+        dblClickTack.current = false;
+      }
     };
 
     document.addEventListener('mousedown', handleDown);
@@ -72,9 +79,10 @@ function ContextMenu({ menuList }) {
       document.removeEventListener('scroll', handleScroll);
       document.removeEventListener('contextmenu', handleContext);
     };
-  }, [dispatch, interactionType, triggerList]);
+  }, [interactionType, triggerList, dispatch]);
 
   const handleClose = useCallback(() => {
+    dblClickTack.current = false;
     dispatch(setOpen(null));
   }, [dispatch]);
 
@@ -110,7 +118,7 @@ function ContextMenu({ menuList }) {
             },
           }}
         >
-          <View target={targetTable?.[key]} />
+          <View target={targetTable?.[key]} closeMenu={handleClose} />
         </Box>
       ))}
     </Menu>

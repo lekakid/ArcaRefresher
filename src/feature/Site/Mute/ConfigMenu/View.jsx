@@ -121,7 +121,7 @@ const View = forwardRef((_props, ref) => {
           <SwitchRow
             divider
             primary="[공통] 뮤트 표시 숨김"
-            secondary="변경 후 새로고침 필요"
+            secondary="댓글, 알림의 뮤트 처리 표시를 숨깁니다."
             value={hideMutedMark}
             action={$toggleMutedMark}
           />

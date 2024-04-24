@@ -60,7 +60,7 @@ function MemoList() {
   useLayoutEffect(() => {
     if (!loaded) return;
 
-    const search = getQuery(window.location.search);
+    const search = getQuery();
     const searchKeys = Object.keys(search);
     const targetKeys = ['after', 'before', 'near'];
     const page = parseInt(search.p, 10);
