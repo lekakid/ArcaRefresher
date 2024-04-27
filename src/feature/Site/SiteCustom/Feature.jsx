@@ -190,7 +190,9 @@ function FontSizeStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        fontSize: value,
+        html: {
+          fontSize: `${value}px !important`,
+        },
       }}
     />
   );
@@ -237,6 +239,7 @@ export default function SiteCustom() {
     sideBests,
     sideNews,
     sideMenu,
+    fontSizeEnabled,
     fontSize,
     fixDarkModeWriteForm,
     // 동작
@@ -298,7 +301,7 @@ export default function SiteCustom() {
       <SideContentsStyles value={sideContents} />
       <SideBestsStyles value={sideBests} />
       <SideNewsStyles value={sideNews} />
-      <FontSizeStyles value={fontSize} />
+      {fontSizeEnabled && <FontSizeStyles value={fontSize} />}
       <FixDarkModeWriteFormStyles value={fixDarkModeWriteForm} />
     </>
   );

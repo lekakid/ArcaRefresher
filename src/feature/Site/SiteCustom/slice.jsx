@@ -22,6 +22,7 @@ const defaultStorage = {
   sideContents: true,
   sideBests: true,
   sideNews: true,
+  fontSizeEnabled: false,
   fontSize: 15,
   // 동작
   spoofTitle: '',
@@ -95,6 +96,9 @@ export const slice = createSlice({
     $toggleSideNews(state) {
       state.storage.sideNews = !state.storage.sideNews;
     },
+    $toggleFontSizeEnabled(state) {
+      state.storage.fontSizeEnabled = !state.storage.fontSizeEnabled;
+    },
     $setFontSize(state, action) {
       state.storage.fontSize = action.payload;
     },
@@ -122,6 +126,7 @@ export const {
   $toggleSideContents,
   $toggleSideBests,
   $toggleSideNews,
+  $toggleFontSizeEnabled,
   $setFontSize,
   // 동작
   $setSpoofTitle,

@@ -26,6 +26,7 @@ import {
   $toggleSideContents,
   $toggleSideBests,
   $toggleSideNews,
+  $toggleFontSizeEnabled,
   $setFontSize,
   // 동작
   $setSpoofTitle,
@@ -50,6 +51,7 @@ const View = forwardRef((_props, ref) => {
     sideBests,
     sideNews,
     sideMenu,
+    fontSizeEnabled,
     fontSize,
     // 동작
     spoofTitle,
@@ -138,21 +140,29 @@ const View = forwardRef((_props, ref) => {
               </Collapse>
             </>
           )}
-          <SliderRow
-            divider
-            primary="사이트 전체 폰트 크기"
-            secondary="표시 설정에서 글자 크기 브라우저 기본 설정 필요"
-            sliderProps={{
-              min: 8,
-              max: 30,
-              step: 1,
-              valueLabelFormat: labelFormat,
-              valueLabelDisplay: 'auto',
-            }}
-            value={fontSize}
-            action={$setFontSize}
-            opacityOnChange={0.6}
+          <SwitchRow
+            divider={fontSizeEnabled}
+            primary="사이트 전체 폰트 크기 설정"
+            secondary="⚠ 사이트의 표시 설정을 무시합니다."
+            value={fontSizeEnabled}
+            action={$toggleFontSizeEnabled}
           />
+          <Collapse in={fontSizeEnabled}>
+            <SliderRow
+              divider
+              primary="폰트 크기"
+              sliderProps={{
+                min: 8,
+                max: 30,
+                step: 1,
+                valueLabelFormat: labelFormat,
+                valueLabelDisplay: 'auto',
+              }}
+              value={fontSize}
+              action={$setFontSize}
+              opacityOnChange={0.6}
+            />
+          </Collapse>
         </List>
       </Paper>
       <Typography variant="subtitle2">동작 설정</Typography>
