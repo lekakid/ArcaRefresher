@@ -76,7 +76,9 @@ function ContextMenu({ target, closeMenu }) {
 
           const userTmp = new ArcaUser(userElement);
           const uid = userTmp.toUID();
-          return { type: 'user', uid };
+          const regex = makeRegex(uid);
+
+          return { type: 'user', uid, regex };
         }
 
         if (target.matches(emotSelector)) {
@@ -252,9 +254,8 @@ function ContextMenu({ target, closeMenu }) {
   }, [closeMenu, data, dispatch, setSnack]);
 
   const handleUser = useCallback(() => {
-    const { uid } = data;
-    const regex = makeRegex(uid);
-    const exist = user.includes(uid);
+    const { regex } = data;
+    const exist = user.includes(regex);
 
     dispatch(exist ? $removeUser(regex) : $addUser(regex));
     closeMenu();
@@ -318,7 +319,7 @@ function ContextMenu({ target, closeMenu }) {
   }
 
   if (data?.type === 'user') {
-    const exist = user.includes(makeRegex(data.uid));
+    const exist = user.includes(data.regex);
     return (
       <List>
         <MenuItem onClick={handleUser}>
