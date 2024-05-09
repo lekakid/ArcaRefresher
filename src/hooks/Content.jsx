@@ -10,6 +10,9 @@ import {
   ARTICLE_URL,
   BOARD_LOADED,
   CHANNEL_TITLE_LOADED,
+  EMOTICON_AUTHOR,
+  EMOTICON_INFO,
+  EMOTICON_TITLE,
   NAVIGATION_LOADED,
 } from 'core/selector';
 import { convertImgToAlt } from 'func/emoji';
@@ -147,9 +150,16 @@ export function ContentCollector() {
   useLayoutEffect(() => {
     if (!articleLoaded) return;
 
-    const titleElement = document.querySelector(ARTICLE_TITLE);
-    const infoElement = document.querySelector(ARTICLE_INFO);
+    const titleElement = document.querySelector(
+      `${ARTICLE_TITLE}, ${EMOTICON_TITLE}`,
+    );
+    const infoElement = document.querySelector(
+      `${ARTICLE_INFO}, ${EMOTICON_INFO}`,
+    );
     const timeElement = infoElement.querySelector('.date time');
+    const user = new ArcaUser(
+      document.querySelector(`${ARTICLE_AUTHOR}, ${EMOTICON_AUTHOR}`),
+    );
 
     const category =
       titleElement?.querySelector('.badge')?.textContent || '일반';
@@ -157,8 +167,7 @@ export function ContentCollector() {
       convertImgToAlt([...(titleElement?.childNodes || [])].slice(2)) ||
       titleElement.textContent.trim() ||
       '제목 없음';
-    const author =
-      new ArcaUser(document.querySelector(ARTICLE_AUTHOR)).toString() || '익명';
+    const author = user.toString() || '익명';
     const datetime = new Date(
       timeElement?.getAttribute('datetime') || Date.now(),
     );
