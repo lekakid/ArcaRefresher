@@ -54,3 +54,6 @@ export const USER_INFO = 'span.user-info';
 export const USER_INFO_WITHOUT_NOTICE =
   '.board-title span.user-info, .vrow:not(.notice) span.user-info';
 export const USER_MENTION = 'a[href^="/u/@"]';
+export const EMOTICON_INFO = '.emoticon-info';
+export const EMOTICON_TITLE = '.emoticon-info .title';
+export const EMOTICON_AUTHOR = '.emoticon-info .author';
