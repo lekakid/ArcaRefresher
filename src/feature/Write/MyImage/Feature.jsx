@@ -36,7 +36,7 @@ export default function MyImage() {
     if (!enabled) return;
     if (!editorLoaded) return;
     if (/edit$/.test(window.location.pathname)) return;
-    setEditor(unsafeWindow.FroalaEditor('#content'));
+    setEditor(unsafeWindow.editorInstance);
   }, [dispatch, editorLoaded, enabled]);
 
   const handleLoad = useCallback(() => {

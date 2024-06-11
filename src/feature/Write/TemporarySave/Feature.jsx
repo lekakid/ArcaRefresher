@@ -60,7 +60,7 @@ export default function TemporarySave() {
     if (!editorLoaded) return;
 
     const title = document.querySelector('#inputTitle');
-    const content = unsafeWindow.FroalaEditor('#content');
+    const content = unsafeWindow.editorInstance;
     setEditor({ title, content });
 
     const tempButton = document.createElement('div');
