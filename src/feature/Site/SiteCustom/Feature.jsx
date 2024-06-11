@@ -28,7 +28,7 @@ function TopNewsStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        'li.topbar-area': {
+        '.topbar-area': {
           display: 'none !important',
         },
       }}

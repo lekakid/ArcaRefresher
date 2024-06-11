@@ -205,49 +205,51 @@ export default function ChannelManager() {
 
   return (
     <>
-      <Portal container={container?.subs}>
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a
-          ref={subRef}
-          aria-expanded="false"
-          className="nav-link dropdown-toggle"
-          href="#"
-          onClick={handleSubClick}
-        >
-          구독
-          <span className="d-none d-md-inline"> </span>
-          <span className="d-none d-md-inline">채널</span>
-          {'\n'}
-        </a>
-        <Popover
-          anchorEl={subRef.current}
-          anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-          transformOrigin={{ horizontal: 'center', vertical: 'top' }}
-          transitionDuration={150}
-          disableScrollLock
-          open={open.subs}
-          onClose={handleSubClose}
-        >
-          <List>
-            <ListItem dense disablePadding>
-              <ListItemButton
-                onClick={() =>
-                  setOpen((prev) => ({ ...prev, subs: false, editor: true }))
-                }
-              >
-                <ListItemText disableTypography primary="그룹 편집" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem dense disablePadding>
-              <ListItemButton component={Link} href="/b/my">
-                <ListItemText disableTypography primary="구독 중인 채널" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          {groupChildren}
-          {remainChannelChildren}
-        </Popover>
-      </Portal>
+      {container?.subs && (
+        <Portal container={container.subs}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a
+            ref={subRef}
+            aria-expanded="false"
+            className="nav-link dropdown-toggle"
+            href="#"
+            onClick={handleSubClick}
+          >
+            구독
+            <span className="d-none d-md-inline"> </span>
+            <span className="d-none d-md-inline">채널</span>
+            {'\n'}
+          </a>
+          <Popover
+            anchorEl={subRef.current}
+            anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+            transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+            transitionDuration={150}
+            disableScrollLock
+            open={open.subs}
+            onClose={handleSubClose}
+          >
+            <List>
+              <ListItem dense disablePadding>
+                <ListItemButton
+                  onClick={() =>
+                    setOpen((prev) => ({ ...prev, subs: false, editor: true }))
+                  }
+                >
+                  <ListItemText disableTypography primary="그룹 편집" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem dense disablePadding>
+                <ListItemButton component={Link} href="/b/my">
+                  <ListItemText disableTypography primary="구독 중인 채널" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+            {groupChildren}
+            {remainChannelChildren}
+          </Popover>
+        </Portal>
+      )}
       <SubsChannelManager
         subs={navChannelInfo.subs}
         open={open.editor}
