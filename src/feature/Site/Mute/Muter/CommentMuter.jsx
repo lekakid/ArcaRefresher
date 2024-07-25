@@ -81,7 +81,7 @@ const commentMuteStyles = (
               },
             },
           '& .emoticon-muted': {
-            '& .emoticon-wrapper': {
+            '& .emoticon-wrapper, & .combo_emoticon-wrapper': {
               width: 'auto !important',
               height: 'auto !important',
               textDecoration: 'none !important',
@@ -140,12 +140,13 @@ function CommentMuter() {
       const commentEmot = document.querySelectorAll(COMMENT_EMOTICON);
       commentEmot.forEach((c) => {
         const id = Number(c.dataset.id);
-        c.closest(
-          muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
-        ).classList.toggle(
-          hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
-          muteAllEmot || !!filter.emoticon.bundle[id],
-        );
+        if (muteAllEmot || !!filter.emoticon.bundle[id]) {
+          c.closest(
+            muteIncludeReply ? COMMENT_WRAPPERS : COMMENT_ITEMS,
+          ).classList.add(
+            hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
+          );
+        }
 
         if (!(muteAllEmot || filter.emoticon.bundle[id]) || hideMutedMark)
           return;
@@ -153,7 +154,7 @@ function CommentMuter() {
         muted.append('[아카콘 뮤트됨]');
         muted.classList.add('muted');
         muted.title = muteAllEmot ? '알 수 없음' : filter.emoticon.bundle[id];
-        c.closest('.emoticon-wrapper').append(muted);
+        c.closest('.emoticon-wrapper, .combo_emoticon-wrapper').append(muted);
       });
     };
 
@@ -168,7 +169,9 @@ function CommentMuter() {
         ).classList.remove(
           hideMutedMark ? 'hide-emoticon-muted' : 'emoticon-muted',
         );
-        c.closest('.emoticon-wrapper').querySelector('span')?.remove();
+        c.closest('.emoticon-wrapper, .combo_emoticon-wrapper')
+          .querySelector('span')
+          ?.remove();
       });
       window.removeEventListener(EVENT_COMMENT_REFRESH, muteEmoticon);
     };
