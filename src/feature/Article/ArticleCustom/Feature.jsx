@@ -120,6 +120,7 @@ export default function ArticleCustom() {
 
     article.querySelectorAll('a.external').forEach((e) => {
       e.href = e.href.replace(/^https:\/\/.*\/https:\/\//, 'https://');
+      e.href = e.href.replace(/^https:\/\/.*\/http:\/\//, 'http://');
       e.classList.remove('external');
     });
   }, [article, ignoreExternalLinkWarning]);
