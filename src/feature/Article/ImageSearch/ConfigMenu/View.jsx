@@ -130,7 +130,7 @@ const View = forwardRef((_props, ref) => {
           />
           <SwitchRow
             divider
-            primary="trace.moe"
+            primary="TraceMoe"
             value={showTraceMoe}
             action={$toggleShowTraceMoe}
           />
