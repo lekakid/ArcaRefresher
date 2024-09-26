@@ -13,7 +13,7 @@ import { open } from 'func/window';
 import Info from '../FeatureInfo';
 
 const ERROR_MSG =
-  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
+  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔 창을 확인 바랍니다.';
 
 function ContextMenu({ target, closeMenu }) {
   const {
@@ -30,6 +30,9 @@ function ContextMenu({ target, closeMenu }) {
     showSauceNao,
     showIqdb,
     showAscii2D,
+    showTraceMoe,
+    showImgOps,
+    showTinEye,
   } = useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
@@ -182,6 +185,33 @@ function ContextMenu({ target, closeMenu }) {
     }
   }, [showAscii2D, closeMenu, data, openType, setSnack]);
 
+  const handleTraceMoe = useCallback(() => {
+    if (!showTraceMoe) return;
+
+    GM_openInTab(
+      `https://trace.moe/?url=${encodeURIComponent(data)}`,
+      openType,
+    );
+    closeMenu();
+  }, [showTraceMoe, closeMenu, data, openType]);
+
+  const handleImgOps = useCallback(() => {
+    if (!showImgOps) return;
+
+    GM_openInTab(`https://imgops.com/${data}`, openType);
+    closeMenu();
+  }, [showImgOps, closeMenu, data, openType]);
+
+  const handleTinEye = useCallback(() => {
+    if (!showTinEye) return;
+
+    GM_openInTab(
+      `https://tineye.com/search?url=${encodeURIComponent(data)}`,
+      openType,
+    );
+    closeMenu();
+  }, [showTinEye, closeMenu, data, openType]);
+
   const handleAllOpen = useCallback(() => {
     handleGoogle();
     handleBing();
@@ -189,6 +219,9 @@ function ContextMenu({ target, closeMenu }) {
     handleSauceNao();
     handleIqdb();
     handleAscii2D();
+    handleTraceMoe();
+    handleImgOps();
+    handleTinEye();
   }, [
     handleGoogle,
     handleBing,
@@ -196,6 +229,9 @@ function ContextMenu({ target, closeMenu }) {
     handleSauceNao,
     handleIqdb,
     handleAscii2D,
+    handleTraceMoe,
+    handleImgOps,
+    handleTinEye,
   ]);
 
   if (!data) return null;
@@ -253,6 +289,30 @@ function ContextMenu({ target, closeMenu }) {
             <ImageSearch />
           </ListItemIcon>
           <Typography>Ascii2D 검색</Typography>
+        </MenuItem>
+      )}
+      {showTraceMoe && (
+        <MenuItem onClick={handleTraceMoe}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>TraceMoe 검색</Typography>
+        </MenuItem>
+      )}
+      {showImgOps && (
+        <MenuItem onClick={handleImgOps}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>ImgOps 검색</Typography>
+        </MenuItem>
+      )}
+      {showTinEye && (
+        <MenuItem onClick={handleTinEye}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>TinEye 검색</Typography>
         </MenuItem>
       )}
     </List>
