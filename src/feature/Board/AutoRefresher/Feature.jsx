@@ -35,12 +35,7 @@ const refreshStyles = (
  * @example 'arca.live/b/breaking?p=2&type=best' => { p: '2', type: 'best' }
  */
 function parseSearch(searchString) {
-  const entries = searchString
-    .substring(1)
-    .split('&')
-    .filter((t) => t)
-    .map((t) => t.split('='));
-  return Object.fromEntries(entries);
+  return Object.fromEntries(new URLSearchParams(searchString)); 
 }
 
 function AutoRefresher() {
