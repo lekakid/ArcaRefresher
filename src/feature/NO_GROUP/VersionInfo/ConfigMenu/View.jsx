@@ -1,18 +1,7 @@
-import { forwardRef, Fragment, useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  List,
-  Paper,
-  Typography,
-  Box,
-  Dialog,
-  DialogContent,
-  useMediaQuery,
-  ListItemText,
-  MenuItem,
-} from '@mui/material';
+import { List, Paper, Typography, ListItemText, MenuItem } from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
-import QRCode from 'react-qr-code';
 
 import { BaseRow, SelectRow } from 'component/ConfigMenu';
 import { useConfirm } from 'component';
@@ -21,15 +10,11 @@ import Info from '../FeatureInfo';
 import { $setNotiLevel } from '../slice';
 import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH } from '../func';
 
-const DONATION_TOSS_URL = 'https://toss.me/lekakid';
-
 const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { notiLevel } = useSelector((state) => state[Info.id].storage);
-  const [open, setOpen] = useState(false);
 
   const handleNotiLevel = useCallback(
     async (e) => {
@@ -92,14 +77,6 @@ const View = forwardRef((_props, ref) => {
     GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
   }, []);
 
-  const handleVisitToss = useCallback(() => {
-    if (mobile) {
-      GM_openInTab(DONATION_TOSS_URL);
-      return;
-    }
-    setOpen(true);
-  }, [mobile]);
-
   return (
     <Fragment ref={ref}>
       <Typography variant="subtitle1">{Info.name}</Typography>
@@ -154,24 +131,8 @@ const View = forwardRef((_props, ref) => {
           >
             <OpenInNew />
           </BaseRow>
-          <BaseRow
-            header={<ListItemText primary="토스아이디" />}
-            onClick={handleVisitToss}
-          >
-            <OpenInNew />
-          </BaseRow>
         </List>
       </Paper>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogContent>
-          <Typography style={{ textAlign: 'center' }}>
-            아래의 QR코드로 방문해주세요
-          </Typography>
-          <Box sx={{ padding: 2 }}>
-            <QRCode value={DONATION_TOSS_URL} />
-          </Box>
-        </DialogContent>
-      </Dialog>
       <ConfirmDialog />
     </Fragment>
   );
