@@ -12,7 +12,6 @@ import {
   $toggleContextMenu,
   $toggleSauceNaoBypass,
   $toggleSearchBySource,
-  $toggleShowAscii2D,
   $toggleShowBing,
   $toggleShowGoogle,
   $toggleShowImgOps,
@@ -37,7 +36,6 @@ const View = forwardRef((_props, ref) => {
     showYandex,
     showSauceNao,
     showIqdb,
-    showAscii2D,
     showTraceMoe,
     showImgOps,
     showTinEye,
@@ -121,12 +119,6 @@ const View = forwardRef((_props, ref) => {
             primary="IQDB"
             value={showIqdb}
             action={$toggleShowIqdb}
-          />
-          <SwitchRow
-            divider
-            primary="Ascii2D"
-            value={showAscii2D}
-            action={$toggleShowAscii2D}
           />
           <SwitchRow
             divider

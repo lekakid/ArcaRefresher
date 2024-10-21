@@ -18,7 +18,6 @@ const defaultStorage = {
   showYandex: true,
   showSauceNao: true,
   showIqdb: true,
-  showAscii2D: true,
   showTraceMoe: true,
   showImgOps: true,
   showTinEye: true,
@@ -64,9 +63,6 @@ export const slice = createSlice({
     $toggleShowIqdb(state) {
       state.storage.showIqdb = !state.storage.showIqdb;
     },
-    $toggleShowAscii2D(state) {
-      state.storage.showAscii2D = !state.storage.showAscii2D;
-    },
     $toggleShowTraceMoe(state) {
       state.storage.showTraceMoe = !state.storage.showTraceMoe;
     },
@@ -92,7 +88,6 @@ export const {
   $toggleShowYandex,
   $toggleShowSauceNao,
   $toggleShowIqdb,
-  $toggleShowAscii2D,
   $toggleShowTraceMoe,
   $toggleShowImgOps,
   $toggleShowTinEye,

@@ -29,7 +29,6 @@ function ContextMenu({ target, closeMenu }) {
     showYandex,
     showSauceNao,
     showIqdb,
-    showAscii2D,
     showTraceMoe,
     showImgOps,
     showTinEye,
@@ -152,39 +151,6 @@ function ContextMenu({ target, closeMenu }) {
     closeMenu();
   }, [showIqdb, closeMenu, data, openType]);
 
-  const handleAscii2D = useCallback(async () => {
-    if (!showAscii2D) return;
-
-    try {
-      closeMenu();
-      setSnack({ msg: 'Ascii2D에서 검색 중...' });
-
-      const token = await request('https://ascii2d.net').then(
-        ({ response }) =>
-          response.querySelector('input[name="authenticity_token"]')?.value,
-      );
-      if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
-
-      const formdata = new FormData();
-      formdata.append('utf8', '✓');
-      formdata.append('authenticity_token', token);
-      formdata.append('uri', data);
-
-      const resultURL = await request('https://ascii2d.net/search/uri', {
-        method: 'POST',
-        data: formdata,
-      }).then(({ finalUrl }) => finalUrl);
-      setSnack();
-      open(resultURL, openType);
-    } catch (error) {
-      setSnack({
-        msg: ERROR_MSG,
-        time: 3000,
-      });
-      console.error(error);
-    }
-  }, [showAscii2D, closeMenu, data, openType, setSnack]);
-
   const handleTraceMoe = useCallback(() => {
     if (!showTraceMoe) return;
 
@@ -218,7 +184,6 @@ function ContextMenu({ target, closeMenu }) {
     handleYandex();
     handleSauceNao();
     handleIqdb();
-    handleAscii2D();
     handleTraceMoe();
     handleImgOps();
     handleTinEye();
@@ -228,7 +193,6 @@ function ContextMenu({ target, closeMenu }) {
     handleYandex,
     handleSauceNao,
     handleIqdb,
-    handleAscii2D,
     handleTraceMoe,
     handleImgOps,
     handleTinEye,
@@ -281,14 +245,6 @@ function ContextMenu({ target, closeMenu }) {
             <ImageSearch />
           </ListItemIcon>
           <Typography>IQDB 검색</Typography>
-        </MenuItem>
-      )}
-      {showAscii2D && (
-        <MenuItem onClick={handleAscii2D}>
-          <ListItemIcon>
-            <ImageSearch />
-          </ListItemIcon>
-          <Typography>Ascii2D 검색</Typography>
         </MenuItem>
       )}
       {showTraceMoe && (
