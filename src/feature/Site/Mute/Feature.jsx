@@ -5,6 +5,7 @@ import {
   ArticleMuter,
   CommentMuter,
   ToastMuter,
+  RelayChatMuter,
 } from './Muter';
 
 export default function Mute() {
@@ -16,6 +17,7 @@ export default function Mute() {
       <ArticleMuter />
       <CommentMuter />
       <ToastMuter />
+      <RelayChatMuter />
     </>
   );
 }
