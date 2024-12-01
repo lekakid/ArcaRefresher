@@ -5,6 +5,7 @@ import { List, Paper, Typography, useMediaQuery } from '@mui/material';
 import { SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
+  $toggleCategoryAlign,
   // 모양
   $toggleDarkModeWriteForm,
 } from '../slice';
@@ -14,6 +15,7 @@ const View = forwardRef((_props, ref) => {
 
   const {
     // 모양
+    categoryAlign,
     fixDarkModeWriteForm,
   } = useSelector((state) => state[Info.id].storage);
 
@@ -28,8 +30,8 @@ const View = forwardRef((_props, ref) => {
               divider
               primary="카테고리 모양 수정"
               secondary="카테고리 선택 메뉴가 제목 왼쪽에 붙습니다."
-              value={fixDarkModeWriteForm}
-              action={$toggleDarkModeWriteForm}
+              value={categoryAlign}
+              action={$toggleCategoryAlign}
             />
           )}
           <SwitchRow
