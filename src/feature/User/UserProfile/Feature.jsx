@@ -112,7 +112,7 @@ function UserProfile() {
 
     const callback = (e) => {
       const data = e.data.split('|');
-      if (data[0] !== 'nc') return;
+      if (data[0] !== 'nc' || !data[1]) return;
 
       const chat = JSON.parse(data[1]);
 
