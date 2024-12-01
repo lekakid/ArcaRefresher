@@ -13,7 +13,7 @@ import { open } from 'func/window';
 import Info from '../FeatureInfo';
 
 const ERROR_MSG =
-  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔창을 확인바랍니다.';
+  '오류가 발생했습니다. 개발자 도구(F12)의 콘솔 창을 확인 바랍니다.';
 
 function ContextMenu({ target, closeMenu }) {
   const {
@@ -29,7 +29,9 @@ function ContextMenu({ target, closeMenu }) {
     showYandex,
     showSauceNao,
     showIqdb,
-    showAscii2D,
+    showTraceMoe,
+    showImgOps,
+    showTinEye,
   } = useSelector((state) => state[Info.id].storage);
 
   const setSnack = useSnackbarAlert();
@@ -149,38 +151,32 @@ function ContextMenu({ target, closeMenu }) {
     closeMenu();
   }, [showIqdb, closeMenu, data, openType]);
 
-  const handleAscii2D = useCallback(async () => {
-    if (!showAscii2D) return;
+  const handleTraceMoe = useCallback(() => {
+    if (!showTraceMoe) return;
 
-    try {
-      closeMenu();
-      setSnack({ msg: 'Ascii2D에서 검색 중...' });
+    GM_openInTab(
+      `https://trace.moe/?url=${encodeURIComponent(data)}`,
+      openType,
+    );
+    closeMenu();
+  }, [showTraceMoe, closeMenu, data, openType]);
 
-      const token = await request('https://ascii2d.net').then(
-        ({ response }) =>
-          response.querySelector('input[name="authenticity_token"]')?.value,
-      );
-      if (!token) throw new Error('Ascii2d 검색 토큰 획득 실패');
+  const handleImgOps = useCallback(() => {
+    if (!showImgOps) return;
 
-      const formdata = new FormData();
-      formdata.append('utf8', '✓');
-      formdata.append('authenticity_token', token);
-      formdata.append('uri', data);
+    GM_openInTab(`https://imgops.com/${data}`, openType);
+    closeMenu();
+  }, [showImgOps, closeMenu, data, openType]);
 
-      const resultURL = await request('https://ascii2d.net/search/uri', {
-        method: 'POST',
-        data: formdata,
-      }).then(({ finalUrl }) => finalUrl);
-      setSnack();
-      open(resultURL, openType);
-    } catch (error) {
-      setSnack({
-        msg: ERROR_MSG,
-        time: 3000,
-      });
-      console.error(error);
-    }
-  }, [showAscii2D, closeMenu, data, openType, setSnack]);
+  const handleTinEye = useCallback(() => {
+    if (!showTinEye) return;
+
+    GM_openInTab(
+      `https://tineye.com/search?url=${encodeURIComponent(data)}`,
+      openType,
+    );
+    closeMenu();
+  }, [showTinEye, closeMenu, data, openType]);
 
   const handleAllOpen = useCallback(() => {
     handleGoogle();
@@ -188,14 +184,18 @@ function ContextMenu({ target, closeMenu }) {
     handleYandex();
     handleSauceNao();
     handleIqdb();
-    handleAscii2D();
+    handleTraceMoe();
+    handleImgOps();
+    handleTinEye();
   }, [
     handleGoogle,
     handleBing,
     handleYandex,
     handleSauceNao,
     handleIqdb,
-    handleAscii2D,
+    handleTraceMoe,
+    handleImgOps,
+    handleTinEye,
   ]);
 
   if (!data) return null;
@@ -247,12 +247,28 @@ function ContextMenu({ target, closeMenu }) {
           <Typography>IQDB 검색</Typography>
         </MenuItem>
       )}
-      {showAscii2D && (
-        <MenuItem onClick={handleAscii2D}>
+      {showTraceMoe && (
+        <MenuItem onClick={handleTraceMoe}>
           <ListItemIcon>
             <ImageSearch />
           </ListItemIcon>
-          <Typography>Ascii2D 검색</Typography>
+          <Typography>TraceMoe 검색</Typography>
+        </MenuItem>
+      )}
+      {showImgOps && (
+        <MenuItem onClick={handleImgOps}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>ImgOps 검색</Typography>
+        </MenuItem>
+      )}
+      {showTinEye && (
+        <MenuItem onClick={handleTinEye}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>TinEye 검색</Typography>
         </MenuItem>
       )}
     </List>

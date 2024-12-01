@@ -4,7 +4,7 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  version: 2,
+  version: 3,
   enabled: false,
   current: '',
   theme: {},
@@ -13,12 +13,13 @@ const defaultStorage = {
 function updater(storage, defaultValue) {
   if (!storage) return defaultValue;
 
-  // version 0 => 2
+  // version 0 => 3
   const version = storage?.version || 0;
 
   switch (version) {
     case 0:
-    case 1: {
+    case 1:
+    case 2: {
       // [from, to]
       const remapTable = [
         ['highlight-color', 'bg-highlight'],
@@ -27,6 +28,7 @@ function updater(storage, defaultValue) {
         ['border-outer', 'bd-outer'],
         ['border-inner', 'bd-inner'],
         ['btn-hover', 'bd-btn-hover'],
+        ['visited-article', 'article-visited'],
       ];
       const entries = Object.entries(storage.theme).map(([key, value]) => {
         remapTable.forEach(([from, to]) => {
@@ -41,7 +43,7 @@ function updater(storage, defaultValue) {
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
-      updatedStorage.version = 2;
+      updatedStorage.version = 3;
 
       return updatedStorage;
     }

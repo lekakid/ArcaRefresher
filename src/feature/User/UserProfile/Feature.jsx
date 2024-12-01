@@ -106,6 +106,28 @@ function UserProfile() {
     return () => unsubscribeSocket(subscriber);
   }, [showId, subscribeSocket, unsubscribeSocket]);
 
+  // 동시시청 반고닉 표기 처리
+  useEffect(() => {
+    if (!showId) return undefined;
+
+    const callback = (e) => {
+      const data = e.data.split('|');
+      if (data[0] !== 'nc') return;
+
+      const chat = JSON.parse(data[1]);
+
+      const filter = chat.nickname.split('data-filter="')[1].split('"')[0];
+      if (filter.indexOf('#') === -1) return;
+
+      chat.nickname = chat.nickname.replace(/">[^>]+<\/a>/, `">${filter}</a>`);
+      e.data = `${data[0]}|${JSON.stringify(chat)}`;
+    };
+    const subscriber = { callback, type: 'before' };
+    subscribeSocket(subscriber);
+
+    return () => unsubscribeSocket(subscriber);
+  }, [showId, subscribeSocket, unsubscribeSocket]);
+
   // 자신이 작성한 댓글 표시
   useEffect(() => {
     if (!indicateMyComment) return undefined;

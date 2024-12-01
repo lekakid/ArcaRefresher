@@ -13,8 +13,9 @@ import {
   $toggleUnvote,
   // 동작
   $toggleBlockMediaNewWindow,
-  $toggleRateDownGuard,
+  $toggleIgnoreSpoilerFilter,
   $toggleIgnoreExternalLinkWarning,
+  $toggleRateDownGuard,
 } from '../slice';
 
 const View = forwardRef((_props, ref) => {
@@ -26,6 +27,7 @@ const View = forwardRef((_props, ref) => {
     hideUnvote,
     // 동작
     blockMediaNewWindow,
+    ignoreSpoilerFilter,
     ignoreExternalLinkWarning,
     ratedownGuard,
   } = useSelector((state) => state[Info.id].storage);
@@ -73,6 +75,12 @@ const View = forwardRef((_props, ref) => {
             secondary="새로고침 후에 적용됩니다."
             value={blockMediaNewWindow}
             action={$toggleBlockMediaNewWindow}
+          />
+          <SwitchRow
+            divider
+            primary="스포일러 경고 무시"
+            value={ignoreSpoilerFilter}
+            action={$toggleIgnoreSpoilerFilter}
           />
           <SwitchRow
             divider

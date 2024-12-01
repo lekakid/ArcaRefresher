@@ -88,6 +88,7 @@ export default function ArticleCustom() {
     hideUnvote,
     // 동작
     blockMediaNewWindow,
+    ignoreSpoilerFilter,
     ignoreExternalLinkWarning,
     ratedownGuard,
   } = useSelector((state) => state[Info.id].storage);
@@ -113,6 +114,18 @@ export default function ArticleCustom() {
         a.append(i);
       });
   }, [article, blockMediaNewWindow]);
+
+  // 스포일러 경고 무시
+  useEffect(() => {
+    if (!ignoreSpoilerFilter) return;
+
+    document
+      .querySelector('.spoiler-alert-content')
+      ?.style.setProperty('display', 'none');
+    document
+      .querySelector('.spoiler-filter.active')
+      ?.classList.remove('active');
+  }, [ignoreSpoilerFilter]);
 
   // 외부 링크 경고 무시
   useEffect(() => {

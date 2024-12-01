@@ -2,7 +2,7 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow, SliderRow, SwitchRow } from 'component/ConfigMenu';
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
 import Info from '../FeatureInfo';
 import {
@@ -11,16 +11,11 @@ import {
   $toggleModifiedIndicator,
   $toggleReverseComment,
   $toggleHideVoiceComment,
-  $setResizeEmoticonPalette,
   // 동작
   $toggleFold,
   $toggleWideArea,
   $setAlternativeSubmitKey,
 } from '../slice';
-
-function emotLabelFormat(x) {
-  return `${x}칸`;
-}
 
 const View = forwardRef((_props, ref) => {
   const {
@@ -29,7 +24,6 @@ const View = forwardRef((_props, ref) => {
     modifiedIndicator,
     reverseComment,
     hideVoiceComment,
-    resizeEmoticonPalette,
     // 동작
     foldComment,
     wideClickArea,
@@ -66,19 +60,6 @@ const View = forwardRef((_props, ref) => {
             primary="음성 댓글 버튼 숨기기"
             value={hideVoiceComment}
             action={$toggleHideVoiceComment}
-          />
-          <SliderRow
-            primary="이모티콘 선택창 높이"
-            sliderProps={{
-              min: 2,
-              max: 5,
-              step: 1,
-              marks: true,
-              valueLabelFormat: emotLabelFormat,
-              valueLabelDisplay: 'auto',
-            }}
-            value={resizeEmoticonPalette}
-            action={$setResizeEmoticonPalette}
           />
         </List>
       </Paper>

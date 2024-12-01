@@ -7,19 +7,19 @@ import { BACKGROUND, FOREGROUND } from 'func/window';
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
-  // 동작
-  $toggleContextMenu,
   $setOpenType,
   $setSearchGoogleMethod,
+  $toggleContextMenu,
   $toggleSauceNaoBypass,
   $toggleSearchBySource,
-  // 사이트
-  $toggleShowGoogle,
   $toggleShowBing,
-  $toggleShowYandex,
-  $toggleShowSauceNao,
+  $toggleShowGoogle,
+  $toggleShowImgOps,
   $toggleShowIqdb,
-  $toggleShowAscii2D,
+  $toggleShowSauceNao,
+  $toggleShowTinEye,
+  $toggleShowTraceMoe,
+  $toggleShowYandex,
 } from '../slice';
 
 const View = forwardRef((_props, ref) => {
@@ -36,7 +36,9 @@ const View = forwardRef((_props, ref) => {
     showYandex,
     showSauceNao,
     showIqdb,
-    showAscii2D,
+    showTraceMoe,
+    showImgOps,
+    showTinEye,
   } = useSelector((state) => state[Info.id].storage);
 
   return (
@@ -120,9 +122,21 @@ const View = forwardRef((_props, ref) => {
           />
           <SwitchRow
             divider
-            primary="Ascii2D"
-            value={showAscii2D}
-            action={$toggleShowAscii2D}
+            primary="TraceMoe"
+            value={showTraceMoe}
+            action={$toggleShowTraceMoe}
+          />
+          <SwitchRow
+            divider
+            primary="ImgOps"
+            value={showImgOps}
+            action={$toggleShowImgOps}
+          />
+          <SwitchRow
+            divider
+            primary="TinEye"
+            value={showTinEye}
+            action={$toggleShowTinEye}
           />
         </List>
       </Paper>

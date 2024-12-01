@@ -10,7 +10,6 @@ const defaultStorage = {
   modifiedIndicator: false,
   reverseComment: false,
   hideVoiceComment: false,
-  resizeEmoticonPalette: 2,
   // 동작
   foldComment: false,
   wideClickArea: true,
@@ -71,9 +70,6 @@ export const slice = createSlice({
     $toggleHideVoiceComment(state) {
       state.storage.hideVoiceComment = !state.storage.hideVoiceComment;
     },
-    $setResizeEmoticonPalette(state, action) {
-      state.storage.resizeEmoticonPalette = action.payload;
-    },
     // 동작
     $toggleFold(state) {
       state.storage.foldComment = !state.storage.foldComment;
@@ -93,7 +89,6 @@ export const {
   $toggleModifiedIndicator,
   $toggleReverseComment,
   $toggleHideVoiceComment,
-  $setResizeEmoticonPalette,
   // 동작
   $toggleFold,
   $toggleWideArea,

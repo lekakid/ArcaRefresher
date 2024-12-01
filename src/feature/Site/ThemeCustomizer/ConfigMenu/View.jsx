@@ -64,7 +64,7 @@ const groups = [
       createRow('bg-dropdown', '드롭다운 메뉴'),
       createRow('bg-input', '입력칸'),
       createRow('text-color', '텍스트(기본)'),
-      createRow('visited-article', '조회한 게시물'),
+      createRow('article-visited', '조회한 게시물'),
       createRow('text-muted', '비활성화'),
       createRow('link-color', '링크'),
       createRow('board-category', '글머리 배경'),
