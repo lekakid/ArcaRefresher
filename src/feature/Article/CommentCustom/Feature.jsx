@@ -81,23 +81,6 @@ function HideVoiceComment({ value }) {
   );
 }
 
-function ResizeEmoticonPalette({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.namlacon': {
-          height: 'auto !important',
-          '& .emoticons': {
-            maxHeight: `${value * 100}px !important`,
-          },
-        },
-      }}
-    />
-  );
-}
-
 /* eslint-enable react/prop-types */
 
 const foldingStyles = (
@@ -119,7 +102,6 @@ export default function CommentCustom() {
     modifiedIndicator,
     reverseComment,
     hideVoiceComment,
-    resizeEmoticonPalette,
     // 동작
     foldComment,
     wideClickArea,
@@ -201,7 +183,6 @@ export default function CommentCustom() {
       <ModifiedIndicatorStyles value={modifiedIndicator} />
       <ReverseCommentStyles value={reverseComment} />
       <HideVoiceComment value={hideVoiceComment} />
-      <ResizeEmoticonPalette value={resizeEmoticonPalette} />
       {foldComment && unfoldContainer && !unfold && (
         <Portal container={unfoldContainer}>
           {foldingStyles}
