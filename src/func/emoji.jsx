@@ -1,10 +1,16 @@
-export function convertImgToAlt(Nodes) {
-  try {
-    const convertedNodeList = Nodes.map((node) =>
-      node.alt ?? node.textContent.trim(),
-    );
-    return convertedNodeList.join('');
-  } catch {
-    return '';
-  }
+export function serializeText(rootElement) {
+  const result = [...rootElement.childNodes]
+    .map((child) => {
+      if (child.classList?.contains('badge')) {
+        return '';
+      }
+      if (child.classList?.contains('twemoji')) {
+        return child.alt;
+      }
+
+      return child.textContent.trim();
+    })
+    .join('');
+
+  return result;
 }

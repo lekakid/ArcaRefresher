@@ -6,6 +6,7 @@ import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
 import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
+import { serializeText } from 'func/emoji';
 
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
@@ -104,7 +105,7 @@ function BoardMuter() {
           return {
             element: article,
             user: new ArcaUser(article.querySelector('.user-info')).toUID(),
-            content: article.querySelector('.title')?.textContent || '',
+            content: serializeText(article.querySelector('.title')) || '',
             channel: isGlogal
               ? article.querySelector('.badge')?.textContent
               : undefined,
