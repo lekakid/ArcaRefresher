@@ -102,21 +102,6 @@ export default function BoardCustom() {
     let value = false;
     let dragged = false;
 
-    const dragStartHandler = (e) => {
-      if (e.button !== 0) return;
-
-      const row = e.target.closest('a.vrow:not(.notice)');
-      if (!row) return;
-
-      selectedElement = row;
-      const check = row.querySelector('input[type="checkbox"]');
-      value = !check.checked;
-    };
-    const dragEndHandler = (e) => {
-      if (e.button !== 0) return;
-
-      selectedElement = undefined;
-    };
     const clickHandler = (e) => {
       if (e.target.matches('input[type="checkbox"]')) return;
       if (dragged) {
@@ -135,7 +120,24 @@ export default function BoardCustom() {
         }
       }
     };
-    const draggingHandler = (e) => {
+    const downHandler = (e) => {
+      if (e.button !== 0) return;
+
+      const row = e.target.closest('a.vrow:not(.notice)');
+      if (!row) return;
+
+      e.preventDefault();
+      selectedElement = row;
+      const check = row.querySelector('input[type="checkbox"]');
+      value = !check.checked;
+    };
+    const upHandler = (e) => {
+      if (e.button !== 0) return;
+
+      e.preventDefault();
+      selectedElement = undefined;
+    };
+    const moveHandler = (e) => {
       if (!selectedElement) return;
       e.preventDefault();
 
@@ -156,14 +158,14 @@ export default function BoardCustom() {
       }
     };
     board.addEventListener('click', clickHandler);
-    board.addEventListener('mousedown', dragStartHandler);
-    board.addEventListener('mouseup', dragEndHandler);
-    board.addEventListener('mousemove', draggingHandler);
+    board.addEventListener('mousedown', downHandler);
+    board.addEventListener('mouseup', upHandler);
+    board.addEventListener('mousemove', moveHandler);
     return () => {
-      board.addEventListener('click', clickHandler);
-      board.removeEventListener('mousedown', dragStartHandler);
-      board.addEventListener('mouseup', dragEndHandler);
-      board.addEventListener('mousemove', draggingHandler);
+      board.removeEventListener('click', clickHandler);
+      board.removeEventListener('mousedown', downHandler);
+      board.removeEventListener('mouseup', upHandler);
+      board.removeEventListener('mousemove', moveHandler);
     };
   }, [boardLoaded, enhancedArticleManage]);
 
