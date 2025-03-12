@@ -7,12 +7,13 @@ import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
   $toggleEnable,
+  $toggleContextMenu,
   $setDownloadMethod,
+  $toggleStartWithZero,
   $setFileName,
   $setZipName,
   $setZipImageName,
   $setZipExtension,
-  $toggleContextMenu,
 } from '../slice';
 import FormatTextFieldRow from './FormatTextFieldRow';
 
@@ -21,6 +22,7 @@ const View = forwardRef((_props, ref) => {
     enabled,
     contextMenuEnabled,
     downloadMethod,
+    startWithZero,
     fileName,
     zipName,
     zipExtension,
@@ -61,6 +63,13 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle2">저장될 이름 설정</Typography>
       <Paper>
         <List disablePadding>
+          <SwitchRow
+            divider
+            primary="숫자 0부터 사용"
+            secondary="%num% 변수 사용 시 0부터 카운트 됩니다"
+            value={startWithZero}
+            action={$toggleStartWithZero}
+          />
           <FormatTextFieldRow
             divider
             primary="우클릭 저장 시 이미지 이름"
