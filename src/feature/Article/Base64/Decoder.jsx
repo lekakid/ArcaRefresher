@@ -73,6 +73,9 @@ function tryDecodeAll(html, max = 200) {
         encoded = `${encoded}${'='.repeat(c)}`;
       }
       const decodedString = decode(encoded);
+      if (decodedString.indexOf('eval(') > -1) {
+        throw new Error('인젝션 공격 감지');
+      }
       result = result.replace(
         regex,
         decodedString.indexOf('http') > -1
