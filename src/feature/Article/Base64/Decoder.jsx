@@ -17,11 +17,13 @@ import Info from './FeatureInfo';
 
 const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
-  url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
+  candidateUrl:
+    /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
   includeBreakLine:
     /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)+[A-Za-z0-9+/]+)={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
+  url: /^(https?:\/\/)([\da-z.-]+\.[a-z.]{2,6}|[\d.]+)([/:?=&#]{1}[\da-z.-]+)*\/?$/,
 };
 
 const URLRegex =
@@ -56,11 +58,12 @@ function tryDecodeAll(html, max = 200) {
     result = result.replace(breaklined, concatnated);
   }
 
-  const regex = new RegExp(Base64Regex.url);
+  const candidateRegex = new RegExp(Base64Regex.candidateUrl);
+  const urlRegex = new RegExp(Base64Regex.url);
   for (
-    let count = 0, encoded = regex.exec(result)?.[0];
+    let count = 0, encoded = candidateRegex.exec(result)?.[0];
     count <= max && encoded;
-    count += 1, encoded = regex.exec(result)?.[0]
+    count += 1, encoded = candidateRegex.exec(result)?.[0]
   ) {
     if (count === max) {
       console.warn(`[tryDecodeAll] 복호화 시도가 ${max}번을 넘었습니다.`);
@@ -73,21 +76,23 @@ function tryDecodeAll(html, max = 200) {
         encoded = `${encoded}${'='.repeat(c)}`;
       }
       const decodedString = decode(encoded);
-      if (decodedString.indexOf('eval(') > -1) {
-        throw new Error('인젝션 공격 감지');
-      }
       const urlList = decodedString
-        .split('http')
-        .reduce((list, i) => {
-          if (i !== '') list.push(i);
-          return list;
-        }, [])
-        .map(
-          (i) =>
-            `<a href="http${i}" class="base64" target="_blank" rel="noopener noreferrer">http${i}</a>`,
-        );
+        .split(/\shttp/)
+        .map((i, index) => (index > 0 ? `http${i.trim()}` : i.trim()))
+        .map((i) => {
+          if (urlRegex.test(i)) {
+            return `<a href="${i}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
+          }
 
-      result = result.replace(regex, urlList.join('<br>'));
+          return `${i
+            .replace(/</g, '&lt;')
+            .replace(
+              />/g,
+              '&gt;',
+            )} <span style="color: red; font-weight: 700;">(⚠️ URL 형식에 맞지 않음)</span>`;
+        });
+
+      result = result.replace(candidateRegex, urlList.join('<br>'));
     } catch (error) {
       console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
       break;
