@@ -19,7 +19,7 @@ const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
   url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
   includeBreakLine:
-    /(aHR0|YUhS)([A-Za-z0-9+/]*(<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n))+[A-Za-z0-9+/]*={0,2}/,
+    /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)+[A-Za-z0-9+/]+)={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
 };
@@ -73,12 +73,21 @@ function tryDecodeAll(html, max = 200) {
         encoded = `${encoded}${'='.repeat(c)}`;
       }
       const decodedString = decode(encoded);
-      result = result.replace(
-        regex,
-        decodedString.indexOf('http') > -1
-          ? `<a href=${decodedString} class="base64" target="_blank" rel="noopener noreferrer">${decodedString}</a>`
-          : decodedString,
-      );
+      if (decodedString.indexOf('eval(') > -1) {
+        throw new Error('인젝션 공격 감지');
+      }
+      const urlList = decodedString
+        .split('http')
+        .reduce((list, i) => {
+          if (i !== '') list.push(i);
+          return list;
+        }, [])
+        .map(
+          (i) =>
+            `<a href="http${i}" class="base64" target="_blank" rel="noopener noreferrer">http${i}</a>`,
+        );
+
+      result = result.replace(regex, urlList.join('<br>'));
     } catch (error) {
       console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
       break;

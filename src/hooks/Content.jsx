@@ -15,7 +15,7 @@ import {
   EMOTICON_TITLE,
   NAVIGATION_LOADED,
 } from 'core/selector';
-import { convertImgToAlt } from 'func/emoji';
+import { serializeText } from 'func/emoji';
 import { ArcaUser } from 'func/user';
 
 import { useLoadChecker } from './LoadChecker';
@@ -163,10 +163,7 @@ export function ContentCollector() {
 
     const category =
       titleElement?.querySelector('.badge')?.textContent || '일반';
-    const title =
-      convertImgToAlt([...(titleElement?.childNodes || [])].slice(2)) ||
-      titleElement.textContent.trim() ||
-      '제목 없음';
+    const title = serializeText(titleElement) || '제목 없음';
     const author = user.toString() || '익명';
     const datetime = new Date(
       timeElement?.getAttribute('datetime') || Date.now(),

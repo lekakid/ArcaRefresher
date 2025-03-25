@@ -26,9 +26,8 @@ import Info from './FeatureInfo';
 function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
-  const { downloadMethod, zipImageName, zipName, zipExtension } = useSelector(
-    (state) => state[Info.id].storage,
-  );
+  const { downloadMethod, startWithZero, zipImageName, zipName, zipExtension } =
+    useSelector((state) => state[Info.id].storage);
   const { open } = useSelector((state) => state[Info.id]);
   const data = useMemo(() => {
     const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
@@ -141,7 +140,7 @@ function DownloadDialog() {
       return message;
     };
 
-    let count = 1;
+    let count = startWithZero ? 0 : 1;
     const dupCount = {};
     const myReadable = new ReadableStream({
       start() {
@@ -207,6 +206,7 @@ function DownloadDialog() {
     selection,
     zipName,
     contentInfo,
+    startWithZero,
     zipExtension,
     zipImageName,
     downloadMethod,

@@ -205,6 +205,7 @@ const View = forwardRef((_props, ref) => {
           />
           <Collapse in={!muteAllEmot}>
             <DataGridRow
+              divider
               primary="뮤트한 아카콘"
               columns={columns}
               rows={emotRows}
@@ -212,7 +213,6 @@ const View = forwardRef((_props, ref) => {
               onChange={handleMutedEmotChange}
             />
           </Collapse>
-
           <ListItem>
             <ListItemText>카테고리 설정</ListItemText>
           </ListItem>

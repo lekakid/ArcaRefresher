@@ -7,6 +7,7 @@ const defaultStorage = {
   enabled: true,
   contextMenuEnabled: true,
   downloadMethod: 'fetch',
+  startWithZero: false,
   fileName: '%title%',
   zipName: '%title%',
   zipExtension: 'zip',
@@ -33,6 +34,9 @@ export const slice = createSlice({
       state.storage.downloadMethod = action.payload;
     },
     // 파일 포멧
+    $toggleStartWithZero(state) {
+      state.storage.startWithZero = !state.storage.startWithZero;
+    },
     $setFileName(state, action) {
       state.storage.fileName = action.payload;
     },
@@ -56,6 +60,7 @@ export const {
   $toggleEnable,
   $toggleContextMenu,
   $setDownloadMethod,
+  $toggleStartWithZero,
   $setFileName,
   $setZipName,
   $setZipExtension,
