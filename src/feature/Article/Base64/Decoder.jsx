@@ -76,12 +76,18 @@ function tryDecodeAll(html, max = 200) {
       if (decodedString.indexOf('eval(') > -1) {
         throw new Error('인젝션 공격 감지');
       }
-      result = result.replace(
-        regex,
-        decodedString.indexOf('http') > -1
-          ? `<a href=${decodedString} class="base64" target="_blank" rel="noopener noreferrer">${decodedString}</a>`
-          : decodedString,
-      );
+      const urlList = decodedString
+        .split('http')
+        .reduce((list, i) => {
+          if (i !== '') list.push(i);
+          return list;
+        }, [])
+        .map(
+          (i) =>
+            `<a href="http${i}" class="base64" target="_blank" rel="noopener noreferrer">http${i}</a>`,
+        );
+
+      result = result.replace(regex, urlList.join('<br>'));
     } catch (error) {
       console.warn(`[tryDecodeAll] 복호화 오류\n원문: ${encoded}`, error);
       break;
