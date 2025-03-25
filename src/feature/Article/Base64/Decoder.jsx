@@ -19,7 +19,7 @@ const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
   url: /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
   includeBreakLine:
-    /(aHR0|YUhS)([A-Za-z0-9+/]*(<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n))+[A-Za-z0-9+/]*={0,2}/,
+    /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)+[A-Za-z0-9+/]+)={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
 };
