@@ -16,7 +16,7 @@ function ContextMenu({ target, closeMenu }) {
   const data = useContextMenu(
     {
       key: Info.id,
-      selector: 'a.base64',
+      selector: '.base64',
       dataExtractor: () => target,
     },
     [target],
