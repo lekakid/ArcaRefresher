@@ -20,7 +20,7 @@ const Base64Regex = {
   candidateUrl:
     /(aHR0|YUhS)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=?|[A-Za-z0-9+/]{2}(==)?)?/,
   includeBreakLine:
-    /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)+[A-Za-z0-9+/]+)={0,2}/,
+    /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)[A-Za-z0-9+/]+)+={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
   url: /^(https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
@@ -77,16 +77,19 @@ function tryDecodeAll(html, max = 200) {
         .split(/\shttp/)
         .map((i, index) => (index > 0 ? `http${i.trim()}` : i.trim()))
         .map((i) => {
+          if (candidateRegex.test(i)) {
+            return i;
+          }
           if (urlRegex.test(i)) {
             return `<a href="${i}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
           }
 
-          return `${i
+          return `<p class="base64">${i
             .replace(/</g, '&lt;')
             .replace(
               />/g,
               '&gt;',
-            )} <span style="color: red; font-weight: 700;">(⚠️ URL 형식에 맞지 않음)</span>`;
+            )} <span style="color: red; font-weight: 700;">(⚠️ URL 형식에 맞지 않음)</span></p>`;
         });
 
       result = result.replace(candidateRegex, urlList.join('<br>'));
