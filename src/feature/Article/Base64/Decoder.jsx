@@ -23,11 +23,8 @@ const Base64Regex = {
     /(aHR0|YUhS)[A-Za-z0-9+/]*((<\/[a-z]+>(<br>)?<[a-z]+( [a-z]+(="[^"]*"))*>|<br>|\n)+[A-Za-z0-9+/]+)={0,2}/,
   excludePaddingChar:
     /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}|[A-Za-z0-9+/]{2})?$/,
-  url: /^(https?:\/\/)([\da-z.-]+\.[a-z.]{2,6}|[\d.]+)([/:?=&#]{1}[\da-z.-]+)*\/?$/,
+  url: /^(https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
 };
-
-const URLRegex =
-  /^(https?:\/\/(www\.)?)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
 
 const LABEL = {
   fix: '패딩 부호(=)가 빠진것 같습니다. 복원 후 복호화하시겠습니까?',
@@ -175,7 +172,7 @@ function Decoder() {
       }));
     }
 
-    if (URLRegex.test(decoded)) {
+    if (Base64Regex.url.test(decoded)) {
       setDecodeResult((prev) => ({
         ...prev,
         text: decoded,
