@@ -155,7 +155,11 @@ function BoardMuter() {
     images.forEach((e) => {
       const url = e.matches('img')
         ? trimEmotURL(e.src)
-        : trimEmotURL(e.textContent.match(/(\/\/.+)type=list/g)[0]);
+        : trimEmotURL(
+            e.textContent.match(
+              /(\/\/.+)&amp;key=[A-Za-z0-9-_]{22}(&amp;type=list)?/g,
+            )[0],
+          );
 
       if (filter.emoticon.url[url]) {
         e.parentNode.classList.add('filtered-emoticon');
