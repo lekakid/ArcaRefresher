@@ -153,16 +153,25 @@ function BoardMuter() {
       '.vrow-preview noscript, .vrow-preview img',
     );
     images.forEach((e) => {
-      const url = e.matches('img')
-        ? trimEmotURL(e.src)
-        : trimEmotURL(
-            e.textContent.match(
-              /(\/\/.+)&amp;key=[A-Za-z0-9-_]{22}(&amp;type=list)?/g,
-            )[0],
-          );
+      try {
+        const url = e.matches('img')
+          ? trimEmotURL(e.src)
+          : trimEmotURL(
+              e.textContent.match(
+                /(\/\/.+)&amp;key=[A-Za-z0-9-_]{22}(&amp;type=list)?/g,
+              )[0],
+            );
 
-      if (filter.emoticon.url[url]) {
-        e.parentNode.classList.add('filtered-emoticon');
+        if (filter.emoticon.url[url]) {
+          e.parentNode.classList.add('filtered-emoticon');
+        }
+      } catch (error) {
+        console.warn(
+          '[Mute] 처리가 안되는 게시물 미리보기\n',
+          e.matches('img')
+            ? `IMG: ${e.src.trim()}`
+            : `NOSCRIPT: ${e.textContent.trim()}`,
+        );
       }
     });
   }, [controlTarget, filter.emoticon]);
