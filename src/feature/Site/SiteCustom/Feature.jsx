@@ -50,6 +50,20 @@ function SearchBarStyles({ value }) {
   );
 }
 
+function UserNameStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        '.body .username': {
+          display: 'none !important',
+        },
+      }}
+    />
+  );
+}
+
 function RecentVisitStyles({ value }) {
   let styles;
   switch (value) {
@@ -234,6 +248,7 @@ export default function SiteCustom() {
     notifyPosition,
     topNews,
     searchBar,
+    userName,
     recentVisit,
     sideContents,
     sideBests,
@@ -296,6 +311,7 @@ export default function SiteCustom() {
       <NotifyPositionStyles value={notifyPosition} />
       <TopNewsStyles value={topNews} />
       <SearchBarStyles value={searchBar} />
+      <UserNameStyles value={userName} />
       <RecentVisitStyles value={recentVisit} />
       <SideMenuStyles value={sideMenu} />
       <SideContentsStyles value={sideContents} />

@@ -17,6 +17,7 @@ const defaultStorage = {
   notifyPosition: 'right',
   topNews: true,
   searchBar: true,
+  userName: true,
   recentVisit: 'afterAd',
   sideMenu: true,
   sideContents: true,
@@ -81,6 +82,9 @@ export const slice = createSlice({
     $toggleSearchBar(state) {
       state.storage.searchBar = !state.storage.searchBar;
     },
+    $toggleUserName(state) {
+      state.storage.userName = !state.storage.userName;
+    },
     $setRecentVisit(state, action) {
       state.storage.recentVisit = action.payload;
     },
@@ -121,6 +125,7 @@ export const {
   $setNotifyPosition,
   $toggleTopNews,
   $toggleSearchBar,
+  $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,

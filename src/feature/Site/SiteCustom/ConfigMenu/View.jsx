@@ -21,6 +21,7 @@ import {
   $setNotifyPosition,
   $toggleTopNews,
   $toggleSearchBar,
+  $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,
@@ -46,6 +47,7 @@ const View = forwardRef((_props, ref) => {
     notifyPosition,
     topNews,
     searchBar,
+    userName,
     recentVisit,
     sideContents,
     sideBests,
@@ -94,6 +96,12 @@ const View = forwardRef((_props, ref) => {
             primary="검색창 표시"
             value={searchBar}
             action={$toggleSearchBar}
+          />
+          <SwitchRow
+            divider
+            primary="로그인한 계정의 닉네임"
+            value={userName}
+            action={$toggleUserName}
           />
           <SelectRow
             divider
