@@ -68,14 +68,18 @@ function MemoList() {
     if (page > 1) return;
     if (isKeywordSearch) return;
 
+    const dupTable = {};
+
     [...document.querySelectorAll(USER_INFO_WITHOUT_NOTICE)].forEach((e) => {
       const user = new ArcaUser(e);
       const { nick } = user;
       const id = user.toUID();
 
-      if (memo[id] && memo[id].nick !== nick) {
+      if (!dupTable[id] && memo[id] && memo[id].nick !== nick) {
         dispatch($updateMemoNick({ user: id, nick }));
       }
+      // 이미 갱신처리한 이용자의 갱신 처리 방지
+      dupTable[id] = true;
     });
   }, [loaded, memo, dispatch]);
 
