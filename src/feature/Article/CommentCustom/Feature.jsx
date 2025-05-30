@@ -157,14 +157,17 @@ export default function CommentCustom() {
   // 댓글 키 입력 변경
   useEffect(() => {
     if (!comment) return undefined;
-    if (!alternativeSubmitKey) return undefined;
 
     const handler = (e) => {
       if (!e.target.matches('[name="content"]')) return;
 
       if (e.key === 'Enter') {
         e.stopPropagation();
-        if (e[alternativeSubmitKey]) {
+        if (!alternativeSubmitKey && !e.shiftKey) {
+          e.preventDefault();
+          e.target.closest('form').querySelector('[type="submit"]').click();
+        }
+        if (alternativeSubmitKey && e[alternativeSubmitKey]) {
           e.preventDefault();
           e.target.closest('form').querySelector('[type="submit"]').click();
         }
