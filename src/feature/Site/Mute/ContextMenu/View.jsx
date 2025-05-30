@@ -58,7 +58,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const setSnack = useSnackbarAlert();
   const emotSelector =
-    '[class$="emoticon"], .emoticon-wrapper > span, .article-body a.muted';
+    '[class$="emoticon"], .emoticon-wrapper > span, .article-body span.emoticon-wrapper.muted';
   const categorySelector = '.board-category .item a';
   const data = useContextMenu(
     {
@@ -84,12 +84,11 @@ function ContextMenu({ target, closeMenu }) {
         if (target.matches(emotSelector)) {
           let emotElement = target;
           let muted = false;
-          if (target.matches('span.muted')) {
-            emotElement = target.parentElement.querySelector('.emoticon');
-            muted = true;
-          }
-          if (target.matches('a.muted')) {
+          if (target.matches('span.emoticon-wrapper.muted')) {
             emotElement = target.querySelector('[class$="emoticon"]');
+            muted = true;
+          } else if (target.matches('span.muted')) {
+            emotElement = target.parentElement.querySelector('.emoticon');
             muted = true;
           }
           return {
