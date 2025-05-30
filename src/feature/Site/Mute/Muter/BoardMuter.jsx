@@ -22,6 +22,9 @@ const boardMuteStyles = (
         '& .frontend-header': {
           display: 'none !important',
         },
+        '& .filtered': {
+          backgroundColor: 'var(--color-bg-focus)',
+        },
         '& .list-table.show-filtered-category .filtered-category': {
           display: 'flex !important',
         },
