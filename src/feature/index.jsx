@@ -1,3 +1,5 @@
+import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
+
 const featureContext = require.context(
   'feature/',
   true,
@@ -10,9 +12,15 @@ const featureWrapperChildren = featureContext
 function FeatureWrapper() {
   return (
     <>
-      {featureWrapperChildren.map(({ Component, key }) => (
-        <Component key={key} />
-      ))}
+      {featureWrapperChildren.map(({ Component, key }) => {
+        const [, , name] = key.split('/');
+
+        return (
+          <ModuleLoadBoundary key={key} name={name}>
+            <Component />
+          </ModuleLoadBoundary>
+        );
+      })}
     </>
   );
 }
