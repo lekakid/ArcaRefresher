@@ -29,6 +29,45 @@ export default [
     },
   },
   {
+    action: 'prevCategory',
+    label: '이전 카테고리',
+    active: 'article|board',
+    defaultKey: 'KeyC',
+    callback() {
+      const categoryUrlList = [
+        ...document.querySelectorAll('.board-category .item a'),
+      ].map((e) => e.href);
+      const currentCategory = document.querySelector(
+        '.board-category .item a.active',
+      ).href;
+
+      const targeIndex =
+        (categoryUrlList.length +
+          categoryUrlList.indexOf(currentCategory) -
+          1) %
+        categoryUrlList.length;
+      window.location.href = categoryUrlList[targeIndex];
+    },
+  },
+  {
+    action: 'nextCategory',
+    label: '다음 카테고리',
+    active: 'article|board',
+    defaultKey: 'KeyV',
+    callback() {
+      const categoryUrlList = [
+        ...document.querySelectorAll('.board-category .item a'),
+      ].map((e) => e.href);
+      const currentCategory = document.querySelector(
+        '.board-category .item a.active',
+      ).href;
+
+      const targeIndex =
+        (categoryUrlList.indexOf(currentCategory) + 1) % categoryUrlList.length;
+      window.location.href = categoryUrlList[targeIndex];
+    },
+  },
+  {
     action: 'prevChannel',
     label: '이전 구독 채널',
     active: 'article|board',
