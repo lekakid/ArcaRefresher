@@ -95,8 +95,10 @@ function ContextMenu({ menuList }) {
       disableRestoreFocus
       anchorReference="anchorPosition"
       anchorPosition={{ top, left }}
-      MenuListProps={{ disablePadding: true }}
-      TransitionProps={{ timeout: { enter: 150, exit: 0 } }}
+      slotProps={{
+        list: { disablePadding: true },
+      }}
+      transitionDuration={{ enter: 150, exit: 0 }}
       open={!!mousePos}
       onClose={handleClose}
     >

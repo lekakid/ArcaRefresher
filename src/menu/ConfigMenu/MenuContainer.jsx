@@ -206,16 +206,18 @@ function MenuContainer({ groupList, menuList }) {
         <Stack direction="row" sx={{ minHeight: 0, height: '100%' }}>
           <Drawer
             variant={mobile ? 'temporary' : 'permanent'}
-            PaperProps={{
-              sx: {
-                position: 'relative',
-                width: 240,
-                sm: {
-                  zIndex: (theme) => theme.zIndex.appBar - 1,
+            ModalProps={{ disablePortal: true, keepMounted: true }}
+            slotProps={{
+              paper: {
+                sx: {
+                  position: 'relative',
+                  width: 240,
+                  sm: {
+                    zIndex: (theme) => theme.zIndex.appBar - 1,
+                  },
                 },
               },
             }}
-            ModalProps={{ disablePortal: true, keepMounted: true }}
             open={!mobile || drawer}
             onClose={handleDrawerToggle}
           >

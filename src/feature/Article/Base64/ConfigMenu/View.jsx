@@ -7,7 +7,6 @@ import {
   Box,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   Stack,
 } from '@mui/material';
 
@@ -58,15 +57,16 @@ const View = forwardRef((_props, ref) => {
             <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <List disablePadding>
-                  <ListItem>
-                    <ListItemText primary="인코딩" />
-                    <ListItemSecondaryAction>
+                  <ListItem
+                    secondaryAction={
                       <Stack direction="row">
                         <KeyIcon title="Ctrl" />
                         +
                         <KeyIcon title="Space" />
                       </Stack>
-                    </ListItemSecondaryAction>
+                    }
+                  >
+                    <ListItemText primary="인코딩" />
                   </ListItem>
                 </List>
               </Paper>

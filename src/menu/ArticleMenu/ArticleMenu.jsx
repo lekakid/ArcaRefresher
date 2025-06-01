@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { GlobalStyles, Grid, Portal, Typography } from '@mui/material';
+import { GlobalStyles, Grid2 as Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEADER_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -42,10 +42,13 @@ function ArticleMenu({ children }) {
       <EditMenuStyles />
       <Portal container={container}>
         <Grid container alignItems="center">
-          <Grid item xs={12} sm={3} sx={{ paddingLeft: 1 }}>
+          <Grid size={{ xs: 12, sm: 3 }} sx={{ paddingLeft: 1 }}>
             <Typography variant="subtitle1">리프레셔 메뉴</Typography>
           </Grid>
-          <Grid item xs={12} sm={9} sx={{ paddingRight: 1, textAlign: 'end' }}>
+          <Grid
+            size={{ xs: 12, sm: 9 }}
+            sx={{ paddingRight: 1, textAlign: 'end' }}
+          >
             {children}
           </Grid>
         </Grid>

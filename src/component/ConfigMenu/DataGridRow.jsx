@@ -51,10 +51,11 @@ function NoRowsOverlay({ noRowsText }) {
 }
 
 function TableView({
-  rows,
-  columns,
   textEditable,
   noRowsText,
+  columns,
+  columnVisibilityModel,
+  rows,
   onModeChange,
   onChange,
 }) {
@@ -80,22 +81,21 @@ function TableView({
 
   return (
     <DataGrid
-      rows={rows}
       columns={columns}
-      autoHeight
+      columnVisibilityModel={columnVisibilityModel}
       rowHeight={40}
       pagination
       checkboxSelection
       disableColumnMenu
-      disableSelectionOnClick
+      disableRowSelectionOnClick
       sx={{
         width: '100%',
       }}
-      components={{
-        Toolbar,
-        NoRowsOverlay,
+      slots={{
+        toolbar: Toolbar,
+        noRowsOverlay: NoRowsOverlay,
       }}
-      componentsProps={{
+      slotProps={{
         toolbar: {
           textEditable,
           removeDisabled: !(selection.length > 0),
@@ -108,12 +108,13 @@ function TableView({
       }}
       initialState={{
         pagination: {
-          pageSize: 10,
+          paginationModel: { pageSize: 10 },
         },
       }}
-      rowsPerPageOptions={[10, 25, 50, 100]}
+      pageSizeOptions={[10, 25, 50, 100]}
+      rows={rows}
       onCellEditCommit={handleCellEdit}
-      onSelectionModelChange={handleSelection}
+      onRowSelectionModelChange={handleSelection}
     />
   );
 }
@@ -159,7 +160,7 @@ function TextView({ rows, columns, onChange, onModeChange }) {
       <Divider />
       <InputBase
         fullWidth
-        componentsProps={{ input: { sx: { padding: '8.5px 14px' } } }}
+        slotProps={{ input: { sx: { padding: '8.5px 14px' } } }}
         multiline
         minRows={6}
         maxRows={6}
@@ -181,6 +182,7 @@ const DataGridRow = forwardRef(
       secondary,
       rows,
       columns,
+      columnVisibilityModel,
       textEditable,
       noRowsText,
       onChange,
@@ -212,6 +214,7 @@ const DataGridRow = forwardRef(
           <TableView
             rows={rows}
             columns={columns}
+            columnVisibilityModel={columnVisibilityModel}
             textEditable={textEditable}
             noRowsText={noRowsText}
             onModeChange={handleMode}
@@ -230,6 +233,7 @@ const rowPropTypes = {
   secondary: PropTypes.node,
   rows: PropTypes.array,
   columns: PropTypes.array,
+  columnVisibilityModel: PropTypes.object,
   textEditable: PropTypes.bool,
   noRowsText: PropTypes.string,
   onChange: PropTypes.func,

@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
   Tooltip,
@@ -35,12 +34,13 @@ import Info from '../FeatureInfo';
 
 function KeyRow({ divider, inputKey, children, onClick }) {
   return (
-    <ListItem disablePadding divider={divider}>
+    <ListItem
+      disablePadding
+      divider={divider}
+      secondaryAction={<KeyIcon title={inputKey} />}
+    >
       <ListItemButton onClick={onClick}>
         <ListItemText>{children}</ListItemText>
-        <ListItemSecondaryAction>
-          <KeyIcon title={inputKey} />
-        </ListItemSecondaryAction>
       </ListItemButton>
     </ListItem>
   );
@@ -160,15 +160,16 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle2">키 설정</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem>
-            <ListItemText>단축키 목록</ListItemText>
-            <ListItemSecondaryAction>
+          <ListItem
+            secondaryAction={
               <Tooltip title="초기화">
                 <IconButton onClick={handleReset} size="large">
                   <Refresh />
                 </IconButton>
               </Tooltip>
-            </ListItemSecondaryAction>
+            }
+          >
+            <ListItemText>단축키 목록</ListItemText>
           </ListItem>
           <ListItem>
             <Paper variant="outlined" sx={{ width: '100%' }}>

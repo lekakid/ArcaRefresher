@@ -12,7 +12,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
   Menu,
   MenuItem,
@@ -83,7 +82,7 @@ function ChannelTitleRenderer({ id, value }) {
   return (
     <>
       <Stack
-        sx={{ width: '100%' }}
+        sx={{ width: '100%', height: '100%' }}
         direction="row"
         alignItems="center"
         justifyContent="space-between"
@@ -115,15 +114,18 @@ function ChannelTitleRenderer({ id, value }) {
         <DialogContent>
           <Paper variant="outlined">
             <List disablePadding>
-              <ListItem divider disablePadding>
+              <ListItem
+                divider
+                disablePadding
+                secondaryAction={
+                  <Switch
+                    checked={channelInfoTable[id]?.best || false}
+                    onClick={handleBestToggle}
+                  />
+                }
+              >
                 <ListItemButton onClick={handleBestToggle}>
                   <ListItemText primary="개념글 페이지로" />
-                  <ListItemSecondaryAction>
-                    <Switch
-                      checked={channelInfoTable[id]?.best || false}
-                      onClick={handleBestToggle}
-                    />
-                  </ListItemSecondaryAction>
                 </ListItemButton>
               </ListItem>
               <ListItem>
@@ -177,7 +179,12 @@ function GroupRenderer({ id, value }) {
   const addibleGroups = groupList.filter((group) => !value?.includes(group));
 
   return (
-    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+    <Stack
+      sx={{ width: '100%', height: '100%' }}
+      direction="row"
+      alignItems="center"
+      gap={1}
+    >
       {value?.map((group) => (
         <Chip key={group} label={group} onDelete={handleRemove(group)} />
       ))}
@@ -442,16 +449,19 @@ function SubsChannelManager({ subs, open, onClose }) {
             </Stack>
           </Stack>
           <DataGrid
-            autoHeight
             disableColumnMenu
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             checkboxSelection
-            selectionModel={selection}
-            onSelectionModelChange={(s) => setSelection(s)}
-            rowsPerPageOptions={[10]}
-            pageSize={10}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[10]}
             columns={columns}
             rows={rows}
+            rowSelectionModel={selection}
+            onRowSelectionModelChange={(s) => setSelection(s)}
             onCellEditCommit={handleCellEdit}
           />
         </DialogContent>

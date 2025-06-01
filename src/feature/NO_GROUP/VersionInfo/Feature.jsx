@@ -143,11 +143,11 @@ export default function VersionInfo() {
   return (
     <Snackbar
       anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+      slotProps={{
+        clickAwayListener() {},
+      }}
       open={noti.open}
       message={message}
-      ClickAwayListenerProps={{
-        mouseEvent: false,
-      }}
       action={action}
     />
   );

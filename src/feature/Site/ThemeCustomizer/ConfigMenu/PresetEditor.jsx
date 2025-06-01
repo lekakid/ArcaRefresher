@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -44,12 +43,12 @@ const PresetEditor = forwardRef(
                 groupIndex < groupData.length - 1 ||
                 (groupIndex === groupData.length - 1 && openGroup[groupKey])
               }
+              secondaryAction={
+                openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />
+              }
             >
               <ListItemButton onClick={handleOpen(groupKey)}>
                 <ListItemText>{text}</ListItemText>
-                <ListItemSecondaryAction>
-                  {openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />}
-                </ListItemSecondaryAction>
               </ListItemButton>
             </ListItem>
             <Collapse in={openGroup[groupKey]}>
@@ -68,9 +67,7 @@ const PresetEditor = forwardRef(
                       groupIndex < groupData.length - 1 ||
                       colorIndex < rows.length - 1
                     }
-                  >
-                    <ListItemText primary={primary} secondary={secondary} />
-                    <ListItemSecondaryAction>
+                    secondaryAction={
                       <ColorPicker
                         disabled={disabled}
                         defaultColor={defaultPreset[key]}
@@ -79,7 +76,9 @@ const PresetEditor = forwardRef(
                         onClose={() => setOpacity(1)}
                         onChange={(color) => handleChange(key, color)}
                       />
-                    </ListItemSecondaryAction>
+                    }
+                  >
+                    <ListItemText primary={primary} secondary={secondary} />
                   </ListItem>
                 ))}
               </List>

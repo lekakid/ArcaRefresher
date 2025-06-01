@@ -1,6 +1,13 @@
 import { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Grid2 as Grid,
+  IconButton,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import {
   FormatBold,
   FormatStrikethrough,
@@ -76,11 +83,11 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   return (
     <>
       {divider && (
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Divider />
         </Grid>
       )}
-      <Grid item sm={6} xs={12}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <Box
           sx={{
             display: 'flex',
@@ -97,7 +104,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
           <span className="title">게시물 제목</span>
         </Box>
       </Grid>
-      <Grid item sm={6} xs={12}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <Stack direction="row" sx={{ alignItems: 'center' }}>
           <Tooltip title="카테고리 색">
             <span>

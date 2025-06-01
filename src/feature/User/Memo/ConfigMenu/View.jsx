@@ -19,7 +19,7 @@ import { FOREGROUND, open } from 'func/window';
 import Info from '../FeatureInfo';
 import { $setContextRange, $setMemoList, $setVariant } from '../slice';
 
-function userRenderrer(params) {
+function userRenderer(params) {
   let uid = params.row.id;
   let hideBtn = false;
   if (uid.includes('#')) {
@@ -32,7 +32,7 @@ function userRenderrer(params) {
 
   return (
     <Stack
-      sx={{ width: '100%' }}
+      sx={{ width: '100%', height: '100%' }}
       direction="row"
       justifyContent="space-between"
       alignItems="center"
@@ -63,12 +63,19 @@ const columns = [
     field: 'id',
     headerName: '이용자',
     flex: 2,
-    renderCell: userRenderrer,
+    renderCell: userRenderer,
   },
   { field: 'msg', headerName: '메모 메세지', flex: 2, editable: true },
   { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
-  { field: 'nick', hide: true },
+  { field: 'nick' },
 ];
+
+const columnVisibilityModel = {
+  id: true,
+  msg: true,
+  color: true,
+  nick: false,
+};
 
 const memoRowsSelector = createSelector(
   (state) => state[Info.id].storage.memo,
@@ -228,9 +235,10 @@ const View = forwardRef((_props, ref) => {
           </BaseRow>
           <DataGridRow
             primary="저장된 메모"
-            columns={columns}
-            rows={memoRows}
             textEditable
+            rows={memoRows}
+            columns={columns}
+            columnVisibilityModel={columnVisibilityModel}
             noRowsText="저장된 메모가 없습니다."
             onChange={handleMemoRowsChange}
           />

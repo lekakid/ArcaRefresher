@@ -76,9 +76,11 @@ const FormatTextFieldRow = forwardRef(
           <TextField
             fullWidth
             inputRef={inputRef}
-            inputProps={{
-              sx: {
-                paddingRight: 4.5,
+            slotProps={{
+              htmlInput: {
+                sx: {
+                  paddingRight: 4.5,
+                },
               },
             }}
             value={value}
