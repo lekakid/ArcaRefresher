@@ -23,11 +23,11 @@ import { KeyIcon } from 'component';
 import { SwitchRow } from 'component/ConfigMenu';
 
 import {
-  $resetKeyMap,
   $setKey,
+  $resetKey,
+  $resetKeyMap,
   $toggleCompatibilityMode,
   $toggleEnabled,
-  setWaitKeyInput,
 } from '../slice';
 import actionTable from '../actionTable';
 import keyFilter from '../keyFilter';
@@ -85,23 +85,29 @@ const View = forwardRef((_props, ref) => {
     (state) => state[Info.id].storage,
   );
   const keyMap = useSelector(keyMapSelector);
-  const { waitKeyInput } = useSelector((state) => state[Info.id]);
+  const [shortKeyAction, setShortKeyAction] = useState(undefined);
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
-    if (!waitKeyInput) return undefined;
+    if (!shortKeyAction) return undefined;
 
     const keyInputEvent = (e) => {
       e.stopPropagation();
 
       if (e.code === 'Escape') {
-        dispatch(setWaitKeyInput(undefined));
+        setShortKeyAction(undefined);
+        return;
+      }
+
+      if (e.code === 'Backspace') {
+        dispatch($resetKey({ action: shortKeyAction }));
+        setShortKeyAction(undefined);
         return;
       }
 
       if (e.code === 'Delete') {
-        dispatch($setKey({ action: waitKeyInput, key: 'DISABLED' }));
-        dispatch(setWaitKeyInput(undefined));
+        dispatch($setKey({ action: shortKeyAction, key: 'DISABLED' }));
+        setShortKeyAction(undefined);
         return;
       }
 
@@ -110,20 +116,20 @@ const View = forwardRef((_props, ref) => {
         return;
       }
 
-      dispatch($setKey({ action: waitKeyInput, key: e.code }));
-      dispatch(setWaitKeyInput(undefined));
+      dispatch($setKey({ action: shortKeyAction, key: e.code }));
+      setShortKeyAction(undefined);
       setError(undefined);
     };
     document.addEventListener('keyup', keyInputEvent, true);
     return () => document.removeEventListener('keyup', keyInputEvent, true);
-  }, [waitKeyInput, dispatch]);
+  }, [shortKeyAction, dispatch]);
 
   const handleReset = () => {
     dispatch($resetKeyMap());
   };
 
   const handleClick = (action) => () => {
-    dispatch(setWaitKeyInput(action));
+    setShortKeyAction(action);
   };
 
   return (
@@ -184,7 +190,7 @@ const View = forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-      <Dialog open={!!waitKeyInput}>
+      <Dialog open={!!shortKeyAction}>
         <DialogTitle>키 입력 대기 중...</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -192,6 +198,9 @@ const View = forwardRef((_props, ref) => {
               키를 2개 이상 사용하는 단축키는 지원하지 않습니다
             </Typography>
             <Typography>Delete 키를 누르면 기능을 비활성화 합니다</Typography>
+            <Typography>
+              Backspace 키를 누르면 기본값으로 초기화됩니다
+            </Typography>
             <Typography>ESC 키를 눌러 키 변경을 취소합니다</Typography>
             {error && <Typography>{`🚫 ${error}`}</Typography>}
           </DialogContentText>

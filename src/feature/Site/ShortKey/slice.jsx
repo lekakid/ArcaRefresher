@@ -11,7 +11,6 @@ const defaultStorage = {
 
 const initialState = {
   storage: getValue(Info.id, defaultStorage),
-  waitKeyInput: undefined,
 };
 
 export const slice = createSlice({
@@ -35,11 +34,17 @@ export const slice = createSlice({
       }
       state.storage.keyTable.push(action.payload);
     },
+    $resetKey(state, action) {
+      const { action: updatedAction } = action.payload;
+      const exist = state.storage.keyTable.findIndex(
+        (t) => t.action === updatedAction,
+      );
+      if (exist > -1) {
+        state.storage.keyTable.splice(exist, 1);
+      }
+    },
     $resetKeyMap(state) {
       state.storage.keyTable = [];
-    },
-    setWaitKeyInput(state, action) {
-      state.waitKeyInput = action.payload;
     },
   },
 });
@@ -48,8 +53,8 @@ export const {
   $toggleEnabled,
   $toggleCompatibilityMode,
   $setKey,
+  $resetKey,
   $resetKeyMap,
-  setWaitKeyInput,
 } = slice.actions;
 
 export default slice.reducer;
