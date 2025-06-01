@@ -46,8 +46,8 @@ export default function HeaderButton() {
     <li className="nav-item dropdown">
       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <a aria-expanded="false" className="nav-link" href="#" onClick={onClick}>
-        <span className="d-inline">리프레셔 </span>
-        <span className="d-none d-sm-inline ion-gear-a" />
+        <span className="d-inline">리프레셔</span>
+        <span className="d-none d-sm-inline ml-2 ion-gear-a" />
       </a>
     </li>,
     navEl,
