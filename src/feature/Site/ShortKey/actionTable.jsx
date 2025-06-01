@@ -210,7 +210,7 @@ export default [
     action: 'scrap',
     label: '게시물 스크랩',
     active: 'article',
-    defaultKey: 'KeyV',
+    defaultKey: 'KeyB',
     callback(_e, { content, setSnack }) {
       const token = window.location.pathname.split('/');
       const articleId = token.pop();
