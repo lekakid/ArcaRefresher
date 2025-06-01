@@ -68,7 +68,7 @@ function formatKey(keyStr) {
     .replace('Decimal', '.')
     .replace('ArrowUp', '↑')
     .replace('ArrowDown', '↓')
-    .replace('ArrowLeft', 'ㅁ')
+    .replace('ArrowLeft', '←')
     .replace('ArrowRight', '→')
     .replace('DISABLED', '비활성화');
 }
