@@ -262,7 +262,8 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleCategory = useCallback(
     (type) => () => {
-      const config = category[data.id];
+      const config = category?.[data.id];
+
       dispatch(
         $setCategoryConfig({
           channel: channel.id,
@@ -330,12 +331,12 @@ function ContextMenu({ target, closeMenu }) {
   }
 
   if (data?.type === 'category') {
-    const config = category[data.id];
+    const config = category?.[data.id];
 
     return (
       <List>
         <MenuItem sx={{ opacity: '1 !important' }} dense disabled>
-          {data.label}
+          [{data.label}]
         </MenuItem>
         <MenuItem onClick={handleCategory('mutePreview')}>
           <ListItemIcon>
