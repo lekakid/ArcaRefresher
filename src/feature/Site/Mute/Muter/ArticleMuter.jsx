@@ -53,8 +53,14 @@ function ArticleMuter() {
     emotList.forEach((e) => {
       const wrapper = document.createElement('span');
       wrapper.classList.add('emoticon-wrapper');
-      e.parentElement.insertBefore(wrapper, e);
-      wrapper.appendChild(e);
+      const reference = e.parentElement.matches('a[href^="/e/"]')
+        ? e.parentElement
+        : e;
+      const parent = e.parentElement.matches('a[href^="/e/"]')
+        ? e.parentElement.parentElement
+        : e.parentElement;
+      parent.insertBefore(wrapper, reference);
+      wrapper.appendChild(reference);
     });
 
     setWrapped(true);
