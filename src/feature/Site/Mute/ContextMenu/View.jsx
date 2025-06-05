@@ -35,51 +35,45 @@ function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
 }
 
+const USER_SELECTOR = `${USER_INFO}, ${USER_MENTION}, ${BOARD_ITEMS_WITH_NOTICE}`;
+const EMOTICON_SELECTOR =
+  '.article-body .emoticon-wrapper.muted, :is(img, video)[class$="emoticon"]';
+const CATEGORY_SELECTOR = '.board-category .item a';
+
 function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { channel } = useContent();
   const { contextRange, user } = useSelector((state) => state[Info.id].storage);
   const filter = useSelector((state) => filterSelector(state, channel.id));
-  let userSelector;
-  switch (contextRange) {
-    case 'articleItem':
-      userSelector = `${BOARD_ITEMS_WITH_NOTICE}, ${USER_INFO}, ${USER_MENTION}`;
-      break;
-    case 'nickname':
-      userSelector = `${USER_INFO}, ${USER_MENTION}`;
-      break;
-    default:
-      console.warn('[Mute] contextRange 값이 올바르지 않음');
-      userSelector = `${USER_INFO}, ${USER_MENTION}`;
-      break;
-  }
 
   const setSnack = useSnackbarAlert();
-  const emotSelector =
-    '.article-body .emoticon-wrapper.muted, :is(img, video)[class$="emoticon"]';
-  const categorySelector = '.board-category .item a';
   const data = useContextMenu(
     {
       key: Info.id,
-      selector: `${userSelector}, ${emotSelector}, ${categorySelector}`,
+      selector: `${USER_SELECTOR}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
       dataExtractor: () => {
         if (!target) return undefined;
 
-        if (target.matches(userSelector)) {
+        if (target.matches(USER_SELECTOR)) {
+          if (
+            contextRange !== 'articleItem' &&
+            target.matches(BOARD_ITEMS_WITH_NOTICE)
+          )
+            return undefined;
+
           let userElement = target;
           if (target.matches('.vrow')) {
             userElement = target.querySelector('span.user-info');
           }
           if (!userElement) return undefined;
 
-          const userTmp = new ArcaUser(userElement);
-          const uid = userTmp.toUID();
+          const uid = new ArcaUser(userElement).toUID();
           const regex = makeRegex(uid);
 
           return { type: 'user', uid, regex };
         }
 
-        if (target.matches(emotSelector)) {
+        if (target.matches(EMOTICON_SELECTOR)) {
           let emoticon = target;
 
           if (target.matches('.emoticon-wrapper.muted')) {
@@ -94,7 +88,7 @@ function ContextMenu({ target, closeMenu }) {
           };
         }
 
-        if (target.matches(categorySelector)) {
+        if (target.matches(CATEGORY_SELECTOR)) {
           const id = decodeURI(
             getQuery(target.search).category || '글머리없음',
           );
@@ -110,7 +104,7 @@ function ContextMenu({ target, closeMenu }) {
         return undefined;
       },
     },
-    [target],
+    [target, contextRange],
   );
 
   const handleMuteEmotBundle = useCallback(() => {
