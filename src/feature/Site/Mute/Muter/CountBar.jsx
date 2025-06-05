@@ -6,6 +6,7 @@ import { Chip, Grid2 as Grid, Typography } from '@mui/material';
 const TypeString = {
   keyword: '키워드',
   user: '사용자',
+  emoticon: '아카콘',
   channel: '채널',
   category: '카테고리',
   deleted: '삭제됨',

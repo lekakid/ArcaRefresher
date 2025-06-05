@@ -28,6 +28,7 @@ import {
   $removeUser,
   $setCategoryConfig,
 } from '../slice';
+import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
 function makeRegex(id) {
@@ -37,11 +38,8 @@ function makeRegex(id) {
 function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { channel } = useContent();
-  const {
-    contextRange,
-    user,
-    category: { [channel.id]: category },
-  } = useSelector((state) => state[Info.id].storage);
+  const { contextRange, user } = useSelector((state) => state[Info.id].storage);
+  const filter = useSelector((state) => filterSelector(state, channel.id));
   let userSelector;
   switch (contextRange) {
     case 'articleItem':
@@ -58,7 +56,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const setSnack = useSnackbarAlert();
   const emotSelector =
-    '[class$="emoticon"], .emoticon-wrapper > span, .article-body span.emoticon-wrapper.muted';
+    '.article-body .emoticon-wrapper.muted, :is(img, video)[class$="emoticon"]';
   const categorySelector = '.board-category .item a';
   const data = useContextMenu(
     {
@@ -82,21 +80,17 @@ function ContextMenu({ target, closeMenu }) {
         }
 
         if (target.matches(emotSelector)) {
-          let emotElement = target;
-          let muted = false;
-          if (target.matches('span.emoticon-wrapper.muted')) {
-            emotElement = target.querySelector('[class$="emoticon"]');
-            muted = true;
-          } else if (target.matches('span.muted')) {
-            emotElement = target.parentElement.querySelector('.emoticon');
-            muted = true;
+          let emoticon = target;
+
+          if (target.matches('.emoticon-wrapper.muted')) {
+            emoticon = target.querySelector('[class$="emoticon"]');
           }
+
           return {
             type: 'emoticon',
-            muted,
-            bundleId: emotElement.dataset.storeId,
-            emotId: parseInt(emotElement.dataset.id, 10),
-            url: trimEmotURL(emotElement.src),
+            bundleId: emoticon.dataset.storeId,
+            emotId: parseInt(emoticon.dataset.id, 10),
+            url: trimEmotURL(emoticon.src),
           };
         }
 
@@ -262,7 +256,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleCategory = useCallback(
     (type) => () => {
-      const config = category?.[data.id];
+      const config = filter.category?.[data.id];
 
       dispatch(
         $setCategoryConfig({
@@ -276,45 +270,32 @@ function ContextMenu({ target, closeMenu }) {
       );
       closeMenu();
     },
-    [data, category, channel, dispatch, closeMenu],
+    [data, filter.category, channel, dispatch, closeMenu],
   );
 
   if (data?.type === 'emoticon') {
+    const muted =
+      filter.emoticon.bundle[data.emotId] || filter.emoticon.url[data.url];
+
     return (
-      <>
-        {!data.muted && (
-          <List>
-            <MenuItem onClick={handleMuteEmotBundle}>
-              <ListItemIcon>
-                <Block />
-              </ListItemIcon>
-              <Typography>아카콘 묶음 뮤트</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleMuteSingleEmot}>
-              <ListItemIcon>
-                <Block />
-              </ListItemIcon>
-              <Typography>이 아카콘만 뮤트</Typography>
-            </MenuItem>
-          </List>
-        )}
-        {data.muted && (
-          <List>
-            <MenuItem onClick={handleUnmuteEmotBundle}>
-              <ListItemIcon>
-                <Block />
-              </ListItemIcon>
-              <Typography>아카콘 묶음 뮤트 해제</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleUnmuteSingleEmot}>
-              <ListItemIcon>
-                <Block />
-              </ListItemIcon>
-              <Typography>이 아카콘만 뮤트 해제</Typography>
-            </MenuItem>
-          </List>
-        )}
-      </>
+      <List>
+        <MenuItem
+          onClick={muted ? handleUnmuteEmotBundle : handleMuteEmotBundle}
+        >
+          <ListItemIcon>
+            <Block />
+          </ListItemIcon>
+          <Typography>아카콘 묶음 뮤트{muted ? ' 해제' : ''}</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={muted ? handleUnmuteSingleEmot : handleMuteSingleEmot}
+        >
+          <ListItemIcon>
+            <Block />
+          </ListItemIcon>
+          <Typography>이 아카콘만 뮤트{muted ? ' 해제' : ''}</Typography>
+        </MenuItem>
+      </List>
     );
   }
 
@@ -331,7 +312,7 @@ function ContextMenu({ target, closeMenu }) {
   }
 
   if (data?.type === 'category') {
-    const config = category?.[data.id];
+    const config = filter.category?.[data.id];
 
     return (
       <List>

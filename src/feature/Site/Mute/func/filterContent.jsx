@@ -2,6 +2,7 @@ export default function filterContent(contents, filter) {
   const filteredList = {
     user: [],
     keyword: [],
+    emoticon: [],
     category: [],
     preview: [],
     channel: [],
@@ -24,48 +25,61 @@ export default function filterContent(contents, filter) {
       ? new RegExp(filter.channel.join('|'))
       : undefined;
 
-  contents.forEach(({ element, user, content, channel, category, deleted }) => {
-    let filtered = false;
-    // 이용자 뮤트 처리
-    if (regexUser?.test(user)) {
-      filteredList.user.push(element);
-      filtered = true;
-    }
+  contents.forEach(
+    ({ element, user, content, emoticon, channel, category, deleted }) => {
+      let filtered = false;
+      // 이용자 뮤트 처리
+      if (regexUser?.test(user)) {
+        filteredList.user.push(element);
+        filtered = true;
+      }
 
-    // 키워드 뮤트 처리
-    if (regexKeyword?.test(content)) {
-      filteredList.keyword.push(element);
-      filtered = true;
-    }
+      // 키워드 뮤트 처리
+      if (regexKeyword?.test(content)) {
+        filteredList.keyword.push(element);
+        filtered = true;
+      }
 
-    // [게시판 한정] 카테고리 뮤트 처리
-    if (filter.category?.[category]?.muteArticle) {
-      filteredList.category.push(element);
-      filtered = true;
-    }
+      // 아카콘 뮤트 처리
+      if (
+        emoticon &&
+        (emoticon[0] === -1 ||
+          filter.emoticon.bundle[emoticon[0]] ||
+          filter.emoticon.bundle[emoticon[1]])
+      ) {
+        filteredList.emoticon.push(element);
+        filtered = true;
+      }
 
-    // [게시판 한정] 게시물 미리보기 뮤트 처리
-    if (filter.category?.[category]?.mutePreview) {
-      filteredList.preview.push(element);
-    }
+      // [게시판 한정] 카테고리 뮤트 처리
+      if (filter.category?.[category]?.muteArticle) {
+        filteredList.category.push(element);
+        filtered = true;
+      }
 
-    // [특수 게시판 한정] 특정 채널 게시물 뮤트
-    if (regexChannel?.test(channel)) {
-      filteredList.channel.push(element);
-      filtered = true;
-    }
+      // [게시판 한정] 게시물 미리보기 뮤트 처리
+      if (filter.category?.[category]?.mutePreview) {
+        filteredList.preview.push(element);
+      }
 
-    // [댓글 한정] 삭제된 댓글 뮤트 처리
-    if (deleted) {
-      filteredList.deleted.push(element);
-      filtered = true;
-    }
+      // [특수 게시판 한정] 특정 채널 게시물 뮤트
+      if (regexChannel?.test(channel)) {
+        filteredList.channel.push(element);
+        filtered = true;
+      }
 
-    // 카운트 용
-    if (filtered) {
-      filteredList.all.push(element);
-    }
-  });
+      // [댓글 한정] 삭제된 댓글 뮤트 처리
+      if (deleted) {
+        filteredList.deleted.push(element);
+        filtered = true;
+      }
+
+      // 카운트 용
+      if (filtered) {
+        filteredList.all.push(element);
+      }
+    },
+  );
 
   return filteredList;
 }
