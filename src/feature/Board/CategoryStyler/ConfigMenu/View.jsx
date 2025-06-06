@@ -1,6 +1,12 @@
 import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
+import {
+  Grid2 as Grid,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+} from '@mui/material';
 
 import { useContent } from 'hooks/Content';
 
@@ -44,7 +50,7 @@ const View = forwardRef((_props, ref) => {
                     ),
                   )
                 ) : (
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <Typography align="center">
                       카테고리를 확인할 수 없습니다.
                     </Typography>

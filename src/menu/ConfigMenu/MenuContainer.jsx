@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { Close, Menu } from '@mui/icons-material';
 
+import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 import Info from './FeatureInfo';
 import { setOpen, setDrawer, setGroup } from './slice';
 import HeaderButton from './HeaderButton';
@@ -148,10 +149,27 @@ function MenuContainer({ groupList, menuList }) {
       .flat();
     content = sortedMenuList
       .filter((_value, index) => index < loadCount)
-      .map(({ key, View }) => <View key={key} />);
+      .map(({ key, View }) => (
+        <ModuleLoadBoundary
+          key={key}
+          moduleId={key}
+          text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+        >
+          <View />
+        </ModuleLoadBoundary>
+      ));
   } else {
     content = menuList.map(
-      ({ key, View }) => selection === key && <View key={key} />,
+      ({ key, View }) =>
+        selection === key && (
+          <ModuleLoadBoundary
+            key={key}
+            moduleId={key}
+            text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+          >
+            <View />
+          </ModuleLoadBoundary>
+        ),
     );
   }
 
@@ -161,20 +179,19 @@ function MenuContainer({ groupList, menuList }) {
         fullScreen={mobile}
         fullWidth
         maxWidth="md"
-        PaperProps={{
-          sx: {
-            aspectRatio: '9/7',
-            opacity,
-          },
-          square: true,
-          elevation: 0,
-        }}
-        TransitionProps={{
-          mountOnEnter: true,
-        }}
         slotProps={{
           backdrop: {
             invisible: opacity !== 1,
+          },
+          transition: {
+            mountOnEnter: true,
+          },
+          paper: {
+            sx: {
+              aspectRatio: '9/7',
+            },
+            square: true,
+            elevation: 0,
           },
         }}
         open={open}
@@ -206,16 +223,18 @@ function MenuContainer({ groupList, menuList }) {
         <Stack direction="row" sx={{ minHeight: 0, height: '100%' }}>
           <Drawer
             variant={mobile ? 'temporary' : 'permanent'}
-            PaperProps={{
-              sx: {
-                position: 'relative',
-                width: 240,
-                sm: {
-                  zIndex: (theme) => theme.zIndex.appBar - 1,
+            ModalProps={{ disablePortal: true, keepMounted: true }}
+            slotProps={{
+              paper: {
+                sx: {
+                  position: 'relative',
+                  width: 240,
+                  sm: {
+                    zIndex: (theme) => theme.zIndex.appBar - 1,
+                  },
                 },
               },
             }}
-            ModalProps={{ disablePortal: true, keepMounted: true }}
             open={!mobile || drawer}
             onClose={handleDrawerToggle}
           >

@@ -234,7 +234,13 @@ function DownloadDialog() {
         fullWidth
         maxWidth="lg"
         open={open}
-        TransitionProps={{ onExited: () => setShowProgress(false) }}
+        slotProps={{
+          transition: {
+            onExited() {
+              setShowProgress(false);
+            },
+          },
+        }}
       >
         <DialogContent sx={{ textAlign: 'center' }}>
           <CircularProgress color="primary" />

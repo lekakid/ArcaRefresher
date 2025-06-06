@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Chip, Grid, Typography } from '@mui/material';
+import { Chip, Grid2 as Grid, Typography } from '@mui/material';
 
 const TypeString = {
   keyword: '키워드',
   user: '사용자',
+  emoticon: '아카콘',
   channel: '채널',
   category: '카테고리',
   deleted: '삭제됨',
@@ -47,13 +48,11 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
         alignItems: 'center',
       }}
     >
-      <Grid item sm={4} xs={12} sx={{ paddingLeft: 1 }}>
+      <Grid size={{ xs: 12, sm: 4 }} sx={{ paddingLeft: 1 }}>
         <Typography variant="subtitle1">뮤트(리프레셔)</Typography>
       </Grid>
       <Grid
-        item
-        sm={8}
-        xs={12}
+        size={{ xs: 12, sm: 8 }}
         sx={{
           paddingRight: 1,
           textAlign: 'end',

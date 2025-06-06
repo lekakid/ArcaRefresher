@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
   Tooltip,
@@ -23,11 +22,11 @@ import { KeyIcon } from 'component';
 import { SwitchRow } from 'component/ConfigMenu';
 
 import {
-  $resetKeyMap,
   $setKey,
+  $resetKey,
+  $resetKeyMap,
   $toggleCompatibilityMode,
   $toggleEnabled,
-  setWaitKeyInput,
 } from '../slice';
 import actionTable from '../actionTable';
 import keyFilter from '../keyFilter';
@@ -35,12 +34,13 @@ import Info from '../FeatureInfo';
 
 function KeyRow({ divider, inputKey, children, onClick }) {
   return (
-    <ListItem disablePadding divider={divider}>
+    <ListItem
+      disablePadding
+      divider={divider}
+      secondaryAction={<KeyIcon title={inputKey} />}
+    >
       <ListItemButton onClick={onClick}>
         <ListItemText>{children}</ListItemText>
-        <ListItemSecondaryAction>
-          <KeyIcon title={inputKey} />
-        </ListItemSecondaryAction>
       </ListItemButton>
     </ListItem>
   );
@@ -68,7 +68,7 @@ function formatKey(keyStr) {
     .replace('Decimal', '.')
     .replace('ArrowUp', '↑')
     .replace('ArrowDown', '↓')
-    .replace('ArrowLeft', 'ㅁ')
+    .replace('ArrowLeft', '←')
     .replace('ArrowRight', '→')
     .replace('DISABLED', '비활성화');
 }
@@ -85,23 +85,29 @@ const View = forwardRef((_props, ref) => {
     (state) => state[Info.id].storage,
   );
   const keyMap = useSelector(keyMapSelector);
-  const { waitKeyInput } = useSelector((state) => state[Info.id]);
+  const [shortKeyAction, setShortKeyAction] = useState(undefined);
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
-    if (!waitKeyInput) return undefined;
+    if (!shortKeyAction) return undefined;
 
     const keyInputEvent = (e) => {
       e.stopPropagation();
 
       if (e.code === 'Escape') {
-        dispatch(setWaitKeyInput(undefined));
+        setShortKeyAction(undefined);
+        return;
+      }
+
+      if (e.code === 'Backspace') {
+        dispatch($resetKey({ action: shortKeyAction }));
+        setShortKeyAction(undefined);
         return;
       }
 
       if (e.code === 'Delete') {
-        dispatch($setKey({ action: waitKeyInput, key: 'DISABLED' }));
-        dispatch(setWaitKeyInput(undefined));
+        dispatch($setKey({ action: shortKeyAction, key: 'DISABLED' }));
+        setShortKeyAction(undefined);
         return;
       }
 
@@ -110,20 +116,20 @@ const View = forwardRef((_props, ref) => {
         return;
       }
 
-      dispatch($setKey({ action: waitKeyInput, key: e.code }));
-      dispatch(setWaitKeyInput(undefined));
+      dispatch($setKey({ action: shortKeyAction, key: e.code }));
+      setShortKeyAction(undefined);
       setError(undefined);
     };
     document.addEventListener('keyup', keyInputEvent, true);
     return () => document.removeEventListener('keyup', keyInputEvent, true);
-  }, [waitKeyInput, dispatch]);
+  }, [shortKeyAction, dispatch]);
 
   const handleReset = () => {
     dispatch($resetKeyMap());
   };
 
   const handleClick = (action) => () => {
-    dispatch(setWaitKeyInput(action));
+    setShortKeyAction(action);
   };
 
   return (
@@ -154,15 +160,16 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle2">키 설정</Typography>
       <Paper>
         <List disablePadding>
-          <ListItem>
-            <ListItemText>단축키 목록</ListItemText>
-            <ListItemSecondaryAction>
+          <ListItem
+            secondaryAction={
               <Tooltip title="초기화">
                 <IconButton onClick={handleReset} size="large">
                   <Refresh />
                 </IconButton>
               </Tooltip>
-            </ListItemSecondaryAction>
+            }
+          >
+            <ListItemText>단축키 목록</ListItemText>
           </ListItem>
           <ListItem>
             <Paper variant="outlined" sx={{ width: '100%' }}>
@@ -184,7 +191,7 @@ const View = forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-      <Dialog open={!!waitKeyInput}>
+      <Dialog open={!!shortKeyAction}>
         <DialogTitle>키 입력 대기 중...</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -192,6 +199,9 @@ const View = forwardRef((_props, ref) => {
               키를 2개 이상 사용하는 단축키는 지원하지 않습니다
             </Typography>
             <Typography>Delete 키를 누르면 기능을 비활성화 합니다</Typography>
+            <Typography>
+              Backspace 키를 누르면 기본값으로 초기화됩니다
+            </Typography>
             <Typography>ESC 키를 눌러 키 변경을 취소합니다</Typography>
             {error && <Typography>{`🚫 ${error}`}</Typography>}
           </DialogContentText>

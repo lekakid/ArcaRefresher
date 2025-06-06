@@ -71,9 +71,11 @@ function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
           fullWidth
           size="small"
           margin="normal"
+          slotProps={{
+            htmlInput: { style: { color } },
+          }}
           label="메세지"
           value={msg}
-          inputProps={{ style: { color } }}
           onChange={handleMsgChange}
           onKeyDown={handleSubmit}
         />

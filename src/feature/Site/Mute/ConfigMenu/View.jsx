@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Collapse,
-  Grid,
+  Grid2 as Grid,
   List,
   ListItem,
   ListItemText,
@@ -234,7 +234,7 @@ const View = forwardRef((_props, ref) => {
                       ),
                     )
                   ) : (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                       <Typography align="center">
                         카테고리를 확인할 수 없습니다.
                       </Typography>

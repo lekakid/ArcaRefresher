@@ -15,8 +15,11 @@ const defaultStorage = {
   version: 1,
   // 모양
   notifyPosition: 'right',
+  navControlPosition: 'bottom right',
+  navControlItemDirection: 'row',
   topNews: true,
   searchBar: true,
+  userName: true,
   recentVisit: 'afterAd',
   sideMenu: true,
   sideContents: true,
@@ -75,11 +78,20 @@ export const slice = createSlice({
     $setNotifyPosition(state, action) {
       state.storage.notifyPosition = action.payload;
     },
+    $setNavControlPosition(state, action) {
+      state.storage.navControlPosition = action.payload;
+    },
+    $setNavControlItemDirection(state, action) {
+      state.storage.navControlItemDirection = action.payload;
+    },
     $toggleTopNews(state) {
       state.storage.topNews = !state.storage.topNews;
     },
     $toggleSearchBar(state) {
       state.storage.searchBar = !state.storage.searchBar;
+    },
+    $toggleUserName(state) {
+      state.storage.userName = !state.storage.userName;
     },
     $setRecentVisit(state, action) {
       state.storage.recentVisit = action.payload;
@@ -119,8 +131,11 @@ export const slice = createSlice({
 export const {
   // 모양
   $setNotifyPosition,
+  $setNavControlPosition,
+  $setNavControlItemDirection,
   $toggleTopNews,
   $toggleSearchBar,
+  $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,

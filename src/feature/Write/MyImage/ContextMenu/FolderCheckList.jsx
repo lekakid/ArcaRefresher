@@ -10,7 +10,7 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
-  Grid,
+  Grid2 as Grid,
   TextField,
 } from '@mui/material';
 import { Add, ExpandMore } from '@mui/icons-material';
@@ -89,7 +89,7 @@ function FolderCheckList({ open, url, onClose }) {
         <Grid container>
           {openFolderInput && (
             <>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
                   size="small"
@@ -101,7 +101,7 @@ function FolderCheckList({ open, url, onClose }) {
                   onKeyUp={handleFolderEnter}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Button
                   fullWidth
                   startIcon={<Add />}
@@ -116,7 +116,7 @@ function FolderCheckList({ open, url, onClose }) {
             </>
           )}
           {!openFolderInput && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Button
                 fullWidth
                 startIcon={<ExpandMore />}

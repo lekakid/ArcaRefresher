@@ -89,10 +89,10 @@ export default function ChannelManager() {
   useEffect(() => {
     if (!navLoaded) return undefined;
     if (!enabled) return undefined;
+    if (window.location.pathname.includes('/w/')) return undefined;
 
     const nav = document.querySelector('nav .nav');
     const subsElement = nav.firstElementChild;
-    // const mainElement = subsElement.nextElementSibling;
 
     subsElement.style.display = 'none';
     const subs = [

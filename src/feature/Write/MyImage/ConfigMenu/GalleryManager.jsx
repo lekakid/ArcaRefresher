@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   MenuItem,
   Paper,
   Select,
@@ -125,6 +126,7 @@ function Toolbar({
     return (
       <Stack direction="row" justifyContent="end">
         <Button
+          variant="text"
           startIcon={<FlipToFront />}
           disabled={disabled}
           name="move"
@@ -133,6 +135,7 @@ function Toolbar({
           이동
         </Button>
         <Button
+          variant="text"
           startIcon={<FileCopy />}
           disabled={disabled}
           name="copy"
@@ -148,24 +151,27 @@ function Toolbar({
   }
 
   return (
-    <Stack direction="row" justifyContent="end">
-      <Button
-        variant="text"
-        startIcon={<FlipToFront />}
-        disabled={disabled}
-        onClick={onMoving}
-      >
-        이동/복사
-      </Button>
-      <Button
-        variant="text"
-        startIcon={<Delete />}
-        disabled={disabled}
-        onClick={onRemove}
-      >
-        선택 삭제
-      </Button>
-    </Stack>
+    <>
+      <Stack direction="row" justifyContent="end">
+        <Button
+          variant="text"
+          startIcon={<FlipToFront />}
+          disabled={disabled}
+          onClick={onMoving}
+        >
+          이동/복사
+        </Button>
+        <Button
+          variant="text"
+          startIcon={<Delete />}
+          disabled={disabled}
+          onClick={onRemove}
+        >
+          선택 삭제
+        </Button>
+      </Stack>
+      <Divider />
+    </>
   );
 }
 
@@ -332,17 +338,16 @@ function GalleryManager({ gallery }) {
           rows={rows}
           getRowId={(row) => row.url}
           columns={columns}
-          autoHeight
           rowHeight={40}
           pagination
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           checkboxSelection={!moveList}
-          components={{
-            Toolbar,
-            NoRowsOverlay,
+          slots={{
+            toolbar: Toolbar,
+            noRowsOverlay: NoRowsOverlay,
           }}
-          componentsProps={{
+          slotProps={{
             toolbar: {
               moving: !!moveList,
               disabled: moveList
@@ -360,10 +365,10 @@ function GalleryManager({ gallery }) {
               pageSize: 10,
             },
           }}
-          selectionModel={selection}
-          rowsPerPageOptions={[10, 25, 50, 100]}
+          rowSelectionModel={selection}
+          pageSizeOptions={[10, 25, 50, 100]}
           onCellEditCommit={handleCellEdit}
-          onSelectionModelChange={(s) => setSelection(s)}
+          onRowSelectionModelChange={(s) => setSelection(s)}
         />
       </Stack>
       <Dialog open={confirm} onClose={handleConfirmClose}>

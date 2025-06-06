@@ -5,7 +5,6 @@ import {
   Box,
   List,
   ListItem,
-  ListItemSecondaryAction,
   ListItemText,
   MenuItem,
   Paper,
@@ -54,9 +53,9 @@ const View = React.forwardRef((_props, ref) => {
             <Box sx={{ width: '100%' }}>
               <Paper variant="outlined">
                 <List disablePadding>
-                  <ListItem divider>
-                    <ListItemText primary="리프레셔 메뉴" />
-                    <ListItemSecondaryAction>
+                  <ListItem
+                    divider
+                    secondaryAction={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].refresher.map(
                           (value, index) => (
@@ -68,11 +67,12 @@ const View = React.forwardRef((_props, ref) => {
                           ),
                         )}
                       </Box>
-                    </ListItemSecondaryAction>
+                    }
+                  >
+                    <ListItemText primary="리프레셔 메뉴" />
                   </ListItem>
-                  <ListItem>
-                    <ListItemText primary="브라우저 메뉴" />
-                    <ListItemSecondaryAction>
+                  <ListItem
+                    secondaryAction={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].browser.map((value, index) => (
                           // eslint-disable-next-line react/no-array-index-key
@@ -82,7 +82,9 @@ const View = React.forwardRef((_props, ref) => {
                           </React.Fragment>
                         ))}
                       </Box>
-                    </ListItemSecondaryAction>
+                    }
+                  >
+                    <ListItemText primary="브라우저 메뉴" />
                   </ListItem>
                 </List>
               </Paper>

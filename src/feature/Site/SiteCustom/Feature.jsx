@@ -22,6 +22,39 @@ function NotifyPositionStyles({ value }) {
   );
 }
 
+function NavControlPositionStyles({ value }) {
+  return (
+    <GlobalStyles
+      styles={{
+        '.body .nav-control': {
+          right: value.includes('left') ? 'initial !important' : undefined,
+          left: value.includes('left') ? 0 : undefined,
+          top: value.includes('top') ? '53px' : undefined,
+          bottom: value.includes('top') ? 'initial !important' : undefined,
+          margin: '1rem !important',
+        },
+      }}
+    />
+  );
+}
+
+function NavControlItemDirectionStyles({ value }) {
+  return (
+    <GlobalStyles
+      styles={{
+        '.body .nav-control': {
+          display: 'flex',
+          flexDirection: value,
+          gap: '0.2rem',
+          li: {
+            marginRight: '0 !important',
+          },
+        },
+      }}
+    />
+  );
+}
+
 function TopNewsStyles({ value }) {
   if (value) return null;
 
@@ -43,6 +76,20 @@ function SearchBarStyles({ value }) {
     <GlobalStyles
       styles={{
         'html li.nav-channel-search-wrapper': {
+          display: 'none !important',
+        },
+      }}
+    />
+  );
+}
+
+function UserNameStyles({ value }) {
+  if (value) return null;
+
+  return (
+    <GlobalStyles
+      styles={{
+        '.body .username': {
           display: 'none !important',
         },
       }}
@@ -232,8 +279,11 @@ export default function SiteCustom() {
   const {
     // 모양
     notifyPosition,
+    navControlPosition,
+    navControlItemDirection,
     topNews,
     searchBar,
+    userName,
     recentVisit,
     sideContents,
     sideBests,
@@ -294,8 +344,11 @@ export default function SiteCustom() {
   return (
     <>
       <NotifyPositionStyles value={notifyPosition} />
+      <NavControlPositionStyles value={navControlPosition} />
+      <NavControlItemDirectionStyles value={navControlItemDirection} />
       <TopNewsStyles value={topNews} />
       <SearchBarStyles value={searchBar} />
+      <UserNameStyles value={userName} />
       <RecentVisitStyles value={recentVisit} />
       <SideMenuStyles value={sideMenu} />
       <SideContentsStyles value={sideContents} />

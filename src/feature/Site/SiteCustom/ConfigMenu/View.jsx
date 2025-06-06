@@ -19,8 +19,11 @@ import Info from '../FeatureInfo';
 import {
   // 모양
   $setNotifyPosition,
+  $setNavControlPosition,
+  $setNavControlItemDirection,
   $toggleTopNews,
   $toggleSearchBar,
+  $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,
@@ -44,8 +47,11 @@ const View = forwardRef((_props, ref) => {
   const {
     // 모양
     notifyPosition,
+    navControlPosition,
+    navControlItemDirection,
     topNews,
     searchBar,
+    userName,
     recentVisit,
     sideContents,
     sideBests,
@@ -76,10 +82,33 @@ const View = forwardRef((_props, ref) => {
               return $setNotifyPosition(payload);
             }}
           >
-            <MenuItem value="left">왼쪽</MenuItem>
-            <MenuItem value="right">오른쪽</MenuItem>
+            <MenuItem value="left">왼쪽 아래</MenuItem>
+            <MenuItem value="right">오른쪽 아래</MenuItem>
             <MenuItem value="lefttop">왼쪽 위</MenuItem>
             <MenuItem value="righttop">오른쪽 위</MenuItem>
+          </SelectRow>
+          <SelectRow
+            divider
+            primary="네비게이션 컨트롤러 위치"
+            secondary="화면 우측 하단의 둥근 조작 버튼의 위치를 변경합니다."
+            value={navControlPosition}
+            action={$setNavControlPosition}
+          >
+            <MenuItem value="bottom left">왼쪽 아래</MenuItem>
+            <MenuItem value="bottom right">오른쪽 아래</MenuItem>
+            <MenuItem value="top left">왼쪽 위</MenuItem>
+            <MenuItem value="top right">오른쪽 위</MenuItem>
+          </SelectRow>
+          <SelectRow
+            divider
+            primary="네비게이션 컨트롤러 버튼 방향"
+            value={navControlItemDirection}
+            action={$setNavControlItemDirection}
+          >
+            <MenuItem value="row">가로</MenuItem>
+            <MenuItem value="row-reverse">가로(역순)</MenuItem>
+            <MenuItem value="column">세로</MenuItem>
+            <MenuItem value="column-reverse">세로(역순)</MenuItem>
           </SelectRow>
           {mobile && (
             <SwitchRow
@@ -94,6 +123,12 @@ const View = forwardRef((_props, ref) => {
             primary="검색창 표시"
             value={searchBar}
             action={$toggleSearchBar}
+          />
+          <SwitchRow
+            divider
+            primary="로그인한 계정의 닉네임"
+            value={userName}
+            action={$toggleUserName}
           />
           <SelectRow
             divider

@@ -35,7 +35,7 @@ const refreshStyles = (
  * @example 'arca.live/b/breaking?p=2&type=best' => { p: '2', type: 'best' }
  */
 function parseSearch(searchString) {
-  return Object.fromEntries(new URLSearchParams(searchString)); 
+  return Object.fromEntries(new URLSearchParams(searchString));
 }
 
 function AutoRefresher() {
@@ -44,6 +44,9 @@ function AutoRefresher() {
 
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
     (state) => state[Info.id].storage,
+  );
+  const { navControlPosition, navControlItemDirection } = useSelector(
+    (state) => state.SiteCustom.storage,
   );
   const [board, setBoard] = useState();
   const [pause, setPause] = useState({
@@ -203,13 +206,33 @@ function AutoRefresher() {
     return () => clearInterval(timer);
   }, [countdown, enabled, pause, tryRefresh]);
 
+  const samePosition = progressPos === navControlPosition;
+  const pos = {
+    top: progressPos.includes('top') ? '53px' : 'unset',
+    bottom: progressPos.includes('bottom') ? 0 : 'unset',
+    left: progressPos.includes('left') ? 0 : 'unset',
+    right: progressPos.includes('right') ? 0 : 'unset',
+    marginTop: `calc(1rem ${
+      samePosition && navControlItemDirection.includes('row') ? '+ 50px' : ''
+    })`,
+    marginBottom: `calc(1rem ${
+      samePosition && navControlItemDirection.includes('row') ? '+ 50px' : ''
+    })`,
+    marginLeft: `calc(1rem ${
+      samePosition && navControlItemDirection.includes('column') ? '+ 50px' : ''
+    })`,
+    marginRight: `calc(1rem ${
+      samePosition && navControlItemDirection.includes('column') ? '+ 50px' : ''
+    })`,
+  };
+
   return (
     <>
       {refreshStyles}
       <Fade in={enabled && progressPos !== 'hidden'}>
         <Box>
           <RefreshIndicator
-            pos={progressPos.split(' ')}
+            pos={pos}
             count={enabled ? countdown : 0}
             animate={!(pause.management || pause.unfocus || pause.api)}
           />

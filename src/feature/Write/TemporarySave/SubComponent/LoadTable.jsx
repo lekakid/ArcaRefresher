@@ -8,8 +8,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControlLabel,
-  Grid,
+  Grid2 as Grid,
   IconButton,
   Stack,
   Switch,
@@ -34,8 +35,7 @@ const columns = [
     field: 'date',
     headerName: '날짜',
     flex: 1,
-    valueFormatter: (params) =>
-      `${new Date(Number(params.value)).toLocaleString()}`,
+    valueFormatter: (value) => `${new Date(Number(value)).toLocaleString()}`,
   },
 ];
 
@@ -73,20 +73,23 @@ function CustomToolbar({
   }
 
   return (
-    <Grid container alignItems="center">
-      <Grid item xs={8}>
-        <Box sx={{ display: 'flex', px: '8px' }}>
-          <Typography variant="caption">
-            100개 이상 저장 시 전체적인 속도 저하가 있을 수 있습니다.
-          </Typography>
-        </Box>
+    <>
+      <Grid container alignItems="center">
+        <Grid size={{ xs: 8 }}>
+          <Box sx={{ display: 'flex', px: '8px' }}>
+            <Typography variant="caption">
+              100개 이상 저장 시 전체적인 속도 저하가 있을 수 있습니다.
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid size={{ xs: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {toolButton}
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {toolButton}
-        </Box>
-      </Grid>
-    </Grid>
+      <Divider />
+    </>
   );
 }
 
@@ -112,7 +115,6 @@ function LoadTable({ editor, open, onClose }) {
     date: key,
   }));
   const [selection, setSelection] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
   const [editMode, setEditMode] = useState(false);
 
   const handleSelection = useCallback((current) => {
@@ -133,10 +135,6 @@ function LoadTable({ editor, open, onClose }) {
     },
     [dispatch, editor, importTitle, templateMode, onClose],
   );
-
-  const handlePageSize = useCallback((currentSize) => {
-    setPageSize(currentSize);
-  }, []);
 
   const handleClose = useCallback(() => {
     setSelection([]);
@@ -183,16 +181,15 @@ function LoadTable({ editor, open, onClose }) {
         <DataGrid
           columns={columns}
           rows={rows}
-          autoHeight
           rowHeight={40}
           pagination
           checkboxSelection={editMode}
           disableColumnMenu
-          components={{
-            Toolbar: CustomToolbar,
-            NoRowsOverlay: CustomNoRowsOverlay,
+          slots={{
+            toolbar: CustomToolbar,
+            noRowsOverlay: CustomNoRowsOverlay,
           }}
-          componentsProps={{
+          slotProps={{
             toolbar: {
               selection,
               editMode,
@@ -201,12 +198,15 @@ function LoadTable({ editor, open, onClose }) {
               onClickDone: handleDone,
             },
           }}
-          pageSize={pageSize}
-          rowsPerPageOptions={[10, 20, 30]}
-          onPageSizeChange={handlePageSize}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10 },
+            },
+          }}
+          pageSizeOptions={[10, 20, 30]}
           onRowClick={editMode ? null : handleLoad}
-          selectionModel={selection}
-          onSelectionModelChange={handleSelection}
+          rowSelectionModel={selection}
+          onRowSelectionModelChange={handleSelection}
         />
       </DialogContent>
       <DialogActions>

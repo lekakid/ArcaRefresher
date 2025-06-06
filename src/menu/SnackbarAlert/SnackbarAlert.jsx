@@ -43,10 +43,12 @@ export default function SnackbarAlert() {
         vertical: 'bottom',
       }}
       autoHideDuration={snack?.time}
-      onClose={snack?.time && handleSnackClose}
-      message={snack?.msg}
-      TransitionProps={{ onExited: handleExit }}
+      slotProps={{
+        transition: { onExited: handleExit },
+      }}
       open={open}
+      message={snack?.msg}
+      onClose={snack?.time && handleSnackClose}
     />
   );
 }

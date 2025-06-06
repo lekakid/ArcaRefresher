@@ -1,6 +1,12 @@
 import { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Grid2 as Grid,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import { BrokenImage, Image, VolumeOff, VolumeUp } from '@mui/icons-material';
 
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
@@ -28,11 +34,11 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
   return (
     <>
       {divider && (
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Divider />
         </Grid>
       )}
-      <Grid item xs={6}>
+      <Grid size={{ xs: 6 }}>
         <Box
           sx={{
             display: 'flex',
@@ -47,7 +53,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
           </span>
         </Box>
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={{ xs: 6 }}>
         <Box
           sx={{
             display: 'flex',

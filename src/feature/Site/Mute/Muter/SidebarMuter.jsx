@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { FULL_LOADED } from 'core/selector';
 
 import { useLoadChecker } from 'hooks/LoadChecker';
+import { serializeText } from 'func/emoji';
 import Info from '../FeatureInfo';
 
 function SidebarMuter() {
@@ -27,14 +28,16 @@ function SidebarMuter() {
         '.right-sidebar .sidebar-item .link-list a',
       );
       articles.forEach((e) => {
-        if (!filter.test(e.lastChild.textContent)) return;
+        const title = serializeText(e);
+
+        if (!filter.test(title)) return;
 
         if (hideMutedMark) {
           e.style.display = 'none';
         }
-        e.dataset.orig = e.lastChild.textContent;
+        e.dataset.orig = e.innerHTML;
         e.dataset.href = e.href;
-        e.lastChild.textContent = '[뮤트됨]';
+        e.textContent = '[뮤트됨]';
         e.removeAttribute('href');
       });
     };
@@ -48,7 +51,7 @@ function SidebarMuter() {
         '.right-sidebar .sidebar-item .link-list a[data-orig]',
       );
       articles.forEach((e) => {
-        e.lastChild.textContent = e.dataset.orig;
+        e.innerHTML = e.dataset.orig;
         e.href = e.dataset.href;
 
         delete e.dataset.orig;

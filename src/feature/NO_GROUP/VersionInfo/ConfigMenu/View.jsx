@@ -69,12 +69,16 @@ const View = forwardRef((_props, ref) => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
-  const handleVisitGithubSponsors = useCallback(() => {
-    GM_openInTab('https://github.com/sponsors/lekakid');
+  const handleVisitPatreon = useCallback(() => {
+    GM_openInTab('https://www.patreon.com/LeKAKiD/membership');
   }, []);
 
   const handleVisitCoffeeBuyMe = useCallback(() => {
     GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
+  }, []);
+
+  const handleVisitGithubSponsors = useCallback(() => {
+    GM_openInTab('https://github.com/sponsors/lekakid');
   }, []);
 
   return (
@@ -119,8 +123,8 @@ const View = forwardRef((_props, ref) => {
         <List disablePadding>
           <BaseRow
             divider
-            header={<ListItemText primary="Github Sponsors" />}
-            onClick={handleVisitGithubSponsors}
+            header={<ListItemText primary="Patreon" />}
+            onClick={handleVisitPatreon}
           >
             <OpenInNew />
           </BaseRow>
@@ -128,6 +132,13 @@ const View = forwardRef((_props, ref) => {
             divider
             header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
+          >
+            <OpenInNew />
+          </BaseRow>
+          <BaseRow
+            divider
+            header={<ListItemText primary="Github Sponsors" />}
+            onClick={handleVisitGithubSponsors}
           >
             <OpenInNew />
           </BaseRow>
