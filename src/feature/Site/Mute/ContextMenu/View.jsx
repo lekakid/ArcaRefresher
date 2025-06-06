@@ -35,7 +35,10 @@ function makeRegex(id) {
   return `${id.replace('.', '\\.')}$`;
 }
 
-const USER_SELECTOR = `${USER_INFO}, ${USER_MENTION}, ${BOARD_ITEMS_WITH_NOTICE}`;
+const USER_SELECTOR = {
+  articleItem: `${USER_INFO}, ${USER_MENTION}, ${BOARD_ITEMS_WITH_NOTICE}`,
+  nickname: `${USER_INFO}, ${USER_MENTION}`,
+};
 const EMOTICON_SELECTOR =
   '.article-body .emoticon-wrapper.muted, :is(img, video)[class$="emoticon"]';
 const CATEGORY_SELECTOR = '.board-category .item a';
@@ -50,17 +53,11 @@ function ContextMenu({ target, closeMenu }) {
   const data = useContextMenu(
     {
       key: Info.id,
-      selector: `${USER_SELECTOR}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
+      selector: `${USER_SELECTOR[contextRange]}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
       dataExtractor: () => {
         if (!target) return undefined;
 
-        if (target.matches(USER_SELECTOR)) {
-          if (
-            contextRange !== 'articleItem' &&
-            target.matches(BOARD_ITEMS_WITH_NOTICE)
-          )
-            return undefined;
-
+        if (target.matches(USER_SELECTOR[contextRange])) {
           let userElement = target;
           if (target.matches('.vrow')) {
             userElement = target.querySelector('span.user-info');
