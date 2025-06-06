@@ -161,20 +161,19 @@ function MenuContainer({ groupList, menuList }) {
         fullScreen={mobile}
         fullWidth
         maxWidth="md"
-        PaperProps={{
-          sx: {
-            aspectRatio: '9/7',
-            opacity,
-          },
-          square: true,
-          elevation: 0,
-        }}
-        TransitionProps={{
-          mountOnEnter: true,
-        }}
         slotProps={{
           backdrop: {
             invisible: opacity !== 1,
+          },
+          transition: {
+            mountOnEnter: true,
+          },
+          paper: {
+            sx: {
+              aspectRatio: '9/7',
+            },
+            squre: true,
+            elevation: 0,
           },
         }}
         open={open}
