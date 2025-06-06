@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { Close, Menu } from '@mui/icons-material';
 
+import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 import Info from './FeatureInfo';
 import { setOpen, setDrawer, setGroup } from './slice';
 import HeaderButton from './HeaderButton';
@@ -148,10 +149,27 @@ function MenuContainer({ groupList, menuList }) {
       .flat();
     content = sortedMenuList
       .filter((_value, index) => index < loadCount)
-      .map(({ key, View }) => <View key={key} />);
+      .map(({ key, View }) => (
+        <ModuleLoadBoundary
+          key={key}
+          moduleId={key}
+          text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+        >
+          <View />
+        </ModuleLoadBoundary>
+      ));
   } else {
     content = menuList.map(
-      ({ key, View }) => selection === key && <View key={key} />,
+      ({ key, View }) =>
+        selection === key && (
+          <ModuleLoadBoundary
+            key={key}
+            moduleId={key}
+            text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+          >
+            <View />
+          </ModuleLoadBoundary>
+        ),
     );
   }
 
@@ -172,7 +190,7 @@ function MenuContainer({ groupList, menuList }) {
             sx: {
               aspectRatio: '9/7',
             },
-            squre: true,
+            square: true,
             elevation: 0,
           },
         }}

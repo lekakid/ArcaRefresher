@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Box, List, Menu, MenuItem } from '@mui/material';
 
+import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
+
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
 
@@ -108,20 +110,25 @@ function ContextMenu({ menuList }) {
         </MenuItem>
       </List>
       {menuList.map(({ key, View }) => (
-        <Box
+        <ModuleLoadBoundary
           key={key}
-          sx={{
-            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-            '&:empty': {
-              display: 'none',
-            },
-            '& .MuiList-root': {
-              paddingY: 0.5,
-            },
-          }}
+          moduleId={key}
+          text={`[${key}] 기능의 우클릭 메뉴에 오류가 발생해 해당 기능이 중단됐습니다.`}
         >
-          <View target={targetTable?.[key]} closeMenu={handleClose} />
-        </Box>
+          <Box
+            sx={{
+              borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+              '&:empty': {
+                display: 'none',
+              },
+              '& .MuiList-root': {
+                paddingY: 0.5,
+              },
+            }}
+          >
+            <View target={targetTable?.[key]} closeMenu={handleClose} />
+          </Box>
+        </ModuleLoadBoundary>
       ))}
     </Menu>
   );

@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { $setIgnoreVersionTarget, SLICE_ID } from './slice';
 
-function ErrorDialog({ name, error }) {
+function ErrorDialog({ moduleId, text, error }) {
   const dispatch = useDispatch();
 
   const lastCheckVersion = useSelector(
@@ -27,16 +27,16 @@ function ErrorDialog({ name, error }) {
 
   useEffect(() => {
     if (!error) return;
-    if (lastCheckVersion[name] === GM_info.script.version) return;
+    if (lastCheckVersion[moduleId] === GM_info.script.version) return;
 
     setOpen(true);
-  }, [name, error, lastCheckVersion]);
+  }, [moduleId, error, lastCheckVersion]);
 
   const onClose = () => {
     if (ignore) {
       dispatch(
         $setIgnoreVersionTarget({
-          moduleId: name,
+          moduleId,
           version: GM_info.script.version,
         }),
       );
@@ -49,7 +49,7 @@ function ErrorDialog({ name, error }) {
       <DialogTitle>오류</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {`${name} 모듈을 불러오는 중 처리하지 못하는 문제가 발생했습니다.`}
+          {`${text} 모듈을 불러오는 중 처리하지 못하는 문제가 발생했습니다.`}
         </DialogContentText>
         <TextField
           sx={{ my: 2 }}
@@ -62,7 +62,7 @@ function ErrorDialog({ name, error }) {
       </DialogContent>
       <DialogActions>
         <FormControlLabel
-          label="다음 업데이트까지 표시 안함"
+          label="다음 업데이트까지 이 기능의 오류 표시 안함"
           control={
             <Checkbox
               checked={ignore}
@@ -85,16 +85,17 @@ function ErrorDialog({ name, error }) {
 }
 
 ErrorDialog.propTypes = {
-  name: PropTypes.string,
+  moduleId: PropTypes.string,
+  text: PropTypes.string,
   error: PropTypes.object,
 };
 
-export function ModuleLoadBoundary({ name, children }) {
+export function ModuleLoadBoundary({ moduleId, text, children }) {
   const [error, setError] = useState(undefined);
 
   return (
     <ErrorBoundary
-      fallback={<ErrorDialog name={name} error={error} />}
+      fallback={<ErrorDialog moduleId={moduleId} text={text} error={error} />}
       onError={(e) => setError(e)}
     >
       {children}
@@ -103,6 +104,7 @@ export function ModuleLoadBoundary({ name, children }) {
 }
 
 ModuleLoadBoundary.propTypes = {
-  name: PropTypes.string,
+  moduleId: PropTypes.string,
+  text: PropTypes.string,
   children: PropTypes.element,
 };

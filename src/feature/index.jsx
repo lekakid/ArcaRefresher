@@ -13,10 +13,14 @@ function FeatureWrapper() {
   return (
     <>
       {featureWrapperChildren.map(({ Component, key }) => {
-        const [, , name] = key.split('/');
+        const [, , moduleId] = key.split('/');
 
         return (
-          <ModuleLoadBoundary key={key} name={name}>
+          <ModuleLoadBoundary
+            key={key}
+            moduleId={moduleId}
+            text={`[${moduleId}] 기능에 오류가 발생해 해당 기능이 중단됐습니다.`}
+          >
             <Component />
           </ModuleLoadBoundary>
         );
