@@ -89,7 +89,7 @@ function UserNameStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        '.body .username': {
+        '.body span.username': {
           display: 'none !important',
         },
       }}
