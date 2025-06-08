@@ -4,6 +4,7 @@ import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
 
+import { useLoadChecker } from 'hooks/LoadChecker';
 import Info from './FeatureInfo';
 
 /* eslint-disable react/prop-types */
@@ -89,7 +90,7 @@ function UserNameStyles({ value }) {
   return (
     <GlobalStyles
       styles={{
-        '.body .username': {
+        '.body span.username': {
           display: 'none !important',
         },
       }}
@@ -275,6 +276,7 @@ function FixDarkModeWriteFormStyles({ value }) {
 
 export default function SiteCustom() {
   const [subscribeWS, unsubscribeWS] = useArcaSocket();
+  const faviconLoaded = useLoadChecker('#dynamic-favicon');
 
   const {
     // 모양
@@ -306,6 +308,7 @@ export default function SiteCustom() {
   // 사이트 파비콘 변경
   useEffect(() => {
     if (!spoofFavicon) return undefined;
+    if (!faviconLoaded) return undefined;
 
     const defaultUrl = document.querySelector('#dynamic-favicon').href;
     const changeFavicon = (url) => {
@@ -313,7 +316,7 @@ export default function SiteCustom() {
       faviconEl.href = url;
     };
 
-    // 글 알림 비활성화
+    // 사이트 자체 파비콘 변경 기능 비활성화
     Object.defineProperty(unsafeWindow, 'notificationBadge', {
       get() {
         return 'default';
@@ -339,7 +342,7 @@ export default function SiteCustom() {
       unsubscribeWS(subscriber);
       window.removeEventListener('load', changeFavicon);
     };
-  }, [spoofFavicon, subscribeWS, unsubscribeWS]);
+  }, [faviconLoaded, spoofFavicon, subscribeWS, unsubscribeWS]);
 
   return (
     <>
