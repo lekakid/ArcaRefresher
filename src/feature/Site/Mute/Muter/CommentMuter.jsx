@@ -151,11 +151,9 @@ function CommentMuter() {
         const element = !deleted && muteIncludeReply ? wrapper : item;
         const user = new ArcaUser(wrapper.querySelector('.user-info')).toUID();
         const content = serializeText(wrapper.querySelector('.message pre'));
-        const emoticon = muteAllEmot
-          ? [-1]
-          : [...item.querySelectorAll('.message .emoticon')].map(
-              (i) => i.dataset.id,
-            );
+        const emoticon = [...item.querySelectorAll('.message .emoticon')].map(
+          (i) => (muteAllEmot ? -1 : i.dataset.id),
+        );
 
         return {
           element,
