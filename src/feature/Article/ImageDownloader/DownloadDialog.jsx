@@ -88,6 +88,7 @@ function DownloadDialog() {
             case 'fetch': {
               const response = await fetch(info.orig, {
                 method: 'HEAD',
+                cache: 'no-cache',
               });
               if (!response.ok) throw new Error('서버 접속 실패');
 
