@@ -92,7 +92,7 @@ function ContextMenu({ target, closeMenu }) {
         });
         switch (downloadMethod) {
           case 'fetch': {
-            const response = await fetch(orig);
+            const response = await fetch(orig, { cache: 'no-cache' });
             const size = Number(response.headers.get('content-length'));
             const stream = response.body;
 

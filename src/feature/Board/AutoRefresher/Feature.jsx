@@ -30,6 +30,10 @@ const refreshStyles = (
   />
 );
 
+const PAUSE_MANAGEMENT = 'management';
+const PAUSE_UNFOCUS = 'unfocus';
+const PAUSE_API = 'api';
+
 /**
  * 주소 끝 search string을 Object로 반환
  * @example 'arca.live/b/breaking?p=2&type=best' => { p: '2', type: 'best' }
@@ -49,11 +53,7 @@ function AutoRefresher() {
     (state) => state.SiteCustom.storage,
   );
   const [board, setBoard] = useState();
-  const [pause, setPause] = useState({
-    management: false,
-    unfocus: false,
-    api: false,
-  });
+  const [pause, setPause] = useState([]);
   const refreshData = useRef({
     newArticle: 0, // 반영 안 된 새 게시물 수
     accTime: 0, // 새 게시물이 없는채로 누적된 시간
@@ -157,33 +157,37 @@ function AutoRefresher() {
       if (target.tagName !== 'INPUT') return;
 
       if (target.classList.contains('batch-check-all')) {
-        setPause((prev) => ({
-          ...prev,
-          management: target.checked,
-        }));
+        setPause((prev) =>
+          target.checked
+            ? [...prev, PAUSE_MANAGEMENT]
+            : prev.filter((p) => p !== PAUSE_MANAGEMENT),
+        );
         return;
       }
 
-      setPause((prev) => ({
-        ...prev,
-        management: !!board.querySelector('.batch-check:checked'),
-      }));
+      setPause((prev) =>
+        !board.querySelector('.batch-check:checked')
+          ? prev.filter((p) => p !== PAUSE_MANAGEMENT)
+          : [...prev, PAUSE_MANAGEMENT],
+      );
     };
 
     // 브라우저 탭이 최소화되는 경우
     const onFocusOut = () => {
-      setPause((prev) => ({
-        ...prev,
-        unfocus: document.hidden,
-      }));
+      setPause((prev) =>
+        document.hidden
+          ? [...prev, PAUSE_UNFOCUS]
+          : prev.filter((p) => p !== PAUSE_UNFOCUS),
+      );
       if (!document.hidden) tryRefresh();
     };
 
     const apiPause = () => {
-      setPause((prev) => ({
-        ...prev,
-        api: !prev.api,
-      }));
+      setPause((prev) =>
+        prev.includes(PAUSE_API)
+          ? [...prev, PAUSE_API]
+          : prev.filter((p) => p !== PAUSE_API),
+      );
     };
 
     board.addEventListener('click', onManageArticle);
@@ -199,7 +203,7 @@ function AutoRefresher() {
 
   useEffect(() => {
     if (!enabled) return undefined;
-    if (pause.management || pause.unfocus || pause.api) return undefined;
+    if (pause.length > 0) return undefined;
 
     const timer = setInterval(tryRefresh, countdown * 1000);
 
@@ -234,7 +238,7 @@ function AutoRefresher() {
           <RefreshIndicator
             pos={pos}
             count={enabled ? countdown : 0}
-            animate={!(pause.management || pause.unfocus || pause.api)}
+            animate={pause.length === 0}
           />
         </Box>
       </Fade>
