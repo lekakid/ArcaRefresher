@@ -168,7 +168,9 @@ function DownloadDialog() {
         switch (downloadMethod) {
           case 'fetch':
           case 'xhr+fetch': {
-            const stream = await fetch(orig).then((response) => response.body);
+            const stream = await fetch(orig, {
+              cache: 'no-cache',
+            }).then((response) => response.body);
             return controller.enqueue({
               name: `${finalName}.${ext}`,
               stream: () => stream,
