@@ -8,7 +8,6 @@ import Info from '../FeatureInfo';
 import {
   $toggleEnable,
   $toggleContextMenu,
-  $setDownloadMethod,
   $toggleStartWithZero,
   $setFileName,
   $setZipName,
@@ -21,7 +20,6 @@ const View = forwardRef((_props, ref) => {
   const {
     enabled,
     contextMenuEnabled,
-    downloadMethod,
     startWithZero,
     fileName,
     zipName,
@@ -48,16 +46,6 @@ const View = forwardRef((_props, ref) => {
             value={contextMenuEnabled}
             action={$toggleContextMenu}
           />
-          <SelectRow
-            divider
-            primary="다운로드 방식"
-            value={downloadMethod}
-            action={$setDownloadMethod}
-          >
-            <MenuItem value="fetch">fetch</MenuItem>
-            <MenuItem value="xhr+fetch">XHR+fetch</MenuItem>
-            <MenuItem value="xhr">XHR</MenuItem>
-          </SelectRow>
         </List>
       </Paper>
       <Typography variant="subtitle2">저장될 이름 설정</Typography>

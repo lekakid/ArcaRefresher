@@ -15,7 +15,7 @@ import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
 function ContextMenu({ target, closeMenu }) {
-  const { contextMenuEnabled, downloadMethod, fileName } = useSelector(
+  const { contextMenuEnabled, fileName } = useSelector(
     (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
@@ -82,7 +82,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleDownload = useCallback(() => {
     (async () => {
-      let { orig } = data;
+      const { orig } = data;
       const { ext, uploadName } = data;
       try {
         closeMenu();
@@ -90,67 +90,15 @@ function ContextMenu({ target, closeMenu }) {
           content: contentInfo,
           fileName: uploadName,
         });
-        switch (downloadMethod) {
-          case 'fetch': {
-            const response = await fetch(orig, { cache: 'no-cache' });
-            const size = Number(response.headers.get('content-length'));
-            const stream = response.body;
 
-            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-              size,
-            });
-            stream.pipeTo(filestream);
-            break;
-          }
-          case 'xhr+fetch': {
-            const headResponse = await request(orig, {
-              responseType: 'blob',
-            });
+        const response = await fetch(orig, { cache: 'no-cache' });
+        const size = Number(response.headers.get('content-length'));
+        const stream = response.body;
 
-            const size =
-              Number(
-                headResponse.responseHeaders
-                  .split('content-length: ')[1]
-                  .split('\r')[0],
-              ) || 0;
-
-            orig = headResponse.finalUrl;
-
-            const response = await fetch(orig);
-            const stream = response.body;
-
-            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-              size,
-            });
-            stream.pipeTo(filestream);
-            break;
-          }
-          case 'xhr': {
-            setSnack({
-              msg: '다운로드 준비 중...',
-            });
-            const response = await request(orig, {
-              responseType: 'blob',
-            });
-
-            const size =
-              Number(
-                response.responseHeaders
-                  .split('content-length: ')[1]
-                  .split('\r')[0],
-              ) || 0;
-            const stream = response.response.stream();
-
-            const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-              size,
-            });
-            stream.pipeTo(filestream);
-            setSnack();
-            break;
-          }
-          default:
-            throw new Error('확인할 수 없는 다운로드 방식 사용');
-        }
+        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
+          size,
+        });
+        stream.pipeTo(filestream);
       } catch (error) {
         console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({
@@ -159,7 +107,7 @@ function ContextMenu({ target, closeMenu }) {
         });
       }
     })();
-  }, [data, closeMenu, downloadMethod, fileName, contentInfo, setSnack]);
+  }, [data, closeMenu, fileName, contentInfo, setSnack]);
 
   const handleCopyURL = useCallback(() => {
     closeMenu();

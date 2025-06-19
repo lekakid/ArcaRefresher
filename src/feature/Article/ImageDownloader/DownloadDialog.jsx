@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   IconButton,
   Typography,
@@ -16,44 +17,72 @@ import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
-import { request } from 'func/http';
 
 import SelectableImageList from './SelectableImageList';
 import { format, getImageInfo } from './func';
 import { setOpen } from './slice';
 import Info from './FeatureInfo';
 
+function delay(interval) {
+  if (!interval) return Promise.resolve();
+
+  return new Promise((resolve) => {
+    setTimeout(resolve, interval);
+  });
+}
+
+async function fetchWithRetry(url, opt, tryOpt) {
+  const { tryCount, interval } = tryOpt;
+
+  let count = 0;
+  while (count < tryCount) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      return await fetch(url, opt);
+    } catch (error) {
+      // eslint-disable-next-line no-await-in-loop
+      await delay(interval);
+      count += 1;
+    }
+  }
+  throw new Error('[fetchWithRetry] 시도 횟수 초과');
+}
+
 function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
-  const { downloadMethod, startWithZero, zipImageName, zipName, zipExtension } =
-    useSelector((state) => state[Info.id].storage);
+
+  const { startWithZero, zipImageName, zipName, zipExtension } = useSelector(
+    (state) => state[Info.id].storage,
+  );
   const { open } = useSelector((state) => state[Info.id]);
-  const data = useMemo(() => {
+
+  const [data, setData] = useState(undefined);
+  const [selection, setSelection] = useState([]);
+  const [showProgress, setShowProgress] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    if (data) return;
+
     const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
     const query = isEmotShop
       ? ARTICLE_EMOTICON
       : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
     const imageList = [...document.querySelectorAll(query)];
-    const dataResult = imageList.reduce((acc, image) => {
-      try {
-        acc.push(getImageInfo(image));
-      } catch (error) {
-        console.warn('[ImageDownloader]', error);
-      }
-      return acc;
-    }, []);
+    setData(
+      imageList.reduce((acc, image) => {
+        try {
+          acc.push(getImageInfo(image));
+        } catch (error) {
+          console.warn('[ImageDownloader]', error);
+        }
+        return acc;
+      }, []),
+    );
 
-    return dataResult;
-  }, []);
-  const [selection, setSelection] = useState([]);
-  const [showProgress, setShowProgress] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setSelection([...new Array(data.length).keys()]);
-    }
-  }, [data, open]);
+    setSelection([...new Array(imageList.length).keys()]);
+  }, [open, data]);
 
   const handleSelection = useCallback((sel) => {
     setSelection(sel);
@@ -68,7 +97,6 @@ function DownloadDialog() {
   }, [data, selection]);
 
   const handleDownload = useCallback(async () => {
-    dispatch(setOpen(false));
     setSelection([]);
     setShowProgress(true);
 
@@ -82,46 +110,27 @@ function DownloadDialog() {
 
     let totalSize = 0;
     const availableImages = await selectedImages.reduce(
-      async (promise, info) => {
+      async (promise, info, index) => {
         try {
-          switch (downloadMethod) {
-            case 'fetch': {
-              const response = await fetch(info.orig, {
-                method: 'HEAD',
-                cache: 'no-cache',
-              });
-              if (!response.ok) throw new Error('서버 접속 실패');
+          await delay(Math.floor(index / 5) * 200);
+          const response = await fetchWithRetry(
+            info.orig,
+            {
+              method: 'HEAD',
+            },
+            {
+              tryCount: 3,
+              interval: 1000,
+            },
+          );
+          if (!response.ok) throw new Error('서버 접속 실패');
 
-              const size = Number(response.headers.get('content-length'));
-              totalSize += size;
-
-              break;
-            }
-            case 'xhr+fetch':
-            case 'xhr': {
-              const response = await request(info.orig, {
-                method: 'HEAD',
-              });
-              if (response.status !== 200) throw new Error('서버 접속 실패');
-
-              const size =
-                Number(
-                  response.responseHeaders
-                    .split('content-length: ')[1]
-                    .split('\r')[0],
-                ) || 0;
-              totalSize += size;
-              info.orig = response.finalUrl;
-
-              break;
-            }
-            default: {
-              throw new Error('다운로드 방식 설정값이 이상합니다.');
-            }
-          }
           const acc = await promise;
-          acc.push(info);
 
+          const size = Number(response.headers.get('content-length'));
+          totalSize += size;
+
+          acc.push(info);
           return acc;
         } catch (error) {
           console.warn('[ImageDownloader] 이미지를 처리할 수 없습니다.', error);
@@ -145,7 +154,7 @@ function DownloadDialog() {
     const dupCount = {};
     const myReadable = new ReadableStream({
       start() {
-        setOpen(false);
+        dispatch(setOpen(false));
         window.addEventListener('beforeunload', confirm);
       },
       async pull(controller) {
@@ -166,29 +175,18 @@ function DownloadDialog() {
         dupCount[name] = dupCount[name] > 0 ? dupCount[name] + 1 : 1;
 
         count += 1;
-        switch (downloadMethod) {
-          case 'fetch':
-          case 'xhr+fetch': {
-            const stream = await fetch(orig, {
-              cache: 'no-cache',
-            }).then((response) => response.body);
-            return controller.enqueue({
-              name: `${finalName}.${ext}`,
-              stream: () => stream,
-            });
-          }
-          case 'xhr': {
-            const stream = await request(orig, { responseType: 'blob' }).then(
-              ({ response }) => response.stream(),
-            );
-            return controller.enqueue({
-              name: `${finalName}.${ext}`,
-              stream: () => stream,
-            });
-          }
-          default:
-            console.warn('[ImageDownload] 확인할 수 없는 다운로드 방식 사용');
-            return undefined;
+        try {
+          const stream = await fetchWithRetry(orig, undefined, {
+            tryCount: 5,
+            interval: 1000,
+          }).then((response) => response.body);
+          return controller.enqueue({
+            name: `${finalName}.${ext}`,
+            stream: () => stream,
+          });
+        } catch (error) {
+          console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+          return undefined;
         }
       },
       cancel() {
@@ -212,7 +210,6 @@ function DownloadDialog() {
     startWithZero,
     zipExtension,
     zipImageName,
-    downloadMethod,
   ]);
 
   const handleClose = useCallback(() => {
@@ -229,13 +226,23 @@ function DownloadDialog() {
     [handleDownload, selection],
   );
 
-  const imgList = data.map(({ thumb }) => thumb);
+  const imgList = data?.map(({ thumb }) => thumb);
+  if (!imgList) {
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent sx={{ textAlign: 'center' }}>
+          <DialogContentText>
+            게시물 내 이미지 목록을 확인 중입니다...
+          </DialogContentText>
+          <CircularProgress color="primary" />
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   if (showProgress) {
     return (
       <Dialog
-        fullWidth
-        maxWidth="lg"
         open={open}
         slotProps={{
           transition: {
@@ -246,6 +253,9 @@ function DownloadDialog() {
         }}
       >
         <DialogContent sx={{ textAlign: 'center' }}>
+          <DialogContentText>
+            선택한 이미지들의 데이터를 확인하는 중입니다...
+          </DialogContentText>
           <CircularProgress color="primary" />
         </DialogContent>
       </Dialog>
