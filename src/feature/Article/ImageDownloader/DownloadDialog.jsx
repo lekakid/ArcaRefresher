@@ -22,6 +22,7 @@ import SelectableImageList from './SelectableImageList';
 import { format, getImageInfo } from './func';
 import { setOpen } from './slice';
 import Info from './FeatureInfo';
+import getEmotInfo from './func/getEmotInfo';
 
 function delay(interval) {
   if (!interval) return Promise.resolve();
@@ -65,23 +66,39 @@ function DownloadDialog() {
     if (!open) return;
     if (data) return;
 
-    const isEmotShop = window.location.pathname.indexOf('/e/') !== -1;
-    const query = isEmotShop
-      ? ARTICLE_EMOTICON
-      : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
-    const imageList = [...document.querySelectorAll(query)];
-    setData(
-      imageList.reduce((acc, image) => {
+    (async () => {
+      const isEmotShop = window.location.pathname.includes('/e/');
+      if (isEmotShop) {
+        const bundleId = window.location.pathname.replace('/e/', '');
         try {
-          acc.push(getImageInfo(image));
+          const response = await fetch(`/api/emoticon/${bundleId}`);
+          if (response.ok) {
+            const emotJson = await response.json();
+            setData(emotJson.map((e) => getEmotInfo(e)));
+            setSelection([...new Array(emotJson.length).keys()]);
+            return;
+          }
         } catch (error) {
-          console.warn('[ImageDownloader]', error);
+          console.warn('[ImageDownloader] 아카콘 번들 데이터 획득 실패');
         }
-        return acc;
-      }, []),
-    );
+      }
+      const query = isEmotShop
+        ? ARTICLE_EMOTICON
+        : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
+      const imageList = [...document.querySelectorAll(query)];
+      setData(
+        imageList.reduce((acc, image) => {
+          try {
+            acc.push(getImageInfo(image));
+          } catch (error) {
+            console.warn('[ImageDownloader]', error);
+          }
+          return acc;
+        }, []),
+      );
 
-    setSelection([...new Array(imageList.length).keys()]);
+      setSelection([...new Array(imageList.length).keys()]);
+    })();
   }, [open, data]);
 
   const handleSelection = useCallback((sel) => {
@@ -117,6 +134,7 @@ function DownloadDialog() {
             info.orig,
             {
               method: 'HEAD',
+              cache: 'no-cache',
             },
             {
               tryCount: 3,
