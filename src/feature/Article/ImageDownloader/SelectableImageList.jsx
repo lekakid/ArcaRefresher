@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -40,38 +41,43 @@ function SelectableImageList({ imgList, selection, onChange }) {
   return (
     <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
       {imgList.map((img, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <ImageListItem key={`${img}_${index}`} onClick={handleSelect(index)}>
-          <img
-            style={{ overflow: 'hidden' }}
-            src={img}
-            alt={img}
-            loading="lazy"
-          />
-          <ImageListItemBar
-            sx={{
-              background:
-                'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-            }}
-            position="top"
-            actionPosition="left"
-            actionIcon={
-              <Checkbox
-                size="small"
-                sx={{
-                  color: 'white',
-                  '&.Mui-checked': {
+        <LazyLoadComponent
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${img}_${index}`}
+          placeholder={<Box sx={{ height: 3000 }} />}
+        >
+          <ImageListItem onClick={handleSelect(index)}>
+            <img
+              style={{ overflow: 'hidden' }}
+              src={img}
+              alt={img}
+              loading="lazy"
+            />
+            <ImageListItemBar
+              sx={{
+                background:
+                  'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+              }}
+              position="top"
+              actionPosition="left"
+              actionIcon={
+                <Checkbox
+                  size="small"
+                  sx={{
                     color: 'white',
-                  },
-                }}
-                icon={<CheckCircleOutline />}
-                checkedIcon={<CheckCircle />}
-                checked={selection.includes(index)}
-                onClick={handleSelect(index)}
-              />
-            }
-          />
-        </ImageListItem>
+                    '&.Mui-checked': {
+                      color: 'white',
+                    },
+                  }}
+                  icon={<CheckCircleOutline />}
+                  checkedIcon={<CheckCircle />}
+                  checked={selection.includes(index)}
+                  onClick={handleSelect(index)}
+                />
+              }
+            />
+          </ImageListItem>
+        </LazyLoadComponent>
       ))}
     </ImageList>
   );

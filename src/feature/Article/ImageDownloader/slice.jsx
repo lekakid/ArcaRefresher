@@ -4,9 +4,10 @@ import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
+  // 동작 설정
   enabled: true,
   contextMenuEnabled: true,
-  downloadMethod: 'fetch',
+  // 파일 포맷
   startWithZero: false,
   fileName: '%title%',
   zipName: '%title%',
@@ -29,9 +30,6 @@ export const slice = createSlice({
     },
     $toggleContextMenu(state) {
       state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
-    },
-    $setDownloadMethod(state, action) {
-      state.storage.downloadMethod = action.payload;
     },
     // 파일 포멧
     $toggleStartWithZero(state) {
@@ -59,7 +57,6 @@ export const slice = createSlice({
 export const {
   $toggleEnable,
   $toggleContextMenu,
-  $setDownloadMethod,
   $toggleStartWithZero,
   $setFileName,
   $setZipName,
