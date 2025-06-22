@@ -53,14 +53,17 @@ function DownloadDialog() {
   const dispatch = useDispatch();
   const contentInfo = useContent();
 
-  const { startWithZero, zipImageName, zipName, zipExtension } = useSelector(
-    (state) => state[Info.id].storage,
-  );
+  const {
+    // 파일 포맷
+    startWithZero,
+    zipImageName,
+    zipName,
+    zipExtension,
+  } = useSelector((state) => state[Info.id].storage);
   const { open } = useSelector((state) => state[Info.id]);
 
   const [data, setData] = useState(undefined);
   const [selection, setSelection] = useState([]);
-  const [showProgress, setShowProgress] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -115,7 +118,6 @@ function DownloadDialog() {
 
   const handleDownload = useCallback(async () => {
     setSelection([]);
-    setShowProgress(true);
 
     const selectedTable = data.map(() => false);
     selection.forEach((s) => {
@@ -125,40 +127,7 @@ function DownloadDialog() {
       .map((s, i) => (s ? data[i] : undefined))
       .filter((d) => !!d);
 
-    let totalSize = 0;
-    const availableImages = await selectedImages.reduce(
-      async (promise, info, index) => {
-        try {
-          await delay(Math.floor(index / 5) * 200);
-          const response = await fetchWithRetry(
-            info.orig,
-            {
-              method: 'HEAD',
-              cache: 'no-cache',
-            },
-            {
-              tryCount: 3,
-              interval: 1000,
-            },
-          );
-          if (!response.ok) throw new Error('서버 접속 실패');
-
-          const acc = await promise;
-
-          const size = Number(response.headers.get('content-length'));
-          totalSize += size;
-
-          acc.push(info);
-          return acc;
-        } catch (error) {
-          console.warn('[ImageDownloader] 이미지를 처리할 수 없습니다.', error);
-          return promise;
-        }
-      },
-      [],
-    );
-
-    const iterator = availableImages.values();
+    const iterator = selectedImages.values();
 
     const confirm = (event) => {
       event.preventDefault();
@@ -195,7 +164,7 @@ function DownloadDialog() {
         count += 1;
         try {
           const stream = await fetchWithRetry(orig, undefined, {
-            tryCount: 5,
+            tryCount: 10,
             interval: 1000,
           }).then((response) => response.body);
           return controller.enqueue({
@@ -214,20 +183,19 @@ function DownloadDialog() {
 
     const zipFileName = format(zipName, { content: contentInfo });
 
-    myReadable.pipeThrough(new Writer()).pipeTo(
-      streamSaver.createWriteStream(`${zipFileName}.${zipExtension}`, {
-        size: totalSize,
-      }),
+    const filestream = streamSaver.createWriteStream(
+      `${zipFileName}.${zipExtension}`,
     );
+    myReadable.pipeThrough(new Writer()).pipeTo(filestream);
   }, [
-    dispatch,
     data,
     selection,
+    startWithZero,
     zipName,
     contentInfo,
-    startWithZero,
     zipExtension,
     zipImageName,
+    dispatch,
   ]);
 
   const handleClose = useCallback(() => {
@@ -251,28 +219,6 @@ function DownloadDialog() {
         <DialogContent sx={{ textAlign: 'center' }}>
           <DialogContentText>
             게시물 내 이미지 목록을 확인 중입니다...
-          </DialogContentText>
-          <CircularProgress color="primary" />
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (showProgress) {
-    return (
-      <Dialog
-        open={open}
-        slotProps={{
-          transition: {
-            onExited() {
-              setShowProgress(false);
-            },
-          },
-        }}
-      >
-        <DialogContent sx={{ textAlign: 'center' }}>
-          <DialogContentText>
-            선택한 이미지들의 데이터를 확인하는 중입니다...
           </DialogContentText>
           <CircularProgress color="primary" />
         </DialogContent>
