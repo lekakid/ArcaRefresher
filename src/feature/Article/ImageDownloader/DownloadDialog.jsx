@@ -163,10 +163,14 @@ function DownloadDialog() {
 
         count += 1;
         try {
-          const stream = await fetchWithRetry(orig, undefined, {
-            tryCount: 10,
-            interval: 1000,
-          }).then((response) => response.body);
+          const stream = await fetchWithRetry(
+            orig,
+            { cache: 'no-cache' },
+            {
+              tryCount: 10,
+              interval: 1000,
+            },
+          ).then((response) => response.body);
           return controller.enqueue({
             name: `${finalName}.${ext}`,
             stream: () => stream,
