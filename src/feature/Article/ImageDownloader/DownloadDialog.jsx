@@ -139,51 +139,53 @@ function DownloadDialog() {
 
     let count = startWithZero ? 0 : 1;
     const dupCount = {};
-    const myReadable = new ReadableStream({
-      start() {
-        dispatch(setOpen(false));
-        window.addEventListener('beforeunload', confirm);
-      },
-      async pull(controller) {
-        const { done, value } = iterator.next();
-        if (done) {
-          window.removeEventListener('beforeunload', confirm);
-          return controller.close();
-        }
+    const myReadable = new ReadableStream(
+      {
+        start() {
+          dispatch(setOpen(false));
+          window.addEventListener('beforeunload', confirm);
+        },
+        async pull(controller) {
+          const { done, value } = iterator.next();
+          if (done) {
+            window.removeEventListener('beforeunload', confirm);
+          }
 
-        const { orig, ext, uploadName } = value;
-        const name = format(zipImageName, {
-          content: contentInfo,
-          index: count,
-          fileName: uploadName,
-        });
-        const finalName =
-          dupCount[name] > 0 ? `${name}(${dupCount[name]})` : name;
-        dupCount[name] = dupCount[name] > 0 ? dupCount[name] + 1 : 1;
-
-        count += 1;
-        try {
-          const stream = await fetchWithRetry(
-            orig,
-            { cache: 'no-cache' },
-            {
-              tryCount: 10,
-              interval: 1000,
-            },
-          ).then((response) => response.body);
-          return controller.enqueue({
-            name: `${finalName}.${ext}`,
-            stream: () => stream,
+          const { orig, ext, uploadName } = value;
+          const name = format(zipImageName, {
+            content: contentInfo,
+            index: count,
+            fileName: uploadName,
           });
-        } catch (error) {
-          console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
-          return undefined;
-        }
+          const finalName =
+            dupCount[name] > 0 ? `${name}(${dupCount[name]})` : name;
+          dupCount[name] = dupCount[name] > 0 ? dupCount[name] + 1 : 1;
+
+          count += 1;
+          try {
+            const stream = await fetchWithRetry(
+              orig,
+              { cache: 'no-cache' },
+              {
+                tryCount: 10,
+                interval: 1000,
+              },
+            ).then((response) => response.body);
+            return controller.enqueue({
+              name: `${finalName}.${ext}`,
+              stream: () => stream,
+            });
+          } catch (error) {
+            console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+            return undefined;
+          }
+        },
+        cancel() {
+          window.removeEventListener('beforeunload', confirm);
+        },
       },
-      cancel() {
-        window.removeEventListener('beforeunload', confirm);
-      },
-    });
+      { highWaterMark: 0 },
+    );
 
     const zipFileName = format(zipName, { content: contentInfo });
 
