@@ -32,7 +32,7 @@ import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
 function makeRegex(id) {
-  return `${id.replace('.', '\\.')}$`;
+  return `${id.replace('.', '\\.').replace('*', '\\*')}$`;
 }
 
 const USER_SELECTOR = {
