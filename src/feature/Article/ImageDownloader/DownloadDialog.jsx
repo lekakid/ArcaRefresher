@@ -149,6 +149,7 @@ function DownloadDialog() {
           const { done, value } = iterator.next();
           if (done) {
             window.removeEventListener('beforeunload', confirm);
+            return controller.close();
           }
 
           const { orig, ext, uploadName } = value;
