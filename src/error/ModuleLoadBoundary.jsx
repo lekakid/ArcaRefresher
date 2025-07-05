@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -18,6 +18,7 @@ import { $setIgnoreVersionTarget, SLICE_ID } from './slice';
 
 function ErrorDialog({ moduleId, text, error }) {
   const dispatch = useDispatch();
+  const { resetBoundary } = useErrorBoundary();
 
   const lastCheckVersion = useSelector(
     (state) => state[SLICE_ID].storage.lastCheckVersion,
@@ -62,7 +63,7 @@ function ErrorDialog({ moduleId, text, error }) {
       </DialogContent>
       <DialogActions>
         <FormControlLabel
-          label="다음 업데이트까지 이 기능의 오류 표시 안함"
+          label="다음 업데이트까지 이 기능의 오류 무시"
           control={
             <Checkbox
               checked={ignore}
@@ -75,6 +76,9 @@ function ErrorDialog({ moduleId, text, error }) {
           onClick={() => GM_openInTab('https://arca.live/b/namurefresher')}
         >
           문의
+        </Button>
+        <Button variant="outlined" onClick={resetBoundary}>
+          재시도
         </Button>
         <Button variant="contained" onClick={onClose}>
           닫기
