@@ -12,6 +12,7 @@ import {
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { useConfirm } from 'component';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import Info from './FeatureInfo';
 
 const PREVIEW_SELECTOR =
@@ -129,13 +130,21 @@ export default function ArticleCustom() {
 
   // 외부 링크 경고 무시
   useEffect(() => {
-    if (!article || !ignoreExternalLinkWarning) return;
+    if (!article || !ignoreExternalLinkWarning) return undefined;
 
-    article.querySelectorAll('a.external').forEach((e) => {
-      e.href = e.href.replace(/^https:\/\/.*\/https:\/\//, 'https://');
-      e.href = e.href.replace(/^https:\/\/.*\/http:\/\//, 'http://');
-      e.classList.remove('external');
-    });
+    const releaseExternal = () => {
+      article.querySelectorAll('a.external').forEach((e) => {
+        e.href = e.href.replace(/^https:\/\/.*\/https:\/\//, 'https://');
+        e.href = e.href.replace(/^https:\/\/.*\/http:\/\//, 'http://');
+        e.classList.remove('external');
+      });
+    };
+
+    releaseExternal();
+
+    window.addEventListener(EVENT_COMMENT_REFRESH, releaseExternal);
+    return () =>
+      window.addEventListener(EVENT_COMMENT_REFRESH, releaseExternal);
   }, [article, ignoreExternalLinkWarning]);
 
   // 비추천 방지
