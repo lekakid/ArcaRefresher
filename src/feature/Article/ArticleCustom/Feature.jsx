@@ -90,6 +90,7 @@ export default function ArticleCustom() {
     // 동작
     blockMediaNewWindow,
     ignoreSpoilerFilter,
+    removeBlur,
     ignoreExternalLinkWarning,
     ratedownGuard,
   } = useSelector((state) => state[Info.id].storage);
@@ -127,6 +128,15 @@ export default function ArticleCustom() {
       .querySelector('.spoiler-filter.active')
       ?.classList.remove('active');
   }, [ignoreSpoilerFilter]);
+
+  // 블러 제거
+  useEffect(() => {
+    if (!removeBlur) return;
+
+    document.querySelectorAll('.blur').forEach((e) => {
+      e.classList.remove('blur');
+    });
+  }, [removeBlur]);
 
   // 외부 링크 경고 무시
   useEffect(() => {

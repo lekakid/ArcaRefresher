@@ -16,6 +16,7 @@ import {
   $toggleIgnoreSpoilerFilter,
   $toggleIgnoreExternalLinkWarning,
   $toggleRateDownGuard,
+  $toggleRemoveBlur,
 } from '../slice';
 
 const View = forwardRef((_props, ref) => {
@@ -28,6 +29,7 @@ const View = forwardRef((_props, ref) => {
     // 동작
     blockMediaNewWindow,
     ignoreSpoilerFilter,
+    removeBlur,
     ignoreExternalLinkWarning,
     ratedownGuard,
   } = useSelector((state) => state[Info.id].storage);
@@ -81,6 +83,12 @@ const View = forwardRef((_props, ref) => {
             primary="스포일러 경고 무시"
             value={ignoreSpoilerFilter}
             action={$toggleIgnoreSpoilerFilter}
+          />
+          <SwitchRow
+            divider
+            primary="블러 제거"
+            value={removeBlur}
+            action={$toggleRemoveBlur}
           />
           <SwitchRow
             divider
