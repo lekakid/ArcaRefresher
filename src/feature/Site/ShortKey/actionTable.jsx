@@ -103,28 +103,31 @@ export default [
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
-        // 게시물
-        const currentArticle = document.querySelector(
-          '.article-view .vrow.active',
+        // 게시물 뷰
+        const articleList = [
+          ...document.querySelectorAll('.article-view .vrow:not(.notice)'),
+        ];
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (article.matches('.active')) {
+            break;
+          }
+        }
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (!article.matches('.filtered')) {
+            const url = article.href || article.querySelector('a.title').href;
+            window.location = url;
+            return;
+          }
+        }
+
+        const lastArticle = document.querySelector(
+          '.article-view .vrow:last-child',
         );
-        if (!currentArticle) {
-          const lastArticle = document.querySelector(
-            '.article-view .vrow:last-child',
-          );
-          const url =
-            lastArticle.href || lastArticle.querySelector('a.title').href;
-          window.location = url;
-        }
-        if (
-          currentArticle.previousElementSibling &&
-          !currentArticle.previousElementSibling.matches('.notice')
-        ) {
-          const url =
-            currentArticle.previousElementSibling.href ||
-            currentArticle.previousElementSibling.querySelector('a.title').href;
-          window.location = url;
-          return;
-        }
+        const url =
+          lastArticle.href || lastArticle.querySelector('a.title').href;
+        window.location = url;
       }
       const currentPage = document.querySelector(
         '.article-list~.pagination-wrapper .active',
@@ -140,25 +143,31 @@ export default [
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
-        // 게시물
-        const currentArticle = document.querySelector(
-          '.article-view .vrow.active',
+        // 게시물 뷰
+        const articleList = [
+          ...document.querySelectorAll('.article-view .vrow:not(.notice)'),
+        ].reverse();
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (article.matches('.active')) {
+            break;
+          }
+        }
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (!article.matches('.filtered')) {
+            const url = article.href || article.querySelector('a.title').href;
+            window.location = url;
+            return;
+          }
+        }
+
+        const lastArticle = document.querySelector(
+          '.article-view .vrow:last-child',
         );
-        if (!currentArticle) {
-          // 마지막 게시물이 다음 페이지로 넘어갔으므로 페이지 이동
-          const currentPage = document.querySelector(
-            '.pagination-wrapper .active',
-          );
-          currentPage.nextElementSibling?.querySelector('a').click();
-          return;
-        }
-        if (currentArticle.nextElementSibling) {
-          const url =
-            currentArticle.nextElementSibling.href ||
-            currentArticle.nextElementSibling.querySelector('a.title').href;
-          window.location = url;
-          return;
-        }
+        const url =
+          lastArticle.href || lastArticle.querySelector('a.title').href;
+        window.location = url;
       }
       const currentPage = document.querySelector(
         '.article-list~.pagination-wrapper .active',
