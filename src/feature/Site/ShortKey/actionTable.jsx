@@ -105,29 +105,26 @@ export default [
       if (token.length > 3) {
         // 게시물 뷰
         const articleList = [
-          ...document.querySelectorAll('.article-view .vrow:not(.notice)'),
+          ...document.querySelectorAll(
+            '.article-view a.vrow:not(.notice):not(.filtered), .article-view div.vrow:not(.filtered) a.hybrid-title',
+          ),
         ];
+
+        // 조회중인 게시물 검색
         while (articleList.length > 0) {
           const article = articleList.pop();
-          if (article.matches('.active')) {
+          if (article.closest('.active')) {
             break;
           }
         }
-        while (articleList.length > 0) {
-          const article = articleList.pop();
-          if (!article.matches('.filtered')) {
-            const url = article.href || article.querySelector('a.title').href;
-            window.location = url;
-            return;
-          }
-        }
 
-        const lastArticle = document.querySelector(
-          '.article-view .vrow:last-child',
-        );
-        const url =
-          lastArticle.href || lastArticle.querySelector('a.title').href;
-        window.location = url;
+        // 그 다음 게시물
+        if (articleList.length > 0) {
+          const article = articleList.pop();
+          const url = article.href;
+          window.location = url;
+          return;
+        }
       }
       const currentPage = document.querySelector(
         '.article-list~.pagination-wrapper .active',
@@ -145,29 +142,26 @@ export default [
       if (token.length > 3) {
         // 게시물 뷰
         const articleList = [
-          ...document.querySelectorAll('.article-view .vrow:not(.notice)'),
+          ...document.querySelectorAll(
+            '.article-view a.vrow:not(.notice):not(.filtered), .article-view div.vrow:not(.filtered) a.hybrid-title',
+          ),
         ].reverse();
+
+        // 조회중인 게시물 검색
         while (articleList.length > 0) {
           const article = articleList.pop();
-          if (article.matches('.active')) {
+          if (article.closest('.active')) {
             break;
           }
         }
-        while (articleList.length > 0) {
-          const article = articleList.pop();
-          if (!article.matches('.filtered')) {
-            const url = article.href || article.querySelector('a.title').href;
-            window.location = url;
-            return;
-          }
-        }
 
-        const lastArticle = document.querySelector(
-          '.article-view .vrow:last-child',
-        );
-        const url =
-          lastArticle.href || lastArticle.querySelector('a.title').href;
-        window.location = url;
+        // 그 다음 게시물
+        if (articleList.length > 0) {
+          const article = articleList.pop();
+          const url = article.href || article.querySelector('a.title')?.href;
+          window.location = url;
+          return;
+        }
       }
       const currentPage = document.querySelector(
         '.article-list~.pagination-wrapper .active',
