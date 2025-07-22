@@ -1,6 +1,6 @@
 export default function getImageInfo(image) {
-  // 변환된 GIF || GIF 아카콘 || 일반적인 경우
   const url = new URL(
+    // 변환된 GIF || GIF 아카콘 || 일반적인 경우
     image.dataset.originalurl || image.dataset.src || image.src,
     window.location.origin,
   );

@@ -15,7 +15,7 @@ import { format, getImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
 function ContextMenu({ target, closeMenu }) {
-  const { contextMenuEnabled, fileName } = useSelector(
+  const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
     (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
@@ -38,14 +38,14 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleClipboard = useCallback(() => {
     (async () => {
-      const { orig } = data;
+      const { orig, thumb } = data;
 
       try {
         closeMenu();
         setSnack({ msg: '이미지를 다운로드 중...' });
-        const rawData = await request(orig, { responseType: 'blob' }).then(
-          (r) => r.response,
-        );
+        const rawData = await request(originToClipboard ? orig : thumb, {
+          responseType: 'blob',
+        }).then((r) => r.response);
 
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
@@ -78,7 +78,7 @@ function ContextMenu({ target, closeMenu }) {
         });
       }
     })();
-  }, [closeMenu, data, setSnack]);
+  }, [data, originToClipboard, closeMenu, setSnack]);
 
   const handleDownload = useCallback(() => {
     (async () => {
