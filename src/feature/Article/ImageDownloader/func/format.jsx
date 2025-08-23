@@ -57,7 +57,7 @@ export const FORMAT = {
     STRING: '%orig%',
     REGEX: /%orig%/,
     LABEL: '이미지 업로드 명',
-    getValue: (args) => args.fileName || '',
+    getValue: (args) => args.name || '',
   },
   NUMBER: {
     STRING: '%num%',
