@@ -8,6 +8,7 @@ import Info from '../FeatureInfo';
 import {
   $toggleEnable,
   $toggleContextMenu,
+  $toggleDownloadOrigin,
   $toggleOriginToClipboard,
   $toggleStartWithZero,
   $setFileName,
@@ -21,6 +22,7 @@ const View = forwardRef((_props, ref) => {
   const {
     enabled,
     contextMenuEnabled,
+    downloadOrigin,
     originToClipboard,
     startWithZero,
     fileName,
@@ -47,6 +49,12 @@ const View = forwardRef((_props, ref) => {
             primary="우클릭 메뉴 사용"
             value={contextMenuEnabled}
             action={$toggleContextMenu}
+          />
+          <SwitchRow
+            divider
+            primary="다운로드 시 원본 이미지 다운로드"
+            value={downloadOrigin}
+            action={$toggleDownloadOrigin}
           />
           <SwitchRow
             divider

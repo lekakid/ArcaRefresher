@@ -8,7 +8,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   IconButton,
+  Switch,
   Typography,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -20,7 +22,7 @@ import { useContent } from 'hooks/Content';
 
 import SelectableImageList from './SelectableImageList';
 import { format, ImageInfo } from './func';
-import { setOpen } from './slice';
+import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
 
 function mapImageInfo(arr) {
@@ -66,6 +68,8 @@ function DownloadDialog() {
   const contentInfo = useContent();
 
   const {
+    // 동작 설정
+    downloadOrigin,
     // 파일 포맷
     startWithZero,
     zipImageName,
@@ -155,7 +159,7 @@ function DownloadDialog() {
             return controller.close();
           }
 
-          const { orig, ext, name } = value;
+          const { url, orig, ext, name } = value;
           let imageName = format(zipImageName, {
             content: contentInfo,
             index: count,
@@ -170,7 +174,7 @@ function DownloadDialog() {
           count += 1;
           try {
             const stream = await fetchWithRetry(
-              orig,
+              downloadOrigin ? orig : url,
               { cache: 'no-cache' },
               {
                 tryCount: 10,
@@ -202,6 +206,7 @@ function DownloadDialog() {
   }, [
     data,
     selection,
+    downloadOrigin,
     startWithZero,
     zipName,
     contentInfo,
@@ -266,6 +271,16 @@ function DownloadDialog() {
         />
       </DialogContent>
       <DialogActions>
+        <FormControlLabel
+          label="원본"
+          control={
+            <Switch
+              checked={downloadOrigin}
+              onChange={() => dispatch($toggleDownloadOrigin())}
+            />
+          }
+        />
+
         <Typography>{`${selection.length}/${imgList.length}`}</Typography>
         <Button onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}
