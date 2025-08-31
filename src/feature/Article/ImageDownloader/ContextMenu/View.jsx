@@ -48,11 +48,12 @@ function ContextMenu({ target, closeMenu }) {
         : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
+        if (!contentInfo.config) return undefined;
 
         return new ImageInfo(target);
       },
     },
-    [target],
+    [target, contentInfo.config],
   );
 
   const handleClipboard = useCallback(() => {
