@@ -265,8 +265,7 @@ function ContextMenu({ target, closeMenu }) {
   );
 
   if (data?.type === 'emoticon') {
-    const muted =
-      filter.emoticon.bundle[data.emotId] || filter.emoticon.url[data.url];
+    const muted = target.closest('.muted');
 
     return (
       <List>
