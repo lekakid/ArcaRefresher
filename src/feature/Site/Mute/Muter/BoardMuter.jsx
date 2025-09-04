@@ -216,6 +216,7 @@ function BoardMuter() {
       <CountBar
         renderContainer={countBarContainer}
         controlTarget={controlTarget}
+        hideMutedToggleBtn
         count={count}
         hide={hideCountBar}
       />

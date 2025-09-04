@@ -27,7 +27,13 @@ const TypeString = {
   all: '전체',
 };
 
-function CountBar({ renderContainer, controlTarget, count, hide }) {
+function CountBar({
+  renderContainer,
+  controlTarget,
+  hideMutedToggleBtn,
+  count,
+  hide,
+}) {
   const [showStates, setShowStates] = useState(undefined);
   const hideMutedMark = useSelector(
     (state) => state[Info.id].storage.hideMutedMark,
@@ -102,15 +108,17 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
               <Cancel />
             </IconButton>
           </Tooltip>
-          <Tooltip title="[뮤트됨] 표시">
-            <IconButton
-              size="small"
-              sx={{ padding: 0.2 }}
-              onClick={() => dispatch($toggleMutedMark())}
-            >
-              {hideMutedMark ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </Tooltip>
+          {!hideMutedToggleBtn && (
+            <Tooltip title="[뮤트됨] 표시">
+              <IconButton
+                size="small"
+                sx={{ padding: 0.2 }}
+                onClick={() => dispatch($toggleMutedMark())}
+              >
+                {hideMutedMark ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </Tooltip>
+          )}
         </Grid>
         <Grid
           size={{ xs: 12, sm: 8 }}
@@ -152,11 +160,13 @@ function CountBar({ renderContainer, controlTarget, count, hide }) {
 CountBar.propTypes = {
   renderContainer: PropTypes.object,
   controlTarget: PropTypes.object,
+  hideMutedToggleBtn: PropTypes.bool,
   count: PropTypes.object,
   hide: PropTypes.bool,
 };
 
 CountBar.defaultProps = {
+  hideMutedToggleBtn: false,
   count: {
     keyword: 0,
     user: 0,
