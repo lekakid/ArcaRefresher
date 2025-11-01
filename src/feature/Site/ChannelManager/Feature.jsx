@@ -94,6 +94,8 @@ export default function ChannelManager() {
     const nav = document.querySelector('nav .nav');
     const subsElement = nav.firstElementChild;
 
+    if (!subsElement) return undefined;
+
     subsElement.style.display = 'none';
     const subs = [
       ...subsElement.querySelectorAll(

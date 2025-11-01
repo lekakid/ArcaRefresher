@@ -13,6 +13,7 @@ const defaultStorage = {
   // 동작
   blockMediaNewWindow: false,
   ignoreExternalLinkWarning: false,
+  removeBlur: true,
   ignoreSpoilerFilter: false,
   ratedownGuard: false,
 };
@@ -78,6 +79,9 @@ export const slice = createSlice({
     $toggleIgnoreSpoilerFilter(state) {
       state.storage.ignoreSpoilerFilter = !state.storage.ignoreSpoilerFilter;
     },
+    $toggleRemoveBlur(state) {
+      state.storage.removeBlur = !state.storage.removeBlur;
+    },
     $toggleIgnoreExternalLinkWarning(state) {
       state.storage.ignoreExternalLinkWarning =
         !state.storage.ignoreExternalLinkWarning;
@@ -97,6 +101,7 @@ export const {
   // 동작
   $toggleBlockMediaNewWindow,
   $toggleIgnoreSpoilerFilter,
+  $toggleRemoveBlur,
   $toggleIgnoreExternalLinkWarning,
   $toggleRateDownGuard,
 } = slice.actions;

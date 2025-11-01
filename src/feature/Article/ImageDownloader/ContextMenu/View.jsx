@@ -11,11 +11,30 @@ import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
-import { format, getImageInfo } from '../func';
+import { format, ImageInfo } from '../func';
 import Info from '../FeatureInfo';
 
+async function convertToPng(blob) {
+  const canvas = document.createElement('canvas');
+  const canvasContext = canvas.getContext('2d');
+
+  const result = await new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvasContext.drawImage(img, 0, 0);
+      canvas.toBlob((b) => resolve(b));
+    };
+    img.src = URL.createObjectURL(blob);
+  });
+  canvas.remove();
+
+  return result;
+}
+
 function ContextMenu({ target, closeMenu }) {
-  const { contextMenuEnabled, fileName } = useSelector(
+  const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
     (state) => state[Info.id].storage,
   );
   const contentInfo = useContent();
@@ -29,43 +48,35 @@ function ContextMenu({ target, closeMenu }) {
         : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
+        if (!contentInfo.config) return undefined;
 
-        return getImageInfo(target);
+        return new ImageInfo(target);
       },
     },
-    [target],
+    [target, contentInfo.config],
   );
 
   const handleClipboard = useCallback(() => {
     (async () => {
-      const { orig } = data;
+      const { orig, thumb } = data;
 
       try {
         closeMenu();
-        setSnack({ msg: '이미지를 다운로드 중...' });
-        const rawData = await request(orig, { responseType: 'blob' }).then(
-          (r) => r.response,
-        );
 
-        const canvas = document.createElement('canvas');
-        const canvasContext = canvas.getContext('2d');
-        const convertedBlob = await new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            canvasContext.drawImage(img, 0, 0);
-            canvas.toBlob((blob) => {
-              resolve(blob);
-            });
-          };
-          img.src = URL.createObjectURL(rawData);
-        });
-        canvas.remove();
-        const item = new ClipboardItem({
-          [convertedBlob.type]: convertedBlob,
-        });
-        navigator.clipboard.write([item]);
+        setSnack({ msg: '이미지를 다운로드 중...' });
+        const response = await request(originToClipboard ? orig : thumb, {
+          responseType: 'blob',
+        }).then((r) => r.response);
+        const blob =
+          response.type === 'image/png'
+            ? response
+            : await convertToPng(response);
+
+        navigator.clipboard.write([
+          new ClipboardItem({
+            [blob.type]: blob,
+          }),
+        ]);
         setSnack({
           msg: '클립보드에 이미지가 복사되었습니다.',
           time: 3000,
@@ -78,7 +89,7 @@ function ContextMenu({ target, closeMenu }) {
         });
       }
     })();
-  }, [closeMenu, data, setSnack]);
+  }, [data, originToClipboard, closeMenu, setSnack]);
 
   const handleDownload = useCallback(() => {
     (async () => {

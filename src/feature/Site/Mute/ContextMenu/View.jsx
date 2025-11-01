@@ -32,7 +32,7 @@ import { filterSelector } from '../selector';
 import Info from '../FeatureInfo';
 
 function makeRegex(id) {
-  return `${id.replace('.', '\\.').replace('*', '\\*')}$`;
+  return `^${id.replace('.', '\\.').replace('*', '\\*')}$`;
 }
 
 const USER_SELECTOR = {
@@ -265,8 +265,7 @@ function ContextMenu({ target, closeMenu }) {
   );
 
   if (data?.type === 'emoticon') {
-    const muted =
-      filter.emoticon.bundle[data.emotId] || filter.emoticon.url[data.url];
+    const muted = target.closest('.muted');
 
     return (
       <List>

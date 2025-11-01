@@ -8,7 +8,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   IconButton,
+  Switch,
   Typography,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -19,10 +21,22 @@ import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
 
 import SelectableImageList from './SelectableImageList';
-import { format, getImageInfo } from './func';
-import { setOpen } from './slice';
+import { format, ImageInfo } from './func';
+import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
-import getEmotInfo from './func/getEmotInfo';
+
+function mapImageInfo(arr) {
+  return arr
+    .map((i) => {
+      try {
+        return new ImageInfo(i);
+      } catch (error) {
+        console.warn(error);
+        return undefined;
+      }
+    })
+    .filter((i) => i);
+}
 
 function delay(interval) {
   if (!interval) return Promise.resolve();
@@ -54,6 +68,8 @@ function DownloadDialog() {
   const contentInfo = useContent();
 
   const {
+    // 동작 설정
+    downloadOrigin,
     // 파일 포맷
     startWithZero,
     zipImageName,
@@ -75,12 +91,12 @@ function DownloadDialog() {
         const bundleId = window.location.pathname.replace('/e/', '');
         try {
           const response = await fetch(`/api/emoticon/${bundleId}`);
-          if (response.ok) {
-            const emotJson = await response.json();
-            setData(emotJson.map((e) => getEmotInfo(e)));
-            setSelection([...new Array(emotJson.length).keys()]);
-            return;
-          }
+          if (!response.ok) throw Error(response.statusText);
+
+          const emotJson = await response.json();
+          setData(mapImageInfo(emotJson));
+          setSelection([...new Array(emotJson.length).keys()]);
+          return;
         } catch (error) {
           console.warn('[ImageDownloader] 아카콘 번들 데이터 획득 실패');
         }
@@ -89,16 +105,7 @@ function DownloadDialog() {
         ? ARTICLE_EMOTICON
         : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
       const imageList = [...document.querySelectorAll(query)];
-      setData(
-        imageList.reduce((acc, image) => {
-          try {
-            acc.push(getImageInfo(image));
-          } catch (error) {
-            console.warn('[ImageDownloader]', error);
-          }
-          return acc;
-        }, []),
-      );
+      setData(mapImageInfo(imageList));
 
       setSelection([...new Array(imageList.length).keys()]);
     })();
@@ -109,11 +116,11 @@ function DownloadDialog() {
   }, []);
 
   const handleSelectAll = useCallback(() => {
-    if (selection.length !== data.length) {
-      setSelection([...new Array(data.length).keys()]);
-      return;
-    }
-    setSelection([]);
+    setSelection(
+      selection.length === data.length
+        ? []
+        : [...new Array(data.length).keys()],
+    );
   }, [data, selection]);
 
   const handleDownload = useCallback(async () => {
@@ -152,20 +159,22 @@ function DownloadDialog() {
             return controller.close();
           }
 
-          const { orig, ext, uploadName } = value;
-          const name = format(zipImageName, {
+          const { url, orig, ext, name } = value;
+          let imageName = format(zipImageName, {
             content: contentInfo,
             index: count,
-            fileName: uploadName,
+            name,
           });
-          const finalName =
-            dupCount[name] > 0 ? `${name}(${dupCount[name]})` : name;
-          dupCount[name] = dupCount[name] > 0 ? dupCount[name] + 1 : 1;
+          imageName =
+            dupCount[imageName] > 0
+              ? `${imageName}(${dupCount[imageName]})`
+              : imageName;
+          dupCount[imageName] = (dupCount[imageName] || 0) + 1;
 
           count += 1;
           try {
             const stream = await fetchWithRetry(
-              orig,
+              downloadOrigin ? orig : url,
               { cache: 'no-cache' },
               {
                 tryCount: 10,
@@ -173,7 +182,7 @@ function DownloadDialog() {
               },
             ).then((response) => response.body);
             return controller.enqueue({
-              name: `${finalName}.${ext}`,
+              name: `${imageName}.${ext}`,
               stream: () => stream,
             });
           } catch (error) {
@@ -197,6 +206,7 @@ function DownloadDialog() {
   }, [
     data,
     selection,
+    downloadOrigin,
     startWithZero,
     zipName,
     contentInfo,
@@ -261,6 +271,16 @@ function DownloadDialog() {
         />
       </DialogContent>
       <DialogActions>
+        <FormControlLabel
+          label="원본"
+          control={
+            <Switch
+              checked={downloadOrigin}
+              onChange={() => dispatch($toggleDownloadOrigin())}
+            />
+          }
+        />
+
         <Typography>{`${selection.length}/${imgList.length}`}</Typography>
         <Button onClick={handleSelectAll}>
           {selection.length !== data.length ? '전체 선택' : '선택 해제'}

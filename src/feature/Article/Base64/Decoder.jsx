@@ -136,9 +136,8 @@ function Decoder() {
     if (!commentLoaded) return undefined;
     if (temporaryDisabled) return undefined;
 
-    const comments = document.querySelectorAll(COMMENT_ITEMS);
     const handler = () => {
-      comments.forEach((c) => {
+      [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
         if (!target) return;
 
@@ -152,7 +151,7 @@ function Decoder() {
     window.addEventListener(EVENT_COMMENT_REFRESH, handler);
 
     return () => {
-      comments.forEach((c) => {
+      [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
         if (!target) return;
 

@@ -8,6 +8,8 @@ import Info from '../FeatureInfo';
 import {
   $toggleEnable,
   $toggleContextMenu,
+  $toggleDownloadOrigin,
+  $toggleOriginToClipboard,
   $toggleStartWithZero,
   $setFileName,
   $setZipName,
@@ -20,6 +22,8 @@ const View = forwardRef((_props, ref) => {
   const {
     enabled,
     contextMenuEnabled,
+    downloadOrigin,
+    originToClipboard,
     startWithZero,
     fileName,
     zipName,
@@ -45,6 +49,18 @@ const View = forwardRef((_props, ref) => {
             primary="우클릭 메뉴 사용"
             value={contextMenuEnabled}
             action={$toggleContextMenu}
+          />
+          <SwitchRow
+            divider
+            primary="다운로드 시 원본 이미지 다운로드"
+            value={downloadOrigin}
+            action={$toggleDownloadOrigin}
+          />
+          <SwitchRow
+            divider
+            primary="클립보드 복사 시 원본이미지 사용"
+            value={originToClipboard}
+            action={$toggleOriginToClipboard}
           />
         </List>
       </Paper>

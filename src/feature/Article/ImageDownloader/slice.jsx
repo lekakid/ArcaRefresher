@@ -7,6 +7,8 @@ const defaultStorage = {
   // 동작 설정
   enabled: true,
   contextMenuEnabled: true,
+  downloadOrigin: true,
+  originToClipboard: false,
   // 파일 포맷
   startWithZero: false,
   fileName: '%title%',
@@ -30,6 +32,12 @@ export const slice = createSlice({
     },
     $toggleContextMenu(state) {
       state.storage.contextMenuEnabled = !state.storage.contextMenuEnabled;
+    },
+    $toggleDownloadOrigin(state) {
+      state.storage.downloadOrigin = !state.storage.downloadOrigin;
+    },
+    $toggleOriginToClipboard(state) {
+      state.storage.originToClipboard = !state.storage.originToClipboard;
     },
     // 파일 포멧
     $toggleStartWithZero(state) {
@@ -55,13 +63,18 @@ export const slice = createSlice({
 });
 
 export const {
+  // 동작 설정
   $toggleEnable,
   $toggleContextMenu,
+  $toggleDownloadOrigin,
+  $toggleOriginToClipboard,
+  // 파일 포맷
   $toggleStartWithZero,
   $setFileName,
   $setZipName,
   $setZipExtension,
   $setZipImageName,
+  // 상태
   setOpen,
 } = slice.actions;
 

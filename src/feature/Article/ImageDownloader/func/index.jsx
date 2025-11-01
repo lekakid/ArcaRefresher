@@ -1,4 +1,4 @@
 import format from './format';
-import getImageInfo from './getImageInfo';
+import ImageInfo from './ImageInfo';
 
-export { format, getImageInfo };
+export { format, ImageInfo };

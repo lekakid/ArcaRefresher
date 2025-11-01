@@ -103,25 +103,25 @@ export default [
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
-        // 게시물
-        const currentArticle = document.querySelector(
-          '.article-view .vrow.active',
-        );
-        if (!currentArticle) {
-          const lastArticle = document.querySelector(
-            '.article-view .vrow:last-child',
-          );
-          const url =
-            lastArticle.href || lastArticle.querySelector('a.title').href;
-          window.location = url;
+        // 게시물 뷰
+        const articleList = [
+          ...document.querySelectorAll(
+            '.article-view a.vrow:not(.notice):not(.filtered), .article-view div.vrow:not(.filtered) a.hybrid-title',
+          ),
+        ];
+
+        // 조회중인 게시물 검색
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (article.closest('.active')) {
+            break;
+          }
         }
-        if (
-          currentArticle.previousElementSibling &&
-          !currentArticle.previousElementSibling.matches('.notice')
-        ) {
-          const url =
-            currentArticle.previousElementSibling.href ||
-            currentArticle.previousElementSibling.querySelector('a.title').href;
+
+        // 그 다음 게시물
+        if (articleList.length > 0) {
+          const article = articleList.pop();
+          const url = article.href;
           window.location = url;
           return;
         }
@@ -140,22 +140,25 @@ export default [
     callback() {
       const token = window.location.pathname.split('/');
       if (token.length > 3) {
-        // 게시물
-        const currentArticle = document.querySelector(
-          '.article-view .vrow.active',
-        );
-        if (!currentArticle) {
-          // 마지막 게시물이 다음 페이지로 넘어갔으므로 페이지 이동
-          const currentPage = document.querySelector(
-            '.pagination-wrapper .active',
-          );
-          currentPage.nextElementSibling?.querySelector('a').click();
-          return;
+        // 게시물 뷰
+        const articleList = [
+          ...document.querySelectorAll(
+            '.article-view a.vrow:not(.notice):not(.filtered), .article-view div.vrow:not(.filtered) a.hybrid-title',
+          ),
+        ].reverse();
+
+        // 조회중인 게시물 검색
+        while (articleList.length > 0) {
+          const article = articleList.pop();
+          if (article.closest('.active')) {
+            break;
+          }
         }
-        if (currentArticle.nextElementSibling) {
-          const url =
-            currentArticle.nextElementSibling.href ||
-            currentArticle.nextElementSibling.querySelector('a.title').href;
+
+        // 그 다음 게시물
+        if (articleList.length > 0) {
+          const article = articleList.pop();
+          const url = article.href || article.querySelector('a.title')?.href;
           window.location = url;
           return;
         }

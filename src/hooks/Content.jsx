@@ -47,6 +47,7 @@ const initialState = {
   },
   category: undefined,
   article: undefined,
+  config: unsafeWindow.LiveConfig,
 };
 
 const HOOK_NAME = 'Content';
@@ -66,9 +67,14 @@ const slice = createSlice({
     setArticle(state, action) {
       state.article = action.payload;
     },
+    setConfig(state, action) {
+      state.config = action.payload;
+    },
   },
 });
-const { setUser, setChannel, setCategory, setArticle } = slice.actions;
+const { setUser, setChannel, setCategory, setArticle, setConfig } =
+  slice.actions;
+
 export const ContentReducerEntrie = [HOOK_NAME, slice.reducer];
 
 export function ContentCollector() {
@@ -185,6 +191,19 @@ export function ContentCollector() {
 
     dispatch(setArticle({ id, category, title, author, date, time, url }));
   }, [dispatch, articleLoaded]);
+
+  useLayoutEffect(() => {
+    let hookedConfig = unsafeWindow.LiveConfig;
+    Object.defineProperty(unsafeWindow, 'LiveConfig', {
+      get() {
+        return hookedConfig;
+      },
+      set(newValue) {
+        hookedConfig = newValue;
+        dispatch(setConfig(newValue));
+      },
+    });
+  }, [dispatch]);
 
   return null;
 }
