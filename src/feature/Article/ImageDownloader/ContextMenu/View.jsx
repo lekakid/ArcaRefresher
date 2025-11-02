@@ -94,12 +94,12 @@ function ContextMenu({ target, closeMenu }) {
   const handleDownload = useCallback(() => {
     (async () => {
       const { orig } = data;
-      const { ext, uploadName } = data;
+      const { ext, name: uploadName } = data;
       try {
         closeMenu();
         const name = format(fileName, {
           content: contentInfo,
-          fileName: uploadName,
+          name: uploadName,
         });
 
         const response = await fetch(orig, { cache: 'no-cache' });
