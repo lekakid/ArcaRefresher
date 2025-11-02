@@ -59,7 +59,6 @@
     "@mui/x-data-grid": "^7.29.5",
     "@reduxjs/toolkit": "^2.2.2",
     "@transcend-io/conflux": "^4.0.2",
-    "caniuse-lite": "^1.0.30001558",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
