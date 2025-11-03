@@ -102,7 +102,7 @@ const defaultPreset = {
   'bg-dropdown': '#fff',
   'bg-input': '#fff',
   'text-color': '#000000',
-  'visited-article': '#bbb',
+  'article-visited': '#bbb',
   'text-muted': '#666666',
   'link-color': '#0275d8',
   'board-category': '#42464f',
