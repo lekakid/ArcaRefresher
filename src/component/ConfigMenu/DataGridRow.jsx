@@ -57,18 +57,17 @@ function TableView({
   columnVisibilityModel,
   rows,
   onModeChange,
-  onChange,
+  onChangeRow,
+  onChangeRows,
 }) {
   const [selection, setSelection] = useState([]);
 
-  const handleCellEdit = useCallback(
-    ({ id, field, value }) => {
-      const updatedRows = rows.map((row) =>
-        row.id === id ? { ...row, [field]: value } : row,
-      );
-      onChange(updatedRows);
+  const handleUpdateRow = useCallback(
+    (updateRow) => {
+      onChangeRow(updateRow);
+      return updateRow;
     },
-    [rows, onChange],
+    [onChangeRow],
   );
 
   const handleSelection = useCallback((current) => {
@@ -76,8 +75,8 @@ function TableView({
   }, []);
 
   const handleRemove = useCallback(() => {
-    onChange(rows.filter((row) => !selection.includes(row.id)));
-  }, [rows, selection, onChange]);
+    onChangeRows(rows.filter((row) => !selection.includes(row.id)));
+  }, [rows, selection, onChangeRows]);
 
   return (
     <DataGrid
@@ -113,7 +112,7 @@ function TableView({
       }}
       pageSizeOptions={[10, 25, 50, 100]}
       rows={rows}
-      onCellEditCommit={handleCellEdit}
+      processRowUpdate={handleUpdateRow}
       onRowSelectionModelChange={handleSelection}
     />
   );
@@ -185,7 +184,8 @@ const DataGridRow = forwardRef(
       columnVisibilityModel,
       textEditable,
       noRowsText,
-      onChange,
+      onChangeRow,
+      onChangeRows,
     },
     ref,
   ) => {
@@ -207,7 +207,7 @@ const DataGridRow = forwardRef(
           <TextView
             rows={rows}
             columns={columns}
-            onChange={onChange}
+            onChange={onChangeRows}
             onModeChange={handleMode}
           />
         ) : (
@@ -218,7 +218,8 @@ const DataGridRow = forwardRef(
             textEditable={textEditable}
             noRowsText={noRowsText}
             onModeChange={handleMode}
-            onChange={onChange}
+            onChangeRow={onChangeRow}
+            onChangeRows={onChangeRows}
           />
         )}
       </BaseRow>
@@ -226,7 +227,7 @@ const DataGridRow = forwardRef(
   },
 );
 
-const rowPropTypes = {
+DataGridRow.propTypes = {
   divider: PropTypes.bool,
   nested: PropTypes.bool,
   primary: PropTypes.node,
@@ -236,9 +237,8 @@ const rowPropTypes = {
   columnVisibilityModel: PropTypes.object,
   textEditable: PropTypes.bool,
   noRowsText: PropTypes.string,
-  onChange: PropTypes.func,
+  onChangeRow: PropTypes.func,
+  onChangeRows: PropTypes.func,
 };
-
-DataGridRow.propTypes = rowPropTypes;
 
 export default DataGridRow;
