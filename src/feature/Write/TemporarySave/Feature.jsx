@@ -81,11 +81,13 @@ export default function TemporarySave() {
 
   useEffect(() => {
     if (!editor) return undefined;
+
     const handler = (e) => {
       if (e.key !== 'Enter') return;
 
+      e.preventDefault();
+
       if (deleteOnCommit) {
-        e.preventDefault();
         dispatch($removeArticle({ slot: currentSlot }));
       }
 
