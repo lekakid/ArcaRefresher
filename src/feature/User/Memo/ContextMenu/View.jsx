@@ -59,7 +59,7 @@ function ContextMenu({ target, closeMenu }) {
   }, [closeMenu]);
 
   const handleInputClose = useCallback(() => {
-    setOpen(undefined);
+    setOpen(false);
   }, []);
 
   const handleInputSubmit = useCallback(
