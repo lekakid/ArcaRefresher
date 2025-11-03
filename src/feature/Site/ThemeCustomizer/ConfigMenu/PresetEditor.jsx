@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -56,18 +57,17 @@ const PresetEditor = forwardRef(
                 {rows.map(({ key, primary, secondary }, colorIndex) => (
                   <ListItem
                     key={key}
-                    sx={
-                      disabled
-                        ? (theme) => ({
-                            opacity: theme.palette.action.disabledOpacity,
-                          })
-                        : undefined
-                    }
+                    sx={(theme) => ({
+                      opacity: disabled
+                        ? theme.palette.action.disabledOpacity
+                        : 'unset',
+                    })}
                     divider={
                       groupIndex < groupData.length - 1 ||
                       colorIndex < rows.length - 1
                     }
-                    secondaryAction={
+                  >
+                    <ListItemIcon>
                       <ColorPicker
                         disabled={disabled}
                         defaultColor={defaultPreset[key]}
@@ -76,8 +76,7 @@ const PresetEditor = forwardRef(
                         onClose={() => setOpacity(1)}
                         onChange={(color) => handleChange(key, color)}
                       />
-                    }
-                  >
+                    </ListItemIcon>
                     <ListItemText primary={primary} secondary={secondary} />
                   </ListItem>
                 ))}
