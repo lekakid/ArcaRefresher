@@ -12,6 +12,7 @@ const defaultStorage = {
   hideUnvote: false,
   // 동작
   blockMediaNewWindow: false,
+  unmuteVideo: false,
   ignoreExternalLinkWarning: false,
   removeBlur: true,
   ignoreSpoilerFilter: false,
@@ -76,6 +77,9 @@ export const slice = createSlice({
     $toggleBlockMediaNewWindow(state) {
       state.storage.blockMediaNewWindow = !state.storage.blockMediaNewWindow;
     },
+    $toggleUnmuteVideo(state) {
+      state.storage.unmuteVideo = !state.storage.unmuteVideo;
+    },
     $toggleIgnoreSpoilerFilter(state) {
       state.storage.ignoreSpoilerFilter = !state.storage.ignoreSpoilerFilter;
     },
@@ -100,6 +104,7 @@ export const {
   $toggleUnvote,
   // 동작
   $toggleBlockMediaNewWindow,
+  $toggleUnmuteVideo,
   $toggleIgnoreSpoilerFilter,
   $toggleRemoveBlur,
   $toggleIgnoreExternalLinkWarning,

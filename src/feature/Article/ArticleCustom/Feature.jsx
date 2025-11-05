@@ -8,6 +8,7 @@ import {
   ARTICLE_IMAGES,
   ARTICLE_LOADED,
   ARTICLE,
+  ARTICLE_VIDEOS,
 } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
@@ -89,6 +90,7 @@ export default function ArticleCustom() {
     hideUnvote,
     // 동작
     blockMediaNewWindow,
+    unmuteVideo,
     ignoreSpoilerFilter,
     removeBlur,
     ignoreExternalLinkWarning,
@@ -116,6 +118,20 @@ export default function ArticleCustom() {
         a.append(i);
       });
   }, [article, blockMediaNewWindow]);
+
+  // 영상 뮤트 해제
+  useEffect(() => {
+    if (!article || !unmuteVideo) return;
+
+    const videoList = article.querySelectorAll(`${ARTICLE_VIDEOS}`);
+    if (!videoList.length) return;
+
+    videoList.forEach((video) => {
+      video.autoplay = false;
+      video.volume = 0.5;
+      video.muted = false;
+    });
+  }, [article, unmuteVideo]);
 
   // 스포일러 경고 무시
   useEffect(() => {

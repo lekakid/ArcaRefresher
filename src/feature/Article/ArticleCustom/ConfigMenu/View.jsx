@@ -17,6 +17,7 @@ import {
   $toggleIgnoreExternalLinkWarning,
   $toggleRateDownGuard,
   $toggleRemoveBlur,
+  $toggleUnmuteVideo,
 } from '../slice';
 
 const View = forwardRef((_props, ref) => {
@@ -28,6 +29,7 @@ const View = forwardRef((_props, ref) => {
     hideUnvote,
     // 동작
     blockMediaNewWindow,
+    unmuteVideo,
     ignoreSpoilerFilter,
     removeBlur,
     ignoreExternalLinkWarning,
@@ -77,6 +79,13 @@ const View = forwardRef((_props, ref) => {
             secondary="새로고침 후에 적용됩니다."
             value={blockMediaNewWindow}
             action={$toggleBlockMediaNewWindow}
+          />
+          <SwitchRow
+            divider
+            primary="모든 동영상 뮤트 해제"
+            secondary="첫 영상을 직접 재생해야 합니다."
+            value={unmuteVideo}
+            action={$toggleUnmuteVideo}
           />
           <SwitchRow
             divider
