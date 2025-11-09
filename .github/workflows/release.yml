@@ -9,11 +9,14 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[version]') }}
+    if: ${{ contains(github.event.head_commit.message, '[version]') }}
     steps:
       - name: Get Version
         id: get-version
-        run: echo "version=${{ github.event.head_commit.message }}" >> $GITHUB_OUTPUT
+        run: |
+          message="${{ github.event.head_commit.message }}"
+          version="${message//\[version\] /}"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Create Github Release
         id: release
