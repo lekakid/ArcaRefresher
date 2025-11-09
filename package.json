@@ -16,9 +16,9 @@
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
-    "hotfix": "bash build/deploy.sh patch",
-    "minor": "bash build/deploy.sh minor",
-    "pre": "bash build/deploy.sh preminor --preid=pre"
+    "ver:fix": "bash build/deploy.sh patch",
+    "ver:min": "bash build/deploy.sh minor",
+    "ver:pre": "bash build/deploy.sh preminor --preid=pre"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
