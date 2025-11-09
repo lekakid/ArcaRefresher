@@ -1,8 +1,6 @@
 const prod = require('./webpack.prod.js');
 
-const path = require('path');
 const { merge } = require('webpack-merge');
-const { UserscriptPlugin } = require('webpack-userscript');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = merge(prod, {

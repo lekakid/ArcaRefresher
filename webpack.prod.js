@@ -1,8 +1,9 @@
 const common = require('./webpack.common.js');
 
-const path = require('path');
 const { merge } = require('webpack-merge');
 const { UserscriptPlugin } = require('webpack-userscript');
+
+const headers = require('./script-meta.js');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -11,7 +12,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new UserscriptPlugin({
-      headers: path.join(__dirname, './src/meta.json'),
+      headers,
     }),
   ],
 });
