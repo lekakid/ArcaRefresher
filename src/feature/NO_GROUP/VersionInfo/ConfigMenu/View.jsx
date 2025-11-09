@@ -77,10 +77,6 @@ const View = forwardRef((_props, ref) => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
-  const handleVisitPatreon = useCallback(() => {
-    GM_openInTab('https://www.patreon.com/LeKAKiD/membership');
-  }, []);
-
   const handleVisitCoffeeBuyMe = useCallback(() => {
     GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
   }, []);
@@ -135,20 +131,12 @@ const View = forwardRef((_props, ref) => {
         <List disablePadding>
           <BaseRow
             divider
-            header={<ListItemText primary="Patreon" />}
-            onClick={handleVisitPatreon}
-          >
-            <OpenInNew />
-          </BaseRow>
-          <BaseRow
-            divider
             header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
           >
             <OpenInNew />
           </BaseRow>
           <BaseRow
-            divider
             header={<ListItemText primary="Github Sponsors" />}
             onClick={handleVisitGithubSponsors}
           >
