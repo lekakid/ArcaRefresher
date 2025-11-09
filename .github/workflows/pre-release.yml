@@ -9,6 +9,7 @@ jobs:
   release:
     name: Pre-Release
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[version]') }}
     steps:
       - name: Get Version
         id: get-version
