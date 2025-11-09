@@ -8,13 +8,21 @@ import { useConfirm } from 'component';
 
 import Info from '../FeatureInfo';
 import { $setNotiLevel } from '../slice';
-import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH } from '../func';
+import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
 
 const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
 
   const { notiLevel } = useSelector((state) => state[Info.id].storage);
+
+  const handleChangeLog = useCallback(() => {
+    const url =
+      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
+    const version = parse(GM_info.script.version);
+    version.patch = '*';
+    window.open(`${url}${join(version)}`);
+  }, []);
 
   const handleNotiLevel = useCallback(
     async (e) => {
@@ -86,7 +94,11 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <BaseRow divider header={<ListItemText primary="버전" />}>
+          <BaseRow
+            divider
+            header={<ListItemText primary="버전" />}
+            onClick={handleChangeLog}
+          >
             <Typography>{GM_info.script.version}</Typography>
           </BaseRow>
           <SelectRow
