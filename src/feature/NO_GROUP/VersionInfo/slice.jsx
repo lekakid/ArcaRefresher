@@ -6,7 +6,8 @@ import { TYPE_MINOR } from './func';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  checkedVersion: '',
+  lastVersion: GM_info.script.version,
+  checkedVersion: GM_info.script.version,
   notiLevel: TYPE_MINOR,
 };
 
@@ -18,6 +19,9 @@ export const slice = createSlice({
   name: Info.id,
   initialState,
   reducers: {
+    $setLastVersion(state, action) {
+      state.storage.lastVersion = action.payload;
+    },
     $setCheckedVersion(state, action) {
       state.storage.checkedVersion = action.payload;
     },
@@ -27,6 +31,7 @@ export const slice = createSlice({
   },
 });
 
-export const { $setCheckedVersion, $setNotiLevel } = slice.actions;
+export const { $setLastVersion, $setCheckedVersion, $setNotiLevel } =
+  slice.actions;
 
 export default slice.reducer;

@@ -77,24 +77,24 @@ export function resetValues() {
 
 const INIT_MONKEY_SYNC = '!INIT_MONKEY_SYNC';
 
-let blockedSync = false;
+let disabled = false;
 export function disableStorageSync() {
-  blockedSync = true;
+  disabled = true;
 }
 
 export function createMonkeySyncMiddleware() {
-  const channel = new BroadcastChannel(`AR_SYNC_${GM_info.script.version}`);
+  const channel = new BroadcastChannel(`AR_SYNC_MONKEY`);
   const currentWindowId = uuid();
   let initialized = false;
 
   return (store) => (next) => (action) => {
-    // 버전이 다름 등으로 동기화 중단
-    if (blockedSync) return next(action);
-
     if (!initialized) {
       channel.onmessage = ({ data: actionMessage }) => {
         // 현재 창이랑 같은 동기화 액션 무시
         if (actionMessage.$windowId === currentWindowId) return;
+
+        // 버전이 다름 등으로 동기화 중단
+        if (disabled) return;
 
         // 동기화 액션 전파
         store.dispatch(actionMessage);
@@ -103,6 +103,9 @@ export function createMonkeySyncMiddleware() {
       initialized = true;
       return next(action);
     }
+
+    // 버전이 다름 등으로 동기화 중단
+    if (disabled) return next(action);
 
     // BroadcastChannel에서 받은 액션 여부
     if (action.$windowId) return next(action);
