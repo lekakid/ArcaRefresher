@@ -1,6 +1,13 @@
 import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Paper, Typography, ListItemText, MenuItem } from '@mui/material';
+import {
+  Box,
+  List,
+  Paper,
+  Typography,
+  ListItemText,
+  MenuItem,
+} from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 
 import { BaseRow, SelectRow } from 'component/ConfigMenu';
@@ -95,7 +102,9 @@ const View = forwardRef((_props, ref) => {
             header={<ListItemText primary="버전" />}
             onClick={handleChangeLog}
           >
-            <Typography>{GM_info.script.version}</Typography>
+            <Box sx={{ minWidth: 160, textAlign: 'right' }}>
+              <Typography>{GM_info.script.version}</Typography>
+            </Box>
           </BaseRow>
           <SelectRow
             primary="업데이트 알림 수준"
