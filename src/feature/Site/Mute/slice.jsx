@@ -12,6 +12,7 @@ const defaultStorage = {
   hideCountBar: false,
   hideMutedMark: false,
   muteIncludeReply: false,
+  hideUserAd: false,
   hideServiceNotice: false,
   hideNoPermission: false,
   hideClosedDeal: true,
@@ -70,6 +71,9 @@ export const slice = createSlice({
     },
     $toggleIncludeReply(state) {
       state.storage.muteIncludeReply = !state.storage.muteIncludeReply;
+    },
+    $toggleHideUserAd(state) {
+      state.storage.hideUserAd = !state.storage.hideUserAd;
     },
     $toggleHideNoticeService(state) {
       state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
@@ -175,6 +179,7 @@ export const {
   $toggleCountBar,
   $toggleMutedMark,
   $toggleIncludeReply,
+  $toggleHideUserAd,
   $toggleHideNoticeService,
   $toggleHideNoPermission,
   $toggleHideClosedDeal,

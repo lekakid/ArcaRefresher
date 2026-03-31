@@ -17,7 +17,12 @@ import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
 
 import { FOREGROUND, open } from 'func/window';
 import Info from '../FeatureInfo';
-import { $setContextRange, $setMemoList, $setVariant } from '../slice';
+import {
+  $setContextRange,
+  $setMemo,
+  $setMemoList,
+  $setVariant,
+} from '../slice';
 
 function userRenderer(params) {
   let uid = params.row.id;
@@ -161,7 +166,14 @@ const View = forwardRef((_props, ref) => {
     return rs.pipeTo(filestream);
   }, [memoRows]);
 
-  const handleMemoRowsChange = useCallback(
+  const handleChangeMemoRow = useCallback(
+    ({ id, msg, color, nick }) => {
+      dispatch($setMemo({ user: id, memo: { msg, color, nick } }));
+    },
+    [dispatch],
+  );
+
+  const handleChangeMemoRows = useCallback(
     (updatedRows) => {
       const entries = updatedRows.map(({ id, msg, color, nick }) => [
         id,
@@ -240,7 +252,8 @@ const View = forwardRef((_props, ref) => {
             columns={columns}
             columnVisibilityModel={columnVisibilityModel}
             noRowsText="저장된 메모가 없습니다."
-            onChange={handleMemoRowsChange}
+            onChangeRow={handleChangeMemoRow}
+            onChangeRows={handleChangeMemoRows}
           />
         </List>
       </Paper>

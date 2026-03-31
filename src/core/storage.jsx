@@ -77,57 +77,53 @@ export function resetValues() {
 
 const INIT_MONKEY_SYNC = '!INIT_MONKEY_SYNC';
 
-let blockedSync = false;
+let disabled = false;
 export function disableStorageSync() {
-  blockedSync = true;
+  disabled = true;
 }
 
-let lastActionId;
-const currentWindowId = uuid();
 export function createMonkeySyncMiddleware() {
-  const channel = new BroadcastChannel(`AR_SYNC_${GM_info.script.version}`);
+  const channel = new BroadcastChannel(`AR_SYNC_MONKEY`);
+  const currentWindowId = uuid();
   let initialized = false;
 
   return (store) => (next) => (action) => {
-    if (blockedSync) return next(action);
-
     if (!initialized) {
       channel.onmessage = ({ data: actionMessage }) => {
         // 현재 창이랑 같은 동기화 액션 무시
         if (actionMessage.$windowId === currentWindowId) return;
 
-        // 동기화된 액션
-        if (
-          actionMessage.$actionId &&
-          actionMessage.$actionId !== lastActionId
-        ) {
-          lastActionId = actionMessage.$actionId;
-          store.dispatch(actionMessage);
-        }
+        // 버전이 다름 등으로 동기화 중단
+        if (disabled) return;
+
+        // 동기화 액션 전파
+        store.dispatch(actionMessage);
       };
+
       initialized = true;
+      return next(action);
     }
 
-    const prevState = store.getState();
+    // 버전이 다름 등으로 동기화 중단
+    if (disabled) return next(action);
+
+    // BroadcastChannel에서 받은 액션 여부
+    if (action.$windowId) return next(action);
+    // 동기화가 되어야 하는 액션 여부
+    if (!action.type.includes('/$')) return next(action);
+
     const result = next(action);
+    const currentState = store.getState();
 
-    // action.type = '{featureName}/${StorageAction}'
-    if (action.type.indexOf('/$') > -1 && !action.$actionId) {
-      const currentState = store.getState();
+    // 저장소에 저장
+    Object.entries(currentState).forEach(([key, value]) => {
+      setValue(key, value.storage);
+    });
 
-      Object.entries(currentState)
-        .filter(([, value]) => !!value.storage)
-        .forEach(([key, value]) => {
-          if (prevState[key].storage !== value.storage)
-            setValue(key, value.storage);
-        });
-
-      const actionMessage = action;
-      actionMessage.$actionId = uuid();
-      actionMessage.$windowId = currentWindowId;
-      lastActionId = actionMessage.$actionId;
-      channel.postMessage(actionMessage);
-    }
+    // BroadcastChannel로 동기화할 액션 전송
+    const actionMessage = action;
+    actionMessage.$windowId = currentWindowId;
+    channel.postMessage(actionMessage);
 
     return result;
   };

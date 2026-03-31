@@ -121,8 +121,7 @@ export default [
         // 그 다음 게시물
         if (articleList.length > 0) {
           const article = articleList.pop();
-          const url = article.href;
-          window.location = url;
+          unsafeWindow.location = article.href;
           return;
         }
       }
@@ -158,8 +157,7 @@ export default [
         // 그 다음 게시물
         if (articleList.length > 0) {
           const article = articleList.pop();
-          const url = article.href || article.querySelector('a.title')?.href;
-          window.location = url;
+          unsafeWindow.location = article.href;
           return;
         }
       }

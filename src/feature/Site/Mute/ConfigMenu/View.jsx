@@ -30,6 +30,7 @@ import {
   $toggleIncludeReply,
   $setCategoryConfig,
   $setBoardBarPos,
+  $toggleHideUserAd,
   $toggleHideNoticeService,
   $toggleHideClosedDeal,
   $setContextRange,
@@ -52,6 +53,7 @@ const View = forwardRef((_props, ref) => {
     hideCountBar,
     hideMutedMark,
     muteIncludeReply,
+    hideUserAd,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
@@ -144,6 +146,12 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle2">특정 컨텐츠</Typography>
       <Paper>
         <List disablePadding>
+          <SwitchRow
+            divider
+            primary="[모든 채널] 이용자 광고 숨김"
+            value={hideUserAd}
+            action={$toggleHideUserAd}
+          />
           <SwitchRow
             divider
             primary="[모든 채널] 서비스 공지사항 숨김"

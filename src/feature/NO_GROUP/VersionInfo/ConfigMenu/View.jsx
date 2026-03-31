@@ -1,6 +1,13 @@
 import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, Paper, Typography, ListItemText, MenuItem } from '@mui/material';
+import {
+  Box,
+  List,
+  Paper,
+  Typography,
+  ListItemText,
+  MenuItem,
+} from '@mui/material';
 import { GitHub, Help, OpenInNew } from '@mui/icons-material';
 
 import { BaseRow, SelectRow } from 'component/ConfigMenu';
@@ -8,13 +15,21 @@ import { useConfirm } from 'component';
 
 import Info from '../FeatureInfo';
 import { $setNotiLevel } from '../slice';
-import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH } from '../func';
+import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
 
 const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
 
   const { notiLevel } = useSelector((state) => state[Info.id].storage);
+
+  const handleChangeLog = useCallback(() => {
+    const url =
+      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
+    const version = parse(GM_info.script.version);
+    version.patch = '*';
+    window.open(`${url}${join(version)}`);
+  }, []);
 
   const handleNotiLevel = useCallback(
     async (e) => {
@@ -69,10 +84,6 @@ const View = forwardRef((_props, ref) => {
     GM_openInTab('https://github.com/lekakid/ArcaRefresher');
   }, []);
 
-  const handleVisitPatreon = useCallback(() => {
-    GM_openInTab('https://www.patreon.com/LeKAKiD/membership');
-  }, []);
-
   const handleVisitCoffeeBuyMe = useCallback(() => {
     GM_openInTab('https://www.buymeacoffee.com/kinglekakid');
   }, []);
@@ -86,8 +97,14 @@ const View = forwardRef((_props, ref) => {
       <Typography variant="subtitle1">{Info.name}</Typography>
       <Paper>
         <List disablePadding>
-          <BaseRow divider header={<ListItemText primary="버전" />}>
-            <Typography>{GM_info.script.version}</Typography>
+          <BaseRow
+            divider
+            header={<ListItemText primary="버전" />}
+            onClick={handleChangeLog}
+          >
+            <Box sx={{ minWidth: 160, textAlign: 'right' }}>
+              <Typography>{GM_info.script.version}</Typography>
+            </Box>
           </BaseRow>
           <SelectRow
             primary="업데이트 알림 수준"
@@ -123,20 +140,12 @@ const View = forwardRef((_props, ref) => {
         <List disablePadding>
           <BaseRow
             divider
-            header={<ListItemText primary="Patreon" />}
-            onClick={handleVisitPatreon}
-          >
-            <OpenInNew />
-          </BaseRow>
-          <BaseRow
-            divider
             header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
           >
             <OpenInNew />
           </BaseRow>
           <BaseRow
-            divider
             header={<ListItemText primary="Github Sponsors" />}
             onClick={handleVisitGithubSponsors}
           >

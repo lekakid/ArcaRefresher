@@ -38,7 +38,10 @@ const boardMuteStyles = (
           display: 'none !important',
         },
       },
-      '.hide-service-notice .notice-service': {
+      '.hide-user-ad .notice-service:first-of-type': {
+        display: 'none !important',
+      },
+      '.hide-service-notice .notice-service:not(:first-of-type)': {
         display: 'none !important',
       },
       '.hide-no-permission .vrow[href$="#c_"]': {
@@ -59,6 +62,7 @@ function BoardMuter() {
   const {
     boardBarPos,
     hideCountBar,
+    hideUserAd,
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
@@ -178,6 +182,11 @@ function BoardMuter() {
       }
     });
   }, [controlTarget, filter.emoticon]);
+
+  // 이용자 광고
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('hide-user-ad', hideUserAd);
+  }, [hideUserAd]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {

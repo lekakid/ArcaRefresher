@@ -33,6 +33,9 @@ switch (pageType) {
     channelId = 'emoticon';
     channelName = '아카콘';
     break;
+  case 'reports':
+    channelId = pathToken.shift();
+    break;
   default:
     channelId = 'ArcaLive';
     channelName = '아카라이브';

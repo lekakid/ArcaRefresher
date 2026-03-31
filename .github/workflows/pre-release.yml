@@ -1,18 +1,22 @@
-name: Release
+name: Pre-Release
 
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   release:
-    name: Release
+    name: Pre-Release
     runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '[version]') }}
     steps:
       - name: Get Version
         id: get-version
-        run: echo "version=${{ github.event.head_commit.message }}" >> $GITHUB_OUTPUT
+        run: |
+          message="${{ github.event.head_commit.message }}"
+          version="${message//\[version\] /}"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Create Github Release
         id: release
@@ -23,7 +27,7 @@ jobs:
           tag_name: ${{ steps.get-version.outputs.version }}
           release_name: ${{ steps.get-version.outputs.version }}
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Checkout Repo
         uses: actions/checkout@v3
