@@ -218,7 +218,7 @@ const View = forwardRef((_props, ref) => {
               columns={columns}
               rows={emotRows}
               noRowsText="뮤트된 아카콘이 없습니다."
-              onChange={handleMutedEmotChange}
+              onChangeRows={handleMutedEmotChange}
             />
           </Collapse>
           <ListItem>
