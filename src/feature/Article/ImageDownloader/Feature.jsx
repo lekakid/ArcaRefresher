@@ -46,7 +46,7 @@ export default function ImageDownloader() {
 
     if (!container) {
       const tmp = document.createElement('span');
-      tmp.classList.add('float-left');
+      tmp.classList.add('float-start');
       menu.insertAdjacentElement('afterbegin', tmp);
       setContainer(tmp);
     }
