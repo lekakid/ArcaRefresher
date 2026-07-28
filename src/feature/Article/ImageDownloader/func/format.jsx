@@ -70,7 +70,7 @@ export const FORMAT = {
 /**
  * 패턴이 일치하는 string을 변환합니다.
  *
- * @param {string} formatStr             포맷 스트링을 포함한 문자열
+ * @param {string} formatStr        포맷 스트링을 포함한 문자열
  * @param {Object} args             치환할 문자열
  * @param {Object} args.content     util/Content/useContent()으로 받은 값
  * @param {Number} args.index       인덱스 번호
@@ -80,9 +80,22 @@ export const FORMAT = {
 
 export default function format(formatStr, args) {
   let result = formatStr;
+
+  // 포맷 스트링 처리
   Object.values(FORMAT).forEach(({ REGEX, getValue }) => {
     result = result.replace(REGEX, getValue(args));
   });
+
+  // 특수문자 처리
+  result = result.replace(/[\\/:*?"<>|]/g, '_');
+
+  // 앞 뒤 공백 처리
+  result = result.trim();
+
+  // 빈 제목 방지
+  if (result === '') {
+    result = '제목 없음';
+  }
 
   return result;
 }
