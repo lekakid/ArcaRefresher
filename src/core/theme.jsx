@@ -36,6 +36,13 @@ const components = {
       },
     },
   },
+  MuiTableCell: {
+    styleOverrides: {
+      root: {
+        padding: '4px 8px',
+      },
+    },
+  },
   MuiTablePagination: {
     styleOverrides: {
       selectLabel: {
