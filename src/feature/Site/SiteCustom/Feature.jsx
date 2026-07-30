@@ -316,31 +316,14 @@ export default function SiteCustom() {
       faviconEl.href = url;
     };
 
-    // 사이트 자체 파비콘 변경 기능 비활성화
-    Object.defineProperty(unsafeWindow, 'notificationBadge', {
-      get() {
-        return 'default';
-      },
-      set() {},
-    });
-    changeFavicon(spoofFavicon);
-    window.addEventListener('load', () => {
-      changeFavicon(spoofFavicon);
-    });
+    const observer = new MutationObserver(() => changeFavicon(spoofFavicon));
 
-    const subscriber = {
-      type: 'before',
-      callback(e) {
-        if (e.data.split('|').shift() === 'na') {
-          Object.defineProperty(e, 'ignore', { value: true });
-        }
-      },
-    };
-    subscribeWS(subscriber);
+    changeFavicon(spoofFavicon);
+    observer.observe(document.head, { childList: true });
+
     return () => {
+      observer.disconnect();
       changeFavicon(defaultUrl);
-      unsubscribeWS(subscriber);
-      window.removeEventListener('load', changeFavicon);
     };
   }, [faviconLoaded, spoofFavicon, subscribeWS, unsubscribeWS]);
 
