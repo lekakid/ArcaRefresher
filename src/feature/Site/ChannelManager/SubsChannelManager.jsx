@@ -1,9 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Chip,
   Dialog,
   DialogContent,
@@ -19,12 +20,17 @@ import {
   Select,
   Stack,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import {
   Add,
   Close,
@@ -217,30 +223,6 @@ GroupRenderer.propTypes = {
   value: PropTypes.array,
 };
 
-const columns = [
-  {
-    field: 'channel',
-    headerName: '채널',
-    flex: 1,
-    minWidth: 200,
-    renderCell: ChannelTitleRenderer,
-  },
-  {
-    field: 'memo',
-    headerName: '메모',
-    flex: 1,
-    minWidth: 200,
-    editable: true,
-  },
-  {
-    field: 'groups',
-    headerName: '그룹',
-    flex: 2,
-    minWidth: 400,
-    renderCell: GroupRenderer,
-  },
-];
-
 function SubsChannelManager({ subs, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
@@ -250,15 +232,61 @@ function SubsChannelManager({ subs, open, onClose }) {
     (state) => state[Info.id].storage,
   );
   const groupInput = useRef(undefined);
+  const editInputRef = useRef(null);
   const [groupSelection, setGroupSelection] = useState('');
   const [selection, setSelection] = useState([]);
-  const rows =
-    subs?.map(({ id, label }) => ({
-      id,
-      channel: label,
-      memo: channelInfoTable[id]?.memo,
-      groups: channelInfoTable[id]?.groups,
-    })) || [];
+  const [page, setPage] = useState(0);
+  const [editingCell, setEditingCell] = useState(null);
+  const pageSize = 10;
+
+  const rows = useMemo(
+    () =>
+      subs?.map(({ id, label }) => ({
+        id,
+        channel: label,
+        memo: channelInfoTable[id]?.memo,
+        groups: channelInfoTable[id]?.groups,
+      })) || [],
+    [subs, channelInfoTable],
+  );
+
+  const pagedRows = useMemo(
+    () => rows.slice(page * pageSize, page * pageSize + pageSize),
+    [rows, page],
+  );
+
+  useEffect(() => {
+    if (editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editingCell]);
+
+  const handleSelectAll = useCallback(
+    (e) => {
+      setSelection(e.target.checked ? pagedRows.map((r) => r.id) : []);
+    },
+    [pagedRows],
+  );
+
+  const handleSelectRow = useCallback((id) => {
+    setSelection((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+    );
+  }, []);
+
+  const handleCellBlur = useCallback(
+    (row, field, value) => {
+      setEditingCell(null);
+      if (row[field] === value) return;
+      const channelInfo = {
+        ...defaultChannelInfo,
+        ...channelInfoTable[row.id],
+        [field]: value,
+      };
+      dispatch($setChannelInfo({ id: row.id, info: channelInfo }));
+    },
+    [channelInfoTable, dispatch],
+  );
 
   const handleAddGroup = useCallback(async () => {
     const result = await confirm({
@@ -269,17 +297,12 @@ function SubsChannelManager({ subs, open, onClose }) {
           label: '확인',
           value: () => groupInput.current.value,
           key: 'Enter',
-        },
-        {
-          label: '취소',
-          value: false,
-          key: 'Escape',
           variant: 'contained',
         },
+        { label: '취소', value: false, key: 'Escape' },
       ],
     });
     if (!result) return;
-
     dispatch($addGroup({ name: result }));
   }, [confirm, dispatch, groupInput]);
 
@@ -289,7 +312,6 @@ function SubsChannelManager({ subs, open, onClose }) {
       content: '정말 삭제하시겠습니까?',
     });
     if (!result) return;
-
     setGroupSelection('');
     dispatch($removeGroup({ name: groupSelection }));
   }, [dispatch, confirm, groupSelection]);
@@ -305,18 +327,13 @@ function SubsChannelManager({ subs, open, onClose }) {
           label: '확인',
           value: () => groupInput.current.value,
           key: 'Enter',
-        },
-        {
-          label: '취소',
-          value: false,
-          key: 'Escape',
           variant: 'contained',
         },
+        { label: '취소', value: false, key: 'Escape' },
       ],
     });
     if (!result) return;
     if (groupSelection === result) return;
-
     dispatch($renameGroup({ prev: groupSelection, next: result }));
     setGroupSelection(result);
   }, [groupSelection, groupInput, confirm, dispatch]);
@@ -324,7 +341,6 @@ function SubsChannelManager({ subs, open, onClose }) {
   const handleAddGroupAll = useCallback(() => {
     selection.forEach((id) => {
       if (channelInfoTable[id]?.groups?.includes(groupSelection)) return;
-
       const channelInfo = {
         ...defaultChannelInfo,
         ...channelInfoTable[id],
@@ -346,18 +362,6 @@ function SubsChannelManager({ subs, open, onClose }) {
     });
     setSelection([]);
   }, [selection, channelInfoTable, dispatch]);
-
-  const handleCellEdit = useCallback(
-    ({ field, id, value }) => {
-      const channelInfo = {
-        ...defaultChannelInfo,
-        ...channelInfoTable[id],
-        [field]: value,
-      };
-      dispatch($setChannelInfo({ id, info: channelInfo }));
-    },
-    [channelInfoTable, dispatch],
-  );
 
   const channelBtns = (
     <ButtonGroup fullWidth={mobile}>
@@ -384,11 +388,7 @@ function SubsChannelManager({ subs, open, onClose }) {
         <DialogTitle>구독 그룹 편집</DialogTitle>
         <IconButton
           size="large"
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-          }}
+          sx={{ position: 'absolute', top: 8, right: 8 }}
           onClick={onClose}
         >
           <Close />
@@ -448,21 +448,92 @@ function SubsChannelManager({ subs, open, onClose }) {
               {channelBtns}
             </Stack>
           </Stack>
-          <DataGrid
-            disableColumnMenu
-            disableRowSelectionOnClick
-            checkboxSelection
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            pageSizeOptions={[10]}
-            columns={columns}
-            rows={rows}
-            rowSelectionModel={selection}
-            onRowSelectionModelChange={(s) => setSelection(s)}
-            onCellEditCommit={handleCellEdit}
+          <Paper variant="outlined">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={
+                        selection.length > 0 &&
+                        selection.length < pagedRows.length
+                      }
+                      checked={
+                        pagedRows.length > 0 &&
+                        selection.length === pagedRows.length
+                      }
+                      onChange={handleSelectAll}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ minWidth: 200, flex: 1 }}>채널</TableCell>
+                  <TableCell sx={{ minWidth: 200, flex: 1 }}>메모</TableCell>
+                  <TableCell sx={{ minWidth: 400, flex: 2 }}>그룹</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pagedRows.length === 0 ? (
+                  <TableRow sx={{ height: 200 }}>
+                    <TableCell colSpan={4} align="center">
+                      구독 중인 채널이 없습니다.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  pagedRows.map((row) => (
+                    <TableRow key={row.id} sx={{ height: 40 }}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selection.includes(row.id)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleSelectRow(row.id);
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <ChannelTitleRenderer row={row} value={row.channel} />
+                      </TableCell>
+                      <TableCell
+                        onClick={() =>
+                          setEditingCell({ rowId: row.id, field: 'memo' })
+                        }
+                        sx={{ cursor: 'text' }}
+                      >
+                        {editingCell?.rowId === row.id &&
+                        editingCell?.field === 'memo' ? (
+                          <input
+                            ref={editInputRef}
+                            defaultValue={row.memo}
+                            onBlur={(e) =>
+                              handleCellBlur(row, 'memo', e.target.value)
+                            }
+                            style={{
+                              width: '100%',
+                              border: 'none',
+                              outline: 'none',
+                              fontSize: 'inherit',
+                            }}
+                          />
+                        ) : (
+                          row.memo
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <GroupRenderer id={row.id} value={row.groups} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+          <TablePagination
+            component="div"
+            count={rows.length}
+            page={page}
+            rowsPerPage={pageSize}
+            rowsPerPageOptions={[10]}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={() => {}}
           />
         </DialogContent>
       </Dialog>

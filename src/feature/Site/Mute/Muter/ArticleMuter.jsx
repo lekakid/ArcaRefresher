@@ -51,16 +51,18 @@ function ArticleMuter() {
     const emotList = [...document.querySelectorAll(ARTICLE_EMOTICON)];
 
     emotList.forEach((e) => {
-      const wrapper = document.createElement('span');
-      wrapper.classList.add('emoticon-wrapper');
-      const reference = e.parentElement.matches('a[href^="/e/"]')
-        ? e.parentElement
-        : e;
-      const parent = e.parentElement.matches('a[href^="/e/"]')
+      const isInShopURL = e.parentElement.matches('a[href^="/e/"]');
+      const isInNormalURL = e.closest('a:not([href^="/e/"])');
+
+      const emot = isInShopURL ? e.parentElement : e;
+      const root = isInShopURL
         ? e.parentElement.parentElement
         : e.parentElement;
-      parent.insertBefore(wrapper, reference);
-      wrapper.appendChild(reference);
+
+      const wrapper = document.createElement(isInNormalURL ? 'a' : 'span');
+      wrapper.classList.add('emoticon-wrapper');
+      root.insertBefore(wrapper, emot);
+      wrapper.appendChild(emot);
     });
 
     setWrapped(true);
@@ -76,7 +78,7 @@ function ArticleMuter() {
         const { src } = i;
 
         const emotURL = trimEmotURL(src);
-        const wrapper = i.closest('span.emoticon-wrapper');
+        const wrapper = i.closest('.emoticon-wrapper');
         if (wrapper && (muteAllEmot || !!filter.emoticon.url[emotURL])) {
           wrapper.classList.add('muted');
           wrapper.dataset.href = wrapper.href;
@@ -94,7 +96,7 @@ function ArticleMuter() {
         const { src } = i;
 
         const filterFormat = trimEmotURL(src);
-        const wrapper = i.closest('span.emoticon-wrapper');
+        const wrapper = i.closest('.emoticon-wrapper');
         if (wrapper && !!filter.emoticon.url[filterFormat]) {
           wrapper.classList.remove('muted');
           wrapper.href = wrapper.dataset.href;

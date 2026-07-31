@@ -1,15 +1,29 @@
-import { forwardRef, useCallback, useEffect, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
+  Box,
   Button,
+  Checkbox,
   Divider,
   InputBase,
   ListItemText,
   Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
 } from '@mui/material';
 import { Remove, Subject, TableChart } from '@mui/icons-material';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 import BaseRow from './BaseRow';
 
@@ -46,10 +60,6 @@ function Toolbar({ textEditable, removeDisabled, onModeChange, onRemove }) {
   );
 }
 
-function NoRowsOverlay({ noRowsText }) {
-  return <GridOverlay>{noRowsText}</GridOverlay>;
-}
-
 function TableView({
   textEditable,
   noRowsText,
@@ -61,60 +71,164 @@ function TableView({
   onChangeRows,
 }) {
   const [selection, setSelection] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [editingCell, setEditingCell] = useState(null); // { rowId, field }
+  const editInputRef = useRef(null);
 
-  const handleUpdateRow = useCallback(
-    (updateRow) => {
-      onChangeRow(updateRow);
-      return updateRow;
-    },
-    [onChangeRow],
+  useEffect(() => {
+    if (editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editingCell]);
+
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => columnVisibilityModel?.[col.field] !== false),
+    [columns, columnVisibilityModel],
   );
 
-  const handleSelection = useCallback((current) => {
-    setSelection(current);
+  const pagedRows = useMemo(
+    () => rows.slice(page * pageSize, page * pageSize + pageSize),
+    [rows, page, pageSize],
+  );
+
+  const handleSelectAll = useCallback(
+    (e) => {
+      setSelection(e.target.checked ? rows.map((r) => r.id) : []);
+    },
+    [rows],
+  );
+
+  const handleSelectRow = useCallback((id) => {
+    setSelection((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+    );
   }, []);
 
   const handleRemove = useCallback(() => {
     onChangeRows(rows.filter((row) => !selection.includes(row.id)));
+    setSelection([]);
   }, [rows, selection, onChangeRows]);
 
+  const handleCellClick = useCallback((rowId, field, editable) => {
+    if (editable) setEditingCell({ rowId, field });
+  }, []);
+
+  const handleCellBlur = useCallback(
+    (row, field, value) => {
+      setEditingCell(null);
+      if (row[field] !== value) {
+        onChangeRow({ ...row, [field]: value });
+      }
+    },
+    [onChangeRow],
+  );
+
+  const renderCellContent = (col, row, isEditing) => {
+    if (isEditing) {
+      return (
+        <input
+          ref={editInputRef}
+          defaultValue={row[col.field]}
+          onBlur={(e) => handleCellBlur(row, col.field, e.target.value)}
+          style={{
+            width: '100%',
+            border: 'none',
+            outline: 'none',
+            fontSize: 'inherit',
+          }}
+        />
+      );
+    }
+    if (col.renderCell) {
+      return col.renderCell({ row, value: row[col.field] });
+    }
+    return (
+      <Box sx={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {row[col.field]}
+      </Box>
+    );
+  };
+
   return (
-    <DataGrid
-      columns={columns}
-      columnVisibilityModel={columnVisibilityModel}
-      rowHeight={40}
-      pagination
-      checkboxSelection
-      disableColumnMenu
-      disableRowSelectionOnClick
-      sx={{
-        width: '100%',
-      }}
-      slots={{
-        toolbar: Toolbar,
-        noRowsOverlay: NoRowsOverlay,
-      }}
-      slotProps={{
-        toolbar: {
-          textEditable,
-          removeDisabled: !(selection.length > 0),
-          onModeChange,
-          onRemove: handleRemove,
-        },
-        noRowsOverlay: {
-          noRowsText,
-        },
-      }}
-      initialState={{
-        pagination: {
-          paginationModel: { pageSize: 10 },
-        },
-      }}
-      pageSizeOptions={[10, 25, 50, 100]}
-      rows={rows}
-      processRowUpdate={handleUpdateRow}
-      onRowSelectionModelChange={handleSelection}
-    />
+    <Paper variant="outlined" sx={{ width: '100%' }}>
+      <Toolbar
+        textEditable={textEditable}
+        removeDisabled={selection.length === 0}
+        onModeChange={onModeChange}
+        onRemove={handleRemove}
+      />
+      <Table size="small">
+        <TableHead>
+          <TableRow sx={{ height: 40 }}>
+            <TableCell padding="checkbox">
+              <Checkbox
+                indeterminate={
+                  selection.length > 0 && selection.length < rows.length
+                }
+                checked={rows.length > 0 && selection.length === rows.length}
+                onChange={handleSelectAll}
+              />
+            </TableCell>
+            {visibleColumns.map((col) => (
+              <TableCell key={col.field} sx={{ width: col.width }}>
+                {col.headerName}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {pagedRows.length === 0 ? (
+            <TableRow sx={{ height: 120 }}>
+              <TableCell colSpan={visibleColumns.length + 1} align="center">
+                {noRowsText}
+              </TableCell>
+            </TableRow>
+          ) : (
+            pagedRows.map((row) => (
+              <TableRow key={row.id} sx={{ height: 40 }}>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selection.includes(row.id)}
+                    onChange={() => handleSelectRow(row.id)}
+                  />
+                </TableCell>
+                {visibleColumns.map((col) => {
+                  const isEditing =
+                    editingCell?.rowId === row.id &&
+                    editingCell?.field === col.field;
+                  return (
+                    <TableCell
+                      key={col.field}
+                      sx={{
+                        maxWidth: 0,
+                      }}
+                      onClick={() =>
+                        handleCellClick(row.id, col.field, col.editable)
+                      }
+                    >
+                      {renderCellContent(col, row, isEditing)}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+      <TablePagination
+        component="div"
+        count={rows.length}
+        page={page}
+        rowsPerPage={pageSize}
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        onRowsPerPageChange={(e) => {
+          setPageSize(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+      />
+    </Paper>
   );
 }
 

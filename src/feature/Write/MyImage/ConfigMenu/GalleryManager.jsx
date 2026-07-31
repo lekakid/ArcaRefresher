@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
+  Box,
   Button,
   ButtonGroup,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +15,15 @@ import {
   Paper,
   Select,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
   TextField,
 } from '@mui/material';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import {
   Add,
   Cancel,
@@ -175,16 +183,7 @@ function Toolbar({
   );
 }
 
-function NoRowsOverlay() {
-  return <GridOverlay>저장된 자짤이 없습니다.</GridOverlay>;
-}
-
 /* eslint-enable react/prop-types */
-
-const columns = [
-  { field: 'url', headerName: '이미지 주소', flex: 1 },
-  { field: 'memo', headerName: '메모', flex: 1, editable: true },
-];
 
 function GalleryManager({ gallery }) {
   const dispatch = useDispatch();
@@ -196,6 +195,10 @@ function GalleryManager({ gallery }) {
   const [moveList, setMoveList] = useState(null);
   const [selection, setSelection] = useState([]);
   const [confirm, setConfirm] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [editingCell, setEditingCell] = useState(null);
+  const editInputRef = useRef(null);
   const resolveRef = useRef(null);
 
   const folderList = useMemo(() => Object.keys(gallery), [gallery]);
@@ -204,9 +207,33 @@ function GalleryManager({ gallery }) {
     [gallery, moveList, toFolder, fromFolder],
   );
 
+  const pagedRows = useMemo(
+    () => rows.slice(page * pageSize, page * pageSize + pageSize),
+    [rows, page, pageSize],
+  );
+
   useEffect(() => {
     setSelection([]);
   }, [fromFolder]);
+
+  useEffect(() => {
+    if (editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editingCell]);
+
+  const handleSelectAll = useCallback(
+    (e) => {
+      setSelection(e.target.checked ? pagedRows.map((r) => r.url) : []);
+    },
+    [pagedRows],
+  );
+
+  const handleSelectRow = useCallback((url) => {
+    setSelection((prev) =>
+      prev.includes(url) ? prev.filter((s) => s !== url) : [...prev, url],
+    );
+  }, []);
 
   const handleSelctFolder = useCallback(
     (e) => {
@@ -295,12 +322,15 @@ function GalleryManager({ gallery }) {
     setSelection([]);
   }, [gallery, fromFolder, selection, dispatch]);
 
-  const handleCellEdit = useCallback(
-    ({ id, field, value }) => {
-      const updatedRows = rows.map((row) =>
-        row.url === id ? { ...row, [field]: value } : row,
-      );
-      dispatch($setFolderData({ folder: fromFolder, list: updatedRows }));
+  const handleMemoBlur = useCallback(
+    (row, value) => {
+      setEditingCell(null);
+      if (row.memo !== value) {
+        const updatedRows = rows.map((r) =>
+          r.url === row.url ? { ...r, memo: value } : r,
+        );
+        dispatch($setFolderData({ folder: fromFolder, list: updatedRows }));
+      }
     },
     [fromFolder, rows, dispatch],
   );
@@ -316,7 +346,7 @@ function GalleryManager({ gallery }) {
   return (
     <>
       <Stack sx={{ width: '100%' }}>
-        <Paper elevation={0} sx={{ marginBottom: 1 }}>
+        <Box sx={{ marginBottom: 1 }}>
           {createFolder ? (
             <FolderNameInput
               initialValue={channelInfo.id}
@@ -333,43 +363,112 @@ function GalleryManager({ gallery }) {
               onRemove={handleRemoveFolder}
             />
           )}
+        </Box>
+        <Paper variant="outlined">
+          <Toolbar
+            moving={!!moveList}
+            disabled={
+              moveList ? fromFolder === toFolder : !(selection.length > 0)
+            }
+            onMove={handleMove}
+            onCopy={handleCopy}
+            onCancel={handleToggle}
+            onMoving={handleToggle}
+            onRemove={handleRemove}
+          />
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  {!moveList && (
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        indeterminate={
+                          selection.length > 0 &&
+                          selection.length < pagedRows.length
+                        }
+                        checked={
+                          pagedRows.length > 0 &&
+                          selection.length === pagedRows.length
+                        }
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                  )}
+                  <TableCell sx={{ width: 200 }}>이미지 주소</TableCell>
+                  <TableCell>메모</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pagedRows.length === 0 ? (
+                  <TableRow sx={{ height: 100 }}>
+                    <TableCell colSpan={3} align="center">
+                      저장된 자짤이 없습니다.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  pagedRows.map((row) => (
+                    <TableRow key={row.url} sx={{ height: 40 }}>
+                      {!moveList && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={selection.includes(row.url)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              handleSelectRow(row.url);
+                            }}
+                          />
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <Box
+                          sx={{
+                            width: 200,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {row.url}
+                        </Box>
+                      </TableCell>
+                      <TableCell
+                        onClick={() =>
+                          setEditingCell({ rowId: row.url, field: 'memo' })
+                        }
+                        sx={{ cursor: 'text' }}
+                      >
+                        <input
+                          ref={editInputRef}
+                          defaultValue={row.memo}
+                          onBlur={(e) => handleMemoBlur(row, e.target.value)}
+                          style={{
+                            width: '100%',
+                            border: 'none',
+                            outline: 'none',
+                            fontSize: 'inherit',
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            component="div"
+            count={rows.length}
+            page={page}
+            rowsPerPage={pageSize}
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(e) => {
+              setPageSize(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+          />
         </Paper>
-        <DataGrid
-          rows={rows}
-          getRowId={(row) => row.url}
-          columns={columns}
-          rowHeight={40}
-          pagination
-          disableColumnMenu
-          disableRowSelectionOnClick
-          checkboxSelection={!moveList}
-          slots={{
-            toolbar: Toolbar,
-            noRowsOverlay: NoRowsOverlay,
-          }}
-          slotProps={{
-            toolbar: {
-              moving: !!moveList,
-              disabled: moveList
-                ? fromFolder === toFolder
-                : !(selection.length > 0),
-              onMove: handleMove,
-              onCopy: handleCopy,
-              onCancel: handleToggle,
-              onMoving: handleToggle,
-              onRemove: handleRemove,
-            },
-          }}
-          initialState={{
-            pagination: {
-              pageSize: 10,
-            },
-          }}
-          rowSelectionModel={selection}
-          pageSizeOptions={[10, 25, 50, 100]}
-          onCellEditCommit={handleCellEdit}
-          onRowSelectionModelChange={(s) => setSelection(s)}
-        />
       </Stack>
       <Dialog open={confirm} onClose={handleConfirmClose}>
         <DialogTitle>폴더 삭제</DialogTitle>

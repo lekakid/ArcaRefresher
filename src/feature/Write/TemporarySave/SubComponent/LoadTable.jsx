@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,13 +13,19 @@ import {
   FormControlLabel,
   Grid2 as Grid,
   IconButton,
+  Paper,
   Stack,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
   Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { Close, Delete, Done, Edit } from '@mui/icons-material';
 
 import Info from '../FeatureInfo';
@@ -29,21 +36,7 @@ import {
   $toggleTemplateMode,
 } from '../slice';
 
-const columns = [
-  { field: 'title', headerName: '제목', flex: 3 },
-  {
-    field: 'date',
-    headerName: '날짜',
-    flex: 1,
-    valueFormatter: (value) => `${new Date(Number(value)).toLocaleString()}`,
-  },
-];
-
-function CustomNoRowsOverlay() {
-  return <GridOverlay>임시 저장된 게시물이 없습니다.</GridOverlay>;
-}
-
-function CustomToolbar({
+function Toolbar({
   selection,
   editMode,
   onClickEdit,
@@ -93,12 +86,12 @@ function CustomToolbar({
   );
 }
 
-CustomToolbar.propTypes = {
-  selection: PropTypes.array.isRequired,
-  editMode: PropTypes.bool.isRequired,
-  onClickEdit: PropTypes.func.isRequired,
-  onClickRemove: PropTypes.func.isRequired,
-  onClickDone: PropTypes.func.isRequired,
+Toolbar.propTypes = {
+  selection: PropTypes.array,
+  editMode: PropTypes.bool,
+  onClickEdit: PropTypes.func,
+  onClickRemove: PropTypes.func,
+  onClickDone: PropTypes.func,
 };
 
 function LoadTable({ editor, open, onClose }) {
@@ -108,21 +101,40 @@ function LoadTable({ editor, open, onClose }) {
   const { tempArticleList, importTitle, templateMode } = useSelector(
     (state) => state[Info.id].storage,
   );
+
   const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
     id: index,
     title: value.title,
     content: value.content,
     date: key,
   }));
+
   const [selection, setSelection] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
-  const handleSelection = useCallback((current) => {
-    setSelection(current);
+  const pagedRows = useMemo(
+    () => rows.slice(page * pageSize, page * pageSize + pageSize),
+    [rows, page, pageSize],
+  );
+
+  const handleSelectAll = useCallback(
+    (e) => {
+      setSelection(e.target.checked ? pagedRows.map((r) => r.id) : []);
+    },
+    [pagedRows],
+  );
+
+  const handleSelectRow = useCallback((id) => {
+    setSelection((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+    );
   }, []);
 
   const handleLoad = useCallback(
-    ({ row }) => {
+    (row) => {
+      if (editMode) return;
       const { date, title, content } = row;
 
       editor.content.html.set(content);
@@ -133,7 +145,7 @@ function LoadTable({ editor, open, onClose }) {
       dispatch(setCurrentSlot(templateMode ? null : date));
       onClose();
     },
-    [dispatch, editor, importTitle, templateMode, onClose],
+    [dispatch, editor, importTitle, templateMode, editMode, onClose],
   );
 
   const handleClose = useCallback(() => {
@@ -178,36 +190,87 @@ function LoadTable({ editor, open, onClose }) {
         <Close />
       </IconButton>
       <DialogContent>
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          rowHeight={40}
-          pagination
-          checkboxSelection={editMode}
-          disableColumnMenu
-          slots={{
-            toolbar: CustomToolbar,
-            noRowsOverlay: CustomNoRowsOverlay,
-          }}
-          slotProps={{
-            toolbar: {
-              selection,
-              editMode,
-              onClickEdit: handleEdit,
-              onClickRemove: handleRemove,
-              onClickDone: handleDone,
-            },
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 10 },
-            },
-          }}
-          pageSizeOptions={[10, 20, 30]}
-          onRowClick={editMode ? null : handleLoad}
-          rowSelectionModel={selection}
-          onRowSelectionModelChange={handleSelection}
-        />
+        <Paper variant="outlined" sx={{ width: '100%' }}>
+          <Toolbar
+            selection={selection}
+            editMode={editMode}
+            onClickEdit={handleEdit}
+            onClickRemove={handleRemove}
+            onClickDone={handleDone}
+          />
+          <Table>
+            <TableHead>
+              <TableRow sx={{ height: 40 }}>
+                <TableCell padding="checkbox">
+                  {editMode && (
+                    <Checkbox
+                      indeterminate={
+                        selection.length > 0 &&
+                        selection.length < pagedRows.length
+                      }
+                      checked={
+                        pagedRows.length > 0 &&
+                        selection.length === pagedRows.length
+                      }
+                      onChange={handleSelectAll}
+                    />
+                  )}
+                </TableCell>
+                <TableCell sx={{ flex: 3 }}>제목</TableCell>
+                <TableCell sx={{ flex: 1 }}>날짜</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {pagedRows.length === 0 ? (
+                <TableRow sx={{ height: 100 }}>
+                  <TableCell colSpan={3} align="center">
+                    임시 저장된 게시물이 없습니다.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                pagedRows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    sx={{
+                      height: 40,
+                      cursor: editMode ? 'default' : 'pointer',
+                      '&:hover': { backgroundColor: 'action.hover' },
+                    }}
+                    onClick={() => handleLoad(row)}
+                  >
+                    <TableCell padding="checkbox">
+                      {editMode && (
+                        <Checkbox
+                          checked={selection.includes(row.id)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleSelectRow(row.id);
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell>
+                      {new Date(Number(row.date)).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            count={rows.length}
+            page={page}
+            rowsPerPage={pageSize}
+            rowsPerPageOptions={[10, 20, 30]}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(e) => {
+              setPageSize(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+          />
+        </Paper>
       </DialogContent>
       <DialogActions>
         <Stack direction={mobile ? 'column' : 'row'}>

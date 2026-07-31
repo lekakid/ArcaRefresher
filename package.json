@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.40.1",
+  "version": "3.41.0",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -57,7 +57,6 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^6.4.11",
     "@mui/material": "^6.4.11",
-    "@mui/x-data-grid": "^7.29.5",
     "@reduxjs/toolkit": "^2.2.2",
     "@transcend-io/conflux": "^4.0.2",
     "prop-types": "^15.8.1",
@@ -69,7 +68,7 @@
     "react-qr-code": "^2.0.11",
     "react-redux": "^9.1.0",
     "streamsaver": "^2.0.6",
-    "uuid": "^9.0.1"
+    "uuid": "^14.0.1"
   },
   "packageManager": "npm@3.3.0"
 }

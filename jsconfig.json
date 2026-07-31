@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": "src"
+    "paths": {
+      "component/*": ["./src/component/*"],
+      "core/*": ["./src/core/*"],
+      "error/*": ["./src/error/*"],
+      "feature/*": ["./src/feature/*"],
+      "func/*": ["./src/func/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "menu/*": ["./src/menu/*"]
+    }
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
