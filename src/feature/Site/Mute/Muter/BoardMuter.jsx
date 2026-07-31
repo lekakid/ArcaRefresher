@@ -200,7 +200,7 @@ function BoardMuter() {
     const channelfilter =
       filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
 
-    const hidden = hideUserAd || channelfilter?.test(slug);
+    const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
     document.documentElement.classList.toggle('hide-user-ad', hidden);
   }, [category, filter.channel, hideUserAd]);
 
