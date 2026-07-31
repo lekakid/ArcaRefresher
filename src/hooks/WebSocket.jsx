@@ -63,12 +63,27 @@ function WrappedWebSocket(...contructorArguments) {
       this.ws.send(data);
     },
     reconnect() {
-      this.eventHistoryRecording = false;
+      // 소켓 종료 후 정리
       this.ws.close();
-      this.ws = new OriginWebSocket(...contructorArguments);
+
+      // 신규 소켓 연결
+      const reconnectedSocket = new OriginWebSocket(...contructorArguments);
+
+      // 기본 이벤트 이전
+      reconnectedSocket.onopen = this.ws.onopen;
+      reconnectedSocket.onerror = this.ws.onerror;
+
+      // 소켓 교체
+      this.ws = reconnectedSocket;
+
+      // 이벤트 재등록
+      this.eventHistoryRecording = false;
       this.eventHistory.forEach((args) => this.addEventListener(...args));
       this.eventHistoryRecording = true;
     },
+  };
+  wrappedSocket.ws.onopen = () => {
+    console.info('[ArcaRefresher] Arcalive Websocket connected');
   };
   wrappedSocket.ws.onerror = (e) => {
     console.warn('[ArcaRefresher] Arcalive Websocket error', e);
@@ -76,16 +91,6 @@ function WrappedWebSocket(...contructorArguments) {
       wrappedSocket.reconnect();
     }, 2000);
   };
-  setInterval(() => {
-    // 약 8초에 한번 보내므로 1분에 7번까지는 받아야 정상
-    if (wrappedSocket.pingCount < 5) {
-      console.warn(
-        `[ArcaRefresher] Arcalive Websocket disconnected (${new Date()})`,
-      );
-      wrappedSocket.reconnect();
-    }
-    wrappedSocket.pingCount = 0;
-  }, 60000);
 
   console.info('[ArcaRefresher] WebSocket Hooked');
   return wrappedSocket;
