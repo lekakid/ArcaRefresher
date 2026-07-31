@@ -21,6 +21,7 @@ export const AUDIT = '.board-audit-list';
 export const TOASTBOX = '#toastbox';
 
 // 컨테이너 내에 있는 아이템
+export const BOARD_USER_AD = '.vrow.notice:not(.notice-unfilter):first-of-type';
 export const BOARD_NOTICES = '.vrow.notice:not(.notice-unfilter)';
 export const BOARD_ITEMS = '.vrow.column:not(.notice):not(.head), .vrow.hybrid';
 export const BOARD_ITEMS_WITH_NOTICE =

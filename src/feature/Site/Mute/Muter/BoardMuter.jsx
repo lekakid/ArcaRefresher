@@ -2,7 +2,12 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { BOARD, BOARD_IN_ARTICLE, BOARD_ITEMS } from 'core/selector';
+import {
+  BOARD,
+  BOARD_IN_ARTICLE,
+  BOARD_ITEMS,
+  BOARD_USER_AD,
+} from 'core/selector';
 import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
@@ -185,8 +190,17 @@ function BoardMuter() {
 
   // 이용자 광고
   useLayoutEffect(() => {
-    document.documentElement.classList.toggle('hide-user-ad', hideUserAd);
-  }, [hideUserAd]);
+    if (!category) return;
+
+    const adUrl = document.querySelector(BOARD_USER_AD).href;
+    const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)[1];
+
+    const channelfilter =
+      filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
+
+    const hidden = hideUserAd || channelfilter?.test(slug);
+    document.documentElement.classList.toggle('hide-user-ad', hidden);
+  }, [category, filter.channel, hideUserAd]);
 
   // 서비스 공지사항
   useLayoutEffect(() => {
