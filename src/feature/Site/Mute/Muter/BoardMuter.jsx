@@ -192,7 +192,9 @@ function BoardMuter() {
   useLayoutEffect(() => {
     if (!category) return;
 
-    const adUrl = document.querySelector(BOARD_USER_AD).href;
+    const adUrl = document.querySelector(BOARD_USER_AD)?.href;
+    if (!adUrl) return;
+
     const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)[1];
 
     const channelfilter =
