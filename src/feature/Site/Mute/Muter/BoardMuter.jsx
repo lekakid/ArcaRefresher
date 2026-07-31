@@ -195,7 +195,7 @@ function BoardMuter() {
     const adUrl = document.querySelector(BOARD_USER_AD)?.href;
     if (!adUrl) return;
 
-    const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)[1];
+    const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
 
     const channelfilter =
       filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
