@@ -16,7 +16,7 @@ function WrappedWebSocket(...contructorArguments) {
       this.addEventListener.apply(this, ['open', callback, false]);
     },
     set onclose(callback) {
-      // 이벤트 무력화
+      // 사이트 기본 이벤트 무력화
     },
     addEventListener(event, eventCallback, options) {
       if (this.eventHistoryRecording) {
@@ -63,18 +63,11 @@ function WrappedWebSocket(...contructorArguments) {
       this.ws.send(data);
     },
     reconnect() {
-      // 소켓 종료 후 정리
+      // 기존 소켓 종료 처리
       this.ws.close();
 
-      // 신규 소켓 연결
-      const reconnectedSocket = new OriginWebSocket(...contructorArguments);
-
-      // 기본 이벤트 이전
-      reconnectedSocket.onopen = this.ws.onopen;
-      reconnectedSocket.onerror = this.ws.onerror;
-
       // 소켓 교체
-      this.ws = reconnectedSocket;
+      this.ws = new OriginWebSocket(...contructorArguments);
 
       // 이벤트 재등록
       this.eventHistoryRecording = false;
@@ -82,15 +75,15 @@ function WrappedWebSocket(...contructorArguments) {
       this.eventHistoryRecording = true;
     },
   };
-  wrappedSocket.ws.onopen = () => {
+  wrappedSocket.addEventListener('open', () => {
     console.info('[ArcaRefresher] Arcalive Websocket connected');
-  };
-  wrappedSocket.ws.onerror = (e) => {
+  });
+  wrappedSocket.addEventListener('error', (e) => {
     console.warn('[ArcaRefresher] Arcalive Websocket error', e);
     setTimeout(() => {
       wrappedSocket.reconnect();
     }, 2000);
-  };
+  });
 
   console.info('[ArcaRefresher] WebSocket Hooked');
   return wrappedSocket;
