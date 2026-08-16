@@ -490,7 +490,7 @@ function SubsChannelManager({ subs, open, onClose }) {
                         />
                       </TableCell>
                       <TableCell>
-                        <ChannelTitleRenderer row={row} value={row.channel} />
+                        <ChannelTitleRenderer id={row.id} value={row.channel} />
                       </TableCell>
                       <TableCell
                         onClick={() =>

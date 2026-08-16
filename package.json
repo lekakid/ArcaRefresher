@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.41.3",
+  "version": "3.41.4",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -16,9 +16,8 @@
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "analyze": "webpack --config webpack.analyze.js && webpack-bundle-analyzer ./dist/bundle-report.json --default-sizes parsed",
-    "ver:fix": "bash build/deploy.sh patch",
-    "ver:min": "bash build/deploy.sh minor",
-    "ver:pre": "bash build/deploy.sh preminor --preid=pre"
+    "fix": "bash build/deploy.sh patch",
+    "min": "bash build/deploy.sh minor"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
