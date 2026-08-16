@@ -187,8 +187,7 @@ export default function ChannelManager() {
               key={id}
               id={id}
               label={label}
-              memo={channelInfoTable[id]?.memo || ''}
-              best={channelInfoTable[id]?.best}
+              info={channelInfoTable[id]}
             />
           ))}{' '}
         </List>
