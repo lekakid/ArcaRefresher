@@ -14,6 +14,7 @@ const defaultStorage = {
   muteIncludeReply: false,
   hideUserAd: false,
   hideServiceNotice: false,
+  muteChannelPointAlarm: false,
   hideNoPermission: false,
   hideClosedDeal: true,
   user: [],
@@ -77,6 +78,10 @@ export const slice = createSlice({
     },
     $toggleHideNoticeService(state) {
       state.storage.hideServiceNotice = !state.storage.hideServiceNotice;
+    },
+    $toggleMuteChannelPointAlarm(state) {
+      state.storage.muteChannelPointAlarm =
+        !state.storage.muteChannelPointAlarm;
     },
     $toggleHideNoPermission(state) {
       state.storage.hideNoPermission = !state.storage.hideNoPermission;
@@ -181,6 +186,7 @@ export const {
   $toggleIncludeReply,
   $toggleHideUserAd,
   $toggleHideNoticeService,
+  $toggleMuteChannelPointAlarm,
   $toggleHideNoPermission,
   $toggleHideClosedDeal,
   $addUser,

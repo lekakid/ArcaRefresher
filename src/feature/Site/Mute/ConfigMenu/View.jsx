@@ -32,6 +32,7 @@ import {
   $setBoardBarPos,
   $toggleHideUserAd,
   $toggleHideNoticeService,
+  $toggleMuteChannelPointAlarm,
   $toggleHideClosedDeal,
   $setContextRange,
   $setChannel,
@@ -55,6 +56,7 @@ const View = forwardRef((_props, ref) => {
     muteIncludeReply,
     hideUserAd,
     hideServiceNotice,
+    muteChannelPointAlarm,
     hideNoPermission,
     hideClosedDeal,
     user: userList,
@@ -157,6 +159,12 @@ const View = forwardRef((_props, ref) => {
             primary="[모든 채널] 서비스 공지사항 숨김"
             value={hideServiceNotice}
             action={$toggleHideNoticeService}
+          />
+          <SwitchRow
+            divider
+            primary="[모든 채널] 채널 포인트 알람 뮤트"
+            value={muteChannelPointAlarm}
+            action={$toggleMuteChannelPointAlarm}
           />
           <SwitchRow
             divider
