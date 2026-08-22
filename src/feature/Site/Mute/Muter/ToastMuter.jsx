@@ -32,7 +32,7 @@ function ToastMuter() {
   const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
 
   const filter = useSelector(filterSelector);
-  const { hideMutedMark, muteAllEmot } = useSelector(
+  const { muteChannelPointAlarm, hideMutedMark, muteAllEmot } = useSelector(
     (state) => state[Info.id].storage,
   );
 
@@ -79,6 +79,20 @@ function ToastMuter() {
 
     return () => unsubscribeSocket(subscriber);
   }, [filter, hideMutedMark, muteAllEmot, subscribeSocket, unsubscribeSocket]);
+
+  useEffect(() => {
+    if (!muteChannelPointAlarm) return undefined;
+
+    const callback = (e) => {
+      const data = e.data.split('|');
+
+      e.ignore = data[0] === 'cp';
+    };
+    const subscriber = { callback, type: 'before' };
+    subscribeSocket(subscriber);
+
+    return () => unsubscribeSocket(subscriber);
+  }, [muteChannelPointAlarm, subscribeSocket, unsubscribeSocket]);
 
   return toastMuteStyles;
 }
