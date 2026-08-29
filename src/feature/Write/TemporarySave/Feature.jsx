@@ -20,23 +20,7 @@ const btnsStyles = (
   <GlobalStyles
     styles={{
       '.article-write .btns': {
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gridTemplateAreas: `
-          'tmp'
-          'recapcha'
-        `,
-        rowGap: '1rem',
-        '& > .tmpBtn': {
-          gridArea: 'tmp',
-          textAlign: 'left',
-        },
-        '& > #submitBtn': {
-          display: 'none',
-        },
-        '& > div': {
-          gridArea: 'recapcha',
-        },
+        display: 'none',
       },
     }}
   />
@@ -51,23 +35,37 @@ export default function TemporarySave() {
     (state) => state[Info.id].storage,
   );
   const { currentSlot } = useSelector((state) => state[Info.id]);
-  const [container, setContainer] = useState(null);
+  const [tempArticleContainer, setTemparticleContainer] = useState(null);
+  const [submitHandlerContainer, setSubmitHandlerContainer] = useState(null);
   const [editor, setEditor] = useState(null);
 
   // 렌더 컨테이너 생성
   useEffect(() => {
-    if (!enabled) return;
-    if (!editorLoaded) return;
+    if (!enabled) return undefined;
+    if (!editorLoaded) return undefined;
 
     const title = document.querySelector('#inputTitle');
     const content = unsafeWindow.editorInstance;
     setEditor({ title, content });
 
-    const tempButton = document.createElement('div');
-    tempButton.classList.add('tmpBtn');
     const btns = document.querySelector('.article-write .btns');
-    btns.append(tempButton);
-    setContainer(tempButton);
+    const previewCb = document.querySelector('#hidden-preview-checkbox');
+
+    const taContainer = document.createElement('div');
+    previewCb.before(taContainer);
+    setTemparticleContainer(taContainer);
+
+    const shContainer = document.createElement('div');
+    btns.after(shContainer);
+    setSubmitHandlerContainer(shContainer);
+
+    return () => {
+      taContainer.remove();
+      shContainer.remove();
+
+      setTemparticleContainer(null);
+      setSubmitHandlerContainer(null);
+    };
   }, [enabled, editorLoaded]);
 
   const handleCommit = useCallback(() => {
@@ -78,6 +76,14 @@ export default function TemporarySave() {
     const submitBtn = document.querySelector('#submitBtn');
     submitBtn.click();
   }, [currentSlot, deleteOnCommit, dispatch]);
+
+  const handleBack = () => {
+    const backBtn = document.querySelector(
+      '.article-write .btns a:first-child',
+    );
+
+    backBtn.click();
+  };
 
   useEffect(() => {
     if (!editor) return undefined;
@@ -99,25 +105,24 @@ export default function TemporarySave() {
   }, [currentSlot, deleteOnCommit, dispatch, editor]);
 
   if (!enabled) return null;
-  if (!container) return null;
+  if (!tempArticleContainer) return null;
+  if (!submitHandlerContainer) return null;
+
   return (
     <>
       {btnsStyles}
       <AutoSaver editor={editor} />
-      <Portal container={container}>
-        <Stack
-          direction={mobile ? 'column' : 'row'}
-          justifyContent="space-between"
-          gap={1}
-        >
-          <ButtonGroup sx={mobile ? { width: '100%' } : undefined}>
-            <SaveButton sx={{ flexGrow: 1 }} editor={editor} />
-            <SaveButton sx={{ flexGrow: 2 }} editor={editor} saveAs />
-            <LoadButton sx={{ flexGrow: 1 }} editor={editor} />
-          </ButtonGroup>
-          <Button fullWidth={mobile} onClick={handleCommit}>
-            작성
-          </Button>
+      <Portal container={tempArticleContainer}>
+        <ButtonGroup sx={{ pb: 2, width: mobile ? '100%' : undefined }}>
+          <SaveButton sx={{ flexGrow: 1 }} editor={editor} />
+          <SaveButton sx={{ flexGrow: 2 }} editor={editor} saveAs />
+          <LoadButton sx={{ flexGrow: 1 }} editor={editor} />
+        </ButtonGroup>
+      </Portal>
+      <Portal container={submitHandlerContainer}>
+        <Stack direction="row" justifyContent="space-between">
+          <Button onClick={handleBack}>돌아가기</Button>
+          <Button onClick={handleCommit}>작성</Button>
         </Stack>
       </Portal>
     </>
