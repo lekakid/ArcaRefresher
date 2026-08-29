@@ -82,7 +82,7 @@ function WrappedWebSocket(...contructorArguments) {
     console.warn('[ArcaRefresher] Arcalive Websocket error', e);
     setTimeout(() => {
       wrappedSocket.reconnect();
-    }, 2000);
+    }, 5000);
   });
 
   console.info('[ArcaRefresher] WebSocket Hooked');
