@@ -6,8 +6,9 @@ import Info from './FeatureInfo';
 const defaultStorage = {
   version: 1,
   enabled: true,
-  imgList: { _shared_: [] },
   forceLoad: false,
+  firstLoad: true,
+  imgList: { _shared_: [] },
 };
 
 function formatUpdater(storage, defaultValue) {
@@ -50,6 +51,9 @@ export const slice = createSlice({
     $toggleForceLoad(state) {
       state.storage.forceLoad = !state.storage.forceLoad;
     },
+    $toggleFirstLoad(state) {
+      state.storage.firstLoad = !state.storage.firstLoad;
+    },
     $addImage(state, action) {
       const { folder, image } = action.payload;
       state.storage.imgList[folder].push(image);
@@ -88,6 +92,7 @@ export const slice = createSlice({
 export const {
   $toggleEnabled,
   $toggleForceLoad,
+  $toggleFirstLoad,
   $addImage,
   $removeImage,
   $setImageList,
