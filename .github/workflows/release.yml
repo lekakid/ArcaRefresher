@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release
@@ -18,59 +21,27 @@ jobs:
           version="${message//\[version\] /}"
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Create Github Release
-        id: release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get-version.outputs.version }}
-          release_name: ${{ steps.get-version.outputs.version }}
-          draft: false
-          prerelease: false
-
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 18
+          node-version: lts/*
+          cache: npm
 
-      - name: Intall packages
-        uses: bahmutov/npm-install@v1
-        with:
-          install-command: npm ci --legacy-peer-deps
+      - name: Install packages
+        run: npm ci --legacy-peer-deps
 
       - name: Build
         run: npm run build
 
-      - name: Upload Assets (user.js)
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        id: release
+        uses: softprops/action-gh-release@v3
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ./dist/ArcaRefresher.user.js
-          asset_name: ArcaRefresher.user.js
-          asset_content_type: application/vnd.github+json
-
-      - name: Upload Assets (meta.js)
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ./dist/ArcaRefresher.meta.js
-          asset_name: ArcaRefresher.meta.js
-          asset_content_type: application/vnd.github+json
-
-      - name: Upload Assets (user.js.LICENSE.txt)
-        uses: actions/upload-release-asset@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ./dist/ArcaRefresher.user.js.LICENSE.txt
-          asset_name: ArcaRefresher.user.js.LICENSE.txt
-          asset_content_type: application/vnd.github+json
+          tag_name: ${{ steps.get-version.outputs.version }}
+          files: |
+            ./dist/ArcaRefresher.user.js
+            ./dist/ArcaRefresher.meta.js
+            ./dist/ArcaRefresher.user.js.LICENSE.txt
