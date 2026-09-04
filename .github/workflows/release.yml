@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Create Github Release
+      - name: Create GitHub Release
         id: release
         uses: softprops/action-gh-release@v3
         with:
