@@ -19,6 +19,7 @@ import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
+import { request } from 'func/http';
 
 import SelectableImageList from './SelectableImageList';
 import { EmoticonInfo, format, ImageInfo } from './func';
@@ -47,31 +48,6 @@ function mapDownloadInfo(arr, type) {
       }
     })
     .filter((i) => i);
-}
-
-function delay(interval) {
-  if (!interval) return Promise.resolve();
-
-  return new Promise((resolve) => {
-    setTimeout(resolve, interval);
-  });
-}
-
-async function fetchWithRetry(url, opt, tryOpt) {
-  const { tryCount, interval } = tryOpt;
-
-  let count = 0;
-  while (count < tryCount) {
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      return await fetch(url, opt);
-    } catch (error) {
-      // eslint-disable-next-line no-await-in-loop
-      await delay(interval);
-      count += 1;
-    }
-  }
-  throw new Error('[fetchWithRetry] 시도 횟수 초과');
 }
 
 function DownloadDialog() {
@@ -137,15 +113,13 @@ function DownloadDialog() {
   const handleDownload = useCallback(async () => {
     setSelection([]);
 
-    const selectedTable = data.map(() => false);
+    const selectedItems = data.map(() => false);
     selection.forEach((s) => {
-      selectedTable[s] = true;
+      selectedItems[s] = true;
     });
-    const selectedImages = selectedTable
+    const imageInfoList = selectedItems
       .map((s, i) => (s ? data[i] : undefined))
       .filter((d) => !!d);
-
-    const iterator = selectedImages.values();
 
     const confirm = (event) => {
       event.preventDefault();
@@ -156,64 +130,60 @@ function DownloadDialog() {
     };
 
     let count = startWithZero ? 0 : 1;
+    // 파일명 중복 시 끝에 숫자 붙이는 용도
     const dupCount = {};
-    const myReadable = new ReadableStream(
-      {
-        start() {
-          dispatch(setOpen(false));
-          window.addEventListener('beforeunload', confirm);
-        },
-        async pull(controller) {
-          const { done, value } = iterator.next();
-          if (done) {
-            window.removeEventListener('beforeunload', confirm);
-            return controller.close();
-          }
 
-          const { url, orig, ext, name } = value;
-          let imageName = format(zipImageName, {
-            content: contentInfo,
-            index: count,
-            name,
-          });
-          imageName =
-            dupCount[imageName] > 0
-              ? `${imageName}(${dupCount[imageName]})`
-              : imageName;
-          dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+    // 페이지 이탈 방지
+    window.addEventListener('beforeunload', confirm);
+    dispatch(setOpen(false));
 
-          count += 1;
-          try {
-            const stream = await fetchWithRetry(
-              downloadOrigin ? orig : url,
-              { cache: 'no-cache' },
-              {
-                tryCount: 10,
-                interval: 1000,
-              },
-            ).then((response) => response.body);
-            return controller.enqueue({
-              name: `${imageName}.${ext}`,
-              stream: () => stream,
-            });
-          } catch (error) {
-            console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
-            return undefined;
-          }
-        },
-        cancel() {
-          window.removeEventListener('beforeunload', confirm);
-        },
-      },
-      { highWaterMark: 0 },
-    );
+    // Conflux 압축파일 스트림 생성
+    const { readable, writable } = new Writer();
+    const writer = writable.getWriter();
 
+    // 파일 저장 스트림 생성
     const zipFileName = format(zipName, { content: contentInfo });
-
     const filestream = streamSaver.createWriteStream(
       `${zipFileName}.${zipExtension}`,
     );
-    myReadable.pipeThrough(new Writer()).pipeTo(filestream);
+
+    // Conflux -> streamSaver 연결
+    readable.pipeTo(filestream);
+
+    // 다운로드 시작
+    for (let i = 0; i < imageInfoList.length; i += 1) {
+      const info = imageInfoList[i];
+
+      const { url, orig, ext, name } = info;
+
+      let imageName = format(zipImageName, {
+        content: contentInfo,
+        index: count,
+        name,
+      });
+      imageName =
+        dupCount[imageName] > 0
+          ? `${imageName}(${dupCount[imageName]})`
+          : imageName;
+      dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+
+      count += 1;
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const stream = await request(downloadOrigin ? orig : url, {
+          responseType: 'blob',
+        }).then(({ response }) => response.stream());
+
+        writer.write({
+          name: `${imageName}.${ext}`,
+          stream: () => stream,
+        });
+      } catch (error) {
+        console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+      }
+    }
+
+    writer.close();
   }, [
     data,
     selection,

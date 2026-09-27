@@ -7,26 +7,26 @@ export default class ImageInfo {
       container.dataset.src || container.src,
       window.location.origin,
     );
-
+    const thumb = new URL(container.poster || url);
     const orig = new URL(container.dataset.originalurl || url);
     const [path, ext1, ext2] = url.pathname.split('.');
     const ext = ext2 || ext1;
+    const name = path.split('/').pop();
 
     // JPG 다운로드 속도 최적화
     if (
       ['jpg', 'jpeg'].includes(ext) &&
       container.getAttribute('width') <= 1280
     ) {
+      orig.host = url.host;
       orig.searchParams.delete('type');
     }
-
-    const thumb = new URL(container.poster || url);
 
     this.container = container;
     this.url = url;
     this.orig = orig;
     this.thumb = thumb;
-    this.name = path.split('/').pop();
+    this.name = name;
     this.ext = ext;
   }
 
