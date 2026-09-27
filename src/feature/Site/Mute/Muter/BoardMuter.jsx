@@ -190,18 +190,29 @@ function BoardMuter() {
 
   // 이용자 광고
   useLayoutEffect(() => {
-    if (!category) return;
+    if (!category) return undefined;
 
-    const adUrl = document.querySelector(BOARD_USER_AD)?.href;
-    if (!adUrl) return;
+    const muteUserAd = () => {
+      const adUrl = document.querySelector(BOARD_USER_AD)?.href;
+      if (!adUrl) return;
 
-    const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
+      const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
 
-    const channelfilter =
-      filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
+      const channelfilter =
+        filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
 
-    const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
-    document.documentElement.classList.toggle('hide-user-ad', hidden);
+      const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
+      document.documentElement.classList.toggle('hide-user-ad', hidden);
+    };
+
+    if (document.readyState === 'complete') muteUserAd();
+    window.addEventListener('load', muteUserAd);
+    window.addEventListener(EVENT_BOARD_REFRESH, muteUserAd);
+
+    return () => {
+      window.removeEventListener('load', muteUserAd);
+      window.removeEventListener(EVENT_BOARD_REFRESH, muteUserAd);
+    };
   }, [category, filter.channel, hideUserAd]);
 
   // 서비스 공지사항
