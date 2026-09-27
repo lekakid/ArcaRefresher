@@ -12,7 +12,7 @@ module.exports = {
   supportURL: 'https://arca.live/b/namurefresher',
   match: ['https://*.arca.live/*'],
   exclude: ['https://*.arca.live/api/*'],
-  connect: ['namu.la', 'saucenao.com', 'ascii2d.net'],
+  connect: ['namu.la', 'arca.live', 'saucenao.com', 'ascii2d.net'],
   noframes: true,
   'run-at': 'document-body',
   grant: [
