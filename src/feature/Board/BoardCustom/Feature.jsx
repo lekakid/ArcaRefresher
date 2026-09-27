@@ -169,6 +169,31 @@ export default function BoardCustom() {
     };
   }, [boardLoaded, enhancedArticleManage]);
 
+  // 운영 경고 팝업 시 게시물 링크 처리
+  useEffect(() => {
+    window.addEventListener('load', () => {
+      const dialogContent = document.querySelector(
+        '.microModal .microModal-content',
+      );
+
+      if (dialogContent) {
+        const urlRegex = /https:\/\/arca.live\/b\/[a-z0-9]+\/[0-9]+/;
+        const urlList = dialogContent.innerHTML.match(urlRegex);
+
+        let result = dialogContent.innerHTML;
+
+        urlList.forEach((e) => {
+          result = result.replace(
+            e,
+            `<a href="${e}" target="_blank" rel="noopener noreferrer">${e}</a>`,
+          );
+        });
+
+        dialogContent.innerHTML = result;
+      }
+    });
+  }, []);
+
   return (
     <>
       <UserInfoWidthStyles value={userinfoWidth} />
