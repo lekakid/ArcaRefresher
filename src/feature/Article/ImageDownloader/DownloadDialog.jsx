@@ -21,18 +21,29 @@ import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
 
 import SelectableImageList from './SelectableImageList';
-import { format, ImageInfo } from './func';
+import { EmoticonInfo, format, ImageInfo } from './func';
 import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
 
-function mapImageInfo(arr) {
+function mapDownloadInfo(arr, type) {
+  if (type === undefined) {
+    throw new Error('[mapDownloadInfo] type 미지정');
+  }
+
   return arr
     .map((i) => {
       try {
-        return new ImageInfo(i);
+        switch (type) {
+          case 'image':
+            return new ImageInfo(i);
+          case 'emoticon':
+            return new EmoticonInfo(i);
+          default:
+            return null;
+        }
       } catch (error) {
         console.warn(error);
-        return undefined;
+        return null;
       }
     })
     .filter((i) => i);
@@ -86,26 +97,26 @@ function DownloadDialog() {
     if (data) return;
 
     (async () => {
-      const isEmotShop = window.location.pathname.includes('/e/');
-      if (isEmotShop) {
+      const isEmotList = window.location.pathname.includes('/e/');
+      if (isEmotList) {
         const bundleId = window.location.pathname.replace('/e/', '');
         try {
           const response = await fetch(`/api/emoticon/${bundleId}`);
           if (!response.ok) throw Error(response.statusText);
 
           const emotJson = await response.json();
-          setData(mapImageInfo(emotJson));
+          setData(mapDownloadInfo(emotJson, 'emoticon'));
           setSelection([...new Array(emotJson.length).keys()]);
           return;
         } catch (error) {
           console.warn('[ImageDownloader] 아카콘 번들 데이터 획득 실패');
         }
       }
-      const query = isEmotShop
+      const query = isEmotList
         ? ARTICLE_EMOTICON
         : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
       const imageList = [...document.querySelectorAll(query)];
-      setData(mapImageInfo(imageList));
+      setData(mapDownloadInfo(imageList, 'image'));
 
       setSelection([...new Array(imageList.length).keys()]);
     })();

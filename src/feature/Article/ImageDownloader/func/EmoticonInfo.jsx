@@ -1,24 +1,16 @@
-export default class ImageInfo {
+export default class EmoticonInfo {
   static TYPE_IMAGE = 'IMAGE';
   static TYPE_EMOTICON = 'EMOTICON';
 
   constructor(container) {
     const url = new URL(
-      container.dataset.src || container.src,
+      container.orig || container.imageUrl,
       window.location.origin,
     );
 
-    const orig = new URL(container.dataset.originalurl || url);
+    const orig = new URL(container.orig || url);
     const [path, ext1, ext2] = url.pathname.split('.');
     const ext = ext2 || ext1;
-
-    // JPG 다운로드 속도 최적화
-    if (
-      ['jpg', 'jpeg'].includes(ext) &&
-      container.getAttribute('width') <= 1280
-    ) {
-      orig.searchParams.delete('type');
-    }
 
     const thumb = new URL(container.poster || url);
 

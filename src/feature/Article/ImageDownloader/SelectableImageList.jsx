@@ -50,7 +50,7 @@ function SelectableImageList({ imgList, selection, onChange }) {
             <img
               style={{ overflow: 'hidden' }}
               src={img}
-              alt={img}
+              alt={`${index + 1}번 이미지`}
               loading="lazy"
             />
             <ImageListItemBar
