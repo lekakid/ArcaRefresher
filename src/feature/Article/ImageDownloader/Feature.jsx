@@ -7,8 +7,9 @@ import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import ImageSelector from './ImageSelector';
-import Info from './FeatureInfo';
+import DownloadWidget from './DownloadWidget';
 import { setOpen } from './slice';
+import Info from './FeatureInfo';
 
 const hideButtonStyles = (
   <GlobalStyles
@@ -27,6 +28,7 @@ export default function ImageDownloader() {
   const { enabled } = useSelector((state) => state[Info.id].storage);
   const { open } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState(undefined);
+  const [downloadInfoList, setDownloadInfoList] = useState([]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -71,7 +73,11 @@ export default function ImageDownloader() {
           리프레셔 다운로더
         </Button>
       </Portal>
-      <ImageSelector open={open} />
+      <ImageSelector
+        open={open}
+        onConfirm={(list) => setDownloadInfoList(list)}
+      />
+      <DownloadWidget infoList={downloadInfoList} />
     </>
   );
 }

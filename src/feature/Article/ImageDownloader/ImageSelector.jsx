@@ -22,15 +22,10 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { CheckCircle, CheckCircleOutline, Close } from '@mui/icons-material';
-import { Writer } from '@transcend-io/conflux';
-import streamSaver from 'streamsaver';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContent } from 'hooks/Content';
-import { request } from 'func/http';
 
 import { EmoticonInfo, ImageInfo } from './Model';
-import { format } from './Util';
 import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
 
@@ -58,19 +53,13 @@ function mapDownloadInfo(arr, type) {
     .filter((i) => i);
 }
 
-function ImageSelector({ open }) {
+function ImageSelector({ open, onConfirm }) {
   const dispatch = useDispatch();
-  const contentInfo = useContent();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
     // 동작 설정
     downloadOrigin,
-    // 파일 포맷
-    startWithZero,
-    zipImageName,
-    zipName,
-    zipExtension,
   } = useSelector((state) => state[Info.id].storage);
 
   const [data, setData] = useState(undefined);
@@ -128,92 +117,11 @@ function ImageSelector({ open }) {
   const handleDownload = useCallback(async () => {
     setSelection([]);
 
-    const selectedItems = data.map(() => false);
-    selection.forEach((s) => {
-      selectedItems[s] = true;
-    });
-    const imageInfoList = selectedItems
-      .map((s, i) => (s ? data[i] : undefined))
-      .filter((d) => !!d);
+    const selectedInfoList = selection.sort().map((i) => data[i]);
+    onConfirm(selectedInfoList);
 
-    const confirm = (event) => {
-      event.preventDefault();
-      const message =
-        '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
-      event.returnValue = message;
-      return message;
-    };
-
-    let count = startWithZero ? 0 : 1;
-    // 파일명 중복 시 끝에 숫자 붙이는 용도
-    const dupCount = {};
-
-    // 페이지 이탈 방지
-    window.addEventListener('beforeunload', confirm);
     dispatch(setOpen(false));
-
-    // Conflux 압축파일 스트림 생성
-    const { readable, writable } = new Writer();
-    const writer = writable.getWriter();
-
-    // 파일 저장 스트림 생성
-    const zipFileName = format(zipName, { content: contentInfo });
-    const filestream = streamSaver.createWriteStream(
-      `${zipFileName}.${zipExtension}`,
-    );
-
-    // Conflux -> streamSaver 연결
-    readable.pipeTo(filestream);
-
-    // 다운로드 시작
-    for (let i = 0; i < imageInfoList.length; i += 1) {
-      const info = imageInfoList[i];
-
-      const { url, orig, ext, name } = info;
-
-      let imageName = format(zipImageName, {
-        content: contentInfo,
-        index: count,
-        name,
-      });
-      imageName =
-        dupCount[imageName] > 0
-          ? `${imageName}(${dupCount[imageName]})`
-          : imageName;
-      dupCount[imageName] = (dupCount[imageName] || 0) + 1;
-
-      count += 1;
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const stream = await request(downloadOrigin ? orig : url, {
-          responseType: 'blob',
-        }).then(({ response }) => response.stream());
-
-        writer.write({
-          name: `${imageName}.${ext}`,
-          stream: () => stream,
-        });
-      } catch (error) {
-        console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
-      }
-    }
-
-    // 스트림 종료
-    writer.close();
-
-    // 페이지 이탈 방지 해제
-    window.removeEventListener('beforeunload', confirm);
-  }, [
-    data,
-    selection,
-    downloadOrigin,
-    startWithZero,
-    zipName,
-    contentInfo,
-    zipExtension,
-    zipImageName,
-    dispatch,
-  ]);
+  }, [selection, onConfirm, data, dispatch]);
 
   const handleClose = useCallback(() => {
     dispatch(setOpen(false));
@@ -336,6 +244,7 @@ function ImageSelector({ open }) {
 
 ImageSelector.propTypes = {
   open: PropTypes.bool,
+  onConfirm: PropTypes.func,
 };
 
 export default ImageSelector;
