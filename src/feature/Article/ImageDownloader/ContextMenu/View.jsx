@@ -11,7 +11,8 @@ import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
-import { format, ImageInfo } from '../func';
+import { ImageInfo } from '../Model';
+import { format } from '../Util';
 import Info from '../FeatureInfo';
 
 async function convertToPng(blob) {

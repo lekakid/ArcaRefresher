@@ -29,7 +29,8 @@ import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
-import { format, EmoticonInfo, ImageInfo } from './func';
+import { EmoticonInfo, ImageInfo } from './Model';
+import { format } from './Util';
 import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
 
