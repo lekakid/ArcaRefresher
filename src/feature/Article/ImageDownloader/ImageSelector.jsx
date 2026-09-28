@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
+  Box,
   Button,
+  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -10,10 +14,14 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
   Switch,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { CheckCircle, CheckCircleOutline, Close } from '@mui/icons-material';
 import { Writer } from '@transcend-io/conflux';
 import streamSaver from 'streamsaver';
 
@@ -21,8 +29,7 @@ import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
-import SelectableImageList from './SelectableImageList';
-import { EmoticonInfo, format, ImageInfo } from './func';
+import { format, EmoticonInfo, ImageInfo } from './func';
 import { $toggleDownloadOrigin, setOpen } from './slice';
 import Info from './FeatureInfo';
 
@@ -50,9 +57,10 @@ function mapDownloadInfo(arr, type) {
     .filter((i) => i);
 }
 
-function DownloadDialog() {
+function ImageSelector({ open }) {
   const dispatch = useDispatch();
   const contentInfo = useContent();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
     // 동작 설정
@@ -63,7 +71,6 @@ function DownloadDialog() {
     zipName,
     zipExtension,
   } = useSelector((state) => state[Info.id].storage);
-  const { open } = useSelector((state) => state[Info.id]);
 
   const [data, setData] = useState(undefined);
   const [selection, setSelection] = useState([]);
@@ -98,9 +105,16 @@ function DownloadDialog() {
     })();
   }, [open, data]);
 
-  const handleSelection = useCallback((sel) => {
-    setSelection(sel);
-  }, []);
+  const handleSelect = useCallback(
+    (index) => () => {
+      const next = selection.includes(index)
+        ? selection.filter((s) => s !== index)
+        : [...selection, index];
+
+      setSelection(next);
+    },
+    [selection],
+  );
 
   const handleSelectAll = useCallback(() => {
     setSelection(
@@ -245,11 +259,47 @@ function DownloadDialog() {
         <Close />
       </IconButton>
       <DialogContent>
-        <SelectableImageList
-          imgList={imgList}
-          selection={selection}
-          onChange={handleSelection}
-        />
+        <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
+          {imgList.map((img, index) => (
+            <LazyLoadComponent
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${img}_${index}`}
+              placeholder={<Box sx={{ height: 3000 }} />}
+            >
+              <ImageListItem onClick={handleSelect(index)}>
+                <img
+                  style={{ overflow: 'hidden' }}
+                  src={img}
+                  alt={`${index + 1}번 이미지`}
+                  loading="lazy"
+                />
+                <ImageListItemBar
+                  sx={{
+                    background:
+                      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                  }}
+                  position="top"
+                  actionPosition="left"
+                  actionIcon={
+                    <Checkbox
+                      size="small"
+                      sx={{
+                        color: 'white',
+                        '&.Mui-checked': {
+                          color: 'white',
+                        },
+                      }}
+                      icon={<CheckCircleOutline />}
+                      checkedIcon={<CheckCircle />}
+                      checked={selection.includes(index)}
+                      onClick={handleSelect(index)}
+                    />
+                  }
+                />
+              </ImageListItem>
+            </LazyLoadComponent>
+          ))}
+        </ImageList>
       </DialogContent>
       <DialogActions>
         <FormControlLabel
@@ -279,4 +329,8 @@ function DownloadDialog() {
   );
 }
 
-export default DownloadDialog;
+ImageSelector.propTypes = {
+  open: PropTypes.bool,
+};
+
+export default ImageSelector;
