@@ -197,7 +197,11 @@ function ImageSelector({ open }) {
       }
     }
 
+    // 스트림 종료
     writer.close();
+
+    // 페이지 이탈 방지 해제
+    window.removeEventListener('beforeunload', confirm);
   }, [
     data,
     selection,
