@@ -42,6 +42,7 @@ function formatUpdater(storage, defaultValue) {
 
 const initialState = {
   storage: getValue(Info.id, defaultStorage, formatUpdater),
+  inputUser: null,
 };
 
 export const slice = createSlice({
@@ -70,6 +71,9 @@ export const slice = createSlice({
     $setMemoList(state, action) {
       state.storage.memo = action.payload;
     },
+    setInputUser(state, action) {
+      state.inputUser = action.payload;
+    },
   },
 });
 
@@ -79,6 +83,7 @@ export const {
   $setMemo,
   $updateMemoNick,
   $setMemoList,
+  setInputUser,
 } = slice.actions;
 
 export default slice.reducer;
