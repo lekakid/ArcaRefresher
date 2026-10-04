@@ -1,5 +1,3 @@
-import { getQuery, stringifyQuery } from 'func/http';
-
 export default [
   {
     action: 'write',
@@ -169,35 +167,38 @@ export default [
   },
   {
     action: 'goBoard',
-    label: '게시물 목록으로 이동/첫 페이지로 이동',
+    label: '게시물 조회 직전으로/검색 첫 페이지로/검색 조건 해제',
     active: 'article|board',
     defaultKey: 'KeyQ',
     callback() {
-      const { host } = window.location;
-      const token = window.location.pathname.split('/');
-      if (token.length < 4) {
-        const query = getQuery();
-        const keys = Object.keys(query);
+      const url = new URL(window.location.href);
+      const pathToken = url.pathname.split('/');
 
-        if (keys.length === 0) return;
-        if (keys.length === 1 && query.mode === 'best') return;
-
-        const pathname = token.slice(0, 3).join('/');
-        const search = query.mode === 'best' ? '?mode=best' : '';
-        window.location = `https://${host}${pathname}${search}`;
+      // 게시물 조회 직전으로 이동
+      if (pathToken[3]) {
+        window.location.pathname = window.location.pathname.replace(
+          `/${pathToken[3]}`,
+          '',
+        );
         return;
       }
-      const pathname = token.slice(0, 3).join('/');
-      const { mode, before, after, near, tz, p } = getQuery();
-      const query = {};
-      if (mode) query.mode = mode;
-      if (before) query.before = before;
-      if (after) query.after = after;
-      if (near) query.near = near;
-      if (tz) query.tz = tz;
-      if (p && p !== '1') query.p = p;
-      const search = stringifyQuery(query);
-      window.location = `https://${host}${pathname}${search}`;
+
+      // 게시판 첫페이지로
+      if (parseInt(url.searchParams.get('p'), 10) > 1) {
+        url.searchParams.delete('p');
+        window.location.href = url;
+        return;
+      }
+
+      const keys = [...url.searchParams.keys()];
+
+      // 검색 조건 해제
+      if (keys.length > 1) {
+        url.search = new URLSearchParams(
+          url.searchParams.get('mode') === 'best' ? 'mode=best' : '',
+        );
+        window.location.href = url;
+      }
     },
   },
   {
@@ -206,16 +207,14 @@ export default [
     active: 'board',
     defaultKey: 'KeyE',
     callback() {
-      const { host } = window.location;
-      const token = window.location.pathname.split('/');
-      const pathname = token.slice(0, 3).join('/');
-      const query = getQuery();
-      if (query.mode === 'best') {
-        window.location = `https://${host}${pathname}`;
-        return;
+      const url = new URL(window.location.href);
+      const search = new URLSearchParams();
+      if (url.searchParams.get('mode') !== 'best') {
+        search.set('mode', 'best');
       }
-      const search = stringifyQuery({ mode: 'best' });
-      window.location = `https://${host}${pathname}${search}`;
+
+      url.search = search;
+      window.location.href = url;
     },
   },
   {

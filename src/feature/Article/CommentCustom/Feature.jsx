@@ -6,7 +6,6 @@ import { COMMENT_LOADED, COMMENT } from 'core/selector';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { getQuery } from 'func/http';
 import Info from './FeatureInfo';
 
 /* eslint-disable react/prop-types */
@@ -126,7 +125,9 @@ export default function CommentCustom() {
   // 댓글란 접어두기
   useEffect(() => {
     if (!comment || !foldComment) return;
-    if (Object.keys(getQuery()).includes('cp')) return;
+
+    const search = new URLSearchParams(window.location.search);
+    if (search.has('cp')) return;
 
     if (!unfoldContainer) {
       const container = document.createElement('div');

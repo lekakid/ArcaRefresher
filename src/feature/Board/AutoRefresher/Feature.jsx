@@ -34,14 +34,6 @@ const PAUSE_MANAGEMENT = 'management';
 const PAUSE_UNFOCUS = 'unfocus';
 const PAUSE_API = 'api';
 
-/**
- * 주소 끝 search string을 Object로 반환
- * @example 'arca.live/b/breaking?p=2&type=best' => { p: '2', type: 'best' }
- */
-function parseSearch(searchString) {
-  return Object.fromEntries(new URLSearchParams(searchString));
-}
-
 function AutoRefresher() {
   const [subscribe, unsubscribe] = useArcaSocket();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
@@ -62,27 +54,26 @@ function AutoRefresher() {
 
   const enabled = useMemo(() => {
     if (countdown === 0) return false;
-    // 아카라이브 검색 기능이 꽤 많은 리소스를 쓰는걸로 보임
-    // 서버를 위해서라도 다음에 해당하면 새로고침이 동작하지 않음
-    // 1. 주소 기준으로 지금 보고 있는 게시물이 어느 페이지인지 알 수 없음
-    // 2. 게시물 조회 페이지가 1페이지가 아님
-    // 3. 날짜 혹은 키워드 검색을 사용 중임
-    const search = parseSearch(window.location.search);
-    const searchKeys = Object.keys(search);
-    const targetKeys = ['after', 'before', 'near'];
-    const page = parseInt(search.p, 10);
-    const isKeywordSearch = searchKeys.some((key) => targetKeys.includes(key));
+    // 검색 중에는 새로고침 기능 중단 (서버 부담 방지)
+    const search = new URLSearchParams(window.location.search);
+
+    // 2 페이지 이상 탐색 중인 경우 (중단)
+    const page = parseInt(search.get('p'), 10);
     if (page > 1) return false;
+
+    // 기간 검색 혹은 키워드 검색 중인 경우 (중단)
+    const targetKeys = ['after', 'before', 'near', 'keyword'];
+    const isKeywordSearch = targetKeys.some((key) => search.has(key));
     if (isKeywordSearch) return false;
 
-    // 게시판이 존재하는지 로드 체크를 전체글 버튼이 있는 엘리먼트를 사용함
-    // 파이어폭스 같은 코드 실행이 빠른 브라우저에서는 이 코드가 실행될 쯤엔
-    // pagination 엘리먼트가 생기기 전일 수도 있어서 사용할 수 없음
-    // 로드 체크 설렉터(boardLoaded)를 pagination으로 변경하는 것은 자식 요소들이 다 있는지 체크 못해서 안됨
-    // 게시물 조회 중일 때 페이지를 알 수 있는지 검사하는 것으로 대체함
-    const articleId = window.location.pathname.split('/')[3];
-    if (articleId && !(refreshOnArticle && search.p)) return false;
+    // 게시물 조회 중에도 새로고침을 사용한다면 허용
+    if (refreshOnArticle && page === 1) return true;
 
+    // 게시물 조회 중인 경우 (중단)
+    const articleId = window.location.pathname.split('/')[3];
+    if (articleId) return false;
+
+    // 그 외
     return true;
   }, [countdown, refreshOnArticle]);
 

@@ -12,7 +12,6 @@ import {
 import { useContextMenu } from 'menu/ContextMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { ArcaUser } from 'func/user';
-import { getQuery } from 'func/http';
 import { useContent } from 'hooks/Content';
 
 import {
@@ -86,11 +85,11 @@ function ContextMenu({ target, closeMenu }) {
         }
 
         if (target.matches(CATEGORY_SELECTOR)) {
-          const id = decodeURI(
-            getQuery(target.search).category || '글머리없음',
-          );
+          const search = new URLSearchParams(target.search);
+          const id = decodeURI(search.get('category') || '글머리없음');
           const label =
             id !== '글머리없음' ? target.textContent.trim() : '글머리없음';
+
           return {
             type: 'category',
             id,

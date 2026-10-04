@@ -12,7 +12,6 @@ import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { ArcaUser, getUserKey } from 'func/user';
-import { getQuery } from 'func/http';
 
 import MemoInput from './MemoInput';
 import Info from './FeatureInfo';
@@ -63,13 +62,14 @@ function MemoList() {
   useLayoutEffect(() => {
     if (!loaded) return;
 
-    const search = getQuery();
-    const searchKeys = Object.keys(search);
+    const search = new URLSearchParams(window.location.search);
     const targetKeys = ['after', 'before', 'near'];
-    const page = parseInt(search.p, 10);
-    const isKeywordSearch = searchKeys.some((key) => targetKeys.includes(key));
-    if (page > 1) return;
+
+    const isKeywordSearch = targetKeys.some((key) => search.has(key));
     if (isKeywordSearch) return;
+
+    const page = parseInt(search.get('p'), 10);
+    if (page > 1) return;
 
     const dupTable = {};
 

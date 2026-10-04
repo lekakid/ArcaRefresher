@@ -44,21 +44,3 @@ export function request(
     });
   });
 }
-
-export function getQuery(search) {
-  const entries = (search || window.location.search)
-    .substring(1)
-    .split('&')
-    .filter((e) => e)
-    .map((e) => e.split('='));
-  return Object.fromEntries(entries);
-}
-
-export function stringifyQuery(query) {
-  let search = `?${Object.entries(query)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`;
-  if (search === '?') search = '';
-
-  return search;
-}
