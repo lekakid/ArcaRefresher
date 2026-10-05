@@ -1,7 +1,4 @@
 export default class EmoticonInfo {
-  static TYPE_IMAGE = 'IMAGE';
-  static TYPE_EMOTICON = 'EMOTICON';
-
   constructor(container) {
     const url = new URL(
       container.orig || container.imageUrl,

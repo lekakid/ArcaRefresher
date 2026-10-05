@@ -1,7 +1,4 @@
 export default class ImageInfo {
-  static TYPE_IMAGE = 'IMAGE';
-  static TYPE_EMOTICON = 'EMOTICON';
-
   constructor(container) {
     const url = new URL(
       container.dataset.src || container.src,
@@ -10,7 +7,7 @@ export default class ImageInfo {
     const thumb = new URL(container.poster || url);
     const orig = new URL(container.dataset.originalurl || url);
     const [path, ext1, ext2] = url.pathname.split('.');
-    const ext = ext2 || ext1;
+    const ext = container.dataset.orig || ext2 || ext1;
     const name = path.split('/').pop();
 
     // JPG 다운로드 속도 최적화

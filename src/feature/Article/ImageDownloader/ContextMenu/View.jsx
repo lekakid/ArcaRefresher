@@ -59,13 +59,15 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleClipboard = useCallback(() => {
     (async () => {
-      const { orig, thumb } = data;
+      const { orig, thumb, ext } = data;
 
       try {
         closeMenu();
-
         setSnack({ msg: '이미지를 다운로드 중...' });
-        const response = await request(originToClipboard ? orig : thumb, {
+
+        const isGif = ext === 'gif';
+        const url = originToClipboard && !isGif ? orig : thumb;
+        const response = await request(url, {
           responseType: 'blob',
         }).then((r) => r.response);
         const blob =
@@ -94,19 +96,19 @@ function ContextMenu({ target, closeMenu }) {
 
   const handleDownload = useCallback(() => {
     (async () => {
-      const { orig } = data;
-      const { ext, name: uploadName } = data;
+      const { orig, ext, name: uploadName } = data;
+
       try {
         closeMenu();
-        const name = format(fileName, {
-          content: contentInfo,
-          name: uploadName,
-        });
 
         const response = await fetch(orig, { cache: 'no-cache' });
         const size = Number(response.headers.get('content-length'));
         const stream = response.body;
 
+        const name = format(fileName, {
+          content: contentInfo,
+          name: uploadName,
+        });
         const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
           size,
         });
