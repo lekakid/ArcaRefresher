@@ -26,7 +26,7 @@ const commentMuteStyles = (
         '& .frontend-header': {
           display: 'none',
         },
-        '& .ARMute-comment': {
+        '& .ARMute-comment:not(:empty)': {
           borderBottom: '1px solid var(--color-bd-outer)',
         },
         '& div.list-area': {

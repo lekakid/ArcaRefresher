@@ -24,6 +24,9 @@ const boardMuteStyles = (
   <GlobalStyles
     styles={{
       '.body .article-list': {
+        '& .ARMute-board:empty+.list-table': {
+          borderTop: '0 !important',
+        },
         '& .frontend-header': {
           display: 'none !important',
         },
@@ -94,7 +97,6 @@ function BoardMuter() {
 
   useLayoutEffect(() => {
     if (!controlTarget) return;
-    if (!(count?.all > 0)) return;
 
     controlTarget.insertAdjacentElement(boardBarPos, countBarContainer);
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
