@@ -18,13 +18,8 @@ export async function getNewArticle() {
 }
 
 export function updateBoard(board, newArticles, animationClass) {
-  // 공지사항 새로고침
-  const noticeInsertPivot = board.querySelector('.head');
-  [...board.querySelectorAll(BOARD_NOTICES)].forEach((o) => o.remove());
-  newArticles.notices.reverse();
-  newArticles.notices.forEach((n) => {
-    noticeInsertPivot.insertAdjacentElement('afterend', n);
-  });
+  const tableHead = board.querySelector('.head');
+  const noticeUnfoldBtn = board.querySelector('.notice-unfilter');
 
   // 새 일반 게시물 확인 및 애니메이션 처리
   const oldPathnames = [...board.querySelectorAll(BOARD_ITEMS)].map(
@@ -37,17 +32,20 @@ export function updateBoard(board, newArticles, animationClass) {
     }
   });
 
-  // 일반 게시물 새로고침
-  [...board.querySelectorAll(BOARD_ITEMS)].forEach((o) => o.remove());
-  newArticles.articles.forEach((n) => {
-    board.append(n);
-  });
-
-  // 미리보기 수정
+  // 게시물 이미지 미리보기 lazy load 해제
   newArticles.articles.forEach((a) => {
     const lazyWrapper = a.querySelector('noscript');
     lazyWrapper?.replaceWith(lazyWrapper.firstElementChild);
   });
+
+  // 리스트 재구성 후 새로고침
+  const updatedChildList = [
+    tableHead,
+    ...newArticles.notices,
+    noticeUnfoldBtn,
+    ...newArticles.articles,
+  ];
+  board.replaceChildren(...updatedChildList);
 
   unsafeWindow.applyLocalTimeFix();
 }
