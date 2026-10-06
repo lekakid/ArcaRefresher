@@ -53,7 +53,12 @@ function AutoRefresher() {
   });
 
   const enabled = useMemo(() => {
+    // 기능 사용 안함
     if (countdown === 0) return false;
+
+    // 게시판이 로드되지 않음
+    if (!boardLoaded) return false;
+
     // 검색 중에는 새로고침 기능 중단 (서버 부담 방지)
     const search = new URLSearchParams(window.location.search);
 
@@ -75,7 +80,7 @@ function AutoRefresher() {
 
     // 그 외
     return true;
-  }, [countdown, refreshOnArticle]);
+  }, [boardLoaded, countdown, refreshOnArticle]);
 
   const tryRefresh = useCallback(async () => {
     if (refreshData.current.newArticle < 1) {
