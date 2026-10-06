@@ -27,6 +27,9 @@ const boardMuteStyles = (
         '& .ARMute-board:empty+.list-table': {
           borderTop: '0 !important',
         },
+        '& .list-table+.ARMute-board': {
+          borderBottom: '1px solid var(--color-bd-outer)',
+        },
         '& .frontend-header': {
           display: 'none !important',
         },
