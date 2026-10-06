@@ -127,6 +127,7 @@ function CommentMuter() {
     setControlTarget(commentElement);
 
     const container = document.createElement('div');
+    container.classList.add('ARMute');
     commentElement.insertAdjacentElement('beforebegin', container);
     setCountBarContainer(container);
 

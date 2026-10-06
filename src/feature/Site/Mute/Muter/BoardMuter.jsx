@@ -88,6 +88,7 @@ function BoardMuter() {
     setControlTarget(boardElement);
 
     const containerElement = document.createElement('div');
+    containerElement.classList.add('ARMute');
     setCountBarContainer(containerElement);
   }, [dispatch, category]);
 
