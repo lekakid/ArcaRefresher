@@ -88,16 +88,17 @@ function BoardMuter() {
     setControlTarget(boardElement);
 
     const containerElement = document.createElement('div');
-    containerElement.classList.add('ARMute');
+    containerElement.classList.add('ARMute-board');
     setCountBarContainer(containerElement);
   }, [dispatch, category]);
 
   useLayoutEffect(() => {
     if (!controlTarget) return;
+    if (!(count?.all > 0)) return;
 
     controlTarget.insertAdjacentElement(boardBarPos, countBarContainer);
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
-  }, [controlTarget, countBarContainer, boardBarPos]);
+  }, [count?.all, controlTarget, countBarContainer, boardBarPos]);
 
   // 유저, 키워드, 카테고리, 채널 뮤트처리
   useLayoutEffect(() => {

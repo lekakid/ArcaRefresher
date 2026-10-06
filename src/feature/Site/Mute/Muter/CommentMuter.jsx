@@ -26,6 +26,9 @@ const commentMuteStyles = (
         '& .frontend-header': {
           display: 'none',
         },
+        '& .ARMute-comment': {
+          borderBottom: '1px solid var(--color-bd-outer)',
+        },
         '& div.list-area': {
           // 임시 해제 시 흐릿하게
           '& .muted, & .filtered': {
@@ -127,7 +130,7 @@ function CommentMuter() {
     setControlTarget(commentElement);
 
     const container = document.createElement('div');
-    container.classList.add('ARMute');
+    container.classList.add('ARMute-comment');
     commentElement.insertAdjacentElement('beforebegin', container);
     setCountBarContainer(container);
 
