@@ -101,13 +101,9 @@ function MenuContainer({ groupList, menuList }) {
       .map((m) => (
         <DrawerItem
           key={m.key}
-          sx={
-            g
-              ? {
-                  paddingLeft: 4,
-                }
-              : undefined
-          }
+          sx={{
+            paddingLeft: g ? 4 : undefined,
+          }}
           divider={m.order === -1}
           configKey={m.key}
           icon={<m.Icon />}
