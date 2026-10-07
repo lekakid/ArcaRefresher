@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Writer } from '@transcend-io/conflux';
+import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
 import { useContent } from 'hooks/Content';
@@ -41,9 +41,41 @@ function DownloadWidget({ infoList }) {
       // 페이지 이탈 방지
       window.addEventListener('beforeunload', confirm);
 
-      // Conflux 압축파일 스트림 생성
-      const { readable, writable } = new Writer();
-      const writer = writable.getWriter();
+      // 다운로드 스트림 제너레이터 선언
+      async function* entries() {
+        // 다운로드 시작
+        for (let i = 0; i < infoList.length; i += 1) {
+          const info = infoList[i];
+
+          const { url, orig, ext, name } = info;
+
+          let imageName = format(zipImageName, {
+            content: contentInfo,
+            index: count,
+            name,
+          });
+          imageName =
+            dupCount[imageName] > 0
+              ? `${imageName}(${dupCount[imageName]})`
+              : imageName;
+          dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+
+          count += 1;
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            const stream = await request(downloadOrigin ? orig : url, {
+              responseType: 'blob',
+            }).then(({ response }) => response.stream());
+
+            yield { name: `${imageName}.${ext}`, input: stream };
+          } catch (error) {
+            console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+          }
+        }
+      }
+
+      // 다운로드 스트림 생성
+      const zipstream = downloadZip(entries());
 
       // 파일 저장 스트림 생성
       const zipFileName = format(zipName, { content: contentInfo });
@@ -51,44 +83,8 @@ function DownloadWidget({ infoList }) {
         `${zipFileName}.${zipExtension}`,
       );
 
-      // Conflux -> streamSaver 연결
-      readable.pipeTo(filestream);
-
-      // 다운로드 시작
-      for (let i = 0; i < infoList.length; i += 1) {
-        const info = infoList[i];
-
-        const { url, orig, ext, name } = info;
-
-        let imageName = format(zipImageName, {
-          content: contentInfo,
-          index: count,
-          name,
-        });
-        imageName =
-          dupCount[imageName] > 0
-            ? `${imageName}(${dupCount[imageName]})`
-            : imageName;
-        dupCount[imageName] = (dupCount[imageName] || 0) + 1;
-
-        count += 1;
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          const stream = await request(downloadOrigin ? orig : url, {
-            responseType: 'blob',
-          }).then(({ response }) => response.stream());
-
-          writer.write({
-            name: `${imageName}.${ext}`,
-            stream: () => stream,
-          });
-        } catch (error) {
-          console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
-        }
-      }
-
-      // 스트림 종료
-      writer.close();
+      // 연결
+      zipstream.body.pipeTo(filestream);
 
       // 페이지 이탈 방지 해제
       window.removeEventListener('beforeunload', confirm);

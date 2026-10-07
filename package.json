@@ -59,7 +59,7 @@
     "@mui/icons-material": "^6.4.11",
     "@mui/material": "^6.4.11",
     "@reduxjs/toolkit": "^2.2.2",
-    "@transcend-io/conflux": "^4.0.2",
+    "client-zip": "^2.5.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
