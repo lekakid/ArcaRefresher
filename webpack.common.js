@@ -22,6 +22,10 @@ module.exports = {
           },
         },
       },
+      {
+        test: /node_modules[\\/]react-color[\\/]/,
+        sideEffects: false,
+      },
     ],
   },
   plugins: [
