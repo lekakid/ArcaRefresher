@@ -176,10 +176,9 @@ export default [
 
       // 게시물 조회 직전으로 이동
       if (pathToken[3]) {
-        window.location.pathname = window.location.pathname.replace(
-          `/${pathToken[3]}`,
-          '',
-        );
+        // 댓글의 경우 게시물 id 뒤에 댓글 id가 추가로 붙음
+        const pathname = pathToken.slice(0, 3).join('/');
+        window.location.pathname = pathname;
         return;
       }
 
