@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, IconButton, Popover } from '@mui/material';
-import { ChromePicker } from 'react-color';
 import { Delete } from '@mui/icons-material';
+import { Chrome as ChromePicker } from '@uiw/react-color';
 
 const Picker = forwardRef(
   ({ disabled, defaultColor, color, onOpen, onClose, onChange }, ref) => {
@@ -71,7 +71,11 @@ const Picker = forwardRef(
           }}
           onClose={handleClose}
         >
-          <ChromePicker color={color ?? innerColor} onChange={handleChange} />
+          <ChromePicker
+            placement={null}
+            color={color ?? innerColor}
+            onChange={handleChange}
+          />
           <IconButton
             size="small"
             sx={{

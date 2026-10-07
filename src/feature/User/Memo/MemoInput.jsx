@@ -10,8 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { Close, FormatColorReset } from '@mui/icons-material';
-import { TwitterPicker } from 'react-color';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { TwitterPicker } from 'component';
 
 import Info from './FeatureInfo';
 import { $setMemo, setInputUser } from './slice';
@@ -37,7 +38,7 @@ function MemoInput() {
   }, []);
 
   const handleColorChange = useCallback((input) => {
-    setColor(input.hex);
+    setColor(input);
   }, []);
 
   const handleDialogClose = useCallback(
@@ -91,7 +92,7 @@ function MemoInput() {
         <TwitterPicker
           triangle="hide"
           color={color}
-          onChangeComplete={handleColorChange}
+          onChange={handleColorChange}
         />
       </DialogContent>
       <DialogActions>
