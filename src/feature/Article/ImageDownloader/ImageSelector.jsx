@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -174,43 +172,41 @@ function ImageSelector({ open, onConfirm }) {
       <DialogContent>
         <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
           {imgList.map((img, index) => (
-            <LazyLoadComponent
+            <ImageListItem
               // eslint-disable-next-line react/no-array-index-key
               key={`${img}_${index}`}
-              placeholder={<Box sx={{ height: 3000 }} />}
+              onClick={handleSelect(index)}
             >
-              <ImageListItem onClick={handleSelect(index)}>
-                <img
-                  style={{ overflow: 'hidden' }}
-                  src={img}
-                  alt={`${index + 1}번 이미지`}
-                  loading="lazy"
-                />
-                <ImageListItemBar
-                  sx={{
-                    background:
-                      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-                  }}
-                  position="top"
-                  actionPosition="left"
-                  actionIcon={
-                    <Checkbox
-                      size="small"
-                      sx={{
+              <img
+                style={{ overflow: 'hidden' }}
+                src={img}
+                alt={`${index + 1}번 이미지`}
+                loading="lazy"
+              />
+              <ImageListItemBar
+                sx={{
+                  background:
+                    'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                }}
+                position="top"
+                actionPosition="left"
+                actionIcon={
+                  <Checkbox
+                    size="small"
+                    sx={{
+                      color: 'white',
+                      '&.Mui-checked': {
                         color: 'white',
-                        '&.Mui-checked': {
-                          color: 'white',
-                        },
-                      }}
-                      icon={<CheckCircleOutline />}
-                      checkedIcon={<CheckCircle />}
-                      checked={selection.includes(index)}
-                      onClick={handleSelect(index)}
-                    />
-                  }
-                />
-              </ImageListItem>
-            </LazyLoadComponent>
+                      },
+                    }}
+                    icon={<CheckCircleOutline />}
+                    checkedIcon={<CheckCircle />}
+                    checked={selection.includes(index)}
+                    onClick={handleSelect(index)}
+                  />
+                }
+              />
+            </ImageListItem>
           ))}
         </ImageList>
       </DialogContent>
