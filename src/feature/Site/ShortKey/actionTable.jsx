@@ -178,7 +178,9 @@ export default [
       if (pathToken[3]) {
         // 댓글의 경우 게시물 id 뒤에 댓글 id가 추가로 붙음
         const pathname = pathToken.slice(0, 3).join('/');
-        window.location.pathname = pathname;
+        url.pathname = pathname;
+        url.hash = '';
+        window.location.href = url;
         return;
       }
 
