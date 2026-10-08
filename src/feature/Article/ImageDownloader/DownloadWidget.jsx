@@ -25,71 +25,73 @@ function DownloadWidget({ infoList }) {
   useEffect(() => {
     if (infoList.length === 0) return;
 
-    async function download() {
-      const confirm = (event) => {
-        event.preventDefault();
-        const message =
-          '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
-        event.returnValue = message;
-        return message;
-      };
+    const confirm = (event) => {
+      event.preventDefault();
+      const message =
+        '지금 창을 닫으면 다운로드가 중단됩니다. 계속하시겠습니까?';
+      event.returnValue = message;
+      return message;
+    };
 
-      let count = startWithZero ? 0 : 1;
-      // 파일명 중복 시 끝에 숫자 붙이는 용도
-      const dupCount = {};
+    let count = startWithZero ? 0 : 1;
+    // 파일명 중복 시 끝에 숫자 붙이는 용도
+    const dupCount = {};
 
-      // 페이지 이탈 방지
-      window.addEventListener('beforeunload', confirm);
+    // 페이지 이탈 방지
+    window.addEventListener('beforeunload', confirm);
 
-      // 다운로드 스트림 제너레이터 선언
-      async function* entries() {
-        // 다운로드 시작
-        for (let i = 0; i < infoList.length; i += 1) {
-          const info = infoList[i];
+    // 파일 저장 스트림 생성
+    const zipFileName = format(zipName, { content: contentInfo });
+    const filestream = streamSaver.createWriteStream(
+      `${zipFileName}.${zipExtension}`,
+    );
 
-          const { url, orig, ext, name } = info;
+    // 다운로드 스트림 제너레이터 선언
+    async function* entries() {
+      // 다운로드 시작
+      for (let i = 0; i < infoList.length; i += 1) {
+        const info = infoList[i];
 
-          let imageName = format(zipImageName, {
-            content: contentInfo,
-            index: count,
-            name,
+        const { url, orig, ext, name } = info;
+
+        let imageName = format(zipImageName, {
+          content: contentInfo,
+          index: count,
+          name,
+        });
+        imageName =
+          dupCount[imageName] > 0
+            ? `${imageName}(${dupCount[imageName]})`
+            : imageName;
+        dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+
+        count += 1;
+        try {
+          const stream = new ReadableStream({
+            async pull(controller) {
+              const blob = (
+                await request(downloadOrigin ? orig : url, {
+                  responseType: 'blob',
+                })
+              ).response;
+              controller.enqueue(new Uint8Array(await blob.arrayBuffer()));
+              controller.close();
+            },
           });
-          imageName =
-            dupCount[imageName] > 0
-              ? `${imageName}(${dupCount[imageName]})`
-              : imageName;
-          dupCount[imageName] = (dupCount[imageName] || 0) + 1;
 
-          count += 1;
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            const stream = await request(downloadOrigin ? orig : url, {
-              responseType: 'blob',
-            }).then(({ response }) => response.stream());
-
-            yield { name: `${imageName}.${ext}`, input: stream };
-          } catch (error) {
-            console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
-          }
+          yield { name: `${imageName}.${ext}`, input: stream };
+        } catch (error) {
+          console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
         }
       }
-
-      // 다운로드 스트림 생성
-      const zipstream = downloadZip(entries());
-
-      // 파일 저장 스트림 생성
-      const zipFileName = format(zipName, { content: contentInfo });
-      const filestream = streamSaver.createWriteStream(
-        `${zipFileName}.${zipExtension}`,
-      );
-
-      // 연결
-      zipstream.body.pipeTo(filestream);
-
-      // 페이지 이탈 방지 해제
-      window.removeEventListener('beforeunload', confirm);
     }
-    download();
+
+    // 다운로드 스트림 생성 후 연결
+    const zipstream = downloadZip(entries());
+    zipstream.body.pipeTo(filestream);
+
+    // 페이지 이탈 방지 해제
+    window.removeEventListener('beforeunload', confirm);
   }, [
     infoList,
     downloadOrigin,
