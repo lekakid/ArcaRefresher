@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
-import ColorPicker from 'component/ColorPicker';
+import { ColorPickerButton } from 'component';
 import { useOpacity } from 'menu/ConfigMenu';
 
 const PresetEditor = forwardRef(
@@ -68,7 +68,7 @@ const PresetEditor = forwardRef(
                     }
                   >
                     <ListItemIcon>
-                      <ColorPicker
+                      <ColorPickerButton
                         disabled={disabled}
                         defaultColor={defaultPreset[key]}
                         color={preset[key]}

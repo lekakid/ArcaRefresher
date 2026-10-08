@@ -16,7 +16,7 @@ import {
   Replay,
 } from '@mui/icons-material';
 
-import ColorPicker from 'component/ColorPicker';
+import { ColorPickerButton } from 'component';
 import { getContrastYIQ } from 'func/color';
 
 const DEFAULT_CATEGORY_CONFIG = {
@@ -108,12 +108,18 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
         <Stack direction="row" sx={{ alignItems: 'center' }}>
           <Tooltip title="카테고리 색">
             <span>
-              <ColorPicker color={badge} onChange={handleColor('badge')} />
+              <ColorPickerButton
+                color={badge}
+                onChange={handleColor('badge')}
+              />
             </span>
           </Tooltip>
           <Tooltip title="배경색">
             <span>
-              <ColorPicker color={bgcolor} onChange={handleColor('bgcolor')} />
+              <ColorPickerButton
+                color={bgcolor}
+                onChange={handleColor('bgcolor')}
+              />
             </span>
           </Tooltip>
           <Tooltip title="굵게">

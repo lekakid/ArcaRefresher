@@ -87,7 +87,6 @@ function CountBar({
       <Grid
         container
         sx={{
-          borderBottom: '1px solid var(--color-bd-outer)',
           alignItems: 'center',
         }}
       >

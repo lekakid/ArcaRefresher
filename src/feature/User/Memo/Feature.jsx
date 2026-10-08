@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { Portal } from '@mui/material';
+import { Box, Portal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -13,9 +13,9 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { ArcaUser, getUserKey } from 'func/user';
 
-import { getQuery } from 'func/http';
+import MemoInput from './MemoInput';
 import Info from './FeatureInfo';
-import { $updateMemoNick } from './slice';
+import { $updateMemoNick, setInputUser } from './slice';
 
 function MemoList() {
   const dispatch = useDispatch();
@@ -26,6 +26,7 @@ function MemoList() {
   const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);
 
+  // 렌더 컨테이너 생성
   useLayoutEffect(() => {
     if (!loaded) return undefined;
 
@@ -57,16 +58,18 @@ function MemoList() {
     };
   }, [loaded]);
 
+  // 1페이지 한정 마지막으로 사용한 닉네임 갱신
   useLayoutEffect(() => {
     if (!loaded) return;
 
-    const search = getQuery();
-    const searchKeys = Object.keys(search);
+    const search = new URLSearchParams(window.location.search);
     const targetKeys = ['after', 'before', 'near'];
-    const page = parseInt(search.p, 10);
-    const isKeywordSearch = searchKeys.some((key) => targetKeys.includes(key));
-    if (page > 1) return;
+
+    const isKeywordSearch = targetKeys.some((key) => search.has(key));
     if (isKeywordSearch) return;
+
+    const page = parseInt(search.get('p'), 10);
+    if (page > 1) return;
 
     const dupTable = {};
 
@@ -83,6 +86,7 @@ function MemoList() {
     });
   }, [loaded, memo, dispatch]);
 
+  // 메모 색상 처리
   useLayoutEffect(() => {
     const colorizeUser = () => {
       [...document.querySelectorAll(USER_INFO)].forEach((e) => {
@@ -119,9 +123,18 @@ function MemoList() {
     <>
       {infoList.map(({ key, id, container }) => (
         <Portal key={key} container={container}>
-          <AuthorTag variant={variant}>{memo[id]?.msg}</AuthorTag>
+          <Box
+            component="span"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setInputUser(id));
+            }}
+          >
+            <AuthorTag variant={variant}>{memo[id]?.msg}</AuthorTag>
+          </Box>
         </Portal>
       ))}
+      <MemoInput />
     </>
   );
 }

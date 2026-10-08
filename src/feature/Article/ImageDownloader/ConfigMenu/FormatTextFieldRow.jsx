@@ -13,7 +13,7 @@ import { Add } from '@mui/icons-material';
 
 import { BaseRow } from 'component/ConfigMenu';
 
-import { FORMAT } from '../func/format';
+import { FORMAT } from '../Util/format';
 
 const FormatTextFieldRow = forwardRef(
   (

@@ -9,3 +9,5 @@ node_modules
 /dist
 /types
 
+# React UI Mock
+/.mock

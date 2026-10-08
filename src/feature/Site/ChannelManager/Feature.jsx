@@ -18,7 +18,6 @@ import { Folder } from '@mui/icons-material';
 import { NAVIGATION_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { stringifyQuery } from 'func/http';
 import SubsChannelManager from './SubsChannelManager';
 import { setNavChannelInfo } from './slice';
 import Info from './FeatureInfo';
@@ -49,16 +48,16 @@ ListFolder.propTypes = {
 };
 
 function ChannelItem({ id, label, info }) {
-  const search = {};
-  if (info?.best) search.mode = 'best';
-  if (info?.cut > 0) search.cut = info.cut;
+  const search = new URLSearchParams();
+  if (info?.best) search.set('mode', 'best');
+  if (info?.cut > 0) search.set('cut', info.cut);
+
+  const url = new URL(`/b/${id}`, window.location.href);
+  url.search = search;
 
   return (
     <ListItem dense disablePadding>
-      <ListItemButton
-        component={Link}
-        href={`/b/${id}${stringifyQuery(search)}`}
-      >
+      <ListItemButton component={Link} href={url}>
         <ListItemText
           disableTypography
           primary={`${label}${info?.memo ? ` - ${info.memo}` : ''}`}

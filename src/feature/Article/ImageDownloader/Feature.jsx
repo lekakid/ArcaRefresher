@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, GlobalStyles, Portal } from '@mui/material';
 import { PhotoLibrary } from '@mui/icons-material';
@@ -6,9 +6,10 @@ import { PhotoLibrary } from '@mui/icons-material';
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import DownloadDialog from './DownloadDialog';
-import Info from './FeatureInfo';
+import ImageSelector from './ImageSelector';
+import DownloadWidget from './DownloadWidget';
 import { setOpen } from './slice';
+import Info from './FeatureInfo';
 
 const hideButtonStyles = (
   <GlobalStyles
@@ -26,7 +27,8 @@ export default function ImageDownloader() {
 
   const { enabled } = useSelector((state) => state[Info.id].storage);
   const { open } = useSelector((state) => state[Info.id]);
-  const [container, setContainer] = useState(null);
+  const [container, setContainer] = useState(undefined);
+  const [downloadInfoList, setDownloadInfoList] = useState([]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -52,10 +54,6 @@ export default function ImageDownloader() {
     }
   }, [articleLoaded, container, enabled]);
 
-  const handleOpen = useCallback(() => {
-    dispatch(setOpen(true));
-  }, [dispatch]);
-
   if (!container) return null;
   if (!enabled) return null;
   return (
@@ -70,12 +68,16 @@ export default function ImageDownloader() {
           size="small"
           startIcon={<PhotoLibrary />}
           disabled={open}
-          onClick={handleOpen}
+          onClick={() => dispatch(setOpen(true))}
         >
           리프레셔 다운로더
         </Button>
       </Portal>
-      <DownloadDialog />
+      <ImageSelector
+        open={open}
+        onConfirm={(list) => setDownloadInfoList(list)}
+      />
+      <DownloadWidget infoList={downloadInfoList} />
     </>
   );
 }

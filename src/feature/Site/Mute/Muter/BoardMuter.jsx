@@ -24,6 +24,12 @@ const boardMuteStyles = (
   <GlobalStyles
     styles={{
       '.body .article-list': {
+        '& .ARMute-board:empty+.list-table': {
+          borderTop: '0 !important',
+        },
+        '& .list-table+.ARMute-board': {
+          borderBottom: '1px solid var(--color-bd-outer)',
+        },
         '& .frontend-header': {
           display: 'none !important',
         },
@@ -88,6 +94,7 @@ function BoardMuter() {
     setControlTarget(boardElement);
 
     const containerElement = document.createElement('div');
+    containerElement.classList.add('ARMute-board');
     setCountBarContainer(containerElement);
   }, [dispatch, category]);
 
@@ -96,7 +103,7 @@ function BoardMuter() {
 
     controlTarget.insertAdjacentElement(boardBarPos, countBarContainer);
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
-  }, [controlTarget, countBarContainer, boardBarPos]);
+  }, [count?.all, controlTarget, countBarContainer, boardBarPos]);
 
   // 유저, 키워드, 카테고리, 채널 뮤트처리
   useLayoutEffect(() => {
@@ -190,18 +197,29 @@ function BoardMuter() {
 
   // 이용자 광고
   useLayoutEffect(() => {
-    if (!category) return;
+    if (!category) return undefined;
 
-    const adUrl = document.querySelector(BOARD_USER_AD)?.href;
-    if (!adUrl) return;
+    const muteUserAd = () => {
+      const adUrl = document.querySelector(BOARD_USER_AD)?.href;
+      if (!adUrl) return;
 
-    const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
+      const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
 
-    const channelfilter =
-      filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
+      const channelfilter =
+        filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
 
-    const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
-    document.documentElement.classList.toggle('hide-user-ad', hidden);
+      const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
+      document.documentElement.classList.toggle('hide-user-ad', hidden);
+    };
+
+    if (document.readyState === 'complete') muteUserAd();
+    window.addEventListener('load', muteUserAd);
+    window.addEventListener(EVENT_BOARD_REFRESH, muteUserAd);
+
+    return () => {
+      window.removeEventListener('load', muteUserAd);
+      window.removeEventListener(EVENT_BOARD_REFRESH, muteUserAd);
+    };
   }, [category, filter.channel, hideUserAd]);
 
   // 서비스 공지사항

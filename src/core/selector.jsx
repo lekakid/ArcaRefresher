@@ -41,9 +41,9 @@ export const ARTICLE_MEDIA =
   '.article-content img:not(.twemoji), .article-content video';
 export const ARTICLE_EMOTICON = '.article-body *[class$="emoticon"]';
 export const ARTICLE_URL = '.article-body .article-link a';
+export const ARTICLE_HEAD = '.article-head';
 export const ARTICLE_BODY = '.article-body';
 export const ARTICLE_CONTENT = '.article-content';
-export const ARTICLE_HEADER_MENU = '.edit-menu';
 export const ARTICLE_MENU = '.article-menu';
 export const ARTICLE_USER_INFO = '.article-wrapper .user-info';
 export const COMMENT_WRAPPERS = '#comment .comment-wrapper';

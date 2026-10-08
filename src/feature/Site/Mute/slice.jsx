@@ -6,9 +6,9 @@ import { trimEmotURL } from './func';
 import Info from './FeatureInfo';
 
 const defaultStorage = {
-  version: 1,
+  version: 2,
   contextRange: 'nickname',
-  boardBarPos: 'afterbegin',
+  boardBarPos: 'beforebegin',
   hideCountBar: false,
   hideMutedMark: false,
   muteIncludeReply: false,
@@ -42,6 +42,11 @@ function updater(storage, defaultValue) {
 
       storage.emoticon = data;
       storage.version = 1;
+      return storage;
+    }
+    case 1: {
+      if (storage.boardBarPos === 'afterbegin')
+        storage.boardBarPos = 'beforebegin';
       return storage;
     }
     default:

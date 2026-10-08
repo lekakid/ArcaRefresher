@@ -2,13 +2,13 @@ const common = require('./webpack.common.js');
 
 const path = require('path');
 const { merge } = require('webpack-merge');
+const { SourceMapDevToolPlugin } = require('webpack');
 const { UserscriptPlugin } = require('webpack-userscript');
 
 const headers = require('./script-meta.js');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'eval-cheap-source-map',
   output: {
     filename: 'ArcaRefresher.debug.user.js',
   },
@@ -23,6 +23,10 @@ module.exports = merge(common, {
     hot: false,
   },
   plugins: [
+    new SourceMapDevToolPlugin({
+      filename: '[file].map',
+      publicPath: 'http://localhost:8080/',
+    }),
     new UserscriptPlugin({
       headers: {
         ...headers,

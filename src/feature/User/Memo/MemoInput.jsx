@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Dialog,
@@ -11,47 +10,58 @@ import {
   Typography,
 } from '@mui/material';
 import { Close, FormatColorReset } from '@mui/icons-material';
-import { TwitterPicker } from 'react-color';
+import { useDispatch, useSelector } from 'react-redux';
 
-function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
+import { TwitterPicker } from 'component';
+
+import Info from './FeatureInfo';
+import { $setMemo, setInputUser } from './slice';
+
+function MemoInput() {
+  const dispatch = useDispatch();
+  const { memo } = useSelector((state) => state[Info.id].storage);
+  const user = useSelector((state) => state[Info.id].inputUser);
+  const userMemo = memo[user];
+
   const [msg, setMsg] = useState('');
   const [color, setColor] = useState('');
 
   useEffect(() => {
-    if (!open) return;
-    setMsg(defaultValue.msg);
-    setColor(defaultValue.color);
-  }, [defaultValue, open]);
+    if (!user) return;
+
+    setMsg(memo[user]?.msg || '');
+    setColor(memo[user]?.color || '');
+  }, [memo, user]);
 
   const handleMsgChange = useCallback((e) => {
     setMsg(e.target.value);
   }, []);
 
   const handleColorChange = useCallback((input) => {
-    setColor(input.hex);
+    setColor(input);
   }, []);
 
   const handleDialogClose = useCallback(
     (_e, reason) => {
       if (reason === 'backdropClick') return;
 
-      onClose();
+      dispatch(setInputUser(null));
     },
-    [onClose],
+    [dispatch],
   );
 
   const handleSubmit = useCallback(
     (e) => {
       if (e.key && e.key !== 'Enter') return;
 
-      onSubmit({ msg, color });
-      onClose();
+      dispatch($setMemo({ user, memo: { ...userMemo, msg, color } }));
+      dispatch(setInputUser(null));
     },
-    [msg, color, onClose, onSubmit],
+    [user, userMemo, msg, color, dispatch],
   );
 
   return (
-    <Dialog sx={{ maxWidth: 'xs' }} open={open} onClose={handleDialogClose}>
+    <Dialog sx={{ maxWidth: 'xs' }} open={!!user} onClose={handleDialogClose}>
       <DialogTitle>메모 작성</DialogTitle>
       <IconButton
         size="large"
@@ -82,7 +92,7 @@ function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
         <TwitterPicker
           triangle="hide"
           color={color}
-          onChangeComplete={handleColorChange}
+          onChange={handleColorChange}
         />
       </DialogContent>
       <DialogActions>
@@ -97,14 +107,4 @@ function MemoDialog({ open, defaultValue, onClose, onSubmit }) {
   );
 }
 
-MemoDialog.defaultProps = {
-  defaultValue: { msg: '', color: '' },
-};
-MemoDialog.propTypes = {
-  open: PropTypes.bool,
-  defaultValue: PropTypes.object,
-  onClose: PropTypes.func,
-  onSubmit: PropTypes.func,
-};
-
-export default MemoDialog;
+export default MemoInput;

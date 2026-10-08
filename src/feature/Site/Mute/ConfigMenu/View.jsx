@@ -135,7 +135,7 @@ const View = forwardRef((_props, ref) => {
             value={boardBarPos}
             action={$setBoardBarPos}
           >
-            <MenuItem value="afterbegin">게시판 위</MenuItem>
+            <MenuItem value="beforebegin">게시판 위</MenuItem>
             <MenuItem value="afterend">게시판 아래</MenuItem>
           </SelectRow>
           <SwitchRow
