@@ -10,6 +10,7 @@ import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { request } from 'func/http';
 import { open } from 'func/window';
 
+import { convertToPng } from 'func/image';
 import Info from '../FeatureInfo';
 
 const ERROR_MSG =
@@ -22,13 +23,13 @@ function ContextMenu({ target, closeMenu }) {
     openType,
     searchBySource,
     searchGoogleMethod,
-    saucenaoBypass,
     // 사이트
     showGoogle,
     showBing,
     showYandex,
     showSauceNao,
     showIqdb,
+    showAscii2D,
     showTraceMoe,
     showImgOps,
     showTinEye,
@@ -85,22 +86,13 @@ function ContextMenu({ target, closeMenu }) {
   const handleSauceNao = useCallback(() => {
     if (!showSauceNao) return;
 
-    if (!saucenaoBypass) {
-      open(
-        `https://saucenao.com/search.php?db=999&url=${encodeURIComponent(
-          data,
-        )}`,
-        openType,
-      );
-      closeMenu();
-      return;
-    }
-
     (async () => {
       try {
         closeMenu();
         setSnack({ msg: 'SauceNao에서 검색 중...' });
-        const blob = await fetch(data).then((response) => response.blob());
+        const blob = await request(data, {
+          responseType: 'blob',
+        }).then(({ response }) => response);
 
         if (blob.size > 15728640) {
           setSnack({
@@ -110,30 +102,33 @@ function ContextMenu({ target, closeMenu }) {
           return;
         }
 
-        const formdata = new FormData();
-        formdata.append('file', blob, `image.${blob.type.split('/')[1]}`);
-        formdata.append('frame', 1);
-        formdata.append('database', 999);
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(
+          new File([blob], `image.${blob.type.split('/')[1]}`, {
+            type: blob.type,
+          }),
+        );
 
-        const resultURL = await request('https://saucenao.com/search.php', {
-          method: 'POST',
-          data: formdata,
-        }).then(
-          ({ response }) =>
-            response.querySelector('#yourimage a')?.href.split('image=')[1],
-        );
-        if (!resultURL) {
-          setSnack({
-            msg: '이미지 업로드에 실패했습니다.',
-            time: 3000,
-          });
-          return;
-        }
+        const form = document.createElement('form');
+        form.style.position = 'absolute';
+        form.style.left = '-9999px';
+
+        form.method = 'POST';
+        form.action = 'https://saucenao.com/search.php';
+        form.enctype = 'multipart/form-data';
+        form.target = '_blank';
+
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.name = 'file';
+        input.files = dataTransfer.files;
+        form.append(input);
+
+        document.body.append(form);
+        form.submit();
+        form.remove();
+
         setSnack();
-        open(
-          `https://saucenao.com/search.php?db=999&url=https://saucenao.com/userdata/tmp/${resultURL}`,
-          openType,
-        );
       } catch (error) {
         setSnack({
           msg: ERROR_MSG,
@@ -142,14 +137,118 @@ function ContextMenu({ target, closeMenu }) {
         console.error(error);
       }
     })();
-  }, [showSauceNao, saucenaoBypass, openType, data, closeMenu, setSnack]);
+  }, [showSauceNao, data, closeMenu, setSnack]);
 
   const handleIqdb = useCallback(() => {
     if (!showIqdb) return;
 
-    GM_openInTab(`https://iqdb.org/?url=${encodeURIComponent(data)}`, openType);
-    closeMenu();
-  }, [showIqdb, closeMenu, data, openType]);
+    (async () => {
+      try {
+        closeMenu();
+        setSnack({ msg: 'IQDB에서 검색 중...' });
+        const blob = await request(data, {
+          responseType: 'blob',
+        }).then(({ response }) => response);
+
+        if (blob.size > 8388608) {
+          setSnack({
+            msg: '업로드 용량 제한(8MB)을 초과했습니다.',
+            time: 3000,
+          });
+          return;
+        }
+
+        const inputList = await request('https://iqdb.org/').then(
+          ({ response }) => [...response.querySelectorAll('input')],
+        );
+
+        const convertedBlob = await convertToPng(blob);
+        const file = new File(
+          [convertedBlob],
+          `image.${convertedBlob.type.split('/')[1]}`,
+          {
+            type: convertedBlob.type,
+          },
+        );
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+
+        const form = document.createElement('form');
+        form.style.position = 'absolute';
+        form.style.left = '-9999px';
+
+        form.method = 'POST';
+        form.action = 'https://iqdb.org/';
+        form.enctype = 'multipart/form-data';
+        form.target = '_blank';
+
+        for (let i = 0; i < inputList.length; i += 1) {
+          const input = inputList[i];
+          if (input.type === 'file') {
+            input.files = dataTransfer.files;
+          }
+          form.append(input);
+        }
+
+        document.body.append(form);
+        form.submit();
+        form.remove();
+
+        setSnack();
+      } catch (error) {
+        setSnack({
+          msg: ERROR_MSG,
+          time: 3000,
+        });
+        console.error(error);
+      }
+    })();
+  }, [showIqdb, data, closeMenu, setSnack]);
+
+  const handleAscii2D = useCallback(() => {
+    if (!showAscii2D) return;
+
+    (async () => {
+      try {
+        closeMenu();
+        setSnack({ msg: 'Ascii2D에서 검색 중...' });
+        const inputList = await request('https://ascii2d.net/').then(
+          ({ response }) => [
+            ...response.querySelectorAll('form:not(#file_upload) input'),
+          ],
+        );
+
+        const form = document.createElement('form');
+        form.style.position = 'absolute';
+        form.style.left = '-9999px';
+
+        form.method = 'POST';
+        form.action = 'https://ascii2d.net/search/uri';
+        form.enctype = 'multipart/form-data';
+        form.target = '_blank';
+
+        for (let i = 0; i < inputList.length; i += 1) {
+          const input = inputList[i];
+          if (input.type === 'url') {
+            input.value = data;
+          }
+          form.append(input);
+        }
+
+        document.body.append(form);
+        form.submit();
+        form.remove();
+
+        setSnack();
+      } catch (error) {
+        setSnack({
+          msg: ERROR_MSG,
+          time: 3000,
+        });
+        console.error(error);
+      }
+    })();
+  }, [showAscii2D, data, closeMenu, setSnack]);
 
   const handleTraceMoe = useCallback(() => {
     if (!showTraceMoe) return;
@@ -245,6 +344,14 @@ function ContextMenu({ target, closeMenu }) {
             <ImageSearch />
           </ListItemIcon>
           <Typography>IQDB 검색</Typography>
+        </MenuItem>
+      )}
+      {showAscii2D && (
+        <MenuItem onClick={handleAscii2D}>
+          <ListItemIcon>
+            <ImageSearch />
+          </ListItemIcon>
+          <Typography>Ascii2D 검색</Typography>
         </MenuItem>
       )}
       {showTraceMoe && (

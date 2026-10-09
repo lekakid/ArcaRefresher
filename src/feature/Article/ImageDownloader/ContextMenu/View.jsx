@@ -11,28 +11,10 @@ import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
+import { convertToPng } from 'func/image';
 import { ImageInfo } from '../Model';
 import { format } from '../Util';
 import Info from '../FeatureInfo';
-
-async function convertToPng(blob) {
-  const canvas = document.createElement('canvas');
-  const canvasContext = canvas.getContext('2d');
-
-  const result = await new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      canvasContext.drawImage(img, 0, 0);
-      canvas.toBlob((b) => resolve(b));
-    };
-    img.src = URL.createObjectURL(blob);
-  });
-  canvas.remove();
-
-  return result;
-}
 
 function ContextMenu({ target, closeMenu }) {
   const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
