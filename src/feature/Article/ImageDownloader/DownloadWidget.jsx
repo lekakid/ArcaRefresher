@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
+import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-
 import { request } from 'func/http';
+
 import { format } from './Util';
 import Info from './FeatureInfo';
 
@@ -21,6 +22,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
     zipName,
     zipExtension,
   } = useSelector((state) => state[Info.id].storage);
+  const setSnack = useSnackbarAlert();
 
   useEffect(() => {
     if (infoList.length === 0) return;
@@ -49,6 +51,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       window.addEventListener('beforeunload', confirm);
 
       onDownloadStart();
+      setSnack({ msg: '다운로드 준비 중' });
 
       // 다운로드 시작
       for (let i = 0; i < infoList.length; i += 1) {
@@ -70,19 +73,20 @@ function DownloadWidget({ infoList, onDownloadStart }) {
 
         count += 1;
         try {
-          const stream = new ReadableStream({
-            async pull(controller) {
-              const blob = (
-                await request(downloadOrigin || isGif ? orig : url, {
-                  responseType: 'blob',
-                })
-              ).response;
-              controller.enqueue(new Uint8Array(await blob.arrayBuffer()));
-              controller.close();
-            },
+          const targetUrl = downloadOrigin || isGif ? orig : url;
+          // eslint-disable-next-line no-await-in-loop
+          const blob = await request(targetUrl, {
+            responseType: 'blob',
+          }).then(({ status, response }) => {
+            if (status >= 400) {
+              throw new Error(`HTTP ${status}`, response);
+            }
+
+            return response;
           });
 
-          yield { name: `${imageName}.${ext}`, input: stream };
+          if (i === 0) setSnack();
+          yield { name: `${imageName}.${ext}`, input: blob };
         } catch (error) {
           console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
         }
@@ -104,6 +108,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
     zipName,
     contentInfo,
     onDownloadStart,
+    setSnack,
   ]);
 
   return null;
