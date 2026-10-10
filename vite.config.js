@@ -40,6 +40,7 @@ export default defineConfig(({ mode }) => {
       target: ['chrome93', 'firefox127'],
       minify: !isDebug,
       sourcemap: isDebug || isAnalyze,
+      license: { fileName: 'ArcaRefresher.user.js.LICENSE.txt' },
     },
     plugins: [
       react(),
