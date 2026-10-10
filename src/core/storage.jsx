@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit';
-import { v4 as uuid } from 'uuid';
 
 /**
  * 설정 값을 가져옵니다.
@@ -84,7 +83,7 @@ export function disableStorageSync() {
 
 export function createMonkeySyncMiddleware() {
   const channel = new BroadcastChannel(`AR_SYNC_MONKEY`);
-  const currentWindowId = uuid();
+  const currentWindowId = crypto.randomUUID();
   let initialized = false;
 
   return (store) => (next) => (action) => {
