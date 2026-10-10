@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { GlobalStyles, IconButton, Portal } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
@@ -53,6 +54,7 @@ function CommentRefresh() {
     document.querySelector(COMMENT_TITLE)?.append(top);
     document.querySelector(COMMENT_SUBTITLE)?.prepend(bottom);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle({ top, bottom });
   }, [commentLoaded]);
 
@@ -70,9 +72,6 @@ function CommentRefresh() {
 
     comment.current.replaceWith(newComments);
     comment.current = newComments;
-    newComments
-      .querySelector('.fetch-comment')
-      .addEventListener('click', handleClick);
     unsafeWindow.applyLocalTimeFix();
     window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
   }, []);

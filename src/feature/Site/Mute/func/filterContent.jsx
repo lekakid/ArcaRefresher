@@ -1,3 +1,5 @@
+import { unsafeWindow } from '$';
+
 export default function filterContent(contents, filter) {
   const filteredList = {
     user: [],

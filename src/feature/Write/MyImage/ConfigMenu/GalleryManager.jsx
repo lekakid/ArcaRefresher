@@ -77,11 +77,6 @@ function FolderNameSelect({
 const nameRegex = /^[0-9a-zA-Zㄱ-힣]*$/;
 function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
   const [text, setText] = useState(initialValue);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    setError(validate(text));
-  }, [validate, text]);
 
   const handleChange = (e) => {
     if (!nameRegex.test(text)) return;
@@ -93,6 +88,8 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
     if (e.key === 'Escape') onCancel();
   };
 
+  const isError = validate(text);
+
   return (
     <Stack sx={{ width: '100%' }} direction="row" gap={1}>
       <TextField
@@ -100,7 +97,7 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
         autoFocus
         size="small"
         value={text}
-        error={error}
+        error={isError}
         onChange={handleChange}
         onFocus={(e) => e.target.select()}
         onKeyUp={handleKeyUp}
@@ -108,7 +105,7 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
       <ButtonGroup>
         <Button
           startIcon={<Done />}
-          disabled={error}
+          disabled={isError}
           onClick={() => onDone(text)}
         >
           확인
@@ -213,10 +210,6 @@ function GalleryManager({ gallery }) {
   );
 
   useEffect(() => {
-    setSelection([]);
-  }, [fromFolder]);
-
-  useEffect(() => {
     if (editInputRef.current) {
       editInputRef.current.focus();
     }
@@ -242,6 +235,7 @@ function GalleryManager({ gallery }) {
         return;
       }
       setFromFolder(e.target.value);
+      setSelection([]);
     },
     [moveList],
   );

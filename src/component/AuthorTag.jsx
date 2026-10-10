@@ -61,7 +61,6 @@ function AuthorTag({ variant = 'badge', color, children }) {
         />
         <Popper transition open={!!anchorEl} anchorEl={anchorEl}>
           {({ TransitionProps }) => (
-            // eslint-disable-next-line react/jsx-props-no-spreading
             <Fade {...TransitionProps} in={!!anchorEl}>
               <Paper variant="outlined" sx={{ padding: 1 }}>
                 {children}

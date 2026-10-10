@@ -1,3 +1,5 @@
+import { GM_openInTab } from '$';
+
 export const FOREGROUND = 'foreground';
 export const BACKGROUND = 'background';
 export const CURRENT = 'current';

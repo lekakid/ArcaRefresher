@@ -27,7 +27,7 @@ export default function ImageDownloader() {
 
   const { enabled } = useSelector((state) => state[Info.id].storage);
   const { open } = useSelector((state) => state[Info.id]);
-  const [container, setContainer] = useState(undefined);
+  const [container] = useState(() => document.createElement('div'));
   const [downloadInfoList, setDownloadInfoList] = useState([]);
 
   useEffect(() => {
@@ -36,25 +36,23 @@ export default function ImageDownloader() {
 
     const menu = document.querySelector(ARTICLE_MENU);
     if (!menu) {
-      if (!container) {
-        setContainer(
-          document
-            .querySelector(ARTICLE_BODY)
-            .insertAdjacentElement('afterend', document.createElement('div')),
-        );
-      }
+      document
+        .querySelector(ARTICLE_BODY)
+        .insertAdjacentElement('afterend', container);
       return;
     }
 
-    if (!container) {
-      const tmp = document.createElement('span');
-      tmp.classList.add('float-start');
-      menu.insertAdjacentElement('afterbegin', tmp);
-      setContainer(tmp);
-    }
+    container.classList.toggle('float-start', true);
+    // eslint-disable-next-line react-hooks/immutability
+    container.style.display = 'inline';
+    menu.insertAdjacentElement('afterbegin', container);
+
+    return () => {
+      container.style.display = '';
+      container.remove();
+    };
   }, [articleLoaded, container, enabled]);
 
-  if (!container) return null;
   if (!enabled) return null;
   return (
     <>

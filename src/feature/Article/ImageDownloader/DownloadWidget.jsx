@@ -74,7 +74,6 @@ function DownloadWidget({ infoList, onDownloadStart }) {
         count += 1;
         try {
           const targetUrl = downloadOrigin || isGif ? orig : url;
-          // eslint-disable-next-line no-await-in-loop
           const blob = await request(targetUrl, {
             responseType: 'blob',
           }).then(({ status, response }) => {

@@ -79,7 +79,7 @@ function ImageSelector({ open, onConfirm }) {
           setData(mapDownloadInfo(emotJson, 'emoticon'));
           setSelection([...new Array(emotJson.length).keys()]);
           return;
-        } catch (error) {
+        } catch (_) {
           console.warn('[ImageDownloader] 아카콘 번들 데이터 획득 실패');
         }
       }
@@ -115,7 +115,9 @@ function ImageSelector({ open, onConfirm }) {
   const handleDownload = useCallback(async () => {
     setSelection([]);
 
-    const selectedInfoList = selection.sort().map((i) => data[i]);
+    const selectedInfoList = selection
+      .sort((a, b) => a - b)
+      .map((i) => data[i]);
     onConfirm(selectedInfoList);
 
     dispatch(setOpen(false));
@@ -173,7 +175,6 @@ function ImageSelector({ open, onConfirm }) {
         <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>
           {imgList.map((img, index) => (
             <ImageListItem
-              // eslint-disable-next-line react/no-array-index-key
               key={`${img}_${index}`}
               onClick={handleSelect(index)}
             >

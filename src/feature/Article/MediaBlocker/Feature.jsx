@@ -21,13 +21,11 @@ export default function MediaBlocker() {
 
   useEffect(() => {
     if (!articleLoaded) return undefined;
-    if (
-      !(
-        blockAll ||
-        (alertLoaded && blockDeleted) ||
-        (document.referrer.includes('/reports/') && blockReported)
-      )
-    )
+    if (!(
+      blockAll ||
+      (alertLoaded && blockDeleted) ||
+      (document.referrer.includes('/reports/') && blockReported)
+    ))
       return undefined;
 
     const images = [...document.querySelectorAll(ARTICLE_MEDIA)];
@@ -37,7 +35,9 @@ export default function MediaBlocker() {
 
       return { element: e, container };
     });
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBlockImgList(info);
+
     return () => setBlockImgList([]);
   }, [alertLoaded, articleLoaded, blockAll, blockDeleted, blockReported]);
 

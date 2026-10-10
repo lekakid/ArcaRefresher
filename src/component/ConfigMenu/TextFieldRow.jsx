@@ -34,7 +34,7 @@ const TextFieldRow = forwardRef(
       try {
         const formatted = saveFormat?.(baseValue) || baseValue;
         dispatch(action(formatted));
-      } catch (error) {
+      } catch (_) {
         setShowError(true);
       }
     }, [dispatch, action, saveFormat, baseValue]);

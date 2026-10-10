@@ -1,3 +1,4 @@
+import { GM_deleteValue, GM_getValue, GM_listValues } from '$';
 import { forwardRef, Fragment, useCallback, useRef } from 'react';
 import {
   List,
@@ -15,15 +16,11 @@ import { useConfirm } from 'component';
 
 import Info from '../FeatureInfo';
 
-const featureContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/FeatureInfo$/,
+const featureModules = import.meta.glob(
+  ['/src/feature/*/*/FeatureInfo.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
 );
-
-const idList = featureContext
-  .keys()
-  .map((path) => featureContext(path).default.id);
+const idList = Object.values(featureModules).map(({ id }) => id);
 
 const View = forwardRef((_props, ref) => {
   const inputRef = useRef();

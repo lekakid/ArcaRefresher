@@ -139,6 +139,7 @@ function LoadTable({ editor, open, onClose }) {
 
       editor.content.html.set(content);
       editor.content.events.trigger('contentChanged');
+      // eslint-disable-next-line react-hooks/immutability
       if (importTitle) editor.title.value = title;
 
       setSelection([]);

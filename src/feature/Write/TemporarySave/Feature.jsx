@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -46,6 +47,7 @@ export default function TemporarySave() {
 
     const title = document.querySelector('#inputTitle');
     const content = unsafeWindow.editorInstance;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEditor({ title, content });
 
     const btns = document.querySelector('.article-write .btns');

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -23,15 +23,8 @@ function MemoInput() {
   const user = useSelector((state) => state[Info.id].inputUser);
   const userMemo = memo[user];
 
-  const [msg, setMsg] = useState('');
-  const [color, setColor] = useState('');
-
-  useEffect(() => {
-    if (!user) return;
-
-    setMsg(memo[user]?.msg || '');
-    setColor(memo[user]?.color || '');
-  }, [memo, user]);
+  const [msg, setMsg] = useState(() => memo[user]?.msg || '');
+  const [color, setColor] = useState(() => memo[user]?.color || '');
 
   const handleMsgChange = useCallback((e) => {
     setMsg(e.target.value);

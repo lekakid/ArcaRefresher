@@ -1,3 +1,5 @@
+import { GM_xmlhttpRequest } from '$';
+
 const parser = new DOMParser();
 
 export function getDocument(source) {

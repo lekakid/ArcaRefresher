@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: 'Arca Refresher',
   namespace: 'LeKAKiD',
   author: 'LeKAKiD',
@@ -14,15 +14,5 @@ module.exports = {
   exclude: ['https://*.arca.live/api/*'],
   connect: ['namu.la', 'arca.live', 'saucenao.com', 'iqdb.org', 'ascii2d.net'],
   noframes: true,
-  'run-at': 'document-body',
-  grant: [
-    'GM_info',
-    'GM_openInTab',
-    'GM_setValue',
-    'GM_getValue',
-    'GM_deleteValue',
-    'GM_listValues',
-    'GM_xmlhttpRequest',
-    'unsafeWindow',
-  ],
+  runAt: 'document-body',
 };

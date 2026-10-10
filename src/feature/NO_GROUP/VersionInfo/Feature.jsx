@@ -1,3 +1,4 @@
+import { GM_info, GM_openInTab } from '$';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@mui/material';
@@ -25,6 +26,7 @@ export default function VersionInfo() {
   useEffect(() => {
     // 최초 렌더 시(창을 처음 켰을 때) 마지막으로 로드된 버전 저장
     dispatch($setLastVersion(GM_info.script.version));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialized(true);
   }, [dispatch]);
 
@@ -35,6 +37,7 @@ export default function VersionInfo() {
     if (lastVersion !== GM_info.script.version) {
       // 데이터 동기화 중단
       disableStorageSync();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNoti(MODE_DISABLE_STORAGE);
     }
   }, [initialized, lastVersion]);
@@ -42,6 +45,7 @@ export default function VersionInfo() {
   useEffect(() => {
     const { type, diff } = compare(GM_info.script.version, checkedVersion);
     if (diff === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNoti(MODE_NONE);
     }
     if (diff < 0) {

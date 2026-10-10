@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useCallback } from 'react';
 
 const callbackList = [];

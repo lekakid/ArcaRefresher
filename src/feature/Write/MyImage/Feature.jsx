@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -39,6 +40,7 @@ export default function MyImage() {
     if (!enabled) return;
     if (!editorLoaded) return;
     if (/edit$/.test(window.location.pathname)) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEditor(unsafeWindow.editorInstance);
   }, [dispatch, editorLoaded, enabled]);
 
@@ -63,6 +65,7 @@ export default function MyImage() {
     if (targetImgList.length === 0) return;
 
     if (forceLoad || !editor.html.get(true)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       handleLoad();
     } else {
       setAlert(true);

@@ -107,7 +107,7 @@ export default function CommentCustom() {
     alternativeSubmitKey,
   } = useSelector((state) => state[Info.id].storage);
   const [comment, setComment] = useState(null);
-  const [unfoldContainer, setUnfoldContainer] = useState(null);
+  const [unfoldContainer] = useState(() => document.createElement('div'));
   const [unfold, setUnfold] = useState(false);
 
   // 댓글 로드 확인 및 엘리먼트 저장
@@ -129,11 +129,7 @@ export default function CommentCustom() {
     const search = new URLSearchParams(window.location.search);
     if (search.has('cp')) return;
 
-    if (!unfoldContainer) {
-      const container = document.createElement('div');
-      comment.insertAdjacentElement('afterend', container);
-      setUnfoldContainer(container);
-    }
+    comment.insertAdjacentElement('afterend', unfoldContainer);
   }, [comment, foldComment, unfoldContainer]);
 
   // 넓은 답글창 열기

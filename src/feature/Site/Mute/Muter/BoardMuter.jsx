@@ -91,6 +91,7 @@ function BoardMuter() {
       `${BOARD}, ${BOARD_IN_ARTICLE}`,
     );
     if (!boardElement) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setControlTarget(boardElement);
 
     const containerElement = document.createElement('div');
@@ -102,6 +103,7 @@ function BoardMuter() {
     if (!controlTarget) return;
 
     controlTarget.insertAdjacentElement(boardBarPos, countBarContainer);
+    // eslint-disable-next-line react-hooks/immutability
     controlTarget.style.marginBottom = boardBarPos === 'afterend' ? '0' : '';
   }, [count?.all, controlTarget, countBarContainer, boardBarPos]);
 
@@ -184,7 +186,7 @@ function BoardMuter() {
         if (filter.emoticon.url[url]) {
           e.parentNode.classList.add('filtered-emoticon');
         }
-      } catch (error) {
+      } catch (_) {
         console.warn(
           '[Mute] 처리가 안되는 게시물 미리보기\n',
           e.matches('img')

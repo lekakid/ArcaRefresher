@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { BOARD_NOTICES, BOARD_ITEMS } from 'core/selector';
 import { getDocument } from 'func/http';
 

@@ -43,7 +43,6 @@ const SliderRow = forwardRef(
       >
         <Slider
           sx={{ minWidth: 160, width: '100%' }}
-          // eslint-disable-next-line react/jsx-props-no-spreading
           {...sliderProps}
           value={value}
           onChange={onChange || handleChange}

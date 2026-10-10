@@ -23,6 +23,7 @@ export default function CategoryStyler() {
       Math.random().toString(36).substring(2),
     ]);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setKeyMap(Object.fromEntries(entries));
   }, [category]);
 

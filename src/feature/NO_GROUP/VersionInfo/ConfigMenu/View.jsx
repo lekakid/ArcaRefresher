@@ -1,3 +1,4 @@
+import { GM_info, GM_openInTab } from '$';
 import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {

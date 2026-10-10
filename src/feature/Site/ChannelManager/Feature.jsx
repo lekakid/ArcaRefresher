@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -82,7 +82,7 @@ export default function ChannelManager() {
   );
   const { navChannelInfo } = useSelector((state) => state[Info.id]);
   const [container, setContainer] = useState();
-  const subRef = useRef(undefined);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState({ subs: false, main: false, editor: false });
 
   useEffect(() => {
@@ -113,6 +113,7 @@ export default function ChannelManager() {
 
     nav.insertAdjacentElement('afterbegin', mainContainer);
     nav.insertAdjacentElement('afterbegin', subsContainer);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContainer({ subs: subsContainer, main: mainContainer });
     return () => {
       subsElement.style.removeProperty('display');
@@ -207,9 +208,8 @@ export default function ChannelManager() {
     <>
       {container?.subs && (
         <Portal container={container.subs}>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a
-            ref={subRef}
+            ref={setAnchorEl}
             aria-expanded="false"
             className="nav-link dropdown-toggle"
             href="#"
@@ -221,7 +221,7 @@ export default function ChannelManager() {
             {'\n'}
           </a>
           <Popover
-            anchorEl={subRef.current}
+            anchorEl={anchorEl}
             anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
             transformOrigin={{ horizontal: 'center', vertical: 'top' }}
             transitionDuration={150}

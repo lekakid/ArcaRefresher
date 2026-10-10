@@ -127,6 +127,7 @@ function CommentMuter() {
     const commentElement = document.querySelector(COMMENT_INNER);
     if (!commentElement) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setControlTarget(commentElement);
 
     const container = document.createElement('div');

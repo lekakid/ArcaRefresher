@@ -1,10 +1,11 @@
 {
   "name": "arcarefresher",
-  "version": "3.43.2",
+  "version": "3.43.3",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "lint-staged": {
     "*.jsx": [
       "eslint --fix",
@@ -13,44 +14,28 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "dev": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "analyze": "webpack serve --config webpack.analyze.js",
+    "lint": "eslint .",
+    "dev": "vite",
+    "build": "vite build",
+    "analyze": "vite build --mode analyze",
     "fix": "bash script/deploy.sh patch",
-    "min": "bash script/deploy.sh minor",
-    "mock:init": "bash script/mock_setup.sh",
-    "mock": "webpack serve --config .mock/webpack.config.js"
+    "min": "bash script/deploy.sh minor"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.8",
-    "@babel/eslint-parser": "^7.17.0",
-    "@babel/eslint-plugin": "^7.17.7",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "babel-loader": "^8.2.4",
-    "babel-plugin-import": "^1.13.6",
-    "clean-terminal-webpack-plugin": "^3.0.0",
-    "eslint": "^8.12.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-react-app": "^7.0.0",
-    "eslint-import-resolver-webpack": "^0.13.2",
-    "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "@eslint/js": "^9.39.5",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^7.0.4",
     "lint-staged": "^15.1.0",
-    "prettier": "^2.6.2",
-    "webpack": "^5.89.0",
-    "webpack-bundle-analyzer": "^4.9.1",
-    "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.11.1",
-    "webpack-merge": "^5.8.0",
-    "webpack-userscript": "^3.2.2"
+    "prettier": "^3.9.10",
+    "rollup-plugin-visualizer": "^6.0.11",
+    "vite": "^8.3.4",
+    "vite-plugin-monkey": "^8.1.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -68,6 +53,5 @@
     "react-qr-code": "^2.0.11",
     "react-redux": "^9.1.0",
     "streamsaver": "^2.0.6"
-  },
-  "packageManager": "npm@3.3.0"
+  }
 }
