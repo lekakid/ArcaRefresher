@@ -115,7 +115,9 @@ function ImageSelector({ open, onConfirm }) {
   const handleDownload = useCallback(async () => {
     setSelection([]);
 
-    const selectedInfoList = selection.sort().map((i) => data[i]);
+    const selectedInfoList = selection
+      .sort((a, b) => a - b)
+      .map((i) => data[i]);
     onConfirm(selectedInfoList);
 
     dispatch(setOpen(false));
