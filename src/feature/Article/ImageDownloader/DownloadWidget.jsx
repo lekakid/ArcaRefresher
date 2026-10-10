@@ -64,13 +64,14 @@ function DownloadWidget({ infoList }) {
             ? `${imageName}(${dupCount[imageName]})`
             : imageName;
         dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+        const isGif = ext === 'gif';
 
         count += 1;
         try {
           const stream = new ReadableStream({
             async pull(controller) {
               const blob = (
-                await request(downloadOrigin ? orig : url, {
+                await request(downloadOrigin || isGif ? orig : url, {
                   responseType: 'blob',
                 })
               ).response;
