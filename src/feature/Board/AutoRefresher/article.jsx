@@ -42,7 +42,7 @@ export function updateBoard(board, newArticles, animationClass) {
   const updatedChildList = [
     tableHead,
     ...newArticles.notices,
-    noticeUnfoldBtn,
+    ...(noticeUnfoldBtn ? [noticeUnfoldBtn] : []),
     ...newArticles.articles,
   ];
   board.replaceChildren(...updatedChildList);
