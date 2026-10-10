@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
@@ -10,7 +10,7 @@ import { request } from 'func/http';
 import { format } from './Util';
 import Info from './FeatureInfo';
 
-function DownloadWidget({ infoList }) {
+function DownloadWidget({ infoList, onDownloadStart }) {
   const contentInfo = useContent();
   const {
     // 동작 설정
@@ -37,9 +37,6 @@ function DownloadWidget({ infoList }) {
     // 파일명 중복 시 끝에 숫자 붙이는 용도
     const dupCount = {};
 
-    // 페이지 이탈 방지
-    window.addEventListener('beforeunload', confirm);
-
     // 파일 저장 스트림 생성
     const zipFileName = format(zipName, { content: contentInfo });
     const filestream = streamSaver.createWriteStream(
@@ -48,6 +45,11 @@ function DownloadWidget({ infoList }) {
 
     // 다운로드 스트림 제너레이터 선언
     async function* entries() {
+      // 페이지 이탈 방지
+      window.addEventListener('beforeunload', confirm);
+
+      onDownloadStart();
+
       // 다운로드 시작
       for (let i = 0; i < infoList.length; i += 1) {
         const info = infoList[i];
@@ -85,14 +87,14 @@ function DownloadWidget({ infoList }) {
           console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
         }
       }
+
+      // 페이지 이탈 방지 해제
+      window.removeEventListener('beforeunload', confirm);
     }
 
     // 다운로드 스트림 생성 후 연결
     const zipstream = downloadZip(entries());
     zipstream.body.pipeTo(filestream);
-
-    // 페이지 이탈 방지 해제
-    window.removeEventListener('beforeunload', confirm);
   }, [
     infoList,
     downloadOrigin,
@@ -101,6 +103,7 @@ function DownloadWidget({ infoList }) {
     zipImageName,
     zipName,
     contentInfo,
+    onDownloadStart,
   ]);
 
   return null;
@@ -108,6 +111,7 @@ function DownloadWidget({ infoList }) {
 
 DownloadWidget.propTypes = {
   infoList: PropTypes.array,
+  onDownloadStart: PropTypes.func,
 };
 
 export default DownloadWidget;
