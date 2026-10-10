@@ -13,6 +13,7 @@ function NavigationMuter() {
   const [nav, setNav] = useState(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (navLoaded) setNav(document.querySelector(NAVIGATION_MENU));
   }, [navLoaded]);
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -42,12 +42,6 @@ function CountBar({
   const [confirm, ConfirmDialog] = useConfirm();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setShowStates((prev) =>
-      Object.fromEntries(Object.keys(count).map((key) => [key, prev?.[key]])),
-    );
-  }, [count]);
-
   const handleHideCount = async () => {
     const result = await confirm({
       title: '뮤트 표시 숨기기',
@@ -69,7 +63,7 @@ function CountBar({
       const suffix = key === 'all' ? '' : `-${key}`;
       const className = `show-filtered${suffix}`;
       setShowStates((prev) => {
-        controlTarget.classList.toggle(className, !prev[key]);
+        controlTarget.classList.toggle(className, !prev?.[key]);
         return {
           ...prev,
           [key]: !prev[key],

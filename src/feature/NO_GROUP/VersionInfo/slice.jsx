@@ -1,3 +1,4 @@
+import { GM_info } from '$';
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';

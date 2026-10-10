@@ -18,6 +18,7 @@ export default function HeaderButton() {
       const nav = document.querySelector(NAVIGATION_MENU);
       const searchbarEl = nav.querySelector('.nav-channel-search-wrapper');
       nav.insertBefore(container, searchbarEl);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNavEl(container);
       return undefined;
     }
@@ -44,7 +45,6 @@ export default function HeaderButton() {
 
   return ReactDOM.createPortal(
     <li className="nav-item dropdown">
-      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <a aria-expanded="false" className="nav-link" href="#" onClick={onClick}>
         <span className="d-inline">리프레셔</span>
         <span className="d-none d-sm-inline ml-2 ion-gear-a" />

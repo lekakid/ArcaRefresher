@@ -1,3 +1,5 @@
+import { unsafeWindow } from '$';
+
 export default [
   {
     action: 'write',

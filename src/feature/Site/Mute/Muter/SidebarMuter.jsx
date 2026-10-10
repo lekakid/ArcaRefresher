@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 

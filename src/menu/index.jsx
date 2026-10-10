@@ -3,57 +3,47 @@ import ConfigMenuContainer from './ConfigMenu';
 import ContextMenuContainer from './ContextMenu';
 import SnackbarAlert from './SnackbarAlert';
 
-const articleMenuContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/ArticleMenu$/,
+const articleMenuModules = import.meta.glob(
+  ['/src/feature/*/*/ArticleMenu.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
 );
-const articleMenuChildren = articleMenuContext
-  .keys()
-  .map((path) => ({
-    Component: articleMenuContext(path).default,
-    key: path,
-  }))
-  .map(({ Component, key }) => <Component key={key} />);
+const articleMenuChildren = Object.entries(articleMenuModules).map(
+  ([path, Component]) => <Component key={path} />,
+);
 
-const contextMenuContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/ContextMenu$/,
+const contextMenuModules = import.meta.glob(
+  ['/src/feature/*/*/ContextMenu/index.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
 );
-const contextMenuList = contextMenuContext
-  .keys()
-  .map((path) => contextMenuContext(path).default)
-  .sort((a, b) => a.order - b.order);
+const contextMenuList = Object.values(contextMenuModules).sort(
+  (a, b) => a.order - b.order,
+);
 
-const groupContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/GroupInfo$/,
+const groupModules = import.meta.glob(
+  ['/src/feature/*/GroupInfo.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
 );
-const groupList = groupContext
-  .keys()
-  .map((path) => ({
-    key: path.split('/')[1],
-    ...groupContext(path).default,
+const groupList = Object.entries(groupModules)
+  .map(([path, info]) => ({
+    key: path.split('/')[3],
+    ...info,
   }))
   .sort((a, b) => a.order - b.order);
 groupList.push(null);
 
-const configMenuContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/ConfigMenu$/,
+const configMenuModules = import.meta.glob(
+  ['/src/feature/*/*/ConfigMenu/index.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
 );
-const configMenuChildren = configMenuContext.keys().map((path) => {
-  const group = path.split('/')[1];
-  const menuInfo = configMenuContext(path).default;
-
-  return {
-    group: group === 'NO_GROUP' ? '' : group,
-    ...menuInfo,
-  };
-});
+const configMenuChildren = Object.entries(configMenuModules).map(
+  ([path, info]) => {
+    const group = path.split('/')[3];
+    return {
+      group: group === 'NO_GROUP' ? '' : group,
+      ...info,
+    };
+  },
+);
 
 function MenuWrapper() {
   return (

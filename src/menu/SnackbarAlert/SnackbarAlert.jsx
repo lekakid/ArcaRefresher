@@ -24,6 +24,7 @@ export default function SnackbarAlert() {
       }, 50);
     }
     if (snackBag.length && snack && open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpen(false);
     }
   }, [dispatch, open, snack, snackBag]);

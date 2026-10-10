@@ -11,17 +11,10 @@ function ArticleMenu({ children }) {
   const articleLoaded = useLoadChecker(ARTICLE_TITLE);
   const { position } = useSelector((state) => state[Info.id].storage);
 
-  const [container, setContainer] = useState(null);
+  const [container] = useState(() => document.createElement('div'));
 
   useEffect(() => {
     if (!articleLoaded) return;
-
-    const menuContainer = document.createElement('div');
-    setContainer(menuContainer);
-  }, [articleLoaded]);
-
-  useEffect(() => {
-    if (!container) return;
 
     const articleHead = document.querySelector(ARTICLE_HEAD);
     if (!articleHead) return;
@@ -37,7 +30,7 @@ function ArticleMenu({ children }) {
         container.remove();
         break;
     }
-  }, [position, container]);
+  }, [position, articleLoaded, container]);
 
   if (!container) return null;
   return (

@@ -59,7 +59,6 @@ const View = React.forwardRef((_props, ref) => {
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].refresher.map(
                           (value, index) => (
-                            // eslint-disable-next-line react/no-array-index-key
                             <React.Fragment key={index}>
                               {index !== 0 && '+'}
                               <KeyIcon title={value} />
@@ -75,7 +74,6 @@ const View = React.forwardRef((_props, ref) => {
                     secondaryAction={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {label[interactionType].browser.map((value, index) => (
-                          // eslint-disable-next-line react/no-array-index-key
                           <React.Fragment key={index}>
                             {index !== 0 && '+'}
                             <KeyIcon title={value} />

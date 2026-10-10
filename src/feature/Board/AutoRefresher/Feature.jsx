@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Fade, GlobalStyles } from '@mui/material';
@@ -113,6 +114,7 @@ function AutoRefresher() {
     if (!boardLoaded) return undefined;
 
     const boardElement = document.querySelector(BOARD);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBoard(boardElement);
 
     // 마우스 이동 이벤트 등록

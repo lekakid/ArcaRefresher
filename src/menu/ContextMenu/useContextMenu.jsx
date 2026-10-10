@@ -20,7 +20,8 @@ export default function useContextMenu({ key, selector, dataExtractor }, deps) {
     return () => dispatch(removeTrigger(trigger));
   }, [dispatch, key, selector]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // TODO: 마이그레이션 작업 후 역할 분리
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   const data = useMemo(dataExtractor, deps);
 
   return data;

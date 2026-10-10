@@ -102,6 +102,7 @@ export default function ArticleCustom() {
   // 게시물 로드 확인 및 엘리먼트 저장
   useEffect(() => {
     if (articleLoaded) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setArticle(document.querySelector(ARTICLE));
     }
   }, [articleLoaded]);
@@ -216,6 +217,7 @@ export default function ArticleCustom() {
       alterParent.append(preview);
       const container = document.createElement('span');
       preview.parentElement.insertAdjacentElement('afterbegin', container);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFakePreview({ container, preview });
     }
   }, [article]);

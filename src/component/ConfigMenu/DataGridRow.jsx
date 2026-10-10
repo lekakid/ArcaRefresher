@@ -233,7 +233,10 @@ function TableView({
 }
 
 function TextView({ rows, columns, onChange, onModeChange }) {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(
+    () =>
+      rows.map((row) => Object.values(row).join(DELIMITER)).join('\n') || '',
+  );
   const [error, setError] = useState(false);
 
   const handleChange = useCallback((e) => {
@@ -256,12 +259,6 @@ function TextView({ rows, columns, onChange, onModeChange }) {
       setError(true);
     }
   }, [columns, text, onChange, onModeChange]);
-
-  useEffect(() => {
-    setText(
-      rows.map((row) => Object.values(row).join(DELIMITER)).join('\n') || '',
-    );
-  }, [rows]);
 
   return (
     <Paper variant="outlined" sx={{ width: '100%' }}>

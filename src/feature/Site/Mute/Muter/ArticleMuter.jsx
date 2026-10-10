@@ -65,6 +65,7 @@ function ArticleMuter() {
       wrapper.appendChild(emot);
     });
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setWrapped(true);
   }, [articleLoaded]);
 

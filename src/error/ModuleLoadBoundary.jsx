@@ -1,3 +1,4 @@
+import { GM_info, GM_openInTab } from '$';
 import { useEffect, useState } from 'react';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
@@ -30,6 +31,7 @@ function ErrorDialog({ moduleId, text, error }) {
     if (!error) return;
     if (lastCheckVersion[moduleId] === GM_info.script.version) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpen(true);
   }, [moduleId, error, lastCheckVersion]);
 

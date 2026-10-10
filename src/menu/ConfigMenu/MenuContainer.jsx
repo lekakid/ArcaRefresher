@@ -1,3 +1,4 @@
+import { GM_info } from '$';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';

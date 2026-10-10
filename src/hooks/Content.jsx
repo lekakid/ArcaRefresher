@@ -1,3 +1,4 @@
+import { unsafeWindow } from '$';
 import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSlice } from '@reduxjs/toolkit';
@@ -103,7 +104,7 @@ export function ContentCollector() {
       }
       const nick = decodeURI(token.pop());
       dispatch(setUser({ id: `${nick}${uniqueId}` }));
-    } catch (error) {
+    } catch (_) {
       console.warn('[ContentInfo] 이용자 정보를 받아오지 못했습니다.');
     }
   }, [dispatch, navLoaded]);
@@ -118,7 +119,7 @@ export function ContentCollector() {
       dispatch(
         setChannel({ id: channelId, name: name.replace(' 채널', '') || '' }),
       );
-    } catch (error) {
+    } catch (_) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
   }, [dispatch, titleLoaded]);
@@ -151,7 +152,7 @@ export function ContentCollector() {
           name2IdMap: Object.fromEntries(name2IdMapEntries),
         }),
       );
-    } catch (error) {
+    } catch (_) {
       console.warn('[ContentInfo] 카테고리 목록을 얻어오지 못했습니다.');
     }
   }, [dispatch, boardLoaded]);

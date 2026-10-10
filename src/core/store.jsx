@@ -5,21 +5,23 @@ import { ErrorHandlerEntires } from 'error/slice';
 import { ContentReducerEntrie } from 'hooks/Content';
 import { LoadCheckerReducerEntrie } from 'hooks/LoadChecker';
 
-const menuContext = require.context('menu/', true, /^menu\/.+\/slice$/);
-const menuReducerEntries = menuContext
-  .keys()
-  // path: 'menu/{MenuName}/slice.jsx'
-  .map((path) => [path.split('/')[1], menuContext(path).default]);
-
-const featureContext = require.context(
-  'feature/',
-  true,
-  /^feature\/(?!_).+\/.+\/slice$/,
+const menuModules = import.meta.glob('/src/menu/*/slice.jsx', {
+  eager: true,
+  import: 'default',
+});
+const menuReducerEntries = Object.entries(menuModules).map(
+  // path: '/src/menu/{MenuName}/slice.jsx'
+  ([path, reducer]) => [path.split('/')[3], reducer],
 );
-const featureReducerEntries = featureContext
-  .keys()
-  // path: 'feature/{GroupName}/{FeatureName}/slice.jsx'
-  .map((path) => [path.split('/')[2], featureContext(path).default]);
+
+const featureModules = import.meta.glob(
+  ['/src/feature/*/*/slice.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
+);
+const featureReducerEntries = Object.entries(featureModules).map(
+  // path: '/src/feature/{GroupName}/{FeatureName}/slice.jsx'
+  ([path, reducer]) => [path.split('/')[4], reducer],
+);
 
 const store = configureStore({
   reducer: Object.fromEntries([
