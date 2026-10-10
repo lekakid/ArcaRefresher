@@ -10,8 +10,8 @@ import {
   $setOpenType,
   $setSearchGoogleMethod,
   $toggleContextMenu,
-  $toggleSauceNaoBypass,
   $toggleSearchBySource,
+  $toggleShowAscii2D,
   $toggleShowBing,
   $toggleShowGoogle,
   $toggleShowImgOps,
@@ -29,13 +29,13 @@ const View = forwardRef((_props, ref) => {
     openType,
     searchBySource,
     searchGoogleMethod,
-    saucenaoBypass,
     // 사이트
     showGoogle,
     showBing,
     showYandex,
     showSauceNao,
     showIqdb,
+    showAscii2D,
     showTraceMoe,
     showImgOps,
     showTinEye,
@@ -79,12 +79,6 @@ const View = forwardRef((_props, ref) => {
             <MenuItem value="lens">구글 렌즈</MenuItem>
             <MenuItem value="source">소스 검색</MenuItem>
           </SelectRow>
-          <SwitchRow
-            primary="SauceNao 바이패스 활성화"
-            secondary="정상적으로 검색되지 않을 때만 사용 바랍니다."
-            value={saucenaoBypass}
-            action={$toggleSauceNaoBypass}
-          />
         </List>
       </Paper>
       <Typography variant="subtitle2">사용할 검색 사이트</Typography>
@@ -119,6 +113,12 @@ const View = forwardRef((_props, ref) => {
             primary="IQDB"
             value={showIqdb}
             action={$toggleShowIqdb}
+          />
+          <SwitchRow
+            divider
+            primary="Ascii2D"
+            value={showAscii2D}
+            action={$toggleShowAscii2D}
           />
           <SwitchRow
             divider

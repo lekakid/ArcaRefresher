@@ -11,13 +11,13 @@ const defaultStorage = {
   openType: BACKGROUND,
   searchBySource: false,
   searchGoogleMethod: 'lens',
-  saucenaoBypass: false,
   // 사이트
   showGoogle: true,
   showBing: true,
   showYandex: true,
   showSauceNao: true,
   showIqdb: true,
+  showAscii2D: true,
   showTraceMoe: true,
   showImgOps: true,
   showTinEye: true,
@@ -44,9 +44,6 @@ export const slice = createSlice({
     $setSearchGoogleMethod(state, action) {
       state.storage.searchGoogleMethod = action.payload;
     },
-    $toggleSauceNaoBypass(state) {
-      state.storage.saucenaoBypass = !state.storage.saucenaoBypass;
-    },
     // 사이트
     $toggleShowGoogle(state) {
       state.storage.showGoogle = !state.storage.showGoogle;
@@ -62,6 +59,9 @@ export const slice = createSlice({
     },
     $toggleShowIqdb(state) {
       state.storage.showIqdb = !state.storage.showIqdb;
+    },
+    $toggleShowAscii2D(state) {
+      state.storage.showAscii2D = !state.storage.showAscii2D;
     },
     $toggleShowTraceMoe(state) {
       state.storage.showTraceMoe = !state.storage.showTraceMoe;
@@ -81,13 +81,13 @@ export const {
   $setOpenType,
   $toggleSearchBySource,
   $setSearchGoogleMethod,
-  $toggleSauceNaoBypass,
   // 사이트
   $toggleShowGoogle,
   $toggleShowBing,
   $toggleShowYandex,
   $toggleShowSauceNao,
   $toggleShowIqdb,
+  $toggleShowAscii2D,
   $toggleShowTraceMoe,
   $toggleShowImgOps,
   $toggleShowTinEye,

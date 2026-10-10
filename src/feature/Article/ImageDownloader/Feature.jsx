@@ -77,7 +77,10 @@ export default function ImageDownloader() {
         open={open}
         onConfirm={(list) => setDownloadInfoList(list)}
       />
-      <DownloadWidget infoList={downloadInfoList} />
+      <DownloadWidget
+        infoList={downloadInfoList}
+        onDownloadStart={() => setDownloadInfoList([])}
+      />
     </>
   );
 }
