@@ -12,19 +12,21 @@ import {
 import { Close, FormatColorReset } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { TwitterPicker } from 'component';
+import { AuthorTag, TwitterPicker } from 'component';
 
 import Info from './FeatureInfo';
 import { $setMemo, setInputUser } from './slice';
+import { ArcaUser } from 'func/user';
 
 function MemoInput() {
   const dispatch = useDispatch();
-  const { memo } = useSelector((state) => state[Info.id].storage);
-  const user = useSelector((state) => state[Info.id].inputUser);
-  const userMemo = memo[user];
+  const { memo, variant } = useSelector((state) => state[Info.id].storage);
 
-  const [msg, setMsg] = useState(() => memo[user]?.msg || '');
-  const [color, setColor] = useState(() => memo[user]?.color || '');
+  const user = useSelector((state) => state[Info.id].inputUser);
+  const userMemo = memo[user?.id];
+
+  const [msg, setMsg] = useState(null);
+  const [color, setColor] = useState(null);
 
   const handleMsgChange = useCallback((e) => {
     setMsg(e.target.value);
@@ -47,7 +49,16 @@ function MemoInput() {
     (e) => {
       if (e.key && e.key !== 'Enter') return;
 
-      dispatch($setMemo({ user, memo: { ...userMemo, msg, color } }));
+      dispatch(
+        $setMemo({
+          user: user.id,
+          memo: {
+            ...userMemo,
+            msg: msg ? msg : userMemo.msg,
+            color: color ? color : userMemo.color,
+          },
+        }),
+      );
       dispatch(setInputUser(null));
     },
     [user, userMemo, msg, color, dispatch],
@@ -69,22 +80,36 @@ function MemoInput() {
       </IconButton>
       <DialogContent dividers>
         <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
+        <Typography>
+          <span
+            style={{
+              color: color ? color : userMemo?.color,
+              fontSize: '.83rem',
+              fontWeight: color ? 'bold' : undefined,
+            }}
+          >
+            <span style={{ marginRight: '.2rem' }}>{user?.nick}</span>
+            <span
+              style={{ color: 'var(--color-user-icon-fixed)' }}
+              className={`${user?.type === ArcaUser.TYPE_FIXED ? 'bi-check-circle-fill' : ''} 
+              ${user?.type === ArcaUser.TYPE_HALF ? 'bi-person-fill' : ''}`}
+            />
+            <AuthorTag variant={variant}>{msg ?? userMemo?.msg}</AuthorTag>
+          </span>
+        </Typography>
         <TextField
           autoFocus
           fullWidth
           size="small"
           margin="normal"
-          slotProps={{
-            htmlInput: { style: { color } },
-          }}
           label="메세지"
-          value={msg}
+          value={msg ?? userMemo?.msg ?? ''}
           onChange={handleMsgChange}
           onKeyDown={handleSubmit}
         />
         <TwitterPicker
           triangle="hide"
-          color={color}
+          color={color ?? userMemo?.color ?? ''}
           onChange={handleColorChange}
         />
       </DialogContent>

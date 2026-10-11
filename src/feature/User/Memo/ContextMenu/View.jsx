@@ -54,12 +54,17 @@ function ContextMenu({ target, closeMenu }) {
   if (!data) return null;
 
   const uid = data.toUID();
+  const serializableUser = {
+    id: data.toUID(),
+    nick: data.toString(),
+    type: data.type,
+  };
   const label = `메모 ${memo[uid]?.msg ? `(${memo[uid].msg})` : ''}`;
   return (
     <List>
       <MenuItem
         onClick={() => {
-          dispatch(setInputUser(uid));
+          dispatch(setInputUser(serializableUser));
           closeMenu();
         }}
       >
