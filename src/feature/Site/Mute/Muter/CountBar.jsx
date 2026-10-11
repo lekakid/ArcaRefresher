@@ -68,7 +68,7 @@ function CountBar({
         controlTarget.classList.toggle(className, !prev?.[key]);
         return {
           ...prev,
-          [key]: !prev[key],
+          [key]: !prev?.[key],
         };
       });
     },
@@ -76,7 +76,6 @@ function CountBar({
   );
 
   if (count.all === 0 || (hide && count.deleted === 0)) return null;
-  if (!showStates) return null;
 
   return ReactDOM.createPortal(
     <>
@@ -134,7 +133,7 @@ function CountBar({
               count[key] > 0 && (
                 <Chip
                   key={key}
-                  variant={showStates[key] ? 'outlined' : 'default'}
+                  variant={showStates?.[key] ? 'outlined' : 'default'}
                   size="small"
                   className={className}
                   data-key={key}
