@@ -282,6 +282,7 @@ function ImageSelector({ open, onConfirm }) {
               key={`${img}_${index}`}
               src={img}
               alt={`${index + 1}번 이미지`}
+              checked={selection.includes(index)}
               onClick={handleSelect(index)}
             />
           ))}
