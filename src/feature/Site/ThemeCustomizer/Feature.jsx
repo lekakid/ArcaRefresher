@@ -1,37 +1,48 @@
 import { useLayoutEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { useContent } from 'hooks/Content';
 import Info from './FeatureInfo';
+import store from 'core/store';
 
-export default function ThemeCustomizer() {
-  const { channel } = useContent();
-  const { enabled, current, theme } = useSelector(
-    (state) => state[Info.id].storage,
-  );
+const pathToken = window.location.pathname.split('/');
+pathToken.shift(); // ''
+const pageType = pathToken.shift();
+let channelId = pageType === 'b' ? pathToken.shift() : '';
 
-  const currentTheme = theme[channel.id] || theme[current];
-  useLayoutEffect(() => {
-    if (!enabled || !currentTheme) return undefined;
+const styleEl = document.createElement('style');
+document.body.append(styleEl);
 
-    document.documentElement.classList.add('theme-custom');
+function applyTheme(storage) {
+  const { enabled, current, theme } = storage;
+  const currentTheme = theme[channelId] || theme[current];
+  const on = enabled && !!currentTheme;
 
-    return () => document.documentElement.classList.remove('theme-custom');
-  }, [currentTheme, enabled]);
-
-  if (!enabled) return null;
-  if (!currentTheme) return null;
-  return ReactDOM.createPortal(
-    <style>
-      {`
-        html.theme-custom {
-          ${Object.entries(currentTheme)
+  styleEl.textContent = on
+    ? `
+          html.theme-custom { ${Object.entries(currentTheme)
             .map(([key, value]) => `--color-${key}: ${value} !important;`)
             .join('\n')}
-        }
-      `}
-    </style>,
-    document.head,
-  );
+          }
+        `
+    : '';
+
+  document.documentElement.classList.toggle('theme-custom', on);
+}
+applyTheme(store.getState()[Info.id].storage);
+
+export default function ThemeCustomizer() {
+  const storage = useSelector((state) => state[Info.id].storage);
+
+  const currentTheme =
+    storage.theme[channelId] || storage.theme[storage.current];
+  useLayoutEffect(() => {
+    const on = storage.enabled && !!currentTheme;
+
+    document.documentElement.classList.toggle('theme-custom', on);
+    applyTheme(storage);
+
+    return () => document.documentElement.classList.remove('theme-custom');
+  }, [storage, currentTheme]);
+
+  return null;
 }
