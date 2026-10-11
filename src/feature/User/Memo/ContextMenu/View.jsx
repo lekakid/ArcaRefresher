@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Comment } from '@mui/icons-material';
+import CommentIcon from '@mui/icons-material/Comment';
 
 import {
   BOARD_ITEMS_WITH_NOTICE,
@@ -54,17 +54,22 @@ function ContextMenu({ target, closeMenu }) {
   if (!data) return null;
 
   const uid = data.toUID();
+  const serializableUser = {
+    id: data.toUID(),
+    nick: data.toString(),
+    type: data.type,
+  };
   const label = `메모 ${memo[uid]?.msg ? `(${memo[uid].msg})` : ''}`;
   return (
     <List>
       <MenuItem
         onClick={() => {
-          dispatch(setInputUser(uid));
+          dispatch(setInputUser(serializableUser));
           closeMenu();
         }}
       >
         <ListItemIcon>
-          <Comment />
+          <CommentIcon />
         </ListItemIcon>
         <Typography>{label}</Typography>
       </MenuItem>

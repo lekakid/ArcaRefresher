@@ -1,7 +1,7 @@
 import { unsafeWindow } from '$';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { GlobalStyles, IconButton, Portal } from '@mui/material';
-import { Refresh } from '@mui/icons-material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import {
   COMMENT_TITLE,
@@ -86,7 +86,7 @@ function CommentRefresh() {
             sx={{ color: 'var(--color-text-muted)' }}
             onClick={handleClick}
           >
-            <Refresh />
+            <RefreshIcon />
           </IconButton>
         </Portal>
       )}
@@ -97,7 +97,7 @@ function CommentRefresh() {
             sx={{ color: 'var(--color-text-muted)' }}
             onClick={handleClick}
           >
-            <Refresh />
+            <RefreshIcon />
           </IconButton>
         </Portal>
       )}

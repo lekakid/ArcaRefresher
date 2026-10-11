@@ -1,11 +1,11 @@
-import { Comment } from '@mui/icons-material';
+import CommentIcon from '@mui/icons-material/Comment';
 
 import View from './View';
 import Info from '../FeatureInfo';
 
 export default {
   key: Info.id,
-  Icon: Comment,
+  Icon: CommentIcon,
   label: Info.name,
   View,
 };

@@ -23,7 +23,9 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import { Remove, Subject, TableChart } from '@mui/icons-material';
+import RemoveIcon from '@mui/icons-material/Remove';
+import SubjectIcon from '@mui/icons-material/Subject';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 import BaseRow from './BaseRow';
 
@@ -39,7 +41,7 @@ function Toolbar({ textEditable, removeDisabled, onModeChange, onRemove }) {
           {textEditable && (
             <Button
               variant="text"
-              startIcon={<Subject />}
+              startIcon={<SubjectIcon />}
               onClick={onModeChange}
             >
               텍스트 편집 모드로 전환
@@ -48,7 +50,7 @@ function Toolbar({ textEditable, removeDisabled, onModeChange, onRemove }) {
         </Stack>
         <Button
           variant="text"
-          startIcon={<Remove />}
+          startIcon={<RemoveIcon />}
           disabled={removeDisabled}
           onClick={onRemove}
         >
@@ -263,7 +265,11 @@ function TextView({ rows, columns, onChange, onModeChange }) {
   return (
     <Paper variant="outlined" sx={{ width: '100%' }}>
       <Stack direction="row" justifyContent="space-between">
-        <Button variant="text" startIcon={<TableChart />} onClick={handleExit}>
+        <Button
+          variant="text"
+          startIcon={<TableChartIcon />}
+          onClick={handleExit}
+        >
           테이블 편집 모드로 전환
         </Button>
       </Stack>

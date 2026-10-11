@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { createMonkeySyncMiddleware, initMonkeySync } from 'core/storage';
 import { ErrorHandlerEntires } from 'error/slice';
 import { ContentReducerEntrie } from 'hooks/Content';
-import { LoadCheckerReducerEntrie } from 'hooks/LoadChecker';
+import { LoadCheckerReducerEntries } from 'hooks/LoadChecker';
 
 const menuModules = import.meta.glob('/src/menu/*/slice.jsx', {
   eager: true,
@@ -26,7 +26,7 @@ const featureReducerEntries = Object.entries(featureModules).map(
 const store = configureStore({
   reducer: Object.fromEntries([
     ErrorHandlerEntires,
-    LoadCheckerReducerEntrie,
+    LoadCheckerReducerEntries,
     ContentReducerEntrie,
     ...menuReducerEntries,
     ...featureReducerEntries,

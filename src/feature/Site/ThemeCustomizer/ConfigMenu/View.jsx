@@ -22,7 +22,9 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { Add, Delete, Label } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LabelIcon from '@mui/icons-material/Label';
 
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
@@ -269,21 +271,21 @@ const View = forwardRef((_props, ref) => {
                 <Tooltip title="추가">
                   <span>
                     <Button onClick={handleAdd}>
-                      <Add />
+                      <AddIcon />
                     </Button>
                   </span>
                 </Tooltip>
                 <Tooltip title="이름 수정">
                   <span>
                     <Button disabled={!editingPresetKey} onClick={handleRename}>
-                      <Label />
+                      <LabelIcon />
                     </Button>
                   </span>
                 </Tooltip>
                 <Tooltip title="제거">
                   <span>
                     <Button disabled={!editingPresetKey} onClick={handleRemove}>
-                      <Delete />
+                      <DeleteIcon />
                     </Button>
                   </span>
                 </Tooltip>

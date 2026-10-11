@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-import { PhotoLibrary } from '@mui/icons-material';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -41,7 +41,7 @@ function ContextMenu({ target, closeMenu }) {
         <List>
           <MenuItem onClick={showDialog}>
             <ListItemIcon>
-              <PhotoLibrary />
+              <PhotoLibraryIcon />
             </ListItemIcon>
             <ListItemText primary="자짤 관리" />
           </MenuItem>

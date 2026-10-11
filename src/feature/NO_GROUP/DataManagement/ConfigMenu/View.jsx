@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Launch } from '@mui/icons-material';
+import LaunchIcon from '@mui/icons-material/Launch';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
@@ -112,7 +112,7 @@ const View = forwardRef((_props, ref) => {
             header={<ListItemText primary="데이터 정리" />}
             onClick={handleCleaner}
           >
-            <Launch />
+            <LaunchIcon />
           </BaseRow>
         </List>
       </Paper>
@@ -129,7 +129,7 @@ const View = forwardRef((_props, ref) => {
             }
             onClick={handleImport}
           >
-            <Launch />
+            <LaunchIcon />
             <input
               ref={inputRef}
               type="file"
@@ -143,14 +143,14 @@ const View = forwardRef((_props, ref) => {
             header={<ListItemText primary="설정 내보내기" />}
             onClick={handleExport}
           >
-            <Launch />
+            <LaunchIcon />
           </BaseRow>
           <BaseRow
             divider
             header={<ListItemText primary="설정 초기화" />}
             onClick={handleReset}
           >
-            <Launch />
+            <LaunchIcon />
           </BaseRow>
         </List>
       </Paper>

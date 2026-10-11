@@ -34,7 +34,6 @@ function MemoList() {
       const list = [...document.querySelectorAll(USER_INFO)].map((e, index) => {
         const key = getUserKey(e, index);
         const user = new ArcaUser(e);
-        const id = user.toUID();
         const container =
           memoContainers.current[index] || document.createElement('span');
         if (!container.classList.contains('memo')) {
@@ -43,7 +42,7 @@ function MemoList() {
         }
         e.append(container);
 
-        return { key, id, container };
+        return { key, user, container };
       });
 
       setInfoList(list);
@@ -121,19 +120,29 @@ function MemoList() {
   if (variant === 'none') return null;
   return (
     <>
-      {infoList.map(({ key, id, container }) => (
-        <Portal key={key} container={container}>
-          <Box
-            component="span"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setInputUser(id));
-            }}
-          >
-            <AuthorTag variant={variant}>{memo[id]?.msg}</AuthorTag>
-          </Box>
-        </Portal>
-      ))}
+      {infoList.map(({ key, user, container }) => {
+        const serializableUser = {
+          id: user.toUID(),
+          nick: user.toString(),
+          type: user.type,
+        };
+
+        return (
+          <Portal key={key} container={container}>
+            <Box
+              component="span"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(setInputUser(serializableUser));
+              }}
+            >
+              <AuthorTag variant={variant}>
+                {memo[serializableUser.id]?.msg}
+              </AuthorTag>
+            </Box>
+          </Portal>
+        );
+      })}
       <MemoInput />
     </>
   );

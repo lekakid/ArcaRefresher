@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
-import { OpenInNew } from '@mui/icons-material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
 
@@ -56,7 +56,7 @@ function userRenderer(params) {
             open(`https://arca.live/u/@${uid.replace('#', '/')}`, FOREGROUND)
           }
         >
-          <OpenInNew />
+          <OpenInNewIcon />
         </Button>
       )}
     </Stack>

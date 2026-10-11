@@ -31,16 +31,14 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import {
-  Add,
-  Close,
-  CreateNewFolder,
-  Delete,
-  DriveFileMove,
-  FolderDelete,
-  Input,
-  Settings,
-} from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
+import InputIcon from '@mui/icons-material/Input';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { useConfirm } from 'component';
 import {
@@ -100,7 +98,7 @@ function ChannelTitleRenderer({ id, value }) {
             size="small"
             onClick={() => setOpen(true)}
           >
-            <Settings />
+            <SettingsIcon />
           </Button>
         </Tooltip>
       </Stack>
@@ -115,7 +113,7 @@ function ChannelTitleRenderer({ id, value }) {
           }}
           onClick={() => setOpen(false)}
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
         <DialogContent>
           <Paper variant="outlined">
@@ -197,7 +195,7 @@ function GroupRenderer({ id, value }) {
       {addibleGroups.length > 0 && (
         <>
           <IconButton size="small" onClick={(e) => setAnchorEl(e.target)}>
-            <Add />
+            <AddIcon />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
@@ -366,14 +364,14 @@ function SubsChannelManager({ subs, open, onClose }) {
   const channelBtns = (
     <ButtonGroup fullWidth={mobile}>
       <Button
-        startIcon={<Input />}
+        startIcon={<InputIcon />}
         disabled={!(selection.length > 0) || !groupSelection}
         onClick={handleAddGroupAll}
       >
         그룹에 추가
       </Button>
       <Button
-        startIcon={<Delete />}
+        startIcon={<DeleteIcon />}
         disabled={!(selection.length > 0)}
         onClick={handleRemoveGroupAll}
       >
@@ -391,7 +389,7 @@ function SubsChannelManager({ subs, open, onClose }) {
           sx={{ position: 'absolute', top: 8, right: 8 }}
           onClick={onClose}
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
         <DialogContent>
           <Stack
@@ -425,20 +423,20 @@ function SubsChannelManager({ subs, open, onClose }) {
             >
               <ButtonGroup fullWidth={mobile}>
                 <Button
-                  startIcon={<CreateNewFolder />}
+                  startIcon={<CreateNewFolderIcon />}
                   onClick={handleAddGroup}
                 >
                   추가
                 </Button>
                 <Button
-                  startIcon={<FolderDelete />}
+                  startIcon={<FolderDeleteIcon />}
                   disabled={!groupSelection}
                   onClick={handleRemoveGroup}
                 >
                   제거
                 </Button>
                 <Button
-                  startIcon={<DriveFileMove />}
+                  startIcon={<DriveFileMoveIcon />}
                   disabled={!groupSelection}
                   onClick={handleRenameGroup}
                 >

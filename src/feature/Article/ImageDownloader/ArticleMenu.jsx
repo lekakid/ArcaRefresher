@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import { GetApp } from '@mui/icons-material';
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 import Info from './FeatureInfo';
 import { setOpen } from './slice';
@@ -18,7 +18,7 @@ export default function ArticleMenu() {
     <Button
       size="small"
       variant="text"
-      startIcon={<GetApp />}
+      startIcon={<GetAppIcon />}
       onClick={handleOpen}
       disabled={open}
     >

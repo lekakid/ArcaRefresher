@@ -10,7 +10,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Cancel, Visibility, VisibilityOff } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import { useConfirm } from 'component';
 
@@ -66,7 +68,7 @@ function CountBar({
         controlTarget.classList.toggle(className, !prev?.[key]);
         return {
           ...prev,
-          [key]: !prev[key],
+          [key]: !prev?.[key],
         };
       });
     },
@@ -74,7 +76,6 @@ function CountBar({
   );
 
   if (count.all === 0 || (hide && count.deleted === 0)) return null;
-  if (!showStates) return null;
 
   return ReactDOM.createPortal(
     <>
@@ -98,7 +99,7 @@ function CountBar({
               sx={{ padding: 0.2 }}
               onClick={handleHideCount}
             >
-              <Cancel />
+              <CancelIcon />
             </IconButton>
           </Tooltip>
           {!hideMutedToggleBtn && (
@@ -108,7 +109,7 @@ function CountBar({
                 sx={{ padding: 0.2 }}
                 onClick={() => dispatch($toggleMutedMark())}
               >
-                {hideMutedMark ? <VisibilityOff /> : <Visibility />}
+                {hideMutedMark ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </Tooltip>
           )}
@@ -132,7 +133,7 @@ function CountBar({
               count[key] > 0 && (
                 <Chip
                   key={key}
-                  variant={showStates[key] ? 'outlined' : 'default'}
+                  variant={showStates?.[key] ? 'outlined' : 'default'}
                   size="small"
                   className={className}
                   data-key={key}

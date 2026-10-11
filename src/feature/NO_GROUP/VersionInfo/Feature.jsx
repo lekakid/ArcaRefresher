@@ -2,7 +2,7 @@ import { GM_info, GM_openInTab } from '$';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { disableStorageSync } from 'core/storage';
 
@@ -95,7 +95,7 @@ export default function VersionInfo() {
             <Box sx={{ fontWeight: 'bold' }}>업데이트 내역</Box>
           </Button>
           <IconButton size="small" color="inherit" onClick={handleClose}>
-            <Close />
+            <CloseIcon />
           </IconButton>
         </>
       );

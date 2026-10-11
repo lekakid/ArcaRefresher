@@ -3,7 +3,8 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { ImageSearch, PhotoLibrary } from '@mui/icons-material';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -303,14 +304,14 @@ function ContextMenu({ target, closeMenu }) {
     <List>
       <MenuItem onClick={handleAllOpen}>
         <ListItemIcon>
-          <PhotoLibrary />
+          <PhotoLibraryIcon />
         </ListItemIcon>
         <Typography>모든 사이트로 검색</Typography>
       </MenuItem>
       {showGoogle && (
         <MenuItem onClick={handleGoogle}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>Google 검색</Typography>
         </MenuItem>
@@ -318,7 +319,7 @@ function ContextMenu({ target, closeMenu }) {
       {showBing && (
         <MenuItem onClick={handleBing}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>Bing 검색</Typography>
         </MenuItem>
@@ -326,7 +327,7 @@ function ContextMenu({ target, closeMenu }) {
       {showYandex && (
         <MenuItem onClick={handleYandex}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>Yandex 검색</Typography>
         </MenuItem>
@@ -334,7 +335,7 @@ function ContextMenu({ target, closeMenu }) {
       {showSauceNao && (
         <MenuItem onClick={handleSauceNao}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>SauceNao 검색</Typography>
         </MenuItem>
@@ -342,7 +343,7 @@ function ContextMenu({ target, closeMenu }) {
       {showIqdb && (
         <MenuItem onClick={handleIqdb}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>IQDB 검색</Typography>
         </MenuItem>
@@ -350,7 +351,7 @@ function ContextMenu({ target, closeMenu }) {
       {showAscii2D && (
         <MenuItem onClick={handleAscii2D}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>Ascii2D 검색</Typography>
         </MenuItem>
@@ -358,7 +359,7 @@ function ContextMenu({ target, closeMenu }) {
       {showTraceMoe && (
         <MenuItem onClick={handleTraceMoe}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>TraceMoe 검색</Typography>
         </MenuItem>
@@ -366,7 +367,7 @@ function ContextMenu({ target, closeMenu }) {
       {showImgOps && (
         <MenuItem onClick={handleImgOps}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>ImgOps 검색</Typography>
         </MenuItem>
@@ -374,7 +375,7 @@ function ContextMenu({ target, closeMenu }) {
       {showTinEye && (
         <MenuItem onClick={handleTinEye}>
           <ListItemIcon>
-            <ImageSearch />
+            <ImageSearchIcon />
           </ListItemIcon>
           <Typography>TinEye 검색</Typography>
         </MenuItem>

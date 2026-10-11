@@ -9,7 +9,7 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 import { BaseRow } from 'component/ConfigMenu';
 
@@ -92,7 +92,7 @@ const FormatTextFieldRow = forwardRef(
             size="small"
             onClick={handleOpen}
           >
-            <Add />
+            <AddIcon />
           </IconButton>
           <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
             {selectableList.map((s) => (

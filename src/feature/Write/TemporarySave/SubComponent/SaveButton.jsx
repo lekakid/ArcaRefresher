@@ -2,7 +2,8 @@ import { cloneElement, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Snackbar } from '@mui/material';
-import { Add, Save } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { $addArticle, setCurrentSlot } from '../slice';
 import Info from '../FeatureInfo';
@@ -30,7 +31,7 @@ function SaveButton({ editor, saveAs = false, ...btnPropsFromGroup }) {
     setSnack(false);
   }, []);
 
-  const startIcon = !saveAs ? <Save /> : <Add />;
+  const startIcon = !saveAs ? <SaveIcon /> : <AddIcon />;
   const text = !saveAs ? '저장' : '사본으로 저장';
   const btnProps = {
     ...btnPropsFromGroup,

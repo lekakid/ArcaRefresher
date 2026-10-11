@@ -16,7 +16,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Refresh } from '@mui/icons-material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { KeyIcon } from 'component';
 import { SwitchRow } from 'component/ConfigMenu';
@@ -164,7 +164,7 @@ const View = forwardRef((_props, ref) => {
             secondaryAction={
               <Tooltip title="초기화">
                 <IconButton onClick={handleReset} size="large">
-                  <Refresh />
+                  <RefreshIcon />
                 </IconButton>
               </Tooltip>
             }

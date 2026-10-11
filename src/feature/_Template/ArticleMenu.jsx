@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Button } from '@mui/material';
-import { PeopleAltOutlined } from '@mui/icons-material';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 // import Info from './FeatureInfo';
 
@@ -14,7 +14,7 @@ export default function ArticleMenu() {
     <Button
       size="small"
       variant="text"
-      startIcon={<PeopleAltOutlined />}
+      startIcon={<PeopleAltOutlinedIcon />}
       onClick={handleToggle}
     >
       버튼

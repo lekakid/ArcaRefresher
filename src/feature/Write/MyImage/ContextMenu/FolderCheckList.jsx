@@ -13,7 +13,8 @@ import {
   Grid2 as Grid,
   TextField,
 } from '@mui/material';
-import { Add, ExpandMore } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { useContent } from 'hooks/Content';
 
@@ -104,7 +105,7 @@ function FolderCheckList({ open, url, onClose }) {
               <Grid size={{ xs: 12 }}>
                 <Button
                   fullWidth
-                  startIcon={<Add />}
+                  startIcon={<AddIcon />}
                   disabled={
                     folderList.includes(folderInput) || folderInput === ''
                   }
@@ -119,7 +120,7 @@ function FolderCheckList({ open, url, onClose }) {
             <Grid size={{ xs: 12 }}>
               <Button
                 fullWidth
-                startIcon={<ExpandMore />}
+                startIcon={<ExpandMoreIcon />}
                 onClick={() => {
                   setFolderInput(channel.id);
                   setOpenFolderInput(true);
