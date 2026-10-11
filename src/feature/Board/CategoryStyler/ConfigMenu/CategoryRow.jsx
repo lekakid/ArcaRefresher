@@ -67,7 +67,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
     margin: '0.25rem',
     ...(badge
       ? { backgroundColor: badge, color: getContrastYIQ(badge) }
-      : { backgroundColor: 'var(--color-board-category)' }),
+      : { backgroundColor: 'var(--color-board-category)', color: 'white' }),
   };
   const backgroundStyle = {
     ...(bgcolor && {
