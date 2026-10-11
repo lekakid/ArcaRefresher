@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import { ImageSearch } from '@mui/icons-material';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -20,20 +20,18 @@ export default function ArticleMenu() {
     body.classList.add('media-blocker-unhide');
   }, []);
 
-  if (
-    !(
-      blockAll ||
-      (alertLoaded && blockDeleted) ||
-      (document.referrer.includes('/reports/') && blockReported)
-    )
-  )
+  if (!(
+    blockAll ||
+    (alertLoaded && blockDeleted) ||
+    (document.referrer.includes('/reports/') && blockReported)
+  ))
     return null;
 
   return (
     <Button
       size="small"
       variant="text"
-      startIcon={<ImageSearch />}
+      startIcon={<ImageSearchIcon />}
       onClick={handleClick}
     >
       이미지 숨기기 해제

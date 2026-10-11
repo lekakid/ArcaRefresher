@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, IconButton, Popover } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Chrome as ChromePicker } from '@uiw/react-color';
 
 const Picker = forwardRef(
@@ -85,7 +85,7 @@ const Picker = forwardRef(
             }}
             onClick={handleRemove}
           >
-            <Delete />
+            <DeleteIcon />
           </IconButton>
         </Popover>
       </>

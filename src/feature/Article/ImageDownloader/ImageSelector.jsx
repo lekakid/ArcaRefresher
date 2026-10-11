@@ -19,7 +19,9 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { CheckCircle, CheckCircleOutline, Close } from '@mui/icons-material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 
@@ -135,8 +137,8 @@ function QueuedImageListItem({ src, alt, checked, onClick }) {
                 color: 'white',
               },
             }}
-            icon={<CheckCircleOutline />}
-            checkedIcon={<CheckCircle />}
+            icon={<CheckCircleOutlineIcon />}
+            checkedIcon={<CheckCircleIcon />}
             checked={checked}
             onClick={onClick}
           />
@@ -271,7 +273,7 @@ function ImageSelector({ open, onConfirm }) {
         }}
         onClick={handleClose}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
       <DialogContent>
         <ImageList cols={mobile ? 3 : 6} rowHeight={mobile ? 100 : 180}>

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import { PeopleAltOutlined } from '@mui/icons-material';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 import Info from './FeatureInfo';
 import { toggleShow } from './slice';
@@ -18,7 +18,7 @@ export default function ArticleMenu() {
     <Button
       size="small"
       variant="text"
-      startIcon={<PeopleAltOutlined />}
+      startIcon={<PeopleAltOutlinedIcon />}
       onClick={handleToggle}
     >
       {show ? '익명화 해제' : '익명화'}

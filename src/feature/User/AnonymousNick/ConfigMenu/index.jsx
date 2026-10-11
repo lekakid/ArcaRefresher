@@ -1,4 +1,4 @@
-import { PeopleOutline } from '@mui/icons-material';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
 import View from './View';
 import Info from '../FeatureInfo';
@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 /** @type {ConfigMenuInfo} */
 export default {
   key: Info.id,
-  Icon: PeopleOutline,
+  Icon: PeopleOutlineIcon,
   label: Info.name,
   View,
 };

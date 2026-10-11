@@ -1,9 +1,9 @@
-import { MoreHoriz } from '@mui/icons-material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import 'core/types';
 
 /** @type {GroupInfo} */
 export default {
-  Icon: MoreHoriz,
+  Icon: MoreHorizIcon,
   label: '기타',
   order: 5,
 };

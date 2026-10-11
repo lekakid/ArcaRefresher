@@ -8,7 +8,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { ColorPickerButton } from 'component';
 import { useOpacity } from 'menu/ConfigMenu';
@@ -45,7 +46,7 @@ const PresetEditor = forwardRef(
                 (groupIndex === groupData.length - 1 && openGroup[groupKey])
               }
               secondaryAction={
-                openGroup[groupKey] ? <ExpandLess /> : <ExpandMore />
+                openGroup[groupKey] ? <ExpandLessIcon /> : <ExpandMoreIcon />
               }
             >
               <ListItemButton onClick={handleOpen(groupKey)}>

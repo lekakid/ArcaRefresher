@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Person } from '@mui/icons-material';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { USER_INFO } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -29,7 +29,7 @@ function ContextMenu({ target, closeMenu }) {
     <List>
       <MenuItem onClick={handleClick}>
         <ListItemIcon>
-          <Person />
+          <PersonIcon />
         </ListItemIcon>
         <Typography>MENU_NAME</Typography>
       </MenuItem>

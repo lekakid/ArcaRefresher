@@ -2,7 +2,8 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Bookmark, OpenInNew } from '@mui/icons-material';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BOARD_ITEMS } from 'core/selector';
 import { useContextMenu } from 'menu/ContextMenu';
@@ -63,14 +64,14 @@ function ContextMenu({ target, closeMenu }) {
     <List>
       <MenuItem onClick={handleOpen}>
         <ListItemIcon>
-          <OpenInNew />
+          <OpenInNewIcon />
         </ListItemIcon>
         <Typography>새 창으로 열기</Typography>
       </MenuItem>
       {user && (
         <MenuItem onClick={handleScrap}>
           <ListItemIcon>
-            <Bookmark />
+            <BookmarkIcon />
           </ListItemIcon>
           <Typography>게시물 스크랩</Typography>
         </MenuItem>

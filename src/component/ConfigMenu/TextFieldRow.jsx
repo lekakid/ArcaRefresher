@@ -2,7 +2,8 @@ import { forwardRef, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { IconButton, ListItemText, TextField } from '@mui/material';
-import { Check, Save } from '@mui/icons-material';
+import CheckIcon from '@mui/icons-material/Check';
+import SaveIcon from '@mui/icons-material/Save';
 import BaseRow from './BaseRow';
 
 const TextFieldRow = forwardRef(
@@ -59,7 +60,7 @@ const TextFieldRow = forwardRef(
             <ListItemText primary={primary} secondary={secondary} />
             {manualSave && (
               <IconButton disabled={baseValue === value} onClick={handleSave}>
-                {baseValue !== value ? <Save /> : <Check />}
+                {baseValue !== value ? <SaveIcon /> : <CheckIcon />}
               </IconButton>
             )}
           </>

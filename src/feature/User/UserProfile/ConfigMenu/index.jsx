@@ -1,4 +1,4 @@
-import { AssignmentInd } from '@mui/icons-material';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 import View from './View';
 import Info from '../FeatureInfo';
@@ -6,7 +6,7 @@ import Info from '../FeatureInfo';
 export default {
   key: Info.id,
   order: -1,
-  Icon: AssignmentInd,
+  Icon: AssignmentIndIcon,
   label: Info.name,
   View,
 };

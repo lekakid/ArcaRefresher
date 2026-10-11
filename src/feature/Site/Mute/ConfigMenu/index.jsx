@@ -1,11 +1,11 @@
-import { Block } from '@mui/icons-material';
+import BlockIcon from '@mui/icons-material/Block';
 
 import View from './View';
 import Info from '../FeatureInfo';
 
 export default {
   key: Info.id,
-  Icon: Block,
+  Icon: BlockIcon,
   label: Info.name,
   View,
 };

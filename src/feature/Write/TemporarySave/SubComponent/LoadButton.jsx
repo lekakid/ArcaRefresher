@@ -1,7 +1,7 @@
 import { cloneElement, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
-import { Publish } from '@mui/icons-material';
+import PublishIcon from '@mui/icons-material/Publish';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoadOpen } from '../slice';
@@ -23,7 +23,7 @@ function LoadButton({ editor, ...btnProps }) {
   return (
     <>
       {cloneElement(
-        <Button startIcon={<Publish />} onClick={handleClick}>
+        <Button startIcon={<PublishIcon />} onClick={handleClick}>
           불러오기
         </Button>,
         btnProps,

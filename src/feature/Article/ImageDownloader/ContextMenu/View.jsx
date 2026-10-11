@@ -2,7 +2,9 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Assignment, GetApp, Image as ImageIcon } from '@mui/icons-material';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ImageIcon from '@mui/icons-material/Image';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
@@ -115,13 +117,13 @@ function ContextMenu({ target, closeMenu }) {
     <List>
       <MenuItem onClick={handleClipboard}>
         <ListItemIcon>
-          <Assignment />
+          <AssignmentIcon />
         </ListItemIcon>
         <Typography>클립보드로 복사</Typography>
       </MenuItem>
       <MenuItem onClick={handleDownload}>
         <ListItemIcon>
-          <GetApp />
+          <GetAppIcon />
         </ListItemIcon>
         <Typography>이미지 저장</Typography>
       </MenuItem>

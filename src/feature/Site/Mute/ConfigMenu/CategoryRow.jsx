@@ -7,7 +7,10 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { BrokenImage, Image, VolumeOff, VolumeUp } from '@mui/icons-material';
+import BrokenImageIcon from '@mui/icons-material/BrokenImage';
+import ImageIcon from '@mui/icons-material/Image';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 
@@ -63,12 +66,12 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
         >
           <Tooltip title="미리보기 뮤트">
             <IconButton onClick={handleBool('mutePreview')} size="large">
-              {mutePreview ? <BrokenImage /> : <Image />}
+              {mutePreview ? <BrokenImageIcon /> : <ImageIcon />}
             </IconButton>
           </Tooltip>
           <Tooltip title="게시물 뮤트">
             <IconButton onClick={handleBool('muteArticle')} size="large">
-              {muteArticle ? <VolumeOff /> : <VolumeUp />}
+              {muteArticle ? <VolumeOffIcon /> : <VolumeUpIcon />}
             </IconButton>
           </Tooltip>
         </Box>

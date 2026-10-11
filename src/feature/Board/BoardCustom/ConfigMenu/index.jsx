@@ -1,4 +1,4 @@
-import { ViewQuilt } from '@mui/icons-material';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 
 import View from './View';
 import Info from '../FeatureInfo';
@@ -7,7 +7,7 @@ import Info from '../FeatureInfo';
 export default {
   key: Info.id,
   order: -1,
-  Icon: ViewQuilt,
+  Icon: ViewQuiltIcon,
   label: Info.name,
   View,
 };

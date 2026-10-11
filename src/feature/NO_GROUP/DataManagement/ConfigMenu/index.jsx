@@ -1,11 +1,11 @@
-import { Settings } from '@mui/icons-material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import View from './View';
 import Info from '../FeatureInfo';
 
 export default {
   key: Info.id,
-  Icon: Settings,
+  Icon: SettingsIcon,
   label: Info.name,
   View,
 };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalStyles, IconButton, Popper, Portal } from '@mui/material';
-import { ImageSearch } from '@mui/icons-material';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 const mediaBlockerStyles = (
   <GlobalStyles
@@ -73,7 +73,7 @@ function Blocker({ referenceElement, container }) {
           onClick={handleClick}
           size="large"
         >
-          <ImageSearch />
+          <ImageSearchIcon />
         </IconButton>
       </Portal>
       <Popper open={!!anchor} anchorEl={anchor} placement="right">

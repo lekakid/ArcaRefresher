@@ -9,7 +9,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Close, FormatColorReset } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import FormatColorResetIcon from '@mui/icons-material/FormatColorReset';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AuthorTag, TwitterPicker } from 'component';
@@ -76,7 +77,7 @@ function MemoInput() {
         }}
         onClick={handleDialogClose}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
       <DialogContent dividers>
         <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
@@ -115,7 +116,7 @@ function MemoInput() {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setColor('')}>
-          <FormatColorReset />
+          <FormatColorResetIcon />
         </Button>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           저장

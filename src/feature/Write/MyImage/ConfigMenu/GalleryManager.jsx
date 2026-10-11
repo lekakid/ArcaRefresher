@@ -24,14 +24,12 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import {
-  Add,
-  Cancel,
-  Delete,
-  Done,
-  FileCopy,
-  FlipToFront,
-} from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import FlipToFrontIcon from '@mui/icons-material/FlipToFront';
 
 import { useContent } from 'hooks/Content';
 import { $addFolder, $removeFolder, $setFolderData } from '../slice';
@@ -59,11 +57,11 @@ function FolderNameSelect({
         ))}
       </Select>
       <ButtonGroup>
-        <Button startIcon={<Add />} onClick={onCreate}>
+        <Button startIcon={<AddIcon />} onClick={onCreate}>
           추가
         </Button>
         <Button
-          startIcon={<Delete />}
+          startIcon={<DeleteIcon />}
           disabled={currentFolder === '_shared_'}
           onClick={onRemove}
         >
@@ -104,13 +102,13 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
       />
       <ButtonGroup>
         <Button
-          startIcon={<Done />}
+          startIcon={<DoneIcon />}
           disabled={isError}
           onClick={() => onDone(text)}
         >
           확인
         </Button>
-        <Button startIcon={<Cancel />} onClick={onCancel}>
+        <Button startIcon={<CancelIcon />} onClick={onCancel}>
           취소
         </Button>
       </ButtonGroup>
@@ -132,7 +130,7 @@ function Toolbar({
       <Stack direction="row" justifyContent="end">
         <Button
           variant="text"
-          startIcon={<FlipToFront />}
+          startIcon={<FlipToFrontIcon />}
           disabled={disabled}
           name="move"
           onClick={onMove}
@@ -141,14 +139,14 @@ function Toolbar({
         </Button>
         <Button
           variant="text"
-          startIcon={<FileCopy />}
+          startIcon={<FileCopyIcon />}
           disabled={disabled}
           name="copy"
           onClick={onCopy}
         >
           복사
         </Button>
-        <Button variant="text" startIcon={<Cancel />} onClick={onCancel}>
+        <Button variant="text" startIcon={<CancelIcon />} onClick={onCancel}>
           취소
         </Button>
       </Stack>
@@ -160,7 +158,7 @@ function Toolbar({
       <Stack direction="row" justifyContent="end">
         <Button
           variant="text"
-          startIcon={<FlipToFront />}
+          startIcon={<FlipToFrontIcon />}
           disabled={disabled}
           onClick={onMoving}
         >
@@ -168,7 +166,7 @@ function Toolbar({
         </Button>
         <Button
           variant="text"
-          startIcon={<Delete />}
+          startIcon={<DeleteIcon />}
           disabled={disabled}
           onClick={onRemove}
         >

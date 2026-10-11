@@ -2,7 +2,8 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Block, Redo } from '@mui/icons-material';
+import BlockIcon from '@mui/icons-material/Block';
+import RedoIcon from '@mui/icons-material/Redo';
 
 import {
   BOARD_ITEMS_WITH_NOTICE,
@@ -272,7 +273,7 @@ function ContextMenu({ target, closeMenu }) {
           onClick={muted ? handleUnmuteEmotBundle : handleMuteEmotBundle}
         >
           <ListItemIcon>
-            <Block />
+            <BlockIcon />
           </ListItemIcon>
           <Typography>아카콘 묶음 뮤트{muted ? ' 해제' : ''}</Typography>
         </MenuItem>
@@ -280,7 +281,7 @@ function ContextMenu({ target, closeMenu }) {
           onClick={muted ? handleUnmuteSingleEmot : handleMuteSingleEmot}
         >
           <ListItemIcon>
-            <Block />
+            <BlockIcon />
           </ListItemIcon>
           <Typography>이 아카콘만 뮤트{muted ? ' 해제' : ''}</Typography>
         </MenuItem>
@@ -293,7 +294,7 @@ function ContextMenu({ target, closeMenu }) {
     return (
       <List>
         <MenuItem onClick={handleUser}>
-          <ListItemIcon>{exist ? <Redo /> : <Block />}</ListItemIcon>
+          <ListItemIcon>{exist ? <RedoIcon /> : <BlockIcon />}</ListItemIcon>
           <Typography>{exist ? '사용자 뮤트 해제' : '사용자 뮤트'}</Typography>
         </MenuItem>
       </List>
@@ -310,7 +311,7 @@ function ContextMenu({ target, closeMenu }) {
         </MenuItem>
         <MenuItem onClick={handleCategory('mutePreview')}>
           <ListItemIcon>
-            {config?.mutePreview ? <Redo /> : <Block />}
+            {config?.mutePreview ? <RedoIcon /> : <BlockIcon />}
           </ListItemIcon>
           <Typography>
             {config?.mutePreview ? '미리보기 뮤트 해제' : '미리보기 뮤트'}
@@ -318,7 +319,7 @@ function ContextMenu({ target, closeMenu }) {
         </MenuItem>
         <MenuItem onClick={handleCategory('muteArticle')}>
           <ListItemIcon>
-            {config?.muteArticle ? <Redo /> : <Block />}
+            {config?.muteArticle ? <RedoIcon /> : <BlockIcon />}
           </ListItemIcon>
           <Typography>
             {config?.muteArticle ? '게시물 뮤트 해제' : '게시물 뮤트'}

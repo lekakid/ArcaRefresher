@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { FastRewind } from '@mui/icons-material';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
 
 import { useContextMenu } from 'menu/ContextMenu';
 
@@ -33,7 +33,7 @@ function ContextMenu({ target, closeMenu }) {
     <List>
       <MenuItem onClick={handleClick}>
         <ListItemIcon>
-          <FastRewind />
+          <FastRewindIcon />
         </ListItemIcon>
         <Typography>복호화 임시해제</Typography>
       </MenuItem>

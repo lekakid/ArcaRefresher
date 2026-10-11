@@ -8,13 +8,11 @@ import {
   Stack,
   Tooltip,
 } from '@mui/material';
-import {
-  FormatBold,
-  FormatStrikethrough,
-  MeetingRoom,
-  NoMeetingRoom,
-  Replay,
-} from '@mui/icons-material';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatStrikethroughIcon from '@mui/icons-material/FormatStrikethrough';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 import { ColorPickerButton } from 'component';
 import { getContrastYIQ } from 'func/color';
@@ -124,22 +122,22 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
           </Tooltip>
           <Tooltip title="굵게">
             <IconButton onClick={handleBool('bold')} size="large">
-              <FormatBold />
+              <FormatBoldIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="취소선">
             <IconButton onClick={handleBool('through')} size="large">
-              <FormatStrikethrough />
+              <FormatStrikethroughIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title={disableVisited ? '방문 표시 안함' : '방문 표시'}>
             <IconButton onClick={handleBool('disableVisited')} size="large">
-              {disableVisited ? <NoMeetingRoom /> : <MeetingRoom />}
+              {disableVisited ? <NoMeetingRoomIcon /> : <MeetingRoomIcon />}
             </IconButton>
           </Tooltip>
           <Tooltip title="리셋">
             <IconButton onClick={handleResetStyle} size="large">
-              <Replay />
+              <ReplayIcon />
             </IconButton>
           </Tooltip>
         </Stack>

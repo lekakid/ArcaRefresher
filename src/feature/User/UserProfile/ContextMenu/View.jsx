@@ -2,7 +2,9 @@ import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Assignment, Person, Search } from '@mui/icons-material';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import PersonIcon from '@mui/icons-material/Person';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   BOARD_ITEMS_WITH_NOTICE,
@@ -163,25 +165,25 @@ function ContextMenu({ target, closeMenu }) {
       {spamAccountAlert}
       <MenuItem onClick={handleProfile}>
         <ListItemIcon>
-          <Person />
+          <PersonIcon />
         </ListItemIcon>
         <Typography>사용자 정보</Typography>
       </MenuItem>
       <MenuItem onClick={handleCopyId}>
         <ListItemIcon>
-          <Assignment />
+          <AssignmentIcon />
         </ListItemIcon>
         <Typography>멘션 아이디 복사</Typography>
       </MenuItem>
       <MenuItem onClick={handleSearchChannel}>
         <ListItemIcon>
-          <Search />
+          <SearchIcon />
         </ListItemIcon>
         <Typography>채널 내 검색</Typography>
       </MenuItem>
       <MenuItem onClick={handleSearchAll}>
         <ListItemIcon>
-          <Search />
+          <SearchIcon />
         </ListItemIcon>
         <Typography>종합속보 검색</Typography>
       </MenuItem>

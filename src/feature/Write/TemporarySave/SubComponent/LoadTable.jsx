@@ -26,7 +26,10 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { Close, Delete, Done, Edit } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
+import EditIcon from '@mui/icons-material/Edit';
 
 import Info from '../FeatureInfo';
 import {
@@ -47,19 +50,19 @@ function Toolbar({
 
   if (!editMode) {
     toolButton = (
-      <Button variant="text" startIcon={<Edit />} onClick={onClickEdit}>
+      <Button variant="text" startIcon={<EditIcon />} onClick={onClickEdit}>
         편집
       </Button>
     );
   } else if (selection.length > 0) {
     toolButton = (
-      <Button variant="text" startIcon={<Delete />} onClick={onClickRemove}>
+      <Button variant="text" startIcon={<DeleteIcon />} onClick={onClickRemove}>
         삭제
       </Button>
     );
   } else {
     toolButton = (
-      <Button variant="text" startIcon={<Done />} onClick={onClickDone}>
+      <Button variant="text" startIcon={<DoneIcon />} onClick={onClickDone}>
         완료
       </Button>
     );
@@ -188,7 +191,7 @@ function LoadTable({ editor, open, onClose }) {
         sx={{ position: 'absolute', right: 8, top: 8 }}
         onClick={onClose}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
       <DialogContent>
         <Paper variant="outlined" sx={{ width: '100%' }}>

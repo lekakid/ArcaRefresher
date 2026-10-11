@@ -10,7 +10,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Cancel, Visibility, VisibilityOff } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import { useConfirm } from 'component';
 
@@ -98,7 +100,7 @@ function CountBar({
               sx={{ padding: 0.2 }}
               onClick={handleHideCount}
             >
-              <Cancel />
+              <CancelIcon />
             </IconButton>
           </Tooltip>
           {!hideMutedToggleBtn && (
@@ -108,7 +110,7 @@ function CountBar({
                 sx={{ padding: 0.2 }}
                 onClick={() => dispatch($toggleMutedMark())}
               >
-                {hideMutedMark ? <VisibilityOff /> : <Visibility />}
+                {hideMutedMark ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </Tooltip>
           )}

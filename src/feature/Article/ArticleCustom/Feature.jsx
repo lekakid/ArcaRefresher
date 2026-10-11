@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles, IconButton, Portal, Tooltip } from '@mui/material';
-import { ZoomIn } from '@mui/icons-material';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
 import {
   ARTICLE_GIFS,
@@ -242,7 +242,7 @@ export default function ArticleCustom() {
         <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">
             <IconButton onClick={handleFakePreview} size="large">
-              <ZoomIn />
+              <ZoomInIcon />
             </IconButton>
           </Tooltip>
         </Portal>

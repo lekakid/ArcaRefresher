@@ -13,7 +13,7 @@ import {
   Popover,
   Portal,
 } from '@mui/material';
-import { Folder } from '@mui/icons-material';
+import FolderIcon from '@mui/icons-material/Folder';
 
 import { NAVIGATION_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -30,7 +30,7 @@ function ListFolder({ group, children }) {
       <ListItem dense disablePadding>
         <ListItemButton onClick={() => setOpen((prev) => !prev)}>
           <ListItemIcon>
-            <Folder />
+            <FolderIcon />
           </ListItemIcon>
           <ListItemText disableTypography primary={group} />
         </ListItemButton>

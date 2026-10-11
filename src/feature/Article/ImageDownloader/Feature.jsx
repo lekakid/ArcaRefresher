@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, GlobalStyles, Portal } from '@mui/material';
-import { PhotoLibrary } from '@mui/icons-material';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
@@ -64,7 +64,7 @@ export default function ImageDownloader() {
             color: 'var(--color-text-color)',
           }}
           size="small"
-          startIcon={<PhotoLibrary />}
+          startIcon={<PhotoLibraryIcon />}
           disabled={open}
           onClick={() => dispatch(setOpen(true))}
         >

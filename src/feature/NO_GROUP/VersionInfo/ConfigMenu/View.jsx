@@ -9,7 +9,9 @@ import {
   ListItemText,
   MenuItem,
 } from '@mui/material';
-import { GitHub, Help, OpenInNew } from '@mui/icons-material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import HelpIcon from '@mui/icons-material/Help';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BaseRow, SelectRow } from 'component/ConfigMenu';
 import { useConfirm } from 'component';
@@ -126,13 +128,13 @@ const View = forwardRef((_props, ref) => {
             header={<ListItemText primary="아카리프레셔 채널 (문의 접수)" />}
             onClick={handleVisitChannel}
           >
-            <Help />
+            <HelpIcon />
           </BaseRow>
           <BaseRow
             header={<ListItemText primary="Github" />}
             onClick={handleVisitGithub}
           >
-            <GitHub />
+            <GitHubIcon />
           </BaseRow>
         </List>
       </Paper>
@@ -144,13 +146,13 @@ const View = forwardRef((_props, ref) => {
             header={<ListItemText primary="Buy Me a Coffee" />}
             onClick={handleVisitCoffeeBuyMe}
           >
-            <OpenInNew />
+            <OpenInNewIcon />
           </BaseRow>
           <BaseRow
             header={<ListItemText primary="Github Sponsors" />}
             onClick={handleVisitGithubSponsors}
           >
-            <OpenInNew />
+            <OpenInNewIcon />
           </BaseRow>
         </List>
       </Paper>

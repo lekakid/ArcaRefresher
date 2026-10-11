@@ -16,7 +16,8 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { Close, Menu } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 import Info from './FeatureInfo';
@@ -202,7 +203,7 @@ function MenuContainer({ groupList, menuList }) {
                 color="inherit"
                 onClick={handleDrawerToggle}
               >
-                <Menu />
+                <MenuIcon />
               </IconButton>
             )}
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
@@ -213,7 +214,7 @@ function MenuContainer({ groupList, menuList }) {
               color="inherit"
               onClick={handleConfigClose}
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -236,7 +237,7 @@ function MenuContainer({ groupList, menuList }) {
             onClose={handleDrawerToggle}
           >
             <List disablePadding>
-              <DrawerItem key="all" configKey="all" icon={<Menu />}>
+              <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
                 전체 설정
               </DrawerItem>
               <Divider />

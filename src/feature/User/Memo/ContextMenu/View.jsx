@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { Comment } from '@mui/icons-material';
+import CommentIcon from '@mui/icons-material/Comment';
 
 import {
   BOARD_ITEMS_WITH_NOTICE,
@@ -69,7 +69,7 @@ function ContextMenu({ target, closeMenu }) {
         }}
       >
         <ListItemIcon>
-          <Comment />
+          <CommentIcon />
         </ListItemIcon>
         <Typography>{label}</Typography>
       </MenuItem>
