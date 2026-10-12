@@ -42,6 +42,6 @@ jobs:
         with:
           tag_name: ${{ steps.get-version.outputs.version }}
           files: |
-            ./dist/ArcaRefresher.user.js
             ./dist/ArcaRefresher.meta.js
+            ./dist/ArcaRefresher.user.js
             ./dist/ArcaRefresher.user.js.LICENSE.txt

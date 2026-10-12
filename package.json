@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "dev": "vite",
     "build": "vite build",
+    "build:pre": "vite build --mode nightly",
     "analyze": "vite build --mode analyze",
     "fix": "bash script/deploy.sh patch",
     "min": "bash script/deploy.sh minor"

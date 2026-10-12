@@ -1,0 +1,40 @@
+name: Nightly Release
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install packages
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build:pre
+
+      - name: Create GitHub Release
+        id: release
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: true
+          tag_name: 'nightly'
+          files: |
+            ./dist/ArcaRefresher.nightly.meta.js
+            ./dist/ArcaRefresher.nightly.user.js
+            ./dist/ArcaRefresher.nightly.user.js.LICENSE.txt
