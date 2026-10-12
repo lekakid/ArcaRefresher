@@ -27,6 +27,11 @@ const View = forwardRef((_props, ref) => {
   const { notiLevel } = useSelector((state) => state[Info.id].storage);
 
   const handleChangeLog = useCallback(() => {
+    if (GM_info.version.includes('nightly')) {
+      window.open('https://github.com/lekakid/ArcaRefresher/commits/develop/');
+      return;
+    }
+
     const url =
       'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
     const version = parse(GM_info.script.version);
