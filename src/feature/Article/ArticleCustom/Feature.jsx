@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { GlobalStyles, IconButton, Portal, Tooltip } from '@mui/material';
+import { IconButton, Portal, Tooltip } from '@mui/material';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
+import { useConfirm } from 'component';
 import {
   ARTICLE_GIFS,
   ARTICLE_IMAGES,
@@ -11,83 +12,60 @@ import {
   ARTICLE_VIDEOS,
 } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
-
-import { useConfirm } from 'component';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
+import store from 'core/store';
+
 import Info from './FeatureInfo';
 
 const PREVIEW_SELECTOR =
   '.article-content img:not(.twemoji), .article-content video';
 
-/* eslint-disable react/prop-types */
-function HideDefaultImageStyles({ value }) {
-  if (!value) return null;
+const styleEl = document.createElement('style');
+document.body.append(styleEl);
 
-  return (
-    <GlobalStyles
-      styles={{
-        '#defaultImage': {
-          display: 'none',
-        },
-      }}
-    />
-  );
+function applyStyle(storage) {
+  const { hideDefaultImage, resizeImage, resizeVideo, hideUnvote } = storage;
+
+  const styles = [];
+
+  // 대문 이미지 숨김
+  if (hideDefaultImage) {
+    styles.push(`
+      #defaultImage { display: none; }
+    `);
+  }
+
+  // 이미지 크기 조절
+  styles.push(`
+    .article-body img:not([class$="emoticon"]),
+    .article-body video:not([controls]):not([class$="emoticon"]) {
+      maxWidth: ${resizeImage}% !important;
+    }
+  `);
+
+  // 영상 크기 조절
+  styles.push(`
+    .article-body video[controls] {
+      maxWidth: ${resizeVideo}% !important;
+    }
+  `);
+
+  // 비추천 숨김
+  if (hideUnvote) {
+    styles.push(`
+      #radeDownForm { display: none; }
+    `);
+  }
+
+  styleEl.textContent = styles.join('\n\n');
 }
-
-function ResizeImageStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.article-body': {
-          '& img, & video:not([controls])': {
-            '&:not([class$="emoticon"])': {
-              maxWidth: `${value}% !important`,
-            },
-          },
-        },
-      }}
-    />
-  );
-}
-
-function ResizeVideoStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.article-body video[controls]': {
-          maxWidth: `${value}% !important`,
-        },
-      }}
-    />
-  );
-}
-
-function HideUnvoteStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#rateDownForm': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
-
-/* eslint-enable react/prop-types */
+applyStyle(store.getState()[Info.id].storage);
 
 export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const [confirm, ConfirmDialog] = useConfirm();
 
   const {
-    // 모양
-    hideDefaultImage,
-    resizeImage,
-    resizeVideo,
-    hideUnvote,
     // 동작
     blockMediaNewWindow,
     unmuteVideo,
@@ -95,9 +73,16 @@ export default function ArticleCustom() {
     removeBlur,
     ignoreExternalLinkWarning,
     ratedownGuard,
+    ...storage
   } = useSelector((state) => state[Info.id].storage);
+
   const [article, setArticle] = useState(null);
   const [fakePreview, setFakePreview] = useState(null);
+
+  // 스타일 적용
+  useLayoutEffect(() => {
+    applyStyle(storage);
+  }, [storage]);
 
   // 게시물 로드 확인 및 엘리먼트 저장
   useEffect(() => {
@@ -232,11 +217,6 @@ export default function ArticleCustom() {
 
   return (
     <>
-      <HideDefaultImageStyles value={hideDefaultImage} />
-      <ResizeImageStyles value={resizeImage} />
-      <ResizeVideoStyles value={resizeVideo} />
-      <HideUnvoteStyles value={hideUnvote} />
-
       <ConfirmDialog />
       {fakePreview && (
         <Portal container={fakePreview.container}>
