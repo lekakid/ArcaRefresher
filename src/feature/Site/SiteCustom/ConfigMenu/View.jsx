@@ -22,14 +22,12 @@ import {
   $setNotifyPosition,
   $setNavControlPosition,
   $setNavControlItemDirection,
-  $toggleTopNews,
   $toggleSearchBar,
   $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,
   $toggleSideBests,
-  $toggleSideNews,
   $toggleFontSizeEnabled,
   $setFontSize,
   // 동작
@@ -50,14 +48,12 @@ const View = forwardRef((_props, ref) => {
     notifyPosition,
     navControlPosition,
     navControlItemDirection,
-    topNews,
     searchBar,
     userName,
     recentVisit,
+    sideMenu,
     sideContents,
     sideBests,
-    sideNews,
-    sideMenu,
     fontSizeEnabled,
     fontSize,
     // 동작
@@ -111,14 +107,6 @@ const View = forwardRef((_props, ref) => {
             <MenuItem value="column">세로</MenuItem>
             <MenuItem value="column-reverse">세로(역순)</MenuItem>
           </SelectRow>
-          {mobile && (
-            <SwitchRow
-              divider
-              primary="상단 뉴스 헤더 표시"
-              value={topNews}
-              action={$toggleTopNews}
-            />
-          )}
           <SwitchRow
             divider
             primary="검색창 표시"
@@ -154,7 +142,7 @@ const View = forwardRef((_props, ref) => {
                   <SwitchRow
                     divider
                     nested
-                    primary="사이드 컨텐츠 패널 표시"
+                    primary="핫딜 패널 표시"
                     value={sideContents}
                     action={$toggleSideContents}
                   />
@@ -164,13 +152,6 @@ const View = forwardRef((_props, ref) => {
                     primary="개념글 패널 표시"
                     value={sideBests}
                     action={$toggleSideBests}
-                  />
-                  <SwitchRow
-                    divider
-                    nested
-                    primary="뉴스 패널 표시"
-                    value={sideNews}
-                    action={$toggleSideNews}
                   />
                 </List>
               </Collapse>

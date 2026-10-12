@@ -17,14 +17,12 @@ const defaultStorage = {
   notifyPosition: 'right',
   navControlPosition: 'bottom right',
   navControlItemDirection: 'row',
-  topNews: true,
   searchBar: true,
   userName: true,
   recentVisit: 'afterAd',
   sideMenu: true,
   sideContents: true,
   sideBests: true,
-  sideNews: true,
   fontSizeEnabled: false,
   fontSize: 15,
   // 동작
@@ -84,9 +82,6 @@ export const slice = createSlice({
     $setNavControlItemDirection(state, action) {
       state.storage.navControlItemDirection = action.payload;
     },
-    $toggleTopNews(state) {
-      state.storage.topNews = !state.storage.topNews;
-    },
     $toggleSearchBar(state) {
       state.storage.searchBar = !state.storage.searchBar;
     },
@@ -104,9 +99,6 @@ export const slice = createSlice({
     },
     $toggleSideBests(state) {
       state.storage.sideBests = !state.storage.sideBests;
-    },
-    $toggleSideNews(state) {
-      state.storage.sideNews = !state.storage.sideNews;
     },
     $toggleFontSizeEnabled(state) {
       state.storage.fontSizeEnabled = !state.storage.fontSizeEnabled;
@@ -133,14 +125,12 @@ export const {
   $setNotifyPosition,
   $setNavControlPosition,
   $setNavControlItemDirection,
-  $toggleTopNews,
   $toggleSearchBar,
   $toggleUserName,
   $setRecentVisit,
   $toggleSideMenu,
   $toggleSideContents,
   $toggleSideBests,
-  $toggleSideNews,
   $toggleFontSizeEnabled,
   $setFontSize,
   // 동작

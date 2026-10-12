@@ -1,304 +1,150 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { GlobalStyles } from '@mui/material';
 
+import store from 'core/store';
 import { useArcaSocket } from 'hooks/WebSocket';
-
 import { useLoadChecker } from 'hooks/LoadChecker';
+
 import Info from './FeatureInfo';
 
-/* eslint-disable react/prop-types */
+const styleEl = document.createElement('style');
+document.body.append(styleEl);
 
-function NotifyPositionStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.body #toastbox': {
-          right: value.indexOf('left') > -1 ? 'initial !important' : undefined,
-          height:
-            value.indexOf('top') > -1 ? 'calc(100% - 4rem - 52px)' : undefined,
-        },
-      }}
-    />
-  );
-}
+function applyStyle(storage) {
+  const {
+    notifyPosition,
+    navControlPosition,
+    navControlItemDirection,
+    searchBar,
+    userName,
+    recentVisit,
+    sideMenu,
+    sideContents,
+    sideBests,
+    fontSizeEnabled,
+    fontSize,
+  } = storage;
 
-function NavControlPositionStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.body .nav-control': {
-          right: value.includes('left') ? 'initial !important' : undefined,
-          left: value.includes('left') ? 0 : undefined,
-          top: value.includes('top') ? '53px' : undefined,
-          bottom: value.includes('top') ? 'initial !important' : undefined,
-          margin: '1rem !important',
-        },
-      }}
-    />
-  );
-}
+  const styles = [];
 
-function NavControlItemDirectionStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.body .nav-control': {
-          display: 'flex',
-          flexDirection: value,
-          gap: '0.2rem',
-          li: {
-            marginRight: '0 !important',
-          },
-        },
-      }}
-    />
-  );
-}
+  // 알림 팝업 위치
+  styles.push(`
+    .body #toastbox {
+      ${notifyPosition.includes('left') ? 'right: initial !important;' : ''} 
+      ${notifyPosition.includes('top') ? 'height: calc(100% - 4rem - 52px);' : ''}
+    }
+  `);
 
-function TopNewsStyles({ value }) {
-  if (value) return null;
+  // 네비게이션 버튼
+  styles.push(`
+    .body .nav-control {
+      ${navControlPosition.includes('left') ? 'right: initial !important;' : ''} 
+      ${navControlPosition.includes('left') ? 'left: 0;' : ''} 
+      ${navControlPosition.includes('top') ? 'top: 53px;' : ''} 
+      ${navControlPosition.includes('top') ? 'bottom: initial !important;' : ''} 
+      margin: 1rem !important;
 
-  return (
-    <GlobalStyles
-      styles={{
-        '.topbar-area': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
+      display: flex;
+      flex-direction: ${navControlItemDirection};
+      gap: 0.2rem;
+    }
+    
+    .body .nav-control li { margin-right: 0 !important; }
+  `);
 
-function SearchBarStyles({ value }) {
-  if (value) return null;
+  // 검색창 숨김 여부
+  if (!searchBar) {
+    styles.push(`
+      li.nav-channel-search-wrapper { display: none !important; }
+      li.nav-channel-mobile-search-wrapper { display: none !important; }
+    `);
+  }
 
-  return (
-    <GlobalStyles
-      styles={{
-        'html li.nav-channel-search-wrapper': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
+  // 사용자 메뉴
+  if (!userName) {
+    styles.push(`
+      .body span.username { display: none !important; }
+    `);
+  }
 
-function UserNameStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.body span.username': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
-
-function RecentVisitStyles({ value }) {
-  let styles;
-  switch (value) {
+  // 최근 방문 채널
+  switch (recentVisit) {
     case 'beforeAd':
-      styles = {
-        '.board-article-list, .included-article-list': {
-          display: 'flex',
-          flexDirection: 'column',
-          '& .board-title': {
-            order: -99,
-          },
-          '& .board-title+.btns-board': {
-            order: -98,
-            marginBottom: '0.5rem',
-          },
-          '& .channel-visit-history': {
-            order: -50,
-            marginBottom: '0.5rem',
-          },
-        },
-      };
-      break;
-    case 'afterAd':
-      styles = {
-        '.board-article-list, .included-article-list': {
-          display: 'inherit',
-          '& .channel-visit-history': {
-            display: 'inherit',
-          },
-        },
-      };
+      styles.push(`
+        [class$="-article-list"] { display: flex; flex-direction: column; }
+        [class$="-article-list"] .board-title { order: -99; }
+        [class$="-article-list"] .board-title+.btns-board { order: -98; margin-bottom: 0.5rem; }
+        [class$="-article-list"] .channel-visit-history { order: -50; margin-bottom: 0.5rem; }
+      `);
       break;
     case 'none':
-      styles = {
-        '.board-article-list, .included-article-list': {
-          '& .channel-visit-history': {
-            display: 'none',
-          },
-        },
-      };
+      styles.push(`
+        [class$="-article-list"] .channel-visit-history { display: none; }
+      `);
       break;
     default:
-      styles = {
-        '.board-article-list': {
-          display: 'inherit',
-          '& .channel-visit-history': {
-            display: 'inherit',
-          },
-        },
-      };
+      // nothing
       break;
   }
-  return <GlobalStyles styles={styles} />;
+
+  // 사이드 바 레이아웃 처리
+  if (!sideMenu) {
+    const widthStyles = [1100, 1200, 1300, 1500, 1600].map(
+      (w) => `
+        html.width-${w} .body .content-wrapper { grid-template-columns: auto 1fr !important; }
+
+        @media screen and (max-width: ${w + 400}px) {
+          html.width-${w} .body .content-wrapper { grid-template-columns: 1fr !important; }
+        }
+      `,
+    );
+
+    styles.push(`
+      ${widthStyles.join('\n\n')}
+      html:not([class*width]) .body .content-wrapper: { grid-template-columns: 1frm !important; }
+      html .right-sidebar { display: none; }
+      html .board-article { margin: 0; }
+    `);
+  }
+
+  // 사이드 바 핫딜 (베스트 라이브는 없어진 듯)
+  if (!sideContents) {
+    styles.push(`
+      .sidebar .sidebar-item:first-child { display: none; }
+    `);
+  }
+
+  // 사이드 바 개념글
+  if (!sideBests) {
+    styles.push(`
+      .sidebar .sidebar-item:nth-child(2) { display: none; }
+    `);
+  }
+
+  // 폰트 사이즈
+  if (fontSizeEnabled) {
+    styles.push(`
+      html { font-size: ${fontSize}px !important; }
+    `);
+  }
+
+  styleEl.textContent = styles.join('\n\n');
 }
-
-function SideMenuStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={(theme) => {
-        const widthEntries = [1100, 1200, 1300, 1500, 1600].map((w) => [
-          `html.width-${w}`,
-          {
-            '& .body .content-wrapper:not(.no-sidebar)': {
-              [theme.breakpoints.up(w + 400)]: {
-                gridTemplateColumns: 'auto 1fr !important',
-              },
-              [theme.breakpoints.down(w + 400)]: {
-                gridTemplateColumns: '1fr !important',
-              },
-            },
-          },
-        ]);
-
-        return {
-          ...Object.fromEntries(widthEntries),
-          'html:not([class*=width])': {
-            '& .body .content-wrapper': {
-              gridTemplateColumns: '1fr !important',
-            },
-          },
-          'html .board-article': {
-            margin: 0,
-          },
-          'html .right-sidebar': {
-            display: 'none',
-          },
-        };
-      }}
-    />
-  );
-}
-
-function SideContentsStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.sidebar .sidebar-item:first-child': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
-
-function SideBestsStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.sidebar .sidebar-item:nth-child(2)': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
-
-function SideNewsStyles({ value }) {
-  if (value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '#newsRank': {
-          display: 'none !important',
-        },
-      }}
-    />
-  );
-}
-
-function FontSizeStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        html: {
-          fontSize: `${value}px !important`,
-        },
-      }}
-    />
-  );
-}
-
-function FixDarkModeWriteFormStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.write-body .dark-theme': {
-          '&.fr-box.fr-basic .fr-wrapper': {
-            border: '1px solid var(--color-bd-outer)',
-            borderBottom: 'none',
-            background: 'var(--color-bg-body)',
-          },
-          '&.fr-box.fr-basic .fr-element': {
-            color: 'var(--color-text)',
-          },
-          '& .fr-second-toolbar': {
-            background: '#353535',
-            border: '1px solid var(--color-bd-outer)',
-            color: 'var(--color-text)',
-          },
-        },
-      }}
-    />
-  );
-}
-
-/* eslint-enable react/prop-types */
+applyStyle(store.getState()[Info.id].storage);
 
 export default function SiteCustom() {
   const [subscribeWS, unsubscribeWS] = useArcaSocket();
   const faviconLoaded = useLoadChecker('#dynamic-favicon');
 
-  const {
-    // 모양
-    notifyPosition,
-    navControlPosition,
-    navControlItemDirection,
-    topNews,
-    searchBar,
-    userName,
-    recentVisit,
-    sideContents,
-    sideBests,
-    sideNews,
-    sideMenu,
-    fontSizeEnabled,
-    fontSize,
-    fixDarkModeWriteForm,
-    // 동작
-    spoofTitle,
-    spoofFavicon,
-  } = useSelector((state) => state[Info.id].storage);
+  const { spoofTitle, spoofFavicon, ...storage } = useSelector(
+    (state) => state[Info.id].storage,
+  );
   const titleRef = useRef(document.title);
+
+  // 레이아웃 커스텀 반영
+  useLayoutEffect(() => {
+    applyStyle(storage);
+  }, [storage]);
 
   // 사이트 표시 제목 변경
   useEffect(() => {
@@ -327,21 +173,5 @@ export default function SiteCustom() {
     };
   }, [faviconLoaded, spoofFavicon, subscribeWS, unsubscribeWS]);
 
-  return (
-    <>
-      <NotifyPositionStyles value={notifyPosition} />
-      <NavControlPositionStyles value={navControlPosition} />
-      <NavControlItemDirectionStyles value={navControlItemDirection} />
-      <TopNewsStyles value={topNews} />
-      <SearchBarStyles value={searchBar} />
-      <UserNameStyles value={userName} />
-      <RecentVisitStyles value={recentVisit} />
-      <SideMenuStyles value={sideMenu} />
-      <SideContentsStyles value={sideContents} />
-      <SideBestsStyles value={sideBests} />
-      <SideNewsStyles value={sideNews} />
-      {fontSizeEnabled && <FontSizeStyles value={fontSize} />}
-      <FixDarkModeWriteFormStyles value={fixDarkModeWriteForm} />
-    </>
-  );
+  return null;
 }
