@@ -19,11 +19,11 @@ function applyTheme(storage) {
 
   styleEl.textContent = on
     ? `
-          html.theme-custom { ${Object.entries(currentTheme)
-            .map(([key, value]) => `--color-${key}: ${value} !important;`)
-            .join('\n')}
-          }
-        `
+        html.theme-custom { ${Object.entries(currentTheme)
+          .map(([key, value]) => `--color-${key}: ${value} !important;`)
+          .join('\n')}
+        }
+      `
     : '';
 
   document.documentElement.classList.toggle('theme-custom', on);
