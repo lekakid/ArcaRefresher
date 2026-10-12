@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
       target: ['chrome93', 'firefox127'],
       minify: !isDebug,
       sourcemap: isDebug || isAnalyze,
+      reportCompressedSize: false,
       license: {
         fileName: `ArcaRefresher${isNightly ? '.nightly' : ''}.user.js.LICENSE.txt`,
       },
@@ -84,13 +85,13 @@ export default defineConfig(({ mode }) => {
         visualizer({
           template: 'raw-data',
           filename: 'dist/bundle-report.json',
-          gzipSize: true,
+          gzipSize: false,
         }),
       isAnalyze &&
         visualizer({
           template: 'treemap',
           filename: 'dist/bundle-report.html',
-          gzipSize: true,
+          gzipSize: false,
         }),
     ].filter(Boolean),
   };
