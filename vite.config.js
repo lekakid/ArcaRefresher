@@ -49,6 +49,14 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
+      isDebug &&
+        monkey({
+          entry: 'src/index.jsx',
+          userscript: releaseMeta,
+          build: {
+            autoGrant: true,
+          },
+        }),
       isNightly &&
         monkey({
           entry: 'src/index.jsx',
