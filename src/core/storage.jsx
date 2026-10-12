@@ -1,5 +1,4 @@
 import { GM_deleteValue, GM_getValue, GM_listValues, GM_setValue } from '$';
-import { createAction } from '@reduxjs/toolkit';
 
 /**
  * 설정 값을 가져옵니다.
@@ -75,8 +74,6 @@ export function resetValues() {
   values.forEach((v) => GM_deleteValue(v));
 }
 
-const INIT_MONKEY_SYNC = '!INIT_MONKEY_SYNC';
-
 let disabled = false;
 export function disableStorageSync() {
   disabled = true;
@@ -85,51 +82,43 @@ export function disableStorageSync() {
 export function createMonkeySyncMiddleware() {
   const channel = new BroadcastChannel(`AR_SYNC_MONKEY`);
   const currentWindowId = crypto.randomUUID();
-  let initialized = false;
 
-  return (store) => (next) => (action) => {
-    if (!initialized) {
-      channel.onmessage = ({ data: actionMessage }) => {
-        // 현재 창이랑 같은 동기화 액션 무시
-        if (actionMessage.$windowId === currentWindowId) return;
+  return (store) => {
+    channel.onmessage = ({ data: actionMessage }) => {
+      // 현재 창이랑 같은 동기화 액션 무시
+      if (actionMessage.$windowId === currentWindowId) return;
 
-        // 버전이 다름 등으로 동기화 중단
-        if (disabled) return;
+      // 버전이 다름 등으로 동기화 중단
+      if (disabled) return;
 
-        // 동기화 액션 전파
-        store.dispatch(actionMessage);
-      };
+      // 동기화 액션 전파
+      store.dispatch(actionMessage);
+    };
 
-      initialized = true;
-      return next(action);
-    }
+    return (next) => (action) => {
+      // 버전이 다름 등으로 동기화 중단된 경우
+      if (disabled) return next(action);
 
-    // 버전이 다름 등으로 동기화 중단
-    if (disabled) return next(action);
+      // BroadcastChannel에서 받은 액션인 경우
+      if (action.$windowId) return next(action);
 
-    // BroadcastChannel에서 받은 액션 여부
-    if (action.$windowId) return next(action);
-    // 동기화가 되어야 하는 액션 여부
-    if (!action.type.includes('/$')) return next(action);
+      // $액션이 아닌 경우
+      if (!action.type.includes('/$')) return next(action);
 
-    const result = next(action);
-    const currentState = store.getState();
+      const result = next(action);
+      const currentState = store.getState();
 
-    // 저장소에 저장
-    Object.entries(currentState).forEach(([key, value]) => {
-      setValue(key, value.storage);
-    });
+      // 저장소에 저장
+      const key = action.type.split('/')[0];
+      const slice = currentState[key];
+      if (slice?.storage) setValue(key, slice.storage);
 
-    // BroadcastChannel로 동기화할 액션 전송
-    const actionMessage = action;
-    actionMessage.$windowId = currentWindowId;
-    channel.postMessage(actionMessage);
+      // BroadcastChannel로 동기화할 액션 전파
+      const actionMessage = { ...action };
+      actionMessage.$windowId = currentWindowId;
+      channel.postMessage(actionMessage);
 
-    return result;
+      return result;
+    };
   };
-}
-
-const initMonkeySyncAction = createAction(INIT_MONKEY_SYNC);
-export function initMonkeySync({ dispatch }) {
-  dispatch(initMonkeySyncAction());
 }

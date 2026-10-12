@@ -79,7 +79,7 @@ const slice = createSlice({
 const { setUser, setChannel, setCategory, setArticle, setConfig } =
   slice.actions;
 
-export const ContentReducerEntrie = [HOOK_NAME, slice.reducer];
+export const ContentReducerEntries = [HOOK_NAME, slice.reducer];
 
 export function ContentCollector() {
   const dispatch = useDispatch();
