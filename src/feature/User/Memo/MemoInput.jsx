@@ -55,8 +55,8 @@ function MemoInput() {
           user: user.id,
           memo: {
             ...userMemo,
-            msg: msg ? msg : userMemo.msg,
-            color: color ? color : userMemo.color,
+            msg: msg ?? userMemo.msg,
+            color: color ?? userMemo.color,
           },
         }),
       );
@@ -84,7 +84,7 @@ function MemoInput() {
         <Typography>
           <span
             style={{
-              color: color ? color : userMemo?.color,
+              color: color ?? userMemo?.color,
               fontSize: '.83rem',
               fontWeight: color ? 'bold' : undefined,
             }}
