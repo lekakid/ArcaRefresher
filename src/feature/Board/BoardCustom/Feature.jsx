@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { GlobalStyles } from '@mui/material';
 
+import store from 'core/store';
 import {
   BOARD_NOTICES,
   BOARD_ITEMS,
@@ -14,54 +14,47 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Info from './FeatureInfo';
 
-/* eslint-disable react/prop-types */
-function UserInfoWidthStyles({ value }) {
-  return (
-    <GlobalStyles
-      styles={{
-        '.vcol.col-author': {
-          width: `calc(7rem * (1 + ${value * 0.01})) !important`,
-        },
-      }}
-    />
-  );
-}
+const styleEl = document.createElement('style');
+document.body.append(styleEl);
 
-function RateCount({ value }) {
-  if (value) return null;
+function applyStyle(storage) {
+  const { userinfoWidth, rateCount } = storage;
 
-  return (
-    <GlobalStyles
-      styles={{
-        'html body.body .board-article .article-list .list-table': {
-          '& .vrow-inner .vrow-bottom .vcol.col-view': {
-            '&::after': {
-              content: '""',
-              margin: 0,
-            },
-            marginRight: 0,
-          },
-          '& .vcol.col-rate': {
-            display: 'none !important',
-          },
-        },
-      }}
-    />
-  );
+  const styles = [];
+
+  // 게시판 이용자 너비 설정
+  styles.push(`
+    .vcol.col-author {
+      width: calc(7rem * (1 + ${userinfoWidth * 0.01})) !important;
+    }
+  `);
+
+  // 추천 수 표시 제거
+  if (!rateCount) {
+    styles.push(`
+      body .board-article .vrow-inner .vcol.col-view:after { content: "" !important; }
+      body .board-article .vrow-inner .vcol.col-rate { display: none !important; }
+    `);
+  }
+
+  styleEl.textContent = styles.join('\n\n');
 }
-/* eslint-enable react/prop-types */
+applyStyle(store.getState()[Info.id].storage);
 
 export default function BoardCustom() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
   const {
-    // 모양
-    userinfoWidth,
-    rateCount,
     // 동작
     openArticleNewWindow,
     enhancedArticleManage,
+    ...storage
   } = useSelector((state) => state[Info.id].storage);
+
+  // 레이아웃 스타일 적용
+  useLayoutEffect(() => {
+    applyStyle(storage);
+  }, [storage]);
 
   // 게시판 새 창 열기 방지
   useEffect(() => {
@@ -194,10 +187,5 @@ export default function BoardCustom() {
     });
   }, []);
 
-  return (
-    <>
-      <UserInfoWidthStyles value={userinfoWidth} />
-      <RateCount value={rateCount} />
-    </>
-  );
+  return null;
 }
