@@ -10,7 +10,7 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
-  Grid2 as Grid,
+  Grid,
   TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';

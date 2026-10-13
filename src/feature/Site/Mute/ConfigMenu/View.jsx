@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Collapse,
-  Grid2 as Grid,
+  Grid,
   List,
   ListItem,
   ListItemText,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid2 as Grid, Portal, Typography } from '@mui/material';
+import { Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEAD, ARTICLE_TITLE } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {
   Chip,
   DialogContentText,
-  Grid2 as Grid,
+  Grid,
   IconButton,
   Tooltip,
   Typography,

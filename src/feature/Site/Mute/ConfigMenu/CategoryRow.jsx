@@ -1,12 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Divider,
-  Grid2 as Grid,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
 import BrokenImageIcon from '@mui/icons-material/BrokenImage';
 import ImageIcon from '@mui/icons-material/Image';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';

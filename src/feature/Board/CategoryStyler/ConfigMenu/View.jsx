@@ -1,12 +1,6 @@
 import { forwardRef, Fragment, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Grid2 as Grid,
-  List,
-  ListItem,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
 import { useContent } from 'hooks/Content';
 

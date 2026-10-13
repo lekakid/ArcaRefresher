@@ -1,13 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Divider,
-  Grid2 as Grid,
-  IconButton,
-  Stack,
-  Tooltip,
-} from '@mui/material';
+import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatStrikethroughIcon from '@mui/icons-material/FormatStrikethrough';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
