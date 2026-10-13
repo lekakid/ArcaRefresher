@@ -1,10 +1,13 @@
 import { unsafeWindow } from '$';
 
+export const ACTIVE_ARTICLE = 'article';
+export const ACTIVE_BOARD = 'board';
+
 export default [
   {
     action: 'write',
     label: '글 작성',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyW',
     callback() {
       document.querySelector('.btn-arca-article-write')?.click();
@@ -13,7 +16,7 @@ export default [
   {
     action: 'refresh',
     label: '새로고침',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyR',
     callback() {
       window.location.reload();
@@ -22,7 +25,7 @@ export default [
   {
     action: 'moveTop',
     label: '가장 위로 스크롤',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyT',
     callback() {
       window.scrollTo(0, 0);
@@ -31,7 +34,7 @@ export default [
   {
     action: 'prevCategory',
     label: '이전 카테고리',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyC',
     callback() {
       const categoryUrlList = [
@@ -52,7 +55,7 @@ export default [
   {
     action: 'nextCategory',
     label: '다음 카테고리',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyV',
     callback() {
       const categoryUrlList = [
@@ -70,7 +73,7 @@ export default [
   {
     action: 'prevChannel',
     label: '이전 구독 채널',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyZ',
     callback(_e, { content }) {
       const { subList } = unsafeWindow.LiveConfig;
@@ -84,7 +87,7 @@ export default [
   {
     action: 'nextChannel',
     label: '다음 구독 채널',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyX',
     callback(_e, { content }) {
       const { subList } = unsafeWindow.LiveConfig;
@@ -98,7 +101,7 @@ export default [
   {
     action: 'prev',
     label: '이전 글/게시판 이전 페이지',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyA',
     callback() {
       const token = window.location.pathname.split('/');
@@ -134,7 +137,7 @@ export default [
   {
     action: 'next',
     label: '다음 글/게시판 다음 페이지',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyS',
     callback() {
       const token = window.location.pathname.split('/');
@@ -170,7 +173,7 @@ export default [
   {
     action: 'goBoard',
     label: '게시물 조회 직전으로/검색 첫 페이지로/검색 조건 해제',
-    active: 'article|board',
+    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
     defaultKey: 'KeyQ',
     callback() {
       const url = new URL(window.location.href);
@@ -207,7 +210,7 @@ export default [
   {
     action: 'goBest',
     label: '개념글 페이지 토글',
-    active: 'board',
+    active: ACTIVE_BOARD,
     defaultKey: 'KeyE',
     callback() {
       const url = new URL(window.location.href);
@@ -223,7 +226,7 @@ export default [
   {
     action: 'comment',
     label: '댓글 목록/입력창으로 이동',
-    active: 'article',
+    active: ACTIVE_ARTICLE,
     defaultKey: 'KeyC',
     callback(e) {
       e.preventDefault();
@@ -242,7 +245,7 @@ export default [
   {
     action: 'recommend',
     label: '게시물 추천',
-    active: 'article',
+    active: ACTIVE_ARTICLE,
     defaultKey: 'KeyF',
     callback() {
       document.querySelector('#rateUp').click();
@@ -251,7 +254,7 @@ export default [
   {
     action: 'scrap',
     label: '게시물 스크랩',
-    active: 'article',
+    active: ACTIVE_ARTICLE,
     defaultKey: 'KeyB',
     callback(_e, { content, setSnack }) {
       const token = window.location.pathname.split('/');

@@ -5,7 +5,7 @@ import { useOpenState } from 'menu/ConfigMenu';
 import { useSnackbarAlert } from 'menu/SnackbarAlert';
 
 import { useContent } from 'hooks/Content';
-import actionTable from './actionTable';
+import actionTable, { ACTIVE_ARTICLE, ACTIVE_BOARD } from './actionTable';
 import keyFilter from './keyFilter';
 import Info from './FeatureInfo';
 
@@ -23,8 +23,8 @@ export default function ShortKey() {
     if (configOpen) return undefined;
 
     const activeActionTable = actionTable.filter(({ active }) => {
-      if (content.article) return active.indexOf('article') > -1;
-      if (content.category) return active.indexOf('board') > -1;
+      if (content.article) return active.includes(ACTIVE_ARTICLE);
+      if (content.category) return active.includes(ACTIVE_BOARD);
       return false;
     });
     const keyMap = Object.fromEntries(
