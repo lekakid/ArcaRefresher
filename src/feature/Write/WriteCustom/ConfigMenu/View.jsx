@@ -5,8 +5,8 @@ import { List, Paper, Typography, useMediaQuery } from '@mui/material';
 import { SwitchRow } from 'component/ConfigMenu';
 import Info from '../FeatureInfo';
 import {
-  $toggleCategoryAlign,
   // 모양
+  $toggleCategoryAlign,
   $toggleDarkModeWriteForm,
 } from '../slice';
 

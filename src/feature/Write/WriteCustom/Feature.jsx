@@ -1,91 +1,66 @@
 import { useSelector } from 'react-redux';
-import { GlobalStyles, useMediaQuery } from '@mui/material';
+
+import store from 'core/store';
 
 import Info from './FeatureInfo';
+import { useLayoutEffect } from 'react';
 
-/* eslint-disable react/prop-types */
+const styleEl = document.createElement('style');
+document.body.append(styleEl);
 
-function CategoryAlignStyles({ value }) {
-  if (!value) return null;
+function applyStyle(storage) {
+  const { categoryAlign, fixDarkModeWriteForm } = storage;
 
-  return (
-    <GlobalStyles
-      styles={{
-        '.article-write #article_write_form': {
-          display: 'grid',
-          gridTemplateAreas: `
-            'category title'
-            'prevent prevent'
-          `,
-          gridTemplateColumns: '150px 1fr',
-          columnGap: 8,
-          '& .category-select-wrap': {
-            gridArea: 'category',
-          },
-          '& #formAgreePreventDelete': {
-            gridArea: 'prevent',
-          },
-          '& .input-title-wrap': {
-            gridArea: 'title',
-            '& > input[name=title]': {
-              fontSize: '.9em',
-              padding: '.4em .8em',
-            },
-          },
-          '& > .row': {
-            marginBottom: 12,
-          },
-          '& > *': {
-            gridColumn: '1 / 3',
-          },
-        },
-      }}
-    />
-  );
+  const styles = [];
+
+  // 카테고리 선택 콤보박스 모양 개선
+  if (categoryAlign) {
+    styles.push(`
+      .article-write #article_write_form {
+        display: grid;
+        grid-template-areas: 
+          'category title'
+          'preent prevent';
+        grid-template-columns: 150px 1fr;
+        column-gap: 8px;
+      }
+      
+      .article-write #article_write_form .category-select-wrap { grid-area: category; }
+      .article-write #article_write_form #formAgreePreventDelete { grid-area: prevent; }
+      .article-write #article_write_form .input-title-wrap { grid-area: title; }
+      .article-write #article_write_form .input-title-wrap > input[name=title] { font-size: .9em; padding: .4em .8em; }
+      .article-write #article_write_form .row { margin-bottom: 12px; }
+      .article-write #article_write_form * { grid-column: 1 / 3; }
+    `);
+  }
+
+  // 다크모드에서 글작성 폼이 흰색으로 나오는 문제 강제 수정
+  if (fixDarkModeWriteForm) {
+    styles.push(`
+      .write-body .dark-theme.fr-box.fr-basic .fr-wrapper {
+        border: 1px solid var(--color-bd-outer); border-bottom: none; background: var(--color-bg-body);
+      }
+      .write-body .dark-theme.fr-box.fr-basic .fr-element {
+        color: var(--color-text);
+      }
+      .write-body .dark-theme .fr-second-toolbar {
+        background: #353535; border: 1px solid var(--color-bd-outer); color: var(--color-text);
+      }
+      
+    `);
+  }
+
+  styleEl.textContent = styles.join('\n\n');
 }
-
-function FixDarkModeWriteFormStyles({ value }) {
-  if (!value) return null;
-
-  return (
-    <GlobalStyles
-      styles={{
-        '.write-body .dark-theme': {
-          '&.fr-box.fr-basic .fr-wrapper': {
-            border: '1px solid var(--color-bd-outer)',
-            borderBottom: 'none',
-            background: 'var(--color-bg-body)',
-          },
-          '&.fr-box.fr-basic .fr-element': {
-            color: 'var(--color-text)',
-          },
-          '& .fr-second-toolbar': {
-            background: '#353535',
-            border: '1px solid var(--color-bd-outer)',
-            color: 'var(--color-text)',
-          },
-        },
-      }}
-    />
-  );
-}
-
-/* eslint-enable react/prop-types */
+applyStyle(store.getState()[Info.id].storage);
 
 export default function WriteCustom() {
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+  const { ...storage } = useSelector((state) => state[Info.id].storage);
 
-  const {
-    // 모양
-    categoryAlign,
-    fixDarkModeWriteForm,
-  } = useSelector((state) => state[Info.id].storage);
+  // 스타일 적용
+  useLayoutEffect(() => {
+    applyStyle(storage);
+  }, [storage]);
 
-  return (
-    <>
-      {/* 나중에 추가될 수도 있기도 하고 Eslint 경고창 띄우는거 싫어서 주석 한줄 넣음 */}
-      {!mobile && <CategoryAlignStyles value={categoryAlign} />}
-      <FixDarkModeWriteFormStyles value={fixDarkModeWriteForm} />
-    </>
-  );
+  return null;
 }
