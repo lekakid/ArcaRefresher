@@ -60,7 +60,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
     margin: '0.25rem',
     ...(badge
       ? { backgroundColor: badge, color: getContrastYIQ(badge) }
-      : { backgroundColor: 'var(--color-board-category)', color: 'white' }),
+      : undefined),
   };
   const backgroundStyle = {
     ...(bgcolor && {
@@ -89,7 +89,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
             ...backgroundStyle,
           }}
         >
-          <span className="badge badge-success" style={badgeStyle}>
+          <span className="badge text-bg-success" style={badgeStyle}>
             {label}
           </span>
           <span className="title">게시물 제목</span>
