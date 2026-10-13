@@ -45,7 +45,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
             alignItems: 'center',
           }}
         >
-          <span className="badge badge-success" style={{ margin: '0.25rem' }}>
+          <span className="badge text-bg-success" style={{ margin: '0.25rem' }}>
             {label}
           </span>
         </Box>
