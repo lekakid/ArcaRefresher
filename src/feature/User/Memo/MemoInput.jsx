@@ -55,12 +55,14 @@ function MemoInput() {
           user: user.id,
           memo: {
             ...userMemo,
-            msg: msg ?? userMemo.msg,
-            color: color ?? userMemo.color,
+            msg: msg ?? userMemo?.msg ?? '',
+            color: color ?? userMemo?.color ?? '',
           },
         }),
       );
       dispatch(setInputUser(null));
+      setMsg(null);
+      setColor(null);
     },
     [user, userMemo, msg, color, dispatch],
   );
