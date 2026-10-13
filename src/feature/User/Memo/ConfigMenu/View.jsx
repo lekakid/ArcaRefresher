@@ -37,14 +37,17 @@ function userRenderer(params) {
 
   return (
     <Stack
-      sx={{ width: '100%', height: '100%' }}
       direction="row"
-      justifyContent="space-between"
-      alignItems="center"
+      sx={{
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       <Typography
-        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         variant="body2"
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         {uid}
       </Typography>
@@ -220,9 +223,8 @@ const View = forwardRef((_props, ref) => {
             }
           >
             <Stack
-              sx={{ minWidth: 180, width: '100%' }}
               direction="row"
-              gap={1}
+              sx={{ minWidth: 180, width: '100%', gap: 1 }}
             >
               <Button
                 sx={{ width: '100%' }}

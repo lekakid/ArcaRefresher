@@ -20,7 +20,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
@@ -137,7 +137,7 @@ function QueuedImageListItem({ src, alt, checked, onClick }) {
                 color: 'white',
               },
             }}
-            icon={<CheckCircleOutlineIcon />}
+            icon={<CheckCircleOutlinedIcon />}
             checkedIcon={<CheckCircleIcon />}
             checked={checked}
             onClick={onClick}

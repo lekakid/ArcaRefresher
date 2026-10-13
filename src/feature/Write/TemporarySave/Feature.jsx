@@ -122,7 +122,7 @@ export default function TemporarySave() {
         </ButtonGroup>
       </Portal>
       <Portal container={submitHandlerContainer}>
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
           <Button onClick={handleBack}>돌아가기</Button>
           <Button onClick={handleCommit}>작성</Button>
         </Stack>

@@ -253,7 +253,10 @@ const View = forwardRef((_props, ref) => {
             ))}
           </SelectRow>
           <ListItem>
-            <Stack direction={mobile ? 'column' : 'row'} width="100%" gap={2}>
+            <Stack
+              direction={mobile ? 'column' : 'row'}
+              sx={{ width: '100%', gap: 2 }}
+            >
               <Select
                 displayEmpty
                 sx={{ flexGrow: 1 }}

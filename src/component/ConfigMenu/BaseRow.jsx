@@ -13,20 +13,20 @@ const BaseRow = forwardRef(
 
     const content = (
       <Stack
-        sx={{ width: '100%' }}
+        sx={{ width: '100%', alignItems: isColumn ? 'flex-start' : 'center' }}
         direction={isColumn ? 'column' : 'row'}
-        alignItems={isColumn ? 'flex-start' : 'center'}
       >
         <Stack
-          sx={{ width: '100%' }}
+          sx={{
+            width: '100%',
+            justifyContent: 'space-between',
+          }}
           direction="row"
-          justifyContent="space-between"
         >
           {header}
         </Stack>
         <Stack
-          sx={isColumn ? { width: '100%' } : undefined}
-          alignItems="center"
+          sx={{ width: isColumn ? '100%' : undefined, alignItems: 'center' }}
         >
           {children}
         </Stack>

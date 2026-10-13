@@ -70,7 +70,7 @@ function Toolbar({
 
   return (
     <>
-      <Grid container alignItems="center">
+      <Grid container sx={{ alignItems: 'center' }}>
         <Grid size={{ xs: 8 }}>
           <Box sx={{ display: 'flex', px: '8px' }}>
             <Typography variant="caption">

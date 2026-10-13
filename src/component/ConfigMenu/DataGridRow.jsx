@@ -264,7 +264,7 @@ function TextView({ rows, columns, onChange, onModeChange }) {
 
   return (
     <Paper variant="outlined" sx={{ width: '100%' }}>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
         <Button
           variant="text"
           startIcon={<TableChartIcon />}

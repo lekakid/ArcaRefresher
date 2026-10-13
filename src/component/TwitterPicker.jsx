@@ -43,7 +43,10 @@ function TwitterPicker({ color, colors, onChange }) {
               overflow: 'hidden',
             }}
           >
-            <Stack direction="row" height="100%" alignItems="center">
+            <Stack
+              direction="row"
+              sx={{ height: '100%', alignItems: 'center' }}
+            >
               <Box
                 sx={{
                   minWidth: 30,

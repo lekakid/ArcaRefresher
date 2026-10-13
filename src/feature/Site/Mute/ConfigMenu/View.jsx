@@ -251,7 +251,12 @@ const View = forwardRef((_props, ref) => {
                     )
                   ) : (
                     <Grid size={{ xs: 12 }}>
-                      <Typography align="center" padding={4}>
+                      <Typography
+                        align="center"
+                        sx={{
+                          padding: 4,
+                        }}
+                      >
                         카테고리를 확인할 수 없습니다.
                       </Typography>
                     </Grid>

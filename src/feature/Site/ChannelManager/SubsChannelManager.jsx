@@ -86,10 +86,13 @@ function ChannelTitleRenderer({ id, value }) {
   return (
     <>
       <Stack
-        sx={{ width: '100%', height: '100%' }}
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
+        sx={{
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
       >
         <Typography variant="body2">{value}</Typography>
         <Tooltip title="상세 편집">
@@ -184,10 +187,8 @@ function GroupRenderer({ id, value }) {
 
   return (
     <Stack
-      sx={{ width: '100%', height: '100%' }}
       direction="row"
-      alignItems="center"
-      gap={1}
+      sx={{ width: '100%', height: '100%', alignItems: 'center', gap: 1 }}
     >
       {value?.map((group) => (
         <Chip key={group} label={group} onDelete={handleRemove(group)} />
@@ -393,9 +394,8 @@ function SubsChannelManager({ subs, open, onClose }) {
         </IconButton>
         <DialogContent>
           <Stack
-            sx={{ marginBottom: 1 }}
             direction={mobile ? 'column' : 'row'}
-            gap={1}
+            sx={{ marginBottom: 1, gap: 1 }}
           >
             <Select
               displayEmpty
@@ -416,10 +416,8 @@ function SubsChannelManager({ subs, open, onClose }) {
               ))}
             </Select>
             <Stack
-              sx={{ width: '100%' }}
               direction={mobile ? 'column' : 'row'}
-              justifyContent="space-between"
-              gap={2}
+              sx={{ width: '100%', justifyContent: 'space-between', gap: 2 }}
             >
               <ButtonGroup fullWidth={mobile}>
                 <Button

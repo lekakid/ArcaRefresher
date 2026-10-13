@@ -88,9 +88,7 @@ function CountBar({
         <Grid
           container
           size={{ xs: 12, sm: 4 }}
-          alignItems="center"
-          gap={0.5}
-          sx={{ paddingLeft: 1 }}
+          sx={{ paddingLeft: 1, alignItems: 'center', gap: 0.5 }}
         >
           <Typography variant="subtitle1">뮤트(리프레셔)</Typography>
           <Tooltip title="카운트 바 숨김">

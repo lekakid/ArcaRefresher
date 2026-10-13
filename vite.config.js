@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => {
       alias: srcAliases,
     },
     build: {
-      target: ['chrome93', 'firefox127'],
+      target: ['chrome117', 'firefox127'],
       minify: !isDebug,
       sourcemap: isDebug || isAnalyze,
       reportCompressedSize: false,

@@ -43,7 +43,7 @@ function FolderNameSelect({
   onRemove,
 }) {
   return (
-    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+    <Stack direction="row" sx={{ width: '100%', gap: 1 }}>
       <Select
         // 왜 인진 모르겠고 width값을 잡아주기만 하면 flexGrow를 통한 크기 조절 문제가 해결됨
         sx={{ flexGrow: 1, width: 0 }}
@@ -89,7 +89,7 @@ function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
   const isError = validate(text);
 
   return (
-    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+    <Stack direction="row" sx={{ width: '100%', gap: 1 }}>
       <TextField
         sx={{ flexGrow: 1, width: 0 }}
         autoFocus
@@ -125,53 +125,58 @@ function Toolbar({
   onMoving,
   onRemove,
 }) {
-  if (moving) {
-    return (
-      <Stack direction="row" justifyContent="end">
-        <Button
-          variant="text"
-          startIcon={<FlipToFrontIcon />}
-          disabled={disabled}
-          name="move"
-          onClick={onMove}
-        >
-          이동
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<FileCopyIcon />}
-          disabled={disabled}
-          name="copy"
-          onClick={onCopy}
-        >
-          복사
-        </Button>
-        <Button variant="text" startIcon={<CancelIcon />} onClick={onCancel}>
-          취소
-        </Button>
-      </Stack>
-    );
-  }
-
   return (
     <>
-      <Stack direction="row" justifyContent="end">
-        <Button
-          variant="text"
-          startIcon={<FlipToFrontIcon />}
-          disabled={disabled}
-          onClick={onMoving}
-        >
-          이동/복사
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<DeleteIcon />}
-          disabled={disabled}
-          onClick={onRemove}
-        >
-          선택 삭제
-        </Button>
+      <Stack direction="row" sx={{ justifyContent: 'end' }}>
+        {moving && (
+          <>
+            <Button
+              variant="text"
+              startIcon={<FlipToFrontIcon />}
+              disabled={disabled}
+              name="move"
+              onClick={onMove}
+            >
+              이동
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<FileCopyIcon />}
+              disabled={disabled}
+              name="copy"
+              onClick={onCopy}
+            >
+              복사
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<CancelIcon />}
+              onClick={onCancel}
+            >
+              취소
+            </Button>
+          </>
+        )}
+        {!moving && (
+          <>
+            <Button
+              variant="text"
+              startIcon={<FlipToFrontIcon />}
+              disabled={disabled}
+              onClick={onMoving}
+            >
+              이동/복사
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<DeleteIcon />}
+              disabled={disabled}
+              onClick={onRemove}
+            >
+              선택 삭제
+            </Button>
+          </>
+        )}
       </Stack>
       <Divider />
     </>

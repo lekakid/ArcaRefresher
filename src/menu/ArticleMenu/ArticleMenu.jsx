@@ -37,8 +37,8 @@ function ArticleMenu({ children }) {
     <Portal container={container}>
       <Grid
         container
-        alignItems="center"
         sx={{
+          alignItems: 'center',
           borderTop:
             position === 'beforeHead'
               ? '1px solid var(--color-bd-outer)'
