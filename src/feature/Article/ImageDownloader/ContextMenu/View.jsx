@@ -54,10 +54,7 @@ function ContextMenu({ target, closeMenu }) {
         const response = await request(url, {
           responseType: 'blob',
         }).then((r) => r.response);
-        const blob =
-          response.type === 'image/png'
-            ? response
-            : await convertToPng(response);
+        const blob = await convertToPng(response);
 
         navigator.clipboard.write([
           new ClipboardItem({
