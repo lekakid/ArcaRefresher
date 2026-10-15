@@ -38,7 +38,6 @@
     "vite-plugin-monkey": "^8.1.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^9.5.0",
