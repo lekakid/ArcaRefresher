@@ -57,7 +57,7 @@ function FolderCheckList({ open, url, onClose }) {
     (e) => {
       if (e?.key !== 'Enter') return;
       if (folderInput === '') return;
-      if (Object.keys(imgList).includes(folderInput)) return;
+      if (Object.hasOwn(imgList, folderInput)) return;
 
       createFolder();
     },
@@ -96,7 +96,9 @@ function FolderCheckList({ open, url, onClose }) {
                   size="small"
                   autoFocus
                   value={folderInput}
-                  error={folderList.includes(folderInput) || folderInput === ''}
+                  error={
+                    Object.hasOwn(imgList, folderInput) || folderInput === ''
+                  }
                   onChange={handleFolderInput}
                   onFocus={handleFocus}
                   onKeyUp={handleFolderEnter}
@@ -107,7 +109,7 @@ function FolderCheckList({ open, url, onClose }) {
                   fullWidth
                   startIcon={<AddIcon />}
                   disabled={
-                    folderList.includes(folderInput) || folderInput === ''
+                    Object.hasOwn(imgList, folderInput) || folderInput === ''
                   }
                   onClick={createFolder}
                 >
