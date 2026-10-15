@@ -76,17 +76,17 @@ const nameRegex = /^[0-9a-zA-Zㄱ-힣]*$/;
 function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
   const [text, setText] = useState(initialValue);
 
+  const isError = validate(text);
+
   const handleChange = (e) => {
-    if (!nameRegex.test(text)) return;
+    if (!nameRegex.test(e.target.value)) return;
     setText(e.target.value);
   };
 
   const handleKeyUp = (e) => {
-    if (e.key === 'Enter') onDone(text);
+    if (e.key === 'Enter' && !isError) onDone(text);
     if (e.key === 'Escape') onCancel();
   };
-
-  const isError = validate(text);
 
   return (
     <Stack direction="row" sx={{ width: '100%', gap: 1 }}>
@@ -202,10 +202,8 @@ function GalleryManager({ gallery }) {
   const resolveRef = useRef(null);
 
   const folderList = useMemo(() => Object.keys(gallery), [gallery]);
-  const rows = useMemo(
-    () => gallery[moveList ? toFolder : fromFolder],
-    [gallery, moveList, toFolder, fromFolder],
-  );
+  const currentFolder = moveList ? toFolder : fromFolder;
+  const rows = useMemo(() => gallery[currentFolder], [gallery, currentFolder]);
 
   const pagedRows = useMemo(
     () => rows.slice(page * pageSize, page * pageSize + pageSize),
@@ -246,10 +244,11 @@ function GalleryManager({ gallery }) {
   const handleCreateFolder = useCallback(
     (folder) => {
       dispatch($addFolder(folder));
-      setFromFolder(folder);
+      if (moveList) setToFolder(folder);
+      else setFromFolder(folder);
       setCreateFolder(false);
     },
-    [dispatch],
+    [dispatch, moveList],
   );
 
   const handleRemoveFolder = useCallback(async () => {
@@ -263,10 +262,15 @@ function GalleryManager({ gallery }) {
       return;
     }
 
-    setFromFolder('_shared_');
-    dispatch($removeFolder(fromFolder));
+    if (currentFolder === fromFolder) {
+      setFromFolder('_shared_');
+      setMoveList(null);
+      setSelection([]);
+    }
+    if (currentFolder === toFolder) setToFolder('_shared_');
+    dispatch($removeFolder(currentFolder));
     setConfirm(false);
-  }, [dispatch, fromFolder]);
+  }, [dispatch, currentFolder, fromFolder, toFolder]);
 
   const handleToggle = useCallback(() => {
     if (moveList) {
@@ -326,10 +330,10 @@ function GalleryManager({ gallery }) {
         const updatedRows = rows.map((r) =>
           r.url === row.url ? { ...r, memo: value } : r,
         );
-        dispatch($setFolderData({ folder: fromFolder, list: updatedRows }));
+        dispatch($setFolderData({ folder: currentFolder, list: updatedRows }));
       }
     },
-    [fromFolder, rows, dispatch],
+    [currentFolder, rows, dispatch],
   );
 
   const handleConfirmDone = useCallback(() => {
@@ -354,7 +358,7 @@ function GalleryManager({ gallery }) {
           ) : (
             <FolderNameSelect
               folderList={folderList}
-              currentFolder={moveList ? toFolder : fromFolder}
+              currentFolder={currentFolder}
               onSelect={handleSelctFolder}
               onCreate={() => setCreateFolder(true)}
               onRemove={handleRemoveFolder}
@@ -469,7 +473,7 @@ function GalleryManager({ gallery }) {
       </Stack>
       <Dialog open={confirm} onClose={handleConfirmClose}>
         <DialogTitle>폴더 삭제</DialogTitle>
-        <DialogContent>{`'${fromFolder}' 폴더를 삭제합니까?`}</DialogContent>
+        <DialogContent>{`'${currentFolder}' 폴더를 삭제합니까?`}</DialogContent>
         <DialogActions>
           <Button onClick={handleConfirmDone}>예</Button>
           <Button variant="contained" onClick={handleConfirmClose}>
