@@ -39,21 +39,21 @@ function applyStyle(storage) {
   styles.push(`
     .article-body img:not([class$="emoticon"]),
     .article-body video:not([controls]):not([class$="emoticon"]) {
-      maxWidth: ${resizeImage}% !important;
+      max-width: ${resizeImage}% !important;
     }
   `);
 
   // 영상 크기 조절
   styles.push(`
     .article-body video[controls] {
-      maxWidth: ${resizeVideo}% !important;
+      max-width: ${resizeVideo}% !important;
     }
   `);
 
   // 비추천 숨김
   if (hideUnvote) {
     styles.push(`
-      #radeDownForm { display: none; }
+      #rateDownForm { display: none; }
     `);
   }
 
