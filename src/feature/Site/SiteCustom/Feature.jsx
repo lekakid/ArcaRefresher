@@ -101,7 +101,7 @@ function applyStyle(storage) {
 
     styles.push(`
       ${widthStyles.join('\n\n')}
-      html:not([class*width]) .body .content-wrapper: { grid-template-columns: 1frm !important; }
+      html:not([class*=width]) .body .content-wrapper { grid-template-columns: 1fr !important; }
       html .right-sidebar { display: none; }
       html .board-article { margin: 0; }
     `);
