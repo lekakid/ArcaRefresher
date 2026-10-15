@@ -71,7 +71,7 @@ export default defineConfig(({ mode }) => {
             autoGrant: true,
           },
         }),
-      isRelease &&
+      (isRelease || isAnalyze) &&
         monkey({
           entry: 'src/index.jsx',
           userscript: releaseMeta,
