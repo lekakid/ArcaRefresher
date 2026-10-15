@@ -91,7 +91,7 @@ function applyStyle(storage) {
   if (!sideMenu) {
     const widthStyles = [1100, 1200, 1300, 1500, 1600].map(
       (w) => `
-        html.width-${w} .body .content-wrapper { grid-template-columns: auto 1fr !important; }
+        html.width-${w} .body .content-wrapper:not(.no-sidebar) { grid-template-columns: auto 1fr !important; }
 
         @media screen and (max-width: ${w + 400}px) {
           html.width-${w} .body .content-wrapper { grid-template-columns: 1fr !important; }
