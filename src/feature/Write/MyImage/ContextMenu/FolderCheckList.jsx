@@ -20,6 +20,7 @@ import { useContent } from 'hooks/Content';
 
 import Info from '../FeatureInfo';
 import { $addFolder, $addImage, $removeImage } from '../slice';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 function FolderCheckList({ open, url, onClose }) {
   const dispatch = useDispatch();
@@ -48,6 +49,11 @@ function FolderCheckList({ open, url, onClose }) {
     dispatch($addFolder(folderInput));
     setOpenFolderInput(false);
   }, [dispatch, folderInput]);
+
+  const cancelCreate = useCallback(() => {
+    setFolderInput('');
+    setOpenFolderInput(false);
+  }, []);
 
   const handleFocus = useCallback((e) => {
     e.target.select();
@@ -87,7 +93,7 @@ function FolderCheckList({ open, url, onClose }) {
         </FormGroup>
       </DialogContent>
       <DialogActions>
-        <Grid container>
+        <Grid container sx={{ width: '100%' }}>
           {openFolderInput && (
             <>
               <Grid size={{ xs: 12 }}>
@@ -105,16 +111,24 @@ function FolderCheckList({ open, url, onClose }) {
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>
-                <Button
-                  fullWidth
-                  startIcon={<AddIcon />}
-                  disabled={
-                    Object.hasOwn(imgList, folderInput) || folderInput === ''
-                  }
-                  onClick={createFolder}
-                >
-                  폴더 추가
-                </Button>
+                {folderInput.length > 0 ? (
+                  <Button
+                    fullWidth
+                    startIcon={<AddIcon />}
+                    disabled={Object.hasOwn(imgList, folderInput)}
+                    onClick={createFolder}
+                  >
+                    폴더 추가
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    startIcon={<CloseIcon />}
+                    onClick={cancelCreate}
+                  >
+                    취소
+                  </Button>
+                )}
               </Grid>
             </>
           )}
