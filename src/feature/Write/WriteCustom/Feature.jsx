@@ -13,24 +13,26 @@ function applyStyle(storage) {
 
   const styles = [];
 
-  // 카테고리 선택 콤보박스 모양 개선
+  // 카테고리 선택 콤보박스 모양 개선 (모바일 제외)
   if (categoryAlign) {
     styles.push(`
-      .article-write #article_write_form {
-        display: grid;
-        grid-template-areas: 
-          'category title'
-          'preent prevent';
-        grid-template-columns: 150px 1fr;
-        column-gap: 8px;
+      @media screen and (min-width: 1200px) {
+        .article-write #article_write_form {
+          display: grid;
+          grid-template-areas:
+            'category title'
+            'prevent prevent';
+          grid-template-columns: 150px 1fr;
+          column-gap: 8px;
+        }
+
+        .article-write #article_write_form .category-select-wrap { grid-area: category; }
+        .article-write #article_write_form #formAgreePreventDelete { grid-area: prevent; }
+        .article-write #article_write_form .input-title-wrap { grid-area: title; }
+        .article-write #article_write_form .input-title-wrap > input[name=title] { font-size: .9em; padding: .4em .8em; }
+        .article-write #article_write_form > .row { margin-bottom: 12px; }
+        .article-write #article_write_form > * { grid-column: 1 / 3; }
       }
-      
-      .article-write #article_write_form .category-select-wrap { grid-area: category; }
-      .article-write #article_write_form #formAgreePreventDelete { grid-area: prevent; }
-      .article-write #article_write_form .input-title-wrap { grid-area: title; }
-      .article-write #article_write_form .input-title-wrap > input[name=title] { font-size: .9em; padding: .4em .8em; }
-      .article-write #article_write_form .row { margin-bottom: 12px; }
-      .article-write #article_write_form * { grid-column: 1 / 3; }
     `);
   }
 
