@@ -62,6 +62,7 @@ export default function MyImage() {
 
   useEffect(() => {
     if (!editor) return;
+    if (loaded) return;
     if (targetImgList.length === 0) return;
 
     if (forceLoad || !editor.html.get(true)) {
@@ -70,7 +71,7 @@ export default function MyImage() {
     } else {
       setAlert(true);
     }
-  }, [editor, forceLoad, handleLoad, targetImgList]);
+  }, [editor, forceLoad, handleLoad, loaded, targetImgList]);
 
   const handleConfirmClose = () => {
     setLoaded(true);
