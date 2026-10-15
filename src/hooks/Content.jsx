@@ -185,7 +185,7 @@ export function ContentCollector() {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hourCycle: 'h24',
+      hourCycle: 'h23',
     });
     const datetimeString = formatter.format(datetime).replace(/:/g, '');
     const [date, time] = datetimeString.split(', ');
