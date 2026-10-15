@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, original } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import Info from './FeatureInfo';
 
@@ -29,8 +29,8 @@ export const slice = createSlice({
       state.triggerList.push(action.payload);
     },
     removeTrigger(state, action) {
-      const i = state.triggerList.findIndex((t) => t === action.payload);
-      state.triggerList.splice(i, 1);
+      const i = original(state.triggerList).indexOf(action.payload);
+      if (i !== -1) state.triggerList.splice(i, 1);
     },
   },
 });
