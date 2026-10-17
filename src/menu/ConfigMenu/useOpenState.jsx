@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
-import Info from './FeatureInfo';
+import info from './info';
 
 export default function useOpenState() {
-  const { open } = useSelector((state) => state[Info.id]);
+  const { open } = useSelector((state) => state[info.id]);
 
   return open;
 }

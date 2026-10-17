@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   version: 1,
@@ -53,11 +53,11 @@ function updater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage, updater),
+  storage: getValue(info.id, defaultStorage, updater),
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     // 모양

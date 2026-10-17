@@ -1,8 +1,8 @@
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import Info from './FeatureInfo';
 import store from 'core/store';
+import info from './info';
 
 const pathToken = window.location.pathname.split('/');
 pathToken.shift(); // ''
@@ -28,10 +28,10 @@ function applyTheme(storage) {
 
   document.documentElement.classList.toggle('theme-custom', on);
 }
-applyTheme(store.getState()[Info.id].storage);
+applyTheme(store.getState()[info.id].storage);
 
 export default function ThemeCustomizer() {
-  const storage = useSelector((state) => state[Info.id].storage);
+  const storage = useSelector((state) => state[info.id].storage);
 
   const currentTheme =
     storage.theme[channelId] || storage.theme[storage.current];

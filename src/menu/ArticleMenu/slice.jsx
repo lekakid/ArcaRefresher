@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   position: 'beforeHead',
 };
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage),
+  storage: getValue(info.id, defaultStorage),
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     $setPosition(state, action) {

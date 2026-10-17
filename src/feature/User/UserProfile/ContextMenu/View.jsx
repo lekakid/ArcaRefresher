@@ -18,14 +18,14 @@ import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
 import { getDocument } from 'func/http';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const profileUrl = 'https://arca.live/u/@';
 
 function ContextMenu({ target, closeMenu }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
-    (store) => store[Info.id].storage,
+    (store) => store[info.id].storage,
   );
   const { channel } = useContent();
   let contextSelector;
@@ -46,7 +46,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;

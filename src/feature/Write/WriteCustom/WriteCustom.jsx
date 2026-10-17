@@ -1,9 +1,9 @@
+import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import store from 'core/store';
 
-import Info from './FeatureInfo';
-import { useLayoutEffect } from 'react';
+import info from './info';
 
 const styleEl = document.createElement('style');
 document.body.append(styleEl);
@@ -54,10 +54,10 @@ function applyStyle(storage) {
 
   styleEl.textContent = styles.join('\n\n');
 }
-applyStyle(store.getState()[Info.id].storage);
+applyStyle(store.getState()[info.id].storage);
 
 export default function WriteCustom() {
-  const { ...storage } = useSelector((state) => state[Info.id].storage);
+  const { ...storage } = useSelector((state) => state[info.id].storage);
 
   // 스타일 적용
   useLayoutEffect(() => {

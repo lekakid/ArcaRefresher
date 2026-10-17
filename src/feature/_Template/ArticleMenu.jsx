@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Button } from '@mui/material';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
-// import Info from './FeatureInfo';
+// import info from './info';
 
 // 게시물 상단 메뉴
 export default function ArticleMenu() {

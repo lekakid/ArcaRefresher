@@ -17,7 +17,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useConfirm } from 'component';
 
 import { $toggleCountBar, $toggleMutedMark } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const TypeString = {
   keyword: '키워드',
@@ -38,7 +38,7 @@ function CountBar({
 }) {
   const [showStates, setShowStates] = useState(undefined);
   const hideMutedMark = useSelector(
-    (state) => state[Info.id].storage.hideMutedMark,
+    (state) => state[info.id].storage.hideMutedMark,
   );
 
   const [confirm, ConfirmDialog] = useConfirm();

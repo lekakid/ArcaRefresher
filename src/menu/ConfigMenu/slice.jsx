@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import Info from './FeatureInfo';
+import info from './info';
 
 const initialState = {
   open: false,
@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     setOpen(state, action) {

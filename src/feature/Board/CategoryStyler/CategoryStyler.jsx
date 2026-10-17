@@ -7,12 +7,12 @@ import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useContent } from 'hooks/Content';
 import { getContrastYIQ } from 'func/color';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 export default function CategoryStyler() {
   const { channel, category } = useContent();
 
-  const { color } = useSelector((state) => state[Info.id].storage);
+  const { color } = useSelector((state) => state[info.id].storage);
   const [keyMap, setKeyMap] = useState(null);
 
   useLayoutEffect(() => {

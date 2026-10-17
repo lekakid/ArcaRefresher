@@ -14,13 +14,13 @@ import { importValues, exportValues, resetValues } from 'core/storage';
 import { BaseRow } from 'component/ConfigMenu';
 import { useConfirm } from 'component';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 
-const featureModules = import.meta.glob(
-  ['/src/feature/*/*/FeatureInfo.jsx', '!/src/feature/_*/**'],
+const featureInfos = import.meta.glob(
+  ['/src/feature/*/*/info.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const idList = Object.values(featureModules).map(({ id }) => id);
+const idList = Object.values(featureInfos).map(({ id }) => id);
 
 const View = forwardRef((_props, ref) => {
   const inputRef = useRef();
@@ -104,7 +104,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">데이터 정리</Typography>
       <Paper>
         <List disablePadding>
@@ -159,5 +159,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

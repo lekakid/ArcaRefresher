@@ -20,7 +20,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
-import Info from './FeatureInfo';
+
+import info from './info';
 import { setOpen, setDrawer, setGroup } from './slice';
 import HeaderButton from './HeaderButton';
 import DrawerGroup from './DrawerGroup';
@@ -41,7 +42,7 @@ function menuSorter(a, b) {
 function MenuContainer({ groupList, menuList }) {
   const dispatch = useDispatch();
   const { open, opacity, drawer, group, selection } = useSelector(
-    (state) => state[Info.id],
+    (state) => state[info.id],
   );
   const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);

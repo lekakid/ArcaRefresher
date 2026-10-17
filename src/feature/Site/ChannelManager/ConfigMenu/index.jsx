@@ -1,12 +1,12 @@
 import FolderIcon from '@mui/icons-material/Folder';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: FolderIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

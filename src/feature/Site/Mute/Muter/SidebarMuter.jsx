@@ -6,13 +6,13 @@ import { FULL_LOADED } from 'core/selector';
 
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { serializeText } from 'func/emoji';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function SidebarMuter() {
   const fullLoaded = useLoadChecker(FULL_LOADED);
 
   const { keyword, hideMutedMark } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   useLayoutEffect(() => {

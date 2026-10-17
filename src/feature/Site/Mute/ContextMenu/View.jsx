@@ -29,7 +29,7 @@ import {
   $setCategoryConfig,
 } from '../slice';
 import { filterSelector } from '../selector';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function makeRegex(id) {
   return `^${id.replace('.', '\\.').replace('*', '\\*')}$`;
@@ -46,13 +46,13 @@ const CATEGORY_SELECTOR = '.board-category .item a';
 function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { channel } = useContent();
-  const { contextRange, user } = useSelector((state) => state[Info.id].storage);
+  const { contextRange, user } = useSelector((state) => state[info.id].storage);
   const filter = useSelector((state) => filterSelector(state, channel.id));
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: `${USER_SELECTOR[contextRange]}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
       dataExtractor: () => {
         if (!target) return undefined;

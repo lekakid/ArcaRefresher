@@ -9,11 +9,11 @@ import {
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Blocker from './Blocker';
-import Info from './FeatureInfo';
+import info from './info';
 
 export default function MediaBlocker() {
   const { blockAll, blockDeleted, blockReported } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);

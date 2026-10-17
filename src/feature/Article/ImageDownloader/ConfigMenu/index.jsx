@@ -1,11 +1,11 @@
 import GetAppIcon from '@mui/icons-material/GetApp';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: GetAppIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

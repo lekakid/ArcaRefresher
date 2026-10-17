@@ -27,7 +27,7 @@ import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 
 import { EmoticonInfo, ImageInfo } from './Model';
 import { $toggleDownloadOrigin, setOpen } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 function mapDownloadInfo(arr, type) {
   if (type === undefined) {
@@ -162,7 +162,7 @@ function ImageSelector({ open, onConfirm }) {
   const {
     // 동작 설정
     downloadOrigin,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const [data, setData] = useState(undefined);
   const [selection, setSelection] = useState([]);

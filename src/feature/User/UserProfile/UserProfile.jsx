@@ -9,7 +9,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser } from 'func/user';
 
 import { useArcaSocket } from 'hooks/WebSocket';
-import Info from './FeatureInfo';
+import info from './info';
 
 /* eslint-disable react/prop-types */
 
@@ -48,7 +48,7 @@ function UserProfile() {
   const { user } = useContent();
 
   const { showId, avatar, indicateMyComment } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   // 반고닉 고유번호 표시

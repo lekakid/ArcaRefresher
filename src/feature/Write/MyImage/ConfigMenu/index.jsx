@@ -1,11 +1,11 @@
 import ImageIcon from '@mui/icons-material/Image';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: ImageIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

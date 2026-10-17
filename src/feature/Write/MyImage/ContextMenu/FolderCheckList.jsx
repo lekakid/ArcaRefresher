@@ -15,17 +15,17 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Close as CloseIcon } from '@mui/icons-material/Close';
 
 import { useContent } from 'hooks/Content';
 
-import Info from '../FeatureInfo';
 import { $addFolder, $addImage, $removeImage } from '../slice';
-import { Close as CloseIcon } from '@mui/icons-material';
+import info from '../info';
 
 function FolderCheckList({ open, url, onClose }) {
   const dispatch = useDispatch();
   const { channel, article } = useContent();
-  const { imgList } = useSelector((state) => state[Info.id].storage);
+  const { imgList } = useSelector((state) => state[info.id].storage);
   const [openFolderInput, setOpenFolderInput] = useState(false);
   const [folderInput, setFolderInput] = useState('');
 

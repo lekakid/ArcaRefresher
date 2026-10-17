@@ -6,14 +6,14 @@ import { List, MenuItem, Paper, Typography } from '@mui/material';
 import { SelectRow } from 'component/ConfigMenu';
 import { $setPosition } from 'menu/ArticleMenu/slice';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const View = React.forwardRef((_props, ref) => {
-  const { position } = useSelector((state) => state[Info.id].storage);
+  const { position } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow primary="메뉴 위치" value={position} action={$setPosition}>
@@ -27,5 +27,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

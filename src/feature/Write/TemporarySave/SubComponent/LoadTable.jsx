@@ -31,13 +31,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 
-import Info from '../FeatureInfo';
 import {
   $setArticleList,
   setCurrentSlot,
   $toggleImportTitle,
   $toggleTemplateMode,
 } from '../slice';
+import info from '../info';
 
 function Toolbar({
   selection,
@@ -102,7 +102,7 @@ function LoadTable({ editor, open, onClose }) {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { tempArticleList, importTitle, templateMode } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   const rows = Object.entries(tempArticleList).map(([key, value], index) => ({

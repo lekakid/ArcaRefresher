@@ -1,11 +1,11 @@
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: RefreshIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

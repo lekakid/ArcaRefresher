@@ -14,7 +14,7 @@ import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { WRITE_LOADED } from 'core/selector';
 
-import Info from './FeatureInfo';
+import info from './info';
 import { $toggleFirstLoad } from './slice';
 
 const SHARED = '_shared_';
@@ -24,7 +24,7 @@ export default function MyImage() {
   const editorLoaded = useLoadChecker(WRITE_LOADED);
   const { channel } = useContent();
   const { enabled, imgList, forceLoad, firstLoad } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const [alert, setAlert] = useState(false);
   const [editor, setEditor] = useState(null);

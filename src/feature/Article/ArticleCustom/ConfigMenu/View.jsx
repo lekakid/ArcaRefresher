@@ -4,7 +4,6 @@ import { List, Paper, Typography } from '@mui/material';
 
 import { SliderRow, SwitchRow } from 'component/ConfigMenu';
 
-import Info from '../FeatureInfo';
 import {
   // 모양
   $toggleDefaultImage,
@@ -19,6 +18,7 @@ import {
   $toggleRemoveBlur,
   $toggleUnmuteVideo,
 } from '../slice';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const {
@@ -34,11 +34,11 @@ const View = forwardRef((_props, ref) => {
     removeBlur,
     ignoreExternalLinkWarning,
     ratedownGuard,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
         <List disablePadding>
@@ -119,5 +119,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

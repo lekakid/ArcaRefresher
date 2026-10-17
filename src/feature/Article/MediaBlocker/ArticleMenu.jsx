@@ -6,12 +6,12 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 // 게시물 상단 메뉴
 export default function ArticleMenu() {
   const { blockAll, blockDeleted, blockReported } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const alertLoaded = useLoadChecker(DELETED_ALERT_LOADED);
 

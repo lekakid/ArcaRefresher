@@ -4,7 +4,7 @@ import { List, Paper, Typography, MenuItem } from '@mui/material';
 
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import {
   $toggleEnable,
   $toggleContextMenu,
@@ -29,11 +29,11 @@ const View = forwardRef((_props, ref) => {
     zipName,
     zipExtension,
     zipImageName,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">동작 설정</Typography>
       <Paper>
         <List disablePadding>
@@ -142,5 +142,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

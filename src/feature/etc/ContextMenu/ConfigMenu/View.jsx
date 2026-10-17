@@ -15,7 +15,7 @@ import { KeyIcon } from 'component';
 import { SelectRow } from 'component/ConfigMenu';
 import { $setInteraction } from 'menu/ContextMenu/slice';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const label = {
   r: {
@@ -33,11 +33,11 @@ const label = {
 };
 
 const View = React.forwardRef((_props, ref) => {
-  const { interactionType } = useSelector((state) => state[Info.id].storage);
+  const { interactionType } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -94,5 +94,5 @@ const View = React.forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

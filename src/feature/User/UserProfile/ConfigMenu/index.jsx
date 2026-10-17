@@ -1,12 +1,12 @@
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   order: -1,
   Icon: AssignmentIndIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

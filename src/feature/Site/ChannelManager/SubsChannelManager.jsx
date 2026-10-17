@@ -47,13 +47,13 @@ import {
   $renameGroup,
   $setChannelInfo,
 } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultChannelInfo = { memo: '', groups: [], best: false };
 
 function ChannelTitleRenderer({ id, value }) {
   const dispatch = useDispatch();
-  const { channelInfoTable } = useSelector((state) => state[Info.id].storage);
+  const { channelInfoTable } = useSelector((state) => state[info.id].storage);
   const [open, setOpen] = useState(false);
 
   const handleBestToggle = useCallback(() => {
@@ -160,7 +160,7 @@ function GroupRenderer({ id, value }) {
   const dispatch = useDispatch();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const [anchorEl, setAnchorEl] = useState(false);
 
@@ -228,7 +228,7 @@ function SubsChannelManager({ subs, open, onClose }) {
   const [confirm, ConfirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const groupInput = useRef(undefined);
   const editInputRef = useRef(null);

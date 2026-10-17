@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   // 동작 설정
@@ -18,12 +18,12 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage),
+  storage: getValue(info.id, defaultStorage),
   open: false,
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     // 동작 설정

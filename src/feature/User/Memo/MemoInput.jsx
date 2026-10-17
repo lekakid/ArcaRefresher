@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -11,19 +12,18 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FormatColorResetIcon from '@mui/icons-material/FormatColorReset';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { AuthorTag, TwitterPicker } from 'component';
-
-import Info from './FeatureInfo';
-import { $setMemo, setInputUser } from './slice';
 import { ArcaUser } from 'func/user';
+
+import info from './info';
+import { $setMemo, setInputUser } from './slice';
 
 function MemoInput() {
   const dispatch = useDispatch();
-  const { memo, variant } = useSelector((state) => state[Info.id].storage);
+  const { memo, variant } = useSelector((state) => state[info.id].storage);
 
-  const user = useSelector((state) => state[Info.id].inputUser);
+  const user = useSelector((state) => state[info.id].inputUser);
   const userMemo = memo[user?.id];
 
   const [msg, setMsg] = useState(null);

@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from '@mui/material';
 
 import { shiftSnack } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 export default function SnackbarAlert() {
   const dispatch = useDispatch();
-  const { snackBag } = useSelector((state) => state[Info.id]);
+  const { snackBag } = useSelector((state) => state[info.id]);
   const [open, setOpen] = useState(false);
   const [snack, setSnack] = useState(undefined);
 

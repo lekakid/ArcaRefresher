@@ -20,7 +20,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import SubsChannelManager from './SubsChannelManager';
 import { setNavChannelInfo } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 function ListFolder({ group, children }) {
   const [open, setOpen] = useState(false);
@@ -78,9 +78,9 @@ export default function ChannelManager() {
   const navLoaded = useLoadChecker(NAVIGATION_LOADED);
 
   const { enabled, groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
-  const { navChannelInfo } = useSelector((state) => state[Info.id]);
+  const { navChannelInfo } = useSelector((state) => state[info.id]);
   const [container, setContainer] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState({ subs: false, main: false, editor: false });

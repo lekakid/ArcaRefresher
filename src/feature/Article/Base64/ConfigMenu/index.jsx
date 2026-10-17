@@ -1,11 +1,11 @@
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: DoubleArrowIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

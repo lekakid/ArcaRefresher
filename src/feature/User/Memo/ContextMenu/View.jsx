@@ -12,11 +12,11 @@ import { useContextMenu } from 'menu/ContextMenu';
 import { ArcaUser } from 'func/user';
 
 import { setInputUser } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function ContextMenu({ target, closeMenu }) {
   const dispatch = useDispatch();
-  const { memo, contextRange } = useSelector((state) => state[Info.id].storage);
+  const { memo, contextRange } = useSelector((state) => state[info.id].storage);
 
   let contextSelector;
   switch (contextRange) {
@@ -34,7 +34,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;

@@ -6,8 +6,8 @@ import FastRewindIcon from '@mui/icons-material/FastRewind';
 
 import { useContextMenu } from 'menu/ContextMenu';
 
-import Info from '../FeatureInfo';
 import { toggleTemporaryDisabled } from '../slice';
+import info from '../info';
 
 // 우클릭 메뉴
 function ContextMenu({ target, closeMenu }) {
@@ -15,7 +15,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: '.base64',
       dataExtractor: () => target,
     },

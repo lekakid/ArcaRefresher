@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import Info from './FeatureInfo';
+import info from './info';
 
 const initialState = {
   snackBag: [],
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     pushSnack(state, action) {

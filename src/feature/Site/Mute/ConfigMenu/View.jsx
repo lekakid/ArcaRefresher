@@ -20,7 +20,7 @@ import {
 } from 'component/ConfigMenu';
 import { useContent } from 'hooks/Content';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import {
   $setKeyword,
   $setUser,
@@ -64,7 +64,7 @@ const View = forwardRef((_props, ref) => {
     channel: channelList,
     muteAllEmot,
     category: { [channel.id]: categoryConfig },
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
   const emotRows = useSelector(emoticonTableSelector);
 
   const handleSaveFormat = useCallback((value) => {
@@ -99,7 +99,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -271,5 +271,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

@@ -13,7 +13,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { FOREGROUND, open } from 'func/window';
 import { decode } from './func/base64';
-import Info from './FeatureInfo';
+import info from './info';
 
 const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
@@ -107,9 +107,9 @@ function Decoder() {
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const { enabled, autoDecode, clipboardDecode } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
-  const { temporaryDisabled } = useSelector((state) => state[Info.id]);
+  const { temporaryDisabled } = useSelector((state) => state[info.id]);
   const [decodeResult, setDecodeResult] = useState();
 
   // 게시물 조회 디코딩 기능

@@ -3,22 +3,22 @@ import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
-import Info from '../FeatureInfo';
 import {
   $setTimeLimit,
   $setMaxTime,
   $toggleRefreshOnArticle,
   $setProgressPos,
 } from '../slice';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -71,5 +71,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

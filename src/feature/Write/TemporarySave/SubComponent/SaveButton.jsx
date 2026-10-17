@@ -6,11 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 
 import { $addArticle, setCurrentSlot } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function SaveButton({ editor, saveAs = false, ...btnPropsFromGroup }) {
   const dispatch = useDispatch();
-  const { currentSlot } = useSelector((state) => state[Info.id]);
+  const { currentSlot } = useSelector((state) => state[info.id]);
   const [snack, setSnack] = useState(false);
 
   const handleClick = useCallback(() => {

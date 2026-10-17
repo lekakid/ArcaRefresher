@@ -16,7 +16,7 @@ import { serializeText } from 'func/emoji';
 import CountBar from './CountBar';
 import { filterContent, trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const globalChannel = ['live', 'headline', 'replay', 'breaking'];
 
@@ -77,7 +77,7 @@ function BoardMuter() {
     hideServiceNotice,
     hideNoPermission,
     hideClosedDeal,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);

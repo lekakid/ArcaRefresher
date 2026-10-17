@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { encode } from './func/base64';
-import Info from './FeatureInfo';
+import info from './info';
 
 function Cipher() {
   const { enabled, encodeType } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   // 글작성 인코딩 기능

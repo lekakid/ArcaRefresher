@@ -4,18 +4,18 @@ import { List, ListItemText, Paper, Typography } from '@mui/material';
 
 import { BaseRow, SwitchRow } from 'component/ConfigMenu';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { $toggleEnabled, $toggleForceLoad } from '../slice';
 import GalleryManager from './GalleryManager';
 
 const View = forwardRef((_props, ref) => {
   const { enabled, imgList, forceLoad } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
@@ -49,5 +49,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

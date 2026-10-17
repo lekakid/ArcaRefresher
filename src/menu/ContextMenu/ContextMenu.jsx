@@ -5,7 +5,7 @@ import { Box, List, Menu, MenuItem } from '@mui/material';
 
 import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 
-import Info from './FeatureInfo';
+import info from './info';
 import { setOpen } from './slice';
 
 function getKeyCombine(event) {
@@ -20,8 +20,8 @@ function getKeyCombine(event) {
 
 function ContextMenu({ menuList }) {
   const dispatch = useDispatch();
-  const { interactionType } = useSelector((state) => state[Info.id].storage);
-  const { mousePos, triggerList } = useSelector((state) => state[Info.id]);
+  const { interactionType } = useSelector((state) => state[info.id].storage);
+  const { mousePos, triggerList } = useSelector((state) => state[info.id]);
 
   const gestureRef = useRef({ right: false, count: 0 });
   const openRef = useRef(false);

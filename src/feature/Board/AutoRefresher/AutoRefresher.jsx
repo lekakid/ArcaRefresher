@@ -8,9 +8,9 @@ import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { useArcaSocket } from 'hooks/WebSocket';
 
-import Info from './FeatureInfo';
 import RefreshIndicator from './RefreshProgress';
 import { getNewArticle, updateBoard } from './article';
+import info from './info';
 
 const refreshStyles = (
   <GlobalStyles
@@ -40,7 +40,7 @@ function AutoRefresher() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const { navControlPosition, navControlItemDirection } = useSelector(
     (state) => state.SiteCustom.storage,

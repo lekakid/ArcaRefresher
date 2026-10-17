@@ -9,14 +9,14 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import streamSaver from 'streamsaver';
 import { createSelector } from '@reduxjs/toolkit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import streamSaver from 'streamsaver';
 
 import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
-
 import { FOREGROUND, open } from 'func/window';
-import Info from '../FeatureInfo';
+
+import info from '../info';
 import {
   $setContextRange,
   $setMemo,
@@ -86,7 +86,7 @@ const columnVisibilityModel = {
 };
 
 const memoRowsSelector = createSelector(
-  (state) => state[Info.id].storage.memo,
+  (state) => state[info.id].storage.memo,
   (memo) =>
     Object.entries(memo).map(([key, { msg = '', color = '', nick = '' }]) => ({
       id: key,
@@ -100,9 +100,9 @@ const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
 
   const { variant, contextRange } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
-  const memoData = useSelector((state) => state[Info.id].storage.memo);
+  const memoData = useSelector((state) => state[info.id].storage.memo);
   const memoRows = useSelector(memoRowsSelector);
   const inputRef = useRef();
 
@@ -189,7 +189,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SelectRow
@@ -264,5 +264,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

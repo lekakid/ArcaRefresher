@@ -16,7 +16,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { BaseRow, SelectRow } from 'component/ConfigMenu';
 import { useConfirm } from 'component';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { $setNotiLevel } from '../slice';
 import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
 
@@ -24,7 +24,7 @@ const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
 
-  const { notiLevel } = useSelector((state) => state[Info.id].storage);
+  const { notiLevel } = useSelector((state) => state[info.id].storage);
 
   const handleChangeLog = useCallback(() => {
     if (GM_info.version.includes('nightly')) {
@@ -102,7 +102,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <BaseRow
@@ -166,5 +166,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

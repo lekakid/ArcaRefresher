@@ -7,7 +7,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const articleMuteStyles = (
   <GlobalStyles
@@ -39,7 +39,7 @@ function ArticleMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   const [wrapped, setWrapped] = useState(false);

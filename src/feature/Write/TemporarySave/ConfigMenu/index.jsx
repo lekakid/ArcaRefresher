@@ -1,11 +1,11 @@
 import BookIcon from '@mui/icons-material/Book';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: BookIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

@@ -7,7 +7,7 @@ import { useSnackbarAlert } from 'menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import actionTable, { ACTIVE_ARTICLE, ACTIVE_BOARD } from './actionTable';
 import keyFilter from './keyFilter';
-import Info from './FeatureInfo';
+import info from './info';
 
 export default function ShortKey() {
   const setSnack = useSnackbarAlert();
@@ -15,7 +15,7 @@ export default function ShortKey() {
 
   const configOpen = useOpenState();
   const { enabled, compatibilityMode, keyTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   useEffect(() => {

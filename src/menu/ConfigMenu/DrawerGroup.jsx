@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 
 import { setGroup } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 function DrawerGroup({ groupKey, groupIcon, groupText, open, children }) {
   const dispatch = useDispatch();
-  const { group } = useSelector((state) => state[Info.id]);
+  const { group } = useSelector((state) => state[info.id]);
 
   const handleClick = useCallback(() => {
     dispatch(setGroup(groupKey));

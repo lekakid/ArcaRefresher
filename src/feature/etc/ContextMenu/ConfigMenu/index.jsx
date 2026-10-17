@@ -1,11 +1,11 @@
 import MouseIcon from '@mui/icons-material/Mouse';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: MouseIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

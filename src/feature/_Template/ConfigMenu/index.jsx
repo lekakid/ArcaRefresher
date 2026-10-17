@@ -2,12 +2,12 @@ import 'core/types';
 import GroupIcon from '@mui/icons-material/Group';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: GroupIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

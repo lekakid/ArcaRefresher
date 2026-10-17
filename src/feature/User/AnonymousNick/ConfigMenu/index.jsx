@@ -1,12 +1,12 @@
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: PeopleOutlinedIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

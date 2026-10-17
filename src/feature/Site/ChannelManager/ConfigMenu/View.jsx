@@ -4,15 +4,15 @@ import { List, Paper, Typography } from '@mui/material';
 
 import { SwitchRow } from 'component/ConfigMenu';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { $toggleEnabled } from '../slice';
 
 const View = forwardRef((_props, ref) => {
-  const { enabled } = useSelector((state) => state[Info.id].storage);
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
@@ -27,5 +27,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

@@ -7,7 +7,7 @@ import { ArcaUser, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { EVENT_COMMENT_REFRESH } from 'core/event';
-import Info from './FeatureInfo';
+import info from './info';
 import Label from './Label';
 
 const anonymousNickStyles = (
@@ -25,7 +25,7 @@ const anonymousNickStyles = (
 function AnonymousNick() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
-  const { storage, show } = useSelector((state) => state[Info.id]);
+  const { storage, show } = useSelector((state) => state[info.id]);
   const nickContainer = useRef([]);
   const [nickData, setNickData] = useState([]);
 

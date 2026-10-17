@@ -4,15 +4,15 @@ import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
 import { useContent } from 'hooks/Content';
 
-import Info from '../FeatureInfo';
-import { $setCategoryStyle } from '../slice';
 import CategoryRow from './CategoryRow';
+import { $setCategoryStyle } from '../slice';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
   const color = useSelector(
-    (state) => state[Info.id].storage.color[channel.id],
+    (state) => state[info.id].storage.color[channel.id],
   );
 
   const handleChange = useCallback(
@@ -24,7 +24,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <ListItem>
@@ -59,5 +59,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

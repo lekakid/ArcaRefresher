@@ -5,16 +5,16 @@ import { List, MenuItem, Paper, Typography } from '@mui/material';
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
 import { $setAutoTime, $toggleDeleteOnCommit, $toggleEnabled } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const { enabled, autoSaveTime, deleteOnCommit } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
@@ -46,5 +46,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

@@ -9,7 +9,7 @@ import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
 import { format } from './Util';
-import Info from './FeatureInfo';
+import info from './info';
 
 function DownloadWidget({ infoList, onDownloadStart }) {
   const contentInfo = useContent();
@@ -21,7 +21,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
     zipImageName,
     zipName,
     zipExtension,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
   const setSnack = useSnackbarAlert();
 
   useEffect(() => {

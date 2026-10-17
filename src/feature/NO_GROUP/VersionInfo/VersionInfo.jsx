@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { disableStorageSync } from 'core/storage';
 
-import Info from './FeatureInfo';
+import info from './info';
 import { $setCheckedVersion, $setLastVersion } from './slice';
 import { parse, compare, join } from './func';
 
@@ -18,7 +18,7 @@ const MODE_DISABLE_STORAGE = -2;
 export default function VersionInfo() {
   const dispatch = useDispatch();
   const { lastVersion, checkedVersion, notiLevel } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const [initialized, setInitialized] = useState(false);
   const [noti, setNoti] = useState(MODE_NONE);

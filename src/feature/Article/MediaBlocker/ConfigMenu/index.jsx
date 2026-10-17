@@ -2,12 +2,12 @@ import 'core/types';
 import BlockIcon from '@mui/icons-material/Block';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: BlockIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

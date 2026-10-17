@@ -13,7 +13,7 @@ import { request } from 'func/http';
 import { open } from 'func/window';
 
 import { convertToPng } from 'func/image';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔 창을 확인 바랍니다.';
@@ -84,12 +84,12 @@ function ContextMenu({ target, closeMenu }) {
     showTraceMoe,
     showImgOps,
     showTinEye,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextMenuEnabled ? ARTICLE_IMAGES : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;

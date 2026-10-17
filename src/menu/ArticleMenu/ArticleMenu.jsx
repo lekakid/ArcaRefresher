@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEAD, ARTICLE_TITLE } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { useSelector } from 'react-redux';
-import Info from './FeatureInfo';
+
+import info from './info';
 
 function ArticleMenu({ children }) {
   const articleLoaded = useLoadChecker(ARTICLE_TITLE);
-  const { position } = useSelector((state) => state[Info.id].storage);
+  const { position } = useSelector((state) => state[info.id].storage);
 
   const [container] = useState(() => document.createElement('div'));
 

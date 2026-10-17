@@ -9,7 +9,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import ImageSelector from './ImageSelector';
 import DownloadWidget from './DownloadWidget';
 import { setOpen } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 const hideButtonStyles = (
   <GlobalStyles
@@ -25,8 +25,8 @@ export default function ImageDownloader() {
   const dispatch = useDispatch();
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
 
-  const { enabled } = useSelector((state) => state[Info.id].storage);
-  const { open } = useSelector((state) => state[Info.id]);
+  const { enabled } = useSelector((state) => state[info.id].storage);
+  const { open } = useSelector((state) => state[info.id]);
   const [container] = useState(() => document.createElement('div'));
   const [downloadInfoList, setDownloadInfoList] = useState([]);
 

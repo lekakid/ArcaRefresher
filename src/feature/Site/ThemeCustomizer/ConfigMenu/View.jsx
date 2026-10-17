@@ -29,7 +29,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 
 import { useConfirm } from 'component';
-import Info from '../FeatureInfo';
+import info from '../info';
 import {
   $toggleEnable,
   $setCurrent,
@@ -131,7 +131,7 @@ const View = forwardRef((_props, ref) => {
     enabled,
     current: currentPresetKey,
     theme,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
   const [editingPresetKey, setEditingPresetKey] = useState('');
   const confirmInputRef = useRef('');
   const editingPreset = useMemo(
@@ -229,7 +229,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
@@ -315,5 +315,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

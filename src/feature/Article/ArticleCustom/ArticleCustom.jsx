@@ -15,7 +15,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import store from 'core/store';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 const PREVIEW_SELECTOR =
   '.article-content img:not(.twemoji), .article-content video';
@@ -59,7 +59,7 @@ function applyStyle(storage) {
 
   styleEl.textContent = styles.join('\n\n');
 }
-applyStyle(store.getState()[Info.id].storage);
+applyStyle(store.getState()[info.id].storage);
 
 export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
@@ -74,7 +74,7 @@ export default function ArticleCustom() {
     ignoreExternalLinkWarning,
     ratedownGuard,
     ...storage
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const [article, setArticle] = useState(null);
   const [fakePreview, setFakePreview] = useState(null);

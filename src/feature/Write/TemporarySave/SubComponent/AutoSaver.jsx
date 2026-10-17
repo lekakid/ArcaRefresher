@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { $addArticle } from '../slice';
 
 function AutoSaver({ editor }) {
   const dispatch = useDispatch();
 
-  const { autoSaveTime } = useSelector((state) => state[Info.id].storage);
-  const { currentSlot, loadOpen } = useSelector((state) => state[Info.id]);
+  const { autoSaveTime } = useSelector((state) => state[info.id].storage);
+  const { currentSlot, loadOpen } = useSelector((state) => state[info.id]);
 
   useEffect(() => {
     if (autoSaveTime === 0 || loadOpen) return undefined;

@@ -16,18 +16,18 @@ import { request } from 'func/http';
 import { convertToPng } from 'func/image';
 import { ImageInfo } from '../Model';
 import { format } from '../Util';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function ContextMenu({ target, closeMenu }) {
   const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextMenuEnabled
         ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
         : 'NULL',

@@ -10,23 +10,24 @@ import {
   Stack,
 } from '@mui/material';
 
-import { SwitchRow } from 'component/ConfigMenu';
 import { KeyIcon } from 'component';
-import Info from '../FeatureInfo';
+import { SwitchRow } from 'component/ConfigMenu';
+
 import {
   $toggleAutoDecode,
   $toggleClipboardDecode,
   $toggleEnabled,
 } from '../slice';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const { enabled, autoDecode, clipboardDecode } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
@@ -78,5 +79,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

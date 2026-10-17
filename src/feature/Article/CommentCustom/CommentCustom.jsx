@@ -6,7 +6,7 @@ import { COMMENT_LOADED, COMMENT } from 'core/selector';
 import { EVENT_COMMENT_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 /* eslint-disable react/prop-types */
 function UnfoldLongCommentStyles({ value }) {
@@ -105,7 +105,7 @@ export default function CommentCustom() {
     foldComment,
     wideClickArea,
     alternativeSubmitKey,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
   const [comment, setComment] = useState(null);
   const [unfoldContainer] = useState(() => document.createElement('div'));
   const [unfold, setUnfold] = useState(false);

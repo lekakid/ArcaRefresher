@@ -30,7 +30,7 @@ import {
 } from '../slice';
 import actionTable from '../actionTable';
 import keyFilter from '../keyFilter';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function KeyRow({ divider, inputKey, children, onClick }) {
   return (
@@ -74,7 +74,7 @@ function formatKey(keyStr) {
 }
 
 const keyMapSelector = createSelector(
-  (state) => state[Info.id].storage.keyTable,
+  (state) => state[info.id].storage.keyTable,
   (keyTable) =>
     Object.fromEntries(keyTable.map(({ action, key }) => [action, key])),
 );
@@ -82,7 +82,7 @@ const keyMapSelector = createSelector(
 const View = forwardRef((_props, ref) => {
   const dispatch = useDispatch();
   const { enabled, compatibilityMode } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const keyMap = useSelector(keyMapSelector);
   const [shortKeyAction, setShortKeyAction] = useState(undefined);
@@ -134,7 +134,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <SwitchRow
@@ -211,5 +211,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

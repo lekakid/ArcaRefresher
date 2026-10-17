@@ -4,7 +4,7 @@ import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
 
@@ -33,7 +33,7 @@ function ToastMuter() {
 
   const filter = useSelector(filterSelector);
   const { muteChannelPointAlarm, hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   useEffect(() => {

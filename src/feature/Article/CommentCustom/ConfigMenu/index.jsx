@@ -1,13 +1,13 @@
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   order: -1,
   Icon: ViewQuiltIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

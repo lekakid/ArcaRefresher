@@ -2,10 +2,9 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
+import { SelectRow, SwitchRow } from 'component/ConfigMenu';
 import { BACKGROUND, FOREGROUND } from 'func/window';
 
-import { SelectRow, SwitchRow } from 'component/ConfigMenu';
-import Info from '../FeatureInfo';
 import {
   $setOpenType,
   $setSearchGoogleMethod,
@@ -20,6 +19,7 @@ import {
   $toggleShowTraceMoe,
   $toggleShowYandex,
 } from '../slice';
+import info from '../info';
 
 const View = forwardRef((_props, ref) => {
   const {
@@ -37,11 +37,11 @@ const View = forwardRef((_props, ref) => {
     showTraceMoe,
     showImgOps,
     showTinEye,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">동작 설정</Typography>
       <Paper>
         <List disablePadding>
@@ -136,5 +136,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

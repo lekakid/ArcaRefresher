@@ -1,11 +1,11 @@
 import BrushIcon from '@mui/icons-material/Brush';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: BrushIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

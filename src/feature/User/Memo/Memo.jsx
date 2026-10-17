@@ -2,26 +2,25 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { Box, Portal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { AuthorTag } from 'component';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
+import { useLoadChecker } from 'hooks/LoadChecker';
+import { ArcaUser, getUserKey } from 'func/user';
 import {
   FULL_LOADED,
   USER_INFO,
   USER_INFO_WITHOUT_NOTICE,
 } from 'core/selector';
-import { AuthorTag } from 'component';
-import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
-
-import { ArcaUser, getUserKey } from 'func/user';
 
 import MemoInput from './MemoInput';
-import Info from './FeatureInfo';
+import info from './info';
 import { $updateMemoNick, setInputUser } from './slice';
 
 function Memo() {
   const dispatch = useDispatch();
   const loaded = useLoadChecker(FULL_LOADED);
 
-  const { variant, memo } = useSelector((state) => state[Info.id].storage);
+  const { variant, memo } = useSelector((state) => state[info.id].storage);
 
   const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);

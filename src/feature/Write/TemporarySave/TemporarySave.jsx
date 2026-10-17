@@ -14,7 +14,7 @@ import { WRITE_LOADED } from 'core/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
-import Info from './FeatureInfo';
+import info from './info';
 import { $removeArticle } from './slice';
 
 const btnsStyles = (
@@ -33,9 +33,9 @@ export default function TemporarySave() {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const { enabled, deleteOnCommit } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
-  const { currentSlot } = useSelector((state) => state[Info.id]);
+  const { currentSlot } = useSelector((state) => state[info.id]);
   const [tempArticleContainer, setTemparticleContainer] = useState(null);
   const [submitHandlerContainer, setSubmitHandlerContainer] = useState(null);
   const [editor, setEditor] = useState(null);

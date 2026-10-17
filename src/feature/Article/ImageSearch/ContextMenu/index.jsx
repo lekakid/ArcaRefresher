@@ -1,10 +1,10 @@
 import 'core/types';
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 /** @type {ContextMenuInfo} */
 export default {
-  key: Info.id,
+  key: info.id,
   View,
   order: 901,
 };

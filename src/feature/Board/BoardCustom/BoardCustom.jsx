@@ -12,7 +12,7 @@ import {
 import { EVENT_BOARD_REFRESH } from 'core/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 const styleEl = document.createElement('style');
 document.body.append(styleEl);
@@ -39,7 +39,7 @@ function applyStyle(storage) {
 
   styleEl.textContent = styles.join('\n\n');
 }
-applyStyle(store.getState()[Info.id].storage);
+applyStyle(store.getState()[info.id].storage);
 
 export default function BoardCustom() {
   const boardLoaded = useLoadChecker(BOARD_LOADED);
@@ -49,7 +49,7 @@ export default function BoardCustom() {
     openArticleNewWindow,
     enhancedArticleManage,
     ...storage
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   // 레이아웃 스타일 적용
   useLayoutEffect(() => {

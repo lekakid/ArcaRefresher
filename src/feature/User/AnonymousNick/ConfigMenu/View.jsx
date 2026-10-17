@@ -4,12 +4,12 @@ import { List, Paper, Typography } from '@mui/material';
 
 import { TextFieldRow } from 'component/ConfigMenu';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
 const View = forwardRef((_props, ref) => {
   const { prefixList, suffixList, extraPrefix } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   const handleSaveFormat = useCallback(
@@ -19,7 +19,7 @@ const View = forwardRef((_props, ref) => {
 
   return (
     <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
           <TextFieldRow
@@ -52,5 +52,5 @@ const View = forwardRef((_props, ref) => {
   );
 });
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

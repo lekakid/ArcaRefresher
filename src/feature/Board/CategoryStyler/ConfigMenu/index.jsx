@@ -1,11 +1,11 @@
 import ColorizeIcon from '@mui/icons-material/Colorize';
 
 import View from './View';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  key: info.id,
   Icon: ColorizeIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };
