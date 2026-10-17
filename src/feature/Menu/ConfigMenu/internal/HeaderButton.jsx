@@ -27,10 +27,15 @@ export default function HeaderButton() {
   // 상단바가 없는 경우 ! 입력 시 설정 화면 표시
   useLayoutEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === '!') {
-        if (e.target.matches('input, textarea, [contenteditable]')) return;
-        dispatch(setOpen(true));
-      }
+      if (e.key !== '!') return;
+      if (
+        !document.querySelector('.root-container.single') &&
+        navEl.parentElement
+      )
+        return;
+      if (e.target.matches('input, textarea, [contenteditable]')) return;
+
+      dispatch(setOpen(true));
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
