@@ -70,7 +70,7 @@ function ConfigMenuSideNavigation() {
             <DrawerItem
               key={m.id}
               sx={{
-                paddingLeft: g ? 4 : undefined,
+                paddingLeft: g.label ? 4 : undefined,
               }}
               divider={m.order === -1}
               configKey={m.id}
