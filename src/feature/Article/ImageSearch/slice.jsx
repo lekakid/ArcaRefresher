@@ -13,7 +13,6 @@ const defaultStorage = {
   searchGoogleMethod: 'lens',
   // 사이트
   showGoogle: true,
-  showBing: true,
   showYandex: true,
   showSauceNao: true,
   showIqdb: true,
@@ -48,9 +47,6 @@ export const slice = createSlice({
     $toggleShowGoogle(state) {
       state.storage.showGoogle = !state.storage.showGoogle;
     },
-    $toggleShowBing(state) {
-      state.storage.showBing = !state.storage.showBing;
-    },
     $toggleShowYandex(state) {
       state.storage.showYandex = !state.storage.showYandex;
     },
@@ -83,7 +79,6 @@ export const {
   $setSearchGoogleMethod,
   // 사이트
   $toggleShowGoogle,
-  $toggleShowBing,
   $toggleShowYandex,
   $toggleShowSauceNao,
   $toggleShowIqdb,

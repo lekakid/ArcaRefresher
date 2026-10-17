@@ -12,7 +12,6 @@ import {
   $toggleContextMenu,
   $toggleSearchBySource,
   $toggleShowAscii2D,
-  $toggleShowBing,
   $toggleShowGoogle,
   $toggleShowImgOps,
   $toggleShowIqdb,
@@ -31,7 +30,6 @@ const View = forwardRef((_props, ref) => {
     searchGoogleMethod,
     // 사이트
     showGoogle,
-    showBing,
     showYandex,
     showSauceNao,
     showIqdb,
@@ -89,12 +87,6 @@ const View = forwardRef((_props, ref) => {
             primary="Google"
             value={showGoogle}
             action={$toggleShowGoogle}
-          />
-          <SwitchRow
-            divider
-            primary="Bing"
-            value={showBing}
-            action={$toggleShowBing}
           />
           <SwitchRow
             divider
