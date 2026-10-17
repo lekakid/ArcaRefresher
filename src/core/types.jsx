@@ -24,7 +24,7 @@
  * @typedef {Object} ConfigMenuInfo
  *
  * 설정 메뉴에 사용되는 오브젝트입니다.  
- * menu/index.jsx 에서 사용됩니다.
+ * 각 모듈의 ConfigMenu/index.jsx 에서 사용됩니다.
  * 
  * @property {string}   key           설정의 키 값
  * @property {Number}   order         설정 메뉴에서 보일 순서
@@ -37,7 +37,7 @@
  * @typedef {Object} ContextMenuInfo
  *
  * 설정 메뉴에 사용되는 오브젝트입니다.  
- * menu/index.jsx 에서 사용됩니다.
+ * 각 모듈의 ContextMenu/index.jsx 에서 사용됩니다.
  * 
  * @property {string}    key          키 값
  * @property {Component} View         메뉴 아이템 컴포넌트
