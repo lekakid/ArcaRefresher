@@ -27,7 +27,8 @@ const pageType = pathToken.shift();
 let channelId = pathToken.shift();
 let channelName;
 switch (pageType) {
-  case 'b':
+  case 'b': // 게시판
+  case 'r': // 같이보기
     // Nothing
     break;
   case 'e':
