@@ -5,9 +5,9 @@
  * 
  * 설정에서 보일 그룹에 대한 정보를 담고 있습니다.
  * 
- * @property {string} key           그룹 ID
- * @property {string} label         그룹의 이름
+ * @property {string} id            그룹 ID
  * @property {Icon}   Icon          그룹 아이콘
+ * @property {string} label         그룹의 이름
  * @property {Number} order         그룹 정렬 순서
  */
 

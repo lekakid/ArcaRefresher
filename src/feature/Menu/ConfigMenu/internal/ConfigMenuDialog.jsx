@@ -22,58 +22,98 @@ import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
-import { setOpen, setDrawer, setGroup } from '../slice';
+import { setOpen, setDrawer } from '../slice';
 import info from '../info';
 
-function menuSorter(a, b) {
-  if (!b.order && !a.order) {
-    if (a.label > b.label) return 1;
-    if (a.label < b.label) return -1;
-    return 0;
-  }
-  if (!b.order) return -1;
-  if (!a.order) return 1;
-
-  return a.order - b.order;
-}
-
+// 그룹 정보 (feature/{GROUP_NAME}/group.jsx)
 const groupInfos = import.meta.glob(
-  ['/src/feature/*/GroupInfo.jsx', '!/src/feature/_*/**'],
+  ['/src/feature/*/group.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const groupList = Object.entries(groupInfos)
-  .map(([path, info]) => ({
-    key: path.split('/')[3],
-    ...info,
-  }))
-  .sort((a, b) => a.order - b.order);
-groupList.push(null);
+const groupList = Object.values(groupInfos).sort((a, b) => a.order - b.order);
 
+// 설정 메뉴 정보 (feature/{GROUP_NAME}/{FEATURE_NAME}/ConfigMenu/index.jsx)
 const menuInfos = import.meta.glob(
   ['/src/feature/*/*/ConfigMenu/index.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const menuList = Object.entries(menuInfos).map(([path, info]) => {
-  const group = path.split('/')[3];
-  return {
-    group: group === 'NO_GROUP' ? '' : group,
-    ...info,
-  };
+const menuList = Object.values(menuInfos).sort((a, b) => {
+  // 그룹 정렬
+  if (a.group.order - b.group.order > 0) return 1;
+  if (a.group.order - b.group.order < 0) return -1;
+
+  // 메뉴 정렬
+  if (!a.order && !b.order) {
+    if (a.label > b.label) return 1;
+    if (a.label < b.label) return -1;
+  }
+  if (!a.order) return 1;
+  if (!b.order) return -1;
+  return a.order - b.order;
 });
+
+function ConfigMenuSideNavigation() {
+  const { group } = useSelector((state) => state[info.id]);
+
+  const selectedGroup = group ?? groupList[0].id;
+
+  return (
+    <List disablePadding>
+      <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
+        전체 설정
+      </DrawerItem>
+      <Divider />
+      {groupList.map((g, index) => {
+        const innerList = menuList
+          .filter((m) => m.group === g)
+          .map((m) => (
+            <DrawerItem
+              key={m.id}
+              sx={{
+                paddingLeft: g ? 4 : undefined,
+              }}
+              divider={m.order === -1}
+              configKey={m.id}
+              icon={<m.Icon />}
+            >
+              {m.label}
+            </DrawerItem>
+          ));
+
+        return (
+          <Fragment key={g.id}>
+            {g.label && (
+              <DrawerGroup
+                groupKey={g.id}
+                groupIcon={<g.Icon />}
+                open={g.id === selectedGroup}
+                groupText={g.label}
+              >
+                {innerList}
+                {groupList.length - 2 !== index && <Divider />}
+              </DrawerGroup>
+            )}
+            {!g.label && (
+              <>
+                <Divider />
+                {innerList}
+              </>
+            )}
+          </Fragment>
+        );
+      })}
+    </List>
+  );
+}
 
 function ConfigMenuDialog() {
   const dispatch = useDispatch();
-  const { open, opacity, drawer, group, selection } = useSelector(
+  const { open, opacity, drawer, selection } = useSelector(
     (state) => state[info.id],
   );
   const [loadCount, setLoadCount] = useState(3);
   const [target, setTarget] = useState(undefined);
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-
-  // 첫 항목 자동 선택
-  useEffect(() => {
-    if (!group) dispatch(setGroup(groupList[0].key));
-  }, [group, dispatch]);
 
   // 설정이 열려있는 동안 아카 단축키 무력화
   useEffect(() => {
@@ -119,80 +159,20 @@ function ConfigMenuDialog() {
     dispatch(setDrawer(!drawer));
   }, [dispatch, drawer]);
 
-  const navi = groupList.map((g, index) => {
-    const innerList = menuList
-      .filter((m) => m.group === g?.key || (!g && m.group === ''))
-      .sort(menuSorter)
-      .map((m) => (
-        <DrawerItem
-          key={m.key}
-          sx={{
-            paddingLeft: g ? 4 : undefined,
-          }}
-          divider={m.order === -1}
-          configKey={m.key}
-          icon={<m.Icon />}
-        >
-          {m.label}
-        </DrawerItem>
-      ));
-
-    if (g) {
-      return (
-        <DrawerGroup
-          key={g.key}
-          groupKey={g.key}
-          groupIcon={<g.Icon />}
-          open={group === g.key}
-          groupText={g.label}
-        >
-          {innerList}
-          {groupList.length - 2 !== index && <Divider />}
-        </DrawerGroup>
-      );
-    }
-    return (
-      <Fragment key="NO_GOURP">
-        <Divider />
-        {innerList}
-      </Fragment>
-    );
-  });
-
-  let content = null;
-  if (selection === 'all') {
-    const sortedMenuList = groupList
-      .map((g) =>
-        menuList
-          .filter((m) => m.group === g?.key || (!g && m.group === ''))
-          .sort(menuSorter),
-      )
-      .flat();
-    content = sortedMenuList
-      .filter((_value, index) => index < loadCount)
-      .map(({ key, View }) => (
-        <ModuleLoadBoundary
-          key={key}
-          moduleId={key}
-          text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
-        >
-          <View />
-        </ModuleLoadBoundary>
-      ));
-  } else {
-    content = menuList.map(
-      ({ key, View }) =>
-        selection === key && (
-          <ModuleLoadBoundary
-            key={key}
-            moduleId={key}
-            text={`[${key}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
-          >
-            <View />
-          </ModuleLoadBoundary>
-        ),
-    );
-  }
+  const content = menuList
+    .filter(
+      ({ id }, index) =>
+        (selection === 'all' && index < loadCount) || selection === id,
+    )
+    .map(({ id, View }) => (
+      <ModuleLoadBoundary
+        key={id}
+        moduleId={id}
+        text={`[${id}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+      >
+        <View />
+      </ModuleLoadBoundary>
+    ));
 
   return (
     <Dialog
@@ -254,13 +234,7 @@ function ConfigMenuDialog() {
           open={!mobile || drawer}
           onClose={handleDrawerToggle}
         >
-          <List disablePadding>
-            <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
-              전체 설정
-            </DrawerItem>
-            <Divider />
-            {navi}
-          </List>
+          <ConfigMenuSideNavigation />
         </Drawer>
         <Stack
           sx={{
