@@ -440,7 +440,7 @@ function GalleryManager({ gallery }) {
                         sx={{ cursor: 'text' }}
                       >
                         <input
-                          ref={editInputRef}
+                          ref={editingCell ? editInputRef : undefined}
                           defaultValue={row.memo}
                           onBlur={(e) => handleMemoBlur(row, e.target.value)}
                           style={{
