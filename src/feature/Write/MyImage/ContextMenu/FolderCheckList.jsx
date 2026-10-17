@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Close as CloseIcon } from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { useContent } from 'hooks/Content';
 
