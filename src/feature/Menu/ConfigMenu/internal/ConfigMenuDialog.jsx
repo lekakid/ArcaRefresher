@@ -20,11 +20,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 
-import info from './info';
-import { setOpen, setDrawer, setGroup } from './slice';
-import HeaderButton from './HeaderButton';
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
+import { setOpen, setDrawer, setGroup } from '../slice';
+import info from '../info';
 
 function menuSorter(a, b) {
   if (!b.order && !a.order) {
@@ -62,7 +61,7 @@ const menuList = Object.entries(menuInfos).map(([path, info]) => {
   };
 });
 
-function MenuContainer() {
+function ConfigMenuDialog() {
   const dispatch = useDispatch();
   const { open, opacity, drawer, group, selection } = useSelector(
     (state) => state[info.id],
@@ -196,107 +195,98 @@ function MenuContainer() {
   }
 
   return (
-    <>
-      <Dialog
-        fullScreen={mobile}
-        fullWidth
-        maxWidth="md"
-        slotProps={{
-          backdrop: {
-            invisible: opacity !== 1,
+    <Dialog
+      fullScreen={mobile}
+      fullWidth
+      maxWidth="md"
+      slotProps={{
+        backdrop: {
+          invisible: opacity !== 1,
+        },
+        transition: {
+          mountOnEnter: true,
+        },
+        paper: {
+          sx: {
+            aspectRatio: '9/7',
           },
-          transition: {
-            mountOnEnter: true,
-          },
-          paper: {
-            sx: {
-              aspectRatio: '9/7',
-            },
-            square: true,
-            elevation: 0,
-          },
-        }}
-        open={open}
-        onClose={handleConfigClose}
-      >
-        <AppBar color="primary" position="relative">
-          <Toolbar>
-            {mobile && (
-              <IconButton
-                size="large"
-                color="inherit"
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              {`Arca Refresher ${GM_info.script.version}`}
-            </Typography>
+          square: true,
+          elevation: 0,
+        },
+      }}
+      open={open}
+      onClose={handleConfigClose}
+    >
+      <AppBar color="primary" position="relative">
+        <Toolbar>
+          {mobile && (
             <IconButton
               size="large"
               color="inherit"
-              onClick={handleConfigClose}
+              onClick={handleDrawerToggle}
             >
-              <CloseIcon />
+              <MenuIcon />
             </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Stack direction="row" sx={{ minHeight: 0, height: '100%' }}>
-          <Drawer
-            variant={mobile ? 'temporary' : 'permanent'}
-            ModalProps={{ disablePortal: true, keepMounted: true }}
-            slotProps={{
-              paper: {
-                sx: {
-                  position: 'relative',
-                  width: 240,
-                  sm: {
-                    zIndex: (theme) => theme.zIndex.appBar - 1,
-                  },
+          )}
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+            {`Arca Refresher ${GM_info.script.version}`}
+          </Typography>
+          <IconButton size="large" color="inherit" onClick={handleConfigClose}>
+            <CloseIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Stack direction="row" sx={{ minHeight: 0, height: '100%' }}>
+        <Drawer
+          variant={mobile ? 'temporary' : 'permanent'}
+          ModalProps={{ disablePortal: true, keepMounted: true }}
+          slotProps={{
+            paper: {
+              sx: {
+                position: 'relative',
+                width: 240,
+                sm: {
+                  zIndex: (theme) => theme.zIndex.appBar - 1,
                 },
               },
-            }}
-            open={!mobile || drawer}
-            onClose={handleDrawerToggle}
-          >
-            <List disablePadding>
-              <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
-                전체 설정
-              </DrawerItem>
-              <Divider />
-              {navi}
-            </List>
-          </Drawer>
-          <Stack
-            sx={{
-              width: '100%',
-              padding: 3,
-              overflowY: 'auto',
-              gap: 1,
-            }}
-          >
-            {content}
-            {selection === 'all' && loadCount < menuList.length && (
-              <Box
-                ref={setTarget}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '32px',
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            )}
-          </Stack>
+            },
+          }}
+          open={!mobile || drawer}
+          onClose={handleDrawerToggle}
+        >
+          <List disablePadding>
+            <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
+              전체 설정
+            </DrawerItem>
+            <Divider />
+            {navi}
+          </List>
+        </Drawer>
+        <Stack
+          sx={{
+            width: '100%',
+            padding: 3,
+            overflowY: 'auto',
+            gap: 1,
+          }}
+        >
+          {content}
+          {selection === 'all' && loadCount < menuList.length && (
+            <Box
+              ref={setTarget}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '32px',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </Stack>
-      </Dialog>
-      <HeaderButton />
-    </>
+      </Stack>
+    </Dialog>
   );
 }
 
-MenuContainer.displayName = 'ConfigMenuContainer';
-
-export default MenuContainer;
+export default ConfigMenuDialog;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   ListItem,
   ListItemButton,
@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { setSelection, setDrawer } from './slice';
+import { setSelection, setDrawer } from '../slice';
 
 function DrawerItem({ sx, divider, configKey, icon, children }) {
   const dispatch = useDispatch();
