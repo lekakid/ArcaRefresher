@@ -8,6 +8,7 @@
  * @property {string} key           그룹 ID
  * @property {string} label         그룹의 이름
  * @property {Icon}   Icon          그룹 아이콘
+ * @property {Number} order         그룹 정렬 순서
  */
 
 /**
@@ -27,10 +28,10 @@
  * 각 모듈의 ConfigMenu/index.jsx 에서 사용됩니다.
  * 
  * @property {string}   key           설정의 키 값
- * @property {Number}   order         설정 메뉴에서 보일 순서
- * @property {Icon}     Icon          좌측 목록에서 보일 아이콘
- * @property {string}   label         설정 메뉴 좌측 목록 등에서 보일 이름
- * @property {string}   View
+ * @property {Icon}     Icon          설정 메뉴 좌측 목록에서 보일 아이콘
+ * @property {string}   label         설정 메뉴 좌측 목록에서 보일 이름
+ * @property {string}   View          설정 메뉴에서 보일 컴포넌트
+ * @property {Number?}  order         설정 메뉴에서 보일 순서 (생략 시 label 순서 사용)
  */
 
 /**
