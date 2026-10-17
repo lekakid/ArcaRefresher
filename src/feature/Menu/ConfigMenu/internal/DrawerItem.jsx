@@ -1,24 +1,16 @@
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery,
 } from '@mui/material';
 
-import { setSelection, setDrawer } from '../slice';
-
-function DrawerItem({ sx, divider, configKey, icon, children }) {
-  const dispatch = useDispatch();
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-
+function DrawerItem({ sx, divider, icon, children, configKey, onClick }) {
   const handleClick = useCallback(() => {
-    dispatch(setSelection(configKey));
-    if (mobile) dispatch(setDrawer(false));
-  }, [configKey, dispatch, mobile]);
+    onClick(configKey);
+  }, [configKey, onClick]);
 
   return (
     <ListItem disablePadding divider={divider}>
@@ -33,9 +25,10 @@ function DrawerItem({ sx, divider, configKey, icon, children }) {
 DrawerItem.propTypes = {
   sx: PropTypes.object,
   divider: PropTypes.bool,
-  configKey: PropTypes.string,
   icon: PropTypes.element,
   children: PropTypes.node,
+  configKey: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 export default DrawerItem;

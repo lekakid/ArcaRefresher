@@ -1,10 +1,8 @@
 import { GM_info } from '$';
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
-  Box,
-  CircularProgress,
   Dialog,
   Divider,
   Drawer,
@@ -22,8 +20,9 @@ import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
-import { setOpen, setDrawer } from '../slice';
+import { setOpen, setDrawer, setSelection, setGroup } from '../slice';
 import info from '../info';
+import PropTypes from 'prop-types';
 
 // 그룹 정보 (feature/{GROUP_NAME}/group.jsx)
 const groupInfos = import.meta.glob(
@@ -52,14 +51,37 @@ const menuList = Object.values(menuInfos).sort((a, b) => {
   return a.order - b.order;
 });
 
-function ConfigMenuSideNavigation() {
+function ConfigMenuSideNavigation({ onConfigSelect }) {
+  const dispatch = useDispatch();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
   const { group } = useSelector((state) => state[info.id]);
+
+  const handleItemClick = useCallback(
+    (key) => {
+      onConfigSelect();
+      dispatch(setSelection(key));
+      if (mobile) dispatch(setDrawer(false));
+    },
+    [mobile, onConfigSelect, dispatch],
+  );
+
+  const handleGroupClick = useCallback(
+    (key) => {
+      dispatch(setGroup(key));
+    },
+    [dispatch],
+  );
 
   const selectedGroup = group ?? groupList[0].id;
 
   return (
     <List disablePadding>
-      <DrawerItem key="all" configKey="all" icon={<MenuIcon />}>
+      <DrawerItem
+        key="all"
+        configKey="all"
+        icon={<MenuIcon />}
+        onClick={handleItemClick}
+      >
         전체 설정
       </DrawerItem>
       <Divider />
@@ -73,8 +95,9 @@ function ConfigMenuSideNavigation() {
                 paddingLeft: g.label ? 4 : undefined,
               }}
               divider={m.order === -1}
-              configKey={m.id}
               icon={<m.Icon />}
+              configKey={m.id}
+              onClick={handleItemClick}
             >
               {m.label}
             </DrawerItem>
@@ -84,10 +107,11 @@ function ConfigMenuSideNavigation() {
           <Fragment key={g.id}>
             {g.label && (
               <DrawerGroup
-                groupKey={g.id}
                 groupIcon={<g.Icon />}
-                open={g.id === selectedGroup}
                 groupText={g.label}
+                groupKey={g.id}
+                open={g.id === selectedGroup}
+                onClick={handleGroupClick}
               >
                 {innerList}
                 {groupList.length - 2 !== index && <Divider />}
@@ -106,14 +130,19 @@ function ConfigMenuSideNavigation() {
   );
 }
 
+ConfigMenuSideNavigation.propTypes = {
+  onConfigSelect: PropTypes.func,
+};
+
 function ConfigMenuDialog() {
   const dispatch = useDispatch();
+  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
   const { open, opacity, drawer, selection } = useSelector(
     (state) => state[info.id],
   );
-  const [loadCount, setLoadCount] = useState(3);
-  const [target, setTarget] = useState(undefined);
-  const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+
+  const stackRoot = useRef(null);
+  const [loadCount, setLoadCount] = useState(2);
 
   // 설정이 열려있는 동안 아카 단축키 무력화
   useEffect(() => {
@@ -128,21 +157,15 @@ function ConfigMenuDialog() {
     return () => document.removeEventListener('keydown', blocker, true);
   }, [open]);
 
-  // 전체 설정 조회 시 사용되는 스크롤 관련 옵저버
+  // 전체 설정 렌더 조절
   useEffect(() => {
-    if (!target) return undefined;
+    if (!open) return;
+    if (selection !== 'all') return;
+    if (loadCount >= menuList.length) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target);
-        setLoadCount((prev) => prev + 1);
-        observer.observe(entry.target);
-      }
-    });
-    observer.observe(target);
-
-    return () => observer.disconnect();
-  }, [target]);
+    const id = requestAnimationFrame(() => setLoadCount((c) => c + 4));
+    return () => cancelAnimationFrame(id);
+  }, [open, loadCount, selection]);
 
   // 모바일 환경
   useEffect(() => {
@@ -151,8 +174,8 @@ function ConfigMenuDialog() {
 
   const handleConfigClose = useCallback(() => {
     if (mobile) dispatch(setDrawer(false));
-    setLoadCount(1);
     dispatch(setOpen(false));
+    setLoadCount(2);
   }, [dispatch, mobile]);
 
   const handleDrawerToggle = useCallback(() => {
@@ -234,9 +257,15 @@ function ConfigMenuDialog() {
           open={!mobile || drawer}
           onClose={handleDrawerToggle}
         >
-          <ConfigMenuSideNavigation />
+          <ConfigMenuSideNavigation
+            onConfigSelect={() => {
+              stackRoot.current.scrollTo(0, 0);
+              setLoadCount(2);
+            }}
+          />
         </Drawer>
         <Stack
+          ref={stackRoot}
           sx={{
             width: '100%',
             padding: 3,
@@ -245,18 +274,6 @@ function ConfigMenuDialog() {
           }}
         >
           {content}
-          {selection === 'all' && loadCount < menuList.length && (
-            <Box
-              ref={setTarget}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '32px',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )}
         </Stack>
       </Stack>
     </Dialog>

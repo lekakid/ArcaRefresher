@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Collapse,
@@ -10,14 +9,17 @@ import {
   ListItemText,
 } from '@mui/material';
 
-import { setGroup } from '../slice';
-
-function DrawerGroup({ groupKey, groupIcon, groupText, open, children }) {
-  const dispatch = useDispatch();
-
+function DrawerGroup({
+  groupKey,
+  groupIcon,
+  groupText,
+  open,
+  children,
+  onClick,
+}) {
   const handleClick = useCallback(() => {
-    dispatch(setGroup(groupKey));
-  }, [dispatch, groupKey]);
+    onClick(groupKey);
+  }, [groupKey, onClick]);
 
   return (
     <>
@@ -40,6 +42,7 @@ DrawerGroup.propTypes = {
   groupText: PropTypes.string,
   open: PropTypes.bool,
   children: PropTypes.node,
+  onClick: PropTypes.func,
 };
 
 export default DrawerGroup;
