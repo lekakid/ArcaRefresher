@@ -17,7 +17,7 @@ import MemoInput from './MemoInput';
 import Info from './FeatureInfo';
 import { $updateMemoNick, setInputUser } from './slice';
 
-function MemoList() {
+function Memo() {
   const dispatch = useDispatch();
   const loaded = useLoadChecker(FULL_LOADED);
 
@@ -148,4 +148,4 @@ function MemoList() {
   );
 }
 
-export default MemoList;
+export default Memo;
