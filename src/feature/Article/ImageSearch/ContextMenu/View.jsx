@@ -18,6 +18,56 @@ import Info from '../FeatureInfo';
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔 창을 확인 바랍니다.';
 
+async function openWithForm(
+  searchUrl,
+  { inputSelector = 'input', imageUrl, blob },
+) {
+  if (!searchUrl) throw Error('검색 사이트 지정 안됨');
+
+  const targetUrl = new URL(searchUrl);
+
+  // 사이트 검색 input 추출
+  const inputList = await request(targetUrl.origin).then(({ response }) => [
+    ...response.querySelectorAll(inputSelector),
+  ]);
+
+  // 폼 생성
+  const form = document.createElement('form');
+  form.style.position = 'absolute';
+  form.style.left = '-9999px';
+
+  // 전송 설정
+  form.method = 'POST';
+  form.action = targetUrl;
+  form.enctype = 'multipart/form-data';
+  form.target = '_blank';
+
+  for (const input of inputList) {
+    // 파일 첨부
+    if (blob && input.type === 'file') {
+      const convertedBlob = await convertToPng(blob);
+      const type = convertedBlob.type;
+      const ext = type.split('/')[1];
+      const file = new File([convertedBlob], `image.${ext}`, { type });
+
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      input.files = dataTransfer.files;
+    }
+
+    // URL 입력
+    if (imageUrl && input.type === 'url') {
+      input.value = imageUrl;
+    }
+
+    form.append(input);
+  }
+
+  document.body.append(form);
+  form.submit();
+  form.remove();
+}
+
 function ContextMenu({ target, closeMenu }) {
   const {
     // 동작
@@ -104,32 +154,7 @@ function ContextMenu({ target, closeMenu }) {
           return;
         }
 
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File([blob], `image.${blob.type.split('/')[1]}`, {
-            type: blob.type,
-          }),
-        );
-
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://saucenao.com/search.php';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.name = 'file';
-        input.files = dataTransfer.files;
-        form.append(input);
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://saucenao.com/search.php', { blob });
         setSnack();
       } catch (error) {
         setSnack({
@@ -160,42 +185,7 @@ function ContextMenu({ target, closeMenu }) {
           return;
         }
 
-        const inputList = await request('https://iqdb.org/').then(
-          ({ response }) => [...response.querySelectorAll('input')],
-        );
-
-        const convertedBlob = await convertToPng(blob);
-        const file = new File(
-          [convertedBlob],
-          `image.${convertedBlob.type.split('/')[1]}`,
-          {
-            type: convertedBlob.type,
-          },
-        );
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://iqdb.org/';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        for (let i = 0; i < inputList.length; i += 1) {
-          const input = inputList[i];
-          if (input.type === 'file') {
-            input.files = dataTransfer.files;
-          }
-          form.append(input);
-        }
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://iqdb.org/', { blob });
         setSnack();
       } catch (error) {
         setSnack({
@@ -214,33 +204,11 @@ function ContextMenu({ target, closeMenu }) {
       try {
         closeMenu();
         setSnack({ msg: 'Ascii2D에서 검색 중...' });
-        const inputList = await request('https://ascii2d.net/').then(
-          ({ response }) => [
-            ...response.querySelectorAll('form:not(#file_upload) input'),
-          ],
-        );
 
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://ascii2d.net/search/uri';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        for (let i = 0; i < inputList.length; i += 1) {
-          const input = inputList[i];
-          if (input.type === 'url') {
-            input.value = data;
-          }
-          form.append(input);
-        }
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://ascii2d.net/search/uri', {
+          imageUrl: data,
+          inputSelector: 'form:not(#file_upload) input',
+        });
         setSnack();
       } catch (error) {
         setSnack({
