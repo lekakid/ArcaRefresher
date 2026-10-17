@@ -35,10 +35,6 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       return message;
     };
 
-    let count = startWithZero ? 0 : 1;
-    // 파일명 중복 시 끝에 숫자 붙이는 용도
-    const dupCount = {};
-
     // 파일 저장 스트림 생성
     const zipFileName = format(zipName, { content: contentInfo });
     const filestream = streamSaver.createWriteStream(
@@ -53,15 +49,17 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       onDownloadStart();
       setSnack({ msg: '다운로드 준비 중' });
 
+      // 파일명 중복 시 끝에 숫자 붙이는 용도
+      const dupCount = {};
+
       // 다운로드 시작
       for (let i = 0; i < infoList.length; i += 1) {
         const info = infoList[i];
-
         const { url, orig, ext, name } = info;
 
         let imageName = format(zipImageName, {
           content: contentInfo,
-          index: count,
+          index: startWithZero ? i : i + 1,
           name,
         });
         imageName =
@@ -71,7 +69,6 @@ function DownloadWidget({ infoList, onDownloadStart }) {
         dupCount[imageName] = (dupCount[imageName] || 0) + 1;
         const isGif = ext === 'gif';
 
-        count += 1;
         try {
           const targetUrl = downloadOrigin || isGif ? orig : url;
           const blob = await request(targetUrl, {
