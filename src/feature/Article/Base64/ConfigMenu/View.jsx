@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { KeyIcon } from 'component';
-import { SwitchRow } from 'component/ConfigMenu';
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import {
   $toggleAutoDecode,

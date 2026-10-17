@@ -3,8 +3,9 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow } from 'component/ConfigMenu';
-import { $setPosition } from 'menu/ArticleMenu/slice';
+import { SelectRow } from 'feature/Menu/ConfigMenu/component';
+
+import { $setPosition } from '../slice';
 
 import info from '../info';
 

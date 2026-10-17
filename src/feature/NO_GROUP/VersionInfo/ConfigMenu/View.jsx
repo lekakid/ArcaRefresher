@@ -13,7 +13,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import HelpIcon from '@mui/icons-material/Help';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-import { BaseRow, SelectRow } from 'component/ConfigMenu';
+import { BaseRow, SelectRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
 
 import info from '../info';

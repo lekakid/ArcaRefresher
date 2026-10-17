@@ -26,7 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LabelIcon from '@mui/icons-material/Label';
 
-import { SelectRow, SwitchRow } from 'component/ConfigMenu';
+import { SelectRow, SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import { useConfirm } from 'component';
 import info from '../info';

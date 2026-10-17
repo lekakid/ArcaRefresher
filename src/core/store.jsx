@@ -5,15 +5,6 @@ import { ErrorHandlerEntires } from 'error/slice';
 import { ContentReducerEntries } from 'hooks/Content';
 import { LoadCheckerReducerEntries } from 'hooks/LoadChecker';
 
-const menuModules = import.meta.glob('/src/menu/*/slice.jsx', {
-  eager: true,
-  import: 'default',
-});
-const menuReducerEntries = Object.entries(menuModules).map(
-  // path: '/src/menu/{MenuName}/slice.jsx'
-  ([path, reducer]) => [path.split('/')[3], reducer],
-);
-
 const featureModules = import.meta.glob(
   ['/src/feature/*/*/slice.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
@@ -28,7 +19,6 @@ const store = configureStore({
     ErrorHandlerEntires,
     LoadCheckerReducerEntries,
     ContentReducerEntries,
-    ...menuReducerEntries,
     ...featureReducerEntries,
   ]),
   middleware: (getDefaultMiddleWare) =>

@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useOpenState } from 'menu/ConfigMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
-
+import { useOpenState } from 'feature/Menu/ConfigMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
+
 import actionTable, { ACTIVE_ARTICLE, ACTIVE_BOARD } from './actionTable';
 import keyFilter from './keyFilter';
 import info from './info';

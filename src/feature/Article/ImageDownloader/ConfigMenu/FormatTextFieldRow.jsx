@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import { BaseRow } from 'component/ConfigMenu';
+import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 
 import { FORMAT } from '../Util/format';
 

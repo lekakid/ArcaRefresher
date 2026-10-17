@@ -1,7 +1,6 @@
 import { GM_info } from '$';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
@@ -39,7 +38,31 @@ function menuSorter(a, b) {
   return a.order - b.order;
 }
 
-function MenuContainer({ groupList, menuList }) {
+const groupInfos = import.meta.glob(
+  ['/src/feature/*/GroupInfo.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
+);
+const groupList = Object.entries(groupInfos)
+  .map(([path, info]) => ({
+    key: path.split('/')[3],
+    ...info,
+  }))
+  .sort((a, b) => a.order - b.order);
+groupList.push(null);
+
+const menuInfos = import.meta.glob(
+  ['/src/feature/*/*/ConfigMenu/index.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
+);
+const menuList = Object.entries(menuInfos).map(([path, info]) => {
+  const group = path.split('/')[3];
+  return {
+    group: group === 'NO_GROUP' ? '' : group,
+    ...info,
+  };
+});
+
+function MenuContainer() {
   const dispatch = useDispatch();
   const { open, opacity, drawer, group, selection } = useSelector(
     (state) => state[info.id],
@@ -51,7 +74,7 @@ function MenuContainer({ groupList, menuList }) {
   // 첫 항목 자동 선택
   useEffect(() => {
     if (!group) dispatch(setGroup(groupList[0].key));
-  }, [group, groupList, dispatch]);
+  }, [group, dispatch]);
 
   // 설정이 열려있는 동안 아카 단축키 무력화
   useEffect(() => {
@@ -275,9 +298,5 @@ function MenuContainer({ groupList, menuList }) {
 }
 
 MenuContainer.displayName = 'ConfigMenuContainer';
-MenuContainer.propTypes = {
-  groupList: PropTypes.array,
-  menuList: PropTypes.array,
-};
 
 export default MenuContainer;

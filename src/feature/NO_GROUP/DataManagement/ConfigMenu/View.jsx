@@ -11,7 +11,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
-import { BaseRow } from 'component/ConfigMenu';
+import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
 
 import info from '../info';

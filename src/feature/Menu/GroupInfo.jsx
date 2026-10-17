@@ -4,6 +4,6 @@ import 'core/types';
 /** @type {GroupInfo} */
 export default {
   Icon: MoreHorizIcon,
-  label: '기타',
+  label: '리프레셔 메뉴',
   order: 5,
 };

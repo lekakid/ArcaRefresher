@@ -15,7 +15,7 @@ import {
   SliderRow,
   SwitchRow,
   TextFieldRow,
-} from 'component/ConfigMenu';
+} from 'feature/Menu/ConfigMenu/component';
 import info from '../info';
 import {
   // 모양

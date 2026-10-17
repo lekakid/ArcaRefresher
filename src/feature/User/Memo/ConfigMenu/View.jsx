@@ -13,7 +13,11 @@ import { createSelector } from '@reduxjs/toolkit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import streamSaver from 'streamsaver';
 
-import { BaseRow, SelectRow, DataGridRow } from 'component/ConfigMenu';
+import {
+  BaseRow,
+  SelectRow,
+  DataGridRow,
+} from 'feature/Menu/ConfigMenu/component';
 import { FOREGROUND, open } from 'func/window';
 
 import info from '../info';

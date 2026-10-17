@@ -6,8 +6,7 @@
       "error/*": ["./src/error/*"],
       "feature/*": ["./src/feature/*"],
       "func/*": ["./src/func/*"],
-      "hooks/*": ["./src/hooks/*"],
-      "menu/*": ["./src/menu/*"]
+      "hooks/*": ["./src/hooks/*"]
     }
   },
   "exclude": ["node_modules", "dist"],

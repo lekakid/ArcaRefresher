@@ -8,7 +8,7 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
 import { ArcaUser } from 'func/user';
 
 import { setInputUser } from '../slice';

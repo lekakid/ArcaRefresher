@@ -19,7 +19,7 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { KeyIcon } from 'component';
-import { SwitchRow } from 'component/ConfigMenu';
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import {
   $setKey,

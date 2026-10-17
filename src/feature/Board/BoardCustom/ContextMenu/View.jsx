@@ -6,8 +6,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BOARD_ITEMS } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { BACKGROUND, open } from 'func/window';
 

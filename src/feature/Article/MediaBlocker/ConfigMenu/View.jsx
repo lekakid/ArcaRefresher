@@ -2,7 +2,7 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { Collapse, List, Paper, Typography } from '@mui/material';
 
-import { SwitchRow } from 'component/ConfigMenu';
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import {
   $toggleBlockAll,

@@ -1,12 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Box, List, Menu, MenuItem } from '@mui/material';
 
 import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
 
 import info from './info';
 import { setOpen } from './slice';
+
+const contextMenuInfos = import.meta.glob(
+  ['/src/feature/*/*/ContextMenu/index.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
+);
+const menuList = Object.values(contextMenuInfos).sort(
+  (a, b) => a.order - b.order,
+);
 
 function getKeyCombine(event) {
   let combine = '';
@@ -18,7 +25,7 @@ function getKeyCombine(event) {
   return combine;
 }
 
-function ContextMenu({ menuList }) {
+function ContextMenu() {
   const dispatch = useDispatch();
   const { interactionType } = useSelector((state) => state[info.id].storage);
   const { mousePos, triggerList } = useSelector((state) => state[info.id]);
@@ -142,9 +149,5 @@ function ContextMenu({ menuList }) {
     </Menu>
   );
 }
-
-ContextMenu.propTypes = {
-  menuList: PropTypes.array,
-};
 
 export default ContextMenu;

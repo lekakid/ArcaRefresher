@@ -2,7 +2,7 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
-import { SliderRow, SwitchRow } from 'component/ConfigMenu';
+import { SliderRow, SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import {
   // 모양

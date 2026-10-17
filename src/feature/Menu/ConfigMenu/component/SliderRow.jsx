@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { ListItemText, Slider } from '@mui/material';
 
-import { useOpacity } from 'menu/ConfigMenu';
-
 import BaseRow from './BaseRow';
+import useOpacity from '../useOpacity';
 
 const SliderRow = forwardRef(
   (

@@ -2,7 +2,7 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, useMediaQuery } from '@mui/material';
 
-import { SwitchRow } from 'component/ConfigMenu';
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 import {
   // 모양
   $toggleCategoryAlign,

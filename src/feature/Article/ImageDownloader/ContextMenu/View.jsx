@@ -8,8 +8,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 

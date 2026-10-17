@@ -2,7 +2,7 @@ import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
-import { SelectRow, SwitchRow } from 'component/ConfigMenu';
+import { SelectRow, SwitchRow } from 'feature/Menu/ConfigMenu/component';
 import {
   $setTimeLimit,
   $setMaxTime,

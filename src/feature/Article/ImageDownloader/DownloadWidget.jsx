@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 

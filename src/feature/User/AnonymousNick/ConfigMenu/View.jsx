@@ -2,7 +2,7 @@ import { forwardRef, Fragment, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
-import { TextFieldRow } from 'component/ConfigMenu';
+import { TextFieldRow } from 'feature/Menu/ConfigMenu/component';
 
 import info from '../info';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';

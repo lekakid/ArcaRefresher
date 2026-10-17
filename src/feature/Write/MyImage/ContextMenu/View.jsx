@@ -5,7 +5,7 @@ import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
 
 import info from '../info';
 import FolderCheckList from './FolderCheckList';

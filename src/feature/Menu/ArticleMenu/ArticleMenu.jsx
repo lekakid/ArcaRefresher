@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEAD, ARTICLE_TITLE } from 'core/selector';
@@ -8,7 +7,15 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import info from './info';
 
-function ArticleMenu({ children }) {
+const articleMenuModules = import.meta.glob(
+  ['/src/feature/*/*/ArticleMenu.jsx', '!/src/feature/_*/**'],
+  { eager: true, import: 'default' },
+);
+const articleMenuChildren = Object.entries(articleMenuModules).map(
+  ([path, Component]) => <Component key={path} />,
+);
+
+function ArticleMenu() {
   const articleLoaded = useLoadChecker(ARTICLE_TITLE);
   const { position } = useSelector((state) => state[info.id].storage);
 
@@ -62,15 +69,11 @@ function ArticleMenu({ children }) {
           size={{ xs: 12, sm: 9 }}
           sx={{ paddingRight: 1, textAlign: 'end' }}
         >
-          {children}
+          {articleMenuChildren}
         </Grid>
       </Grid>
     </Portal>
   );
 }
-
-ArticleMenu.propTypes = {
-  children: PropTypes.node,
-};
 
 export default ArticleMenu;

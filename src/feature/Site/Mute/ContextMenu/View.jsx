@@ -10,8 +10,8 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { ArcaUser } from 'func/user';
 import { useContent } from 'hooks/Content';
 

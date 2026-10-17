@@ -12,8 +12,8 @@ import {
 } from '@mui/material';
 
 import { KeyIcon } from 'component';
-import { SelectRow } from 'component/ConfigMenu';
-import { $setInteraction } from 'menu/ContextMenu/slice';
+import { SelectRow } from 'feature/Menu/ConfigMenu/component';
+import { $setInteraction } from '../slice';
 
 import info from '../info';
 

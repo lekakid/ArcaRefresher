@@ -1,3 +1,3 @@
 import ArticleMenu from './ArticleMenu';
 
-export default ArticleMenu;
+export default { Feature: ArticleMenu };
