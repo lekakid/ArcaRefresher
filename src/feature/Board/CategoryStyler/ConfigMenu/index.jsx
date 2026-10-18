@@ -1,6 +1,6 @@
 import ColorizeIcon from '@mui/icons-material/Colorize';
 
-import View from './View';
+import View from './CategoryStyler';
 import group from '../../group.jsx';
 import info from '../info';
 

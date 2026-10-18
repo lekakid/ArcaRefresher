@@ -1,7 +1,7 @@
 import 'core/types';
 import GroupIcon from '@mui/icons-material/Group';
 
-import View from './View';
+import View from './ShortKey';
 import group from '../../group.jsx';
 import info from '../info';
 

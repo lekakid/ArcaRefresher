@@ -1,6 +1,6 @@
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
-import View from './View';
+import View from './UserProfile';
 import group from '../../group.jsx';
 import info from '../info';
 

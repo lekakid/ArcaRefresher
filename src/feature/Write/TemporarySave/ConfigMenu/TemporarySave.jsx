@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -7,13 +6,13 @@ import { SelectRow, SwitchRow } from 'feature/Menu/ConfigMenu/component';
 import { $setAutoTime, $toggleDeleteOnCommit, $toggleEnabled } from '../slice';
 import info from '../info';
 
-const View = forwardRef((_props, ref) => {
+function TemporarySave() {
   const { enabled, autoSaveTime, deleteOnCommit } = useSelector(
     (state) => state[info.id].storage,
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -42,9 +41,8 @@ const View = forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default TemporarySave;

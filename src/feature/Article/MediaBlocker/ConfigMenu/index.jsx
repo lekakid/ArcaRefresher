@@ -1,7 +1,7 @@
 import 'core/types';
 import BlockIcon from '@mui/icons-material/Block';
 
-import View from './View';
+import View from './MediaBlocker';
 import group from '../../group.jsx';
 import info from '../info';
 

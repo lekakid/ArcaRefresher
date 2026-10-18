@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemText, Paper, Typography } from '@mui/material';
 
@@ -8,13 +7,13 @@ import info from '../info';
 import { $toggleEnabled, $toggleForceLoad } from '../slice';
 import GalleryManager from './GalleryManager';
 
-const View = forwardRef((_props, ref) => {
+function MyImage() {
   const { enabled, imgList, forceLoad } = useSelector(
     (state) => state[info.id].storage,
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -45,9 +44,8 @@ const View = forwardRef((_props, ref) => {
           </BaseRow>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default MyImage;

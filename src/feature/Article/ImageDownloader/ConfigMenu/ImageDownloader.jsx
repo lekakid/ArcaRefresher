@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
@@ -18,7 +17,7 @@ import {
 } from '../slice';
 import FormatTextFieldRow from './FormatTextFieldRow';
 
-const View = forwardRef((_props, ref) => {
+function ImageDownloader() {
   const {
     enabled,
     contextMenuEnabled,
@@ -32,7 +31,7 @@ const View = forwardRef((_props, ref) => {
   } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">동작 설정</Typography>
       <Paper>
@@ -138,9 +137,8 @@ const View = forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default ImageDownloader;

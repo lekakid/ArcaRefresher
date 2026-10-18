@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
@@ -79,7 +79,7 @@ const keyMapSelector = createSelector(
     Object.fromEntries(keyTable.map(({ action, key }) => [action, key])),
 );
 
-const View = forwardRef((_props, ref) => {
+function ShortKey() {
   const dispatch = useDispatch();
   const { enabled, compatibilityMode } = useSelector(
     (state) => state[info.id].storage,
@@ -133,7 +133,7 @@ const View = forwardRef((_props, ref) => {
   };
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -207,9 +207,8 @@ const View = forwardRef((_props, ref) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default ShortKey;

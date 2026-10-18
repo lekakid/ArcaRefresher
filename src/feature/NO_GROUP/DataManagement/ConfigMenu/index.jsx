@@ -1,6 +1,6 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import View from './View';
+import View from './DataManagement';
 import group from '../../group.jsx';
 import info from '../info';
 

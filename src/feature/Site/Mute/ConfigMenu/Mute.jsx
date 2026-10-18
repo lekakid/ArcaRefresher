@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -44,7 +44,7 @@ import CategoryRow from './CategoryRow';
 
 const columns = [{ field: 'name', headerName: '이름', flex: 1 }];
 
-const View = forwardRef((_props, ref) => {
+function Mute() {
   const dispatch = useDispatch();
   const { channel, category } = useContent();
 
@@ -98,7 +98,7 @@ const View = forwardRef((_props, ref) => {
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -267,9 +267,8 @@ const View = forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default Mute;

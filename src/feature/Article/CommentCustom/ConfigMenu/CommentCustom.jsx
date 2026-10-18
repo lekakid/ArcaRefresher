@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -17,7 +16,7 @@ import {
   $setAlternativeSubmitKey,
 } from '../slice';
 
-const View = forwardRef((_props, ref) => {
+function CommentCustom() {
   const {
     // 모양
     unfoldLongComment,
@@ -31,7 +30,7 @@ const View = forwardRef((_props, ref) => {
   } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
@@ -91,9 +90,8 @@ const View = forwardRef((_props, ref) => {
           </SelectRow>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default CommentCustom;

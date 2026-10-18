@@ -1,5 +1,5 @@
 import { GM_info, GM_openInTab } from '$';
-import { forwardRef, Fragment, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -20,7 +20,7 @@ import info from '../info';
 import { $setNotiLevel } from '../slice';
 import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
 
-const View = forwardRef((_props, ref) => {
+function VersionInfo() {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
 
@@ -101,7 +101,7 @@ const View = forwardRef((_props, ref) => {
   }, []);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -162,9 +162,8 @@ const View = forwardRef((_props, ref) => {
         </List>
       </Paper>
       <ConfirmDialog />
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default VersionInfo;

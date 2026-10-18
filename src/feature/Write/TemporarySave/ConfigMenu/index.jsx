@@ -1,6 +1,6 @@
 import BookIcon from '@mui/icons-material/Book';
 
-import View from './View';
+import View from './TemporarySave';
 import group from '../../group.jsx';
 import info from '../info';
 

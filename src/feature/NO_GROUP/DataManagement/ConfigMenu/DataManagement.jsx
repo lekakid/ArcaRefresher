@@ -1,5 +1,5 @@
 import { GM_deleteValue, GM_getValue, GM_listValues } from '$';
-import { forwardRef, Fragment, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   List,
   ListItemText,
@@ -22,7 +22,7 @@ const featureInfos = import.meta.glob(
 );
 const idList = Object.values(featureInfos).map(({ id }) => id);
 
-const View = forwardRef((_props, ref) => {
+function DataManagement() {
   const inputRef = useRef();
   const [confirm, ConfirmDialog] = useConfirm();
 
@@ -103,7 +103,7 @@ const View = forwardRef((_props, ref) => {
   }, [confirm]);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">데이터 정리</Typography>
       <Paper>
@@ -155,9 +155,8 @@ const View = forwardRef((_props, ref) => {
         </List>
       </Paper>
       <ConfirmDialog />
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default DataManagement;

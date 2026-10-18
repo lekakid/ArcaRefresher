@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -7,7 +7,7 @@ import { TextFieldRow } from 'feature/Menu/ConfigMenu/component';
 import info from '../info';
 import { $setExtraPrefix, $setPrefixList, $setSuffixList } from '../slice';
 
-const View = forwardRef((_props, ref) => {
+function AnonymousNick() {
   const { prefixList, suffixList, extraPrefix } = useSelector(
     (state) => state[info.id].storage,
   );
@@ -18,7 +18,7 @@ const View = forwardRef((_props, ref) => {
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -48,9 +48,8 @@ const View = forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default AnonymousNick;

@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -11,13 +10,13 @@ import {
 } from '../slice';
 import info from '../info';
 
-const View = forwardRef((_props, ref) => {
+function AutoRefresher() {
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
     (state) => state[info.id].storage,
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -67,9 +66,8 @@ const View = forwardRef((_props, ref) => {
           </SelectRow>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default AutoRefresher;

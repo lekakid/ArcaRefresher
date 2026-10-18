@@ -1,6 +1,6 @@
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-import View from './View';
+import View from './AutoRefresher';
 import group from '../../group.jsx';
 import info from '../info';
 

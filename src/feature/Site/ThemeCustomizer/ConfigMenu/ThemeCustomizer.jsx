@@ -1,11 +1,4 @@
-import {
-  forwardRef,
-  Fragment,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
@@ -122,7 +115,7 @@ const defaultPreset = {
   'text-color-reverse': '#d3d3d3',
 };
 
-const View = forwardRef((_props, ref) => {
+function ThemeCustomizer() {
   const dispatch = useDispatch();
   const [confirm, ConfirmDialog] = useConfirm();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
@@ -228,7 +221,7 @@ const View = forwardRef((_props, ref) => {
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -311,9 +304,8 @@ const View = forwardRef((_props, ref) => {
         </List>
       </Paper>
       <ConfirmDialog />
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default ThemeCustomizer;

@@ -1,6 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 
-import View from './View';
+import View from './ImageSearch';
 import group from '../../group.jsx';
 import info from '../info';
 

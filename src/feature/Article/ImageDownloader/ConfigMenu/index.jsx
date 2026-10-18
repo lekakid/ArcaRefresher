@@ -1,6 +1,6 @@
 import GetAppIcon from '@mui/icons-material/GetApp';
 
-import View from './View';
+import View from './ImageDownloader';
 import group from '../../group.jsx';
 import info from '../info';
 

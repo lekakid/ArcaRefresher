@@ -1,6 +1,6 @@
 import InfoIcon from '@mui/icons-material/Info';
 
-import View from './View';
+import View from './VersionInfo';
 import group from '../../group.jsx';
 import info from '../info';
 

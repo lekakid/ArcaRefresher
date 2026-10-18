@@ -1,6 +1,6 @@
 import BrushIcon from '@mui/icons-material/Brush';
 
-import View from './View';
+import View from './ThemeCustomizer';
 import group from '../../group.jsx';
 import info from '../info';
 

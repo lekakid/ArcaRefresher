@@ -1,6 +1,6 @@
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
-import View from './View';
+import View from './Base64';
 import group from '../../group.jsx';
 import info from '../info';
 

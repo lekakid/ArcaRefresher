@@ -1,5 +1,4 @@
 import { unsafeWindow } from '$';
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Collapse,
@@ -40,7 +39,7 @@ function labelFormat(x) {
   return `${x}px`;
 }
 
-const View = forwardRef((_props, ref) => {
+function SiteCustom() {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
@@ -63,7 +62,7 @@ const View = forwardRef((_props, ref) => {
   } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
@@ -221,9 +220,8 @@ const View = forwardRef((_props, ref) => {
           </Collapse>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default SiteCustom;

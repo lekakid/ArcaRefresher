@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -20,13 +19,13 @@ import {
 } from '../slice';
 import info from '../info';
 
-const View = forwardRef((_props, ref) => {
+function Base64() {
   const { enabled, autoDecode, clipboardDecode } = useSelector(
     (state) => state[info.id].storage,
   );
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -75,9 +74,8 @@ const View = forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default Base64;

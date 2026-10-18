@@ -1,6 +1,6 @@
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 
-import View from './View';
+import View from './BoardCustom';
 import group from '../../group.jsx';
 import info from '../info';
 

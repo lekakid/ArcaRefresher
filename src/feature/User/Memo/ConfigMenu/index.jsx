@@ -1,6 +1,6 @@
 import CommentIcon from '@mui/icons-material/Comment';
 
-import View from './View';
+import View from './Memo';
 import group from '../../group.jsx';
 import info from '../info';
 

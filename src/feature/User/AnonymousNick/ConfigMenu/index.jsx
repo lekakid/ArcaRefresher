@@ -1,6 +1,6 @@
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 
-import View from './View';
+import View from './AnonymousNick';
 import group from '../../group.jsx';
 import info from '../info';
 

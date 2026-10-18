@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -7,11 +6,11 @@ import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 import info from '../info';
 import { $toggleEnabled } from '../slice';
 
-const View = forwardRef((_props, ref) => {
+function ChannelManager() {
   const { enabled } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -23,9 +22,8 @@ const View = forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default ChannelManager;

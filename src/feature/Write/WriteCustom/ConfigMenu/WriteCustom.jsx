@@ -1,4 +1,3 @@
-import { forwardRef, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, useMediaQuery } from '@mui/material';
 
@@ -10,7 +9,7 @@ import {
 } from '../slice';
 import info from '../info';
 
-const View = forwardRef((_props, ref) => {
+function WriteCustom() {
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
@@ -20,7 +19,7 @@ const View = forwardRef((_props, ref) => {
   } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Typography variant="subtitle2">모양 설정</Typography>
       <Paper>
@@ -43,9 +42,8 @@ const View = forwardRef((_props, ref) => {
           />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default WriteCustom;
