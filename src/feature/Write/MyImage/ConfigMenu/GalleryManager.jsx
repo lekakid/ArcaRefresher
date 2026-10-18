@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -489,4 +489,4 @@ GalleryManager.propTypes = {
   gallery: PropTypes.object,
 };
 
-export default GalleryManager;
+export default memo(GalleryManager);

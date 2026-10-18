@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, useMediaQuery } from '@mui/material';
 
@@ -46,4 +47,4 @@ function WriteCustom() {
   );
 }
 
-export default WriteCustom;
+export default memo(WriteCustom);

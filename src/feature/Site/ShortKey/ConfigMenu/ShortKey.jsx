@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
@@ -211,4 +211,4 @@ function ShortKey() {
   );
 }
 
-export default ShortKey;
+export default memo(ShortKey);

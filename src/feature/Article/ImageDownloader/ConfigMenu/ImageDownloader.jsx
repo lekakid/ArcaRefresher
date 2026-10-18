@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
@@ -141,4 +142,4 @@ function ImageDownloader() {
   );
 }
 
-export default ImageDownloader;
+export default memo(ImageDownloader);

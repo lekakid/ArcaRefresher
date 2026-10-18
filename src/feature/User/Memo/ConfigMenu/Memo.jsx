@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -268,4 +268,4 @@ function Memo() {
   );
 }
 
-export default Memo;
+export default memo(Memo);

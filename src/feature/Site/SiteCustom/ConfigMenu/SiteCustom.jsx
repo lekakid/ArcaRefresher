@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { unsafeWindow } from '$';
 import { useSelector } from 'react-redux';
 import {
@@ -224,4 +225,4 @@ function SiteCustom() {
   );
 }
 
-export default SiteCustom;
+export default memo(SiteCustom);

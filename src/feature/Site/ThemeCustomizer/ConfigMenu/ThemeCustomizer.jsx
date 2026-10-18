@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   List,
@@ -308,4 +308,4 @@ function ThemeCustomizer() {
   );
 }
 
-export default ThemeCustomizer;
+export default memo(ThemeCustomizer);

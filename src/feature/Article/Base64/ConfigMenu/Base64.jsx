@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   List,
@@ -78,4 +79,4 @@ function Base64() {
   );
 }
 
-export default Base64;
+export default memo(Base64);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Collapse, List, Paper, Typography } from '@mui/material';
 
@@ -47,4 +48,4 @@ function MediaBlocker() {
   );
 }
 
-export default MediaBlocker;
+export default memo(MediaBlocker);

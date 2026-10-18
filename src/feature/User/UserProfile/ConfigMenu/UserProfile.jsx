@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography, MenuItem } from '@mui/material';
 
@@ -84,4 +85,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default memo(UserProfile);

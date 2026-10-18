@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, ListItemText, Paper, Typography } from '@mui/material';
 
@@ -48,4 +49,4 @@ function MyImage() {
   );
 }
 
-export default MyImage;
+export default memo(MyImage);

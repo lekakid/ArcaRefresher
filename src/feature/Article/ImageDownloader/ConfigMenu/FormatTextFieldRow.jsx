@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef, useState } from 'react';
+import { forwardRef, useCallback, useRef, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -122,4 +122,4 @@ const RowPropTypes = {
 };
 
 FormatTextFieldRow.propTypes = RowPropTypes;
-export default FormatTextFieldRow;
+export default memo(FormatTextFieldRow);

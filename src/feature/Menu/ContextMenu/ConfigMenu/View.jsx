@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -95,4 +95,4 @@ const View = React.forwardRef((_props, ref) => {
 });
 
 View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default memo(View);

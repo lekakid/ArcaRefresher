@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -271,4 +271,4 @@ function Mute() {
   );
 }
 
-export default Mute;
+export default memo(Mute);

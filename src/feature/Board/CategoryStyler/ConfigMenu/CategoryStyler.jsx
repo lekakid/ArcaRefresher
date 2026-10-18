@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
@@ -59,4 +59,4 @@ function CategoryStyler() {
   );
 }
 
-export default CategoryStyler;
+export default memo(CategoryStyler);

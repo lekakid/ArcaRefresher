@@ -22,7 +22,6 @@ import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
 import { setOpen, setDrawer, setSelection, setGroup } from '../slice';
 import info from '../info';
-import PropTypes from 'prop-types';
 
 // 그룹 정보 (feature/{GROUP_NAME}/group.jsx)
 const groupInfos = import.meta.glob(
@@ -51,18 +50,17 @@ const menuList = Object.values(menuInfos).sort((a, b) => {
   return a.order - b.order;
 });
 
-function ConfigMenuSideNavigation({ onConfigSelect }) {
+function ConfigMenuSideNavigation() {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const { group } = useSelector((state) => state[info.id]);
+  const group = useSelector((state) => state[info.id].group);
 
   const handleItemClick = useCallback(
     (key) => {
-      onConfigSelect();
       dispatch(setSelection(key));
       if (mobile) dispatch(setDrawer(false));
     },
-    [mobile, onConfigSelect, dispatch],
+    [mobile, dispatch],
   );
 
   const handleGroupClick = useCallback(
@@ -130,19 +128,67 @@ function ConfigMenuSideNavigation({ onConfigSelect }) {
   );
 }
 
-ConfigMenuSideNavigation.propTypes = {
-  onConfigSelect: PropTypes.func,
-};
+function ConfigMenuContentArea() {
+  const open = useSelector((state) => state[info.id].open);
+  const selection = useSelector((state) => state[info.id].selection);
+
+  const root = useRef(null);
+  const [loadCount, setLoadCount] = useState(2);
+
+  // 전체 메뉴를 보는게 아닐 때 렌더 상태 초기화
+  if (selection !== 'all' && loadCount !== 2) {
+    setLoadCount(2);
+  }
+
+  // 설정 메뉴 변경 시 스크롤 초기화
+  useEffect(() => {
+    root.current.scrollTo(0, 0);
+  }, [selection]);
+
+  // 전체 설정 렌더 조절
+  useEffect(() => {
+    if (!open) return;
+    if (selection !== 'all') return;
+    if (loadCount >= menuList.length) return;
+
+    const id = requestAnimationFrame(() => setLoadCount((c) => c + 4));
+    return () => cancelAnimationFrame(id);
+  }, [open, loadCount, selection]);
+
+  return (
+    <Stack
+      ref={root}
+      sx={{
+        width: '100%',
+        padding: 3,
+        overflowY: 'auto',
+        gap: 1,
+      }}
+    >
+      {menuList
+        .filter(
+          ({ id }, index) =>
+            (selection === 'all' && index < loadCount) || selection === id,
+        )
+        .map(({ id, View }) => (
+          <ModuleLoadBoundary
+            key={id}
+            moduleId={id}
+            text={`[${id}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
+          >
+            <View />
+          </ModuleLoadBoundary>
+        ))}
+    </Stack>
+  );
+}
 
 function ConfigMenuDialog() {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const { open, opacity, drawer, selection } = useSelector(
-    (state) => state[info.id],
-  );
-
-  const stackRoot = useRef(null);
-  const [loadCount, setLoadCount] = useState(2);
+  const open = useSelector((state) => state[info.id].open);
+  const drawer = useSelector((state) => state[info.id].drawer);
+  const opacity = useSelector((state) => state[info.id].opacity);
 
   // 설정이 열려있는 동안 아카 단축키 무력화
   useEffect(() => {
@@ -157,16 +203,6 @@ function ConfigMenuDialog() {
     return () => document.removeEventListener('keydown', blocker, true);
   }, [open]);
 
-  // 전체 설정 렌더 조절
-  useEffect(() => {
-    if (!open) return;
-    if (selection !== 'all') return;
-    if (loadCount >= menuList.length) return;
-
-    const id = requestAnimationFrame(() => setLoadCount((c) => c + 4));
-    return () => cancelAnimationFrame(id);
-  }, [open, loadCount, selection]);
-
   // 모바일 환경
   useEffect(() => {
     if (mobile) dispatch(setDrawer(false));
@@ -175,33 +211,18 @@ function ConfigMenuDialog() {
   const handleConfigClose = useCallback(() => {
     if (mobile) dispatch(setDrawer(false));
     dispatch(setOpen(false));
-    setLoadCount(2);
   }, [dispatch, mobile]);
 
   const handleDrawerToggle = useCallback(() => {
     dispatch(setDrawer(!drawer));
   }, [dispatch, drawer]);
 
-  const content = menuList
-    .filter(
-      ({ id }, index) =>
-        (selection === 'all' && index < loadCount) || selection === id,
-    )
-    .map(({ id, View }) => (
-      <ModuleLoadBoundary
-        key={id}
-        moduleId={id}
-        text={`[${id}] 설정을 불러오는 중 처리하지 못하는 오류가 발생했습니다.`}
-      >
-        <View />
-      </ModuleLoadBoundary>
-    ));
-
   return (
     <Dialog
       fullScreen={mobile}
       fullWidth
       maxWidth="md"
+      keepMounted
       slotProps={{
         backdrop: {
           invisible: opacity !== 1,
@@ -257,24 +278,9 @@ function ConfigMenuDialog() {
           open={!mobile || drawer}
           onClose={handleDrawerToggle}
         >
-          <ConfigMenuSideNavigation
-            onConfigSelect={() => {
-              stackRoot.current.scrollTo(0, 0);
-              setLoadCount(2);
-            }}
-          />
+          <ConfigMenuSideNavigation />
         </Drawer>
-        <Stack
-          ref={stackRoot}
-          sx={{
-            width: '100%',
-            padding: 3,
-            overflowY: 'auto',
-            gap: 1,
-          }}
-        >
-          {content}
-        </Stack>
+        <ConfigMenuContentArea />
       </Stack>
     </Dialog>
   );

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -45,4 +46,4 @@ function TemporarySave() {
   );
 }
 
-export default TemporarySave;
+export default memo(TemporarySave);

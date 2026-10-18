@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -78,4 +79,4 @@ function BoardCustom() {
   );
 }
 
-export default BoardCustom;
+export default memo(BoardCustom);

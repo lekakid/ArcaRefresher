@@ -1,5 +1,5 @@
 import { GM_deleteValue, GM_getValue, GM_listValues } from '$';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, memo } from 'react';
 import {
   List,
   ListItemText,
@@ -159,4 +159,4 @@ function DataManagement() {
   );
 }
 
-export default DataManagement;
+export default memo(DataManagement);

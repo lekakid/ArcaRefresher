@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -26,4 +27,4 @@ function ChannelManager() {
   );
 }
 
-export default ChannelManager;
+export default memo(ChannelManager);

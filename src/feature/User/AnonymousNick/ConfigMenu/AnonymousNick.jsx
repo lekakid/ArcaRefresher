@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -52,4 +52,4 @@ function AnonymousNick() {
   );
 }
 
-export default AnonymousNick;
+export default memo(AnonymousNick);

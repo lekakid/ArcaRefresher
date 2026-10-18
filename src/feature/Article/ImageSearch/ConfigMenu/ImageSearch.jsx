@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, MenuItem, Paper, Typography } from '@mui/material';
 
@@ -135,4 +136,4 @@ function ImageSearch() {
   );
 }
 
-export default ImageSearch;
+export default memo(ImageSearch);

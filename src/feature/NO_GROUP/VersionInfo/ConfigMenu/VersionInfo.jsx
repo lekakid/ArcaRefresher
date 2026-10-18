@@ -1,5 +1,5 @@
 import { GM_info, GM_openInTab } from '$';
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -166,4 +166,4 @@ function VersionInfo() {
   );
 }
 
-export default VersionInfo;
+export default memo(VersionInfo);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -118,4 +119,4 @@ function ArticleCustom() {
   );
 }
 
-export default ArticleCustom;
+export default memo(ArticleCustom);

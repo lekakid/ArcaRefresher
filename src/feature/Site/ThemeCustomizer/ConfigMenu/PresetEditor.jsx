@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse,
@@ -98,4 +98,4 @@ PresetEditor.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default PresetEditor;
+export default memo(PresetEditor);
