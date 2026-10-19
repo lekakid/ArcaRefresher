@@ -1,12 +1,21 @@
 import { unsafeWindow } from '$';
 import { useCallback } from 'react';
 
-const callbackList = [];
+const ARCA_HOST = 'arca.live';
+const ARCA_PATHNAME = '/arcalive';
+
+const modifierList = [];
 
 const OriginWebSocket = unsafeWindow.WebSocket;
-function WrappedWebSocket(...contructorArguments) {
+function WrappedWebSocket(url, protocols) {
+  const { host, pathname } = new URL(url);
+  if (host !== ARCA_HOST || pathname !== ARCA_PATHNAME) {
+    // 아카라이브 이외의 경우 일반 소켓 제공
+    return new OriginWebSocket(url, protocols);
+  }
+
   const wrappedSocket = {
-    ws: new OriginWebSocket(...contructorArguments),
+    ws: new OriginWebSocket(url, protocols),
     eventHistory: [],
     eventHistoryRecording: true,
     set onmessage(callback) {
@@ -15,7 +24,7 @@ function WrappedWebSocket(...contructorArguments) {
     set onopen(callback) {
       this.addEventListener.apply(this, ['open', callback, false]);
     },
-    set onclose(callback) {
+    set onclose(_) {
       // 사이트 기본 이벤트 무력화
     },
     addEventListener(event, eventCallback, options) {
@@ -30,7 +39,7 @@ function WrappedWebSocket(...contructorArguments) {
             ignore: { value: false, writable: true },
           });
 
-          callbackList
+          modifierList
             .filter(({ type }) => type === 'before')
             .forEach(({ callback }) => {
               try {
@@ -46,19 +55,6 @@ function WrappedWebSocket(...contructorArguments) {
           if (!e.ignore) {
             eventCallback.apply(this.ws, [e]);
           }
-
-          callbackList
-            .filter(({ type }) => type === 'after')
-            .forEach(({ callback }) => {
-              try {
-                callback(e);
-              } catch (error) {
-                console.warn(
-                  '[ArcaRefresher] WebSocket subscriber error',
-                  error,
-                );
-              }
-            });
         };
         this.ws.addEventListener.apply(this.ws, [
           event,
@@ -77,7 +73,7 @@ function WrappedWebSocket(...contructorArguments) {
       this.ws.close();
 
       // 소켓 교체
-      this.ws = new OriginWebSocket(...contructorArguments);
+      this.ws = new OriginWebSocket(url, protocols);
 
       // 이벤트 재등록
       this.eventHistoryRecording = false;
@@ -105,12 +101,12 @@ function WrappedWebSocket(...contructorArguments) {
 unsafeWindow.WebSocket = WrappedWebSocket;
 
 export function useArcaSocket() {
-  const subscribe = useCallback((subscriber) => {
-    callbackList.push(subscriber);
+  const subscribe = useCallback((modifier) => {
+    modifierList.push(modifier);
   }, []);
 
-  const unsubscribe = useCallback((subscriber) => {
-    callbackList.splice(callbackList.indexOf(subscriber), 1);
+  const unsubscribe = useCallback((modifier) => {
+    modifierList.splice(modifierList.indexOf(modifier), 1);
   }, []);
 
   return [subscribe, unsubscribe];
