@@ -42,11 +42,12 @@ function updater(storage, defaultValue) {
 
       storage.emoticon = data;
       storage.version = 1;
-      return storage;
+      return updater(storage, defaultValue);
     }
     case 1: {
       if (storage.boardBarPos === 'afterbegin')
         storage.boardBarPos = 'beforebegin';
+      storage.version = 2;
       return storage;
     }
     default:
