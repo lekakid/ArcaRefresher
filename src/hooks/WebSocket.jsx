@@ -38,7 +38,14 @@ function WrappedWebSocket(...contructorArguments) {
           callbackList
             .filter(({ type }) => type === 'before')
             .forEach(({ callback }) => {
-              callback(e);
+              try {
+                callback(e);
+              } catch (error) {
+                console.warn(
+                  '[ArcaRefresher] WebSocket subscriber error',
+                  error,
+                );
+              }
             });
 
           if (!e.ignore) {
@@ -48,7 +55,14 @@ function WrappedWebSocket(...contructorArguments) {
           callbackList
             .filter(({ type }) => type === 'after')
             .forEach(({ callback }) => {
-              callback(e);
+              try {
+                callback(e);
+              } catch (error) {
+                console.warn(
+                  '[ArcaRefresher] WebSocket subscriber error',
+                  error,
+                );
+              }
             });
         };
         this.ws.addEventListener.apply(this.ws, [
@@ -81,6 +95,10 @@ function WrappedWebSocket(...contructorArguments) {
   });
   wrappedSocket.addEventListener('error', (e) => {
     console.warn('[ArcaRefresher] Arcalive Websocket error', e);
+  });
+  wrappedSocket.addEventListener('close', (e) => {
+    if (e.target !== wrappedSocket.ws) return;
+
     setTimeout(() => {
       wrappedSocket.reconnect();
     }, 5000);
