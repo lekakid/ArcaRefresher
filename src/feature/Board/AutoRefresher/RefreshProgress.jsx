@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -32,9 +31,9 @@ const StyledIndicator = styled('div')(({ pos, animate, count }) => ({
   },
 }));
 
-const RefreshIndicator = forwardRef(({ pos, count, animate }, ref) => (
-  <StyledIndicator ref={ref} pos={pos} count={count} animate={animate} />
-));
+function RefreshIndicator({ pos, count, animate }) {
+  return <StyledIndicator pos={pos} count={count} animate={animate} />;
+}
 
 RefreshIndicator.propTypes = {
   pos: PropTypes.object,

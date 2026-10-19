@@ -57,7 +57,7 @@ function applyStyle(storage) {
 applyStyle(store.getState()[info.id].storage);
 
 export default function WriteCustom() {
-  const { ...storage } = useSelector((state) => state[info.id].storage);
+  const storage = useSelector((state) => state[info.id].storage);
 
   // 스타일 적용
   useLayoutEffect(() => {

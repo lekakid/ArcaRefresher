@@ -147,13 +147,4 @@ CategoryRow.propTypes = {
   onChange: PropTypes.func,
 };
 
-function compare(prev, next) {
-  return (
-    prev.badge === next.badge &&
-    prev.bgcolor === next.bgcolor &&
-    prev.bold === next.bold &&
-    prev.through === next.through &&
-    prev.disableVisited === next.disableVisited
-  );
-}
-export default memo(CategoryRow, compare);
+export default memo(CategoryRow);

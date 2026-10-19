@@ -108,9 +108,6 @@ export const slice = createSlice({
     $addKeyword(state, action) {
       state.storage.keyword.push(action.payload);
     },
-    $removeKeyword(state, action) {
-      state.storage.keyword.push(action.payload);
-    },
     $setKeyword(state, action) {
       state.storage.keyword = action.payload;
     },
@@ -199,7 +196,6 @@ export const {
   $removeUser,
   $setUser,
   $addKeyword,
-  $removeKeyword,
   $setKeyword,
   $setChannel,
   $toggleMuteAllEmot,

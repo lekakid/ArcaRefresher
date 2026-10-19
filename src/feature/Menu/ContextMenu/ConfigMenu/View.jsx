@@ -1,4 +1,4 @@
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -32,11 +32,11 @@ const label = {
   },
 };
 
-const View = React.forwardRef((_props, ref) => {
+function View() {
   const { interactionType } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
+    <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
         <List disablePadding>
@@ -90,9 +90,9 @@ const View = React.forwardRef((_props, ref) => {
           </ListItem>
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
 View.displayName = `ConfigMenuView(${info.id})`;
 export default memo(View);
