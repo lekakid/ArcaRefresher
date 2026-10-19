@@ -86,7 +86,7 @@ function ToastMuter() {
     const callback = (e) => {
       const data = e.data.split('|');
 
-      e.ignore = data[0] === 'cp';
+      if (data[0] === 'cp') e.ignore = true;
     };
     const subscriber = { callback, type: 'before' };
     subscribeSocket(subscriber);
