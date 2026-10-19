@@ -5,14 +5,11 @@ import { encode } from './func/base64';
 import info from './info';
 
 function Cipher() {
-  const { enabled, encodeType } = useSelector(
-    (state) => state[info.id].storage,
-  );
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   // 글작성 인코딩 기능
   useEffect(() => {
     if (!enabled) return undefined;
-    if (encodeType === 'disabled') return undefined;
 
     const handler = (e) => {
       if (!e.target.matches('input, textarea, [contenteditable]')) return;
@@ -73,7 +70,7 @@ function Cipher() {
     return () => {
       document.removeEventListener('keydown', handler, true);
     };
-  }, [enabled, encodeType]);
+  }, [enabled]);
 
   return null;
 }

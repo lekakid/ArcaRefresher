@@ -9,7 +9,6 @@ function WrappedWebSocket(...contructorArguments) {
     ws: new OriginWebSocket(...contructorArguments),
     eventHistory: [],
     eventHistoryRecording: true,
-    pingCount: 0,
     set onmessage(callback) {
       this.addEventListener.apply(this, ['message', callback, false]);
     },
@@ -30,10 +29,6 @@ function WrappedWebSocket(...contructorArguments) {
             data: { value: e.data, writable: true },
             ignore: { value: false, writable: true },
           });
-
-          if (e.data.split('|')[0] === 'c') {
-            this.pingCount += 1;
-          }
 
           callbackList
             .filter(({ type }) => type === 'before')

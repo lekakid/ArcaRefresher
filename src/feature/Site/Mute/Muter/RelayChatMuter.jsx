@@ -1,39 +1,16 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
 
 import { filterSelector } from '../selector';
 import info from '../info';
 
-const toastMuteStyles = (
-  <GlobalStyles
-    styles={{
-      '#toastbox': {
-        '& .filtered-emoticon': {
-          width: 'auto !important',
-          height: 'auto !important',
-          textDecoration: 'none !important',
-          '&::after': {
-            content: '"[아카콘 뮤트됨]"',
-          },
-          '& > img, & > video': {
-            display: 'none !important',
-          },
-        },
-      },
-    }}
-  />
-);
-
-function ToastMuter() {
+function RelayChatMuter() {
   const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
 
   const filter = useSelector(filterSelector);
-  const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[info.id].storage,
-  );
+  const { hideMutedMark } = useSelector((state) => state[info.id].storage);
 
   useEffect(() => {
     const callback = (e) => {
@@ -42,23 +19,6 @@ function ToastMuter() {
 
       const chat = JSON.parse(data[1]);
       const dataFilter = chat.nickname.split('data-filter="')[1].split('"')[0];
-
-      /*
-      // 이모티콘 뮤트 처리
-      // 데이터 확보가 어려워서 기회가 되면 나중에
-      if (chat.mediaUrl) {
-        const url = trimEmotURL(chat.mediaUrl);
-        if (muteAllEmot || filter.emoticon.url[url]) {
-          if (hideMutedMark) {
-            e.ignore = true;
-            return;
-          }
-
-          delete chat.mediaUrl;
-          chat.content = '[아카콘 뮤트됨]';
-        }
-      }
-      */
 
       // 사용자 뮤트
       const regex =
@@ -78,9 +38,9 @@ function ToastMuter() {
     subscribeSocket(subscriber);
 
     return () => unsubscribeSocket(subscriber);
-  }, [filter, hideMutedMark, muteAllEmot, subscribeSocket, unsubscribeSocket]);
+  }, [filter, hideMutedMark, subscribeSocket, unsubscribeSocket]);
 
-  return toastMuteStyles;
+  return null;
 }
 
-export default ToastMuter;
+export default RelayChatMuter;

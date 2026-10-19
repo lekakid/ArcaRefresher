@@ -24,6 +24,6 @@ export const slice = createSlice({
   },
 });
 
-export const { $setIgnoreVersionTarget, $setNotiLevel } = slice.actions;
+export const { $setIgnoreVersionTarget } = slice.actions;
 
 export const ErrorHandlerEntires = [SLICE_ID, slice.reducer];
