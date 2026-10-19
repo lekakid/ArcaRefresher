@@ -12,17 +12,16 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '[version]') }}
+    if: ${{ startsWith(github.event.head_commit.message, '[version] v') }}
     steps:
-      - name: Get Version
-        id: get-version
-        run: |
-          message="${{ github.event.head_commit.message }}"
-          version="${message//\[version\] /}"
-          echo "version=$version" >> $GITHUB_OUTPUT
-
       - name: Checkout Repo
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Get Version
+        id: get-version
+        run: echo "version=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -31,7 +30,7 @@ jobs:
           cache: npm
 
       - name: Install packages
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Build
         run: npm run build
@@ -41,6 +40,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.get-version.outputs.version }}
+          target_commitish: ${{ github.sha }}
           files: |
             ./dist/ArcaRefresher.meta.js
             ./dist/ArcaRefresher.user.js
