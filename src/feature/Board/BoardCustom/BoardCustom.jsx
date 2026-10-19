@@ -164,27 +164,26 @@ export default function BoardCustom() {
 
   // 운영 경고 팝업 시 게시물 링크 처리
   useEffect(() => {
-    window.addEventListener('load', () => {
+    const linkify = () => {
       const dialogContent = document.querySelector(
         '.microModal .microModal-content',
       );
+      if (!dialogContent) return;
 
-      if (dialogContent) {
-        const urlRegex = /https:\/\/arca.live\/b\/[a-z0-9]+\/[0-9]+/;
-        const urlList = dialogContent.innerHTML.match(urlRegex);
+      dialogContent.innerHTML = dialogContent.innerHTML.replace(
+        /https:\/\/arca\.live\/b\/[a-z0-9]+\/[0-9]+/g,
+        (url) =>
+          `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`,
+      );
+    };
 
-        let result = dialogContent.innerHTML;
+    if (document.readyState === 'complete') {
+      linkify();
+      return undefined;
+    }
 
-        urlList.forEach((e) => {
-          result = result.replace(
-            e,
-            `<a href="${e}" target="_blank" rel="noopener noreferrer">${e}</a>`,
-          );
-        });
-
-        dialogContent.innerHTML = result;
-      }
-    });
+    window.addEventListener('load', linkify);
+    return () => window.removeEventListener('load', linkify);
   }, []);
 
   return null;

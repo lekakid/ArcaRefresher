@@ -16,6 +16,8 @@ export default function IPInfo() {
   const [infoList, setInfoList] = useState([]);
 
   useEffect(() => {
+    if (!loaded) return undefined;
+
     const refreshUserInfo = () => {
       const list = [...document.querySelectorAll(USER_INFO)]
         .map((e, index) => {
@@ -23,7 +25,7 @@ export default function IPInfo() {
           if (user.type !== ArcaUser.TYPE_IP) return null;
 
           const key = getUserKey(e, index);
-          const ip = new ArcaUser(e).id;
+          const ip = user.id;
 
           const { label, color } = Object.values(DB).find(({ list: ipList }) =>
             ipList.includes(ip),
@@ -33,7 +35,7 @@ export default function IPInfo() {
             infoContainer.current[index] || document.createElement('span');
           if (!container.classList.contains('ip-info')) {
             container.classList.add('ip-info');
-            infoContainer.current.push(container);
+            infoContainer.current[index] = container;
           }
           e.append(container);
 
@@ -43,9 +45,13 @@ export default function IPInfo() {
 
       setInfoList(list);
     };
-    if (loaded) refreshUserInfo();
+    refreshUserInfo();
     window.addEventListener(EVENT_BOARD_REFRESH, refreshUserInfo);
     window.addEventListener(EVENT_COMMENT_REFRESH, refreshUserInfo);
+    return () => {
+      window.removeEventListener(EVENT_BOARD_REFRESH, refreshUserInfo);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, refreshUserInfo);
+    };
   }, [loaded]);
 
   return (
