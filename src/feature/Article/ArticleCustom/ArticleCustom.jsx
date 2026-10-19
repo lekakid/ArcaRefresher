@@ -65,6 +65,7 @@ export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
   const [confirm, ConfirmDialog] = useConfirm();
 
+  const storage = useSelector((state) => state[info.id].storage);
   const {
     // 동작
     blockMediaNewWindow,
@@ -73,8 +74,7 @@ export default function ArticleCustom() {
     removeBlur,
     ignoreExternalLinkWarning,
     ratedownGuard,
-    ...storage
-  } = useSelector((state) => state[info.id].storage);
+  } = storage;
 
   const [article, setArticle] = useState(null);
   const [fakePreview, setFakePreview] = useState(null);
@@ -156,7 +156,7 @@ export default function ArticleCustom() {
 
     window.addEventListener(EVENT_COMMENT_REFRESH, releaseExternal);
     return () =>
-      window.addEventListener(EVENT_COMMENT_REFRESH, releaseExternal);
+      window.removeEventListener(EVENT_COMMENT_REFRESH, releaseExternal);
   }, [article, ignoreExternalLinkWarning]);
 
   // 비추천 방지

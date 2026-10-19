@@ -122,10 +122,10 @@ function CommentMuter() {
 
   // 댓글 창 로드 검사 및 컨테이너 생성
   useLayoutEffect(() => {
-    if (!commentLoaded) return;
+    if (!commentLoaded) return undefined;
 
     const commentElement = document.querySelector(COMMENT_INNER);
-    if (!commentElement) return;
+    if (!commentElement) return undefined;
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setControlTarget(commentElement);
@@ -137,11 +137,15 @@ function CommentMuter() {
 
     const changeTarget = () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
+      if (!refreshedComment) return;
+
       setControlTarget(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', container);
     };
 
     window.addEventListener(EVENT_COMMENT_REFRESH, changeTarget);
+    return () =>
+      window.removeEventListener(EVENT_COMMENT_REFRESH, changeTarget);
   }, [dispatch, commentLoaded]);
 
   // 뮤트 처리
