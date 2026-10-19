@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    name: Release
+    name: Pre-Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -28,12 +28,17 @@ jobs:
       - name: Build
         run: npm run build:pre
 
-      - name: Create GitHub Release
-        id: release
+      - name: Remove Previous Niglty Pre-Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release delete nightly --cleanup-tag -y || true
+
+      - name: Create Pre-Release
         uses: softprops/action-gh-release@v3
         with:
           prerelease: true
           tag_name: 'nightly'
+          target_commitish: ${{ github.sha }}
           files: |
             ./dist/ArcaRefresher.nightly.meta.js
             ./dist/ArcaRefresher.nightly.user.js
