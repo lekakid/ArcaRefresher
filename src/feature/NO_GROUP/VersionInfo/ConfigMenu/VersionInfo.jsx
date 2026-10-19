@@ -27,7 +27,7 @@ function VersionInfo() {
   const { notiLevel } = useSelector((state) => state[info.id].storage);
 
   const handleChangeLog = useCallback(() => {
-    if (GM_info.version.includes('nightly')) {
+    if (GM_info.script.version.includes('nightly')) {
       window.open('https://github.com/lekakid/ArcaRefresher/commits/develop/');
       return;
     }
