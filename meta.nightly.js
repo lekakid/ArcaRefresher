@@ -1,18 +1,10 @@
+import common from './meta.common.js';
+
 export default {
+  ...common,
   name: 'Arca Refresher (Nightly)',
-  namespace: 'LeKAKiD',
-  author: 'LeKAKiD',
-  description: 'Arca Live Extension',
-  icon: 'https://github.com/lekakid/ArcaRefresher/blob/develop/icon.png?raw=true',
   downloadURL:
     'https://github.com/lekakid/ArcaRefresher/releases/download/nightly/ArcaRefresher.nightly.user.js',
   updateURL:
     'https://github.com/lekakid/ArcaRefresher/releases/download/nightly/ArcaRefresher.nightly.meta.js',
-  homepageURL: 'https://github.com/lekakid/ArcaRefresher',
-  supportURL: 'https://arca.live/b/namurefresher',
-  match: ['https://*.arca.live/*'],
-  exclude: ['https://*.arca.live/api/*'],
-  connect: ['namu.la', 'arca.live', 'saucenao.com', 'iqdb.org', 'ascii2d.net'],
-  noframes: true,
-  'run-at': 'document-body',
 };
