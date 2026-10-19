@@ -190,19 +190,6 @@ function ConfigMenuDialog() {
   const drawer = useSelector((state) => state[info.id].drawer);
   const opacity = useSelector((state) => state[info.id].opacity);
 
-  // 설정이 열려있는 동안 아카 단축키 무력화
-  useEffect(() => {
-    if (!open) return undefined;
-
-    const blocker = (e) => {
-      // 아카 단축키가 keydown 이벤트를 사용함
-      e.stopPropagation();
-    };
-
-    document.addEventListener('keydown', blocker, true);
-    return () => document.removeEventListener('keydown', blocker, true);
-  }, [open]);
-
   // 모바일 환경
   useEffect(() => {
     if (mobile) dispatch(setDrawer(false));
@@ -223,6 +210,7 @@ function ConfigMenuDialog() {
       fullWidth
       maxWidth="md"
       keepMounted
+      onKeyDown={(e) => e.stopPropagation()}
       slotProps={{
         backdrop: {
           invisible: opacity !== 1,
