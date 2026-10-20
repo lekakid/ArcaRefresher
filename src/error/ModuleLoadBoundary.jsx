@@ -1,6 +1,6 @@
 import { GM_info, GM_openInTab } from '$';
-import { useEffect, useState } from 'react';
-import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
+import { useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -17,23 +17,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { $setIgnoreVersionTarget, SLICE_ID } from './slice';
 
-function ErrorDialog({ moduleId, text, error }) {
+function ErrorDialog({ moduleId, text, error, resetBoundary }) {
   const dispatch = useDispatch();
-  const { resetBoundary } = useErrorBoundary();
 
   const lastCheckVersion = useSelector(
     (state) => state[SLICE_ID].storage.lastCheckVersion,
   );
   const [ignore, setIgnore] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!error) return;
-    if (lastCheckVersion[moduleId] === GM_info.script.version) return;
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setOpen(true);
-  }, [moduleId, error, lastCheckVersion]);
+  const [open, setOpen] = useState(
+    lastCheckVersion[moduleId] !== GM_info.script.version,
+  );
 
   const onClose = () => {
     if (ignore) {
@@ -60,7 +53,7 @@ function ErrorDialog({ moduleId, text, error }) {
           multiline
           minRows={10}
           maxRows={30}
-          value={error?.stack}
+          value={error.stack}
         />
       </DialogContent>
       <DialogActions>
@@ -94,15 +87,20 @@ ErrorDialog.propTypes = {
   moduleId: PropTypes.string,
   text: PropTypes.string,
   error: PropTypes.object,
+  resetBoundary: PropTypes.func,
 };
 
 export function ModuleLoadBoundary({ moduleId, text, children }) {
-  const [error, setError] = useState(undefined);
-
   return (
     <ErrorBoundary
-      fallback={<ErrorDialog moduleId={moduleId} text={text} error={error} />}
-      onError={(e) => setError(e)}
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        <ErrorDialog
+          moduleId={moduleId}
+          text={text}
+          error={error}
+          resetBoundary={resetErrorBoundary}
+        />
+      )}
     >
       {children}
     </ErrorBoundary>
