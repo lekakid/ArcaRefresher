@@ -43,6 +43,7 @@ export default function ShortKey() {
     const eventListener = (e) => {
       // 검색창 등 텍스트 입력칸
       if (e.target.matches('input, textarea, [contenteditable]')) return;
+      if (e.target.closest('.MuiModal-root, .MuiPopper-root')) return;
 
       // 조합키
       if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
