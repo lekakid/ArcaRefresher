@@ -130,6 +130,7 @@ function ShortKey() {
 
   const handleClick = (action) => () => {
     setShortKeyAction(action);
+    setError(undefined);
   };
 
   return (
