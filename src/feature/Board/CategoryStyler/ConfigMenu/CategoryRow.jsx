@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
@@ -19,39 +19,27 @@ const DEFAULT_CATEGORY_CONFIG = {
 };
 
 function CategoryRow({ divider, id, label, initValue, onChange }) {
-  const [value, setValue] = useState({
-    ...DEFAULT_CATEGORY_CONFIG,
-    ...initValue,
-  });
+  const value = useMemo(
+    () => ({ ...DEFAULT_CATEGORY_CONFIG, ...initValue }),
+    [initValue],
+  );
 
   const handleColor = useCallback(
     (type) => (color) => {
-      const updateValue = {
-        ...value,
-        [type]: color,
-      };
-      setValue(updateValue);
-      onChange(id, updateValue);
+      onChange(id, { ...value, [type]: color });
     },
     [id, onChange, value],
   );
 
   const handleBool = useCallback(
     (type) => () => {
-      const updateValue = {
-        ...value,
-        [type]: !value[type],
-      };
-      setValue(updateValue);
-      onChange(id, updateValue);
+      onChange(id, { ...value, [type]: !value[type] });
     },
     [id, onChange, value],
   );
 
   const handleResetStyle = useCallback(() => {
-    const updateValue = { ...DEFAULT_CATEGORY_CONFIG };
-    setValue(updateValue);
-    onChange(id, updateValue);
+    onChange(id, { ...DEFAULT_CATEGORY_CONFIG });
   }, [id, onChange]);
 
   const { badge = null, bgcolor = null, bold, through, disableVisited } = value;
