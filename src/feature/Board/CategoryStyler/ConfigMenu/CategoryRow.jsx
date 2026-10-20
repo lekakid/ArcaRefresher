@@ -100,6 +100,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
           <Tooltip title="카테고리 색">
             <span>
               <ColorPickerButton
+                disabled={id === '글머리없음'}
                 color={badge}
                 onChange={handleColor('badge')}
               />
