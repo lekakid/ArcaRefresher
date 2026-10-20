@@ -88,6 +88,10 @@ function TableView({
     () => columns.filter((col) => columnVisibilityModel?.[col.field] !== false),
     [columns, columnVisibilityModel],
   );
+  const flexTotal = visibleColumns.reduce(
+    (sum, col) => sum + (col.flex ?? 0),
+    0,
+  );
 
   const currentPage = Math.min(
     page,
@@ -178,7 +182,14 @@ function TableView({
               />
             </TableCell>
             {visibleColumns.map((col) => (
-              <TableCell key={col.field} sx={{ width: col.width }}>
+              <TableCell
+                key={col.field}
+                sx={{
+                  width:
+                    col.width ??
+                    (col.flex ? `${(col.flex / flexTotal) * 100}%` : undefined),
+                }}
+              >
                 {col.headerName}
               </TableCell>
             ))}
