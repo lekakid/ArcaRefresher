@@ -20,6 +20,7 @@ export default function HeaderButton() {
     if (!navigationLoaded) return;
 
     const nav = document.querySelector(NAVIGATION_MENU);
+    if (!nav) return;
     const searchbarEl = nav.querySelector('.nav-channel-search-wrapper');
     nav.insertBefore(navEl, searchbarEl);
   }, [navigationLoaded]);
