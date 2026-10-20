@@ -11,15 +11,13 @@ const defaultStorage = {
 };
 
 function formatUpdater(storage, defaultValue) {
-  if (!storage) return defaultValue;
-
   // version 0 => 1
   const version = storage?.version || 0;
 
   switch (version) {
     case 0: {
       const memo = Object.fromEntries(
-        Object.entries(storage.memo).map(([key, msg]) => [key, { msg }]),
+        Object.entries(storage?.memo ?? {}).map(([key, msg]) => [key, { msg }]),
       );
       const data = getValue('UserColor');
       if (data) {
