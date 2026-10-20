@@ -89,9 +89,14 @@ function TableView({
     [columns, columnVisibilityModel],
   );
 
+  const currentPage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
+
   const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
+    () => rows.slice(currentPage * pageSize, currentPage * pageSize + pageSize),
+    [rows, currentPage, pageSize],
   );
 
   const handleSelectAll = useCallback(
@@ -221,7 +226,7 @@ function TableView({
       <TablePagination
         component="div"
         count={rows.length}
-        page={page}
+        page={currentPage}
         rowsPerPage={pageSize}
         rowsPerPageOptions={[10, 25, 50, 100]}
         onPageChange={(_, newPage) => setPage(newPage)}
