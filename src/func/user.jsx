@@ -5,11 +5,14 @@ export class ArcaUser {
   static TYPE_ERROR = 'ERROR';
 
   constructor(containerEl) {
-    let filter;
-    const infoEl = containerEl.matches('[data-filter]')
-      ? containerEl
-      : containerEl.querySelector('[data-filter]');
-    filter = infoEl?.dataset.filter;
+    let filter = typeof containerEl === 'string' ? containerEl : undefined;
+
+    if (!filter) {
+      const infoEl = containerEl.matches('[data-filter]')
+        ? containerEl
+        : containerEl.querySelector('[data-filter]');
+      filter = infoEl?.dataset.filter;
+    }
 
     if (!filter) {
       const anchorEl = containerEl.matches('a')

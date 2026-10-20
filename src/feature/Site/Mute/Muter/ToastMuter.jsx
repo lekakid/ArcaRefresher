@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
+import { ArcaUser } from 'func/user';
 
 import info from '../info';
 import { trimEmotURL } from '../func';
@@ -58,7 +59,7 @@ function ToastMuter() {
 
       // 사용자 뮤트
       const regex = new RegExp(filter.user.join('|') || '(?!)');
-      if (regex.test(data.username)) {
+      if (data.username && regex.test(new ArcaUser(data.username).toUID())) {
         if (hideMutedMark) return null;
 
         const { mediaUrl, title, message, ...rest } = data;
