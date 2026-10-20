@@ -113,7 +113,45 @@ function BoardMuter() {
 
     const isGlogal = globalChannel.includes(channel.id);
 
+    const markRows = () => {
+      controlTarget
+        .querySelectorAll('.filtered-emoticon')
+        .forEach((e) => e.classList.remove('filtered-emoticon'));
+      controlTarget
+        .querySelectorAll('.vrow-preview noscript, .vrow-preview img')
+        .forEach((e) => {
+          try {
+            const url = e.matches('img')
+              ? trimEmotURL(e.src)
+              : trimEmotURL(
+                  e.textContent.match(
+                    /(\/\/.+)&amp;key=[A-Za-z0-9-_]{22}(&amp;type=list)?/g,
+                  )[0],
+                );
+
+            if (filter.emoticon.url[url]) {
+              e.parentNode.classList.add('filtered-emoticon');
+            }
+          } catch (_) {
+            console.warn(
+              '[Mute] 처리가 안되는 게시물 미리보기\n',
+              e.matches('img')
+                ? `IMG: ${e.src.trim()}`
+                : `NOSCRIPT: ${e.textContent.trim()}`,
+            );
+          }
+        });
+
+      controlTarget
+        .querySelectorAll(BOARD_ITEMS)
+        .forEach((a) =>
+          a.classList.toggle('ar-closed', !!a.querySelector('.deal-close')),
+        );
+    };
+
     const muteArticle = () => {
+      markRows();
+
       const articles = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
       const articleInfos = articles
         .filter((article) => !article.href?.includes('#c_'))
@@ -157,6 +195,7 @@ function BoardMuter() {
     };
 
     if (document.readyState === 'complete') muteArticle();
+    else markRows();
     window.addEventListener('load', muteArticle);
     window.addEventListener(EVENT_BOARD_REFRESH, muteArticle);
 
@@ -165,37 +204,6 @@ function BoardMuter() {
       window.removeEventListener(EVENT_BOARD_REFRESH, muteArticle);
     };
   }, [channel, category, filter, controlTarget]);
-
-  // 게시물 미리보기 뮤트
-  useLayoutEffect(() => {
-    if (!controlTarget) return;
-
-    const images = controlTarget.querySelectorAll(
-      '.vrow-preview noscript, .vrow-preview img',
-    );
-    images.forEach((e) => {
-      try {
-        const url = e.matches('img')
-          ? trimEmotURL(e.src)
-          : trimEmotURL(
-              e.textContent.match(
-                /(\/\/.+)&amp;key=[A-Za-z0-9-_]{22}(&amp;type=list)?/g,
-              )[0],
-            );
-
-        if (filter.emoticon.url[url]) {
-          e.parentNode.classList.add('filtered-emoticon');
-        }
-      } catch (_) {
-        console.warn(
-          '[Mute] 처리가 안되는 게시물 미리보기\n',
-          e.matches('img')
-            ? `IMG: ${e.src.trim()}`
-            : `NOSCRIPT: ${e.textContent.trim()}`,
-        );
-      }
-    });
-  }, [controlTarget, filter.emoticon]);
 
   // 이용자 광고
   useLayoutEffect(() => {
@@ -241,17 +249,11 @@ function BoardMuter() {
 
   // [핫딜 채널] 식은딜 게시물
   useLayoutEffect(() => {
-    if (!controlTarget) return;
-
-    const articleList = [...controlTarget.querySelectorAll(BOARD_ITEMS)];
-    articleList
-      .filter((a) => a.querySelector('.deal-close'))
-      .forEach((a) => a.classList.add('ar-closed'));
     document.documentElement.classList.toggle(
       'hide-closed-deal',
       hideClosedDeal,
     );
-  }, [controlTarget, hideClosedDeal]);
+  }, [hideClosedDeal]);
 
   if (!countBarContainer) return null;
   return (
