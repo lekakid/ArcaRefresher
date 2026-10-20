@@ -9,9 +9,11 @@ export function serializeText(rootElement) {
           return child.alt;
         }
 
-        return child.textContent.trim();
+        return child.textContent;
       })
-      .join('');
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
 
     return result;
   } catch (_) {
