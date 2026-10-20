@@ -18,6 +18,19 @@ function Cipher() {
       e.preventDefault();
 
       (async () => {
+        if (e.target.matches('input, textarea')) {
+          const { value, selectionStart, selectionEnd } = e.target;
+          const selected = value.slice(selectionStart, selectionEnd);
+          const content = (selected || (await navigator.clipboard.readText()))
+            .replace(/[\u200B-\u200D\uFEFF]/g, '')
+            .trim();
+          e.target.value =
+            value.substring(0, selectionStart) +
+            encode(content) +
+            value.substring(selectionEnd);
+          return;
+        }
+
         const selection = window.getSelection();
         let content = '';
         switch (selection.type) {
@@ -41,16 +54,6 @@ function Cipher() {
         const encoded = encode(content);
 
         const range = selection.getRangeAt(0);
-        if (e.target.matches('input, textarea')) {
-          const origin = e.target.value;
-          const value =
-            origin.substring(0, e.target.selectionStart) +
-            encoded +
-            origin.substring(e.target.selectionEnd);
-          e.target.value = value;
-          return;
-        }
-
         if (selection.type === 'Range') {
           if (
             range.commonAncestorContainer.parentElement.matches('a') &&
