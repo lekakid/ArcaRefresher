@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
+import { useCallback, useMemo, useRef, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -197,24 +197,26 @@ function GalleryManager({ gallery }) {
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [editingCell, setEditingCell] = useState(null);
-  const editInputRef = useRef(null);
   const resolveRef = useRef(null);
 
   const folderList = useMemo(() => Object.keys(gallery), [gallery]);
   const currentFolder = moveList ? toFolder : fromFolder;
   const rows = useMemo(() => gallery[currentFolder], [gallery, currentFolder]);
 
-  const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
-  );
+  const [pageFolder, setPageFolder] = useState(currentFolder);
+  if (pageFolder !== currentFolder) {
+    setPageFolder(currentFolder);
+    setPage(0);
+  }
 
-  useEffect(() => {
-    if (editInputRef.current) {
-      editInputRef.current.focus();
-    }
-  }, [editingCell]);
+  const safePage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
+  const pagedRows = useMemo(
+    () => rows.slice(safePage * pageSize, safePage * pageSize + pageSize),
+    [rows, safePage, pageSize],
+  );
 
   const handleSelectAll = useCallback(
     (e) => {
@@ -325,7 +327,6 @@ function GalleryManager({ gallery }) {
 
   const handleMemoBlur = useCallback(
     (row, value) => {
-      setEditingCell(null);
       if (row.memo !== value) {
         const updatedRows = rows.map((r) =>
           r.url === row.url ? { ...r, memo: value } : r,
@@ -409,7 +410,10 @@ function GalleryManager({ gallery }) {
                   </TableRow>
                 ) : (
                   pagedRows.map((row) => (
-                    <TableRow key={row.url} sx={{ height: 40 }}>
+                    <TableRow
+                      key={`${currentFolder}:${row.url}`}
+                      sx={{ height: 40 }}
+                    >
                       {!moveList && (
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -433,14 +437,9 @@ function GalleryManager({ gallery }) {
                           {row.url}
                         </Box>
                       </TableCell>
-                      <TableCell
-                        onClick={() =>
-                          setEditingCell({ rowId: row.url, field: 'memo' })
-                        }
-                        sx={{ cursor: 'text' }}
-                      >
+                      <TableCell sx={{ cursor: 'text' }}>
                         <input
-                          ref={editingCell ? editInputRef : undefined}
+                          key={row.memo ?? ''}
                           defaultValue={row.memo}
                           onBlur={(e) => handleMemoBlur(row, e.target.value)}
                           style={{
@@ -460,7 +459,7 @@ function GalleryManager({ gallery }) {
           <TablePagination
             component="div"
             count={rows.length}
-            page={page}
+            page={safePage}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10, 25, 50, 100]}
             onPageChange={(_, newPage) => setPage(newPage)}
