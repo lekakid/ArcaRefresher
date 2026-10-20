@@ -133,11 +133,19 @@ export default function ArticleCustom() {
 
   // 블러 제거
   useEffect(() => {
-    if (!article || !removeBlur) return;
+    if (!article || !removeBlur) return undefined;
 
-    document.querySelectorAll('.blur').forEach((e) => {
-      e.classList.remove('blur');
-    });
+    const releaseBlur = () => {
+      document.querySelectorAll('.blur').forEach((e) => {
+        e.classList.remove('blur');
+      });
+    };
+
+    releaseBlur();
+    window.addEventListener(EVENT_COMMENT_REFRESH, releaseBlur);
+    return () => {
+      window.removeEventListener(EVENT_COMMENT_REFRESH, releaseBlur);
+    };
   }, [article, removeBlur]);
 
   // 외부 링크 경고 무시
