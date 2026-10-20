@@ -59,7 +59,10 @@ export default function MediaBlocker() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setBlockImgList(info);
 
-    return () => setBlockImgList([]);
+    return () => {
+      info.forEach(({ container }) => container.remove());
+      setBlockImgList([]);
+    };
   }, [alertLoaded, articleLoaded, blockAll, blockDeleted, blockReported]);
 
   if (blockImgList.length === 0) return null;
