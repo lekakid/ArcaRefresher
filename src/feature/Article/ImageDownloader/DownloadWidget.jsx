@@ -74,13 +74,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
             const targetUrl = downloadOrigin || isGif ? orig : url;
             const blob = await request(targetUrl, {
               responseType: 'blob',
-            }).then(({ status, response }) => {
-              if (status >= 400) {
-                throw new Error(`HTTP ${status}`, response);
-              }
-
-              return response;
-            });
+            }).then(({ response }) => response);
 
             if (i === 0) setSnack();
             yield { name: `${imageName}.${ext}`, input: blob };
