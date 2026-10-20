@@ -36,7 +36,7 @@ function WrappedWebSocket(url, protocols) {
         const wrappedCallback = (e) => {
           const token = e.data.split('|');
           const type = token[0];
-          const originalData = token[1] ? JSON.parse(token[1]) : null;
+          const originalData = token[1] ? JSON.parse(token[1]) : {};
 
           // 사이트 이벤트 전 처리
           let data = originalData;

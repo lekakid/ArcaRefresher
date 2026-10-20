@@ -15,7 +15,7 @@ function RelayChatMuter() {
   useEffect(() => {
     const modifier = (type, data) => {
       // 채팅이 아니거나 데이터가 없는 경우
-      if (type !== 'nc' || !data) return data;
+      if (type !== 'nc' || Object.keys(data).length === 0) return data;
 
       const user = data.nickname.split('data-filter="')[1].split('"')[0];
 
