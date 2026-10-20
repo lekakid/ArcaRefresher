@@ -85,6 +85,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
             if (i === 0) setSnack();
             yield { name: `${imageName}.${ext}`, input: blob };
           } catch (error) {
+            if (i === 0) setSnack();
             console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
           }
         }
