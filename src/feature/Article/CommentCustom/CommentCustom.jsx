@@ -114,6 +114,7 @@ export default function CommentCustom() {
     return () => {
       comment.classList.remove('fold-comment');
       comment.classList.remove('temp-show');
+      unfoldContainer.remove();
     };
   }, [comment, foldComment]);
 
