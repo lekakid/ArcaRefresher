@@ -528,7 +528,10 @@ function SubsChannelManager({ subs, open, onClose }) {
             page={page}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10]}
-            onPageChange={(_, newPage) => setPage(newPage)}
+            onPageChange={(_, newPage) => {
+              setPage(newPage);
+              setSelection([]);
+            }}
             onRowsPerPageChange={() => {}}
           />
         </DialogContent>
