@@ -91,20 +91,14 @@ export default function TemporarySave() {
     if (!editor) return undefined;
 
     const handler = (e) => {
-      if (e.key !== 'Enter') return;
+      if (e.key !== 'Enter' || e.isComposing) return;
 
       e.preventDefault();
-
-      if (deleteOnCommit) {
-        dispatch($removeArticle({ slot: currentSlot }));
-      }
-
-      const submitBtn = document.querySelector('#submitBtn');
-      submitBtn.click();
+      handleCommit();
     };
     editor.title.addEventListener('keydown', handler);
     return () => editor.title.removeEventListener('keydown', handler);
-  }, [currentSlot, deleteOnCommit, dispatch, editor]);
+  }, [editor, handleCommit]);
 
   if (!enabled) return null;
   if (!tempArticleContainer) return null;
