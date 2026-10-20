@@ -7,14 +7,14 @@ export function getDocument(source) {
 }
 
 /**
- * CORS 우회 용도 외엔 최소한으로 사용할 것
+ *
  */
 export function request(
   url,
   {
     method = 'GET',
     timeout = 0,
-    responseType = 'document',
+    responseType,
     data = null,
     onprogress = null,
   } = {},
@@ -24,11 +24,14 @@ export function request(
       url,
       method,
       timeout,
-      responseType,
+      // Tampermonkey : UTF-8 문서 파싱 관련 버그가 있음
+      // AdGuard      : Greasemonkey와 동일하다고 설명하고 있으나 responseText가 빈 값으로 반환 됨
+      responseType: responseType === 'document' ? '' : responseType,
       data,
       onprogress,
       onload: (response) => {
         if (responseType === 'document') {
+          console.log(response);
           resolve({
             ...response,
             response: getDocument(response.responseText),
