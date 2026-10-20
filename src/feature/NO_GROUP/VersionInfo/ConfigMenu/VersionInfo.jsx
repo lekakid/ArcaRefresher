@@ -22,7 +22,7 @@ import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
 
 function VersionInfo() {
   const dispatch = useDispatch();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const { notiLevel } = useSelector((state) => state[info.id].storage);
 
@@ -161,7 +161,7 @@ function VersionInfo() {
           </BaseRow>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

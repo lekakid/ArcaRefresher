@@ -63,7 +63,7 @@ applyStyle(store.getState()[info.id].storage);
 
 export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const storage = useSelector((state) => state[info.id].storage);
   const {
@@ -217,7 +217,7 @@ export default function ArticleCustom() {
 
   return (
     <>
-      <ConfirmDialog />
+      {confirmDialog}
       {fakePreview && (
         <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">

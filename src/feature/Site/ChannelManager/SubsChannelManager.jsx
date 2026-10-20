@@ -225,7 +225,7 @@ GroupRenderer.propTypes = {
 function SubsChannelManager({ subs, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
     (state) => state[info.id].storage,
@@ -533,7 +533,7 @@ function SubsChannelManager({ subs, open, onClose }) {
           />
         </DialogContent>
       </Dialog>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

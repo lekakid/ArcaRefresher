@@ -117,7 +117,7 @@ const defaultPreset = {
 
 function ThemeCustomizer() {
   const dispatch = useDispatch();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
@@ -303,7 +303,7 @@ function ThemeCustomizer() {
           </ListItem>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

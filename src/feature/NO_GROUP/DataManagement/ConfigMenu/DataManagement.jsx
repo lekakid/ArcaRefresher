@@ -25,7 +25,7 @@ const idList = [...Object.values(featureInfos).map(({ id }) => id), SLICE_ID];
 
 function DataManagement() {
   const inputRef = useRef();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const handleCleaner = useCallback(async () => {
     const keys = GM_listValues();
@@ -155,7 +155,7 @@ function DataManagement() {
           </BaseRow>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

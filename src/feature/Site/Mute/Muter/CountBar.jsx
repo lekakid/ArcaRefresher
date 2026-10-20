@@ -41,7 +41,7 @@ function CountBar({
     (state) => state[info.id].storage.hideMutedMark,
   );
 
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
   const dispatch = useDispatch();
 
   const handleHideCount = async () => {
@@ -143,7 +143,7 @@ function CountBar({
           })}
         </Grid>
       </Grid>
-      <ConfirmDialog />
+      {confirmDialog}
     </>,
     renderContainer,
   );
