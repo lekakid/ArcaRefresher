@@ -34,9 +34,15 @@ function WrappedWebSocket(url, protocols) {
 
       if (event === 'message') {
         const wrappedCallback = (e) => {
-          const token = e.data.split('|');
-          const type = token[0];
-          const originalData = token[1] ? JSON.parse(token[1]) : null;
+          if (modifierList.length === 0) {
+            eventCallback.apply(this.ws, [e]);
+            return;
+          }
+
+          const sep = e.data.indexOf('|');
+          const type = sep < 0 ? e.data : e.data.slice(0, sep);
+          const raw = sep < 0 ? '' : e.data.slice(sep + 1);
+          const originalData = raw ? JSON.parse(raw) : undefined;
 
           // 사이트 이벤트 전 처리
           let data = originalData;
@@ -47,6 +53,11 @@ function WrappedWebSocket(url, protocols) {
               console.warn('[ArcaRefresher] WebSocket subscriber error', error);
             }
           });
+
+          if (data === originalData) {
+            eventCallback.apply(this.ws, [e]);
+            return;
+          }
 
           if (data === undefined) {
             console.warn('[WebSocket] return 잘못함');
@@ -130,7 +141,8 @@ export function useArcaSocket() {
   }, []);
 
   const unsubscribeSocket = useCallback((modifier) => {
-    modifierList.splice(modifierList.indexOf(modifier), 1);
+    const index = modifierList.indexOf(modifier);
+    if (index >= 0) modifierList.splice(index, 1);
   }, []);
 
   return { subscribeSocket, unsubscribeSocket };
