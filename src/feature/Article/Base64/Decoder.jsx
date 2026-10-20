@@ -127,7 +127,10 @@ function Decoder() {
     if (!article) return undefined;
 
     const originHTML = article.innerHTML;
-    article.innerHTML = tryDecodeAll(article.innerHTML);
+    const decodedHTML = tryDecodeAll(originHTML);
+    if (decodedHTML === originHTML) return undefined;
+
+    article.innerHTML = decodedHTML;
     return () => {
       article.innerHTML = originHTML;
     };
@@ -143,11 +146,14 @@ function Decoder() {
     const handler = () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || 'orig' in target.dataset) return;
 
         const content = target.innerHTML;
+        const decoded = tryDecodeAll(content, 5);
+        if (decoded === content) return;
+
         target.dataset.orig = content;
-        target.innerHTML = tryDecodeAll(content, 5);
+        target.innerHTML = decoded;
       });
     };
 
@@ -157,9 +163,10 @@ function Decoder() {
     return () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || !('orig' in target.dataset)) return;
 
         target.innerHTML = target.dataset.orig;
+        delete target.dataset.orig;
       });
       window.removeEventListener(EVENT_COMMENT_REFRESH, handler);
     };
