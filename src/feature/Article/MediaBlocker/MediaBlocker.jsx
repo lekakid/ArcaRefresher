@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { GlobalStyles } from '@mui/material';
 
 import {
   ARTICLE_LOADED,
@@ -10,6 +11,26 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import Blocker from './Blocker';
 import info from './info';
+
+const mediaBlockerStyles = (
+  <GlobalStyles
+    styles={{
+      '.article-content': {
+        '&:not(.media-blocker-unhide)': {
+          '& .media-blocker': {
+            display: 'none',
+          },
+          '& .media-blocker-btns.removed': {
+            display: 'none',
+          },
+        },
+        '&.media-blocker-unhide .media-blocker-btns': {
+          display: 'none',
+        },
+      },
+    }}
+  />
+);
 
 export default function MediaBlocker() {
   const { blockAll, blockDeleted, blockReported } = useSelector(
@@ -45,6 +66,7 @@ export default function MediaBlocker() {
 
   return (
     <>
+      {mediaBlockerStyles}
       {blockImgList.map(({ element, container }) => (
         <Blocker
           key={element.src}

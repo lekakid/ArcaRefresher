@@ -1,27 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { GlobalStyles, IconButton, Popper, Portal } from '@mui/material';
+import { IconButton, Popper, Portal } from '@mui/material';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
-
-const mediaBlockerStyles = (
-  <GlobalStyles
-    styles={{
-      '.article-content': {
-        '&:not(.media-blocker-unhide)': {
-          '& .media-blocker': {
-            display: 'none',
-          },
-          '& .media-blocker-btns.removed': {
-            display: 'none',
-          },
-        },
-        '&.media-blocker-unhide .media-blocker-btns': {
-          display: 'none',
-        },
-      },
-    }}
-  />
-);
 
 function Blocker({ referenceElement, container }) {
   const [anchor, setAnchor] = useState(null);
@@ -65,7 +45,6 @@ function Blocker({ referenceElement, container }) {
 
   return (
     <>
-      {mediaBlockerStyles}
       <Portal container={container}>
         <IconButton
           onMouseEnter={handleEnter}
