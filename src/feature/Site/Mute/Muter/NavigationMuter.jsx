@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'core/selector';
@@ -10,17 +10,16 @@ function NavigationMuter() {
   const navLoaded = useLoadChecker(NAVIGATION_LOADED);
 
   const filter = useSelector(filterSelector);
-  const [nav, setNav] = useState(null);
+  const navRef = useRef(null);
 
+  // 채널 상단 메뉴 뮤트
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (navLoaded) setNav(document.querySelector(NAVIGATION_MENU));
-  }, [navLoaded]);
+    if (!navLoaded) return;
 
-  // 이모티콘 뮤트
-  useEffect(() => {
-    if (!nav) return undefined;
+    if (!navRef.current)
+      navRef.current = document.querySelector(NAVIGATION_MENU);
 
+    const nav = navRef.current;
     const regex = new RegExp(filter.channel.join('|') || '(?!)');
 
     const muteChannel = () => {
@@ -28,7 +27,10 @@ function NavigationMuter() {
         ...nav.querySelectorAll('li.nav-item.dropdown a.dropdown-item'),
       ];
       channels.forEach((channel) => {
-        if (regex.test(channel.textContent.replace(' 채널', ''))) {
+        const url = new URL(channel.href);
+        const slug = url.pathname.split('/').pop();
+
+        if (regex.test(slug)) {
           channel.style.display = 'none';
         }
       });
@@ -43,17 +45,13 @@ function NavigationMuter() {
       });
     };
 
-    if (document.readyState !== 'complete') {
-      window.addEventListener('load', muteChannel);
-      return () => {
-        window.removeEventListener('load', muteChannel);
-        unmuteChannel();
-      };
-    }
-
-    muteChannel();
-    return () => unmuteChannel();
-  }, [nav, filter.channel]);
+    window.addEventListener('load', muteChannel);
+    if (document.readyState === 'complete') muteChannel();
+    return () => {
+      window.removeEventListener('load', muteChannel);
+      unmuteChannel();
+    };
+  }, [navLoaded, filter.channel]);
 
   return null;
 }
