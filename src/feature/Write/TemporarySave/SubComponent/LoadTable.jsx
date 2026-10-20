@@ -105,12 +105,16 @@ function LoadTable({ editor, open, onClose }) {
     (state) => state[info.id].storage,
   );
 
-  const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
-    id: index,
-    title: value.title,
-    content: value.content,
-    date: key,
-  }));
+  const rows = useMemo(
+    () =>
+      Object.entries(tempArticleList).map(([key, value]) => ({
+        id: key,
+        title: value.title,
+        content: value.content,
+        date: key,
+      })),
+    [tempArticleList],
+  );
 
   const [selection, setSelection] = useState([]);
   const [editMode, setEditMode] = useState(false);
