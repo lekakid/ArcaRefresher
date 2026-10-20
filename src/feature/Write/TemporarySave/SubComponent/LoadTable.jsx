@@ -189,7 +189,7 @@ function LoadTable({ editor, open, onClose }) {
       <DialogTitle>불러오기</DialogTitle>
       <IconButton
         sx={{ position: 'absolute', right: 8, top: 8 }}
-        onClick={onClose}
+        onClick={handleClose}
       >
         <CloseIcon />
       </IconButton>
