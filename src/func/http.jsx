@@ -31,7 +31,6 @@ export function request(
       onprogress,
       onload: (response) => {
         if (responseType === 'document') {
-          console.log(response);
           resolve({
             ...response,
             response: getDocument(response.responseText),
