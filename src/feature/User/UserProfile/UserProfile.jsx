@@ -93,7 +93,7 @@ function UserProfile() {
       const { title, message, ...rest } = data;
       return {
         ...rest,
-        title: title.replace(nick, data.username),
+        ...(title && { title: title.replace(nick, data.username) }),
         message: message.replace(nick, data.username),
       };
     };
