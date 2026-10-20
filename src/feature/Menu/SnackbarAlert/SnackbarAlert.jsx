@@ -13,18 +13,18 @@ export default function SnackbarAlert() {
 
   useEffect(() => {
     if (snackBag.length && !snack) {
+      const next = snackBag[0];
       dispatch(shiftSnack());
-      if (!snackBag[0]) return;
+      if (!next) return;
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSnack({ ...next });
       // mui에 clickaway onClose 이후 clickaway가 바로 터지는 버그가 있음
       setTimeout(() => {
-        const next = { ...snackBag[0] };
-        setSnack(next);
         setOpen(true);
       }, 50);
     }
     if (snackBag.length && snack && open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpen(false);
     }
   }, [dispatch, open, snack, snackBag]);
