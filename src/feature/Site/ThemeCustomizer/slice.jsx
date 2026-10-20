@@ -32,7 +32,7 @@ function updater(storage, defaultValue) {
       ];
       const entries = Object.entries(storage.theme).map(([key, value]) => {
         remapTable.forEach(([from, to]) => {
-          if (!value[to]) {
+          if (!value[to] && from in value) {
             value[to] = value[from];
             delete value[from];
           }
