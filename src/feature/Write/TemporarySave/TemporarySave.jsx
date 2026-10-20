@@ -1,5 +1,5 @@
 import { unsafeWindow } from '$';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -39,6 +39,7 @@ export default function TemporarySave() {
   const [tempArticleContainer, setTemparticleContainer] = useState(null);
   const [submitHandlerContainer, setSubmitHandlerContainer] = useState(null);
   const [editor, setEditor] = useState(null);
+  const commitSlotRef = useRef(null);
 
   // 렌더 컨테이너 생성
   useEffect(() => {
@@ -70,16 +71,31 @@ export default function TemporarySave() {
     };
   }, [enabled, editorLoaded]);
 
+  useEffect(() => {
+    const handler = () => {
+      if (!commitSlotRef.current) return;
+      dispatch($removeArticle({ slot: commitSlotRef.current }));
+    };
+    const resume = () => {
+      commitSlotRef.current = null;
+    };
+    window.addEventListener('pagehide', handler);
+    document.addEventListener('input', resume);
+    return () => {
+      window.removeEventListener('pagehide', handler);
+      document.removeEventListener('input', resume);
+    };
+  }, [dispatch]);
+
   const handleCommit = useCallback(() => {
-    if (deleteOnCommit) {
-      dispatch($removeArticle({ slot: currentSlot }));
-    }
+    commitSlotRef.current = deleteOnCommit ? currentSlot : null;
 
     const submitBtn = document.querySelector('#submitBtn');
     submitBtn.click();
-  }, [currentSlot, deleteOnCommit, dispatch]);
+  }, [currentSlot, deleteOnCommit]);
 
   const handleBack = () => {
+    commitSlotRef.current = null;
     const backBtn = document.querySelector(
       '.article-write .btns a:first-child',
     );
