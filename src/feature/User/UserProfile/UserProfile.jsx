@@ -43,7 +43,7 @@ const profileStyles = (
 );
 
 function UserProfile() {
-  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
+  const { subscribeSocket, unsubscribeSocket } = useArcaSocket();
   const loaded = useLoadChecker(FULL_LOADED);
   const { user } = useContent();
 
@@ -84,48 +84,43 @@ function UserProfile() {
   useEffect(() => {
     if (!showId) return undefined;
 
-    const callback = (e) => {
-      const data = e.data.split('|');
-      if (data[0] !== 'n') return;
+    const modifier = (type, data) => {
+      if (type !== 'n') return data;
 
-      const noti = JSON.parse(data[1]);
+      const [nick, id] = data.username.split('#');
+      if (!id) return data;
 
-      const [nick, id] = noti.username.split('#');
-      if (id) {
-        if (noti.mediaUrl) {
-          noti.title = noti.title.replace(nick, noti.username);
-        }
-        noti.message = noti.message.replace(nick, noti.username);
-      }
-
-      e.data = `${data[0]}|${JSON.stringify(noti)}`;
+      const { title, message, ...rest } = data;
+      return {
+        ...rest,
+        title: title.replace(nick, data.username),
+        message: message.replace(nick, data.username),
+      };
     };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(subscriber);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
   }, [showId, subscribeSocket, unsubscribeSocket]);
 
   // 동시시청 반고닉 표기 처리
   useEffect(() => {
     if (!showId) return undefined;
 
-    const callback = (e) => {
-      const data = e.data.split('|');
-      if (data[0] !== 'nc' || !data[1]) return;
+    const modifier = (type, data) => {
+      if (type !== 'nc' || !data) return data;
 
-      const chat = JSON.parse(data[1]);
+      const user = data.nickname.split('data-filter="')[1].split('"')[0];
+      if (!user.includes('#')) return data;
 
-      const filter = chat.nickname.split('data-filter="')[1].split('"')[0];
-      if (filter.indexOf('#') === -1) return;
-
-      chat.nickname = chat.nickname.replace(/">[^>]+<\/a>/, `">${filter}</a>`);
-      e.data = `${data[0]}|${JSON.stringify(chat)}`;
+      const { nickname, ...rest } = data;
+      return {
+        ...rest,
+        nickname: nickname.replace(/">[^>]+<\/a>/, `">${user}</a>`),
+      };
     };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(subscriber);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
   }, [showId, subscribeSocket, unsubscribeSocket]);
 
   // 자신이 작성한 댓글 표시

@@ -34,27 +34,32 @@ function WrappedWebSocket(url, protocols) {
 
       if (event === 'message') {
         const wrappedCallback = (e) => {
-          Object.defineProperties(e, {
-            data: { value: e.data, writable: true },
-            ignore: { value: false, writable: true },
+          const token = e.data.split('|');
+          const type = token[0];
+          const originalData = token[1] ? JSON.parse(token[1]) : null;
+
+          // 사이트 이벤트 전 처리
+          let data = originalData;
+          modifierList.forEach((callback) => {
+            try {
+              data = callback(type, data, originalData);
+            } catch (error) {
+              console.warn('[ArcaRefresher] WebSocket subscriber error', error);
+            }
           });
 
-          modifierList
-            .filter(({ type }) => type === 'before')
-            .forEach(({ callback }) => {
-              try {
-                callback(e);
-              } catch (error) {
-                console.warn(
-                  '[ArcaRefresher] WebSocket subscriber error',
-                  error,
-                );
-              }
-            });
-
-          if (!e.ignore) {
-            eventCallback.apply(this.ws, [e]);
+          if (data === undefined) {
+            console.warn('[WebSocket] return 잘못함');
           }
+
+          // 비어있으면 이벤트 무시
+          if (!data) return;
+
+          // 이벤트 데이터 패치
+          Object.defineProperty(e, 'data', {
+            value: `${type}|${JSON.stringify(data)}`,
+          });
+          eventCallback.apply(this.ws, [e]);
         };
         this.ws.addEventListener.apply(this.ws, [
           event,
@@ -100,14 +105,33 @@ function WrappedWebSocket(url, protocols) {
 }
 unsafeWindow.WebSocket = WrappedWebSocket;
 
+/**
+ * 사이트에서 제공하는 웹소켓 메세지 이벤트를 구독하는 훅입니다.  
+ * 반환 값을 null로 보내면 사이트 이벤트를 무시하게 됩니다.
+ *
+ * @returns {{
+ *   subscribeSocket : (modifier: (
+ *        type: string,
+ *        data: MessageEvent.data,
+ *        originalData: Object
+ *      ) => ModifiedData
+ *    ) => void,
+ *   unsubscribeSocket : (modifier: (
+ *        type: string,
+ *        data: MessageEvent.data,
+ *        originalData: Object
+ *     ) => ModifiedData
+ *   ) => void,
+ * }}
+ */
 export function useArcaSocket() {
-  const subscribe = useCallback((modifier) => {
+  const subscribeSocket = useCallback((modifier) => {
     modifierList.push(modifier);
   }, []);
 
-  const unsubscribe = useCallback((modifier) => {
+  const unsubscribeSocket = useCallback((modifier) => {
     modifierList.splice(modifierList.indexOf(modifier), 1);
   }, []);
 
-  return [subscribe, unsubscribe];
+  return { subscribeSocket, unsubscribeSocket };
 }

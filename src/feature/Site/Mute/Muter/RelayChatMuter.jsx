@@ -13,31 +13,34 @@ function RelayChatMuter() {
   const { hideMutedMark } = useSelector((state) => state[info.id].storage);
 
   useEffect(() => {
-    const callback = (e) => {
-      const data = e.data.split('|');
-      if (data[0] !== 'nc' || !data[1]) return;
+    const modifier = (type, data) => {
+      // 채팅이 아니거나 데이터가 없는 경우
+      if (type !== 'nc' || !data) return data;
 
-      const chat = JSON.parse(data[1]);
-      const dataFilter = chat.nickname.split('data-filter="')[1].split('"')[0];
+      const user = data.nickname.split('data-filter="')[1].split('"')[0];
+
+      /*
+      // TODO 이모티콘 뮤트 처리
+      // data.type = 'image', data.content = URL
+      */
 
       // 사용자 뮤트
       const regex =
         filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
-      if (regex?.test(dataFilter)) {
-        if (hideMutedMark) {
-          e.ignore = true;
-          return;
-        }
+      if (regex?.test(user)) {
+        if (hideMutedMark) return null;
 
-        chat.content = '[채팅 뮤트됨]';
+        return {
+          ...data,
+          content: '[채팅 뮤트됨]',
+        };
       }
 
-      e.data = `${data[0]}|${JSON.stringify(chat)}`;
+      return data;
     };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(subscriber);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
   }, [filter, hideMutedMark, subscribeSocket, unsubscribeSocket]);
 
   return null;

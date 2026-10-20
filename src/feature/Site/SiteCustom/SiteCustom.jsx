@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import store from 'core/store';
-import { useArcaSocket } from 'hooks/WebSocket';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import info from './info';
@@ -133,7 +132,6 @@ function applyStyle(storage) {
 applyStyle(store.getState()[info.id].storage);
 
 export default function SiteCustom() {
-  const [subscribeWS, unsubscribeWS] = useArcaSocket();
   const faviconLoaded = useLoadChecker('#dynamic-favicon');
 
   const { spoofTitle, spoofFavicon, ...storage } = useSelector(
@@ -171,7 +169,7 @@ export default function SiteCustom() {
       observer.disconnect();
       changeFavicon(defaultUrl);
     };
-  }, [faviconLoaded, spoofFavicon, subscribeWS, unsubscribeWS]);
+  }, [faviconLoaded, spoofFavicon]);
 
   return null;
 }

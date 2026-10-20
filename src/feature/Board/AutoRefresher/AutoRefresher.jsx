@@ -36,7 +36,7 @@ const PAUSE_UNFOCUS = 'unfocus';
 const PAUSE_API = 'api';
 
 function AutoRefresher() {
-  const [subscribe, unsubscribe] = useArcaSocket();
+  const { subscribeSocket, unsubscribeSocket } = useArcaSocket();
   const boardLoaded = useLoadChecker(BOARD_LOADED);
 
   const { countdown, maxTime, refreshOnArticle, progressPos } = useSelector(
@@ -136,15 +136,15 @@ function AutoRefresher() {
   useEffect(() => {
     if (!boardLoaded) return undefined;
 
-    const onmessage = (e) => {
-      if (e.data === 'na') refreshData.current.newArticle += 1;
+    const onmessage = (type, data) => {
+      if (type === 'na') refreshData.current.newArticle += 1;
+
+      return data;
     };
 
-    const subscriber = { callback: onmessage, type: 'after' };
-    subscribe(subscriber);
-
-    return () => unsubscribe(subscriber);
-  }, [boardLoaded, subscribe, unsubscribe]);
+    subscribeSocket(onmessage);
+    return () => unsubscribeSocket(onmessage);
+  }, [boardLoaded, subscribeSocket, unsubscribeSocket]);
 
   useEffect(() => {
     if (!enabled) return undefined;
