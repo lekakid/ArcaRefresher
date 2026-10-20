@@ -15,11 +15,17 @@ function AutoSaver({ editor }) {
     if (autoSaveTime === 0 || loadOpen) return undefined;
     if (!currentSlot) return undefined;
 
+    let lastTitle;
+    let lastContent;
     const timer = setInterval(() => {
-      const date = new Date();
-      const title =
-        editor.title.value || `${date.toLocaleString()}에 자동 저장됨`;
+      const rawTitle = editor.title.value;
       const content = editor.content.html.get(true);
+      if (rawTitle === lastTitle && content === lastContent) return;
+      lastTitle = rawTitle;
+      lastContent = content;
+
+      const date = new Date();
+      const title = rawTitle || `${date.toLocaleString()}에 자동 저장됨`;
 
       dispatch($addArticle({ slot: currentSlot, title, content }));
     }, autoSaveTime * 1000);
