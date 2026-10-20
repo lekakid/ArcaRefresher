@@ -232,13 +232,14 @@ export default [
       e.preventDefault();
 
       const comment = document.querySelector('#comment');
+      if (!comment) return;
       const nav = document.querySelector('nav.navbar');
       const targetY = comment.offsetTop - nav.clientHeight;
 
       if (window.scrollY < comment.offsetTop - window.innerHeight) {
         window.scrollTo({ top: targetY });
       } else {
-        document.querySelector('#comment textarea').focus();
+        document.querySelector('#comment textarea')?.focus();
       }
     },
   },
