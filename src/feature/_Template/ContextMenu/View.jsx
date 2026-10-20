@@ -14,7 +14,10 @@ function ContextMenu({ target, closeMenu }) {
     {
       key: info.id,
       selector: USER_INFO,
-      dataExtractor: () => target.src.split('?')[0],
+      dataExtractor: () => {
+        if (!target) return undefined;
+        return target;
+      },
     },
     [target],
   );
