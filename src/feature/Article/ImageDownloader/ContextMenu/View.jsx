@@ -5,7 +5,6 @@ import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ImageIcon from '@mui/icons-material/Image';
-import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 import { useContextMenu } from 'feature/Menu/ContextMenu';
@@ -14,6 +13,7 @@ import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
 import { convertToPng } from 'func/image';
+import { saveFile } from 'func/file';
 import { ImageInfo } from '../Model';
 import { format } from '../Util';
 import info from '../info';
@@ -84,17 +84,11 @@ function ContextMenu({ target, closeMenu }) {
 
         const response = await fetch(orig, { cache: 'no-cache' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const size = Number(response.headers.get('content-length'));
-        const stream = response.body;
-
         const name = format(fileName, {
           content: contentInfo,
           name: uploadName,
         });
-        const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
-          size,
-        });
-        await stream.pipeTo(filestream);
+        saveFile(`${name}.${ext}`, await response.blob());
       } catch (error) {
         console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({

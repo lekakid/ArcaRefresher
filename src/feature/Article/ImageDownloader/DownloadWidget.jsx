@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { downloadZip } from 'client-zip';
-import streamSaver from 'streamsaver';
 
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
+import { saveStream } from 'func/file';
 
 import { format } from './Util';
 import info from './info';
@@ -35,11 +35,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       return message;
     };
 
-    // 파일 저장 스트림 생성
     const zipFileName = format(zipName, { content: contentInfo });
-    const filestream = streamSaver.createWriteStream(
-      `${zipFileName}.${zipExtension}`,
-    );
 
     // 다운로드 스트림 제너레이터 선언
     async function* entries() {
@@ -48,7 +44,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
 
       try {
         onDownloadStart();
-        setSnack({ msg: '다운로드 준비 중' });
+        setSnack({ msg: '이미지를 다운로드하는 중...' });
 
         // 파일명 중복 시 끝에 숫자 붙이는 용도
         const dupCount = {};
@@ -76,10 +72,8 @@ function DownloadWidget({ infoList, onDownloadStart }) {
               responseType: 'blob',
             }).then(({ response }) => response);
 
-            if (i === 0) setSnack();
             yield { name: `${imageName}.${ext}`, input: blob };
           } catch (error) {
-            if (i === 0) setSnack();
             console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
           }
         }
@@ -89,11 +83,12 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       }
     }
 
-    // 다운로드 스트림 생성 후 연결
-    const zipstream = downloadZip(entries());
-    zipstream.body.pipeTo(filestream).catch((error) => {
-      console.warn('[ImageDownloader] 다운로드가 중단되었습니다.', error);
-    });
+    saveStream(`${zipFileName}.${zipExtension}`, downloadZip(entries()).body)
+      .then(() => setSnack())
+      .catch((error) => {
+        console.warn('[ImageDownloader] 다운로드가 중단되었습니다.', error);
+        setSnack({ msg: '이미지 다운로드에 실패했습니다.', time: 3000 });
+      });
   }, [
     infoList,
     downloadOrigin,
