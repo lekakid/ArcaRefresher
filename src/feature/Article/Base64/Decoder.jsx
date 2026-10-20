@@ -33,6 +33,10 @@ const LABEL = {
   final: '복호화 되었습니다.',
 };
 
+function toHref(url) {
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+}
+
 function tryDecodeAll(html, max = 200) {
   let result = html;
 
@@ -81,7 +85,7 @@ function tryDecodeAll(html, max = 200) {
             return i;
           }
           if (urlRegex.test(i)) {
-            return `<a href="${i}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
+            return `<a href="${toHref(i)}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
           }
 
           return `<p class="base64">${i
@@ -235,8 +239,7 @@ function Decoder() {
   };
 
   const handleUrlOpen = () => {
-    const url = new URL(decodeResult.text, 'https://a');
-    open(url.href, FOREGROUND);
+    open(toHref(decodeResult.text), FOREGROUND);
     setDecodeResult(undefined);
   };
 
