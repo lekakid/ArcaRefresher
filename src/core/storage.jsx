@@ -20,6 +20,7 @@ export function getValue(key, defaultValue, updater) {
     GM_setValue(key, value);
   }
 
+  if (defaultValue === undefined) return value;
   return { ...defaultValue, ...value };
 }
 
