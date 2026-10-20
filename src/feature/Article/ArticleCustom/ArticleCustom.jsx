@@ -121,7 +121,7 @@ export default function ArticleCustom() {
 
   // 스포일러 경고 무시
   useEffect(() => {
-    if (!ignoreSpoilerFilter) return;
+    if (!article || !ignoreSpoilerFilter) return;
 
     document
       .querySelector('.spoiler-alert-content')
@@ -129,16 +129,16 @@ export default function ArticleCustom() {
     document
       .querySelector('.spoiler-filter.active')
       ?.classList.remove('active');
-  }, [ignoreSpoilerFilter]);
+  }, [article, ignoreSpoilerFilter]);
 
   // 블러 제거
   useEffect(() => {
-    if (!removeBlur) return;
+    if (!article || !removeBlur) return;
 
     document.querySelectorAll('.blur').forEach((e) => {
       e.classList.remove('blur');
     });
-  }, [removeBlur]);
+  }, [article, removeBlur]);
 
   // 외부 링크 경고 무시
   useEffect(() => {
