@@ -74,8 +74,10 @@ export const slice = createSlice({
     },
     $renamePreset(state, action) {
       const { prev, next } = action.payload;
+      if (next in state.storage.theme) return;
       state.storage.theme[next] = state.storage.theme[prev];
       delete state.storage.theme[prev];
+      if (state.storage.current === prev) state.storage.current = next;
     },
   },
 });
