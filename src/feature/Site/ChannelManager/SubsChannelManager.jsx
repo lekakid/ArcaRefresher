@@ -76,7 +76,7 @@ function ChannelTitleRenderer({ id, value }) {
       const channelInfo = {
         ...defaultChannelInfo,
         ...channelInfoTable[id],
-        cut: parseInt(e.target.value, 10),
+        cut: Number(e.target.value) || 0,
       };
       dispatch($setChannelInfo({ id, info: channelInfo }));
     },
