@@ -87,7 +87,7 @@ function ContextMenu({ target, closeMenu }) {
 
         if (target.matches(CATEGORY_SELECTOR)) {
           const search = new URLSearchParams(target.search);
-          const id = decodeURI(search.get('category') || '글머리없음');
+          const id = search.get('category') || '글머리없음';
           const label =
             id !== '글머리없음' ? target.textContent.trim() : '글머리없음';
 
