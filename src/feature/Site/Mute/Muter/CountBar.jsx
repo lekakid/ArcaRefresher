@@ -29,12 +29,21 @@ const TypeString = {
   all: '전체',
 };
 
+const DEFAULT_COUNT = {
+  keyword: 0,
+  user: 0,
+  channel: 0,
+  category: 0,
+  deleted: 0,
+  all: 0,
+};
+
 function CountBar({
   renderContainer,
   controlTarget,
-  hideMutedToggleBtn,
-  count,
-  hide,
+  hideMutedToggleBtn = false,
+  count = DEFAULT_COUNT,
+  hide = false,
 }) {
   const [showStates, setShowStates] = useState(undefined);
   const hideMutedMark = useSelector(
@@ -155,19 +164,6 @@ CountBar.propTypes = {
   hideMutedToggleBtn: PropTypes.bool,
   count: PropTypes.object,
   hide: PropTypes.bool,
-};
-
-CountBar.defaultProps = {
-  hideMutedToggleBtn: false,
-  count: {
-    keyword: 0,
-    user: 0,
-    channel: 0,
-    category: 0,
-    deleted: 0,
-    all: 0,
-  },
-  hide: false,
 };
 
 export default CountBar;

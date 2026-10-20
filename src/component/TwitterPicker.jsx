@@ -4,7 +4,20 @@ import { Box, Paper, Stack } from '@mui/material';
 
 const HEX = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
 
-function TwitterPicker({ color, colors, onChange }) {
+const DEFAULT_COLORS = [
+  '#FF6900',
+  '#FCB900',
+  '#7BDCB5',
+  '#00D084',
+  '#8ED1FC',
+  '#0693E3',
+  '#ABB8C3',
+  '#EB144C',
+  '#F78DA7',
+  '#9900EF',
+];
+
+function TwitterPicker({ color, colors = DEFAULT_COLORS, onChange }) {
   return (
     <Paper>
       <Swatch
@@ -79,21 +92,6 @@ function TwitterPicker({ color, colors, onChange }) {
     </Paper>
   );
 }
-
-TwitterPicker.defaultProps = {
-  colors: [
-    '#FF6900',
-    '#FCB900',
-    '#7BDCB5',
-    '#00D084',
-    '#8ED1FC',
-    '#0693E3',
-    '#ABB8C3',
-    '#EB144C',
-    '#F78DA7',
-    '#9900EF',
-  ],
-};
 
 TwitterPicker.propTypes = {
   color: PropTypes.string,
