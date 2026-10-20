@@ -65,21 +65,17 @@ function DataManagement() {
   }, []);
 
   const handleFileSelect = useCallback((e) => {
+    const input = e.target;
     (async () => {
       try {
-        const path = e.target.files[0];
-        const data = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.readAsText(path);
-        });
+        const data = await input.files[0].text();
         importValues(data);
 
         window.location.reload();
       } catch (error) {
         console.error(error);
+      } finally {
+        input.value = '';
       }
     })();
   }, []);

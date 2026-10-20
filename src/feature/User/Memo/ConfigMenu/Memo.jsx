@@ -112,17 +112,11 @@ function Memo() {
 
   const handleImportMobile = useCallback(
     (e) => {
+      const input = e.target;
       (async () => {
         try {
-          const path = e.target.files[0];
-          const memoList = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              const result = JSON.parse(reader.result);
-              resolve(result.data);
-            };
-            reader.readAsText(path);
-          });
+          const text = await input.files[0].text();
+          const memoList = JSON.parse(text).data;
 
           const updateData = { ...memoData };
           memoList.forEach(({ userType, memoKey, memoText }) => {
@@ -145,6 +139,8 @@ function Memo() {
           dispatch($setMemoList(updateData));
         } catch (error) {
           console.error(error);
+        } finally {
+          input.value = '';
         }
       })();
     },
