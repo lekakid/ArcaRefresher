@@ -38,9 +38,9 @@ function AnonymousNick() {
     }, []);
     nickList.sort(() => Math.random() - 0.5);
     const nickTable = {};
+    let count = 0;
 
     const handler = () => {
-      let count = 0;
       const data = [...document.querySelectorAll(ARTICLE_USER_INFO)].map(
         (e, index) => {
           const key = getUserKey(e, index);
