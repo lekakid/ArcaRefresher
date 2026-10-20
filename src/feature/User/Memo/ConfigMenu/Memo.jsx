@@ -128,11 +128,14 @@ function Memo() {
           memoList.forEach(({ userType, memoKey, memoText }) => {
             switch (userType) {
               case 1:
-                (updateData[`#${memoKey}`] ??= {}).msg = memoText;
+                updateData[`#${memoKey}`] = {
+                  ...updateData[`#${memoKey}`],
+                  msg: memoText,
+                };
                 break;
               case 0:
               case 2:
-                (updateData[memoKey] ??= {}).msg = memoText;
+                updateData[memoKey] = { ...updateData[memoKey], msg: memoText };
                 break;
               default:
                 break;
