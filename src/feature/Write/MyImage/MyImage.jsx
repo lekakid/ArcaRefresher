@@ -46,7 +46,7 @@ export default function MyImage() {
 
   const handleLoad = useCallback(() => {
     const img =
-      targetImgList[Math.floor(Math.random() * targetImgList.length)].url;
+      targetImgList[Math.floor(Math.random() * targetImgList.length)]?.url;
     if (!img) return;
 
     const html =
