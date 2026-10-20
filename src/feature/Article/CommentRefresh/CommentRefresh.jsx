@@ -72,7 +72,7 @@ function CommentRefresh() {
 
     comment.current.replaceWith(newComments);
     comment.current = newComments;
-    unsafeWindow.applyLocalTimeFix();
+    unsafeWindow.applyLocalTimeFix?.();
     window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
   }, []);
 
