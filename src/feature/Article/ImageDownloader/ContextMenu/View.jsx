@@ -56,7 +56,7 @@ function ContextMenu({ target, closeMenu }) {
         }).then((r) => r.response);
         const blob = await convertToPng(response);
 
-        navigator.clipboard.write([
+        await navigator.clipboard.write([
           new ClipboardItem({
             [blob.type]: blob,
           }),
@@ -83,6 +83,7 @@ function ContextMenu({ target, closeMenu }) {
         closeMenu();
 
         const response = await fetch(orig, { cache: 'no-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const size = Number(response.headers.get('content-length'));
         const stream = response.body;
 
@@ -93,7 +94,7 @@ function ContextMenu({ target, closeMenu }) {
         const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
           size,
         });
-        stream.pipeTo(filestream);
+        await stream.pipeTo(filestream);
       } catch (error) {
         console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({
