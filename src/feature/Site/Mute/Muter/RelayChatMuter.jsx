@@ -7,7 +7,7 @@ import { filterSelector } from '../selector';
 import info from '../info';
 
 function RelayChatMuter() {
-  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
+  const { subscribeSocket, unsubscribeSocket } = useArcaSocket();
 
   const filter = useSelector(filterSelector);
   const { hideMutedMark } = useSelector((state) => state[info.id].storage);
