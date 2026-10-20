@@ -18,10 +18,7 @@ const observer = new MutationObserver(() => {
     done.push(s);
   });
   done.forEach((s) => selectorSet.delete(s));
-});
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true,
+  if (selectorSet.size === 0) observer.disconnect();
 });
 
 export default function useLoadChecker(targetSelector) {
@@ -40,6 +37,10 @@ export default function useLoadChecker(targetSelector) {
 
     // 검사할 설렉터 등록
     selectorSet.add(targetSelector);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
   }, [loaded, targetSelector, dispatch]);
 
   return loaded || !!document.querySelector(targetSelector);
