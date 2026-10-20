@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
@@ -13,18 +13,16 @@ export default function CategoryStyler() {
   const { channel, category } = useContent();
 
   const { color } = useSelector((state) => state[info.id].storage);
-  const [keyMap, setKeyMap] = useState(null);
 
-  useLayoutEffect(() => {
-    if (!category) return;
+  const keyMap = useMemo(() => {
+    if (!category) return null;
 
-    const entries = Object.values(category.id2NameMap).map((value) => [
+    const entries = Object.values(category.id2NameMap).map((value, index) => [
       value,
-      Math.random().toString(36).substring(2),
+      `${index}`.padStart(2, '0'),
     ]);
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setKeyMap(Object.fromEntries(entries));
+    return Object.fromEntries(entries);
   }, [category]);
 
   useLayoutEffect(() => {
