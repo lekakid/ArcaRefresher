@@ -20,13 +20,13 @@ function NavigationMuter() {
   // 이모티콘 뮤트
   useEffect(() => {
     if (!nav) return undefined;
-    if (!(filter.channel?.length > 0)) return undefined;
+
+    const regex = new RegExp(filter.channel.join('|') || '(?!)');
 
     const muteChannel = () => {
       const channels = [
         ...nav.querySelectorAll('li.nav-item.dropdown a.dropdown-item'),
       ];
-      const regex = new RegExp(filter.channel.join('|'));
       channels.forEach((channel) => {
         if (regex.test(channel.textContent.replace(' 채널', ''))) {
           channel.style.display = 'none';

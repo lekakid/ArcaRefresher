@@ -18,26 +18,21 @@ export default function filterContent(contents, filter) {
   const mergedUser = [...arcaUser, ...filter.user];
   const mergedKeyword = [...arcaKeyword, ...filter.keyword];
 
-  const regexUser =
-    mergedUser.length > 0 ? new RegExp(mergedUser.join('|')) : undefined;
-  const regexKeyword =
-    mergedKeyword.length > 0 ? new RegExp(mergedKeyword.join('|')) : undefined;
-  const regexChannel =
-    filter.channel?.length > 0
-      ? new RegExp(filter.channel.join('|'))
-      : undefined;
+  const regexUser = new RegExp(mergedUser.join('|') || '(?!)');
+  const regexKeyword = new RegExp(mergedKeyword.join('|') || '(?!)');
+  const regexChannel = new RegExp(filter.channel.join('|') || '(?!)');
 
   contents.forEach(
     ({ element, user, content, emoticon, channel, category, deleted }) => {
       let filtered = false;
       // 이용자 뮤트 처리
-      if (regexUser?.test(user)) {
+      if (regexUser.test(user)) {
         filteredList.user.push(element);
         filtered = true;
       }
 
       // 키워드 뮤트 처리
-      if (regexKeyword?.test(content)) {
+      if (regexKeyword.test(content)) {
         filteredList.keyword.push(element);
         filtered = true;
       }
@@ -65,7 +60,7 @@ export default function filterContent(contents, filter) {
       }
 
       // [특수 게시판 한정] 특정 채널 게시물 뮤트
-      if (regexChannel?.test(channel)) {
+      if (regexChannel.test(channel)) {
         filteredList.channel.push(element);
         filtered = true;
       }

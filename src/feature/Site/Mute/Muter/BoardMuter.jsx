@@ -207,10 +207,9 @@ function BoardMuter() {
 
       const slug = adUrl.match(/arca.live\/b\/([a-z0-9]+)(.+)?$/)?.[1];
 
-      const channelfilter =
-        filter.channel.length > 0 ? new RegExp(filter.channel.join('|')) : null;
+      const channelfilter = new RegExp(filter.channel.join('|') || '(?!)');
 
-      const hidden = hideUserAd || (channelfilter?.test(slug) ?? false);
+      const hidden = hideUserAd || (channelfilter.test(slug) ?? false);
       document.documentElement.classList.toggle('hide-user-ad', hidden);
     };
 

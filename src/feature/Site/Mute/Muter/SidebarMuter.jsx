@@ -20,10 +20,9 @@ function SidebarMuter() {
 
     const mute = () => {
       const arcaKeyword = unsafeWindow.LiveConfig?.mute?.keywords || [];
-      const filterList = [...arcaKeyword, ...keyword];
-      if (!filterList.length) return;
-
-      const filter = new RegExp(filterList.join('|'));
+      const filter = new RegExp(
+        [...arcaKeyword, ...keyword].join('|') || '(?!)',
+      );
 
       const articles = document.querySelectorAll(
         '.right-sidebar .sidebar-item .link-list a',

@@ -25,9 +25,8 @@ function RelayChatMuter() {
       */
 
       // 사용자 뮤트
-      const regex =
-        filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
-      if (regex?.test(user)) {
+      const regex = new RegExp(filter.user.join('|') || '(?!)');
+      if (regex.test(user)) {
         if (hideMutedMark) return null;
 
         return {

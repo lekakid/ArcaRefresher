@@ -57,9 +57,8 @@ function ToastMuter() {
       }
 
       // 사용자 뮤트
-      const regex =
-        filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
-      if (regex?.test(data.username)) {
+      const regex = new RegExp(filter.user.join('|') || '(?!)');
+      if (regex.test(data.username)) {
         if (hideMutedMark) return null;
 
         const { mediaUrl, title, message, ...rest } = data;
