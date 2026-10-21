@@ -227,7 +227,7 @@ export default [
     action: 'comment',
     label: '댓글 목록/입력창으로 이동',
     active: ACTIVE_ARTICLE,
-    defaultKey: 'KeyD',
+    defaultKey: 'KeyC',
     callback(e) {
       e.preventDefault();
 
