@@ -30,16 +30,18 @@ function updater(storage, defaultValue) {
         ['btn-hover', 'bd-btn-hover'],
         ['visited-article', 'article-visited'],
       ];
-      const entries = Object.entries(storage.theme).map(([key, value]) => {
-        remapTable.forEach(([from, to]) => {
-          if (!value[to] && from in value) {
-            value[to] = value[from];
-            delete value[from];
-          }
-        });
+      const entries = Object.entries(storage.theme || {})
+        .filter(([, value]) => value)
+        .map(([key, value]) => {
+          remapTable.forEach(([from, to]) => {
+            if (!value[to] && from in value) {
+              value[to] = value[from];
+              delete value[from];
+            }
+          });
 
-        return [key, value];
-      });
+          return [key, value];
+        });
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
