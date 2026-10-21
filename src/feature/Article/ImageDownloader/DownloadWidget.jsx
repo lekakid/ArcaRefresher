@@ -70,18 +70,20 @@ function DownloadWidget({ infoList, onDownloadStart }) {
           dupCount[imageName] = (dupCount[imageName] || 0) + 1;
           const isGif = ext === 'gif';
 
+          let blob;
           try {
             const targetUrl = downloadOrigin || isGif ? orig : url;
-            const blob = await request(targetUrl, {
+            blob = await request(targetUrl, {
               responseType: 'blob',
             }).then(({ response }) => response);
-
-            if (i === 0) setSnack();
-            yield { name: `${imageName}.${ext}`, input: blob };
           } catch (error) {
-            if (i === 0) setSnack();
             console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+            continue;
+          } finally {
+            if (i === 0) setSnack();
           }
+
+          yield { name: `${imageName}.${ext}`, input: blob };
         }
       } finally {
         // 페이지 이탈 방지 해제
