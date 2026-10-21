@@ -56,10 +56,17 @@ export default function ShortKey() {
       activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
+    const stopInModal = (e) => {
+      if (e.target.closest('.MuiModal-root, .MuiPopper-root'))
+        e.stopPropagation();
+    };
+
     document.addEventListener('keydown', eventListener, true);
+    document.body.addEventListener('keydown', stopInModal);
 
     return () => {
       document.removeEventListener('keydown', eventListener, true);
+      document.body.removeEventListener('keydown', stopInModal);
     };
   }, [
     content,
