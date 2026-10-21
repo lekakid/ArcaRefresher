@@ -42,7 +42,13 @@ function WrappedWebSocket(url, protocols) {
           const sep = e.data.indexOf('|');
           const type = sep < 0 ? e.data : e.data.slice(0, sep);
           const raw = sep < 0 ? '' : e.data.slice(sep + 1);
-          const originalData = raw ? JSON.parse(raw) : undefined;
+          let originalData;
+          try {
+            originalData = raw ? JSON.parse(raw) : undefined;
+          } catch (_) {
+            eventCallback.apply(this.ws, [e]);
+            return;
+          }
 
           // 사이트 이벤트 전 처리
           let data = originalData;
