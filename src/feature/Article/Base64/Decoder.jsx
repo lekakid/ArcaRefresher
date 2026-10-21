@@ -34,7 +34,7 @@ const LABEL = {
 };
 
 function toHref(url) {
-  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+  return url.replace(/^(?:(https?):)?\/*/i, (_, s) => `${s || 'https'}://`);
 }
 
 function tryDecodeAll(html, max = 200) {
