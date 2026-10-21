@@ -7,22 +7,22 @@ export class ArcaUser {
   constructor(containerEl) {
     let filter = typeof containerEl === 'string' ? containerEl : undefined;
 
-    if (!filter) {
+    if (typeof containerEl !== 'string') {
       const infoEl = containerEl.matches('[data-filter]')
         ? containerEl
         : containerEl.querySelector('[data-filter]');
       filter = infoEl?.dataset.filter;
-    }
 
-    if (!filter) {
-      const anchorEl = containerEl.matches('a')
-        ? containerEl
-        : containerEl.querySelector('a');
-      filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
-    }
+      if (!filter) {
+        const anchorEl = containerEl.matches('a')
+          ? containerEl
+          : containerEl.querySelector('a');
+        filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
+      }
 
-    if (!filter) {
-      filter = containerEl.textContent.trim();
+      if (!filter) {
+        filter = containerEl.textContent.trim();
+      }
     }
 
     const [, nick, id] = filter
