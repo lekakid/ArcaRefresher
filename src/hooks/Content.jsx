@@ -169,15 +169,14 @@ export function ContentCollector() {
         `${ARTICLE_INFO}, ${EMOTICON_INFO}`,
       );
       const timeElement = infoElement?.querySelector('.date time');
-      const authorElement = document.querySelector(
-        `${ARTICLE_AUTHOR}, ${EMOTICON_AUTHOR}`,
+      const user = new ArcaUser(
+        document.querySelector(`${ARTICLE_AUTHOR}, ${EMOTICON_AUTHOR}`),
       );
 
       const category =
         titleElement?.querySelector('.badge')?.textContent || '일반';
       const title = serializeText(titleElement) || '제목 없음';
-      const author =
-        (authorElement && new ArcaUser(authorElement).toString()) || '익명';
+      const author = user.toString() || '익명';
       const datetime = new Date(
         timeElement?.getAttribute('datetime') || Date.now(),
       );
