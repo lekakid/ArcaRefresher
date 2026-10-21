@@ -121,9 +121,15 @@ function LoadTable({ editor, open, onClose }) {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  const currentPage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
+  if (currentPage !== page) setPage(currentPage);
+
   const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
+    () => rows.slice(currentPage * pageSize, currentPage * pageSize + pageSize),
+    [rows, currentPage, pageSize],
   );
 
   const handleSelectAll = useCallback(
@@ -269,7 +275,7 @@ function LoadTable({ editor, open, onClose }) {
           <TablePagination
             component="div"
             count={rows.length}
-            page={page}
+            page={currentPage}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10, 20, 30]}
             onPageChange={(_, newPage) => setPage(newPage)}
