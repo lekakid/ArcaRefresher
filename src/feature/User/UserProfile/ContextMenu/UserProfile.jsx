@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -11,7 +11,7 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
@@ -24,10 +24,14 @@ const profileUrl = 'https://arca.live/u/@';
 
 function UserProfile({ target, closeMenu }) {
   const setSnack = useSnackbarAlert();
+
+  const { channel } = useContent();
   const { contextRange, openType, checkSpamAccount } = useSelector(
     (store) => store[info.id].storage,
   );
-  const { channel } = useContent();
+
+  const [profileData, setProfileData] = useState(null);
+
   let contextSelector;
   switch (contextRange) {
     case 'articleItem':
@@ -42,81 +46,69 @@ function UserProfile({ target, closeMenu }) {
       break;
   }
 
-  const [profileData, setProfileData] = useState(undefined);
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: contextSelector,
+  });
 
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: contextSelector,
-      dataExtractor: () => {
-        if (!target) return undefined;
+  const data = useMemo(() => {
+    if (!target) return null;
 
-        let userElement = target;
-        if (target.matches('.vrow')) {
-          userElement = target.querySelector('span.user-info');
-        }
-        if (!userElement) return undefined;
+    let userElement = target;
+    if (target.matches('.vrow')) {
+      userElement = target.querySelector('span.user-info');
+    }
+    if (!userElement) return null;
 
-        const user = new ArcaUser(userElement);
-        // 유동 제외
-        if (user.type === ArcaUser.TYPE_IP) return undefined;
+    const user = new ArcaUser(userElement);
+    // 유동 제외
+    if (user.type === ArcaUser.TYPE_IP) return null;
 
-        const id = user.toString();
-        const url = id.replace('#', '/');
-
-        return { id, url };
-      },
-    },
-    [target],
-  );
+    return user;
+  }, [target]);
 
   useEffect(() => {
-    if (!checkSpamAccount || !data) return undefined;
+    if (!checkSpamAccount) return;
+    if (!data) return;
 
-    let cancelled = false;
-    const fail = { article: -1, comment: -1 };
-    fetch(`${profileUrl}${data.url}`)
-      .then((response) => {
-        if (!response.ok) throw new Error(response.status);
-        return response.text();
-      })
-      .then((text) => {
-        if (cancelled) return;
+    (async () => {
+      const userPath = data.toString().replace('#', '/');
 
-        const doc = getDocument(text);
-        if (doc.querySelector('.error-page')) {
-          setProfileData(fail);
-          return;
-        }
+      try {
+        const profileDocument = await fetch(`${profileUrl}${userPath}`)
+          .then((response) => {
+            if (!response.ok && response.status === 404) {
+              throw new Error('없는 이용자');
+            }
+
+            return response.text();
+          })
+          .then((text) => getDocument(text));
 
         const list = [
-          ...doc.querySelectorAll(
+          ...profileDocument.querySelectorAll(
             '.card-block .user-recent, .card-block .clearfix',
           ),
         ];
         const article = list.findIndex((l) => l.matches('.clearfix'));
 
         setProfileData({ article, comment: list.length - article - 1 });
-      })
-      .catch(() => {
-        if (!cancelled) setProfileData(fail);
-      });
-
-    return () => {
-      cancelled = true;
-      setProfileData(undefined);
-    };
+      } catch (_) {
+        setProfileData({ error: true });
+      }
+    })();
   }, [data, checkSpamAccount]);
 
   const handleProfile = useCallback(() => {
-    open(`${profileUrl}${data.url}`, openType);
+    open(`${profileUrl}${data.toString().replace('#', '/')}`, openType);
     closeMenu();
   }, [closeMenu, data, openType]);
 
   const handleCopyId = useCallback(async () => {
     try {
       closeMenu();
-      await navigator.clipboard.writeText(`@${data.id}`);
+      await navigator.clipboard.writeText(`@${data.toString()}`);
     } catch (error) {
       setSnack({ msg: '클립보드 액세스 권한이 없습니다.', time: 3000 });
       console.error(error);
@@ -126,7 +118,7 @@ function UserProfile({ target, closeMenu }) {
   const handleSearchAll = useCallback(async () => {
     open(
       `https://arca.live/b/breaking?target=nickname&keyword=${
-        data.id.split('#')[0]
+        data.toString().split('#')[0]
       }`,
       openType,
     );
@@ -136,45 +128,32 @@ function UserProfile({ target, closeMenu }) {
   const handleSearchChannel = useCallback(async () => {
     open(
       `https://arca.live/b/${channel.id}?target=nickname&keyword=${
-        data.id.split('#')[0]
+        data.toString().split('#')[0]
       }`,
       openType,
     );
     closeMenu();
   }, [channel, closeMenu, data, openType]);
 
-  let spamAccountAlert = checkSpamAccount && (
-    <MenuItem disabled>
-      <Typography>글, 댓글 수 조회 중...</Typography>
-    </MenuItem>
-  );
-
-  if (profileData) {
-    if (profileData.article < 0 || profileData.comment < 0) {
-      spamAccountAlert = (
-        <MenuItem disabled>
-          <Typography>조회 실패</Typography>
-        </MenuItem>
-      );
-    } else {
-      const articleText = `글: ${
-        profileData.article === 15 ? '15 ↑' : profileData.article
-      }`;
-      const commentText = `댓글: ${
-        profileData.comment === 15 ? '15 ↑' : profileData.comment
-      }`;
-      spamAccountAlert = (
-        <MenuItem disabled>
-          <Typography>{`${articleText} / ${commentText}`}</Typography>
-        </MenuItem>
-      );
-    }
-  }
+  const profileArticleCount =
+    profileData?.article === 15 ? '15 ↑' : profileData?.article;
+  const profileCommentCount =
+    profileData?.comment === 15 ? '15 ↑' : profileData?.comment;
 
   if (!data) return null;
   return (
     <List>
-      {spamAccountAlert}
+      {checkSpamAccount && (
+        <MenuItem disabled>
+          {!profileData && <Typography>글, 댓글 수 조회 중...</Typography>}
+          {profileData && profileData.error && (
+            <Typography>조회 실패</Typography>
+          )}
+          {profileData && !profileData.error && (
+            <Typography>{`글: ${profileArticleCount} / 댓글: ${profileCommentCount}`}</Typography>
+          )}
+        </MenuItem>
+      )}
       <MenuItem onClick={handleProfile}>
         <ListItemIcon>
           <PersonIcon />

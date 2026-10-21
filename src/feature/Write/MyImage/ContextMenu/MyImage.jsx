@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 
 import info from '../info';
 import FolderCheckList from './FolderCheckList';
@@ -13,22 +13,25 @@ import FolderCheckList from './FolderCheckList';
 function MyImage({ target, closeMenu }) {
   const { enabled } = useSelector((state) => state[info.id].storage);
 
-  const data = useContextMenu(
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState('');
+
+  // 트리거 등록
+  useContextMenuTrigger(
     {
       key: info.id,
       selector: enabled ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}` : 'NULL',
-      dataExtractor: () => {
-        if (!target) return undefined;
-
-        const url = target.src.split('?')[0];
-        return { url };
-      },
     },
     [target],
   );
 
-  const [open, setOpen] = useState(false);
-  const [url, setUrl] = useState('');
+  const data = useMemo(() => {
+    if (!target) return null;
+
+    const url = target.src.split('?')[0];
+    return { url };
+  }, [target]);
+
   const showDialog = useCallback(() => {
     setUrl(data.url);
     setOpen(true);

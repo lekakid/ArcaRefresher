@@ -1,5 +1,5 @@
 import ContextMenu from './ContextMenu';
-import useContextMenu from './useContextMenu';
+import useContextMenuTrigger from './useContextMenuTrigger';
 
-export { useContextMenu };
+export { useContextMenuTrigger };
 export default { Feature: ContextMenu };

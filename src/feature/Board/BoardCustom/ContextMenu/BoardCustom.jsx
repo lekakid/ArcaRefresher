@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -6,7 +6,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BOARD_ITEMS } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { BACKGROUND, open } from 'func/window';
@@ -15,27 +15,28 @@ import info from '../info';
 
 // 우클릭 메뉴
 function BoardCustom({ target, closeMenu }) {
-  const { contextMenuEnabled } = useSelector((store) => store[info.id].storage);
-  const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
-      dataExtractor: () => {
-        if (!target) return undefined;
 
-        const url = target.href || target.querySelector('a.title').href;
-        const articleId = url.split('/').pop().split('?')[0];
+  const { user, channel } = useContent();
+  const { contextMenuEnabled } = useSelector((store) => store[info.id].storage);
 
-        return {
-          articleId,
-          url,
-        };
-      },
-    },
-    [target],
-  );
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
+  });
+
+  const data = useMemo(() => {
+    if (!target) return null;
+
+    const url = target.href || target.querySelector('a.title').href;
+    const articleId = url.split('/').pop().split('?')[0];
+
+    return {
+      articleId,
+      url,
+    };
+  }, [target]);
 
   const handleOpen = useCallback(() => {
     open(data.url, BACKGROUND);

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -6,7 +6,7 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { request } from 'func/http';
 import { open } from 'func/window';
@@ -68,6 +68,8 @@ async function openWithForm(
 }
 
 function ImageSearch({ target, closeMenu }) {
+  const setSnack = useSnackbarAlert();
+
   const {
     // 동작
     contextMenuEnabled,
@@ -85,19 +87,17 @@ function ImageSearch({ target, closeMenu }) {
     showTinEye,
   } = useSelector((state) => state[info.id].storage);
 
-  const setSnack = useSnackbarAlert();
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: contextMenuEnabled ? ARTICLE_IMAGES : 'NULL',
-      dataExtractor: () => {
-        if (!target) return undefined;
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: contextMenuEnabled ? ARTICLE_IMAGES : 'NULL',
+  });
 
-        return `${target.src}${searchBySource ? '&type=orig' : ''}`;
-      },
-    },
-    [target, searchBySource],
-  );
+  const data = useMemo(() => {
+    if (!target) return null;
+
+    return `${target.src}${searchBySource ? '&type=orig' : ''}`;
+  }, [target, searchBySource]);
 
   const handleGoogle = useCallback(() => {
     if (!showGoogle) return;

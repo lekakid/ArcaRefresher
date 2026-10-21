@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -8,7 +8,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
@@ -19,27 +19,26 @@ import { format } from '../Util';
 import info from '../info';
 
 function ImageDownloader({ target, closeMenu }) {
+  const setSnack = useSnackbarAlert();
+
+  const contentInfo = useContent();
   const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
     (state) => state[info.id].storage,
   );
-  const contentInfo = useContent();
 
-  const setSnack = useSnackbarAlert();
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: contextMenuEnabled
-        ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
-        : 'NULL',
-      dataExtractor: () => {
-        if (!target) return undefined;
-        if (!contentInfo.config) return undefined;
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: contextMenuEnabled
+      ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
+      : 'NULL',
+  });
 
-        return new ImageInfo(target);
-      },
-    },
-    [target, contentInfo.config],
-  );
+  const data = useMemo(() => {
+    if (!target) return null;
+
+    return new ImageInfo(target);
+  }, [target]);
 
   const handleClipboard = useCallback(() => {
     (async () => {

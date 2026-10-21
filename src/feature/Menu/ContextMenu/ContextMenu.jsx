@@ -32,7 +32,7 @@ function ContextMenu() {
 
   const gestureRef = useRef({ right: false, count: 0 });
   const openRef = useRef(false);
-  const [targetTable, setTargetTable] = useState(undefined);
+  const [hitTable, setHitTable] = useState({});
 
   useEffect(() => {
     const handleDown = ({ button }) => {
@@ -78,7 +78,7 @@ function ContextMenu() {
 
         e.preventDefault();
         openRef.current = true;
-        setTargetTable(Object.fromEntries(entries));
+        setHitTable(Object.fromEntries(entries));
         dispatch(setOpen([e.clientX, e.clientY]));
       } catch (_) {
         /* empty */
@@ -142,7 +142,7 @@ function ContextMenu() {
               },
             }}
           >
-            <View target={targetTable?.[key]} closeMenu={handleClose} />
+            <View target={hitTable[key]} closeMenu={handleClose} />
           </Box>
         </ModuleLoadBoundary>
       ))}

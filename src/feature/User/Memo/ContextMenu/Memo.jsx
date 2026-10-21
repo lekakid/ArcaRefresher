@@ -8,11 +8,12 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { ArcaUser } from 'func/user';
 
 import { setInputUser } from '../slice';
 import info from '../info';
+import { useMemo } from 'react';
 
 function Memo({ target, closeMenu }) {
   const dispatch = useDispatch();
@@ -32,24 +33,23 @@ function Memo({ target, closeMenu }) {
       break;
   }
 
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: contextSelector,
-      dataExtractor: () => {
-        if (!target) return undefined;
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: contextSelector,
+  });
 
-        let userElement = target;
-        if (target.matches('.vrow')) {
-          userElement = target.querySelector('span.user-info');
-        }
-        if (!userElement) return undefined;
+  const data = useMemo(() => {
+    if (!target) return null;
 
-        return new ArcaUser(userElement);
-      },
-    },
-    [target],
-  );
+    let userElement = target;
+    if (target.matches('.vrow')) {
+      userElement = target.querySelector('span.user-info');
+    }
+    if (!userElement) return null;
+
+    return new ArcaUser(userElement);
+  }, [target]);
 
   if (!data) return null;
 

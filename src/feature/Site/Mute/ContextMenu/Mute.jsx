@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -10,7 +10,7 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { ArcaUser } from 'func/user';
 import { useContent } from 'hooks/Content';
@@ -44,65 +44,70 @@ const EMOTICON_SELECTOR =
 const CATEGORY_SELECTOR = '.board-category .item a';
 
 function Mute({ target, closeMenu }) {
+  const setSnack = useSnackbarAlert();
   const dispatch = useDispatch();
+
   const { channel } = useContent();
   const { contextRange, user } = useSelector((state) => state[info.id].storage);
   const filter = useSelector((state) => filterSelector(state, channel.id));
 
-  const setSnack = useSnackbarAlert();
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: `${USER_SELECTOR[contextRange]}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
-      dataExtractor: () => {
-        if (!target) return undefined;
+  // 트리거 등록
+  useContextMenuTrigger({
+    key: info.id,
+    selector: `${USER_SELECTOR[contextRange]}, ${EMOTICON_SELECTOR}, ${CATEGORY_SELECTOR}`,
+  });
 
-        if (target.matches(USER_SELECTOR[contextRange])) {
-          let userElement = target;
-          if (target.matches('.vrow')) {
-            userElement = target.querySelector('span.user-info');
-          }
-          if (!userElement) return undefined;
+  const data = useMemo(() => {
+    if (!target) return null;
 
-          const uid = new ArcaUser(userElement).toUID();
-          const regex = makeRegex(uid);
+    // 유저 선택
+    if (target.matches(USER_SELECTOR[contextRange])) {
+      let userElement = target;
+      // 게시물 라인 전체가 대상인 경우
+      if (target.matches('.vrow')) {
+        userElement = target.querySelector('span.user-info');
+      }
+      // 사용자 정보를 찾지 못함
+      if (!userElement) return null;
 
-          return { type: 'user', uid, regex };
-        }
+      const uid = new ArcaUser(userElement).toUID();
+      const regex = makeRegex(uid);
 
-        if (target.matches(EMOTICON_SELECTOR)) {
-          let emoticon = target;
+      return { type: 'user', uid, regex };
+    }
 
-          if (target.matches('.emoticon-wrapper.muted')) {
-            emoticon = target.querySelector('[class$="emoticon"]');
-          }
+    // 이모티콘을 고른 경우
+    if (target.matches(EMOTICON_SELECTOR)) {
+      let emoticon = target;
 
-          return {
-            type: 'emoticon',
-            bundleId: emoticon.dataset.storeId,
-            emotId: parseInt(emoticon.dataset.id, 10),
-            url: trimEmotURL(emoticon.src),
-          };
-        }
+      if (target.matches('.emoticon-wrapper.muted')) {
+        emoticon = target.querySelector('[class$="emoticon"]');
+      }
 
-        if (target.matches(CATEGORY_SELECTOR)) {
-          const search = new URLSearchParams(target.search);
-          const id = decodeURI(search.get('category') || '글머리없음');
-          const label =
-            id !== '글머리없음' ? target.textContent.trim() : '글머리없음';
+      return {
+        type: 'emoticon',
+        bundleId: emoticon.dataset.storeId,
+        emotId: parseInt(emoticon.dataset.id, 10),
+        url: trimEmotURL(emoticon.src),
+      };
+    }
 
-          return {
-            type: 'category',
-            id,
-            label,
-          };
-        }
+    // 카테고리를 고른 경우
+    if (target.matches(CATEGORY_SELECTOR)) {
+      const search = new URLSearchParams(target.search);
+      const id = decodeURI(search.get('category') || '글머리없음');
+      const label =
+        id !== '글머리없음' ? target.textContent.trim() : '글머리없음';
 
-        return undefined;
-      },
-    },
-    [target, contextRange],
-  );
+      return {
+        type: 'category',
+        id,
+        label,
+      };
+    }
+
+    return null;
+  }, [target, contextRange]);
 
   const handleMuteEmotBundle = useCallback(() => {
     (async () => {

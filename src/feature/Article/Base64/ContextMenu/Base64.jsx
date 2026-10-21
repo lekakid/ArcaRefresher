@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 
-import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
 
 import { toggleTemporaryDisabled } from '../slice';
 import info from '../info';
@@ -13,14 +13,10 @@ import info from '../info';
 function Base64({ target, closeMenu }) {
   const dispatch = useDispatch();
 
-  const data = useContextMenu(
-    {
-      key: info.id,
-      selector: '.base64',
-      dataExtractor: () => target,
-    },
-    [target],
-  );
+  useContextMenuTrigger({
+    key: info.id,
+    selector: '.base64',
+  });
 
   const handleClick = useCallback(() => {
     dispatch(toggleTemporaryDisabled());
@@ -28,7 +24,7 @@ function Base64({ target, closeMenu }) {
     closeMenu();
   }, [dispatch, closeMenu]);
 
-  if (!data) return null;
+  if (!target) return null;
   return (
     <List>
       <MenuItem onClick={handleClick}>

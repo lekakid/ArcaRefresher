@@ -25,7 +25,6 @@ const PresetEditor = forwardRef(
       },
       [],
     );
-
     const handleChange = useCallback(
       (key, color) => {
         const nextPreset = { ...preset };
