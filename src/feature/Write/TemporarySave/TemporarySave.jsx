@@ -1,5 +1,5 @@
 import { unsafeWindow } from '$';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -16,6 +16,8 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 import info from './info';
 import { $removeArticle } from './slice';
+
+const COMMIT_KEY = 'AR_TemporarySave_commit';
 
 const btnsStyles = (
   <GlobalStyles
@@ -39,7 +41,6 @@ export default function TemporarySave() {
   const [tempArticleContainer, setTemparticleContainer] = useState(null);
   const [submitHandlerContainer, setSubmitHandlerContainer] = useState(null);
   const [editor, setEditor] = useState(null);
-  const commitSlotRef = useRef(null);
 
   // 렌더 컨테이너 생성
   useEffect(() => {
@@ -72,30 +73,36 @@ export default function TemporarySave() {
   }, [enabled, editorLoaded]);
 
   useEffect(() => {
-    const handler = () => {
-      if (!commitSlotRef.current) return;
-      dispatch($removeArticle({ slot: commitSlotRef.current }));
-    };
-    const resume = () => {
-      commitSlotRef.current = null;
-    };
-    window.addEventListener('pagehide', handler);
-    document.addEventListener('input', resume);
-    return () => {
-      window.removeEventListener('pagehide', handler);
-      document.removeEventListener('input', resume);
-    };
+    const slot = sessionStorage.getItem(COMMIT_KEY);
+    if (!slot) return;
+    sessionStorage.removeItem(COMMIT_KEY);
+
+    const from = document.referrer ? new URL(document.referrer).pathname : '';
+    const posted =
+      /\/(write|edit)$/.test(from) &&
+      /^\/b\/[^/]+\/\d+/.test(window.location.pathname);
+    if (posted) dispatch($removeArticle({ slot }));
   }, [dispatch]);
 
+  useEffect(() => {
+    const resume = () => sessionStorage.removeItem(COMMIT_KEY);
+    document.addEventListener('input', resume);
+    return () => document.removeEventListener('input', resume);
+  }, []);
+
   const handleCommit = useCallback(() => {
-    commitSlotRef.current = deleteOnCommit ? currentSlot : null;
+    if (deleteOnCommit && currentSlot) {
+      sessionStorage.setItem(COMMIT_KEY, currentSlot);
+    } else {
+      sessionStorage.removeItem(COMMIT_KEY);
+    }
 
     const submitBtn = document.querySelector('#submitBtn');
     submitBtn.click();
   }, [currentSlot, deleteOnCommit]);
 
   const handleBack = () => {
-    commitSlotRef.current = null;
+    sessionStorage.removeItem(COMMIT_KEY);
     const backBtn = document.querySelector(
       '.article-write .btns a:first-child',
     );
