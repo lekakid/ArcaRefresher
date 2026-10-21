@@ -62,10 +62,9 @@ export const slice = createSlice({
 
       state.storage.memo[user] = memo;
     },
-    $updateMemoNicks(state, action) {
-      Object.entries(action.payload).forEach(([user, nick]) => {
-        if (state.storage.memo[user]) state.storage.memo[user].nick = nick;
-      });
+    $updateMemoNick(state, action) {
+      const { user, nick } = action.payload;
+      state.storage.memo[user].nick = nick;
     },
     $setMemoList(state, action) {
       state.storage.memo = action.payload;
@@ -80,7 +79,7 @@ export const {
   $setContextRange,
   $setVariant,
   $setMemo,
-  $updateMemoNicks,
+  $updateMemoNick,
   $setMemoList,
   setInputUser,
 } = slice.actions;

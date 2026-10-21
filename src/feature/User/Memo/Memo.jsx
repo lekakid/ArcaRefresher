@@ -14,7 +14,7 @@ import {
 
 import MemoInput from './MemoInput';
 import info from './info';
-import { $updateMemoNicks, setInputUser } from './slice';
+import { $updateMemoNick, setInputUser } from './slice';
 
 function Memo() {
   const dispatch = useDispatch();
@@ -70,7 +70,6 @@ function Memo() {
     if (page > 1) return;
 
     const dupTable = {};
-    const nickUpdates = {};
 
     [...document.querySelectorAll(USER_INFO_WITHOUT_NOTICE)].forEach((e) => {
       const user = new ArcaUser(e);
@@ -78,15 +77,11 @@ function Memo() {
       const id = user.toUID();
 
       if (!dupTable[id] && memo[id] && memo[id].nick !== nick) {
-        nickUpdates[id] = nick;
+        dispatch($updateMemoNick({ user: id, nick }));
       }
       // 이미 갱신처리한 이용자의 갱신 처리 방지
       dupTable[id] = true;
     });
-
-    if (Object.keys(nickUpdates).length) {
-      dispatch($updateMemoNicks(nickUpdates));
-    }
   }, [loaded, memo, dispatch]);
 
   // 메모 색상 처리
