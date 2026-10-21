@@ -5,6 +5,11 @@ export class ArcaUser {
   static TYPE_ERROR = 'ERROR';
 
   constructor(containerEl) {
+    if (!containerEl && typeof containerEl !== 'string') {
+      this.type = ArcaUser.TYPE_ERROR;
+      return;
+    }
+
     let filter = typeof containerEl === 'string' ? containerEl : undefined;
 
     if (typeof containerEl !== 'string') {
