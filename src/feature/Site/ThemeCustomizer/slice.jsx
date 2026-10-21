@@ -30,16 +30,18 @@ function updater(storage, defaultValue) {
         ['btn-hover', 'bd-btn-hover'],
         ['visited-article', 'article-visited'],
       ];
-      const entries = Object.entries(storage.theme).map(([key, value]) => {
-        remapTable.forEach(([from, to]) => {
-          if (!value[to]) {
-            value[to] = value[from];
-            delete value[from];
-          }
-        });
+      const entries = Object.entries(storage.theme || {})
+        .filter(([, value]) => value)
+        .map(([key, value]) => {
+          remapTable.forEach(([from, to]) => {
+            if (!value[to] && from in value) {
+              value[to] = value[from];
+              delete value[from];
+            }
+          });
 
-        return [key, value];
-      });
+          return [key, value];
+        });
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
@@ -74,8 +76,10 @@ export const slice = createSlice({
     },
     $renamePreset(state, action) {
       const { prev, next } = action.payload;
+      if (next in state.storage.theme) return;
       state.storage.theme[next] = state.storage.theme[prev];
       delete state.storage.theme[prev];
+      if (state.storage.current === prev) state.storage.current = next;
     },
   },
 });

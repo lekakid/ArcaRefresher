@@ -46,8 +46,11 @@ export default function MyImage() {
 
   const handleLoad = useCallback(() => {
     const img =
-      targetImgList[Math.floor(Math.random() * targetImgList.length)].url;
-    if (!img) return;
+      targetImgList[Math.floor(Math.random() * targetImgList.length)]?.url;
+    if (!img) {
+      setAlert(false);
+      return;
+    }
 
     const html =
       img.indexOf('.mp4') > -1

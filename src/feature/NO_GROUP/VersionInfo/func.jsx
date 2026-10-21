@@ -16,6 +16,15 @@ export function join({ major, minor, patch }) {
   return `${major}.${minor}.${patch}`;
 }
 
+export function getChangeLogUrl(version) {
+  if (version.includes('nightly')) {
+    return 'https://github.com/lekakid/ArcaRefresher/commits/develop/';
+  }
+
+  const { major, minor } = parse(version);
+  return `https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=${join({ major, minor, patch: '*' })}`;
+}
+
 /**
  * 적용 중인 스크립트 버전과 마지막으로 확인한 버전을 비교합니다.
  *

@@ -76,7 +76,7 @@ function ChannelTitleRenderer({ id, value }) {
       const channelInfo = {
         ...defaultChannelInfo,
         ...channelInfoTable[id],
-        cut: parseInt(e.target.value, 10),
+        cut: Number(e.target.value) || 0,
       };
       dispatch($setChannelInfo({ id, info: channelInfo }));
     },
@@ -225,7 +225,7 @@ GroupRenderer.propTypes = {
 function SubsChannelManager({ subs, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
     (state) => state[info.id].storage,
@@ -528,12 +528,15 @@ function SubsChannelManager({ subs, open, onClose }) {
             page={page}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10]}
-            onPageChange={(_, newPage) => setPage(newPage)}
+            onPageChange={(_, newPage) => {
+              setPage(newPage);
+              setSelection([]);
+            }}
             onRowsPerPageChange={() => {}}
           />
         </DialogContent>
       </Dialog>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

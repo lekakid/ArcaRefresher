@@ -88,10 +88,20 @@ function TableView({
     () => columns.filter((col) => columnVisibilityModel?.[col.field] !== false),
     [columns, columnVisibilityModel],
   );
+  const flexTotal = visibleColumns.reduce(
+    (sum, col) => sum + (col.flex ?? 0),
+    0,
+  );
+
+  const currentPage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
+  if (currentPage !== page) setPage(currentPage);
 
   const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
+    () => rows.slice(currentPage * pageSize, currentPage * pageSize + pageSize),
+    [rows, currentPage, pageSize],
   );
 
   const handleSelectAll = useCallback(
@@ -173,7 +183,14 @@ function TableView({
               />
             </TableCell>
             {visibleColumns.map((col) => (
-              <TableCell key={col.field} sx={{ width: col.width }}>
+              <TableCell
+                key={col.field}
+                sx={{
+                  width:
+                    col.width ??
+                    (col.flex ? `${(col.flex / flexTotal) * 100}%` : undefined),
+                }}
+              >
                 {col.headerName}
               </TableCell>
             ))}
@@ -221,7 +238,7 @@ function TableView({
       <TablePagination
         component="div"
         count={rows.length}
-        page={page}
+        page={currentPage}
         rowsPerPage={pageSize}
         rowsPerPageOptions={[10, 25, 50, 100]}
         onPageChange={(_, newPage) => setPage(newPage)}

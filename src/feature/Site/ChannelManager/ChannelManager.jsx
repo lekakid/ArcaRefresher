@@ -57,7 +57,7 @@ function ChannelItem({ id, label, info }) {
 
   return (
     <ListItem dense disablePadding>
-      <ListItemButton component={Link} href={url}>
+      <ListItemButton component={Link} href={url.href}>
         <ListItemText
           disableTypography
           primary={`${label}${info?.memo ? ` - ${info.memo}` : ''}`}

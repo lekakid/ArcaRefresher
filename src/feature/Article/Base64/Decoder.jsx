@@ -33,6 +33,10 @@ const LABEL = {
   final: '복호화 되었습니다.',
 };
 
+function toHref(url) {
+  return url.replace(/^(?:(https?):)?\/*/i, (_, s) => `${s || 'https'}://`);
+}
+
 function tryDecodeAll(html, max = 200) {
   let result = html;
 
@@ -81,7 +85,7 @@ function tryDecodeAll(html, max = 200) {
             return i;
           }
           if (urlRegex.test(i)) {
-            return `<a href="${i}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
+            return `<a href="${toHref(i)}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
           }
 
           return `<p class="base64">${i
@@ -123,7 +127,10 @@ function Decoder() {
     if (!article) return undefined;
 
     const originHTML = article.innerHTML;
-    article.innerHTML = tryDecodeAll(article.innerHTML);
+    const decodedHTML = tryDecodeAll(originHTML);
+    if (decodedHTML === originHTML) return undefined;
+
+    article.innerHTML = decodedHTML;
     return () => {
       article.innerHTML = originHTML;
     };
@@ -139,11 +146,14 @@ function Decoder() {
     const handler = () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || 'orig' in target.dataset) return;
 
         const content = target.innerHTML;
+        const decoded = tryDecodeAll(content, 5);
+        if (decoded === content) return;
+
         target.dataset.orig = content;
-        target.innerHTML = tryDecodeAll(content, 5);
+        target.innerHTML = decoded;
       });
     };
 
@@ -153,9 +163,10 @@ function Decoder() {
     return () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || !('orig' in target.dataset)) return;
 
         target.innerHTML = target.dataset.orig;
+        delete target.dataset.orig;
       });
       window.removeEventListener(EVENT_COMMENT_REFRESH, handler);
     };
@@ -235,8 +246,7 @@ function Decoder() {
   };
 
   const handleUrlOpen = () => {
-    const url = new URL(decodeResult.text, 'https://a');
-    open(url.href, FOREGROUND);
+    open(toHref(decodeResult.text), FOREGROUND);
     setDecodeResult(undefined);
   };
 

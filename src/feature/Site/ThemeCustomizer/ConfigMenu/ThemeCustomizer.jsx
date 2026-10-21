@@ -90,9 +90,9 @@ const defaultPreset = {
   'bg-body': '#eee',
   'bg-main': '#fff',
   'bg-footer': '#fff',
-  'border-navbar': '#3d414d',
-  'border-outer': '#bbb',
-  'border-inner': '#ddd',
+  'bd-navbar': '#3d414d',
+  'bd-outer': '#bbb',
+  'bd-inner': '#ddd',
   'bg-focus': '#eee',
   'bg-dropdown': '#fff',
   'bg-input': '#fff',
@@ -104,7 +104,7 @@ const defaultPreset = {
   'board-category-text': '#ffffff',
   'user-icon-fixed': '#777',
   'user-icon-public': '#777',
-  'btn-hover': '#007bff',
+  'bd-btn-hover': '#007bff',
   'bg-highlight': '#fff4cc',
   'bg-highlight-user': '#efdf25cf',
   'bg-link-card': '#F9F9F9',
@@ -117,7 +117,7 @@ const defaultPreset = {
 
 function ThemeCustomizer() {
   const dispatch = useDispatch();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   const {
@@ -166,9 +166,10 @@ function ThemeCustomizer() {
     });
     if (!result) return;
 
-    dispatch($setPreset({ key: result, preset: { ...defaultPreset } }));
+    if (!theme[result])
+      dispatch($setPreset({ key: result, preset: { ...defaultPreset } }));
     setEditingPresetKey(result);
-  }, [confirm, dispatch]);
+  }, [theme, confirm, dispatch]);
 
   const handleRename = useCallback(async () => {
     const result = await confirm({
@@ -195,11 +196,11 @@ function ThemeCustomizer() {
       ],
     });
     if (!result) return;
-    if (editingPresetKey === result) return;
+    if (editingPresetKey === result || theme[result]) return;
 
     dispatch($renamePreset({ prev: editingPresetKey, next: result }));
     setEditingPresetKey(result);
-  }, [editingPresetKey, confirm, dispatch]);
+  }, [editingPresetKey, theme, confirm, dispatch]);
 
   const handleRemove = useCallback(async () => {
     const result = await confirm({
@@ -303,7 +304,7 @@ function ThemeCustomizer() {
           </ListItem>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

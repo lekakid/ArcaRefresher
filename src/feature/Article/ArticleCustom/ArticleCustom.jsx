@@ -63,7 +63,7 @@ applyStyle(store.getState()[info.id].storage);
 
 export default function ArticleCustom() {
   const articleLoaded = useLoadChecker(ARTICLE_LOADED);
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const storage = useSelector((state) => state[info.id].storage);
   const {
@@ -121,7 +121,7 @@ export default function ArticleCustom() {
 
   // 스포일러 경고 무시
   useEffect(() => {
-    if (!ignoreSpoilerFilter) return;
+    if (!article || !ignoreSpoilerFilter) return;
 
     document
       .querySelector('.spoiler-alert-content')
@@ -129,16 +129,24 @@ export default function ArticleCustom() {
     document
       .querySelector('.spoiler-filter.active')
       ?.classList.remove('active');
-  }, [ignoreSpoilerFilter]);
+  }, [article, ignoreSpoilerFilter]);
 
   // 블러 제거
   useEffect(() => {
-    if (!removeBlur) return;
+    if (!article || !removeBlur) return undefined;
 
-    document.querySelectorAll('.blur').forEach((e) => {
-      e.classList.remove('blur');
-    });
-  }, [removeBlur]);
+    const releaseBlur = () => {
+      document.querySelectorAll('.blur').forEach((e) => {
+        e.classList.remove('blur');
+      });
+    };
+
+    releaseBlur();
+    window.addEventListener(EVENT_COMMENT_REFRESH, releaseBlur);
+    return () => {
+      window.removeEventListener(EVENT_COMMENT_REFRESH, releaseBlur);
+    };
+  }, [article, removeBlur]);
 
   // 외부 링크 경고 무시
   useEffect(() => {
@@ -217,7 +225,7 @@ export default function ArticleCustom() {
 
   return (
     <>
-      <ConfirmDialog />
+      {confirmDialog}
       {fakePreview && (
         <Portal container={fakePreview.container}>
           <Tooltip placement="right" title="미리보기 확대">

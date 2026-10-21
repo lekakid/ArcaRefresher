@@ -183,8 +183,8 @@ function AutoRefresher() {
     const apiPause = () => {
       setPause((prev) =>
         prev.includes(PAUSE_API)
-          ? [...prev, PAUSE_API]
-          : prev.filter((p) => p !== PAUSE_API),
+          ? prev.filter((p) => p !== PAUSE_API)
+          : [...prev, PAUSE_API],
       );
     };
 

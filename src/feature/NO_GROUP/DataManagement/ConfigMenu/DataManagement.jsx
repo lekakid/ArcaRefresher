@@ -13,6 +13,7 @@ import streamSaver from 'streamsaver';
 import { importValues, exportValues, resetValues } from 'core/storage';
 import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
+import { SLICE_ID } from 'error/slice';
 
 import info from '../info';
 
@@ -20,11 +21,11 @@ const featureInfos = import.meta.glob(
   ['/src/feature/*/*/info.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const idList = Object.values(featureInfos).map(({ id }) => id);
+const idList = [...Object.values(featureInfos).map(({ id }) => id), SLICE_ID];
 
 function DataManagement() {
   const inputRef = useRef();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const handleCleaner = useCallback(async () => {
     const keys = GM_listValues();
@@ -64,21 +65,17 @@ function DataManagement() {
   }, []);
 
   const handleFileSelect = useCallback((e) => {
+    const input = e.target;
     (async () => {
       try {
-        const path = e.target.files[0];
-        const data = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.readAsText(path);
-        });
+        const data = await input.files[0].text();
         importValues(data);
 
         window.location.reload();
       } catch (error) {
         console.error(error);
+      } finally {
+        input.value = '';
       }
     })();
   }, []);
@@ -154,7 +151,7 @@ function DataManagement() {
           </BaseRow>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

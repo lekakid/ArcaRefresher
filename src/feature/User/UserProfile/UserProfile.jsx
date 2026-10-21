@@ -130,7 +130,7 @@ function UserProfile() {
 
     const apply = () => {
       [...document.querySelectorAll(COMMENT_USER_INFO)].forEach((e) => {
-        if (new ArcaUser(e).id === user.id) {
+        if (new ArcaUser(e).toString() === user.id) {
           e.classList.add('mynick');
         }
       });

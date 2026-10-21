@@ -43,6 +43,7 @@ export default function ShortKey() {
     const eventListener = (e) => {
       // 검색창 등 텍스트 입력칸
       if (e.target.matches('input, textarea, [contenteditable]')) return;
+      if (e.target.closest('.MuiModal-root, .MuiPopper-root')) return;
 
       // 조합키
       if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
@@ -55,10 +56,17 @@ export default function ShortKey() {
       activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
+    const stopInModal = (e) => {
+      if (e.target.closest('.MuiModal-root, .MuiPopper-root'))
+        e.stopPropagation();
+    };
+
     document.addEventListener('keydown', eventListener, true);
+    document.body.addEventListener('keydown', stopInModal);
 
     return () => {
       document.removeEventListener('keydown', eventListener, true);
+      document.body.removeEventListener('keydown', stopInModal);
     };
   }, [
     content,

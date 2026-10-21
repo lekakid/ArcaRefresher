@@ -232,13 +232,14 @@ export default [
       e.preventDefault();
 
       const comment = document.querySelector('#comment');
+      if (!comment) return;
       const nav = document.querySelector('nav.navbar');
       const targetY = comment.offsetTop - nav.clientHeight;
 
       if (window.scrollY < comment.offsetTop - window.innerHeight) {
         window.scrollTo({ top: targetY });
       } else {
-        document.querySelector('#comment textarea').focus();
+        document.querySelector('#comment textarea')?.focus();
       }
     },
   },
@@ -257,10 +258,8 @@ export default [
     active: ACTIVE_ARTICLE,
     defaultKey: 'KeyB',
     callback(_e, { content, setSnack }) {
-      const token = window.location.pathname.split('/');
-      const articleId = token.pop();
       fetch(
-        `https://arca.live/api/scrap?slug=${content.channel.id}&articleId=${articleId}`,
+        `https://arca.live/api/scrap?slug=${content.channel.id}&articleId=${content.article.id}`,
       )
         .then((r) => r.json())
         .then((json) => {
@@ -276,6 +275,9 @@ export default [
 
           document.querySelector('#scrapForm .result').textContent =
             json.isScrap ? '스크랩 됨' : '스크랩';
+        })
+        .catch(() => {
+          setSnack({ msg: '스크랩 실패 (서버 오류?)', time: 3000 });
         });
     },
   },

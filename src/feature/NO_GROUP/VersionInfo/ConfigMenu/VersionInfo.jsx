@@ -18,25 +18,16 @@ import { useConfirm } from 'component';
 
 import info from '../info';
 import { $setNotiLevel } from '../slice';
-import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, parse, join } from '../func';
+import { TYPE_MINOR, TYPE_NONE, TYPE_PATCH, getChangeLogUrl } from '../func';
 
 function VersionInfo() {
   const dispatch = useDispatch();
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const { notiLevel } = useSelector((state) => state[info.id].storage);
 
   const handleChangeLog = useCallback(() => {
-    if (GM_info.script.version.includes('nightly')) {
-      window.open('https://github.com/lekakid/ArcaRefresher/commits/develop/');
-      return;
-    }
-
-    const url =
-      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
-    const version = parse(GM_info.script.version);
-    version.patch = '*';
-    window.open(`${url}${join(version)}`);
+    window.open(getChangeLogUrl(GM_info.script.version));
   }, []);
 
   const handleNotiLevel = useCallback(
@@ -161,7 +152,7 @@ function VersionInfo() {
           </BaseRow>
         </List>
       </Paper>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

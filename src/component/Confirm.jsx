@@ -102,10 +102,11 @@ function useConfirm() {
       }),
     [],
   );
-  const ConfirmDialog = () =>
-    ConfirmDialogRenderer({ ...props, open, confirmRef });
+  const confirmDialog = props && (
+    <ConfirmDialogRenderer {...props} open={open} confirmRef={confirmRef} />
+  );
 
-  return [confirm, ConfirmDialog];
+  return [confirm, confirmDialog];
 }
 
 export { useConfirm };

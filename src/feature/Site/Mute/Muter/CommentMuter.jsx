@@ -153,7 +153,9 @@ function CommentMuter() {
     if (!controlTarget) return undefined;
 
     const muteComment = () => {
-      const comments = [...document.querySelectorAll(COMMENT_WRAPPERS)];
+      const comments = [...document.querySelectorAll(COMMENT_WRAPPERS)].filter(
+        (wrapper) => wrapper.querySelector('.comment-item'),
+      );
       const commentInfos = comments.map((wrapper) => {
         const item = wrapper.querySelector('.comment-item');
         const deleted = item.classList.contains('deleted');

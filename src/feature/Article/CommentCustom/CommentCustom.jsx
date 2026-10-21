@@ -94,6 +94,8 @@ export default function CommentCustom() {
     changeComment();
 
     window.addEventListener(EVENT_COMMENT_REFRESH, changeComment);
+    return () =>
+      window.removeEventListener(EVENT_COMMENT_REFRESH, changeComment);
   }, [commentLoaded]);
 
   // 댓글란 접어두기
@@ -112,6 +114,7 @@ export default function CommentCustom() {
     return () => {
       comment.classList.remove('fold-comment');
       comment.classList.remove('temp-show');
+      unfoldContainer.remove();
     };
   }, [comment, foldComment]);
 

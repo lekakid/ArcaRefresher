@@ -8,7 +8,7 @@ import { disableStorageSync } from 'core/storage';
 
 import info from './info';
 import { $setCheckedVersion, $setLastVersion } from './slice';
-import { parse, compare, join } from './func';
+import { compare, getChangeLogUrl } from './func';
 
 const MODE_NONE = 0;
 const MODE_UPGRADE = 1;
@@ -61,11 +61,7 @@ export default function VersionInfo() {
   }, [checkedVersion, notiLevel, dispatch]);
 
   const handleChangeLog = useCallback(() => {
-    const url =
-      'https://arca.live/b/namurefresher?category=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8&target=title&keyword=';
-    const version = parse(GM_info.script.version);
-    version.patch = '*';
-    GM_openInTab(`${url}${join(version)}`);
+    GM_openInTab(getChangeLogUrl(GM_info.script.version));
     setNoti(MODE_NONE);
     dispatch($setCheckedVersion(GM_info.script.version));
   }, [dispatch]);

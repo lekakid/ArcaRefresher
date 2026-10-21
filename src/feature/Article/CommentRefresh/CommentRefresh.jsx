@@ -36,15 +36,17 @@ function CommentRefresh() {
   // 초기화
   useEffect(() => {
     if (!commentLoaded) return;
+    const commentEl = document.querySelector(COMMENT);
+    if (!commentEl) return;
 
     comment.current = document.querySelector(COMMENT_INNER);
     const observer = new MutationObserver(() => {
-      if (comment.current.parentElement) return;
+      if (comment.current?.parentElement) return;
 
       comment.current = document.querySelector(COMMENT_INNER);
       window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
     });
-    observer.observe(document.querySelector(COMMENT), {
+    observer.observe(commentEl, {
       childList: true,
       subtree: true,
     });
@@ -72,7 +74,7 @@ function CommentRefresh() {
 
     comment.current.replaceWith(newComments);
     comment.current = newComments;
-    unsafeWindow.applyLocalTimeFix();
+    unsafeWindow.applyLocalTimeFix?.();
     window.dispatchEvent(new Event(EVENT_COMMENT_REFRESH));
   }, []);
 

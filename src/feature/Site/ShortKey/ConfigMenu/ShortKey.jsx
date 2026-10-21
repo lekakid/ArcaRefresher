@@ -130,6 +130,7 @@ function ShortKey() {
 
   const handleClick = (action) => () => {
     setShortKeyAction(action);
+    setError(undefined);
   };
 
   return (
@@ -194,7 +195,7 @@ function ShortKey() {
       <Dialog open={!!shortKeyAction}>
         <DialogTitle>키 입력 대기 중...</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText component="div">
             <Typography>
               키를 2개 이상 사용하는 단축키는 지원하지 않습니다
             </Typography>

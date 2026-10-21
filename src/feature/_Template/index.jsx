@@ -1,3 +1,3 @@
-import Templete from './Teamplate';
+import Template from './Template';
 
-export default { Feature: Templete };
+export default { Feature: Template };

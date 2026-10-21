@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useArcaSocket } from 'hooks/WebSocket';
+import { ArcaUser } from 'func/user';
 
 import { filterSelector } from '../selector';
 import info from '../info';
@@ -26,7 +27,7 @@ function RelayChatMuter() {
 
       // 사용자 뮤트
       const regex = new RegExp(filter.user.join('|') || '(?!)');
-      if (regex.test(user)) {
+      if (regex.test(new ArcaUser(user).toUID())) {
         if (hideMutedMark) return null;
 
         return {

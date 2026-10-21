@@ -70,9 +70,10 @@ function DownloadWidget({ infoList, onDownloadStart }) {
           dupCount[imageName] = (dupCount[imageName] || 0) + 1;
           const isGif = ext === 'gif';
 
+          let blob;
           try {
             const targetUrl = downloadOrigin || isGif ? orig : url;
-            const blob = await request(targetUrl, {
+            blob = await request(targetUrl, {
               responseType: 'blob',
             }).then(({ status, response }) => {
               if (status >= 400) {
@@ -81,12 +82,14 @@ function DownloadWidget({ infoList, onDownloadStart }) {
 
               return response;
             });
-
-            if (i === 0) setSnack();
-            yield { name: `${imageName}.${ext}`, input: blob };
           } catch (error) {
             console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+            continue;
+          } finally {
+            if (i === 0) setSnack();
           }
+
+          yield { name: `${imageName}.${ext}`, input: blob };
         }
       } finally {
         // 페이지 이탈 방지 해제

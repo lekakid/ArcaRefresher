@@ -1,4 +1,3 @@
-import { GM_openInTab } from '$';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -114,13 +113,14 @@ function ContextMenu({ target, closeMenu }) {
   const handleYandex = useCallback(() => {
     if (!showYandex) return;
 
-    GM_openInTab(
+    open(
       `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
         data,
       )}`,
+      openType,
     );
     closeMenu();
-  }, [showYandex, closeMenu, data]);
+  }, [showYandex, closeMenu, data, openType]);
 
   const handleSauceNao = useCallback(() => {
     if (!showSauceNao) return;
@@ -210,27 +210,21 @@ function ContextMenu({ target, closeMenu }) {
   const handleTraceMoe = useCallback(() => {
     if (!showTraceMoe) return;
 
-    GM_openInTab(
-      `https://trace.moe/?url=${encodeURIComponent(data)}`,
-      openType,
-    );
+    open(`https://trace.moe/?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
   }, [showTraceMoe, closeMenu, data, openType]);
 
   const handleImgOps = useCallback(() => {
     if (!showImgOps) return;
 
-    GM_openInTab(`https://imgops.com/${data}`, openType);
+    open(`https://imgops.com/${data}`, openType);
     closeMenu();
   }, [showImgOps, closeMenu, data, openType]);
 
   const handleTinEye = useCallback(() => {
     if (!showTinEye) return;
 
-    GM_openInTab(
-      `https://tineye.com/search?url=${encodeURIComponent(data)}`,
-      openType,
-    );
+    open(`https://tineye.com/search?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
   }, [showTinEye, closeMenu, data, openType]);
 
@@ -239,6 +233,7 @@ function ContextMenu({ target, closeMenu }) {
     handleYandex();
     handleSauceNao();
     handleIqdb();
+    handleAscii2D();
     handleTraceMoe();
     handleImgOps();
     handleTinEye();
@@ -247,6 +242,7 @@ function ContextMenu({ target, closeMenu }) {
     handleYandex,
     handleSauceNao,
     handleIqdb,
+    handleAscii2D,
     handleTraceMoe,
     handleImgOps,
     handleTinEye,

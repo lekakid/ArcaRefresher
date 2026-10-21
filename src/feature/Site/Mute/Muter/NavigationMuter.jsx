@@ -20,6 +20,7 @@ function NavigationMuter() {
       navRef.current = document.querySelector(NAVIGATION_MENU);
 
     const nav = navRef.current;
+    if (!nav) return;
     const regex = new RegExp(filter.channel.join('|') || '(?!)');
 
     const muteChannel = () => {

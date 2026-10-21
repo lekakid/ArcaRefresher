@@ -9,11 +9,13 @@ import info from './info';
 export default function ArticleMenu() {
   const dispatch = useDispatch();
   const { open } = useSelector((state) => state[info.id]);
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   const handleOpen = useCallback(() => {
     dispatch(setOpen(true));
   }, [dispatch]);
 
+  if (!enabled) return null;
   return (
     <Button
       size="small"

@@ -17,6 +17,8 @@ import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 import info from './info';
 import { $removeArticle } from './slice';
 
+const COMMIT_KEY = 'AR_TemporarySave_commit';
+
 const btnsStyles = (
   <GlobalStyles
     styles={{
@@ -70,16 +72,37 @@ export default function TemporarySave() {
     };
   }, [enabled, editorLoaded]);
 
+  useEffect(() => {
+    const slot = sessionStorage.getItem(COMMIT_KEY);
+    if (!slot) return;
+    sessionStorage.removeItem(COMMIT_KEY);
+
+    const from = document.referrer ? new URL(document.referrer).pathname : '';
+    const posted =
+      /\/(write|edit)$/.test(from) &&
+      /^\/b\/[^/]+\/\d+/.test(window.location.pathname);
+    if (posted) dispatch($removeArticle({ slot }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    const resume = () => sessionStorage.removeItem(COMMIT_KEY);
+    document.addEventListener('input', resume);
+    return () => document.removeEventListener('input', resume);
+  }, []);
+
   const handleCommit = useCallback(() => {
-    if (deleteOnCommit) {
-      dispatch($removeArticle({ slot: currentSlot }));
+    if (deleteOnCommit && currentSlot) {
+      sessionStorage.setItem(COMMIT_KEY, currentSlot);
+    } else {
+      sessionStorage.removeItem(COMMIT_KEY);
     }
 
     const submitBtn = document.querySelector('#submitBtn');
     submitBtn.click();
-  }, [currentSlot, deleteOnCommit, dispatch]);
+  }, [currentSlot, deleteOnCommit]);
 
   const handleBack = () => {
+    sessionStorage.removeItem(COMMIT_KEY);
     const backBtn = document.querySelector(
       '.article-write .btns a:first-child',
     );
@@ -91,20 +114,14 @@ export default function TemporarySave() {
     if (!editor) return undefined;
 
     const handler = (e) => {
-      if (e.key !== 'Enter') return;
+      if (e.key !== 'Enter' || e.isComposing) return;
 
       e.preventDefault();
-
-      if (deleteOnCommit) {
-        dispatch($removeArticle({ slot: currentSlot }));
-      }
-
-      const submitBtn = document.querySelector('#submitBtn');
-      submitBtn.click();
+      handleCommit();
     };
     editor.title.addEventListener('keydown', handler);
     return () => editor.title.removeEventListener('keydown', handler);
-  }, [currentSlot, deleteOnCommit, dispatch, editor]);
+  }, [editor, handleCommit]);
 
   if (!enabled) return null;
   if (!tempArticleContainer) return null;

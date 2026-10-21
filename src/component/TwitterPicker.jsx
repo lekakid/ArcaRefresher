@@ -1,13 +1,23 @@
-import { useState } from 'react';
 import { Swatch, EditableInput } from '@uiw/react-color';
 import PropTypes from 'prop-types';
 import { Box, Paper, Stack } from '@mui/material';
 
 const HEX = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
 
-function TwitterPicker({ color, colors, onChange }) {
-  const [value, setValue] = useState(null);
+const DEFAULT_COLORS = [
+  '#FF6900',
+  '#FCB900',
+  '#7BDCB5',
+  '#00D084',
+  '#8ED1FC',
+  '#0693E3',
+  '#ABB8C3',
+  '#EB144C',
+  '#F78DA7',
+  '#9900EF',
+];
 
+function TwitterPicker({ color, colors = DEFAULT_COLORS, onChange }) {
   return (
     <Paper>
       <Swatch
@@ -30,7 +40,6 @@ function TwitterPicker({ color, colors, onChange }) {
           },
         }}
         onChange={(_, result) => {
-          setValue(result.hex);
           onChange(result.hex);
         }}
         addonAfter={
@@ -68,15 +77,11 @@ function TwitterPicker({ color, colors, onChange }) {
                     outline: 0,
                     fontSize: 14,
                   }}
-                  value={value?.replace('#', '') ?? color?.replace('#', '')}
-                  onChange={(_, v) => {
-                    setValue(v.hex);
-                    if (HEX.test(v)) {
-                      onChange(v.replace('#', ''));
-                    }
-                    if (v === 0) {
-                      onChange('');
-                    }
+                  value={color?.replace('#', '')}
+                  onChange={(e) => {
+                    const hex = e.target.value.trim().replace(/^#/, '');
+                    if (hex === '') onChange('');
+                    else if (HEX.test(hex)) onChange(`#${hex}`);
                   }}
                 />
               </Box>
@@ -87,21 +92,6 @@ function TwitterPicker({ color, colors, onChange }) {
     </Paper>
   );
 }
-
-TwitterPicker.defaultProps = {
-  colors: [
-    '#FF6900',
-    '#FCB900',
-    '#7BDCB5',
-    '#00D084',
-    '#8ED1FC',
-    '#0693E3',
-    '#ABB8C3',
-    '#EB144C',
-    '#F78DA7',
-    '#9900EF',
-  ],
-};
 
 TwitterPicker.propTypes = {
   color: PropTypes.string,

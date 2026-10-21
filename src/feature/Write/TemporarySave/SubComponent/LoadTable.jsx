@@ -105,21 +105,31 @@ function LoadTable({ editor, open, onClose }) {
     (state) => state[info.id].storage,
   );
 
-  const rows = Object.entries(tempArticleList).map(([key, value], index) => ({
-    id: index,
-    title: value.title,
-    content: value.content,
-    date: key,
-  }));
+  const rows = useMemo(
+    () =>
+      Object.entries(tempArticleList).map(([key, value]) => ({
+        id: key,
+        title: value.title,
+        content: value.content,
+        date: key,
+      })),
+    [tempArticleList],
+  );
 
   const [selection, setSelection] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  const currentPage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
+  if (currentPage !== page) setPage(currentPage);
+
   const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
+    () => rows.slice(currentPage * pageSize, currentPage * pageSize + pageSize),
+    [rows, currentPage, pageSize],
   );
 
   const handleSelectAll = useCallback(
@@ -189,7 +199,7 @@ function LoadTable({ editor, open, onClose }) {
       <DialogTitle>불러오기</DialogTitle>
       <IconButton
         sx={{ position: 'absolute', right: 8, top: 8 }}
-        onClick={onClose}
+        onClick={handleClose}
       >
         <CloseIcon />
       </IconButton>
@@ -265,7 +275,7 @@ function LoadTable({ editor, open, onClose }) {
           <TablePagination
             component="div"
             count={rows.length}
-            page={page}
+            page={currentPage}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10, 20, 30]}
             onPageChange={(_, newPage) => setPage(newPage)}

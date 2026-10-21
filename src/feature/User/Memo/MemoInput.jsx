@@ -47,13 +47,15 @@ function MemoInput() {
       if (reason === 'backdropClick') return;
 
       dispatch(setInputUser(null));
+      setMsg(null);
+      setColor(null);
     },
     [dispatch],
   );
 
   const handleSubmit = useCallback(
     (e) => {
-      if (e.key && e.key !== 'Enter') return;
+      if (e.key && (e.key !== 'Enter' || e.nativeEvent.isComposing)) return;
 
       dispatch(
         $setMemo({

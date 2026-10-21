@@ -20,6 +20,7 @@ export function getValue(key, defaultValue, updater) {
     GM_setValue(key, value);
   }
 
+  if (defaultValue === undefined) return value;
   return { ...defaultValue, ...value };
 }
 
@@ -44,6 +45,7 @@ export function deleteValue(key) {
  * 설정 값을 string으로 반환합니다.
  */
 export function exportValues() {
+  flushPendingWrites();
   const keys = GM_listValues();
 
   const data = keys.reduce(
@@ -60,6 +62,7 @@ export function exportValues() {
 export function importValues(JSONString) {
   const data = JSON.parse(JSONString);
 
+  cancelPendingWrites();
   Object.entries(data).forEach(([key, value]) => {
     GM_setValue(key, value);
   });
@@ -69,19 +72,65 @@ export function importValues(JSONString) {
  * 모든 설정 값을 초기화합니다.
  */
 export function resetValues() {
+  cancelPendingWrites();
   const values = GM_listValues();
 
   values.forEach((v) => GM_deleteValue(v));
 }
 
+const pendingWrites = new Map();
+
+let pageHidden = false;
+
+function scheduleWrite(key, value) {
+  clearTimeout(pendingWrites.get(key)?.timer);
+  if (pageHidden) {
+    pendingWrites.delete(key);
+    setValue(key, value);
+    return;
+  }
+  const timer = setTimeout(() => {
+    pendingWrites.delete(key);
+    setValue(key, value);
+  }, 300);
+  pendingWrites.set(key, { value, timer });
+}
+
+function flushPendingWrites() {
+  pendingWrites.forEach(({ value, timer }, key) => {
+    clearTimeout(timer);
+    setValue(key, value);
+  });
+  pendingWrites.clear();
+}
+
+function cancelPendingWrites() {
+  pendingWrites.forEach(({ timer }) => clearTimeout(timer));
+  pendingWrites.clear();
+}
+
 let disabled = false;
 export function disableStorageSync() {
+  flushPendingWrites();
   disabled = true;
 }
 
 export function createMonkeySyncMiddleware() {
   const channel = new BroadcastChannel(`AR_SYNC_MONKEY`);
   const currentWindowId = crypto.randomUUID();
+
+  const handleHide = () => {
+    pageHidden = true;
+    flushPendingWrites();
+  };
+  window.addEventListener('pagehide', handleHide);
+  window.addEventListener('pageshow', () => {
+    pageHidden = false;
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') handleHide();
+    else pageHidden = false;
+  });
 
   return (store) => {
     channel.onmessage = ({ data: actionMessage }) => {
@@ -93,6 +142,12 @@ export function createMonkeySyncMiddleware() {
 
       // 동기화 액션 전파
       store.dispatch(actionMessage);
+
+      const key = actionMessage.type.split('/')[0];
+      const slice = store.getState()[key];
+      if (pendingWrites.has(key) && slice?.storage) {
+        scheduleWrite(key, slice.storage);
+      }
     };
 
     return (next) => (action) => {
@@ -111,7 +166,7 @@ export function createMonkeySyncMiddleware() {
       // 저장소에 저장
       const key = action.type.split('/')[0];
       const slice = currentState[key];
-      if (slice?.storage) setValue(key, slice.storage);
+      if (slice?.storage) scheduleWrite(key, slice.storage);
 
       // BroadcastChannel로 동기화할 액션 전파
       const actionMessage = { ...action };

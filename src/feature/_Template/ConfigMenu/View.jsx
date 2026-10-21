@@ -1,29 +1,20 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { List, Paper, Typography } from '@mui/material';
+
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
 import info from '../info';
-import { $setTemplate } from '../slice';
+import { $toggleEnabled } from '../slice';
 
 function View() {
-  const { template } = useSelector((state) => state[info.id].storage);
-  const dispatch = useDispatch();
-
-  const handler = useCallback(
-    (value) => {
-      dispatch($setTemplate(value));
-    },
-    [dispatch],
-  );
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   return (
     <>
       <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
-        <List>
-          <ListItem onSome={handler}>
-            <ListItemText primary={template} />
-          </ListItem>
+        <List disablePadding>
+          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
         </List>
       </Paper>
     </>

@@ -5,21 +5,29 @@ export class ArcaUser {
   static TYPE_ERROR = 'ERROR';
 
   constructor(containerEl) {
-    let filter;
-    const infoEl = containerEl.matches('[data-filter]')
-      ? containerEl
-      : containerEl.querySelector('[data-filter]');
-    filter = infoEl?.dataset.filter;
-
-    if (!filter) {
-      const anchorEl = containerEl.matches('a')
-        ? containerEl
-        : containerEl.querySelector('a');
-      filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
+    if (!containerEl && typeof containerEl !== 'string') {
+      this.type = ArcaUser.TYPE_ERROR;
+      return;
     }
 
-    if (!filter) {
-      filter = containerEl.textContent.trim();
+    let filter = typeof containerEl === 'string' ? containerEl : undefined;
+
+    if (typeof containerEl !== 'string') {
+      const infoEl = containerEl.matches('[data-filter]')
+        ? containerEl
+        : containerEl.querySelector('[data-filter]');
+      filter = infoEl?.dataset.filter;
+
+      if (!filter) {
+        const anchorEl = containerEl.matches('a')
+          ? containerEl
+          : containerEl.querySelector('a');
+        filter = anchorEl?.title || anchorEl?.textContent.replace('@', '');
+      }
+
+      if (!filter) {
+        filter = containerEl.textContent.trim();
+      }
     }
 
     const [, nick, id] = filter
