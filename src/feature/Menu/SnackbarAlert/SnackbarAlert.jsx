@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from '@mui/material';
 
@@ -10,12 +10,18 @@ export default function SnackbarAlert() {
   const { snackBag } = useSelector((state) => state[info.id]);
   const [open, setOpen] = useState(false);
   const [snack, setSnack] = useState(undefined);
+  const picking = useRef(false);
 
   useEffect(() => {
-    if (snackBag.length && !snack) {
+    if (snack) picking.current = false;
+    if (snackBag.length && !snack && !picking.current) {
+      picking.current = true;
       const next = snackBag[0];
       dispatch(shiftSnack());
-      if (!next) return;
+      if (!next) {
+        picking.current = false;
+        return;
+      }
 
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSnack({ ...next });
