@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { List, Paper, Typography } from '@mui/material';
 
@@ -6,7 +7,7 @@ import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 import info from '../info';
 import { $toggleEnabled } from '../slice';
 
-function View() {
+function Template() {
   const { enabled } = useSelector((state) => state[info.id].storage);
 
   return (
@@ -21,5 +22,4 @@ function View() {
   );
 }
 
-View.displayName = `ConfigMenuView(${info.id})`;
-export default View;
+export default memo(Template);
