@@ -75,7 +75,13 @@ function DownloadWidget({ infoList, onDownloadStart }) {
             const targetUrl = downloadOrigin || isGif ? orig : url;
             blob = await request(targetUrl, {
               responseType: 'blob',
-            }).then(({ response }) => response);
+            }).then(({ status, response }) => {
+              if (status >= 400) {
+                throw new Error(`HTTP ${status}`, response);
+              }
+
+              return response;
+            });
           } catch (error) {
             console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
             continue;

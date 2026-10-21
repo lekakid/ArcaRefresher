@@ -30,10 +30,6 @@ export function request(
       data,
       onprogress,
       onload: (response) => {
-        if (response.status >= 400) {
-          reject(new Error(`HTTP ${response.status}: ${url}`));
-          return;
-        }
         if (responseType === 'document') {
           resolve({
             ...response,
