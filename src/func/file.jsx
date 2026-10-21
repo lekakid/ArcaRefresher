@@ -49,4 +49,7 @@ export async function saveStream(name, stream) {
     throw error;
   }
   saveFile(name, await temp.handle.getFile());
+  setTimeout(() => {
+    temp.root.removeEntry(temp.tempName).catch(() => {});
+  }, 60 * 1000);
 }
