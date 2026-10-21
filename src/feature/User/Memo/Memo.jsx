@@ -14,7 +14,7 @@ import {
 
 import MemoInput from './MemoInput';
 import info from './info';
-import { $updateMemoNick, setInputUser } from './slice';
+import { $updateMemoNicks, setInputUser } from './slice';
 
 function Memo() {
   const dispatch = useDispatch();
@@ -85,7 +85,7 @@ function Memo() {
     });
 
     if (Object.keys(nickUpdates).length) {
-      dispatch($updateMemoNick(nickUpdates));
+      dispatch($updateMemoNicks(nickUpdates));
     }
   }, [loaded, memo, dispatch]);
 
