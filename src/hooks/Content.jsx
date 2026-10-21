@@ -135,7 +135,7 @@ export function ContentCollector() {
         if (!element.href.includes('category='))
           return ['글머리없음', '글머리없음'];
 
-        const id = new URL(element.href).searchParams.get('category');
+        const id = decodeURI(element.href.split('category=')[1].split('&')[0]);
         const text = element.textContent;
 
         return [id, text];
