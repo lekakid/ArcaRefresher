@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { ListItemText, Slider } from '@mui/material';
 
 import BaseRow from './BaseRow';
-import useOpacity from '../useOpacity';
+import { useBackdropOpacity } from '../hooks';
 
 const SliderRow = forwardRef(
   (
@@ -22,7 +22,7 @@ const SliderRow = forwardRef(
     ref,
   ) => {
     const dispatch = useDispatch();
-    const setOpacity = useOpacity();
+    const setOpacity = useBackdropOpacity();
 
     const handleChange = useCallback(
       (_e, sliderValue) => {

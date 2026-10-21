@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useOpenState } from 'feature/Menu/ConfigMenu';
+import { useOpenState } from 'feature/Menu/ConfigMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 

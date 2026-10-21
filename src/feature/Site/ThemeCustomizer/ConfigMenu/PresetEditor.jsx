@@ -12,12 +12,12 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { ColorPickerButton } from 'component';
-import { useOpacity } from 'feature/Menu/ConfigMenu';
+import { useBackdropOpacity } from 'feature/Menu/ConfigMenu/hooks';
 
 const PresetEditor = forwardRef(
   ({ disabled, groupData, defaultPreset, preset, onChange }, ref) => {
     const [openGroup, setOpenGroup] = useState(() => ({}));
-    const setOpacity = useOpacity();
+    const setOpacity = useBackdropOpacity();
 
     const handleOpen = useCallback(
       (key) => () => {
