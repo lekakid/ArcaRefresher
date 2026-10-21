@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTrigger, removeTrigger } from './slice';
+import { addTrigger, removeTrigger } from '../slice';
 
 /**
  * 컨텍스트 메뉴 트리거를 등록합니다.  

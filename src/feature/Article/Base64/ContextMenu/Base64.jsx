@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 
-import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 
 import { toggleTemporaryDisabled } from '../slice';
 import info from '../info';

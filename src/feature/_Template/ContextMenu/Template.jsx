@@ -4,7 +4,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 
 import { USER_INFO } from 'core/selector';
-import { useContextMenuTrigger } from 'feature/Menu/ContextMenu';
+import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 
 import info from '../info';
 
