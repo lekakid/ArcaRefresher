@@ -26,9 +26,9 @@ async function openWithForm(
   const targetUrl = new URL(searchUrl);
 
   // 사이트 검색 input 추출
-  const inputList = await request(targetUrl.origin).then(({ response }) => [
-    ...response.querySelectorAll(inputSelector),
-  ]);
+  const inputList = await request(targetUrl.origin, {
+    responseType: 'document',
+  }).then(({ response }) => [...response.querySelectorAll(inputSelector)]);
 
   // 폼 생성
   const form = document.createElement('form');

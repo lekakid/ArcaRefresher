@@ -69,12 +69,12 @@ function WrappedWebSocket(url, protocols) {
             console.warn('[WebSocket] return 잘못함');
           }
 
-          // 비어있으면 이벤트 무시
-          if (!data) return;
+          // 원본 데이터가 비워졌으면 이벤트 무시
+          if (!!originalData && !data) return;
 
           // 이벤트 데이터 패치
           Object.defineProperty(e, 'data', {
-            value: `${type}|${JSON.stringify(data)}`,
+            value: type.concat(data ? `|${JSON.stringify(data)}` : ''),
           });
           eventCallback.apply(this.ws, [e]);
         };
