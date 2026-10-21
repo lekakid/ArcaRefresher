@@ -97,6 +97,7 @@ function TableView({
     page,
     Math.max(0, Math.ceil(rows.length / pageSize) - 1),
   );
+  if (currentPage !== page) setPage(currentPage);
 
   const pagedRows = useMemo(
     () => rows.slice(currentPage * pageSize, currentPage * pageSize + pageSize),
