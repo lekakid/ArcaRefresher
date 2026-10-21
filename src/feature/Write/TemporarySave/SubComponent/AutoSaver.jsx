@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,6 +7,7 @@ import { $addArticle } from '../slice';
 
 function AutoSaver({ editor }) {
   const dispatch = useDispatch();
+  const lastSaved = useRef({});
 
   const { autoSaveTime } = useSelector((state) => state[info.id].storage);
   const { currentSlot, loadOpen } = useSelector((state) => state[info.id]);
@@ -15,14 +16,15 @@ function AutoSaver({ editor }) {
     if (autoSaveTime === 0 || loadOpen) return undefined;
     if (!currentSlot) return undefined;
 
-    let lastTitle;
-    let lastContent;
     const timer = setInterval(() => {
       const rawTitle = editor.title.value;
       const content = editor.content.html.get(true);
-      if (rawTitle === lastTitle && content === lastContent) return;
-      lastTitle = rawTitle;
-      lastContent = content;
+      if (
+        rawTitle === lastSaved.current.title &&
+        content === lastSaved.current.content
+      )
+        return;
+      lastSaved.current = { title: rawTitle, content };
 
       const date = new Date();
       const title = rawTitle || `${date.toLocaleString()}에 자동 저장됨`;
