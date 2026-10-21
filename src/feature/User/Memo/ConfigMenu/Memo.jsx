@@ -11,13 +11,13 @@ import {
 } from '@mui/material';
 import { createSelector } from '@reduxjs/toolkit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import streamSaver from 'streamsaver';
 
 import {
   BaseRow,
   SelectRow,
   DataGridRow,
 } from 'feature/Menu/ConfigMenu/component';
-import { saveFile } from 'func/file';
 import { FOREGROUND, open } from 'func/window';
 
 import info from '../info';
@@ -167,7 +167,9 @@ function Memo() {
     };
 
     const blob = new Blob([JSON.stringify(mobileJson)], { type: 'text/plain' });
-    saveFile('ArcaRefresher-memo.json', blob);
+    const rs = blob.stream();
+    const filestream = streamSaver.createWriteStream('ArcaRefresher-memo.json');
+    return rs.pipeTo(filestream);
   }, [memoRows]);
 
   const handleChangeMemoRow = useCallback(

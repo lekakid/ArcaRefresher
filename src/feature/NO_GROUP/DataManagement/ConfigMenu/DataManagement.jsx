@@ -8,12 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
+import streamSaver from 'streamsaver';
 
 import { importValues, exportValues, resetValues } from 'core/storage';
 import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
 import { SLICE_ID } from 'error/slice';
-import { saveFile } from 'func/file';
 
 import info from '../info';
 
@@ -83,7 +83,9 @@ function DataManagement() {
   const handleExport = useCallback(() => {
     const data = exportValues();
     const blob = new Blob([data], { type: 'text/plain' });
-    saveFile('setting.txt', blob);
+    const rs = blob.stream();
+    const filestream = streamSaver.createWriteStream('setting.txt');
+    return rs.pipeTo(filestream);
   }, []);
 
   const handleReset = useCallback(async () => {
