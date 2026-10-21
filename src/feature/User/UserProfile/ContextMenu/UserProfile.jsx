@@ -22,7 +22,7 @@ import info from '../info';
 
 const profileUrl = 'https://arca.live/u/@';
 
-function ContextMenu({ target, closeMenu }) {
+function UserProfile({ target, closeMenu }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
     (store) => store[info.id].storage,
@@ -203,9 +203,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+UserProfile.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default UserProfile;

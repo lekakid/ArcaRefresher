@@ -67,7 +67,7 @@ async function openWithForm(
   form.remove();
 }
 
-function ContextMenu({ target, closeMenu }) {
+function ImageSearch({ target, closeMenu }) {
   const {
     // 동작
     contextMenuEnabled,
@@ -325,9 +325,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+ImageSearch.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default ImageSearch;

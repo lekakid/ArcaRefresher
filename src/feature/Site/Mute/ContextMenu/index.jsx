@@ -1,10 +1,10 @@
 import 'core/types';
-import View from './View';
+import Mute from './Mute';
 import info from '../info';
 
 /** @type {ContextMenuInfo} */
 export default {
   key: info.id,
-  View,
+  View: Mute,
   order: 202,
 };

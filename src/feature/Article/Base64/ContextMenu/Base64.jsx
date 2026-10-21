@@ -10,7 +10,7 @@ import { toggleTemporaryDisabled } from '../slice';
 import info from '../info';
 
 // 우클릭 메뉴
-function ContextMenu({ target, closeMenu }) {
+function Base64({ target, closeMenu }) {
   const dispatch = useDispatch();
 
   const data = useContextMenu(
@@ -41,9 +41,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+Base64.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default Base64;

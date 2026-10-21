@@ -18,7 +18,7 @@ import { ImageInfo } from '../Model';
 import { format } from '../Util';
 import info from '../info';
 
-function ContextMenu({ target, closeMenu }) {
+function ImageDownloader({ target, closeMenu }) {
   const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
     (state) => state[info.id].storage,
   );
@@ -135,9 +135,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+ImageDownloader.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default ImageDownloader;

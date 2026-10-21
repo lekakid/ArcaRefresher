@@ -10,7 +10,7 @@ import { useContextMenu } from 'feature/Menu/ContextMenu';
 import info from '../info';
 import FolderCheckList from './FolderCheckList';
 
-function ContextMenu({ target, closeMenu }) {
+function MyImage({ target, closeMenu }) {
   const { enabled } = useSelector((state) => state[info.id].storage);
 
   const data = useContextMenu(
@@ -52,9 +52,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+MyImage.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default MyImage;

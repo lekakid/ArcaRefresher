@@ -43,7 +43,7 @@ const EMOTICON_SELECTOR =
   '.article-body .emoticon-wrapper.muted, :is(img, video)[class$="emoticon"]';
 const CATEGORY_SELECTOR = '.board-category .item a';
 
-function ContextMenu({ target, closeMenu }) {
+function Mute({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { channel } = useContent();
   const { contextRange, user } = useSelector((state) => state[info.id].storage);
@@ -332,9 +332,9 @@ function ContextMenu({ target, closeMenu }) {
   return null;
 }
 
-ContextMenu.propTypes = {
+Mute.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default Mute;

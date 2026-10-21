@@ -14,7 +14,7 @@ import { ArcaUser } from 'func/user';
 import { setInputUser } from '../slice';
 import info from '../info';
 
-function ContextMenu({ target, closeMenu }) {
+function Memo({ target, closeMenu }) {
   const dispatch = useDispatch();
   const { memo, contextRange } = useSelector((state) => state[info.id].storage);
 
@@ -77,9 +77,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+Memo.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default Memo;

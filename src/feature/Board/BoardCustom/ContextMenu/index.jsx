@@ -1,10 +1,10 @@
 import 'core/types';
-import View from './View';
+import BoardCustom from './BoardCustom';
 import info from '../info';
 
 /** @type {ContextMenuInfo} */
 export default {
   key: info.id,
-  View,
+  View: BoardCustom,
   order: 100,
 };

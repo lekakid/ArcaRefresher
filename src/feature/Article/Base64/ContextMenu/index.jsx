@@ -1,10 +1,10 @@
 import 'core/types';
-import View from './View';
+import Base64 from './Base64';
 import info from '../info';
 
 /** @type {ContextMenuInfo} */
 export default {
   key: info.id,
-  View,
+  View: Base64,
   order: 900,
 };

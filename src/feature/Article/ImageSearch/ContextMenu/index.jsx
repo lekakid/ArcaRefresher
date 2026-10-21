@@ -1,10 +1,10 @@
 import 'core/types';
-import View from './View';
+import ImageSearch from './ImageSearch';
 import info from '../info';
 
 /** @type {ContextMenuInfo} */
 export default {
   key: info.id,
-  View,
+  View: ImageSearch,
   order: 901,
 };

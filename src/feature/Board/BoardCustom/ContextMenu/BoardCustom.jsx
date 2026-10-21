@@ -14,7 +14,7 @@ import { BACKGROUND, open } from 'func/window';
 import info from '../info';
 
 // 우클릭 메뉴
-function ContextMenu({ target, closeMenu }) {
+function BoardCustom({ target, closeMenu }) {
   const { contextMenuEnabled } = useSelector((store) => store[info.id].storage);
   const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
@@ -80,9 +80,9 @@ function ContextMenu({ target, closeMenu }) {
   );
 }
 
-ContextMenu.propTypes = {
+BoardCustom.propTypes = {
   target: PropTypes.object,
   closeMenu: PropTypes.func,
 };
 
-export default ContextMenu;
+export default BoardCustom;
