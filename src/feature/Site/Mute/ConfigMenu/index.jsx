@@ -1,6 +1,6 @@
 import BlockIcon from '@mui/icons-material/Block';
 
-import View from './Mute';
+import Mute from './Mute';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: BlockIcon,
   label: info.name,
-  View,
+  View: Mute,
 };

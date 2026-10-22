@@ -1,7 +1,7 @@
 import 'core/types';
 import BlockIcon from '@mui/icons-material/Block';
 
-import View from './MediaBlocker';
+import MediaBlocker from './MediaBlocker';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -11,5 +11,5 @@ export default {
   group,
   Icon: BlockIcon,
   label: info.name,
-  View,
+  View: MediaBlocker,
 };

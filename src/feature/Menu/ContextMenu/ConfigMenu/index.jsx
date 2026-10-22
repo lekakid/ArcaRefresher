@@ -1,6 +1,6 @@
 import MouseIcon from '@mui/icons-material/Mouse';
 
-import View from './View';
+import ContextMenu from './ContextMenu';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: MouseIcon,
   label: info.name,
-  View,
+  View: ContextMenu,
 };

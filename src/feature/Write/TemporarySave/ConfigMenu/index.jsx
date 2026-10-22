@@ -1,6 +1,6 @@
 import BookIcon from '@mui/icons-material/Book';
 
-import View from './TemporarySave';
+import TemporarySave from './TemporarySave';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: BookIcon,
   label: info.name,
-  View,
+  View: TemporarySave,
 };

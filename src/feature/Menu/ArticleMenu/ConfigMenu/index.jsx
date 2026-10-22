@@ -1,6 +1,6 @@
 import ArticleIcon from '@mui/icons-material/Article';
 
-import View from './View';
+import ArticleMenu from './ArticleMenu';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: ArticleIcon,
   label: info.name,
-  View,
+  View: ArticleMenu,
 };

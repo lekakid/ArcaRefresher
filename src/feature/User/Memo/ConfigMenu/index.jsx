@@ -1,6 +1,6 @@
 import CommentIcon from '@mui/icons-material/Comment';
 
-import View from './Memo';
+import Memo from './Memo';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: CommentIcon,
   label: info.name,
-  View,
+  View: Memo,
 };

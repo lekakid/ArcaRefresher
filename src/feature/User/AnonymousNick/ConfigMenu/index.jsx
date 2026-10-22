@@ -1,6 +1,6 @@
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 
-import View from './AnonymousNick';
+import AnonymousNick from './AnonymousNick';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -10,5 +10,5 @@ export default {
   group,
   Icon: PeopleOutlinedIcon,
   label: info.name,
-  View,
+  View: AnonymousNick,
 };

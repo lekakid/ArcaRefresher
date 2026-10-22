@@ -1,7 +1,7 @@
 import 'core/types';
 import GroupIcon from '@mui/icons-material/Group';
 
-import View from './ShortKey';
+import ShortKey from './ShortKey';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -11,5 +11,5 @@ export default {
   group,
   Icon: GroupIcon,
   label: info.name,
-  View,
+  View: ShortKey,
 };

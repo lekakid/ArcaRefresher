@@ -1,6 +1,6 @@
 import FolderIcon from '@mui/icons-material/Folder';
 
-import View from './ChannelManager';
+import ChannelManager from './ChannelManager';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -10,5 +10,5 @@ export default {
   group,
   Icon: FolderIcon,
   label: info.name,
-  View,
+  View: ChannelManager,
 };

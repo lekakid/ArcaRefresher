@@ -1,6 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 
-import View from './ImageSearch';
+import ImageSearch from './ImageSearch';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: SearchIcon,
   label: info.name,
-  View,
+  View: ImageSearch,
 };

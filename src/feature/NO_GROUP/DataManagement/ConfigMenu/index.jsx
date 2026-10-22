@@ -1,6 +1,6 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import View from './DataManagement';
+import DataManagement from './DataManagement';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -9,5 +9,5 @@ export default {
   group,
   Icon: SettingsIcon,
   label: info.name,
-  View,
+  View: DataManagement,
 };

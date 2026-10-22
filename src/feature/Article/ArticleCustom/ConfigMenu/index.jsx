@@ -1,6 +1,6 @@
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 
-import View from './ArticleCustom';
+import ArticleCustom from './ArticleCustom';
 import group from '../../group.jsx';
 import info from '../info';
 
@@ -11,5 +11,5 @@ export default {
   order: -2,
   Icon: ViewQuiltIcon,
   label: info.name,
-  View,
+  View: ArticleCustom,
 };
