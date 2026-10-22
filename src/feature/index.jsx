@@ -4,8 +4,8 @@ const featureModules = import.meta.glob(
   ['/src/feature/*/*/index.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const featureChildren = Object.entries(featureModules).map(
-  ([path, { Feature }]) => ({ Feature, moduleId: path.split('/')[4] }),
+const featureChildren = Object.values(featureModules).map(
+  ({ Feature, info }) => ({ Feature, moduleId: info.id }),
 );
 
 function FeatureWrapper() {
