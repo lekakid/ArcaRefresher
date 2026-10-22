@@ -32,4 +32,4 @@ export const slice = createSlice({
 export const { $toggleBlockAll, $toggleBlockDeleted, $toggleBlockReported } =
   slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

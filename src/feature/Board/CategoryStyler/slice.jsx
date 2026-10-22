@@ -29,4 +29,4 @@ export const slice = createSlice({
 
 export const { $setCategoryStyle, $setStyle } = slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

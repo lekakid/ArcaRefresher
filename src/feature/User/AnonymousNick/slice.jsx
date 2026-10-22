@@ -68,4 +68,4 @@ export const slice = createSlice({
 export const { $setPrefixList, $setSuffixList, $setExtraPrefix, toggleShow } =
   slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

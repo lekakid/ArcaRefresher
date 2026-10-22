@@ -34,4 +34,4 @@ export const slice = createSlice({
 export const { setOpen, setOpacity, setDrawer, setSelection, setGroup } =
   slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

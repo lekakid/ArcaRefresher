@@ -20,4 +20,4 @@ export const slice = createSlice({
 
 export const { pushSnack, shiftSnack } = slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

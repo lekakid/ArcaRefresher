@@ -85,4 +85,4 @@ export const {
   setNavChannelInfo,
 } = slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

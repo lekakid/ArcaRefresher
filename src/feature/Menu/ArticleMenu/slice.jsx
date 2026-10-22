@@ -22,4 +22,4 @@ export const slice = createSlice({
 
 export const { $setPosition } = slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];
