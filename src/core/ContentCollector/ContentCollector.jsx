@@ -1,4 +1,3 @@
-import { unsafeWindow } from '$';
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -19,13 +18,7 @@ import { serializeText } from 'func/emoji';
 import { ArcaUser } from 'func/user';
 
 import { useLoadChecker } from 'core/LoadChecker';
-import {
-  setArticle,
-  setCategory,
-  setChannelName,
-  setConfig,
-  setUser,
-} from './slice';
+import { setArticle, setCategory, setChannelName, setUser } from './slice';
 
 function ContentCollector() {
   const dispatch = useDispatch();
@@ -143,19 +136,6 @@ function ContentCollector() {
       console.warn('[ContentInfo] 게시물 정보를 받아오지 못했습니다.');
     }
   }, [dispatch, articleLoaded]);
-
-  useLayoutEffect(() => {
-    let hookedConfig = unsafeWindow.LiveConfig;
-    Object.defineProperty(unsafeWindow, 'LiveConfig', {
-      get() {
-        return hookedConfig;
-      },
-      set(newValue) {
-        hookedConfig = newValue;
-        dispatch(setConfig(newValue));
-      },
-    });
-  }, [dispatch]);
 
   return null;
 }

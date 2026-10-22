@@ -1,4 +1,3 @@
-import { unsafeWindow } from '$';
 import { createSlice } from '@reduxjs/toolkit';
 
 import info from './info';
@@ -34,7 +33,6 @@ const initialState = {
   },
   category: undefined,
   article: undefined,
-  config: unsafeWindow.LiveConfig,
 };
 
 const slice = createSlice({
@@ -53,13 +51,10 @@ const slice = createSlice({
     setArticle(state, action) {
       state.article = action.payload;
     },
-    setConfig(state, action) {
-      state.config = action.payload;
-    },
   },
 });
 
-export const { setUser, setChannelName, setCategory, setArticle, setConfig } =
+export const { setUser, setChannelName, setCategory, setArticle } =
   slice.actions;
 
 export default [info.id, slice.reducer];
