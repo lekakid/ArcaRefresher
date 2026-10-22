@@ -8,6 +8,3 @@ node_modules
 # Project
 /dist
 /types
-
-# React UI Mock
-/.mock
