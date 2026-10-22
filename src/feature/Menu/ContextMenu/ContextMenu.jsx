@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, Menu, MenuItem } from '@mui/material';
 
-import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
+import { ModuleLoadBoundary } from 'core/ModuleLoadBoundary';
 
 import info from './info';
 import { setOpen } from './slice';

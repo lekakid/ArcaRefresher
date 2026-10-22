@@ -13,7 +13,7 @@ import {
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { ArcaUser } from 'func/user';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 
 import {
   getEmoticonList,

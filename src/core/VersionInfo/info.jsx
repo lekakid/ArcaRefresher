@@ -1,4 +1,4 @@
-import '../../../types';
+import '../../types';
 
 /** @type {FeatureInfo} */
 export default {

@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { ArcaUser } from 'func/user';
 import { serializeText } from 'func/emoji';
 import { EVENT_COMMENT_REFRESH } from 'constants/event';

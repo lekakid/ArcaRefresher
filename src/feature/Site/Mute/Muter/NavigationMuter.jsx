@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import { filterSelector } from '../selector';
 

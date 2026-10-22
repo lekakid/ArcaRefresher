@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { WRITE_LOADED } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';
 import info from './info';

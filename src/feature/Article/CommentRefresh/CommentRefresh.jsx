@@ -11,7 +11,7 @@ import {
   COMMENT,
 } from 'constants/selector';
 import { EVENT_COMMENT_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { getDocument } from 'func/http';
 
 const commentRefreshStyles = (

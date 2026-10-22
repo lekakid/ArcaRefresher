@@ -1,5 +1,3 @@
-import '../../../types';
-
 /** @type {FeatureInfo} */
 export default {
   id: 'DataManagement',

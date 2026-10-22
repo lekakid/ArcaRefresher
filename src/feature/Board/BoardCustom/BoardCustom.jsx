@@ -10,7 +10,7 @@ import {
   BOARD_IN_ARTICLE,
 } from 'constants/selector';
 import { EVENT_BOARD_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import info from './info';
 

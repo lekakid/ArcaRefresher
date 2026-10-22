@@ -9,7 +9,7 @@ import {
   COMMENT_LOADED,
 } from 'constants/selector';
 import { EVENT_COMMENT_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import { FOREGROUND, open } from 'func/window';
 import { decode } from './func/base64';

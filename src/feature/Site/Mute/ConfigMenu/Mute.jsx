@@ -18,7 +18,7 @@ import {
   SwitchRow,
   TextFieldRow,
 } from 'feature/Menu/ConfigMenu/component';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 
 import info from '../info';
 import {

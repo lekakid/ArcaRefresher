@@ -1,10 +1,9 @@
 import { unsafeWindow } from '$';
-import { useCallback } from 'react';
 
 const ARCA_HOST = 'arca.live';
 const ARCA_PATHNAME = '/arcalive';
 
-const modifierList = [];
+export const modifierList = [];
 
 const OriginWebSocket = unsafeWindow.WebSocket;
 function WrappedWebSocket(url, protocols) {
@@ -121,35 +120,3 @@ function WrappedWebSocket(url, protocols) {
   return wrappedSocket;
 }
 unsafeWindow.WebSocket = WrappedWebSocket;
-
-/**
- * 사이트에서 제공하는 웹소켓 메세지 이벤트를 구독하는 훅입니다.  
- * 반환 값을 null로 보내면 사이트 이벤트를 무시하게 됩니다.
- *
- * @returns {{
- *   subscribeSocket : (modifier: (
- *        type: string,
- *        data: MessageEvent.data,
- *        originalData: Object
- *      ) => ModifiedData
- *    ) => void,
- *   unsubscribeSocket : (modifier: (
- *        type: string,
- *        data: MessageEvent.data,
- *        originalData: Object
- *     ) => ModifiedData
- *   ) => void,
- * }}
- */
-export function useArcaSocket() {
-  const subscribeSocket = useCallback((modifier) => {
-    modifierList.push(modifier);
-  }, []);
-
-  const unsubscribeSocket = useCallback((modifier) => {
-    const index = modifierList.indexOf(modifier);
-    if (index >= 0) modifierList.splice(index, 1);
-  }, []);
-
-  return { subscribeSocket, unsubscribeSocket };
-}

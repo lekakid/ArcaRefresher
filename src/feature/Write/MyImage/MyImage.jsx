@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useContent } from 'core/ContentCollector';
+import { useLoadChecker } from 'core/LoadChecker';
 import { WRITE_LOADED } from 'constants/selector';
 
 import info from './info';

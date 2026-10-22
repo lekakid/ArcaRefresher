@@ -7,7 +7,7 @@ import {
   ARTICLE_MEDIA,
   DELETED_ALERT_LOADED,
 } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import Blocker from './Blocker';
 import info from './info';

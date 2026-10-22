@@ -1,7 +1,6 @@
 import { unsafeWindow } from '$';
 import { useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createSlice } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 import {
   ARTICLE_AUTHOR,
@@ -19,70 +18,16 @@ import {
 import { serializeText } from 'func/emoji';
 import { ArcaUser } from 'func/user';
 
-import { useLoadChecker } from './LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
+import {
+  setArticle,
+  setCategory,
+  setChannelName,
+  setConfig,
+  setUser,
+} from './slice';
 
-const pathToken = window.location.pathname.split('/');
-pathToken.shift(); // ''
-const pageType = pathToken.shift();
-let channelId = pathToken.shift();
-let channelName;
-switch (pageType) {
-  case 'b': // 게시판
-  case 'r': // 같이보기
-    // Nothing
-    break;
-  case 'e':
-    channelId = 'emoticon';
-    channelName = '아카콘';
-    break;
-  case 'reports':
-    channelId = pathToken.shift();
-    break;
-  default:
-    channelId = 'ArcaLive';
-    channelName = '아카라이브';
-    break;
-}
-
-const initialState = {
-  user: undefined,
-  channel: {
-    id: channelId,
-    name: channelName,
-  },
-  category: undefined,
-  article: undefined,
-  config: unsafeWindow.LiveConfig,
-};
-
-const HOOK_NAME = 'Content';
-const slice = createSlice({
-  name: HOOK_NAME,
-  initialState,
-  reducers: {
-    setUser(state, action) {
-      state.user = action.payload;
-    },
-    setChannel(state, action) {
-      state.channel = action.payload;
-    },
-    setCategory(state, action) {
-      state.category = action.payload;
-    },
-    setArticle(state, action) {
-      state.article = action.payload;
-    },
-    setConfig(state, action) {
-      state.config = action.payload;
-    },
-  },
-});
-const { setUser, setChannel, setCategory, setArticle, setConfig } =
-  slice.actions;
-
-export const ContentReducerEntries = [HOOK_NAME, slice.reducer];
-
-export function ContentCollector() {
+function ContentCollector() {
   const dispatch = useDispatch();
 
   const navLoaded = useLoadChecker(NAVIGATION_LOADED);
@@ -117,9 +62,7 @@ export function ContentCollector() {
       const { channelName: name } = document.querySelector(
         '.board-title .title',
       ).dataset;
-      dispatch(
-        setChannel({ id: channelId, name: name.replace(' 채널', '') || '' }),
-      );
+      dispatch(setChannelName(name.replace(' 채널', '') || ''));
     } catch (_) {
       console.warn('[ContentInfo] 채널 정보를 받아오지 못했습니다.');
     }
@@ -217,30 +160,4 @@ export function ContentCollector() {
   return null;
 }
 
-/**
- * 게시판 및 게시물 정보를 받아옵니다.
- * @returns {{
- *  user: {
- *    id: string,
- *  }
- *  channel: {
- *    id: string,
- *    name: string,
- *  },
- *  board: {
- *    category: { id: label }
- *  }
- *  article: {
- *    id: string,
- *    category: string,
- *    title: string,
- *    author: string,
- *    date: string,
- *    url: string,
- *  }
- * }}
- */
-export function useContent() {
-  const content = useSelector((state) => state[HOOK_NAME]);
-  return content;
-}
+export default ContentCollector;

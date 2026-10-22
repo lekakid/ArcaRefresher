@@ -5,7 +5,7 @@ import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 import { request } from 'func/http';
 
 import { format } from './Util';

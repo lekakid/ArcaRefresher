@@ -13,7 +13,6 @@ import streamSaver from 'streamsaver';
 import { importValues, exportValues, resetValues } from 'store/storage';
 import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
-import { SLICE_ID } from 'error/slice';
 
 import info from '../info';
 
@@ -21,7 +20,7 @@ const featureInfos = import.meta.glob(
   ['/src/feature/*/*/info.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const idList = [...Object.values(featureInfos).map(({ id }) => id), SLICE_ID];
+const idList = Object.values(featureInfos).map(({ id }) => id);
 
 function DataManagement() {
   const inputRef = useRef();

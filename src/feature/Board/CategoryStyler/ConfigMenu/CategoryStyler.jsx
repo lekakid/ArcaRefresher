@@ -2,7 +2,7 @@ import { useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, List, ListItem, Paper, Typography } from '@mui/material';
 
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 
 import CategoryRow from './CategoryRow';
 import { $setCategoryStyle } from '../slice';

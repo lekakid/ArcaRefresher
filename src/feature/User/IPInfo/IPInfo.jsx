@@ -4,7 +4,7 @@ import { Portal } from '@mui/material';
 import { AuthorTag } from 'component';
 import { FULL_LOADED, USER_INFO } from 'constants/selector';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { ArcaUser, getUserKey } from 'func/user';
 
 import DB from './ip';

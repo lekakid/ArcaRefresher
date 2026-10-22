@@ -31,7 +31,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import FlipToFrontIcon from '@mui/icons-material/FlipToFront';
 
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 import { $addFolder, $removeFolder, $setFolderData } from '../slice';
 
 /* eslint-disable react/prop-types */

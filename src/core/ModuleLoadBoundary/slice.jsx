@@ -1,19 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { getValue } from 'store/storage';
 
-export const SLICE_ID = '__error_handler__';
+import info from './info';
 
 const defaultStorage = {
   lastCheckVersion: {},
 };
 
 const initialState = {
-  storage: getValue(SLICE_ID, defaultStorage),
+  storage: getValue(info.id, defaultStorage),
 };
 
 export const slice = createSlice({
-  name: SLICE_ID,
+  name: info.id,
   initialState,
   reducers: {
     $setIgnoreVersionTarget(state, action) {
@@ -26,4 +25,4 @@ export const slice = createSlice({
 
 export const { $setIgnoreVersionTarget } = slice.actions;
 
-export const ErrorHandlerEntires = [SLICE_ID, slice.reducer];
+export default slice.reducer;

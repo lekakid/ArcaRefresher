@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { useArcaSocket } from 'hooks/WebSocket';
+import { useArcaSocket } from 'core/WebSocket';
 import { ArcaUser } from 'func/user';
 
 import info from '../info';

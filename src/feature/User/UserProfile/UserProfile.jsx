@@ -4,11 +4,11 @@ import { GlobalStyles } from '@mui/material';
 
 import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'constants/selector';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
-import { useContent } from 'hooks/Content';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useContent } from 'core/ContentCollector';
+import { useLoadChecker } from 'core/LoadChecker';
 import { ArcaUser } from 'func/user';
 
-import { useArcaSocket } from 'hooks/WebSocket';
+import { useArcaSocket } from 'core/WebSocket';
 import info from './info';
 
 /* eslint-disable react/prop-types */

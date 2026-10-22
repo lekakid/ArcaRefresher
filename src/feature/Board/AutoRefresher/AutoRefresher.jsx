@@ -5,8 +5,8 @@ import { Box, Fade, GlobalStyles } from '@mui/material';
 
 import { BOARD_LOADED, BOARD } from 'constants/selector';
 import { EVENT_BOARD_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
-import { useArcaSocket } from 'hooks/WebSocket';
+import { useLoadChecker } from 'core/LoadChecker';
+import { useArcaSocket } from 'core/WebSocket';
 
 import RefreshIndicator from './RefreshProgress';
 import { getNewArticle, updateBoard } from './article';

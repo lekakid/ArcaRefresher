@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { AuthorTag } from 'component';
 import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { ArcaUser, getUserKey } from 'func/user';
 import {
   FULL_LOADED,

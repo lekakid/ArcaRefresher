@@ -72,7 +72,7 @@ export const FORMAT = {
  *
  * @param {string} formatStr        포맷 스트링을 포함한 문자열
  * @param {Object} args             치환할 문자열
- * @param {Object} args.content     util/Content/useContent()으로 받은 값
+ * @param {Object} args.content     core/ContentCollector/useContent()으로 받은 값
  * @param {Number} args.index       인덱스 번호
  * @param {string} args.fileName    업로드 된 파일의 실제 이름
  * @returns

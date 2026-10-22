@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Button, Portal } from '@mui/material';
 
 import store from 'store';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import { COMMENT_LOADED, COMMENT } from 'constants/selector';
 

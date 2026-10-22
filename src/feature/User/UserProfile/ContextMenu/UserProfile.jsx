@@ -13,7 +13,7 @@ import {
 } from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';

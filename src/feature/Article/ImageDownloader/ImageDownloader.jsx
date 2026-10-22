@@ -4,7 +4,7 @@ import { Button, GlobalStyles, Portal } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import ImageSelector from './ImageSelector';
 import DownloadWidget from './DownloadWidget';

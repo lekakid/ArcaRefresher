@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { FULL_LOADED } from 'constants/selector';
 
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { serializeText } from 'func/emoji';
 import info from '../info';
 

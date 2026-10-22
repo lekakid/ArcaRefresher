@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { useOpenState } from 'feature/Menu/ConfigMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 
 import actionTable, { ACTIVE_ARTICLE, ACTIVE_BOARD } from './actionTable';
 import keyFilter from './keyFilter';

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Grid, Portal, Typography } from '@mui/material';
 
 import { ARTICLE_HEAD, ARTICLE_TITLE } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import info from './info';
 

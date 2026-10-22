@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "paths": {
+      "core/*": ["./src/core/*"],
+      "feature/*": ["./src/feature/*"],
       "component/*": ["./src/component/*"],
       "store/*": ["./src/store/*"],
       "theme/*": ["./src/theme/*"],
-      "error/*": ["./src/error/*"],
-      "feature/*": ["./src/feature/*"],
-      "hooks/*": ["./src/hooks/*"],
       "func/*": ["./src/func/*"],
       "constants/*": ["./src/constants/*"]
     },

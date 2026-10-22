@@ -17,7 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 
 import { $addFolder, $addImage, $removeImage } from '../slice';
 import info from '../info';

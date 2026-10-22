@@ -16,7 +16,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { ModuleLoadBoundary } from 'error/ModuleLoadBoundary';
+import { ModuleLoadBoundary } from 'core/ModuleLoadBoundary';
+import coreGroupInfo from 'core/group';
 
 import DrawerGroup from './DrawerGroup';
 import DrawerItem from './DrawerItem';
@@ -28,14 +29,23 @@ const groupInfos = import.meta.glob(
   ['/src/feature/*/group.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const groupList = Object.values(groupInfos).sort((a, b) => a.order - b.order);
+const groupList = [...Object.values(groupInfos), coreGroupInfo].sort(
+  (a, b) => a.order - b.order,
+);
 
 // 설정 메뉴 정보 (feature/{GROUP_NAME}/{FEATURE_NAME}/ConfigMenu/index.jsx)
 const menuInfos = import.meta.glob(
   ['/src/feature/*/*/ConfigMenu/index.jsx', '!/src/feature/_*/**'],
   { eager: true, import: 'default' },
 );
-const menuList = Object.values(menuInfos).sort((a, b) => {
+const coreMenuInfos = import.meta.glob(['/src/core/*/ConfigMenu/index.jsx'], {
+  eager: true,
+  import: 'default',
+});
+const menuList = [
+  ...Object.values(menuInfos),
+  ...Object.values(coreMenuInfos),
+].sort((a, b) => {
   // 그룹 정렬
   if (a.group.order - b.group.order > 0) return 1;
   if (a.group.order - b.group.order < 0) return -1;

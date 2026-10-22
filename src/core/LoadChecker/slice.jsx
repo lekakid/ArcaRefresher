@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import hookInfo from './hookInfo';
+import hookInfo from './info';
 
 const slice = createSlice({
   name: hookInfo.id,
@@ -14,4 +14,4 @@ const slice = createSlice({
 
 export const { setLoaded } = slice.actions;
 
-export default [hookInfo.id, slice.reducer];
+export default slice.reducer;

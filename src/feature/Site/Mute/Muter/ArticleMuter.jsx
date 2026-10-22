@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { ARTICLE_EMOTICON, ARTICLE_LOADED } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';

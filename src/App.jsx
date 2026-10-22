@@ -5,9 +5,9 @@ import { useMediaQuery } from '@mui/material';
 
 import store from 'store';
 import { light, dark } from 'theme';
-import { ContentCollector } from 'hooks/Content';
 
 import Feature from 'feature';
+import Core from 'core';
 
 export default function App() {
   const browserDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -28,7 +28,7 @@ export default function App() {
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
-          <ContentCollector />
+          <Core />
           <Feature />
         </ThemeProvider>
       </StyledEngineProvider>

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { BOARD_ITEMS, BOARD, BOARD_IN_ARTICLE } from 'constants/selector';
 import { EVENT_BOARD_REFRESH } from 'constants/event';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 import { getContrastYIQ } from 'func/color';
 
 import info from './info';

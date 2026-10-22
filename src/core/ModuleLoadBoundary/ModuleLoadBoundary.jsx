@@ -15,13 +15,14 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { $setIgnoreVersionTarget, SLICE_ID } from './slice';
+import { $setIgnoreVersionTarget } from './slice';
+import info from './info';
 
 function ErrorDialog({ moduleId, text, error, resetBoundary }) {
   const dispatch = useDispatch();
 
   const lastCheckVersion = useSelector(
-    (state) => state[SLICE_ID].storage.lastCheckVersion,
+    (state) => state[info.id].storage.lastCheckVersion,
   );
   const [ignore, setIgnore] = useState(false);
   const [open, setOpen] = useState(
@@ -90,7 +91,7 @@ ErrorDialog.propTypes = {
   resetBoundary: PropTypes.func,
 };
 
-export function ModuleLoadBoundary({ moduleId, text, children }) {
+function ModuleLoadBoundary({ moduleId, text, children }) {
   return (
     <ErrorBoundary
       fallbackRender={({ error, resetErrorBoundary }) => (
@@ -112,3 +113,5 @@ ModuleLoadBoundary.propTypes = {
   text: PropTypes.string,
   children: PropTypes.element,
 };
+
+export default ModuleLoadBoundary;

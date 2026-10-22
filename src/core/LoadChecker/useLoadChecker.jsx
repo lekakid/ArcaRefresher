@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import store from 'store';
 
-import hookInfo from './hookInfo';
+import info from './info';
 import { setLoaded } from './slice';
 
 const selectorSet = new Set();
@@ -23,7 +23,7 @@ const observer = new MutationObserver(() => {
 
 export default function useLoadChecker(targetSelector) {
   const dispatch = useDispatch();
-  const loaded = useSelector((state) => !!state[hookInfo.id]?.[targetSelector]);
+  const loaded = useSelector((state) => !!state[info.id]?.[targetSelector]);
 
   useLayoutEffect(() => {
     // Mutation 셋업 단계에서 이미 로드 된 경우

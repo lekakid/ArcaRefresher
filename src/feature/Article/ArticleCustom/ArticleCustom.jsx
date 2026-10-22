@@ -11,7 +11,7 @@ import {
   ARTICLE,
   ARTICLE_VIDEOS,
 } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import store from 'store';
 

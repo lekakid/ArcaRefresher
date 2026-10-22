@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'constants/selector';
-import { useLoadChecker } from 'hooks/LoadChecker';
+import { useLoadChecker } from 'core/LoadChecker';
 
 import info from './info';
 

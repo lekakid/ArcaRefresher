@@ -9,7 +9,7 @@ import {
   BOARD_USER_AD,
 } from 'constants/selector';
 import { EVENT_BOARD_REFRESH } from 'constants/event';
-import { useContent } from 'hooks/Content';
+import { useContent } from 'core/ContentCollector';
 import { ArcaUser } from 'func/user';
 import { serializeText } from 'func/emoji';
 
