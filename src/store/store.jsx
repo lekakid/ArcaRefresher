@@ -1,30 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-
 import { createMonkeySyncMiddleware } from 'store/storage';
-
-// path: '/src/core/{FeatureName}/slice.jsx'
-const coreModules = import.meta.glob(['/src/core/*/slice.jsx'], {
-  eager: true,
-  import: 'default',
-});
-const coreReducerEntries = Object.values(coreModules);
-
-const featureModules = import.meta.glob(
-  ['/src/feature/*/*/slice.jsx', '!/src/feature/_*/**'],
-  { eager: true, import: 'default' },
-);
-const featureReducerEntries = Object.entries(featureModules).map(
-  // path: '/src/feature/{GroupName}/{FeatureName}/slice.jsx'
-  ([path, reducer]) => [path.split('/')[4], reducer],
-);
+import rootReducer from './rootReducer';
 
 const store = configureStore({
-  reducer: Object.fromEntries([
-    ...coreReducerEntries,
-    ...featureReducerEntries,
-  ]),
+  reducer: rootReducer,
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare().concat(createMonkeySyncMiddleware()),
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept('./rootReducer', (mod) => {
+    store.replaceReducer(mod.default);
+  });
+}
 
 export default store;
