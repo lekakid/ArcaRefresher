@@ -6,8 +6,8 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'constants/selector';
 import { useLoadChecker } from 'core/LoadChecker';
 
-import ImageSelector from './ImageSelector';
-import DownloadWidget from './DownloadWidget';
+import ImageSelector from './internal/ImageSelector';
+import DownloadWidget from './internal/DownloadWidget';
 import { setOpen } from './slice';
 import info from './info';
 

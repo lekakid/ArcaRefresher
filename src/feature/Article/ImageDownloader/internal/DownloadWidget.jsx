@@ -8,8 +8,8 @@ import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'core/ContentCollector';
 import { request } from 'func/http';
 
-import { format } from './Util';
-import info from './info';
+import { format } from '../Util';
+import info from '../info';
 
 function DownloadWidget({ infoList, onDownloadStart }) {
   const contentInfo = useContent();
