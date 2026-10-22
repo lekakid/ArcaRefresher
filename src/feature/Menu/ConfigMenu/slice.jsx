@@ -5,7 +5,7 @@ const initialState = {
   open: false,
   opacity: 1,
   drawer: true,
-  selection: 'VersionInfo',
+  selection: '__VersionInfo__',
   group: null,
 };
 

@@ -2,14 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { createMonkeySyncMiddleware } from 'store/storage';
 
+// path: '/src/core/{FeatureName}/slice.jsx'
 const coreModules = import.meta.glob(['/src/core/*/slice.jsx'], {
   eager: true,
   import: 'default',
 });
-const coreReducerEntries = Object.entries(coreModules).map(
-  // path: '/src/core/{FeatureName}/slice.jsx'
-  ([path, reducer]) => [path.split('/')[3], reducer],
-);
+const coreReducerEntries = Object.values(coreModules);
 
 const featureModules = import.meta.glob(
   ['/src/feature/*/*/slice.jsx', '!/src/feature/_*/**'],

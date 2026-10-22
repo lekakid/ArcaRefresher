@@ -1,5 +1,5 @@
 /** @type {GroupInfo} */
 export default {
-  id: 'Core',
+  id: '__Core__',
   order: 99,
 };

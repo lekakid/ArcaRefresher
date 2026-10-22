@@ -4,9 +4,9 @@ const coreModules = import.meta.glob(['/src/core/*/index.jsx'], {
   eager: true,
   import: 'default',
 });
-const coreChildren = Object.entries(coreModules).map(([path, { Feature }]) => ({
+const coreChildren = Object.values(coreModules).map(({ Feature, info }) => ({
   Feature,
-  moduleId: path.split('/')[3],
+  moduleId: info.id,
 }));
 
 function CoreWrapper() {

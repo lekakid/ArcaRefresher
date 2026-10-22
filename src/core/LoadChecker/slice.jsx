@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import hookInfo from './info';
+import info from './info';
 
 const slice = createSlice({
-  name: hookInfo.id,
+  name: info.id,
   initialState: {},
   reducers: {
     setLoaded(state, action) {
@@ -14,4 +14,4 @@ const slice = createSlice({
 
 export const { setLoaded } = slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];

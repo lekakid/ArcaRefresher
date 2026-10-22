@@ -62,4 +62,4 @@ const slice = createSlice({
 export const { setUser, setChannelName, setCategory, setArticle, setConfig } =
   slice.actions;
 
-export default slice.reducer;
+export default [info.id, slice.reducer];
