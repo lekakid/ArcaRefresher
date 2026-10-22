@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 
-import { NAVIGATION_LOADED } from 'core/selector';
+import { NAVIGATION_LOADED } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import SubsChannelManager from './SubsChannelManager';

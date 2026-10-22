@@ -9,8 +9,8 @@ import {
   COMMENT_INNER,
   COMMENT_LOADED,
   COMMENT,
-} from 'core/selector';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
+} from 'constants/selector';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { getDocument } from 'func/http';
 

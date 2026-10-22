@@ -2,8 +2,8 @@ import { useLayoutEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
-import { BOARD_ITEMS, BOARD, BOARD_IN_ARTICLE } from 'core/selector';
-import { EVENT_BOARD_REFRESH } from 'core/event';
+import { BOARD_ITEMS, BOARD, BOARD_IN_ARTICLE } from 'constants/selector';
+import { EVENT_BOARD_REFRESH } from 'constants/event';
 import { useContent } from 'hooks/Content';
 import { getContrastYIQ } from 'func/color';
 

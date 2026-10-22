@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'core/selector';
+import { ARTICLE_LOADED, ARTICLE_USER_INFO } from 'constants/selector';
 import { ArcaUser, getUserKey } from 'func/user';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
-import { EVENT_COMMENT_REFRESH } from 'core/event';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import info from './info';
 import Label from './Label';
 

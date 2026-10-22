@@ -1,7 +1,7 @@
 import { GM_info } from '$';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue } from 'core/storage';
+import { getValue } from 'store/storage';
 
 import { TYPE_MINOR } from './func';
 import info from './info';

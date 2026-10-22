@@ -1,4 +1,3 @@
-import 'core/types';
 import GroupIcon from '@mui/icons-material/Group';
 
 import Template from './Template';

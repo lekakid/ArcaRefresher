@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { deleteValue, getValue } from 'core/storage';
+import { deleteValue, getValue } from 'store/storage';
 import info from './info';
 
 const defaultStorage = {

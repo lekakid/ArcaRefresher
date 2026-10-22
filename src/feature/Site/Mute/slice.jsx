@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue } from 'core/storage';
+import { getValue } from 'store/storage';
 
 import { trimEmotURL } from './func';
 import info from './info';

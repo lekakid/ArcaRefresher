@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { ARTICLE_EMOTICON, ARTICLE_LOADED } from 'core/selector';
+import { ARTICLE_EMOTICON, ARTICLE_LOADED } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { trimEmotURL } from '../func';

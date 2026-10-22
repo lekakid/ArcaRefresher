@@ -2,7 +2,7 @@ import { unsafeWindow } from '$';
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { FULL_LOADED } from 'core/selector';
+import { FULL_LOADED } from 'constants/selector';
 
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { serializeText } from 'func/emoji';

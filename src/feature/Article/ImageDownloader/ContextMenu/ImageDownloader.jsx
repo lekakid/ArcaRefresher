@@ -7,7 +7,7 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import ImageIcon from '@mui/icons-material/Image';
 import streamSaver from 'streamsaver';
 
-import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';

@@ -1,4 +1,3 @@
-import 'core/types';
 import Mute from './Mute';
 import info from '../info';
 

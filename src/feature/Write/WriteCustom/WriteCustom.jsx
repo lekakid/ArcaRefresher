@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import store from 'core/store';
+import store from 'store';
 
 import info from './info';
 

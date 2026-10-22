@@ -3,14 +3,14 @@ import { Box, Portal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AuthorTag } from 'component';
-import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser, getUserKey } from 'func/user';
 import {
   FULL_LOADED,
   USER_INFO,
   USER_INFO_WITHOUT_NOTICE,
-} from 'core/selector';
+} from 'constants/selector';
 
 import MemoInput from './MemoInput';
 import info from './info';

@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import store from 'core/store';
+import store from 'store';
 
 import hookInfo from './hookInfo';
 import { setLoaded } from './slice';

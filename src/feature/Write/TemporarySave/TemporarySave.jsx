@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { WRITE_LOADED } from 'core/selector';
+import { WRITE_LOADED } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { AutoSaver, SaveButton, LoadButton } from './SubComponent';

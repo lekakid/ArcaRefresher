@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
-import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'core/selector';
+import { ARTICLE_CONTENT, DELETED_ALERT_LOADED } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import info from './info';

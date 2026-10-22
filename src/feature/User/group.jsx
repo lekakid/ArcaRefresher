@@ -1,5 +1,4 @@
 import PeopleIcon from '@mui/icons-material/People';
-import 'core/types';
 
 /** @type {GroupInfo} */
 export default {

@@ -10,10 +10,10 @@ import {
   ARTICLE_LOADED,
   ARTICLE,
   ARTICLE_VIDEOS,
-} from 'core/selector';
+} from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
-import store from 'core/store';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
+import store from 'store';
 
 import info from './info';
 

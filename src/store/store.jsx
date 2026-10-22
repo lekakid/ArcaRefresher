@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { createMonkeySyncMiddleware } from 'core/storage';
+import { createMonkeySyncMiddleware } from 'store/storage';
 import { ErrorHandlerEntires } from 'error/slice';
 import { ContentReducerEntries } from 'hooks/Content';
 import { LoadCheckerReducerEntries } from 'hooks/LoadChecker';

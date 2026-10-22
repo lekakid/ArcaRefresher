@@ -12,7 +12,7 @@ import {
 
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { WRITE_LOADED } from 'core/selector';
+import { WRITE_LOADED } from 'constants/selector';
 
 import info from './info';
 import { $toggleFirstLoad } from './slice';

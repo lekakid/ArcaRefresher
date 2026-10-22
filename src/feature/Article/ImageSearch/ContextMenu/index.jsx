@@ -1,4 +1,3 @@
-import 'core/types';
 import ImageSearch from './ImageSearch';
 import info from '../info';
 

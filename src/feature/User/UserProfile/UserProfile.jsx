@@ -2,8 +2,8 @@ import { useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
-import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'core/selector';
-import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
+import { COMMENT_USER_INFO, FULL_LOADED, USER_INFO } from 'constants/selector';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
 import { useContent } from 'hooks/Content';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser } from 'func/user';

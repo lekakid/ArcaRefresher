@@ -1,4 +1,3 @@
-import 'core/types';
 import Template from './Template';
 import info from '../info';
 

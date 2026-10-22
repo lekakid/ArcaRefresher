@@ -2,7 +2,7 @@ import { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
 
-import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'core/selector';
+import { NAVIGATION_LOADED, NAVIGATION_MENU } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { setOpen } from '../slice';

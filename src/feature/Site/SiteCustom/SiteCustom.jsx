@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import store from 'core/store';
+import store from 'store';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import info from './info';

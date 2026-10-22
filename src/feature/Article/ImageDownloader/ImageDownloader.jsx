@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, GlobalStyles, Portal } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
-import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'core/selector';
+import { ARTICLE_BODY, ARTICLE_LOADED, ARTICLE_MENU } from 'constants/selector';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import ImageSelector from './ImageSelector';

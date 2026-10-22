@@ -3,8 +3,8 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Fade, GlobalStyles } from '@mui/material';
 
-import { BOARD_LOADED, BOARD } from 'core/selector';
-import { EVENT_BOARD_REFRESH } from 'core/event';
+import { BOARD_LOADED, BOARD } from 'constants/selector';
+import { EVENT_BOARD_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { useArcaSocket } from 'hooks/WebSocket';
 

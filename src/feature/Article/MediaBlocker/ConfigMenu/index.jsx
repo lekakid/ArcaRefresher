@@ -1,4 +1,3 @@
-import 'core/types';
 import BlockIcon from '@mui/icons-material/Block';
 
 import MediaBlocker from './MediaBlocker';

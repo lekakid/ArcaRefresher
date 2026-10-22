@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue } from 'core/storage';
+import { getValue } from 'store/storage';
 
 export const SLICE_ID = '__error_handler__';
 

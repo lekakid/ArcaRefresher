@@ -23,7 +23,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
+import {
+  ARTICLE_EMOTICON,
+  ARTICLE_GIFS,
+  ARTICLE_IMAGES,
+} from 'constants/selector';
 
 import { EmoticonInfo, ImageInfo } from './Model';
 import { $toggleDownloadOrigin, setOpen } from './slice';

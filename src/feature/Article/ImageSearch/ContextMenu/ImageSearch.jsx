@@ -5,7 +5,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
-import { ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_IMAGES } from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { request } from 'func/http';

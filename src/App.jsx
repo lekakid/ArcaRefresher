@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 
-import store from 'core/store';
-import { light, dark } from 'core/theme';
+import store from 'store';
+import { light, dark } from 'theme';
 import { ContentCollector } from 'hooks/Content';
 
 import Feature from 'feature';

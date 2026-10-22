@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
-import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
+import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 
 import info from '../info';

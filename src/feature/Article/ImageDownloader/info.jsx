@@ -1,5 +1,3 @@
-import 'core/types';
-
 /** @type {FeatureInfo} */
 export default {
   id: 'ImageDownloader',

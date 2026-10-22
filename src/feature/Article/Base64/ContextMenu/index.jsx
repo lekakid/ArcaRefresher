@@ -1,4 +1,3 @@
-import 'core/types';
 import Base64 from './Base64';
 import info from '../info';
 

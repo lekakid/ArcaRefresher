@@ -5,7 +5,7 @@ import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-import { BOARD_ITEMS } from 'core/selector';
+import { BOARD_ITEMS } from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';

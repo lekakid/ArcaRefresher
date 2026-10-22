@@ -10,7 +10,7 @@ import {
 import LaunchIcon from '@mui/icons-material/Launch';
 import streamSaver from 'streamsaver';
 
-import { importValues, exportValues, resetValues } from 'core/storage';
+import { importValues, exportValues, resetValues } from 'store/storage';
 import { BaseRow } from 'feature/Menu/ConfigMenu/component';
 import { useConfirm } from 'component';
 import { SLICE_ID } from 'error/slice';

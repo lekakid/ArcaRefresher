@@ -1,5 +1,4 @@
 import ListIcon from '@mui/icons-material/List';
-import 'core/types';
 
 /** @type {GroupInfo} */
 export default {

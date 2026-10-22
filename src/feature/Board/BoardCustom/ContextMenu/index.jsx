@@ -1,4 +1,3 @@
-import 'core/types';
 import BoardCustom from './BoardCustom';
 import info from '../info';
 

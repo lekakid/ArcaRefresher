@@ -1,4 +1,3 @@
-import 'core/types';
 import ImageDownloader from './ImageDownloader';
 import info from '../info';
 

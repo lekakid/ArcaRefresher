@@ -1,4 +1,3 @@
-import 'core/types';
 import Memo from './Memo';
 import info from '../info';
 

@@ -1,4 +1,3 @@
-import 'core/types';
 import MyImage from './MyImage';
 import info from '../info';
 

@@ -1,15 +1,15 @@
 import { useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import store from 'core/store';
+import store from 'store';
 import {
   BOARD_NOTICES,
   BOARD_ITEMS,
   BOARD_LOADED,
   BOARD,
   BOARD_IN_ARTICLE,
-} from 'core/selector';
-import { EVENT_BOARD_REFRESH } from 'core/event';
+} from 'constants/selector';
+import { EVENT_BOARD_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import info from './info';

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, IconButton, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { disableStorageSync } from 'core/storage';
+import { disableStorageSync } from 'store/storage';
 
 import info from './info';
 import { $setCheckedVersion, $setLastVersion } from './slice';

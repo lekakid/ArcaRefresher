@@ -1,4 +1,3 @@
-import 'core/types';
 import UserProfile from './UserProfile';
 import info from '../info';
 

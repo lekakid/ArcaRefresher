@@ -10,7 +10,7 @@ import {
   BOARD_ITEMS_WITH_NOTICE,
   USER_INFO,
   USER_MENTION,
-} from 'core/selector';
+} from 'constants/selector';
 import { useContextMenuTrigger } from 'feature/Menu/ContextMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';

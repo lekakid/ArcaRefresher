@@ -1,5 +1,4 @@
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import 'core/types';
 
 /** @type {GroupInfo} */
 export default {

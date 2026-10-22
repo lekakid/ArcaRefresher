@@ -7,8 +7,8 @@ import {
   ARTICLE_LOADED,
   COMMENT_ITEMS,
   COMMENT_LOADED,
-} from 'core/selector';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
+} from 'constants/selector';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { FOREGROUND, open } from 'func/window';

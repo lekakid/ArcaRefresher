@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Portal } from '@mui/material';
 
 import { AuthorTag } from 'component';
-import { FULL_LOADED, USER_INFO } from 'core/selector';
-import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'core/event';
+import { FULL_LOADED, USER_INFO } from 'constants/selector';
+import { EVENT_BOARD_REFRESH, EVENT_COMMENT_REFRESH } from 'constants/event';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser, getUserKey } from 'func/user';
 

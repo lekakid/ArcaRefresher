@@ -15,7 +15,7 @@ import {
   EMOTICON_INFO,
   EMOTICON_TITLE,
   NAVIGATION_LOADED,
-} from 'core/selector';
+} from 'constants/selector';
 import { serializeText } from 'func/emoji';
 import { ArcaUser } from 'func/user';
 

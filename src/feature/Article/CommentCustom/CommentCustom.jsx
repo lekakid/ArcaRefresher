@@ -2,10 +2,10 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Portal } from '@mui/material';
 
-import store from 'core/store';
+import store from 'store';
 import { useLoadChecker } from 'hooks/LoadChecker';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
-import { COMMENT_LOADED, COMMENT } from 'core/selector';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
+import { COMMENT_LOADED, COMMENT } from 'constants/selector';
 
 import info from './info';
 

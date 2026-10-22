@@ -2,11 +2,13 @@
   "compilerOptions": {
     "paths": {
       "component/*": ["./src/component/*"],
-      "core/*": ["./src/core/*"],
+      "store/*": ["./src/store/*"],
+      "theme/*": ["./src/theme/*"],
       "error/*": ["./src/error/*"],
       "feature/*": ["./src/feature/*"],
+      "hooks/*": ["./src/hooks/*"],
       "func/*": ["./src/func/*"],
-      "hooks/*": ["./src/hooks/*"]
+      "constants/*": ["./src/constants/*"]
     },
     "types": ["vite/client", "vite-plugin-monkey/client"]
   },

@@ -7,8 +7,8 @@ import {
   BOARD_IN_ARTICLE,
   BOARD_ITEMS,
   BOARD_USER_AD,
-} from 'core/selector';
-import { EVENT_BOARD_REFRESH } from 'core/event';
+} from 'constants/selector';
+import { EVENT_BOARD_REFRESH } from 'constants/event';
 import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
 import { serializeText } from 'func/emoji';

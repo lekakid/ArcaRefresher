@@ -5,13 +5,13 @@ import { GlobalStyles } from '@mui/material';
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { ArcaUser } from 'func/user';
 import { serializeText } from 'func/emoji';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
+import { EVENT_COMMENT_REFRESH } from 'constants/event';
 import {
   COMMENT_INNER,
   COMMENT_ITEMS,
   COMMENT_WRAPPERS,
   COMMENT_LOADED,
-} from 'core/selector';
+} from 'constants/selector';
 
 import CountBar from './CountBar';
 import { filterSelector } from '../selector';
