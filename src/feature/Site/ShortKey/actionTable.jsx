@@ -215,6 +215,11 @@ export default [
     callback() {
       const url = new URL(window.location.href);
       const search = new URLSearchParams();
+
+      if (url.searchParams.has('category')) {
+        const category = url.searchParams.get('category');
+        search.set('category', category);
+      }
       if (url.searchParams.get('mode') !== 'best') {
         search.set('mode', 'best');
       }
