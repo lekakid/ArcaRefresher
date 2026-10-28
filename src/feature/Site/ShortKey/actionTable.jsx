@@ -34,7 +34,7 @@ export default [
   {
     action: 'prevCategory',
     label: '이전 카테고리',
-    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
+    active: [ACTIVE_BOARD],
     defaultKey: 'KeyC',
     callback() {
       const categoryUrlList = [
@@ -55,7 +55,7 @@ export default [
   {
     action: 'nextCategory',
     label: '다음 카테고리',
-    active: [ACTIVE_ARTICLE, ACTIVE_BOARD],
+    active: [ACTIVE_BOARD],
     defaultKey: 'KeyV',
     callback() {
       const categoryUrlList = [
