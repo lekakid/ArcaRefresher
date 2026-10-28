@@ -1,7 +1,7 @@
-import { GM_getValue, GM_info } from '$';
+import { GM_info } from '$';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getValue } from 'store/storage';
+import { deleteValue, getValue } from 'store/storage';
 
 import { TYPE_MINOR } from './func';
 import info from './info';
@@ -14,28 +14,17 @@ const defaultStorage = {
   notiLevel: TYPE_MINOR,
 };
 
-function updater(storage, defaultValue) {
-  // version 0 => 1
-  const version = storage?.version || 0;
-
-  switch (version) {
-    case 0: {
-      // NOTE 3.45.0 릴리즈에 ID값이 __VersionInfo__ 바뀔 예정
-      // 키가 바뀌는 경우 updater가 감지 못하는 문제가 있음
-      // 3.44.0 배포 전에 별도로 __를 앞뒤로 추가한 키로 저장하게 끔 적용할 예정
-      const prev = GM_getValue('VersionInfo', null);
-      if (!prev) return defaultStorage;
-
-      return { ...defaultValue, ...prev };
-    }
-    default:
-      console.warn('지원하지 않는 버전 데이터입니다.', storage);
-      return defaultValue;
-  }
+// NOTE 3.44 릴리즈에 끼워넣기 대신 그냥 직접 불러오는 형태
+// 3.45 업데이트 직후 알림이 문제일 뿐 손실되어도 딱히 문제 없는 데이터이기 때문
+// 3.46 릴리즈 쯤에 삭제
+const prev = getValue('VersionInfo');
+if (prev) {
+  deleteValue('VersionInfo');
 }
+const current = getValue(info.id, defaultStorage);
 
 const initialState = {
-  storage: getValue(info.id, defaultStorage, updater),
+  storage: prev ?? current,
 };
 
 export const slice = createSlice({
