@@ -4,17 +4,20 @@ import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 
 import { USER_INFO } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 
 // 우클릭 메뉴
 function ContextMenu({ target, closeMenu }) {
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: USER_INFO,
-      dataExtractor: () => target.src.split('?')[0],
+      dataExtractor: () => {
+        if (!target) return undefined;
+        return target;
+      },
     },
     [target],
   );

@@ -10,21 +10,22 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
-  Grid2 as Grid,
+  Grid,
   TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { useContent } from 'hooks/Content';
 
-import Info from '../FeatureInfo';
 import { $addFolder, $addImage, $removeImage } from '../slice';
+import info from '../info';
 
 function FolderCheckList({ open, url, onClose }) {
   const dispatch = useDispatch();
   const { channel, article } = useContent();
-  const { imgList } = useSelector((state) => state[Info.id].storage);
+  const { imgList } = useSelector((state) => state[info.id].storage);
   const [openFolderInput, setOpenFolderInput] = useState(false);
   const [folderInput, setFolderInput] = useState('');
 
@@ -49,6 +50,11 @@ function FolderCheckList({ open, url, onClose }) {
     setOpenFolderInput(false);
   }, [dispatch, folderInput]);
 
+  const cancelCreate = useCallback(() => {
+    setFolderInput('');
+    setOpenFolderInput(false);
+  }, []);
+
   const handleFocus = useCallback((e) => {
     e.target.select();
   }, []);
@@ -57,7 +63,7 @@ function FolderCheckList({ open, url, onClose }) {
     (e) => {
       if (e?.key !== 'Enter') return;
       if (folderInput === '') return;
-      if (Object.keys(imgList).includes(folderInput)) return;
+      if (Object.hasOwn(imgList, folderInput)) return;
 
       createFolder();
     },
@@ -87,7 +93,7 @@ function FolderCheckList({ open, url, onClose }) {
         </FormGroup>
       </DialogContent>
       <DialogActions>
-        <Grid container>
+        <Grid container sx={{ width: '100%' }}>
           {openFolderInput && (
             <>
               <Grid size={{ xs: 12 }}>
@@ -96,23 +102,33 @@ function FolderCheckList({ open, url, onClose }) {
                   size="small"
                   autoFocus
                   value={folderInput}
-                  error={folderList.includes(folderInput) || folderInput === ''}
+                  error={
+                    Object.hasOwn(imgList, folderInput) || folderInput === ''
+                  }
                   onChange={handleFolderInput}
                   onFocus={handleFocus}
                   onKeyUp={handleFolderEnter}
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>
-                <Button
-                  fullWidth
-                  startIcon={<AddIcon />}
-                  disabled={
-                    folderList.includes(folderInput) || folderInput === ''
-                  }
-                  onClick={createFolder}
-                >
-                  폴더 추가
-                </Button>
+                {folderInput.length > 0 ? (
+                  <Button
+                    fullWidth
+                    startIcon={<AddIcon />}
+                    disabled={Object.hasOwn(imgList, folderInput)}
+                    onClick={createFolder}
+                  >
+                    폴더 추가
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    startIcon={<CloseIcon />}
+                    onClick={cancelCreate}
+                  >
+                    취소
+                  </Button>
+                )}
               </Grid>
             </>
           )}

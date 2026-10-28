@@ -1,11 +1,13 @@
 import ColorizeIcon from '@mui/icons-material/Colorize';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './CategoryStyler';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: ColorizeIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

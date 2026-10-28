@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useCallback, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Collapse,
@@ -12,7 +12,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { ColorPickerButton } from 'component';
-import { useOpacity } from 'menu/ConfigMenu';
+import { useOpacity } from 'feature/Menu/ConfigMenu';
 
 const PresetEditor = forwardRef(
   ({ disabled, groupData, defaultPreset, preset, onChange }, ref) => {
@@ -98,4 +98,4 @@ PresetEditor.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default PresetEditor;
+export default memo(PresetEditor);

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, MenuItem, Typography } from '@mui/material';
@@ -11,21 +11,21 @@ import {
   USER_INFO,
   USER_MENTION,
 } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { ArcaUser } from 'func/user';
 
 import { open } from 'func/window';
 import { getDocument } from 'func/http';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const profileUrl = 'https://arca.live/u/@';
 
 function ContextMenu({ target, closeMenu }) {
   const setSnack = useSnackbarAlert();
   const { contextRange, openType, checkSpamAccount } = useSelector(
-    (store) => store[Info.id].storage,
+    (store) => store[info.id].storage,
   );
   const { channel } = useContent();
   let contextSelector;
@@ -46,7 +46,7 @@ function ContextMenu({ target, closeMenu }) {
 
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextSelector,
       dataExtractor: () => {
         if (!target) return undefined;
@@ -64,37 +64,49 @@ function ContextMenu({ target, closeMenu }) {
         const id = user.toString();
         const url = id.replace('#', '/');
 
-        if (checkSpamAccount) {
-          setProfileData(undefined);
-          fetch(`${profileUrl}${url}`)
-            .then((response) => {
-              if (!response.ok) setProfileData({ article: -1, comment: -1 });
-
-              return response.text();
-            })
-            .then((text) => {
-              const doc = getDocument(text);
-              if (doc.querySelector('.error-page')) {
-                setProfileData({ article: -1, comment: -1 });
-                return;
-              }
-
-              const list = [
-                ...doc.querySelectorAll(
-                  '.card-block .user-recent, .card-block .clearfix',
-                ),
-              ];
-              const article = list.findIndex((l) => l.matches('.clearfix'));
-
-              setProfileData({ article, comment: list.length - article - 1 });
-            });
-        }
-
         return { id, url };
       },
     },
-    [target, checkSpamAccount],
+    [target],
   );
+
+  useEffect(() => {
+    if (!checkSpamAccount || !data) return undefined;
+
+    let cancelled = false;
+    const fail = { article: -1, comment: -1 };
+    fetch(`${profileUrl}${data.url}`)
+      .then((response) => {
+        if (!response.ok) throw new Error(response.status);
+        return response.text();
+      })
+      .then((text) => {
+        if (cancelled) return;
+
+        const doc = getDocument(text);
+        if (doc.querySelector('.error-page')) {
+          setProfileData(fail);
+          return;
+        }
+
+        const list = [
+          ...doc.querySelectorAll(
+            '.card-block .user-recent, .card-block .clearfix',
+          ),
+        ];
+        const article = list.findIndex((l) => l.matches('.clearfix'));
+
+        setProfileData({ article, comment: list.length - article - 1 });
+      })
+      .catch(() => {
+        if (!cancelled) setProfileData(fail);
+      });
+
+    return () => {
+      cancelled = true;
+      setProfileData(undefined);
+    };
+  }, [data, checkSpamAccount]);
 
   const handleProfile = useCallback(() => {
     open(`${profileUrl}${data.url}`, openType);

@@ -1,86 +1,49 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
+import { ArcaUser } from 'func/user';
 
-import Info from '../FeatureInfo';
 import { filterSelector } from '../selector';
+import info from '../info';
 
-const toastMuteStyles = (
-  <GlobalStyles
-    styles={{
-      '#toastbox': {
-        '& .filtered-emoticon': {
-          width: 'auto !important',
-          height: 'auto !important',
-          textDecoration: 'none !important',
-          '&::after': {
-            content: '"[아카콘 뮤트됨]"',
-          },
-          '& > img, & > video': {
-            display: 'none !important',
-          },
-        },
-      },
-    }}
-  />
-);
-
-function ToastMuter() {
-  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
+function RelayChatMuter() {
+  const { subscribeSocket, unsubscribeSocket } = useArcaSocket();
 
   const filter = useSelector(filterSelector);
-  const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.id].storage,
-  );
+  const { hideMutedMark } = useSelector((state) => state[info.id].storage);
 
   useEffect(() => {
-    const callback = (e) => {
-      const data = e.data.split('|');
-      if (data[0] !== 'nc' || !data[1]) return;
+    const modifier = (type, data) => {
+      // 채팅이 아니거나 데이터가 없는 경우
+      if (type !== 'nc' || !data) return data;
 
-      const chat = JSON.parse(data[1]);
-      const dataFilter = chat.nickname.split('data-filter="')[1].split('"')[0];
+      const user = data.nickname.split('data-filter="')[1].split('"')[0];
 
       /*
-      // 이모티콘 뮤트 처리
-      // 데이터 확보가 어려워서 기회가 되면 나중에
-      if (chat.mediaUrl) {
-        const url = trimEmotURL(chat.mediaUrl);
-        if (muteAllEmot || filter.emoticon.url[url]) {
-          if (hideMutedMark) {
-            e.ignore = true;
-            return;
-          }
-
-          delete chat.mediaUrl;
-          chat.content = '[아카콘 뮤트됨]';
-        }
-      }
+      // TODO 이모티콘 뮤트 처리
+      // data.type = 'image', data.content = URL
       */
 
       // 사용자 뮤트
-      const regex =
-        filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
-      if (regex?.test(dataFilter)) {
-        if (hideMutedMark) {
-          e.ignore = true;
-          return;
-        }
+      const regex = new RegExp(filter.user.join('|') || '(?!)');
+      if (regex.test(new ArcaUser(user).toUID())) {
+        if (hideMutedMark) return null;
 
-        chat.content = '[채팅 뮤트됨]';
+        return {
+          ...data,
+          content: '[채팅 뮤트됨]',
+        };
       }
 
-      e.data = `${data[0]}|${JSON.stringify(chat)}`;
+      return data;
     };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(subscriber);
-  }, [filter, hideMutedMark, muteAllEmot, subscribeSocket, unsubscribeSocket]);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
+  }, [filter, hideMutedMark, subscribeSocket, unsubscribeSocket]);
 
-  return toastMuteStyles;
+  return null;
 }
 
-export default ToastMuter;
+export default RelayChatMuter;

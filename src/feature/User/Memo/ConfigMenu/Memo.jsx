@@ -1,0 +1,270 @@
+import { useCallback, useRef, memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Button,
+  List,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { createSelector } from '@reduxjs/toolkit';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import streamSaver from 'streamsaver';
+
+import {
+  BaseRow,
+  SelectRow,
+  DataGridRow,
+} from 'feature/Menu/ConfigMenu/component';
+import { FOREGROUND, open } from 'func/window';
+
+import info from '../info';
+import {
+  $setContextRange,
+  $setMemo,
+  $setMemoList,
+  $setVariant,
+} from '../slice';
+
+function userRenderer(params) {
+  let uid = params.row.id;
+  let hideBtn = false;
+  if (uid.includes('#')) {
+    uid = `${params.row.nick}${params.row.id}`;
+  }
+  if (uid.includes('.')) {
+    uid = `${params.row.nick}(${params.row.id})`;
+    hideBtn = true;
+  }
+
+  return (
+    <Stack
+      direction="row"
+      sx={{
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <Typography
+        variant="body2"
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+      >
+        {uid}
+      </Typography>
+      {!hideBtn && (
+        <Button
+          sx={{ minWidth: 40, px: '3px' }}
+          size="small"
+          onClick={() =>
+            open(`https://arca.live/u/@${uid.replace('#', '/')}`, FOREGROUND)
+          }
+        >
+          <OpenInNewIcon />
+        </Button>
+      )}
+    </Stack>
+  );
+}
+
+const columns = [
+  {
+    field: 'id',
+    headerName: '이용자',
+    flex: 2,
+    renderCell: userRenderer,
+  },
+  { field: 'msg', headerName: '메모 메세지', flex: 2, editable: true },
+  { field: 'color', headerName: '메모 색상', flex: 1, editable: true },
+  { field: 'nick' },
+];
+
+const columnVisibilityModel = {
+  id: true,
+  msg: true,
+  color: true,
+  nick: false,
+};
+
+const memoRowsSelector = createSelector(
+  (state) => state[info.id].storage.memo,
+  (memo) =>
+    Object.entries(memo).map(([key, { msg = '', color = '', nick = '' }]) => ({
+      id: key,
+      msg,
+      color,
+      nick,
+    })),
+);
+
+function Memo() {
+  const dispatch = useDispatch();
+
+  const { variant, contextRange } = useSelector(
+    (state) => state[info.id].storage,
+  );
+  const memoData = useSelector((state) => state[info.id].storage.memo);
+  const memoRows = useSelector(memoRowsSelector);
+  const inputRef = useRef();
+
+  const handleImportMobile = useCallback(
+    (e) => {
+      const input = e.target;
+      (async () => {
+        try {
+          const text = await input.files[0].text();
+          const memoList = JSON.parse(text).data;
+
+          const updateData = { ...memoData };
+          memoList.forEach(({ userType, memoKey, memoText }) => {
+            switch (userType) {
+              case 1:
+                updateData[`#${memoKey}`] = {
+                  ...updateData[`#${memoKey}`],
+                  msg: memoText,
+                };
+                break;
+              case 0:
+              case 2:
+                updateData[memoKey] = { ...updateData[memoKey], msg: memoText };
+                break;
+              default:
+                break;
+            }
+          });
+
+          dispatch($setMemoList(updateData));
+        } catch (error) {
+          console.error(error);
+        } finally {
+          input.value = '';
+        }
+      })();
+    },
+    [dispatch, memoData],
+  );
+
+  const handleExportMobile = useCallback(() => {
+    const ipRegex = /^[0-9]{1,3}\.[0-9]{1,3}$/;
+    const data = memoRows.map(({ id, msg }) => {
+      const row = {
+        userType: 0,
+        memoKey: id.replace('#', ''),
+        memoText: msg,
+      };
+
+      if (ipRegex.test(id)) row.userType = 2;
+      if (id.startsWith('#')) row.userType = 1;
+
+      return row;
+    });
+    const mobileJson = {
+      version: 1,
+      data,
+    };
+
+    const blob = new Blob([JSON.stringify(mobileJson)], { type: 'text/plain' });
+    const rs = blob.stream();
+    const filestream = streamSaver.createWriteStream('ArcaRefresher-memo.json');
+    return rs.pipeTo(filestream);
+  }, [memoRows]);
+
+  const handleChangeMemoRow = useCallback(
+    ({ id, msg, color, nick }) => {
+      dispatch($setMemo({ user: id, memo: { msg, color, nick } }));
+    },
+    [dispatch],
+  );
+
+  const handleChangeMemoRows = useCallback(
+    (updatedRows) => {
+      const entries = updatedRows.map(({ id, msg, color, nick }) => [
+        id,
+        { msg, color, nick },
+      ]);
+      dispatch($setMemoList(Object.fromEntries(entries)));
+    },
+    [dispatch],
+  );
+
+  return (
+    <>
+      <Typography variant="subtitle1">{info.name}</Typography>
+      <Paper>
+        <List disablePadding>
+          <SelectRow
+            divider
+            primary="우클릭 메뉴 호출 범위"
+            value={contextRange}
+            action={$setContextRange}
+          >
+            <MenuItem value="articleItem">게시글</MenuItem>
+            <MenuItem value="nickname">닉네임</MenuItem>
+          </SelectRow>
+          <SelectRow
+            divider
+            primary="메모 모양"
+            value={variant}
+            action={$setVariant}
+          >
+            <MenuItem value="badge">둥근 뱃지</MenuItem>
+            <MenuItem value="text">텍스트</MenuItem>
+            <MenuItem value="popper">마우스 호버 아이콘</MenuItem>
+            <MenuItem value="none">없음</MenuItem>
+          </SelectRow>
+          <BaseRow
+            divider
+            column="lg"
+            header={
+              <ListItemText
+                primary="공앱 메모 데이터"
+                secondary="공앱 포맷에 맞는 파일로 내보내거나 가져옵니다."
+              />
+            }
+          >
+            <Stack
+              direction="row"
+              sx={{ minWidth: 180, width: '100%', gap: 1 }}
+            >
+              <Button
+                sx={{ width: '100%' }}
+                onClick={() => inputRef.current.click()}
+              >
+                가져오기
+              </Button>
+              <Button
+                sx={{ width: '100%' }}
+                disabled={memoRows.length === 0}
+                onClick={handleExportMobile}
+              >
+                내보내기
+              </Button>
+            </Stack>
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".json, .txt"
+              onChange={handleImportMobile}
+              style={{ display: 'none' }}
+            />
+          </BaseRow>
+          <DataGridRow
+            primary="저장된 메모"
+            textEditable
+            rows={memoRows}
+            columns={columns}
+            columnVisibilityModel={columnVisibilityModel}
+            noRowsText="저장된 메모가 없습니다."
+            onChangeRow={handleChangeMemoRow}
+            onChangeRows={handleChangeMemoRows}
+          />
+        </List>
+      </Paper>
+    </>
+  );
+}
+
+export default memo(Memo);

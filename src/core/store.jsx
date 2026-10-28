@@ -1,18 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { createMonkeySyncMiddleware, initMonkeySync } from 'core/storage';
+import { createMonkeySyncMiddleware } from 'core/storage';
 import { ErrorHandlerEntires } from 'error/slice';
-import { ContentReducerEntrie } from 'hooks/Content';
+import { ContentReducerEntries } from 'hooks/Content';
 import { LoadCheckerReducerEntries } from 'hooks/LoadChecker';
-
-const menuModules = import.meta.glob('/src/menu/*/slice.jsx', {
-  eager: true,
-  import: 'default',
-});
-const menuReducerEntries = Object.entries(menuModules).map(
-  // path: '/src/menu/{MenuName}/slice.jsx'
-  ([path, reducer]) => [path.split('/')[3], reducer],
-);
 
 const featureModules = import.meta.glob(
   ['/src/feature/*/*/slice.jsx', '!/src/feature/_*/**'],
@@ -27,14 +18,11 @@ const store = configureStore({
   reducer: Object.fromEntries([
     ErrorHandlerEntires,
     LoadCheckerReducerEntries,
-    ContentReducerEntrie,
-    ...menuReducerEntries,
+    ContentReducerEntries,
     ...featureReducerEntries,
   ]),
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare().concat(createMonkeySyncMiddleware()),
 });
-
-initMonkeySync(store);
 
 export default store;

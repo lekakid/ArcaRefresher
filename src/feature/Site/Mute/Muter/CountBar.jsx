@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {
   Chip,
   DialogContentText,
-  Grid2 as Grid,
+  Grid,
   IconButton,
   Tooltip,
   Typography,
@@ -17,7 +17,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useConfirm } from 'component';
 
 import { $toggleCountBar, $toggleMutedMark } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const TypeString = {
   keyword: '키워드',
@@ -29,19 +29,28 @@ const TypeString = {
   all: '전체',
 };
 
+const DEFAULT_COUNT = {
+  keyword: 0,
+  user: 0,
+  channel: 0,
+  category: 0,
+  deleted: 0,
+  all: 0,
+};
+
 function CountBar({
   renderContainer,
   controlTarget,
-  hideMutedToggleBtn,
-  count,
-  hide,
+  hideMutedToggleBtn = false,
+  count = DEFAULT_COUNT,
+  hide = false,
 }) {
   const [showStates, setShowStates] = useState(undefined);
   const hideMutedMark = useSelector(
-    (state) => state[Info.id].storage.hideMutedMark,
+    (state) => state[info.id].storage.hideMutedMark,
   );
 
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
   const dispatch = useDispatch();
 
   const handleHideCount = async () => {
@@ -88,9 +97,7 @@ function CountBar({
         <Grid
           container
           size={{ xs: 12, sm: 4 }}
-          alignItems="center"
-          gap={0.5}
-          sx={{ paddingLeft: 1 }}
+          sx={{ paddingLeft: 1, alignItems: 'center', gap: 0.5 }}
         >
           <Typography variant="subtitle1">뮤트(리프레셔)</Typography>
           <Tooltip title="카운트 바 숨김">
@@ -145,7 +152,7 @@ function CountBar({
           })}
         </Grid>
       </Grid>
-      <ConfirmDialog />
+      {confirmDialog}
     </>,
     renderContainer,
   );
@@ -157,19 +164,6 @@ CountBar.propTypes = {
   hideMutedToggleBtn: PropTypes.bool,
   count: PropTypes.object,
   hide: PropTypes.bool,
-};
-
-CountBar.defaultProps = {
-  hideMutedToggleBtn: false,
-  count: {
-    keyword: 0,
-    user: 0,
-    channel: 0,
-    category: 0,
-    deleted: 0,
-    all: 0,
-  },
-  hide: false,
 };
 
 export default CountBar;

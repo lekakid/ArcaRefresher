@@ -1,11 +1,13 @@
 import SearchIcon from '@mui/icons-material/Search';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './ImageSearch';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: SearchIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

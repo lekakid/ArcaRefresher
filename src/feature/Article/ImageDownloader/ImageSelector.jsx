@@ -20,14 +20,14 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { ARTICLE_EMOTICON, ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
 
 import { EmoticonInfo, ImageInfo } from './Model';
 import { $toggleDownloadOrigin, setOpen } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 function mapDownloadInfo(arr, type) {
   if (type === undefined) {
@@ -137,7 +137,7 @@ function QueuedImageListItem({ src, alt, checked, onClick }) {
                 color: 'white',
               },
             }}
-            icon={<CheckCircleOutlineIcon />}
+            icon={<CheckCircleOutlinedIcon />}
             checkedIcon={<CheckCircleIcon />}
             checked={checked}
             onClick={onClick}
@@ -162,7 +162,7 @@ function ImageSelector({ open, onConfirm }) {
   const {
     // 동작 설정
     downloadOrigin,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const [data, setData] = useState(undefined);
   const [selection, setSelection] = useState([]);
@@ -180,8 +180,9 @@ function ImageSelector({ open, onConfirm }) {
           if (!response.ok) throw Error(response.statusText);
 
           const emotJson = await response.json();
-          setData(mapDownloadInfo(emotJson, 'emoticon'));
-          setSelection([...new Array(emotJson.length).keys()]);
+          const emotData = mapDownloadInfo(emotJson, 'emoticon');
+          setData(emotData);
+          setSelection([...emotData.keys()]);
           return;
         } catch (_) {
           console.warn('[ImageDownloader] 아카콘 번들 데이터 획득 실패');
@@ -191,9 +192,10 @@ function ImageSelector({ open, onConfirm }) {
         ? ARTICLE_EMOTICON
         : `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`;
       const imageList = [...document.querySelectorAll(query)];
-      setData(mapDownloadInfo(imageList, 'image'));
+      const imageData = mapDownloadInfo(imageList, 'image');
+      setData(imageData);
 
-      setSelection([...new Array(imageList.length).keys()]);
+      setSelection([...imageData.keys()]);
     })();
   }, [open, data]);
 

@@ -1,4 +1,3 @@
-import { GM_openInTab } from '$';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,16 +6,66 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { request } from 'func/http';
 import { open } from 'func/window';
 
 import { convertToPng } from 'func/image';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const ERROR_MSG =
   '오류가 발생했습니다. 개발자 도구(F12)의 콘솔 창을 확인 바랍니다.';
+
+async function openWithForm(
+  searchUrl,
+  { inputSelector = 'input', imageUrl, blob },
+) {
+  if (!searchUrl) throw Error('검색 사이트 지정 안됨');
+
+  const targetUrl = new URL(searchUrl);
+
+  // 사이트 검색 input 추출
+  const inputList = await request(targetUrl.origin, {
+    responseType: 'document',
+  }).then(({ response }) => [...response.querySelectorAll(inputSelector)]);
+
+  // 폼 생성
+  const form = document.createElement('form');
+  form.style.position = 'absolute';
+  form.style.left = '-9999px';
+
+  // 전송 설정
+  form.method = 'POST';
+  form.action = targetUrl;
+  form.enctype = 'multipart/form-data';
+  form.target = '_blank';
+
+  for (const input of inputList) {
+    // 파일 첨부
+    if (blob && input.type === 'file') {
+      const convertedBlob = await convertToPng(blob);
+      const type = convertedBlob.type;
+      const ext = type.split('/')[1];
+      const file = new File([convertedBlob], `image.${ext}`, { type });
+
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      input.files = dataTransfer.files;
+    }
+
+    // URL 입력
+    if (imageUrl && input.type === 'url') {
+      input.value = imageUrl;
+    }
+
+    form.append(input);
+  }
+
+  document.body.append(form);
+  form.submit();
+  form.remove();
+}
 
 function ContextMenu({ target, closeMenu }) {
   const {
@@ -27,7 +76,6 @@ function ContextMenu({ target, closeMenu }) {
     searchGoogleMethod,
     // 사이트
     showGoogle,
-    showBing,
     showYandex,
     showSauceNao,
     showIqdb,
@@ -35,12 +83,12 @@ function ContextMenu({ target, closeMenu }) {
     showTraceMoe,
     showImgOps,
     showTinEye,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextMenuEnabled ? ARTICLE_IMAGES : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;
@@ -62,28 +110,17 @@ function ContextMenu({ target, closeMenu }) {
     closeMenu();
   }, [showGoogle, data, searchGoogleMethod, openType, closeMenu]);
 
-  const handleBing = useCallback(() => {
-    if (!showBing) return;
+  const handleYandex = useCallback(() => {
+    if (!showYandex) return;
 
     open(
-      `https://www.bing.com/images/search?view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste&idpbck=1&q=imgurl:${encodeURIComponent(
+      `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
         data,
       )}`,
       openType,
     );
     closeMenu();
-  }, [showBing, data, openType, closeMenu]);
-
-  const handleYandex = useCallback(() => {
-    if (!showYandex) return;
-
-    GM_openInTab(
-      `https://yandex.com/images/search?rpt=imageview&url=${encodeURIComponent(
-        data,
-      )}`,
-    );
-    closeMenu();
-  }, [showYandex, closeMenu, data]);
+  }, [showYandex, closeMenu, data, openType]);
 
   const handleSauceNao = useCallback(() => {
     if (!showSauceNao) return;
@@ -104,32 +141,7 @@ function ContextMenu({ target, closeMenu }) {
           return;
         }
 
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(
-          new File([blob], `image.${blob.type.split('/')[1]}`, {
-            type: blob.type,
-          }),
-        );
-
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://saucenao.com/search.php';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.name = 'file';
-        input.files = dataTransfer.files;
-        form.append(input);
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://saucenao.com/search.php', { blob });
         setSnack();
       } catch (error) {
         setSnack({
@@ -160,42 +172,7 @@ function ContextMenu({ target, closeMenu }) {
           return;
         }
 
-        const inputList = await request('https://iqdb.org/').then(
-          ({ response }) => [...response.querySelectorAll('input')],
-        );
-
-        const convertedBlob = await convertToPng(blob);
-        const file = new File(
-          [convertedBlob],
-          `image.${convertedBlob.type.split('/')[1]}`,
-          {
-            type: convertedBlob.type,
-          },
-        );
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://iqdb.org/';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        for (let i = 0; i < inputList.length; i += 1) {
-          const input = inputList[i];
-          if (input.type === 'file') {
-            input.files = dataTransfer.files;
-          }
-          form.append(input);
-        }
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://iqdb.org/', { blob });
         setSnack();
       } catch (error) {
         setSnack({
@@ -214,33 +191,11 @@ function ContextMenu({ target, closeMenu }) {
       try {
         closeMenu();
         setSnack({ msg: 'Ascii2D에서 검색 중...' });
-        const inputList = await request('https://ascii2d.net/').then(
-          ({ response }) => [
-            ...response.querySelectorAll('form:not(#file_upload) input'),
-          ],
-        );
 
-        const form = document.createElement('form');
-        form.style.position = 'absolute';
-        form.style.left = '-9999px';
-
-        form.method = 'POST';
-        form.action = 'https://ascii2d.net/search/uri';
-        form.enctype = 'multipart/form-data';
-        form.target = '_blank';
-
-        for (let i = 0; i < inputList.length; i += 1) {
-          const input = inputList[i];
-          if (input.type === 'url') {
-            input.value = data;
-          }
-          form.append(input);
-        }
-
-        document.body.append(form);
-        form.submit();
-        form.remove();
-
+        await openWithForm('https://ascii2d.net/search/uri', {
+          imageUrl: data,
+          inputSelector: 'form:not(#file_upload) input',
+        });
         setSnack();
       } catch (error) {
         setSnack({
@@ -255,45 +210,39 @@ function ContextMenu({ target, closeMenu }) {
   const handleTraceMoe = useCallback(() => {
     if (!showTraceMoe) return;
 
-    GM_openInTab(
-      `https://trace.moe/?url=${encodeURIComponent(data)}`,
-      openType,
-    );
+    open(`https://trace.moe/?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
   }, [showTraceMoe, closeMenu, data, openType]);
 
   const handleImgOps = useCallback(() => {
     if (!showImgOps) return;
 
-    GM_openInTab(`https://imgops.com/${data}`, openType);
+    open(`https://imgops.com/${data}`, openType);
     closeMenu();
   }, [showImgOps, closeMenu, data, openType]);
 
   const handleTinEye = useCallback(() => {
     if (!showTinEye) return;
 
-    GM_openInTab(
-      `https://tineye.com/search?url=${encodeURIComponent(data)}`,
-      openType,
-    );
+    open(`https://tineye.com/search?url=${encodeURIComponent(data)}`, openType);
     closeMenu();
   }, [showTinEye, closeMenu, data, openType]);
 
   const handleAllOpen = useCallback(() => {
     handleGoogle();
-    handleBing();
     handleYandex();
     handleSauceNao();
     handleIqdb();
+    handleAscii2D();
     handleTraceMoe();
     handleImgOps();
     handleTinEye();
   }, [
     handleGoogle,
-    handleBing,
     handleYandex,
     handleSauceNao,
     handleIqdb,
+    handleAscii2D,
     handleTraceMoe,
     handleImgOps,
     handleTinEye,
@@ -314,14 +263,6 @@ function ContextMenu({ target, closeMenu }) {
             <ImageSearchIcon />
           </ListItemIcon>
           <Typography>Google 검색</Typography>
-        </MenuItem>
-      )}
-      {showBing && (
-        <MenuItem onClick={handleBing}>
-          <ListItemIcon>
-            <ImageSearchIcon />
-          </ListItemIcon>
-          <Typography>Bing 검색</Typography>
         </MenuItem>
       )}
       {showYandex && (

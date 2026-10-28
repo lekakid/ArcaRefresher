@@ -7,7 +7,6 @@ import store from 'core/store';
 import { light, dark } from 'core/theme';
 import { ContentCollector } from 'hooks/Content';
 
-import Menu from 'menu';
 import Feature from 'feature';
 
 export default function App() {
@@ -31,7 +30,6 @@ export default function App() {
         <ThemeProvider theme={browserDarkMode || arcaDarkMode ? dark : light}>
           <ContentCollector />
           <Feature />
-          <Menu />
         </ThemeProvider>
       </StyledEngineProvider>
     </Provider>

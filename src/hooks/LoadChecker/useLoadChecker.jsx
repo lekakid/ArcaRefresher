@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import store from 'core/store';
 
-import HookInfo from './HookInfo';
+import hookInfo from './hookInfo';
 import { setLoaded } from './slice';
 
 const selectorSet = new Set();
@@ -18,15 +18,12 @@ const observer = new MutationObserver(() => {
     done.push(s);
   });
   done.forEach((s) => selectorSet.delete(s));
-});
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true,
+  if (selectorSet.size === 0) observer.disconnect();
 });
 
 export default function useLoadChecker(targetSelector) {
   const dispatch = useDispatch();
-  const loaded = useSelector((state) => !!state[HookInfo.id]?.[targetSelector]);
+  const loaded = useSelector((state) => !!state[hookInfo.id]?.[targetSelector]);
 
   useLayoutEffect(() => {
     // Mutation 셋업 단계에서 이미 로드 된 경우
@@ -40,6 +37,10 @@ export default function useLoadChecker(targetSelector) {
 
     // 검사할 설렉터 등록
     selectorSet.add(targetSelector);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
   }, [loaded, targetSelector, dispatch]);
 
   return loaded || !!document.querySelector(targetSelector);

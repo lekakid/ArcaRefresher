@@ -1,33 +1,38 @@
 import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  Popover,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FormatColorResetIcon from '@mui/icons-material/FormatColorReset';
-import { useDispatch, useSelector } from 'react-redux';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { AuthorTag, TwitterPicker } from 'component';
-
-import Info from './FeatureInfo';
-import { $setMemo, setInputUser } from './slice';
 import { ArcaUser } from 'func/user';
+
+import info from './info';
+import { $setMemo, setInputUser } from './slice';
 
 function MemoInput() {
   const dispatch = useDispatch();
-  const { memo, variant } = useSelector((state) => state[Info.id].storage);
+  const { memo, variant } = useSelector((state) => state[info.id].storage);
 
-  const user = useSelector((state) => state[Info.id].inputUser);
+  const user = useSelector((state) => state[info.id].inputUser);
   const userMemo = memo[user?.id];
 
   const [msg, setMsg] = useState(null);
   const [color, setColor] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMsgChange = useCallback((e) => {
     setMsg(e.target.value);
@@ -42,13 +47,15 @@ function MemoInput() {
       if (reason === 'backdropClick') return;
 
       dispatch(setInputUser(null));
+      setMsg(null);
+      setColor(null);
     },
     [dispatch],
   );
 
   const handleSubmit = useCallback(
     (e) => {
-      if (e.key && e.key !== 'Enter') return;
+      if (e.key && (e.key !== 'Enter' || e.nativeEvent.isComposing)) return;
 
       dispatch(
         $setMemo({
@@ -67,6 +74,9 @@ function MemoInput() {
     [user, userMemo, msg, color, dispatch],
   );
 
+  const isAccountUser =
+    user?.type === ArcaUser.TYPE_FIXED || user?.type === ArcaUser.TYPE_HALF;
+
   return (
     <Dialog sx={{ maxWidth: 'xs' }} open={!!user} onClose={handleDialogClose}>
       <DialogTitle>메모 작성</DialogTitle>
@@ -82,7 +92,44 @@ function MemoInput() {
         <CloseIcon />
       </IconButton>
       <DialogContent dividers>
-        <Typography gutterBottom>저장할 메모를 작성해주세요</Typography>
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        >
+          <Typography>저장할 메모를 작성해주세요</Typography>
+          {isAccountUser && (
+            <IconButton onClick={(e) => setAnchorEl(e.target)}>
+              <InfoIcon />
+            </IconButton>
+          )}
+        </Stack>
+        <Popover
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={!!anchorEl}
+          onClose={() => setAnchorEl(null)}
+        >
+          {user?.type === ArcaUser.TYPE_FIXED && (
+            <Alert severity="warning">
+              해당 이용자가 닉네임을 바꿀 경우 메모가 따라가지 않습니다. <br />
+              다른 사람이 같은 닉네임을 취할 경우 메모가 다른 사람에게 붙을 수
+              있습니다.
+            </Alert>
+          )}
+          {user?.type === ArcaUser.TYPE_HALF && (
+            <Alert severity="warning">
+              고정 닉네임으로 바꿀 경우 메모가 따라가지 않습니다. <br />
+              반고닉으로 돌아오면 반고닉 때의 메모가 다시 따라 붙습니다.
+            </Alert>
+          )}
+        </Popover>
         <Typography>
           <span
             style={{

@@ -6,21 +6,21 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { BOARD_ITEMS } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
-
 import { BACKGROUND, open } from 'func/window';
-import Info from '../FeatureInfo';
+
+import info from '../info';
 
 // 우클릭 메뉴
 function ContextMenu({ target, closeMenu }) {
-  const { contextMenuEnabled } = useSelector((store) => store[Info.id].storage);
+  const { contextMenuEnabled } = useSelector((store) => store[info.id].storage);
   const { user, channel } = useContent();
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: `${contextMenuEnabled ? BOARD_ITEMS : 'NULL'}`,
       dataExtractor: () => {
         if (!target) return undefined;

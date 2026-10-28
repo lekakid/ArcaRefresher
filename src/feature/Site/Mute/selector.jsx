@@ -1,12 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
-import Info from './FeatureInfo';
+import info from './info';
 
 export const filterSelector = createSelector(
-  (state) => state[Info.id].storage.user,
-  (state) => state[Info.id].storage.keyword,
-  (state) => state[Info.id].storage.channel,
-  (state) => state[Info.id].storage.emoticon,
-  (state, channelId) => state[Info.id].storage.category[channelId],
+  (state) => state[info.id].storage.user,
+  (state) => state[info.id].storage.keyword,
+  (state) => state[info.id].storage.channel,
+  (state) => state[info.id].storage.emoticon,
+  (state, channelId) => state[info.id].storage.category[channelId],
   (user, keyword, channel, emotBundleList, category) => {
     const entries = Object.values(emotBundleList).reduce(
       (acc, { name, bundle, url }) => {
@@ -27,7 +27,7 @@ export const filterSelector = createSelector(
 );
 
 export const emoticonTableSelector = createSelector(
-  [(state) => state[Info.id].storage.emoticon],
+  [(state) => state[info.id].storage.emoticon],
   (emoticon) =>
     Object.entries(emoticon).map(([key, { name, bundle, url }]) => ({
       id: key,

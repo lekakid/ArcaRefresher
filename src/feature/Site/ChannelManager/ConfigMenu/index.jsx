@@ -1,12 +1,14 @@
 import FolderIcon from '@mui/icons-material/Folder';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './ChannelManager';
+import group from '../../group.jsx';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: FolderIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

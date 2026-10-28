@@ -47,13 +47,13 @@ import {
   $renameGroup,
   $setChannelInfo,
 } from './slice';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultChannelInfo = { memo: '', groups: [], best: false };
 
 function ChannelTitleRenderer({ id, value }) {
   const dispatch = useDispatch();
-  const { channelInfoTable } = useSelector((state) => state[Info.id].storage);
+  const { channelInfoTable } = useSelector((state) => state[info.id].storage);
   const [open, setOpen] = useState(false);
 
   const handleBestToggle = useCallback(() => {
@@ -76,7 +76,7 @@ function ChannelTitleRenderer({ id, value }) {
       const channelInfo = {
         ...defaultChannelInfo,
         ...channelInfoTable[id],
-        cut: parseInt(e.target.value, 10),
+        cut: Number(e.target.value) || 0,
       };
       dispatch($setChannelInfo({ id, info: channelInfo }));
     },
@@ -86,10 +86,13 @@ function ChannelTitleRenderer({ id, value }) {
   return (
     <>
       <Stack
-        sx={{ width: '100%', height: '100%' }}
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
+        sx={{
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
       >
         <Typography variant="body2">{value}</Typography>
         <Tooltip title="상세 편집">
@@ -157,7 +160,7 @@ function GroupRenderer({ id, value }) {
   const dispatch = useDispatch();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const [anchorEl, setAnchorEl] = useState(false);
 
@@ -184,10 +187,8 @@ function GroupRenderer({ id, value }) {
 
   return (
     <Stack
-      sx={{ width: '100%', height: '100%' }}
       direction="row"
-      alignItems="center"
-      gap={1}
+      sx={{ width: '100%', height: '100%', alignItems: 'center', gap: 1 }}
     >
       {value?.map((group) => (
         <Chip key={group} label={group} onDelete={handleRemove(group)} />
@@ -224,10 +225,10 @@ GroupRenderer.propTypes = {
 function SubsChannelManager({ subs, open, onClose }) {
   const dispatch = useDispatch();
   const mobile = useMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const [confirm, ConfirmDialog] = useConfirm();
+  const [confirm, confirmDialog] = useConfirm();
 
   const { groupList, channelInfoTable } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const groupInput = useRef(undefined);
   const editInputRef = useRef(null);
@@ -393,9 +394,8 @@ function SubsChannelManager({ subs, open, onClose }) {
         </IconButton>
         <DialogContent>
           <Stack
-            sx={{ marginBottom: 1 }}
             direction={mobile ? 'column' : 'row'}
-            gap={1}
+            sx={{ marginBottom: 1, gap: 1 }}
           >
             <Select
               displayEmpty
@@ -416,10 +416,8 @@ function SubsChannelManager({ subs, open, onClose }) {
               ))}
             </Select>
             <Stack
-              sx={{ width: '100%' }}
               direction={mobile ? 'column' : 'row'}
-              justifyContent="space-between"
-              gap={2}
+              sx={{ width: '100%', justifyContent: 'space-between', gap: 2 }}
             >
               <ButtonGroup fullWidth={mobile}>
                 <Button
@@ -530,12 +528,15 @@ function SubsChannelManager({ subs, open, onClose }) {
             page={page}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10]}
-            onPageChange={(_, newPage) => setPage(newPage)}
+            onPageChange={(_, newPage) => {
+              setPage(newPage);
+              setSelection([]);
+            }}
             onRowsPerPageChange={() => {}}
           />
         </DialogContent>
       </Dialog>
-      <ConfirmDialog />
+      {confirmDialog}
     </>
   );
 }

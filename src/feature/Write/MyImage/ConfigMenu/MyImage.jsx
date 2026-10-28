@@ -1,0 +1,52 @@
+import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import { List, ListItemText, Paper, Typography } from '@mui/material';
+
+import { BaseRow, SwitchRow } from 'feature/Menu/ConfigMenu/component';
+
+import info from '../info';
+import { $toggleEnabled, $toggleForceLoad } from '../slice';
+import GalleryManager from './GalleryManager';
+
+function MyImage() {
+  const { enabled, imgList, forceLoad } = useSelector(
+    (state) => state[info.id].storage,
+  );
+
+  return (
+    <>
+      <Typography variant="subtitle1">{info.name}</Typography>
+      <Paper>
+        <List disablePadding>
+          <SwitchRow
+            divider
+            primary="사용"
+            secondary="이미지에서 우클릭 메뉴가 활성화됩니다."
+            value={enabled}
+            action={$toggleEnabled}
+          />
+          <SwitchRow
+            divider
+            primary="자짤 강제로 덮어쓰기"
+            secondary="작성하던 글이 있으면 강제로 덮어씁니다."
+            value={forceLoad}
+            action={$toggleForceLoad}
+          />
+          <BaseRow
+            column="always"
+            header={
+              <ListItemText
+                primary="자짤 목록"
+                secondary="채널 slug와 같은 이름을 가진 폴더는 글 작성 시 이미지가 자동으로 첨부됩니다."
+              />
+            }
+          >
+            <GalleryManager gallery={imgList} />
+          </BaseRow>
+        </List>
+      </Paper>
+    </>
+  );
+}
+
+export default memo(MyImage);

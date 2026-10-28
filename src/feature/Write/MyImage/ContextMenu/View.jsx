@@ -1,21 +1,21 @@
 import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { List, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
 
-import { useSelector } from 'react-redux';
-import Info from '../FeatureInfo';
+import info from '../info';
 import FolderCheckList from './FolderCheckList';
 
 function ContextMenu({ target, closeMenu }) {
-  const { enabled } = useSelector((state) => state[Info.id].storage);
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: enabled ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}` : 'NULL',
       dataExtractor: () => {
         if (!target) return undefined;

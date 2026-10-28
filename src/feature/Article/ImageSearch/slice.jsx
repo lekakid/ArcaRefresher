@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 import { BACKGROUND } from 'func/window';
 
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   // 동작
@@ -13,7 +13,6 @@ const defaultStorage = {
   searchGoogleMethod: 'lens',
   // 사이트
   showGoogle: true,
-  showBing: true,
   showYandex: true,
   showSauceNao: true,
   showIqdb: true,
@@ -24,11 +23,11 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage),
+  storage: getValue(info.id, defaultStorage),
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     // 동작
@@ -47,9 +46,6 @@ export const slice = createSlice({
     // 사이트
     $toggleShowGoogle(state) {
       state.storage.showGoogle = !state.storage.showGoogle;
-    },
-    $toggleShowBing(state) {
-      state.storage.showBing = !state.storage.showBing;
     },
     $toggleShowYandex(state) {
       state.storage.showYandex = !state.storage.showYandex;
@@ -83,7 +79,6 @@ export const {
   $setSearchGoogleMethod,
   // 사이트
   $toggleShowGoogle,
-  $toggleShowBing,
   $toggleShowYandex,
   $toggleShowSauceNao,
   $toggleShowIqdb,

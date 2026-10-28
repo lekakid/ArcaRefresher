@@ -6,13 +6,13 @@ import { FULL_LOADED } from 'core/selector';
 
 import { useLoadChecker } from 'hooks/LoadChecker';
 import { serializeText } from 'func/emoji';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function SidebarMuter() {
   const fullLoaded = useLoadChecker(FULL_LOADED);
 
   const { keyword, hideMutedMark } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   useLayoutEffect(() => {
@@ -20,10 +20,9 @@ function SidebarMuter() {
 
     const mute = () => {
       const arcaKeyword = unsafeWindow.LiveConfig?.mute?.keywords || [];
-      const filterList = [...arcaKeyword, ...keyword];
-      if (!filterList.length) return;
-
-      const filter = new RegExp(filterList.join('|'));
+      const filter = new RegExp(
+        [...arcaKeyword, ...keyword].join('|') || '(?!)',
+      );
 
       const articles = document.querySelectorAll(
         '.right-sidebar .sidebar-item .link-list a',

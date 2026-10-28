@@ -1,11 +1,13 @@
 import BookIcon from '@mui/icons-material/Book';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './TemporarySave';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: BookIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

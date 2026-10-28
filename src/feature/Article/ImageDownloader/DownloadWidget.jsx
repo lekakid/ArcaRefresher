@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { downloadZip } from 'client-zip';
 import streamSaver from 'streamsaver';
 
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
 import { format } from './Util';
-import Info from './FeatureInfo';
+import info from './info';
 
 function DownloadWidget({ infoList, onDownloadStart }) {
   const contentInfo = useContent();
@@ -21,7 +21,7 @@ function DownloadWidget({ infoList, onDownloadStart }) {
     zipImageName,
     zipName,
     zipExtension,
-  } = useSelector((state) => state[Info.id].storage);
+  } = useSelector((state) => state[info.id].storage);
   const setSnack = useSnackbarAlert();
 
   useEffect(() => {
@@ -35,10 +35,6 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       return message;
     };
 
-    let count = startWithZero ? 0 : 1;
-    // 파일명 중복 시 끝에 숫자 붙이는 용도
-    const dupCount = {};
-
     // 파일 저장 스트림 생성
     const zipFileName = format(zipName, { content: contentInfo });
     const filestream = streamSaver.createWriteStream(
@@ -50,54 +46,62 @@ function DownloadWidget({ infoList, onDownloadStart }) {
       // 페이지 이탈 방지
       window.addEventListener('beforeunload', confirm);
 
-      onDownloadStart();
-      setSnack({ msg: '다운로드 준비 중' });
+      try {
+        onDownloadStart();
+        setSnack({ msg: '다운로드 준비 중' });
 
-      // 다운로드 시작
-      for (let i = 0; i < infoList.length; i += 1) {
-        const info = infoList[i];
+        // 파일명 중복 시 끝에 숫자 붙이는 용도
+        const dupCount = {};
 
-        const { url, orig, ext, name } = info;
+        // 다운로드 시작
+        for (let i = 0; i < infoList.length; i += 1) {
+          const info = infoList[i];
+          const { url, orig, ext, name } = info;
 
-        let imageName = format(zipImageName, {
-          content: contentInfo,
-          index: count,
-          name,
-        });
-        imageName =
-          dupCount[imageName] > 0
-            ? `${imageName}(${dupCount[imageName]})`
-            : imageName;
-        dupCount[imageName] = (dupCount[imageName] || 0) + 1;
-        const isGif = ext === 'gif';
-
-        count += 1;
-        try {
-          const targetUrl = downloadOrigin || isGif ? orig : url;
-          const blob = await request(targetUrl, {
-            responseType: 'blob',
-          }).then(({ status, response }) => {
-            if (status >= 400) {
-              throw new Error(`HTTP ${status}`, response);
-            }
-
-            return response;
+          let imageName = format(zipImageName, {
+            content: contentInfo,
+            index: startWithZero ? i : i + 1,
+            name,
           });
+          imageName =
+            dupCount[imageName] > 0
+              ? `${imageName}(${dupCount[imageName]})`
+              : imageName;
+          dupCount[imageName] = (dupCount[imageName] || 0) + 1;
+          const isGif = ext === 'gif';
 
-          if (i === 0) setSnack();
+          let blob;
+          try {
+            const targetUrl = downloadOrigin || isGif ? orig : url;
+            blob = await request(targetUrl, {
+              responseType: 'blob',
+            }).then(({ status, response }) => {
+              if (status >= 400) {
+                throw new Error(`HTTP ${status}`, response);
+              }
+
+              return response;
+            });
+          } catch (error) {
+            console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
+            continue;
+          } finally {
+            if (i === 0) setSnack();
+          }
+
           yield { name: `${imageName}.${ext}`, input: blob };
-        } catch (error) {
-          console.warn('[ImageDownloader] 이미지를 받지 못했습니다.', error);
         }
+      } finally {
+        // 페이지 이탈 방지 해제
+        window.removeEventListener('beforeunload', confirm);
       }
-
-      // 페이지 이탈 방지 해제
-      window.removeEventListener('beforeunload', confirm);
     }
 
     // 다운로드 스트림 생성 후 연결
     const zipstream = downloadZip(entries());
-    zipstream.body.pipeTo(filestream);
+    zipstream.body.pipeTo(filestream).catch((error) => {
+      console.warn('[ImageDownloader] 다운로드가 중단되었습니다.', error);
+    });
   }, [
     infoList,
     downloadOrigin,

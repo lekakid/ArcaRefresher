@@ -27,7 +27,8 @@ const pageType = pathToken.shift();
 let channelId = pathToken.shift();
 let channelName;
 switch (pageType) {
-  case 'b':
+  case 'b': // 게시판
+  case 'r': // 같이보기
     // Nothing
     break;
   case 'e':
@@ -79,7 +80,7 @@ const slice = createSlice({
 const { setUser, setChannel, setCategory, setArticle, setConfig } =
   slice.actions;
 
-export const ContentReducerEntrie = [HOOK_NAME, slice.reducer];
+export const ContentReducerEntries = [HOOK_NAME, slice.reducer];
 
 export function ContentCollector() {
   const dispatch = useDispatch();
@@ -160,40 +161,44 @@ export function ContentCollector() {
   useLayoutEffect(() => {
     if (!articleLoaded) return;
 
-    const titleElement = document.querySelector(
-      `${ARTICLE_TITLE}, ${EMOTICON_TITLE}`,
-    );
-    const infoElement = document.querySelector(
-      `${ARTICLE_INFO}, ${EMOTICON_INFO}`,
-    );
-    const timeElement = infoElement.querySelector('.date time');
-    const user = new ArcaUser(
-      document.querySelector(`${ARTICLE_AUTHOR}, ${EMOTICON_AUTHOR}`),
-    );
+    try {
+      const titleElement = document.querySelector(
+        `${ARTICLE_TITLE}, ${EMOTICON_TITLE}`,
+      );
+      const infoElement = document.querySelector(
+        `${ARTICLE_INFO}, ${EMOTICON_INFO}`,
+      );
+      const timeElement = infoElement?.querySelector('.date time');
+      const user = new ArcaUser(
+        document.querySelector(`${ARTICLE_AUTHOR}, ${EMOTICON_AUTHOR}`),
+      );
 
-    const category =
-      titleElement?.querySelector('.badge')?.textContent || '일반';
-    const title = serializeText(titleElement) || '제목 없음';
-    const author = user.toString() || '익명';
-    const datetime = new Date(
-      timeElement?.getAttribute('datetime') || Date.now(),
-    );
-    const formatter = Intl.DateTimeFormat('en-CA', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hourCycle: 'h24',
-    });
-    const datetimeString = formatter.format(datetime).replace(/:/g, '');
-    const [date, time] = datetimeString.split(', ');
-    const url =
-      document.querySelector(ARTICLE_URL)?.href || window.location.href;
-    const id = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)[1] || 0;
+      const category =
+        titleElement?.querySelector('.badge')?.textContent || '일반';
+      const title = serializeText(titleElement) || '제목 없음';
+      const author = user.toString() || '익명';
+      const datetime = new Date(
+        timeElement?.getAttribute('datetime') || Date.now(),
+      );
+      const formatter = Intl.DateTimeFormat('en-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23',
+      });
+      const datetimeString = formatter.format(datetime).replace(/:/g, '');
+      const [date, time] = datetimeString.split(', ');
+      const url =
+        document.querySelector(ARTICLE_URL)?.href || window.location.href;
+      const id = url.match(/\/(?:(?:b\/[0-9a-z]+)|e)\/([0-9]+)/)?.[1] ?? 0;
 
-    dispatch(setArticle({ id, category, title, author, date, time, url }));
+      dispatch(setArticle({ id, category, title, author, date, time, url }));
+    } catch (_) {
+      console.warn('[ContentInfo] 게시물 정보를 받아오지 못했습니다.');
+    }
   }, [dispatch, articleLoaded]);
 
   useLayoutEffect(() => {

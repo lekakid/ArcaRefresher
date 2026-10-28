@@ -1,13 +1,6 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Divider,
-  Grid2 as Grid,
-  IconButton,
-  Stack,
-  Tooltip,
-} from '@mui/material';
+import { Box, Divider, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatStrikethroughIcon from '@mui/icons-material/FormatStrikethrough';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -26,39 +19,27 @@ const DEFAULT_CATEGORY_CONFIG = {
 };
 
 function CategoryRow({ divider, id, label, initValue, onChange }) {
-  const [value, setValue] = useState({
-    ...DEFAULT_CATEGORY_CONFIG,
-    ...initValue,
-  });
+  const value = useMemo(
+    () => ({ ...DEFAULT_CATEGORY_CONFIG, ...initValue }),
+    [initValue],
+  );
 
   const handleColor = useCallback(
     (type) => (color) => {
-      const updateValue = {
-        ...value,
-        [type]: color,
-      };
-      setValue(updateValue);
-      onChange(id, updateValue);
+      onChange(id, { ...value, [type]: color });
     },
     [id, onChange, value],
   );
 
   const handleBool = useCallback(
     (type) => () => {
-      const updateValue = {
-        ...value,
-        [type]: !value[type],
-      };
-      setValue(updateValue);
-      onChange(id, updateValue);
+      onChange(id, { ...value, [type]: !value[type] });
     },
     [id, onChange, value],
   );
 
   const handleResetStyle = useCallback(() => {
-    const updateValue = { ...DEFAULT_CATEGORY_CONFIG };
-    setValue(updateValue);
-    onChange(id, updateValue);
+    onChange(id, { ...DEFAULT_CATEGORY_CONFIG });
   }, [id, onChange]);
 
   const { badge = null, bgcolor = null, bold, through, disableVisited } = value;
@@ -67,7 +48,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
     margin: '0.25rem',
     ...(badge
       ? { backgroundColor: badge, color: getContrastYIQ(badge) }
-      : { backgroundColor: 'var(--color-board-category)', color: 'white' }),
+      : undefined),
   };
   const backgroundStyle = {
     ...(bgcolor && {
@@ -96,7 +77,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
             ...backgroundStyle,
           }}
         >
-          <span className="badge badge-success" style={badgeStyle}>
+          <span className="badge text-bg-success" style={badgeStyle}>
             {label}
           </span>
           <span className="title">게시물 제목</span>
@@ -107,6 +88,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
           <Tooltip title="카테고리 색">
             <span>
               <ColorPickerButton
+                disabled={id === '글머리없음'}
                 color={badge}
                 onChange={handleColor('badge')}
               />
@@ -154,13 +136,4 @@ CategoryRow.propTypes = {
   onChange: PropTypes.func,
 };
 
-function compare(prev, next) {
-  return (
-    prev.badge === next.badge &&
-    prev.bgcolor === next.bgcolor &&
-    prev.bold === next.bold &&
-    prev.through === next.through &&
-    prev.disableVisited === next.disableVisited
-  );
-}
-export default memo(CategoryRow, compare);
+export default memo(CategoryRow);

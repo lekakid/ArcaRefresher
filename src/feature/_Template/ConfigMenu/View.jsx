@@ -1,34 +1,25 @@
-import { forwardRef, Fragment, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { List, Paper, Typography } from '@mui/material';
 
-import Info from '../FeatureInfo';
-import { $setTemplate } from '../slice';
+import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
-const View = forwardRef((_props, ref) => {
-  const { template } = useSelector((state) => state[Info.id].storage);
-  const dispatch = useDispatch();
+import info from '../info';
+import { $toggleEnabled } from '../slice';
 
-  const handler = useCallback(
-    (value) => {
-      dispatch($setTemplate(value));
-    },
-    [dispatch],
-  );
+function View() {
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   return (
-    <Fragment ref={ref}>
-      <Typography variant="subtitle1">{Info.name}</Typography>
+    <>
+      <Typography variant="subtitle1">{info.name}</Typography>
       <Paper>
-        <List>
-          <ListItem onSome={handler}>
-            <ListItemText primary={template} />
-          </ListItem>
+        <List disablePadding>
+          <SwitchRow primary="사용" value={enabled} action={$toggleEnabled} />
         </List>
       </Paper>
-    </Fragment>
+    </>
   );
-});
+}
 
-View.displayName = `ConfigMenuView(${Info.id})`;
+View.displayName = `ConfigMenuView(${info.id})`;
 export default View;

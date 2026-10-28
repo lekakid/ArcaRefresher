@@ -1,12 +1,6 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Divider,
-  Grid2 as Grid,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+import { Box, Divider, Grid, IconButton, Tooltip } from '@mui/material';
 import BrokenImageIcon from '@mui/icons-material/BrokenImage';
 import ImageIcon from '@mui/icons-material/Image';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
@@ -15,19 +9,14 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 const DEFAULT_CATEGORY_CONFIG = { mutePreview: false, muteArticle: false };
 
 function CategoryRow({ divider, id, label, initValue, onChange }) {
-  const [value, setValue] = useState({
-    ...DEFAULT_CATEGORY_CONFIG,
-    ...initValue,
-  });
+  const value = useMemo(
+    () => ({ ...DEFAULT_CATEGORY_CONFIG, ...initValue }),
+    [initValue],
+  );
 
   const handleBool = useCallback(
     (type) => () => {
-      const updateValue = {
-        ...value,
-        [type]: !value[type],
-      };
-      setValue(updateValue);
-      onChange(id, updateValue);
+      onChange(id, { ...value, [type]: !value[type] });
     },
     [value, onChange, id],
   );
@@ -51,7 +40,7 @@ function CategoryRow({ divider, id, label, initValue, onChange }) {
             alignItems: 'center',
           }}
         >
-          <span className="badge badge-success" style={{ margin: '0.25rem' }}>
+          <span className="badge text-bg-success" style={{ margin: '0.25rem' }}>
             {label}
           </span>
         </Box>

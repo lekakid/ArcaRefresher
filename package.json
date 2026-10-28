@@ -1,6 +1,6 @@
 {
   "name": "arcarefresher",
-  "version": "3.43.6",
+  "version": "3.44.0",
   "description": "",
   "author": "LeKAKiD",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "dev": "vite",
     "build": "vite build",
+    "build:pre": "vite build --mode nightly",
     "analyze": "vite build --mode analyze",
     "fix": "bash script/deploy.sh patch",
     "min": "bash script/deploy.sh minor"
@@ -28,21 +29,20 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.7",
     "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^14.0.0",
     "husky": "^7.0.4",
-    "lint-staged": "^15.1.0",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "rollup-plugin-visualizer": "^6.0.11",
     "vite": "^8.3.4",
     "vite-plugin-monkey": "^8.1.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^6.4.11",
-    "@mui/material": "^6.4.11",
+    "@mui/icons-material": "^9.5.0",
+    "@mui/material": "^9.5.0",
     "@reduxjs/toolkit": "^2.2.2",
     "@uiw/react-color": "^2.10.3",
     "client-zip": "^2.5.1",
@@ -50,7 +50,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^6.0.0",
-    "react-qr-code": "^2.0.11",
     "react-redux": "^9.1.0",
     "streamsaver": "^2.0.6"
   }

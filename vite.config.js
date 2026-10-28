@@ -7,7 +7,9 @@ import react from '@vitejs/plugin-react';
 import monkey from 'vite-plugin-monkey';
 import { visualizer } from 'rollup-plugin-visualizer';
 
-import meta from './script-meta.js';
+import nightlyMeta from './meta.nightly.js';
+import releaseMeta from './meta.release.js';
+import pkg from './package.json' with { type: 'json' };
 
 const srcDir = fileURLToPath(new URL('./src', import.meta.url));
 
@@ -26,8 +28,9 @@ const srcAliases = [
 
 export default defineConfig(({ mode }) => {
   const isDebug = mode === 'development';
-  const isAnalyze = mode === 'analyze'; // vite build --mode analyze
-  const isRelease = !isDebug && !isAnalyze;
+  const isAnalyze = mode === 'analyze';
+  const isRelease = mode === 'production';
+  const isNightly = mode === 'nightly';
 
   return {
     server: {
@@ -37,33 +40,58 @@ export default defineConfig(({ mode }) => {
       alias: srcAliases,
     },
     build: {
-      target: ['chrome93', 'firefox127'],
+      target: ['chrome117', 'firefox127'],
       minify: !isDebug,
       sourcemap: isDebug || isAnalyze,
-      license: { fileName: 'ArcaRefresher.user.js.LICENSE.txt' },
+      reportCompressedSize: false,
+      license: {
+        fileName: `ArcaRefresher${isNightly ? '.nightly' : ''}.user.js.LICENSE.txt`,
+      },
     },
     plugins: [
       react(),
-      monkey({
-        entry: 'src/index.jsx',
-        userscript: meta,
-        build: {
-          fileName: 'ArcaRefresher.user.js',
-          metaFileName: isRelease ? 'ArcaRefresher.meta.js' : false,
-          autoGrant: true,
-        },
-      }),
+      isDebug &&
+        monkey({
+          entry: 'src/index.jsx',
+          userscript: releaseMeta,
+          build: {
+            autoGrant: true,
+          },
+        }),
+      isNightly &&
+        monkey({
+          entry: 'src/index.jsx',
+          userscript: {
+            ...nightlyMeta,
+            version: `${pkg.version}.nightly.${Date.now()}`,
+          },
+          build: {
+            fileName: 'ArcaRefresher.nightly.user.js',
+            metaFileName: 'ArcaRefresher.nightly.meta.js',
+            autoGrant: true,
+          },
+        }),
+      (isRelease || isAnalyze) &&
+        monkey({
+          entry: 'src/index.jsx',
+          userscript: releaseMeta,
+          build: {
+            fileName: 'ArcaRefresher.user.js',
+            metaFileName: 'ArcaRefresher.meta.js',
+            autoGrant: true,
+          },
+        }),
       isAnalyze &&
         visualizer({
           template: 'raw-data',
           filename: 'dist/bundle-report.json',
-          gzipSize: true,
+          gzipSize: false,
         }),
       isAnalyze &&
         visualizer({
           template: 'treemap',
           filename: 'dist/bundle-report.html',
-          gzipSize: true,
+          gzipSize: false,
         }),
     ].filter(Boolean),
   };

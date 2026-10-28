@@ -31,15 +31,18 @@ function ConfirmDialogRenderer({
   useEffect(() => {
     if (!open) return undefined;
 
-    const keyUpEvent = (e) => {
+    const keyDownEvent = (e) => {
+      if (e.repeat) return;
       const value = buttonList.find((btn) => btn.key === e.key)?.value;
       if (value === undefined) return;
 
+      e.preventDefault();
+      e.stopPropagation();
       handleBtnDown(value);
     };
 
-    document.addEventListener('keyup', keyUpEvent);
-    return () => document.removeEventListener('keyup', keyUpEvent);
+    window.addEventListener('keydown', keyDownEvent, true);
+    return () => window.removeEventListener('keydown', keyDownEvent, true);
   }, [open, buttonList, handleBtnDown]);
 
   const dialogContent =
@@ -99,10 +102,11 @@ function useConfirm() {
       }),
     [],
   );
-  const ConfirmDialog = () =>
-    ConfirmDialogRenderer({ ...props, open, confirmRef });
+  const confirmDialog = props && (
+    <ConfirmDialogRenderer {...props} open={open} confirmRef={confirmRef} />
+  );
 
-  return [confirm, ConfirmDialog];
+  return [confirm, confirmDialog];
 }
 
 export { useConfirm };

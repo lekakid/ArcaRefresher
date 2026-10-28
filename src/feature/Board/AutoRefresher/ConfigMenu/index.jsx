@@ -1,11 +1,13 @@
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './AutoRefresher';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: RefreshIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

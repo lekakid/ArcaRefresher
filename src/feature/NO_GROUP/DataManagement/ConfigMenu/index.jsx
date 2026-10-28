@@ -1,11 +1,13 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './DataManagement';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: SettingsIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

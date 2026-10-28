@@ -1,67 +1,67 @@
 export const FORMAT = {
   CHANNEL: {
     STRING: '%channel%',
-    REGEX: /%channel%/,
+    REGEX: /%channel%/g,
     LABEL: '채널 이름',
     getValue: (args) => args.content.channel.name,
   },
   CHANNEL_ID: {
     STRING: '%channelId%',
-    REGEX: /%channelI(D|d)%/,
+    REGEX: /%channelI(D|d)%/g,
     LABEL: '채널 SLUG',
     getValue: (args) => args.content.channel.id,
   },
   TITLE: {
     STRING: '%title%',
-    REGEX: /%title%/,
+    REGEX: /%title%/g,
     LABEL: '게시물 제목',
     getValue: (args) => args.content.article.title,
   },
   CATEGORY: {
     STRING: '%category%',
-    REGEX: /%category%/,
+    REGEX: /%category%/g,
     LABEL: '게시물 글머리',
     getValue: (args) => args.content.article.category,
   },
   AUTHOR: {
     STRING: '%author%',
-    REGEX: /%author%/,
+    REGEX: /%author%/g,
     LABEL: '게시물 작성자',
     getValue: (args) => args.content.article.author,
   },
   ARTICLE_ID: {
     STRING: '%articleId%',
-    REGEX: /%articleI(D|d)%/,
+    REGEX: /%articleI(D|d)%/g,
     LABEL: '게시물 번호',
     getValue: (args) => args.content.article.id,
   },
   DATE: {
     STRING: '%date%',
-    REGEX: /%date%/,
+    REGEX: /%date%/g,
     LABEL: '게시물 작성일',
     getValue: (args) => args.content.article.date,
   },
   TIME: {
     STRING: '%time%',
-    REGEX: /%time%/,
+    REGEX: /%time%/g,
     LABEL: '게시물 작성 시간',
     getValue: (args) => args.content.article.time,
   },
   URL: {
     STRING: '%url%',
-    REGEX: /%url%/,
+    REGEX: /%url%/g,
     LABEL: '게시물 URL',
     getValue: (args) => args.content.article.url,
   },
   ORIG: {
     STRING: '%orig%',
-    REGEX: /%orig%/,
+    REGEX: /%orig%/g,
     LABEL: '이미지 업로드 명',
     getValue: (args) => args.name || '',
   },
   NUMBER: {
     STRING: '%num%',
-    REGEX: /%num%/,
+    REGEX: /%num%/g,
     LABEL: '이미지 번호',
     getValue: (args) => `${args.index}`.padStart(3, '0'),
   },
@@ -83,7 +83,7 @@ export default function format(formatStr, args) {
 
   // 포맷 스트링 처리
   Object.values(FORMAT).forEach(({ REGEX, getValue }) => {
-    result = result.replace(REGEX, getValue(args));
+    result = result.replace(REGEX, () => getValue(args));
   });
 
   // 특수문자 처리

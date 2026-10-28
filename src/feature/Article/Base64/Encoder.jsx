@@ -2,17 +2,14 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { encode } from './func/base64';
-import Info from './FeatureInfo';
+import info from './info';
 
 function Cipher() {
-  const { enabled, encodeType } = useSelector(
-    (state) => state[Info.id].storage,
-  );
+  const { enabled } = useSelector((state) => state[info.id].storage);
 
   // 글작성 인코딩 기능
   useEffect(() => {
     if (!enabled) return undefined;
-    if (encodeType === 'disabled') return undefined;
 
     const handler = (e) => {
       if (!e.target.matches('input, textarea, [contenteditable]')) return;
@@ -21,6 +18,19 @@ function Cipher() {
       e.preventDefault();
 
       (async () => {
+        if (e.target.matches('input, textarea')) {
+          const { value, selectionStart, selectionEnd } = e.target;
+          const selected = value.slice(selectionStart, selectionEnd);
+          const content = (selected || (await navigator.clipboard.readText()))
+            .replace(/[\u200B-\u200D\uFEFF]/g, '')
+            .trim();
+          e.target.value =
+            value.substring(0, selectionStart) +
+            encode(content) +
+            value.substring(selectionEnd);
+          return;
+        }
+
         const selection = window.getSelection();
         let content = '';
         switch (selection.type) {
@@ -44,16 +54,6 @@ function Cipher() {
         const encoded = encode(content);
 
         const range = selection.getRangeAt(0);
-        if (e.target.matches('input, textarea')) {
-          const origin = e.target.value;
-          const value =
-            origin.substring(0, e.target.selectionStart) +
-            encoded +
-            origin.substring(e.target.selectionEnd);
-          e.target.value = value;
-          return;
-        }
-
         if (selection.type === 'Range') {
           if (
             range.commonAncestorContainer.parentElement.matches('a') &&
@@ -73,7 +73,7 @@ function Cipher() {
     return () => {
       document.removeEventListener('keydown', handler, true);
     };
-  }, [enabled, encodeType]);
+  }, [enabled]);
 
   return null;
 }

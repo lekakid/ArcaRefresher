@@ -1,11 +1,13 @@
 import ImageIcon from '@mui/icons-material/Image';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './MyImage';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: ImageIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
 import { useArcaSocket } from 'hooks/WebSocket';
+import { ArcaUser } from 'func/user';
 
-import Info from '../FeatureInfo';
+import info from '../info';
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
 
@@ -29,69 +30,60 @@ const toastMuteStyles = (
 );
 
 function ToastMuter() {
-  const [subscribeSocket, unsubscribeSocket] = useArcaSocket();
+  const { subscribeSocket, unsubscribeSocket } = useArcaSocket();
 
   const filter = useSelector(filterSelector);
   const { muteChannelPointAlarm, hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   useEffect(() => {
-    const callback = (e) => {
-      const data = e.data.split('|');
-      if (data[0] !== 'n') return;
-
-      const noti = JSON.parse(data[1]);
+    const modifier = (type, data) => {
+      if (type !== 'n') return data;
 
       // 이모티콘 뮤트 처리
-      if (noti.mediaUrl) {
-        const url = trimEmotURL(noti.mediaUrl);
+      if (data.mediaUrl) {
+        const url = trimEmotURL(data.mediaUrl);
         if (muteAllEmot || filter.emoticon.url[url]) {
-          if (hideMutedMark) {
-            e.ignore = true;
-            return;
-          }
+          if (hideMutedMark) return null;
 
-          delete noti.mediaUrl;
-          noti.title = 'Arca Refresher';
-          noti.message = '[뮤트된 아카콘]';
+          const { mediaUrl, title, message, ...rest } = data;
+
+          return {
+            ...rest,
+            title: 'Arca Refresher',
+            message: '[뮤트된 아카콘]',
+          };
         }
       }
 
       // 사용자 뮤트
-      const regex =
-        filter.user.length > 0 ? new RegExp(filter.user.join('|')) : undefined;
-      if (regex?.test(noti.username)) {
-        if (hideMutedMark) {
-          e.ignore = true;
-          return;
-        }
+      const regex = new RegExp(filter.user.join('|') || '(?!)');
+      if (data.username && regex.test(new ArcaUser(data.username).toUID())) {
+        if (hideMutedMark) return null;
 
-        if (noti.mediaUrl) delete noti.mediaUrl;
-        noti.title = 'Arca Refresher';
-        noti.message = '[뮤트된 이용자의 알림]';
+        const { mediaUrl, title, message, ...rest } = data;
+        return {
+          ...rest,
+          title: 'Arca Refresher',
+          message: '[뮤트된 이용자의 알림]',
+        };
       }
 
-      e.data = `${data[0]}|${JSON.stringify(noti)}`;
+      return data;
     };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
 
-    return () => unsubscribeSocket(subscriber);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
   }, [filter, hideMutedMark, muteAllEmot, subscribeSocket, unsubscribeSocket]);
 
   useEffect(() => {
     if (!muteChannelPointAlarm) return undefined;
 
-    const callback = (e) => {
-      const data = e.data.split('|');
+    const modifier = (type, data) => (type === 'cp' ? null : data);
 
-      e.ignore = data[0] === 'cp';
-    };
-    const subscriber = { callback, type: 'before' };
-    subscribeSocket(subscriber);
-
-    return () => unsubscribeSocket(subscriber);
+    subscribeSocket(modifier);
+    return () => unsubscribeSocket(modifier);
   }, [muteChannelPointAlarm, subscribeSocket, unsubscribeSocket]);
 
   return toastMuteStyles;

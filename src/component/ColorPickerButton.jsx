@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Chrome as ChromePicker } from '@uiw/react-color';
 
 const Picker = forwardRef(
-  ({ disabled, defaultColor, color, onOpen, onClose, onChange }, ref) => {
+  ({ disabled, defaultColor = '', color, onOpen, onClose, onChange }, ref) => {
     const [innerColor, setInnerColor] = useState(defaultColor);
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -92,10 +92,6 @@ const Picker = forwardRef(
     );
   },
 );
-
-Picker.defaultProps = {
-  defaultColor: '',
-};
 
 Picker.propTypes = {
   disabled: PropTypes.bool,

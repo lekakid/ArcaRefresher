@@ -5,12 +5,13 @@ import PublishIcon from '@mui/icons-material/Publish';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoadOpen } from '../slice';
-import Info from '../FeatureInfo';
+import info from '../info';
+
 import LoadTable from './LoadTable';
 
 function LoadButton({ editor, ...btnProps }) {
   const dispatch = useDispatch();
-  const { loadOpen } = useSelector((state) => state[Info.id]);
+  const { loadOpen } = useSelector((state) => state[info.id]);
 
   const handleClick = useCallback(() => {
     dispatch(setLoadOpen(true));

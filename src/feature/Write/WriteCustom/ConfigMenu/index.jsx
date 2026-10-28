@@ -1,13 +1,15 @@
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './WriteCustom';
+import group from '../../group.jsx';
+import info from '../info';
 
 /** @type {ConfigMenuInfo} */
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   order: -1,
   Icon: ViewQuiltIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };

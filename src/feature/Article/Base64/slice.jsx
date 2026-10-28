@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   version: 0,
@@ -11,12 +11,12 @@ const defaultStorage = {
 };
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage),
+  storage: getValue(info.id, defaultStorage),
   temporaryDisabled: false,
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     $toggleEnabled(state) {

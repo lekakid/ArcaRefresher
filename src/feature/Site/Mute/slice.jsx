@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getValue } from 'core/storage';
 
 import { trimEmotURL } from './func';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   version: 2,
@@ -42,11 +42,12 @@ function updater(storage, defaultValue) {
 
       storage.emoticon = data;
       storage.version = 1;
-      return storage;
+      return updater(storage, defaultValue);
     }
     case 1: {
       if (storage.boardBarPos === 'afterbegin')
         storage.boardBarPos = 'beforebegin';
+      storage.version = 2;
       return storage;
     }
     default:
@@ -56,11 +57,11 @@ function updater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage, updater),
+  storage: getValue(info.id, defaultStorage, updater),
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     $setContextRange(state, action) {
@@ -105,9 +106,6 @@ export const slice = createSlice({
       state.storage.user = action.payload;
     },
     $addKeyword(state, action) {
-      state.storage.keyword.push(action.payload);
-    },
-    $removeKeyword(state, action) {
       state.storage.keyword.push(action.payload);
     },
     $setKeyword(state, action) {
@@ -198,7 +196,6 @@ export const {
   $removeUser,
   $setUser,
   $addKeyword,
-  $removeKeyword,
   $setKeyword,
   $setChannel,
   $toggleMuteAllEmot,

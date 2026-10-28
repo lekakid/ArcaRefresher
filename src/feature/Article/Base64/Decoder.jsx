@@ -13,7 +13,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { FOREGROUND, open } from 'func/window';
 import { decode } from './func/base64';
-import Info from './FeatureInfo';
+import info from './info';
 
 const Base64Regex = {
   normal: /^([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/,
@@ -32,6 +32,10 @@ const LABEL = {
   more: '추가로 복호화할 수 있습니다.',
   final: '복호화 되었습니다.',
 };
+
+function toHref(url) {
+  return url.replace(/^(?:(https?):)?\/*/i, (_, s) => `${s || 'https'}://`);
+}
 
 function tryDecodeAll(html, max = 200) {
   let result = html;
@@ -81,7 +85,7 @@ function tryDecodeAll(html, max = 200) {
             return i;
           }
           if (urlRegex.test(i)) {
-            return `<a href="${i}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
+            return `<a href="${toHref(i)}" class="base64" target="_blank" rel="noopener noreferrer">${i}</a>`;
           }
 
           return `<p class="base64">${i
@@ -107,9 +111,9 @@ function Decoder() {
   const commentLoaded = useLoadChecker(COMMENT_LOADED);
 
   const { enabled, autoDecode, clipboardDecode } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
-  const { temporaryDisabled } = useSelector((state) => state[Info.id]);
+  const { temporaryDisabled } = useSelector((state) => state[info.id]);
   const [decodeResult, setDecodeResult] = useState();
 
   // 게시물 조회 디코딩 기능
@@ -123,7 +127,10 @@ function Decoder() {
     if (!article) return undefined;
 
     const originHTML = article.innerHTML;
-    article.innerHTML = tryDecodeAll(article.innerHTML);
+    const decodedHTML = tryDecodeAll(originHTML);
+    if (decodedHTML === originHTML) return undefined;
+
+    article.innerHTML = decodedHTML;
     return () => {
       article.innerHTML = originHTML;
     };
@@ -139,11 +146,14 @@ function Decoder() {
     const handler = () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || 'orig' in target.dataset) return;
 
         const content = target.innerHTML;
+        const decoded = tryDecodeAll(content, 5);
+        if (decoded === content) return;
+
         target.dataset.orig = content;
-        target.innerHTML = tryDecodeAll(content, 5);
+        target.innerHTML = decoded;
       });
     };
 
@@ -153,9 +163,10 @@ function Decoder() {
     return () => {
       [...document.querySelectorAll(COMMENT_ITEMS)].forEach((c) => {
         const target = c.querySelector('.message pre');
-        if (!target) return;
+        if (!target || !('orig' in target.dataset)) return;
 
         target.innerHTML = target.dataset.orig;
+        delete target.dataset.orig;
       });
       window.removeEventListener(EVENT_COMMENT_REFRESH, handler);
     };
@@ -235,8 +246,7 @@ function Decoder() {
   };
 
   const handleUrlOpen = () => {
-    const url = new URL(decodeResult.text, 'https://a');
-    open(url.href, FOREGROUND);
+    open(toHref(decodeResult.text), FOREGROUND);
     setDecodeResult(undefined);
   };
 

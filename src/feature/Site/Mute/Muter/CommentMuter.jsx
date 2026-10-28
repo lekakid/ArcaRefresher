@@ -2,21 +2,21 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GlobalStyles } from '@mui/material';
 
+import { useLoadChecker } from 'hooks/LoadChecker';
+import { ArcaUser } from 'func/user';
+import { serializeText } from 'func/emoji';
+import { EVENT_COMMENT_REFRESH } from 'core/event';
 import {
   COMMENT_INNER,
   COMMENT_ITEMS,
   COMMENT_WRAPPERS,
   COMMENT_LOADED,
 } from 'core/selector';
-import { EVENT_COMMENT_REFRESH } from 'core/event';
-import { useLoadChecker } from 'hooks/LoadChecker';
-import { ArcaUser } from 'func/user';
-import { serializeText } from 'func/emoji';
 
-import Info from '../FeatureInfo';
-import { filterContent } from '../func';
 import CountBar from './CountBar';
 import { filterSelector } from '../selector';
+import { filterContent } from '../func';
+import info from '../info';
 
 const commentMuteStyles = (
   <GlobalStyles
@@ -115,17 +115,17 @@ function CommentMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideCountBar, hideMutedMark, muteIncludeReply, muteAllEmot } =
-    useSelector((state) => state[Info.id].storage);
+    useSelector((state) => state[info.id].storage);
   const [controlTarget, setControlTarget] = useState(undefined);
   const [countBarContainer, setCountBarContainer] = useState(undefined);
   const [count, setCount] = useState(undefined);
 
   // 댓글 창 로드 검사 및 컨테이너 생성
   useLayoutEffect(() => {
-    if (!commentLoaded) return;
+    if (!commentLoaded) return undefined;
 
     const commentElement = document.querySelector(COMMENT_INNER);
-    if (!commentElement) return;
+    if (!commentElement) return undefined;
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setControlTarget(commentElement);
@@ -137,11 +137,15 @@ function CommentMuter() {
 
     const changeTarget = () => {
       const refreshedComment = document.querySelector(COMMENT_INNER);
+      if (!refreshedComment) return;
+
       setControlTarget(refreshedComment);
       refreshedComment.insertAdjacentElement('beforebegin', container);
     };
 
     window.addEventListener(EVENT_COMMENT_REFRESH, changeTarget);
+    return () =>
+      window.removeEventListener(EVENT_COMMENT_REFRESH, changeTarget);
   }, [dispatch, commentLoaded]);
 
   // 뮤트 처리
@@ -149,7 +153,9 @@ function CommentMuter() {
     if (!controlTarget) return undefined;
 
     const muteComment = () => {
-      const comments = [...document.querySelectorAll(COMMENT_WRAPPERS)];
+      const comments = [...document.querySelectorAll(COMMENT_WRAPPERS)].filter(
+        (wrapper) => wrapper.querySelector('.comment-item'),
+      );
       const commentInfos = comments.map((wrapper) => {
         const item = wrapper.querySelector('.comment-item');
         const deleted = item.classList.contains('deleted');

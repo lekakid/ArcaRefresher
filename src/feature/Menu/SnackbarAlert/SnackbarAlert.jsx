@@ -1,0 +1,61 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Snackbar } from '@mui/material';
+
+import { shiftSnack } from './slice';
+import info from './info';
+
+export default function SnackbarAlert() {
+  const dispatch = useDispatch();
+  const { snackBag } = useSelector((state) => state[info.id]);
+  const [open, setOpen] = useState(false);
+  const [snack, setSnack] = useState(undefined);
+  const picking = useRef(false);
+
+  useEffect(() => {
+    if (snack) picking.current = false;
+    if (snackBag.length && !snack && !picking.current) {
+      picking.current = true;
+      const next = snackBag[0];
+      dispatch(shiftSnack());
+      if (!next) {
+        picking.current = false;
+        return;
+      }
+
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSnack({ ...next });
+      // mui에 clickaway onClose 이후 clickaway가 바로 터지는 버그가 있음
+      setTimeout(() => {
+        setOpen(true);
+      }, 50);
+    }
+    if (snackBag.length && snack && open) {
+      setOpen(false);
+    }
+  }, [dispatch, open, snack, snackBag]);
+
+  const handleSnackClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleExit = useCallback(() => {
+    setSnack(undefined);
+  }, []);
+
+  return (
+    <Snackbar
+      anchorOrigin={{
+        horizontal: 'center',
+        vertical: 'bottom',
+      }}
+      autoHideDuration={snack?.time}
+      slotProps={{
+        transition: { onExited: handleExit },
+      }}
+      open={open}
+      message={snack?.msg}
+      onClose={snack?.time && handleSnackClose}
+    />
+  );
+}

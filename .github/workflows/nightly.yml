@@ -1,0 +1,51 @@
+name: Nightly Release
+
+on:
+  push:
+    branches:
+      - develop
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Pre-Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Build
+        run: npm run build:pre
+
+      - name: Remove Previous Nightly Pre-Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release delete nightly --cleanup-tag -y || true
+
+      - name: Create Pre-Release
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: true
+          tag_name: 'nightly'
+          target_commitish: ${{ github.sha }}
+          files: |
+            ./dist/ArcaRefresher.nightly.meta.js
+            ./dist/ArcaRefresher.nightly.user.js
+            ./dist/ArcaRefresher.nightly.user.js.LICENSE.txt

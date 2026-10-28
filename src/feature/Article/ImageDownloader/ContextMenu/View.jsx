@@ -8,26 +8,26 @@ import ImageIcon from '@mui/icons-material/Image';
 import streamSaver from 'streamsaver';
 
 import { ARTICLE_GIFS, ARTICLE_IMAGES } from 'core/selector';
-import { useContextMenu } from 'menu/ContextMenu';
-import { useSnackbarAlert } from 'menu/SnackbarAlert';
+import { useContextMenu } from 'feature/Menu/ContextMenu';
+import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'hooks/Content';
 import { request } from 'func/http';
 
 import { convertToPng } from 'func/image';
 import { ImageInfo } from '../Model';
 import { format } from '../Util';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 function ContextMenu({ target, closeMenu }) {
   const { contextMenuEnabled, originToClipboard, fileName } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
   const contentInfo = useContent();
 
   const setSnack = useSnackbarAlert();
   const data = useContextMenu(
     {
-      key: Info.id,
+      key: info.id,
       selector: contextMenuEnabled
         ? `${ARTICLE_IMAGES}, ${ARTICLE_GIFS}`
         : 'NULL',
@@ -54,12 +54,9 @@ function ContextMenu({ target, closeMenu }) {
         const response = await request(url, {
           responseType: 'blob',
         }).then((r) => r.response);
-        const blob =
-          response.type === 'image/png'
-            ? response
-            : await convertToPng(response);
+        const blob = await convertToPng(response);
 
-        navigator.clipboard.write([
+        await navigator.clipboard.write([
           new ClipboardItem({
             [blob.type]: blob,
           }),
@@ -86,6 +83,7 @@ function ContextMenu({ target, closeMenu }) {
         closeMenu();
 
         const response = await fetch(orig, { cache: 'no-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const size = Number(response.headers.get('content-length'));
         const stream = response.body;
 
@@ -96,7 +94,7 @@ function ContextMenu({ target, closeMenu }) {
         const filestream = streamSaver.createWriteStream(`${name}.${ext}`, {
           size,
         });
-        stream.pipeTo(filestream);
+        await stream.pipeTo(filestream);
       } catch (error) {
         console.warn(`[ImageDownload] ${uploadName} 다운로드 실패`, error);
         setSnack({

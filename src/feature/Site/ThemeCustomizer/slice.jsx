@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   version: 3,
@@ -30,16 +30,18 @@ function updater(storage, defaultValue) {
         ['btn-hover', 'bd-btn-hover'],
         ['visited-article', 'article-visited'],
       ];
-      const entries = Object.entries(storage.theme).map(([key, value]) => {
-        remapTable.forEach(([from, to]) => {
-          if (!value[to]) {
-            value[to] = value[from];
-            delete value[from];
-          }
-        });
+      const entries = Object.entries(storage.theme || {})
+        .filter(([, value]) => value)
+        .map(([key, value]) => {
+          remapTable.forEach(([from, to]) => {
+            if (!value[to] && from in value) {
+              value[to] = value[from];
+              delete value[from];
+            }
+          });
 
-        return [key, value];
-      });
+          return [key, value];
+        });
 
       const updatedStorage = { ...storage };
       updatedStorage.theme = Object.fromEntries(entries);
@@ -54,11 +56,11 @@ function updater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage, updater),
+  storage: getValue(info.id, defaultStorage, updater),
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     $toggleEnable(state) {
@@ -74,8 +76,10 @@ export const slice = createSlice({
     },
     $renamePreset(state, action) {
       const { prev, next } = action.payload;
+      if (next in state.storage.theme) return;
       state.storage.theme[next] = state.storage.theme[prev];
       delete state.storage.theme[prev];
+      if (state.storage.current === prev) state.storage.current = next;
     },
   },
 });

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { deleteValue, getValue } from 'core/storage';
-import Info from './FeatureInfo';
+import info from './info';
 
 const defaultStorage = {
   version: 1,
@@ -11,15 +11,13 @@ const defaultStorage = {
 };
 
 function formatUpdater(storage, defaultValue) {
-  if (!storage) return defaultValue;
-
   // version 0 => 1
   const version = storage?.version || 0;
 
   switch (version) {
     case 0: {
       const memo = Object.fromEntries(
-        Object.entries(storage.memo).map(([key, msg]) => [key, { msg }]),
+        Object.entries(storage?.memo ?? {}).map(([key, msg]) => [key, { msg }]),
       );
       const data = getValue('UserColor');
       if (data) {
@@ -41,12 +39,12 @@ function formatUpdater(storage, defaultValue) {
 }
 
 const initialState = {
-  storage: getValue(Info.id, defaultStorage, formatUpdater),
+  storage: getValue(info.id, defaultStorage, formatUpdater),
   inputUser: null,
 };
 
 export const slice = createSlice({
-  name: Info.id,
+  name: info.id,
   initialState,
   reducers: {
     $setContextRange(state, action) {

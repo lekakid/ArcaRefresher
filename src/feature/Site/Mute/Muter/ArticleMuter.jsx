@@ -7,7 +7,7 @@ import { useLoadChecker } from 'hooks/LoadChecker';
 
 import { trimEmotURL } from '../func';
 import { filterSelector } from '../selector';
-import Info from '../FeatureInfo';
+import info from '../info';
 
 const articleMuteStyles = (
   <GlobalStyles
@@ -39,7 +39,7 @@ function ArticleMuter() {
 
   const filter = useSelector(filterSelector);
   const { hideMutedMark, muteAllEmot } = useSelector(
-    (state) => state[Info.id].storage,
+    (state) => state[info.id].storage,
   );
 
   const [wrapped, setWrapped] = useState(false);
@@ -82,8 +82,6 @@ function ArticleMuter() {
         const wrapper = i.closest('.emoticon-wrapper');
         if (wrapper && (muteAllEmot || !!filter.emoticon.url[emotURL])) {
           wrapper.classList.add('muted');
-          wrapper.dataset.href = wrapper.href;
-          wrapper.removeAttribute('href');
           wrapper.title = muteAllEmot
             ? '알 수 없음'
             : filter.emoticon.url[emotURL];
@@ -92,19 +90,12 @@ function ArticleMuter() {
     };
 
     const unmuteArticle = () => {
-      const articleImage = [...document.querySelectorAll(ARTICLE_EMOTICON)];
-      articleImage.forEach((i) => {
-        const { src } = i;
-
-        const filterFormat = trimEmotURL(src);
-        const wrapper = i.closest('.emoticon-wrapper');
-        if (wrapper && !!filter.emoticon.url[filterFormat]) {
+      document
+        .querySelectorAll('.emoticon-wrapper.muted')
+        .forEach((wrapper) => {
           wrapper.classList.remove('muted');
-          wrapper.href = wrapper.dataset.href;
-          delete wrapper.dataset.href;
           wrapper.removeAttribute('title');
-        }
-      });
+        });
     };
 
     if (document.readyState !== 'complete') {

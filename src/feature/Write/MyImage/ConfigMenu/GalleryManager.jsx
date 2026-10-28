@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import {
@@ -43,7 +43,7 @@ function FolderNameSelect({
   onRemove,
 }) {
   return (
-    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+    <Stack direction="row" sx={{ width: '100%', gap: 1 }}>
       <Select
         // 왜 인진 모르겠고 width값을 잡아주기만 하면 flexGrow를 통한 크기 조절 문제가 해결됨
         sx={{ flexGrow: 1, width: 0 }}
@@ -76,20 +76,20 @@ const nameRegex = /^[0-9a-zA-Zㄱ-힣]*$/;
 function FolderNameInput({ initialValue, validate, onDone, onCancel }) {
   const [text, setText] = useState(initialValue);
 
+  const isError = validate(text);
+
   const handleChange = (e) => {
-    if (!nameRegex.test(text)) return;
+    if (!nameRegex.test(e.target.value)) return;
     setText(e.target.value);
   };
 
   const handleKeyUp = (e) => {
-    if (e.key === 'Enter') onDone(text);
+    if (e.key === 'Enter' && !isError) onDone(text);
     if (e.key === 'Escape') onCancel();
   };
 
-  const isError = validate(text);
-
   return (
-    <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+    <Stack direction="row" sx={{ width: '100%', gap: 1 }}>
       <TextField
         sx={{ flexGrow: 1, width: 0 }}
         autoFocus
@@ -125,53 +125,58 @@ function Toolbar({
   onMoving,
   onRemove,
 }) {
-  if (moving) {
-    return (
-      <Stack direction="row" justifyContent="end">
-        <Button
-          variant="text"
-          startIcon={<FlipToFrontIcon />}
-          disabled={disabled}
-          name="move"
-          onClick={onMove}
-        >
-          이동
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<FileCopyIcon />}
-          disabled={disabled}
-          name="copy"
-          onClick={onCopy}
-        >
-          복사
-        </Button>
-        <Button variant="text" startIcon={<CancelIcon />} onClick={onCancel}>
-          취소
-        </Button>
-      </Stack>
-    );
-  }
-
   return (
     <>
-      <Stack direction="row" justifyContent="end">
-        <Button
-          variant="text"
-          startIcon={<FlipToFrontIcon />}
-          disabled={disabled}
-          onClick={onMoving}
-        >
-          이동/복사
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<DeleteIcon />}
-          disabled={disabled}
-          onClick={onRemove}
-        >
-          선택 삭제
-        </Button>
+      <Stack direction="row" sx={{ justifyContent: 'end' }}>
+        {moving && (
+          <>
+            <Button
+              variant="text"
+              startIcon={<FlipToFrontIcon />}
+              disabled={disabled}
+              name="move"
+              onClick={onMove}
+            >
+              이동
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<FileCopyIcon />}
+              disabled={disabled}
+              name="copy"
+              onClick={onCopy}
+            >
+              복사
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<CancelIcon />}
+              onClick={onCancel}
+            >
+              취소
+            </Button>
+          </>
+        )}
+        {!moving && (
+          <>
+            <Button
+              variant="text"
+              startIcon={<FlipToFrontIcon />}
+              disabled={disabled}
+              onClick={onMoving}
+            >
+              이동/복사
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<DeleteIcon />}
+              disabled={disabled}
+              onClick={onRemove}
+            >
+              선택 삭제
+            </Button>
+          </>
+        )}
       </Stack>
       <Divider />
     </>
@@ -192,26 +197,26 @@ function GalleryManager({ gallery }) {
   const [confirm, setConfirm] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [editingCell, setEditingCell] = useState(null);
-  const editInputRef = useRef(null);
   const resolveRef = useRef(null);
 
   const folderList = useMemo(() => Object.keys(gallery), [gallery]);
-  const rows = useMemo(
-    () => gallery[moveList ? toFolder : fromFolder],
-    [gallery, moveList, toFolder, fromFolder],
-  );
+  const currentFolder = moveList ? toFolder : fromFolder;
+  const rows = useMemo(() => gallery[currentFolder], [gallery, currentFolder]);
 
+  const [pageFolder, setPageFolder] = useState(currentFolder);
+  if (pageFolder !== currentFolder) {
+    setPageFolder(currentFolder);
+    setPage(0);
+  }
+
+  const safePage = Math.min(
+    page,
+    Math.max(0, Math.ceil(rows.length / pageSize) - 1),
+  );
   const pagedRows = useMemo(
-    () => rows.slice(page * pageSize, page * pageSize + pageSize),
-    [rows, page, pageSize],
+    () => rows.slice(safePage * pageSize, safePage * pageSize + pageSize),
+    [rows, safePage, pageSize],
   );
-
-  useEffect(() => {
-    if (editInputRef.current) {
-      editInputRef.current.focus();
-    }
-  }, [editingCell]);
 
   const handleSelectAll = useCallback(
     (e) => {
@@ -241,10 +246,11 @@ function GalleryManager({ gallery }) {
   const handleCreateFolder = useCallback(
     (folder) => {
       dispatch($addFolder(folder));
-      setFromFolder(folder);
+      if (moveList) setToFolder(folder);
+      else setFromFolder(folder);
       setCreateFolder(false);
     },
-    [dispatch],
+    [dispatch, moveList],
   );
 
   const handleRemoveFolder = useCallback(async () => {
@@ -258,10 +264,15 @@ function GalleryManager({ gallery }) {
       return;
     }
 
-    setFromFolder('_shared_');
-    dispatch($removeFolder(fromFolder));
+    if (currentFolder === fromFolder) {
+      setFromFolder('_shared_');
+      setMoveList(null);
+      setSelection([]);
+    }
+    if (currentFolder === toFolder) setToFolder('_shared_');
+    dispatch($removeFolder(currentFolder));
     setConfirm(false);
-  }, [dispatch, fromFolder]);
+  }, [dispatch, currentFolder, fromFolder, toFolder]);
 
   const handleToggle = useCallback(() => {
     if (moveList) {
@@ -316,15 +327,14 @@ function GalleryManager({ gallery }) {
 
   const handleMemoBlur = useCallback(
     (row, value) => {
-      setEditingCell(null);
       if (row.memo !== value) {
         const updatedRows = rows.map((r) =>
           r.url === row.url ? { ...r, memo: value } : r,
         );
-        dispatch($setFolderData({ folder: fromFolder, list: updatedRows }));
+        dispatch($setFolderData({ folder: currentFolder, list: updatedRows }));
       }
     },
-    [fromFolder, rows, dispatch],
+    [currentFolder, rows, dispatch],
   );
 
   const handleConfirmDone = useCallback(() => {
@@ -349,7 +359,7 @@ function GalleryManager({ gallery }) {
           ) : (
             <FolderNameSelect
               folderList={folderList}
-              currentFolder={moveList ? toFolder : fromFolder}
+              currentFolder={currentFolder}
               onSelect={handleSelctFolder}
               onCreate={() => setCreateFolder(true)}
               onRemove={handleRemoveFolder}
@@ -400,7 +410,10 @@ function GalleryManager({ gallery }) {
                   </TableRow>
                 ) : (
                   pagedRows.map((row) => (
-                    <TableRow key={row.url} sx={{ height: 40 }}>
+                    <TableRow
+                      key={`${currentFolder}:${row.url}`}
+                      sx={{ height: 40 }}
+                    >
                       {!moveList && (
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -424,14 +437,9 @@ function GalleryManager({ gallery }) {
                           {row.url}
                         </Box>
                       </TableCell>
-                      <TableCell
-                        onClick={() =>
-                          setEditingCell({ rowId: row.url, field: 'memo' })
-                        }
-                        sx={{ cursor: 'text' }}
-                      >
+                      <TableCell sx={{ cursor: 'text' }}>
                         <input
-                          ref={editInputRef}
+                          key={row.memo ?? ''}
                           defaultValue={row.memo}
                           onBlur={(e) => handleMemoBlur(row, e.target.value)}
                           style={{
@@ -451,7 +459,7 @@ function GalleryManager({ gallery }) {
           <TablePagination
             component="div"
             count={rows.length}
-            page={page}
+            page={safePage}
             rowsPerPage={pageSize}
             rowsPerPageOptions={[10, 25, 50, 100]}
             onPageChange={(_, newPage) => setPage(newPage)}
@@ -464,7 +472,7 @@ function GalleryManager({ gallery }) {
       </Stack>
       <Dialog open={confirm} onClose={handleConfirmClose}>
         <DialogTitle>폴더 삭제</DialogTitle>
-        <DialogContent>{`'${fromFolder}' 폴더를 삭제합니까?`}</DialogContent>
+        <DialogContent>{`'${currentFolder}' 폴더를 삭제합니까?`}</DialogContent>
         <DialogActions>
           <Button onClick={handleConfirmDone}>예</Button>
           <Button variant="contained" onClick={handleConfirmClose}>
@@ -480,4 +488,4 @@ GalleryManager.propTypes = {
   gallery: PropTypes.object,
 };
 
-export default GalleryManager;
+export default memo(GalleryManager);

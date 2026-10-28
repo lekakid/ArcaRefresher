@@ -48,5 +48,5 @@ export function updateBoard(board, newArticles, animationClass) {
   ];
   board.replaceChildren(...updatedChildList);
 
-  unsafeWindow.applyLocalTimeFix();
+  unsafeWindow.applyLocalTimeFix?.();
 }

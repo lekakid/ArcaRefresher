@@ -1,15 +1,15 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import js from "@eslint/js";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import unusedImports from "eslint-plugin-unused-imports";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
-import globals from "globals";
+import { defineConfig, globalIgnores } from 'eslint/config';
+import js from '@eslint/js';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import unusedImports from 'eslint-plugin-unused-imports';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import globals from 'globals';
 
 export default defineConfig([
-  globalIgnores(["dist"]),
+  globalIgnores(['dist']),
   {
-    files: ["src/**/*.jsx"],
+    files: ['src/**/*.jsx'],
 
     extends: [
       js.configs.recommended,
@@ -18,40 +18,41 @@ export default defineConfig([
     ],
 
     plugins: {
-      "unused-imports": unusedImports,
+      'unused-imports': unusedImports,
     },
 
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
 
     rules: {
-      "no-console": "off",
-      "no-param-reassign": ["error", { props: false }],
-      "no-unused-vars": [
-        "error",
+      'no-console': 'off',
+      'no-param-reassign': ['error', { props: false }],
+      'no-unused-vars': [
+        'error',
         {
-          caughtErrors: "all",
-          caughtErrorsIgnorePattern: "^_",
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
-      "lines-between-class-members": "off",
+      'lines-between-class-members': 'off',
 
-      "react/display-name": "off",
-      "react/forbid-prop-types": "off",
-      "react/react-in-jsx-scope": "off",
-      "react/require-default-props": "off",
-      "react/jsx-uses-react": "off",
-      "react/jsx-wrap-multilines": ["error", { prop: "ignore" }],
+      'react/display-name': 'off',
+      'react/forbid-prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/require-default-props': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/jsx-wrap-multilines': ['error', { prop: 'ignore' }],
 
-      "unused-imports/no-unused-imports": "error",
+      'unused-imports/no-unused-imports': 'error',
     },
 
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parserOptions: { ecmaFeatures: { jsx: true } },
       globals: {
         ...globals.browser,

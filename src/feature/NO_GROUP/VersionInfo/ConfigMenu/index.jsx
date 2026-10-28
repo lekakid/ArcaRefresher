@@ -1,11 +1,13 @@
 import InfoIcon from '@mui/icons-material/Info';
 
-import View from './View';
-import Info from '../FeatureInfo';
+import View from './VersionInfo';
+import group from '../../group.jsx';
+import info from '../info';
 
 export default {
-  key: Info.id,
+  id: info.id,
+  group,
   Icon: InfoIcon,
-  label: Info.name,
+  label: info.name,
   View,
 };
