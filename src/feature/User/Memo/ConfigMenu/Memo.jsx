@@ -17,6 +17,7 @@ import {
   BaseRow,
   SelectRow,
   DataGridRow,
+  SwitchRow,
 } from 'feature/Menu/ConfigMenu/component';
 import { FOREGROUND, open } from 'func/window';
 
@@ -26,6 +27,7 @@ import {
   $setMemo,
   $setMemoList,
   $setVariant,
+  $toggleMemoAsBtn,
 } from '../slice';
 
 function userRenderer(params) {
@@ -103,7 +105,7 @@ const memoRowsSelector = createSelector(
 function Memo() {
   const dispatch = useDispatch();
 
-  const { variant, contextRange } = useSelector(
+  const { variant, contextRange, memoAsBtn } = useSelector(
     (state) => state[info.id].storage,
   );
   const memoData = useSelector((state) => state[info.id].storage.memo);
@@ -215,6 +217,13 @@ function Memo() {
             <MenuItem value="popper">마우스 호버 아이콘</MenuItem>
             <MenuItem value="none">없음</MenuItem>
           </SelectRow>
+          <SwitchRow
+            divider
+            primary="메모 클릭 시 수정"
+            secondary="메모를 클릭 하면 수정 메뉴를 보여줍니다."
+            value={memoAsBtn}
+            action={$toggleMemoAsBtn}
+          />
           <BaseRow
             divider
             column="lg"

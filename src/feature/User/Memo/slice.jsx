@@ -7,6 +7,7 @@ const defaultStorage = {
   version: 1,
   contextRange: 'nickname',
   variant: 'badge',
+  memoAsBtn: true,
   memo: {},
 };
 
@@ -53,6 +54,9 @@ export const slice = createSlice({
     $setVariant(state, action) {
       state.storage.variant = action.payload;
     },
+    $toggleMemoAsBtn(state) {
+      state.storage.memoAsBtn = !state.storage.memoAsBtn;
+    },
     $setMemo(state, action) {
       const { user, memo } = action.payload;
       if (memo.msg === '' && memo.color === '') {
@@ -78,6 +82,7 @@ export const slice = createSlice({
 export const {
   $setContextRange,
   $setVariant,
+  $toggleMemoAsBtn,
   $setMemo,
   $updateMemoNick,
   $setMemoList,

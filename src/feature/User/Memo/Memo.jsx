@@ -20,7 +20,9 @@ function Memo() {
   const dispatch = useDispatch();
   const loaded = useLoadChecker(FULL_LOADED);
 
-  const { variant, memo } = useSelector((state) => state[info.id].storage);
+  const { variant, memoAsBtn, memo } = useSelector(
+    (state) => state[info.id].storage,
+  );
 
   const memoContainers = useRef([]);
   const [infoList, setInfoList] = useState([]);
@@ -116,6 +118,13 @@ function Memo() {
     };
   }, [memo, loaded]);
 
+  const handleMemoClick = (e, user) => {
+    if (!memoAsBtn) return;
+
+    e.preventDefault();
+    dispatch(setInputUser(user));
+  };
+
   if (variant === 'none') return null;
   return (
     <>
@@ -130,10 +139,7 @@ function Memo() {
           <Portal key={key} container={container}>
             <Box
               component="span"
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(setInputUser(serializableUser));
-              }}
+              onClick={(e) => handleMemoClick(e, serializableUser)}
             >
               <AuthorTag variant={variant}>
                 {memo[serializableUser.id]?.msg}
