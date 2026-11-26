@@ -21,13 +21,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { KeyIcon } from 'component';
 import { SwitchRow } from 'feature/Menu/ConfigMenu/component';
 
-import {
-  $setKey,
-  $resetKey,
-  $resetKeyMap,
-  $toggleCompatibilityMode,
-  $toggleEnabled,
-} from '../slice';
+import { $setKey, $resetKey, $resetKeyMap, $toggleEnabled } from '../slice';
 import actionTable from '../actionTable';
 import keyFilter from '../keyFilter';
 import info from '../info';
@@ -81,9 +75,7 @@ const keyMapSelector = createSelector(
 
 function ShortKey() {
   const dispatch = useDispatch();
-  const { enabled, compatibilityMode } = useSelector(
-    (state) => state[info.id].storage,
-  );
+  const { enabled } = useSelector((state) => state[info.id].storage);
   const keyMap = useSelector(keyMapSelector);
   const [shortKeyAction, setShortKeyAction] = useState(undefined);
   const [error, setError] = useState(undefined);
@@ -143,18 +135,6 @@ function ShortKey() {
             primary="사용"
             value={enabled}
             action={$toggleEnabled}
-          />
-          <SwitchRow
-            primary="호환성 모드"
-            secondary={
-              <>
-                ⚠️이 옵션을 사용하면 키가 같지 않은 아카라이브 단축키가 동시에
-                동작할 수 있습니다.
-                <br />키 입력을 사용하는 다른 스크립트를 쓰려면 켜주세요.
-              </>
-            }
-            value={compatibilityMode}
-            action={$toggleCompatibilityMode}
           />
         </List>
       </Paper>

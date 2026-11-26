@@ -5,6 +5,7 @@ import { useOpenState } from 'feature/Menu/ConfigMenu/hooks';
 import { useSnackbarAlert } from 'feature/Menu/SnackbarAlert';
 import { useContent } from 'core/ContentCollector';
 
+import useArcaShortKeyBlocker from './useArcaShortKeyBlocker';
 import actionTable, { ACTIVE_ARTICLE, ACTIVE_BOARD } from './actionTable';
 import keyFilter from './keyFilter';
 import info from './info';
@@ -12,11 +13,10 @@ import info from './info';
 export default function ShortKey() {
   const setSnack = useSnackbarAlert();
   const content = useContent();
+  const setBlocker = useArcaShortKeyBlocker();
 
   const configOpen = useOpenState();
-  const { enabled, compatibilityMode, keyTable } = useSelector(
-    (state) => state[info.id].storage,
-  );
+  const { enabled, keyTable } = useSelector((state) => state[info.id].storage);
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -40,42 +40,39 @@ export default function ShortKey() {
         .filter(([key]) => !!key),
     );
 
+    setBlocker(true);
+
     const eventListener = (e) => {
-      // 검색창 등 텍스트 입력칸
-      if (e.target.matches('input, textarea, [contenteditable]')) return;
+      // MUI 컴포넌트 내에서
       if (e.target.closest('.MuiModal-root, .MuiPopper-root')) return;
 
-      // 조합키
+      // 검색창 등 텍스트 입력칸
+      if (e.target.matches('input, textarea, [contenteditable]')) return;
+
+      // 조합키를 사용하는 경우
       if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
 
-      // 기타 기능
+      // 단축키로서 사용을 허용하지 않는 키
       if (keyFilter.test(e.code)) return;
 
-      if ((compatibilityMode && activeActionMap[e.code]) || !compatibilityMode)
-        e.stopPropagation();
+      // 단축키 기능 실행
       activeActionMap[e.code]?.(e, { content, setSnack });
     };
 
-    const stopInModal = (e) => {
-      if (e.target.closest('.MuiModal-root, .MuiPopper-root'))
-        e.stopPropagation();
-    };
-
-    document.addEventListener('keydown', eventListener, true);
-    document.body.addEventListener('keydown', stopInModal);
+    document.addEventListener('keydown', eventListener);
 
     return () => {
-      document.removeEventListener('keydown', eventListener, true);
-      document.body.removeEventListener('keydown', stopInModal);
+      document.removeEventListener('keydown', eventListener);
+      setBlocker(false);
     };
   }, [
     content,
     content.article,
     content.board,
     enabled,
-    compatibilityMode,
     configOpen,
     keyTable,
+    setBlocker,
     setSnack,
   ]);
 
