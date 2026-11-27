@@ -41,7 +41,10 @@ export default function ShortKey() {
     );
 
     setBlocker((e) => {
-      // 단축키로서 사용을 허용하지 않는 키
+      // 검색창 등 텍스트 입력칸 (막을 경우 게시물 에디터 등의 일부 동작을 방해함)
+      if (e.target.matches('input, textarea, [contenteditable]')) return false;
+
+      // 단축키로서 사용을 허용하지 않는 키 (1~9 채널 단축키 사용 허용)
       if (keyFilter.test(e.code)) return false;
 
       return true;
