@@ -55,7 +55,7 @@ proto.removeEventListener = function (type, listener, options) {
 
 export default function useArcaShortKeyBlocker() {
   const setter = useCallback((value) => {
-    keyBlockerRef.current = () => value;
+    keyBlockerRef.current = typeof value === 'function' ? value : () => value;
   }, []);
 
   return setter;

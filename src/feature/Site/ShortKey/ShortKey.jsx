@@ -40,7 +40,12 @@ export default function ShortKey() {
         .filter(([key]) => !!key),
     );
 
-    setBlocker(true);
+    setBlocker((e) => {
+      // 단축키로서 사용을 허용하지 않는 키
+      if (keyFilter.test(e.code)) return false;
+
+      return true;
+    });
 
     const eventListener = (e) => {
       // MUI 컴포넌트 내에서
